@@ -919,6 +919,12 @@ namespace Action {
         return new Insert(*this);
     }
 
+    Modify::~Modify()
+    {
+        delete pExifData_;
+        delete pIptcData_;
+    }
+
     int Modify::run(const std::string& path)
     try {
         if (!Util::fileExists(path, true)) {
@@ -928,8 +934,15 @@ namespace Action {
         }
 
         // Read both exif and iptc metadata (ignore return code)
-        exifData_.read(path);
-        iptcData_.read(path);
+        delete pExifData_;
+        pExifData_ = new Exiv2::ExifData;
+        assert(pExifData_);
+        pExifData_->read(path);
+
+        delete pIptcData_;
+        pIptcData_ = new Exiv2::IptcData;
+        assert(pIptcData_);
+        pIptcData_->read(path);
 
         // loop through command table and apply each command
         ModifyCmds& modifyCmds = Params::instance().modifyCmds_;
@@ -953,11 +966,11 @@ namespace Action {
         }
 
         // Save both exif and iptc metadata
-        int rc = exifData_.write(path);
+        int rc = pExifData_->write(path);
         if (rc) {
             std::cerr << Exiv2::ExifData::strError(rc, path) << "\n";
         }
-        rc = iptcData_.write(path);
+        rc = pIptcData_->write(path);
         if (rc) {
             std::cerr << Exiv2::IptcData::strError(rc, path) << "\n";
         }
@@ -981,10 +994,10 @@ namespace Action {
         Exiv2::Value::AutoPtr value = Exiv2::Value::create(modifyCmd.typeId_);
         value->read(modifyCmd.value_);
         if (modifyCmd.metadataId_ == exif) {
-            exifData_.add(Exiv2::ExifKey(modifyCmd.key_), value.get());
+            pExifData_->add(Exiv2::ExifKey(modifyCmd.key_), value.get());
         }
         if (modifyCmd.metadataId_ == iptc) {
-            iptcData_.add(Exiv2::IptcKey(modifyCmd.key_), value.get());
+            pIptcData_->add(Exiv2::IptcKey(modifyCmd.key_), value.get());
         }
     }
 
@@ -998,10 +1011,10 @@ namespace Action {
         }
         Exiv2::Metadatum* metadatum = 0;
         if (modifyCmd.metadataId_ == exif) {
-            metadatum = &exifData_[modifyCmd.key_];
+            metadatum = &(*pExifData_)[modifyCmd.key_];
         }
         if (modifyCmd.metadataId_ == iptc) {
-            metadatum = &iptcData_[modifyCmd.key_];
+            metadatum = &(*pIptcData_)[modifyCmd.key_];
         }
         assert(metadatum);
         Exiv2::Value::AutoPtr value = metadatum->getValue();
@@ -1022,13 +1035,13 @@ namespace Action {
         }
         if (modifyCmd.metadataId_ == exif) {
             Exiv2::ExifData::iterator pos =
-                exifData_.findKey(Exiv2::ExifKey(modifyCmd.key_));
-            if (pos != exifData_.end()) exifData_.erase(pos);
+                pExifData_->findKey(Exiv2::ExifKey(modifyCmd.key_));
+            if (pos != pExifData_->end()) pExifData_->erase(pos);
         }
         if (modifyCmd.metadataId_ == iptc) {
             Exiv2::IptcData::iterator pos =
-                iptcData_.findKey(Exiv2::IptcKey(modifyCmd.key_));
-            if (pos != iptcData_.end()) iptcData_.erase(pos);
+                pIptcData_->findKey(Exiv2::IptcKey(modifyCmd.key_));
+            if (pos != pIptcData_->end()) pIptcData_->erase(pos);
         }
     }
 
