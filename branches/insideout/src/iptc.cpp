@@ -296,7 +296,7 @@ namespace Exiv2 {
         }
 
         clearModified();
-    }
+    } // IptcData::updateBuffer
 
     long IptcData::size() const
     {
@@ -320,11 +320,11 @@ namespace Exiv2 {
     int IptcData::writeIptcData(const std::string& path)
     {
         updateBuffer();
-        ExvImage exvImage(path, true);
-        if (!exvImage.good()) return -1;
-        exvImage.setIptcData(pData_, size_);
-        return exvImage.writeMetadata();
-    } // IptcData::writeIptcData
+        Image::AutoPtr image(ImageFactory::create(Image::exv, path));
+        if (!image.get()) return -1;
+        image->setIptcData(pData_, size_);
+        return image->writeMetadata();
+    } 
 
     int IptcData::add(const IptcKey& key, Value* value)
     {

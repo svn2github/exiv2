@@ -57,11 +57,8 @@ EXIV2_RCSID("@(#) $Id$");
 #ifdef _MSC_VER
 # define S_ISREG(m)      (((m) & S_IFMT) == S_IFREG)
 #endif
-#ifdef HAVE_PROCESS_H
-# include <process.h>
-#endif
 #ifdef HAVE_UNISTD_H
-# include <unistd.h>                            // for getpid, stat
+# include <unistd.h>                            // stat
 #endif
 
 // *****************************************************************************
@@ -75,7 +72,7 @@ namespace Exiv2 {
         if (0 == registry_) {
             registry_ = new Registry;
         }
-    } // ImageFactory::instance
+    }
 
     void ImageFactory::registerImage(Image::Type type, 
                 NewInstanceFct newInst, IsThisTypeFct isType)
@@ -83,20 +80,31 @@ namespace Exiv2 {
         init();
         assert (newInst && isType);
         (*registry_)[type] = ImageFcts(newInst, isType);
-    } // ImageFactory::registerImage
+    }
 
     Image::Type ImageFactory::getType(const std::string& path)
     {
-        init();
-        FileIo file(path);
-        if (file.open("rb") != 0) return Image::none;
+        FileIo fileIo(path);
+        return getType(fileIo);
+    }
 
+    Image::Type ImageFactory::getType(const byte* data, long size)
+    {
+        MemIo memIo(data, size);
+        return getType(memIo);
+    }
+
+    Image::Type ImageFactory::getType(BasicIo& io)
+    {
+        IoCloser closer(io);
+        if (io.open() != 0) return Image::none;
+        
         Image::Type type = Image::none;
         Registry::const_iterator b = registry_->begin();
         Registry::const_iterator e = registry_->end();
         for (Registry::const_iterator i = b; i != e; ++i)
         {
-            if (i->second.isThisType(file, false)) {
+            if (i->second.isThisType(io, false)) {
                 type = i->first;
                 break;
             }
@@ -106,34 +114,63 @@ namespace Exiv2 {
 
     Image::AutoPtr ImageFactory::open(const std::string& path)
     {
-        init();
+        BasicIo::AutoPtr io(new FileIo(path));
+        return open(io);
+    }
+
+    Image::AutoPtr ImageFactory::open(const byte* data, long size)
+    {
+        BasicIo::AutoPtr io(new MemIo(data, size));
+        return open(io);
+    }
+
+    Image::AutoPtr ImageFactory::open(BasicIo::AutoPtr io)
+    {
         Image::AutoPtr image;
-        FileIo file(path);
-        if (file.open("rb") != 0) return image;
+        IoCloser closer(*io);
+        if (io->open() != 0) return image;
 
         Registry::const_iterator b = registry_->begin();
         Registry::const_iterator e = registry_->end();
         for (Registry::const_iterator i = b; i != e; ++i)
         {
-            if (i->second.isThisType(file, false)) {
-                image = i->second.newInstance(path, false);
+            if (i->second.isThisType(*io, false)) {
+                image = i->second.newInstance(io, false);
                 break;
             }
         }
         return image;
     } // ImageFactory::open
 
+
     Image::AutoPtr ImageFactory::create(Image::Type type, 
                                         const std::string& path)
     {
-        init();
+        FileIo *fileIo = new FileIo(path);
+        BasicIo::AutoPtr io(fileIo);
+        // Create or overwrite the file, then close it
+        if (fileIo->open("w+b") != 0) return Image::AutoPtr();
+        fileIo->close();
+        return create(type, io);
+    }
+
+    Image::AutoPtr ImageFactory::create(Image::Type type)
+    {
+        BasicIo::AutoPtr io(new MemIo);
+        return create(type, io);
+    }
+
+
+    Image::AutoPtr ImageFactory::create(Image::Type type, 
+                                        BasicIo::AutoPtr io)
+    {
+        // BasicIo instance does not need to be open
         Registry::const_iterator i = registry_->find(type);
         if (i != registry_->end()) {
-            return i->second.newInstance(path, true);
+            return i->second.newInstance(io, true);
         }
         return Image::AutoPtr();
     } // ImageFactory::create
-
 
     TiffHeader::TiffHeader(ByteOrder byteOrder) 
         : byteOrder_(byteOrder), tag_(0x002a), offset_(0x00000008)

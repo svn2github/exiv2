@@ -38,6 +38,9 @@ using Exiv2::byte;
 using Exiv2::BasicIo;
 using Exiv2::MemIo;
 using Exiv2::FileIo;
+using Exiv2::IoCloser;
+
+int WriteReadSeek(BasicIo &io);
 
 // *****************************************************************************
 // Main
@@ -61,7 +64,7 @@ try {
     if (fileOut1.open("w+b") != 0) {
         std::cerr << argv[0] << 
             ": Could not open output file 1 (" << argv[2] << ")\n";
-        return 2;
+        return 1;
     }
 
     MemIo memIo1;
@@ -70,90 +73,23 @@ try {
     memIo1.write(fileIn);
     memIo1.seek(0, BasicIo::beg);
     fileOut1.write(memIo1);
-    
-    byte buf[4096];
-    const char tester1[] = "this is a little test of MemIo";
-    const char tester2[] = "Appending this on the end";
-    const char expect[] = "this is a little teAppending this on the end";
-    const long insert = 19;
-    const long len1 = (long)strlen(tester1) + 1;
-    const long len2 = (long)strlen(tester2) + 1;
 
-    MemIo memIo2((byte*)tester1, len1);
+    // Read writereadseek test on MemIo
+    MemIo memIo2;
+    int rc = WriteReadSeek(memIo2);
+    if (rc != 0) return rc;
 
-    int c = EOF;
-    memset(buf, -1, sizeof(buf));
-    for (int i = 0; (c=memIo2.getb()) != EOF; ++i) {
-        buf[i] = (byte)c;
-    }
-
-    // Make sure we got the null back
-    if(buf[len1-1] != 0) {
+    // Read writereadseek test on FileIo
+    // Create or overwrite the file, then close it
+    FileIo fileTest("iotest.txt");
+    if (fileTest.open("w+b") != 0) {
         std::cerr << argv[0] << 
-            ": MemIo missing null terminator 1\n";
-        return 3;
+            ": Could not create test file iotest.txt\n";
+        return 1;
     }
-
-    if (strcmp(tester1, (char*)buf) != 0 ) {
-        std::cerr << argv[0] << 
-            ": MemIo strings don't match 1\n";
-        return 4;
-    }
-
-    memIo2.seek(-2, BasicIo::end);
-    if (memIo2.getb() != 'o') {
-        std::cerr << argv[0] << 
-            ": MemIo bad getb o\n";
-        return 5;
-    }
-    
-    memIo2.seek(-2, BasicIo::cur);
-    if (memIo2.getb() != 'I') {
-        std::cerr << argv[0] << 
-            ": MemIo bad getb I\n";
-        return 6;
-    }
-
-    if (memIo2.putb('O') != 'O') {
-        std::cerr << argv[0] << 
-            ": MemIo bad putb\n";
-        return 7;
-    }
-    
-    memIo2.seek(-1, BasicIo::cur);
-    if (memIo2.getb() != 'O') {
-        std::cerr << argv[0] << 
-            ": MemIo bad getb O\n";
-        return 8;
-    }
-
-    memIo2.seek(insert, BasicIo::beg);
-    if(memIo2.write((byte*)tester2, len2) != len2) {
-        std::cerr << argv[0] << 
-            ": MemIo bad write 1\n";
-        return 9;
-    }
-
-    memIo2.seek(0, BasicIo::beg);
-    memset(buf, -1, sizeof(buf));
-    if (memIo2.read(buf, sizeof(buf)) != insert + len2) {
-        std::cerr << argv[0] << 
-            ": MemIo something went wrong\n";
-        return 10;
-    }
-    
-    // Make sure we got the null back
-    if(buf[insert + len2 - 1] != 0) {
-        std::cerr << argv[0] << 
-            ": MemIo missing null terminator 2\n";
-        return 11;
-    }
-
-    if (strcmp(expect, (char*)buf) != 0 ) {
-        std::cerr << argv[0] << 
-            ": MemIo strings don't match 2\n";
-        return 12;
-    }
+    fileTest.close();
+    rc = WriteReadSeek(fileTest);
+    if (rc != 0) return rc;
     
     // Another test of reading and writing
     fileOut1.seek(0, BasicIo::beg);
@@ -166,7 +102,8 @@ try {
     }
 
     long readCount = 0;
-    while ((readCount=fileOut1.read(buf, 32))) {
+    byte buf[32];
+    while ((readCount=fileOut1.read(buf, sizeof(buf)))) {
         if (memIo2.write(buf, readCount) != readCount) {
             std::cerr << argv[0] << 
                 ": MemIo bad write 2\n";
@@ -187,4 +124,94 @@ catch (Exiv2::Error& e) {
 }
 }
 
+
+int WriteReadSeek(BasicIo &io)
+{
+    byte buf[4096];
+    const char tester1[] = "this is a little test of MemIo";
+    const char tester2[] = "Appending this on the end";
+    const char expect[] = "this is a little teAppending this on the end";
+    const long insert = 19;
+    const long len1 = (long)strlen(tester1) + 1;
+    const long len2 = (long)strlen(tester2) + 1;
+
+    IoCloser closer(io);
+    if (io.open() != 0) {
+        std::cerr << ": WRS could not open IO\n";
+        return 2;
+    }
+
+    if (io.write((byte*)tester1, len1) != len1) {
+        std::cerr << ": WRS initial write failed\n";
+        return 2;
+    }
+    io.seek(-len1, BasicIo::cur);
+
+    int c = EOF;
+    memset(buf, -1, sizeof(buf));
+    for (int i = 0; (c=io.getb()) != EOF; ++i) {
+        buf[i] = (byte)c;
+    }
+
+    // Make sure we got the null back
+    if(buf[len1-1] != 0) {
+        std::cerr << ": WRS missing null terminator 1\n";
+        return 3;
+    }
+
+    if (strcmp(tester1, (char*)buf) != 0 ) {
+        std::cerr << ": WRS strings don't match 1\n";
+        return 4;
+    }
+
+    io.seek(-2, BasicIo::end);
+    if (io.getb() != 'o') {
+        std::cerr << ": WRS bad getb o\n";
+        return 5;
+    }
+    
+    io.seek(-2, BasicIo::cur);
+    if (io.getb() != 'I') {
+        std::cerr << ": WRS bad getb I\n";
+        return 6;
+    }
+
+    if (io.putb('O') != 'O') {
+        std::cerr << ": WRS bad putb\n";
+        return 7;
+    }
+    
+    io.seek(-1, BasicIo::cur);
+    if (io.getb() != 'O') {
+        std::cerr << ": WRS bad getb O\n";
+        return 8;
+    }
+
+    io.seek(insert, BasicIo::beg);
+    if(io.write((byte*)tester2, len2) != len2) {
+        std::cerr << ": WRS bad write 1\n";
+        return 9;
+    }
+
+    // open should seek to beginning
+    io.open();
+    memset(buf, -1, sizeof(buf));
+    if (io.read(buf, sizeof(buf)) != insert + len2) {
+        std::cerr << ": WRS something went wrong\n";
+        return 10;
+    }
+    
+    // Make sure we got the null back
+    if(buf[insert + len2 - 1] != 0) {
+        std::cerr << ": WRS missing null terminator 2\n";
+        return 11;
+    }
+
+    if (strcmp(expect, (char*)buf) != 0 ) {
+        std::cerr << ": WRS strings don't match 2\n";
+        return 12;
+    }
+
+    return 0;
+}
 

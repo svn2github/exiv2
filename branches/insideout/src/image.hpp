@@ -166,6 +166,14 @@ namespace Exiv2 {
         virtual std::string comment() const =0;
 //        virtual const std::string& comment() const =0;
   //      virtual std::string& comment() =0;
+        /*!
+          @brief Return a reference to the BasicIo instance being used for Io.
+               This refence is particularly useful to reading the results of
+               operations on a MemIo instance. If the data is modified,
+               the changes will not be noticed by this class until the
+               next call to readMetadata.
+         */
+        virtual BasicIo& io() const = 0;
         //@}
 
     protected:
@@ -185,8 +193,7 @@ namespace Exiv2 {
     }; // class Image
 
     //! Type for function pointer that creates new Image instances
-    typedef Image::AutoPtr (*NewInstanceFct)(const std::string& path, 
-                                                   bool create);
+    typedef Image::AutoPtr (*NewInstanceFct)(BasicIo::AutoPtr io, bool create);
     //! Type for function pointer that checks image types
     typedef bool (*IsThisTypeFct)(BasicIo& iIo, bool advance);
 
@@ -230,8 +237,8 @@ namespace Exiv2 {
                   the file. If no image type could be determined, the pointer is 0.
          */
         static Image::AutoPtr open(const std::string& path);
-//        static Image::AutoPtr open(byte* data ) const;
- //     static Image::AutoPtr open(const BasicIo& io) const;
+        static Image::AutoPtr open(const byte* data, long size);
+        static Image::AutoPtr open(BasicIo::AutoPtr io);
         /*!
           @brief  Create an %Image of the requested type by creating a new
                   file. If the file already exists, it will be overwritten.
@@ -242,8 +249,8 @@ namespace Exiv2 {
                   If the image type is not supported, the pointer is 0.
          */
         static Image::AutoPtr create(Image::Type type, const std::string& path);
-  //    static Image::AutoPtr create(Image::Type type) const;
- //     static Image::AutoPtr create(Image::Type type, const BasicIo& io) const;
+        static Image::AutoPtr create(Image::Type type);
+        static Image::AutoPtr create(Image::Type type, BasicIo::AutoPtr io);
         /*!
           @brief  Returns the image type of the provided file. 
           @param  path %Image file. The contents of the file are tested to
@@ -251,8 +258,8 @@ namespace Exiv2 {
           @return %Image type of Image::none if the type is not recognized.
          */
         static Image::Type getType(const std::string& path);
- //     static Image::Type getType(byte* data) const;
- //     static Image::Type getType(const BasicIo& io) const;
+        static Image::Type getType(const byte* data, long size);
+        static Image::Type getType(BasicIo& io);
         //@}
 
 

@@ -46,16 +46,7 @@ EXIV2_RCSID("@(#) $Id$");
 
 // + standard includes
 #include <cstring>
-#include <cstdio>                               // for rename, remove
 #include <cassert>
-#include <sys/types.h>
-#include <sys/stat.h>
-#ifdef HAVE_PROCESS_H
-# include <process.h>
-#endif
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>                            // for getpid, stat
-#endif
 
 // *****************************************************************************
 // class member definitions
@@ -68,15 +59,15 @@ namespace Exiv2 {
              Caller owns the returned object and the auto-pointer ensures that 
              it will be deleted.
      */
-    Image::AutoPtr newExvInstance(const std::string& path, bool create);
-    //! Check if the file iIo is an EXV file.
+    Image::AutoPtr newExvInstance(BasicIo::AutoPtr io, bool create);
+    //! Check if the file iIo is an EXV file
     bool isExvType(BasicIo& iIo, bool advance);
     /*!
       @brief Create a new JpegImage instance and return an auto-pointer to it.
              Caller owns the returned object and the auto-pointer ensures that 
              it will be deleted.
      */
-    Image::AutoPtr newJpegInstance(const std::string& path, bool create);
+    Image::AutoPtr newJpegInstance(BasicIo::AutoPtr io, bool create);
     //! Check if the file iIo is a JPEG image.
     bool isJpegType(BasicIo& iIo, bool advance);
  
@@ -92,24 +83,21 @@ namespace Exiv2 {
     const char JpegBase::ps3Id_[]  = "Photoshop 3.0\0";
     const char JpegBase::bimId_[]  = "8BIM";
 
-    JpegBase::JpegBase(const std::string& path, bool create, 
+    JpegBase::JpegBase(BasicIo::AutoPtr io, bool create, 
                        const byte initData[], long dataSize) 
-        : path_(path), sizeExifData_(0), pExifData_(0),
+        : io_(io), sizeExifData_(0), pExifData_(0),
           sizeIptcData_(0), pIptcData_(0)
     {
-        //BIO
         if (create) {
-            FileIo file(path);
-            if (file.open( "w+b")==0) {
-                initFile(file, initData, dataSize);
-            }
+            initImage(initData, dataSize);
         }
     }
 
-    int JpegBase::initFile(BasicIo& io, const byte initData[], long dataSize)
+    int JpegBase::initImage(const byte initData[], long dataSize)
     {
-        if (io.error()) return 4;
-        if (io.write(initData, dataSize) != dataSize) {
+        IoCloser closer(*io_);
+        if (io_->open() != 0) return 4;
+        if (io_->write(initData, dataSize) != dataSize) {
             return 4;
         }
         return 0;
@@ -123,10 +111,9 @@ namespace Exiv2 {
 
     bool JpegBase::good() const
     {
-        //BIO
-        FileIo file(path_);
-        if (file.open("rb") != 0 ) return false;
-        return isThisType(file, false);
+        IoCloser closer(*io_);
+        if (io_->open() != 0) return false;
+        return isThisType(*io_, false);
     }
 
     void JpegBase::clearMetadata()
@@ -188,16 +175,16 @@ namespace Exiv2 {
         setComment(image.comment());
     }
 
-    int JpegBase::advanceToMarker(BasicIo &io) const
+    int JpegBase::advanceToMarker() const
     {
         int c = -1;
         // Skips potential padding between markers
-        while ((c=io.getb()) != 0xff) {
+        while ((c=io_->getb()) != 0xff) {
             if (c == EOF) return -1;
         }
             
         // Markers can start with any number of 0xff
-        while ((c=io.getb()) == 0xff) {
+        while ((c=io_->getb()) == 0xff) {
             if (c == EOF) return -1;
         }
         return c;
@@ -205,13 +192,12 @@ namespace Exiv2 {
 
     int JpegBase::readMetadata()
     {
-        //BIO
-        FileIo file(path_);
-        if (file.open("rb") != 0) return 1;
+        IoCloser closer(*io_);
+        if (io_->open() != 0) return 1;
 
         // Ensure that this is the correct image type
-        if (!isThisType(file, true)) {
-            if (file.error() || file.eof()) return 1;
+        if (!isThisType(*io_, true)) {
+            if (io_->error() || io_->eof()) return 1;
             return 2;
         }
         clearMetadata();
@@ -221,23 +207,23 @@ namespace Exiv2 {
         DataBuf buf(bufMinSize);
 
         // Read section marker
-        int marker = advanceToMarker(file);
+        int marker = advanceToMarker();
         if (marker < 0) return 2;
         
         while (marker != sos_ && marker != eoi_ && search > 0) {
             // Read size and signature (ok if this hits EOF)
-            bufRead = file.read(buf.pData_, bufMinSize);
-            if (file.error()) return 1;
+            bufRead = io_->read(buf.pData_, bufMinSize);
+            if (io_->error()) return 1;
             uint16_t size = getUShort(buf.pData_, bigEndian);
 
             if (marker == app1_ && memcmp(buf.pData_ + 2, exifId_, 6) == 0) {
                 if (size < 8) return 2;
                 // Seek to begining and read the Exif data
-                file.seek(8-bufRead, BasicIo::cur); 
+                io_->seek(8-bufRead, BasicIo::cur); 
                 long sizeExifData = size - 8;
                 pExifData_ = new byte[sizeExifData];
-                file.read(pExifData_, sizeExifData);
-                if (file.error() || file.eof()) {
+                io_->read(pExifData_, sizeExifData);
+                if (io_->error() || io_->eof()) {
                     delete[] pExifData_;
                     pExifData_ = 0;
                     return 1;
@@ -249,10 +235,10 @@ namespace Exiv2 {
             else if (marker == app13_ && memcmp(buf.pData_ + 2, ps3Id_, 14) == 0) {
                 if (size < 16) return 2;
                 // Read the rest of the APP13 segment
-                // needed if bufMinSize!=16: file.seek(16-bufRead, BasicIo::cur);
+                // needed if bufMinSize!=16: io_->seek(16-bufRead, BasicIo::cur);
                 DataBuf psData(size - 16);
-                file.read(psData.pData_, psData.size_);
-                if (file.error() || file.eof()) return 1;
+                io_->read(psData.pData_, psData.size_);
+                if (io_->error() || io_->eof()) return 1;
                 const byte *record = 0;
                 uint16_t sizeIptc = 0;
                 uint16_t sizeHdr = 0;
@@ -272,10 +258,10 @@ namespace Exiv2 {
                 // Jpegs can have multiple comments, but for now only read
                 // the first one (most jpegs only have one anyway). Comments
                 // are simple single byte ISO-8859-1 strings.
-                file.seek(2-bufRead, BasicIo::cur);
+                io_->seek(2-bufRead, BasicIo::cur);
                 buf.alloc(size-2);
-                file.read(buf.pData_, size-2);
-                if (file.error() || file.eof()) return 1;
+                io_->read(buf.pData_, size-2);
+                if (io_->error() || io_->eof()) return 1;
                 comment_.assign(reinterpret_cast<char*>(buf.pData_), size-2);
                 while (   comment_.length()
                        && comment_.at(comment_.length()-1) == '\0') {
@@ -286,10 +272,10 @@ namespace Exiv2 {
             else {
                 if (size < 2) return 2;
                 // Skip the remainder of the unknown segment
-                if (file.seek(size-bufRead, BasicIo::cur)) return 2;
+                if (io_->seek(size-bufRead, BasicIo::cur)) return 2;
             }
             // Read the beginning of the next segment
-            marker = advanceToMarker(file);
+            marker = advanceToMarker();
             if (marker < 0) return 2;
         }
         return 0;
@@ -341,49 +327,34 @@ namespace Exiv2 {
 
     int JpegBase::writeMetadata()
     {
-        //BIO
-        FileIo reader(path_);
-        if (reader.open("rb") != 0) return 1;
+        IoCloser closer(*io_);
+        if (io_->open() != 0) return 1;
+        BasicIo::AutoPtr tempIo(io_->temporary());
+        if (!tempIo.get()) return -3;
 
-        // Write the output to a temporary file
-        pid_t pid = getpid();
-        std::string tmpname = path_ + toString(pid);
-        FileIo writer(tmpname);
-        if (writer.open("wb") != 0) return -3;
-
-        int rc = doWriteMetadata(reader, writer);
-        writer.close();
-        reader.close();
-        if (rc == 0) {
-            // Workaround for MSVCRT rename that does not overwrite existing files
-            if (remove(path_.c_str()) != 0) rc = -4;
-        }
-        if (rc == 0) {
-            // rename temporary file
-            if (rename(tmpname.c_str(), path_.c_str()) == -1) rc = -4;
-        }
-        if (rc != 0) {
-            // remove temporary file
-            remove(tmpname.c_str());
+        int rc = doWriteMetadata(*tempIo);
+        io_->close();
+        if( rc == 0 ) {
+            if (io_->transfer(*tempIo) != 0) return -3;
         }
         return rc;
     } // JpegBase::writeMetadata
 
-    int JpegBase::doWriteMetadata(BasicIo& iIo, BasicIo& oIo) const
+    int JpegBase::doWriteMetadata(BasicIo& outIo) const
     {
-        if (!iIo.isopen()) return 1;
-        if (!oIo.isopen()) return 4;
+        if (!io_->isopen()) return 1;
+        if (!outIo.isopen()) return 4;
 
         // Ensure that this is the correct image type
-        if (!isThisType(iIo, true)) {
-            if (iIo.error() || iIo.eof()) return 1;
+        if (!isThisType(*io_, true)) {
+            if (io_->error() || io_->eof()) return 1;
             return 2;
         }
         
         const long bufMinSize = 16;
         long bufRead = 0;
         DataBuf buf(bufMinSize);
-        const long seek = iIo.tell();
+        const long seek = io_->tell();
         int count = 0;
         int search = 0;
         int insertPos = 0;
@@ -393,10 +364,10 @@ namespace Exiv2 {
         DataBuf psData;
 
         // Write image header
-        if (writeHeader(oIo)) return 4;
+        if (writeHeader(outIo)) return 4;
 
         // Read section marker
-        int marker = advanceToMarker(iIo);
+        int marker = advanceToMarker();
         if (marker < 0) return 2;
         
         // First find segments of interest. Normally app0 is first and we want
@@ -404,30 +375,30 @@ namespace Exiv2 {
         // don't bother.
         while (marker != sos_ && marker != eoi_ && search < 3) {
             // Read size and signature (ok if this hits EOF)
-            bufRead = iIo.read(buf.pData_, bufMinSize);
-            if (iIo.error()) return 1;
+            bufRead = io_->read(buf.pData_, bufMinSize);
+            if (io_->error()) return 1;
             uint16_t size = getUShort(buf.pData_, bigEndian);
 
             if (marker == app0_) {
                 if (size < 2) return 2;
                 insertPos = count + 1;
-                if (iIo.seek(size-bufRead, BasicIo::cur)) return 2;
+                if (io_->seek(size-bufRead, BasicIo::cur)) return 2;
             }
             else if (marker == app1_ && memcmp(buf.pData_ + 2, exifId_, 6) == 0) {
                 if (size < 8) return 2;
                 skipApp1Exif = count;
                 ++search;
-                if (iIo.seek(size-bufRead, BasicIo::cur)) return 2;
+                if (io_->seek(size-bufRead, BasicIo::cur)) return 2;
             }
             else if (marker == app13_ && memcmp(buf.pData_ + 2, ps3Id_, 14) == 0) {
                 if (size < 16) return 2;
                 skipApp13Ps3 = count;
                 ++search;
-                // needed if bufMinSize!=16: iIo.seek(16-bufRead, BasicIo::cur);
+                // needed if bufMinSize!=16: io_->seek(16-bufRead, BasicIo::cur);
                 psData.alloc(size - 16);
                 // Load PS data now to allow reinsertion at any point
-                iIo.read(psData.pData_, psData.size_);
-                if (iIo.error() || iIo.eof()) return 1;
+                io_->read(psData.pData_, psData.size_);
+                if (io_->error() || io_->eof()) return 1;
             }
             else if (marker == com_ && skipCom == -1) {
                 if (size < 2) return 2;
@@ -435,13 +406,13 @@ namespace Exiv2 {
                 // the first one (most jpegs only have one anyway).
                 skipCom = count;
                 ++search;
-                if (iIo.seek(size-bufRead, BasicIo::cur)) return 2;
+                if (io_->seek(size-bufRead, BasicIo::cur)) return 2;
             }
             else {
                 if (size < 2) return 2;
-                if (iIo.seek(size-bufRead, BasicIo::cur)) return 2;
+                if (io_->seek(size-bufRead, BasicIo::cur)) return 2;
             }
-            marker = advanceToMarker(iIo);
+            marker = advanceToMarker();
             if (marker < 0) return 2;
             ++count;
         }
@@ -450,9 +421,9 @@ namespace Exiv2 {
         if (pIptcData_) ++search;
         if (!comment_.empty()) ++search;
 
-        iIo.seek(seek, BasicIo::beg);
+        io_->seek(seek, BasicIo::beg);
         count = 0;
-        marker = advanceToMarker(iIo);
+        marker = advanceToMarker();
         if (marker < 0) return 2;
         
         // To simplify this a bit, new segments are inserts at either the start
@@ -461,8 +432,8 @@ namespace Exiv2 {
         // Segments are erased if there is no assigned metadata.
         while (marker != sos_ && search > 0) {
             // Read size and signature (ok if this hits EOF)
-            bufRead = iIo.read(buf.pData_, bufMinSize);
-            if (iIo.error()) return 1;
+            bufRead = io_->read(buf.pData_, bufMinSize);
+            if (io_->error()) return 1;
             // Careful, this can be a meaningless number for empty
             // images with only an eoi_ marker
             uint16_t size = getUShort(buf.pData_, bigEndian);
@@ -475,11 +446,11 @@ namespace Exiv2 {
                     tmpBuf[1] = com_;
                     us2Data(tmpBuf + 2, 
                             static_cast<uint16_t>(comment_.length()+3), bigEndian);
-                    if (oIo.write(tmpBuf, 4) != 4) return 4;
-                    if (oIo.write((byte*)comment_.data(), (long)comment_.length())
+                    if (outIo.write(tmpBuf, 4) != 4) return 4;
+                    if (outIo.write((byte*)comment_.data(), (long)comment_.length())
                         != (long)comment_.length()) return 4;
-                    if (oIo.putb(0)==EOF) return 4;
-                    if (oIo.error()) return 4;
+                    if (outIo.putb(0)==EOF) return 4;
+                    if (outIo.error()) return 4;
                     --search;
                 }
                 if (pExifData_) {
@@ -490,10 +461,10 @@ namespace Exiv2 {
                             static_cast<uint16_t>(sizeExifData_+8), 
                             bigEndian);
                     memcpy(tmpBuf + 4, exifId_, 6);
-                    if (oIo.write(tmpBuf, 10) != 10) return 4;
-                    if (oIo.write(pExifData_, sizeExifData_) 
+                    if (outIo.write(tmpBuf, 10) != 10) return 4;
+                    if (outIo.write(pExifData_, sizeExifData_) 
                         != sizeExifData_) return 4;
-                    if (oIo.error()) return 4;
+                    if (outIo.error()) return 4;
                     --search;
                 }
                 
@@ -515,13 +486,13 @@ namespace Exiv2 {
                             static_cast<uint16_t>(psData.size_-sizeOldData+sizeNewData+16),
                             bigEndian);
                     memcpy(tmpBuf + 4, ps3Id_, 14);
-                    if (oIo.write(tmpBuf, 18) != 18) return 4;
-                    if (oIo.error()) return 4;
+                    if (outIo.write(tmpBuf, 18) != 18) return 4;
+                    if (outIo.error()) return 4;
 
                     const long sizeFront = (long)(record - psData.pData_);
                     const long sizeEnd = psData.size_ - sizeFront - sizeOldData;
                     // write data before old record.
-                    if (oIo.write(psData.pData_, sizeFront) != sizeFront) return 4;
+                    if (outIo.write(psData.pData_, sizeFront) != sizeFront) return 4;
 
                     // write new iptc record if we have it
                     if (pIptcData_) {
@@ -530,21 +501,21 @@ namespace Exiv2 {
                         tmpBuf[6] = 0;
                         tmpBuf[7] = 0;
                         ul2Data(tmpBuf + 8, sizeIptcData_, bigEndian);
-                        if (oIo.write(tmpBuf, 12) != 12) return 4;
-                        if (oIo.write(pIptcData_, sizeIptcData_) 
+                        if (outIo.write(tmpBuf, 12) != 12) return 4;
+                        if (outIo.write(pIptcData_, sizeIptcData_) 
                             != sizeIptcData_) return 4;
                         // data is padded to be even (but not included in size)
                         if (sizeIptcData_ & 1) {
-                            if (oIo.putb(0)==EOF) return 4;
+                            if (outIo.putb(0)==EOF) return 4;
                         }
-                        if (oIo.error()) return 4;
+                        if (outIo.error()) return 4;
                         --search;
                     }
                     
                     // write existing stuff after record
-                    if (oIo.write(record+sizeOldData, sizeEnd) 
+                    if (outIo.write(record+sizeOldData, sizeEnd) 
                         != sizeEnd) return 4;
-                    if (oIo.error()) return 4;
+                    if (outIo.error()) return 4;
                 }
             }
             if (marker == eoi_) {
@@ -552,32 +523,32 @@ namespace Exiv2 {
             }
             else if (skipApp1Exif==count || skipApp13Ps3==count || skipCom==count) {
                 --search;
-                iIo.seek(size-bufRead, BasicIo::cur);
+                io_->seek(size-bufRead, BasicIo::cur);
             }
             else {
                 if (size < 2) return 2;
                 buf.alloc(size+2);
-                iIo.seek(-bufRead-2, BasicIo::cur);
-                iIo.read(buf.pData_, size+2);
-                if (iIo.error() || iIo.eof()) return 1;
-                if (oIo.write(buf.pData_, size+2) != size+2) return 4;
-                if (oIo.error()) return 4;
+                io_->seek(-bufRead-2, BasicIo::cur);
+                io_->read(buf.pData_, size+2);
+                if (io_->error() || io_->eof()) return 1;
+                if (outIo.write(buf.pData_, size+2) != size+2) return 4;
+                if (outIo.error()) return 4;
             }
 
             // Next marker
-            marker = advanceToMarker(iIo);
+            marker = advanceToMarker();
             if (marker < 0) return 2;
             ++count;
         }
 
         // Copy rest of the Io
-        iIo.seek(-2, BasicIo::cur);
+        io_->seek(-2, BasicIo::cur);
         buf.alloc(4096);
         long readSize = 0;
-        while ((readSize=iIo.read(buf.pData_, buf.size_))) {
-            if (oIo.write(buf.pData_, readSize) != readSize) return 4;
+        while ((readSize=io_->read(buf.pData_, buf.size_))) {
+            if (outIo.write(buf.pData_, readSize) != readSize) return 4;
         }
-        if (oIo.error()) return 4;
+        if (outIo.error()) return 4;
         
         return 0;
     }// JpegBase::doWriteMetadata
@@ -602,25 +573,25 @@ namespace Exiv2 {
         0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,0xDA,0x00,0x0C,0x03,0x01,0x00,0x02,
         0x11,0x03,0x11,0x00,0x3F,0x00,0xA0,0x00,0x0F,0xFF,0xD9 };
 
-    JpegImage::JpegImage(const std::string& path, bool create) 
-        : JpegBase(path, create, blank_, sizeof(blank_))
+    JpegImage::JpegImage(BasicIo::AutoPtr io, bool create) 
+        : JpegBase(io, create, blank_, sizeof(blank_))
     {
     }
 
-    JpegImage::Register::Register()
+    JpegImage::JpegRegister::JpegRegister()
     {
         ImageFactory::registerImage(
             Image::jpeg, newJpegInstance, isJpegType);
     }
 
-    int JpegImage::writeHeader(BasicIo& oIo) const
+    int JpegImage::writeHeader(BasicIo& outIo) const
     {
         // Jpeg header
         byte tmpBuf[2];
         tmpBuf[0] = 0xff;
         tmpBuf[1] = soi_;
-        if (oIo.write(tmpBuf, 2) != 2) return 4;
-        if (oIo.error()) return 4;
+        if (outIo.write(tmpBuf, 2) != 2) return 4;
+        if (outIo.error()) return 4;
         return 0;
     }
 
@@ -629,14 +600,14 @@ namespace Exiv2 {
         return isJpegType(iIo, advance);
     }
 
-    Image::AutoPtr newJpegInstance(const std::string& path, bool create)
+    Image::AutoPtr newJpegInstance(BasicIo::AutoPtr io, bool create)
     {
         Image::AutoPtr image;
         if (create) {
-            image = Image::AutoPtr(new JpegImage(path, true));
+            image = Image::AutoPtr(new JpegImage(io, true));
         }
         else {
-            image = Image::AutoPtr(new JpegImage(path, false));
+            image = Image::AutoPtr(new JpegImage(io, false));
         }
         if (!image->good()) {
             image.reset();
@@ -661,26 +632,26 @@ namespace Exiv2 {
     const char ExvImage::exiv2Id_[] = "Exiv2";
     const byte ExvImage::blank_[] = { 0xff,0x01,'E','x','i','v','2',0xff,0xd9 };
 
-    ExvImage::ExvImage(const std::string& path, bool create) 
-        : JpegBase(path, create, blank_, sizeof(blank_))
+    ExvImage::ExvImage(BasicIo::AutoPtr io, bool create) 
+        : JpegBase(io, create, blank_, sizeof(blank_))
     {
     }
 
-    ExvImage::Register::Register()
+    ExvImage::ExvRegister::ExvRegister()
     {
         ImageFactory::registerImage(
             Image::exv, newExvInstance, isExvType);
     }
 
-    int ExvImage::writeHeader(BasicIo& oIo) const
+    int ExvImage::writeHeader(BasicIo& outIo) const
     {
         // Exv header
         byte tmpBuf[7];
         tmpBuf[0] = 0xff;
         tmpBuf[1] = 0x01;
         memcpy(tmpBuf + 2, exiv2Id_, 5);
-        if (oIo.write(tmpBuf, 7) != 7) return 4;
-        if (oIo.error()) return 4;
+        if (outIo.write(tmpBuf, 7) != 7) return 4;
+        if (outIo.error()) return 4;
         return 0;
     }
 
@@ -689,14 +660,14 @@ namespace Exiv2 {
         return isExvType(iIo, advance);
     }
 
-    Image::AutoPtr newExvInstance(const std::string& path, bool create)
+    Image::AutoPtr newExvInstance(BasicIo::AutoPtr io, bool create)
     {
         Image::AutoPtr image;
         if (create) {
-            image = Image::AutoPtr(new ExvImage(path, true));
+            image = Image::AutoPtr(new ExvImage(io, true));
         }
         else {
-            image = Image::AutoPtr(new ExvImage(path, false));
+            image = Image::AutoPtr(new ExvImage(io, false));
         }
         if (!image->good()) image.reset();
         return image;

@@ -115,6 +115,7 @@ namespace Exiv2 {
         long sizeIptcData() const { return sizeIptcData_; }
         const byte* iptcData() const { return pIptcData_; }
         std::string comment() const { return comment_; }
+        BasicIo& io() const { return *io_; }
         //@}        
     protected:
         //! @name Creators
@@ -131,7 +132,7 @@ namespace Exiv2 {
                  valid image of the calling subclass.
           @param dataSize Size of initData in bytes.
          */
-        JpegBase(const std::string& path, bool create,
+        JpegBase(BasicIo::AutoPtr io, bool create,
                  const byte initData[], long dataSize);
         //@}
         //! @name Accessors
@@ -180,7 +181,7 @@ namespace Exiv2 {
 
     private:
         // DATA
-        const std::string path_;                //!< Image file name
+        BasicIo::AutoPtr io_;                   //!< Image data io pointer
         long sizeExifData_;                     //!< Size of the Exif data buffer
         byte* pExifData_;                       //!< Exif data buffer
         long sizeIptcData_;                     //!< Size of the Iptc data buffer
@@ -196,7 +197,7 @@ namespace Exiv2 {
           @return the next Jpeg segment marker if successful;<BR>
                  -1 if a maker was not found before EOF;<BR>
          */
-        int advanceToMarker(BasicIo& io) const;
+        int advanceToMarker() const;
         /*!
           @brief Locates Photoshop formated Iptc data in a memory buffer.
                  Operates on raw data (rather than file streams) to simplify reuse.
@@ -221,14 +222,13 @@ namespace Exiv2 {
                            uint16_t *const sizeHdr,
                            uint16_t *const sizeIptc) const;
         /*!
-          @brief Write to the specified file stream with the provided data.
-          @param fp File stream to be written to (should be "w+b" mode)
+          @brief Initialize the image with the provided data.
           @param initData Data to be written to the associated file
           @param dataSize Size in bytes of data to be written
           @return 0 if successful;<BR>
                   4 if the output file can not be written to;<BR>
          */
-        int initFile(BasicIo& io, const byte initData[], long dataSize);
+        int initImage(const byte initData[], long dataSize);
         /*!
           @brief Provides the main implementation of writeMetadata by 
                 writing all buffered metadata to associated file. 
@@ -239,7 +239,7 @@ namespace Exiv2 {
                   2 if the input file does not contain a valid image;<BR>
                   4 if the output file can not be written to;<BR>
          */
-        int doWriteMetadata(BasicIo& iIo, BasicIo& oIo) const;
+        int doWriteMetadata(BasicIo& oIo) const;
 
         // NOT Implemented
         //! Default constructor.
@@ -268,15 +268,15 @@ namespace Exiv2 {
           @param create Specifies if an existing file should be opened (false)
                  or if a new file should be created (true).
          */
-        JpegImage(const std::string& path, bool create);
+        JpegImage(BasicIo::AutoPtr io, bool create);
         //! Destructor
         ~JpegImage() {}
         //@}
         
         //! Public so that we can create the static, but not mean for real public use.
-        struct Register{
+        struct JpegRegister{
             //! Default constructor
-            Register();
+            JpegRegister();
         };
     protected:
         //! @name Accessors
@@ -285,7 +285,9 @@ namespace Exiv2 {
           @brief Writes a Jpeg header (aka signature) to the file stream.
           @param ofp File stream that the header is written to.
           @return 0 if successful;<BR>
-                 4 if the output file can not be written to;<BR>
+                 2 if the input image is invalid or can not be read;<BR>
+                 4 if the temporary image can not be written to;<BR>
+                -3 other temporary errors;<BR>
          */
         int writeHeader(BasicIo& oIo) const;
         /*!
@@ -315,7 +317,7 @@ namespace Exiv2 {
         JpegImage& operator=(const JpegImage& rhs);
     }; // class JpegImage
 
-    static JpegImage::Register jpgReg;
+    static JpegImage::JpegRegister jpegReg;
 
     //! Helper class to access %Exiv2 files
     class ExvImage : public JpegBase {
@@ -333,15 +335,15 @@ namespace Exiv2 {
           @param create Specifies if an existing file should be opened (false)
                  or if a new file should be created (true).
          */
-        ExvImage(const std::string& path, bool create);
+        ExvImage(BasicIo::AutoPtr io, bool create);
         //! Destructor
         ~ExvImage() {}
         //@}
         
         //! Public so that we can create the static, but not mean for real public use.
-        struct Register{
+        struct ExvRegister{
             //! Default constructor
-            Register();
+            ExvRegister();
         };
     protected:
         //! @name Accessors
@@ -380,7 +382,7 @@ namespace Exiv2 {
         ExvImage& operator=(const ExvImage& rhs);
     }; // class ExvImage
 
-    static ExvImage::Register exvReg;
+    static ExvImage::ExvRegister exvReg;
 }                                       // namespace Exiv2
 
 

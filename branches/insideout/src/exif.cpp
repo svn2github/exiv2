@@ -628,10 +628,10 @@ namespace Exiv2 {
     int ExifData::writeExifData(const std::string& path)
     {
         DataBuf buf(copy());
-        ExvImage exvImage(path, true);
-        if (!exvImage.good()) return -1;
-        exvImage.setExifData(buf.pData_, buf.size_);
-        return exvImage.writeMetadata();
+        Image::AutoPtr image(ImageFactory::create(Image::exv, path));
+        if (!image.get()) return -1;
+        image->setExifData(buf.pData_, buf.size_);
+        return image->writeMetadata();
     } // ExifData::writeExifData
 
     void ExifData::add(Entries::const_iterator begin, 

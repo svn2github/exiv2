@@ -38,15 +38,22 @@ EXIV2_RCSID("@(#) $Id$");
 
 // + standard includes
 #include <cassert>
-
+#include <sys/types.h>                  // for stat()
+#include <sys/stat.h>                   // for stat()
+#ifdef HAVE_PROCESS_H
+# include <process.h>
+#endif
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>                    // for getpid, stat
+#endif
 
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
 
-    FileIo::FileIo(const std::string& path) : path_(path)
+    FileIo::FileIo(const std::string& path) : 
+        path_(path), fp_(0), opMode_(opSeek)
     {
-        fp_ = 0;
     }
         
     FileIo::~FileIo()
@@ -54,9 +61,43 @@ namespace Exiv2 {
         close();
     }
 
+    BasicIo::AutoPtr FileIo::temporary() const
+    {
+        BasicIo::AutoPtr basicIo;
+        
+        struct stat buf;
+        int ret = stat(path_.c_str(), &buf);
+        
+        // If file is > 1MB then use a file, otherwise use memory buffer
+        if (buf.st_size > 1048576 || ret != 0) {
+            pid_t pid = getpid();
+            std::string tmpname = path_ + toString(pid);
+            FileIo *fileIo = new FileIo(tmpname);
+            if (fileIo->open("w+b") != 0 ) {
+                delete fileIo;
+            }
+            else {
+                basicIo.reset(fileIo);
+            }
+        }
+        else {
+            basicIo.reset(new MemIo);
+        }
+            
+        return basicIo;
+    }
+
     long FileIo::write(const byte* data, long wcount )
     {
         assert(fp_ != 0);
+
+        // ANSI C requires a flush or seek when switching
+        // between read and write modes. 
+        if (opMode_ == opRead) {
+            // on msvcrt fflush does not do the job
+            fseek(fp_, 0, SEEK_CUR);
+        }
+        opMode_ = opWrite;
         return (long)fwrite(data, 1, wcount, fp_);
     }
 
@@ -65,6 +106,14 @@ namespace Exiv2 {
         assert(fp_ != 0);
         if (static_cast<BasicIo*>(this)==&src) return 0;
         if (!src.isopen()) return 0;
+
+        // ANSI C requires a flush or seek when switching
+        // between read and write modes. 
+        if (opMode_ == opRead) {
+            // on msvcrt fflush does not do the job
+            fseek(fp_, 0, SEEK_CUR);
+        }
+        opMode_ = opWrite;
 
         byte buf[4096];
         long readCount = 0;
@@ -82,9 +131,43 @@ namespace Exiv2 {
         return writeTotal;
     }
 
+    int FileIo::transfer(BasicIo& src)
+    {
+        const bool wasOpen = (fp_ != 0);
+        const std::string lastMode(openMode_);
+        
+        FileIo *fileIo = dynamic_cast<FileIo*>(&src);
+        if (fileIo) {
+            // Special processing if this is another instance of FileIo
+            close();
+            fileIo->close();
+            // MSVCRT rename that does not overwrite existing files
+            if (remove(path_.c_str()) != 0) return -4;
+            if (rename(fileIo->path_.c_str(), path_.c_str()) == -1) return -4;
+            remove(fileIo->path_.c_str());
+        }
+        else{
+            // Generic handling, reopen both to reset to start
+            open("w+b");
+            if (src.open() !=0) return 1;
+            write(src);
+            src.close();    
+        }
+        
+        if (wasOpen) open(lastMode);
+        else close();
+
+        return error() || src.error();
+    }
+
     int FileIo::putb(byte data)
     {
         assert(fp_ != 0);
+        if (opMode_ == opRead) {
+            // on msvcrt fflush does not do the job
+            fseek(fp_, 0, SEEK_CUR);
+        }
+        opMode_ = opWrite;
         return putc(data, fp_);
     }
     
@@ -103,6 +186,7 @@ namespace Exiv2 {
             fileSeek = SEEK_END;
         }
         
+        opMode_ = opSeek;
         return fseek(fp_, offset, fileSeek);
     }
         
@@ -124,6 +208,8 @@ namespace Exiv2 {
             fclose(fp_);
         }
 
+        openMode_ = mode;
+        opMode_ = opSeek;
         fp_ = fopen(path_.c_str(), mode.c_str());
         if (!fp_) return 1;
         return 0;
@@ -136,8 +222,10 @@ namespace Exiv2 {
     
     int FileIo::close()
     {
-        if (fp_ != 0) fclose(fp_);
-        fp_= 0;
+        if (fp_ != 0) {
+            fclose(fp_);
+            fp_= 0;
+        }
         return 0;
     }
         
@@ -153,19 +241,30 @@ namespace Exiv2 {
     long FileIo::read(byte* buf, long rcount)
     {
         assert(fp_ != 0);
+        
+        if (opMode_ == opWrite) {
+            // on msvcrt fflush does not do the job
+            fseek(fp_, 0, SEEK_CUR);
+        }
+        opMode_ = opRead;
         return (long)fread(buf, 1, rcount, fp_);
     }
 
     int FileIo::getb()
     {
         assert(fp_ != 0);
+        
+        if (opMode_ == opWrite) {
+            // on msvcrt fflush does not do the job
+            fseek(fp_, 0, SEEK_CUR);
+        }
+        opMode_ = opRead;
         return getc(fp_);
     }
 
     int FileIo::error() const
     {
-        assert(fp_ != 0);
-        return ferror(fp_);
+        return fp_ != 0 ? ferror(fp_) : 0;
     }
     
     bool FileIo::eof() const
@@ -192,6 +291,11 @@ namespace Exiv2 {
         data_.assign(data.begin(), data.end());
         idx_ = 0;
     }
+
+    BasicIo::AutoPtr MemIo::temporary() const
+    {
+        return BasicIo::AutoPtr(new MemIo);
+    }
         
     void MemIo::CheckSize(long wcount)
     {
@@ -208,6 +312,25 @@ namespace Exiv2 {
         memcpy(&data_[idx_], data, wcount);
         idx_ += wcount;
         return wcount;
+    }
+
+    int MemIo::transfer(BasicIo& src)
+    {
+        MemIo *memIo = dynamic_cast<MemIo*>(&src);
+        if (memIo) {
+            // Special processing if this is another instance of memIo
+            data_.swap(memIo->data_);
+            idx_ = 0;
+        }
+        else{
+            // Generic reopen src to reset to start
+            data_.clear();
+            idx_ = 0;
+            if (src.open() != 0) return 1;
+            write(src);
+            src.close();    
+        }
+        return error() || src.error();
     }
 
     long MemIo::write(BasicIo& src)
@@ -260,6 +383,7 @@ namespace Exiv2 {
     
     int MemIo::open()
     {
+        idx_ = 0;
         return 0;
     }
 

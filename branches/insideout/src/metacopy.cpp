@@ -50,8 +50,18 @@ try {
         return 2;
     }
 
+    // Use MemIo to increase test coverage.
+    Exiv2::BasicIo::AutoPtr fileIo(new Exiv2::FileIo(params.read_));
+    Exiv2::BasicIo::AutoPtr memIo(new Exiv2::MemIo);
+
+    if (memIo->transfer(*fileIo) != 0) {
+        std::cerr << params.progname() << 
+            ": Could not read file (" << params.read_ << ")\n";
+        return 4;
+    }
+    
     Exiv2::Image::AutoPtr readImg 
-        = Exiv2::ImageFactory::open(params.read_);
+        = Exiv2::ImageFactory::open(memIo);
     if (readImg.get() == 0) {
         std::cerr << params.progname() << 
             ": Could not read file (" << params.read_ << ")\n";

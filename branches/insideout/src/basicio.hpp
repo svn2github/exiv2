@@ -52,6 +52,7 @@ namespace Exiv2 {
     class BasicIo
     {
     public:
+        typedef std::auto_ptr<BasicIo> AutoPtr;
         enum Position { beg, cur, end };
         //! @name Creators
         //@{
@@ -63,11 +64,11 @@ namespace Exiv2 {
         //@{
         virtual long write(const byte* data, long wcount) = 0;
         virtual long write(BasicIo& src) = 0;
+        virtual int transfer(BasicIo& src) = 0;
         virtual int putb(byte data) = 0;
         virtual int seek(long offset, Position pos) = 0;
         virtual int open() = 0;
         virtual int close() = 0;
-        
         //@}
 
         //! @name Accessors
@@ -79,6 +80,7 @@ namespace Exiv2 {
         virtual bool isopen() const = 0;
         virtual int error() const = 0;
         virtual bool eof() const = 0;
+        virtual BasicIo::AutoPtr temporary() const = 0;
         //@}
 
     protected:
@@ -88,6 +90,39 @@ namespace Exiv2 {
         BasicIo() {}
         //@}
     }; // class BasicIo
+
+    /*!
+      @brief Utility class that closes a BasicIo instance upon destruction.
+            Its primary use is to be a stack variable in functions that need to
+            ensure BasicIo instances get closed. Useful when functions return
+            errors from many locations.
+     */
+    class IoCloser {
+    public:
+        //! @name Creators
+        //@{
+        //! Constructor, takes a file stream pointer 
+        IoCloser(BasicIo &bio) : bio_(bio) {}
+        //! Destructor, closes the file
+        ~IoCloser() { close(); }
+        //@}
+
+        //! @name Manipulators
+        //@{
+        //! Close the file
+        void close() { if (bio_.isopen()) bio_.close(); }
+        //@}
+
+        // DATA
+        //! The BasicIo pointer
+        BasicIo &bio_; 
+    private:
+        // Not implemented
+        //! Copy constructor
+        IoCloser(const IoCloser&);
+        //! Assignment operator
+        IoCloser& operator=(const IoCloser&);
+    }; // class IoCloser
 
 
     class FileIo : public BasicIo
@@ -107,6 +142,7 @@ namespace Exiv2 {
         //@{
         virtual long write(const byte* data, long wcount);
         virtual long write(BasicIo& src);
+        virtual int transfer(BasicIo& src);
         virtual int putb(byte data);
         virtual int seek(long offset, BasicIo::Position pos);
         virtual int open();
@@ -123,6 +159,7 @@ namespace Exiv2 {
         virtual bool isopen() const;
         virtual int error() const;
         virtual bool eof() const;
+        virtual BasicIo::AutoPtr temporary() const;
         //@}
         
     private:
@@ -132,9 +169,14 @@ namespace Exiv2 {
         //! Assignment operator
         FileIo& operator=(const FileIo& rhs);
 
+        // Enumeration
+        enum OpMode { opRead, opWrite, opSeek };
+
         // DATA
         std::string path_;
+        std::string openMode_;
         FILE *fp_;
+        OpMode opMode_;
     }; // class FileIo
 
     class MemIo : public BasicIo
@@ -157,6 +199,7 @@ namespace Exiv2 {
         //@{
         virtual long write(const byte* data, long wcount);
         virtual long write(BasicIo& src);
+        virtual int transfer(BasicIo& src);
         virtual int putb(byte data);
         virtual int seek(long offset, BasicIo::Position pos);
         virtual int open();
@@ -173,6 +216,7 @@ namespace Exiv2 {
         virtual bool isopen() const;
         virtual int error() const;
         virtual bool eof() const;
+        virtual BasicIo::AutoPtr temporary() const;
         //@}
     private:
         // NOT IMPLEMENTED
