@@ -31,7 +31,7 @@ clean:
 distclean:
 	cd src && $(MAKE) $(MAKECMDGOALS)
 	cd doc && $(MAKE) $(MAKECMDGOALS)
-	rm -f config.h config.mk config.log config.status
+	rm -f config.h src/exv_conf.h config.mk config.log config.status
 	rm -f configure.scan autoscan.log
 	rm -rf autom4te.cache/
 	rm -f *~ *.bak *#

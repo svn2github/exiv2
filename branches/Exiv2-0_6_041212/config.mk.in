@@ -85,9 +85,9 @@ endif
 
 # **********************************************************************
 # Global includes, libraries and defines
-INCS = -I. -I$(top_srcdir) -I$(incdir)
-LIBS = -L. -L$(libdir) @LIBS@
-DEFS = @DEFS@
+INCS = -I. 
+LIBS = -L. @LIBS@
+DEFS = 
 
 # **********************************************************************
 # Functions

@@ -1,4 +1,13 @@
-/* config_win32.h */
+// ******************************************************************* -*- C -*-
+/*!
+  @file    exiv2msvc.hpp
+  @brief   Configuration settings for MSVC
+  @version $Rev$
+  @author  Andreas Huggel (ahu)
+           <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
+  @date    07-Feb-04, ahu: created
+           26-Feb-05, ahu: renamed and moved to src directory
+ */
 
 /* Todo: The PACKAGE_* defines should be generated */
 

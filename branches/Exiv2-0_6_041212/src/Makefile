@@ -48,7 +48,7 @@ include $(top_srcdir)/config.mk
 # Source files
 
 # Add standalone C++ header files to this list
-CCHDR = rcsid.hpp error.hpp
+CCHDR = exv_conf.h exv_msvc.h error.hpp rcsid.hpp 
 
 # Add library C++ source files to this list
 CCSRC = canonmn.cpp datasets.cpp exif.cpp fujimn.cpp ifd.cpp image.cpp iptc.cpp \
@@ -190,6 +190,12 @@ endif
 $(BINARY): %: %.o
 	$(CXX) $(CXXFLAGS) $< $(LDLIBS) $(LDFLAGS_BIN) -o $@
 
+exv_conf.h: $(top_srcdir)/config.h
+	cp -f $(top_srcdir)/config.h exv_conf.h
+
+types.hpp: exv_conf.h 
+actions.cpp exiv2.cpp image.cpp utils.cpp: exv_conf.h 
+
 mn.cpp: ./mn.sh
 	./mn.sh
 
@@ -254,7 +260,6 @@ install-header:
 	        $(INSTALL_DATA) $$p $(incdir)/$$p; \
 	    else :; fi; \
 	done
-	$(INSTALL_DATA) $(top_srcdir)/config.h $(incdir)/config.h
 
 install-archive: archive
 	$(INSTALL_DIRS) $(libdir)
@@ -277,7 +282,6 @@ uninstall-header:
 	    echo "rm -f $(incdir)/$$p"; \
 	    rm -f $(incdir)/$$p; \
 	done
-	$(RM) $(incdir)/config.h
 	-rmdir $(incdir)
 
 uninstall-archive:
