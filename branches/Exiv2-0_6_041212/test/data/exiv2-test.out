@@ -9,7 +9,7 @@ This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 Exiv2 help ---------------------------------------------------------------
-Usage: C:\msys\1.0\home\huggel_andreas\src\exiv2\branches\Exiv2-0_6_041212\src\exiv2.exe [ options ] [ action ] file ...
+Usage: exiv2 [ options ] [ action ] file ...
 
 Manipulate the Exif metadata of images.
 
@@ -23,7 +23,7 @@ Actions:
   mv | rename   Rename files according to the Exif create timestamp.
                 The filename format can be set with -r format.
   mo | modify   Apply commands to modify (add, set, delete) the Exif
-                and Iptc metadata of image files. Requires option -m
+                and Iptc metadata of image files. Requires option -m or -M
 
 Options:
    -h      Display this help and exit.
@@ -52,8 +52,10 @@ Options:
            are the same as those for the -d option.
    -r fmt  Filename format for the `rename' action. The format string
            follows strftime(3). Default filename format is %Y%m%d_%H%M%S.
-   -m file Command file for the modify action. The format for the commands
-           set|add|del <key> [[<Type>] <value>].
+   -m file Command file for the modify action. The format for commands is
+           set|add|del <key> [[<type>] <value>].
+   -M cmd  One command line for the modify action. The format for the
+           commands is the same as that of the lines of a command file.
 
 
 Adjust -------------------------------------------------------------------
@@ -77,7 +79,7 @@ Adjusting `Exif.Photo.DateTimeOriginal' by -43261 s to 2001:04:05 23:50:39
 Adjusting `Exif.Photo.DateTimeDigitized' by -43261 s to 2001:04:05 23:50:39
 File 6/9: exiv2-canon-eos-300d.jpg
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
- Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
+ Offset = 0x00000568, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
 Adjusting `Exif.Image.DateTime' by -43261 s to 2003:09:25 20:18:50
 Adjusting `Exif.Photo.DateTimeOriginal' by -43261 s to 2003:09:25 20:18:50
 Adjusting `Exif.Photo.DateTimeDigitized' by -43261 s to 2003:09:25 20:18:50
@@ -105,7 +107,7 @@ File 5/9: exiv2-nikon-e950.jpg
 Renaming file to ./20010405_235039.jpg
 File 6/9: exiv2-canon-eos-300d.jpg
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
- Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
+ Offset = 0x00000568, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
 Renaming file to ./20030925_201850.jpg
 File 7/9: exiv2-kodak-dc210.jpg
 Renaming file to ./20001026_044550.jpg
@@ -219,7 +221,7 @@ Exif comment    :
 
 File 6/9: 20030925_201850.jpg
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
- Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
+ Offset = 0x00000568, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
 Filename        : 20030925_201850.jpg
 Filesize        : 17033 Bytes
 Camera make     : Canon
@@ -627,7 +629,7 @@ File 5/9: 20010405_235039.jpg
 0x0202 IFD1      JPEGInterchangeFormatLength 4662
 File 6/9: 20030925_201850.jpg
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
- Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
+ Offset = 0x00000568, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
 0x010f IFD0      Make                        Canon
 0x0110 IFD0      Model                       Canon EOS 300D DIGITAL
 0x0112 IFD0      Orientation                 right, top
@@ -910,7 +912,7 @@ File 9/9: 20040316_075137.jpg
 0x0213 IFD1      YCbCrPositioning            Co-sited
 exiv2-empty.jpg: No Exif data found in the file
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
- Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
+ Offset = 0x00000568, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
 
 Extract Exif data --------------------------------------------------------
 File 1/9: exiv2-empty.jpg
@@ -945,7 +947,7 @@ File 5/9: 20010405_235039.jpg
 Writing JPEG thumbnail (4662 Bytes) to file ./20010405_235039-thumb.jpg
 File 6/9: 20030925_201850.jpg
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
- Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
+ Offset = 0x00000568, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
 Writing JPEG thumbnail (9728 Bytes) to file ./20030925_201850-thumb.jpg
 File 7/9: 20001026_044550.jpg
 Writing TIFF thumbnail (20916 Bytes) to file ./20001026_044550-thumb.tif
@@ -955,7 +957,7 @@ File 9/9: 20040316_075137.jpg
 Writing JPEG thumbnail (11998 Bytes) to file ./20040316_075137-thumb.jpg
 exiv2-empty.exv: No Exif data found in the file
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
- Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
+ Offset = 0x00000568, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
 
 Compare image data and extracted data ------------------------------------
 1,2c1,2
@@ -1005,7 +1007,7 @@ File 5/9: 20010405_235039.jpg
 Erasing 4756 Bytes of thumbnail data
 File 6/9: 20030925_201850.jpg
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
- Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
+ Offset = 0x00000568, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
 Erasing 9858 Bytes of thumbnail data
 File 7/9: 20001026_044550.jpg
 Erasing 20910 Bytes of thumbnail data
@@ -1025,7 +1027,7 @@ File 5/9: 20010405_235039.jpg
 20010405_235039.jpg: Image does not contain an Exif thumbnail
 File 6/9: 20030925_201850.jpg
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
- Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
+ Offset = 0x00000568, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
 20030925_201850.jpg: Image does not contain an Exif thumbnail
 File 7/9: 20001026_044550.jpg
 20001026_044550.jpg: Image does not contain an Exif thumbnail
@@ -1093,7 +1095,7 @@ File 9/9: 20040316_075137.jpg
 Writing Exif data from ./20040316_075137.exv to 20040316_075137.jpg
 exiv2-empty.exv: No Exif data found in the file
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
- Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
+ Offset = 0x00000568, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
 
 Compare original and inserted image data ---------------------------------
 1,2c1,2
