@@ -21,7 +21,7 @@
 /*!
   @file    basicio.hpp
   @brief   Simple IO abstraction
-  @version $Rev: 413 $
+  @version $Rev$
   @author  Brad Schick (brad) 
            <a href="mailto:brad@robotbattle.com">brad@robotbattle.com</a>
   @date    04-Dec-04, brad: created

@@ -23,7 +23,7 @@
         since FileIo just sits atop of FILE* streams.
 
   File     : iotest.cpp
-  Version  : $Rev: 392 $
+  Version  : $Rev$
   Author(s): Brad Schick (brad) <brad@robotbattle.com>
   History  : 13-Jul-04, brad: created
  */
@@ -82,7 +82,6 @@ try {
     MemIo memIo2((byte*)tester1, len1);
 
     int c = EOF;
-    int i = 0;
     memset(buf, -1, sizeof(buf));
     for (int i = 0; (c=memIo2.getb()) != EOF; ++i) {
         buf[i] = (byte)c;
@@ -167,7 +166,7 @@ try {
     }
 
     long readCount = 0;
-    while (readCount=fileOut1.read(buf, 32)) {
+    while ((readCount=fileOut1.read(buf, 32))) {
         if (memIo2.write(buf, readCount) != readCount) {
             std::cerr << argv[0] << 
                 ": MemIo bad write 2\n";

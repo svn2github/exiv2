@@ -20,7 +20,7 @@
  */
 /*
   File:      jpgimage.cpp
-  Version:   $Rev: 414 $
+  Version:   $Rev$
   Author(s): Andreas Huggel (ahu) <ahuggel@gmx.net>
              Brad Schick (brad) <brad@robotbattle.com>
   History:   26-Jan-04, ahu: created
@@ -29,7 +29,7 @@
  */
 // *****************************************************************************
 #include "rcsid.hpp"
-EXIV2_RCSID("@(#) $Id: image.cpp 414 2004-11-29 14:54:44Z ahuggel $");
+EXIV2_RCSID("@(#) $Id$");
 
 // *****************************************************************************
 // included header files
@@ -477,7 +477,7 @@ namespace Exiv2 {
                             static_cast<uint16_t>(comment_.length()+3), bigEndian);
                     if (oIo.write(tmpBuf, 4) != 4) return 4;
                     if (oIo.write((byte*)comment_.data(), (long)comment_.length())
-                        != comment_.length()) return 4;
+                        != (long)comment_.length()) return 4;
                     if (oIo.putb(0)==EOF) return 4;
                     if (oIo.error()) return 4;
                     --search;
@@ -574,7 +574,7 @@ namespace Exiv2 {
         iIo.seek(-2, BasicIo::cur);
         buf.alloc(4096);
         long readSize = 0;
-        while (readSize=iIo.read(buf.pData_, buf.size_)) {
+        while ((readSize=iIo.read(buf.pData_, buf.size_))) {
             if (oIo.write(buf.pData_, readSize) != readSize) return 4;
         }
         if (oIo.error()) return 4;

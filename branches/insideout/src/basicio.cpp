@@ -20,13 +20,13 @@
  */
 /*
   File:      basicio.cpp
-  Version:   $Rev: 413 $
+  Version:   $Rev$
   Author(s): Brad Schick (brad) <brad@robotbattle.com>
   History:   04-Dec-04, brad: created
  */
 // *****************************************************************************
 #include "rcsid.hpp"
-EXIV2_RCSID("@(#) $Id: iptc.cpp 413 2004-11-27 15:15:57Z ahuggel $");
+EXIV2_RCSID("@(#) $Id$");
 
 // Define DEBUG_MAKERNOTE to output debug information to std::cerr
 #undef DEBUG_MAKERNOTE
@@ -70,7 +70,7 @@ namespace Exiv2 {
         long readCount = 0;
         long writeCount = 0;
         long writeTotal = 0;
-        while (readCount = src.read(buf, sizeof(buf))) {
+        while ((readCount = src.read(buf, sizeof(buf)))) {
             writeTotal += writeCount = (long)fwrite(buf, 1, readCount, fp_);
             if (writeCount != readCount) {
                 // try to reset back to where write stopped
@@ -218,7 +218,7 @@ namespace Exiv2 {
         byte buf[4096];
         long readCount = 0;
         long writeTotal = 0;
-        while (readCount = src.read(buf, sizeof(buf))) {
+        while ((readCount = src.read(buf, sizeof(buf)))) {
             write(buf, readCount);
             writeTotal += readCount;
         }

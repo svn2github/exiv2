@@ -51,9 +51,9 @@ include $(top_srcdir)/config.mk
 CCHDR = rcsid.hpp error.hpp
 
 # Add library C++ source files to this list
-CCSRC = canonmn.cpp datasets.cpp exif.cpp fujimn.cpp ifd.cpp image.cpp iptc.cpp \
+CCSRC = canonmn.cpp datasets.cpp exif.cpp fujimn.cpp ifd.cpp basicio.cpp iptc.cpp \
         makernote.cpp metadatum.cpp nikonmn.cpp sigmamn.cpp tags.cpp types.cpp \
-        value.cpp
+        image.cpp jpgimage.cpp value.cpp
 
 # Add source files of simple applications to this list
 BINSRC = addmoddel.cpp exifcomment.cpp exifprint.cpp ifd-test.cpp iptcprint.cpp \
