@@ -482,6 +482,10 @@ namespace Exiv2 {
     class ExifData {
         //! @name Not implemented
         //@{
+        //! Copy constructor
+        ExifData(const ExifData& rhs);
+        //! Assignment operator
+        ExifData& operator=(const ExifData& rhs);
         //@}
     public:
         //! ExifMetadata iterator type
@@ -493,16 +497,12 @@ namespace Exiv2 {
         //@{
         //! Default constructor
         ExifData();
-        //! Copy constructor (Todo: copy image data also)
-        ExifData(const ExifData& rhs);
         //! Destructor
         ~ExifData();
         //@}
 
         //! @name Manipulators
         //@{
-        //! Assignment operator (Todo: assign image data also)
-        ExifData& operator=(const ExifData& rhs);
         /*!
           @brief Read the Exif data from file \em path.
           @param path Path to the file
