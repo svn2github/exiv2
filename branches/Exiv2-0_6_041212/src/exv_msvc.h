@@ -1,6 +1,6 @@
 // ******************************************************************* -*- C -*-
 /*!
-  @file    exiv2msvc.hpp
+  @file    exv_msvc.hpp
   @brief   Configuration settings for MSVC
   @version $Rev$
   @author  Andreas Huggel (ahu)
