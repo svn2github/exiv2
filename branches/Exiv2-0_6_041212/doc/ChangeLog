@@ -2,6 +2,8 @@ Changes from version 0.6.1 to 0.6.2
 -----------------------------------
 
 * Exiv2 utility
+	- 0000421: [tools] Command parser fails if no type is specified with a 
+	           modify command
 	- 0000416: [exif] Fix Exiv2 modify action to use non-intrusive writing
 	           whenever possible
 	- 0000418: [feature] Add Exiv2 option to specify path of extracted
