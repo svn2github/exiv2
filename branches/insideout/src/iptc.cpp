@@ -81,6 +81,27 @@ namespace Exiv2 {
         return *this;
     } // Iptcdatum::operator=
     
+    Iptcdatum& Iptcdatum::operator=(const uint16_t& value)
+    {
+        UShortValue::AutoPtr v = UShortValue::AutoPtr(new UShortValue);
+        v->value_.push_back(value);
+        value_ = v;
+        modified_ = true;
+        return *this;
+    }
+
+    Iptcdatum& Iptcdatum::operator=(const std::string& value)
+    {
+        setValue(value);
+        return *this;
+    }
+
+    Iptcdatum& Iptcdatum::operator=(const Value& value)
+    {
+        setValue(&value);
+        return *this;
+    }
+
     void Iptcdatum::setValue(const Value* pValue)
     {
         modified_ = true;
@@ -88,11 +109,14 @@ namespace Exiv2 {
         if (pValue) value_ = pValue->clone();
     }
 
-    void Iptcdatum::setValue(const std::string& buf)
+    void Iptcdatum::setValue(const std::string& value)
     {
+        if (value_.get() == 0) {
+            TypeId type = IptcDataSets::dataSetType(tag(), record());
+            value_ = Value::create(type);
+        }
+        value_->read(value);
         modified_ = true;
-        if (value_.get() == 0) value_ = Value::create(string);
-        value_->read(buf);
     }
 
     const byte IptcData::marker_ = 0x1C;          // Dataset marker
@@ -105,6 +129,17 @@ namespace Exiv2 {
     IptcData::~IptcData()
     {
         delete[] pData_;
+    }
+
+    Iptcdatum& IptcData::operator[](const std::string& key)
+    {
+        IptcKey iptcKey(key);
+        iterator pos = findKey(iptcKey);
+        if (pos == end()) {
+            add(Iptcdatum(iptcKey));
+            pos = findKey(iptcKey);
+        }
+        return *pos;
     }
 
     int IptcData::read(const std::string& path)
@@ -178,18 +213,9 @@ namespace Exiv2 {
                            const byte* data, uint32_t sizeData)
     {
         Value::AutoPtr value;
-        try {
-            // If the type is unknown or the parse fails then
-            // default to undefined type below.
-            TypeId type = IptcDataSets::dataSetType(dataSet, record);
-            value = Value::create(type);
-            value->read(data, sizeData, bigEndian);
-        } 
-        catch (const Error&) {
-            // Default to loading as raw bytes
-            value = Value::create(undefined);
-            value->read(data, sizeData, bigEndian);
-        }
+        TypeId type = IptcDataSets::dataSetType(dataSet, record);
+        value = Value::create(type);
+        value->read(data, sizeData, bigEndian);
         IptcKey key(dataSet, record);
         add(key, value.get());
         return 0;
