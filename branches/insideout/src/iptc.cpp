@@ -38,7 +38,7 @@ EXIV2_RCSID("@(#) $Id$");
 #include "error.hpp"
 #include "value.hpp"
 #include "datasets.hpp"
-#include "image.hpp"
+#include "jpgimage.hpp"
 
 // + standard includes
 #include <iostream>
@@ -110,7 +110,7 @@ namespace Exiv2 {
     int IptcData::read(const std::string& path)
     {
         if (!fileExists(path, true)) return -1;
-        Image::AutoPtr image = ImageFactory::instance().open(path);
+        Image::AutoPtr image = ImageFactory::open(path);
         if (image.get() == 0) {
             // We don't know this type of file
             return -2;
@@ -198,7 +198,7 @@ namespace Exiv2 {
     int IptcData::erase(const std::string& path) const
     {
         if (!fileExists(path, true)) return -1;
-        Image::AutoPtr image = ImageFactory::instance().open(path);
+        Image::AutoPtr image = ImageFactory::open(path);
         if (image.get() == 0) return -2;
 
         // Read all metadata then erase only Iptc data
@@ -216,7 +216,7 @@ namespace Exiv2 {
         if (count() == 0) return erase(path);
 
         if (!fileExists(path, true)) return -1;
-        Image::AutoPtr image = ImageFactory::instance().open(path);
+        Image::AutoPtr image = ImageFactory::open(path);
         if (image.get() == 0) return -2;
 
         updateBuffer();

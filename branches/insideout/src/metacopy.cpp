@@ -32,7 +32,7 @@
 #include "types.hpp"
 #include "metacopy.hpp"
 #include <iostream>
-#include <fstream>
+#include <fstream>  
 
 // *****************************************************************************
 // Main
@@ -51,7 +51,7 @@ try {
     }
 
     Exiv2::Image::AutoPtr readImg 
-        = Exiv2::ImageFactory::instance().open(params.read_);
+        = Exiv2::ImageFactory::open(params.read_);
     if (readImg.get() == 0) {
         std::cerr << params.progname() << 
             ": Could not read file (" << params.read_ << ")\n";
@@ -64,7 +64,7 @@ try {
     }
 
     Exiv2::Image::AutoPtr writeImg 
-        = Exiv2::ImageFactory::instance().open(params.write_);
+        = Exiv2::ImageFactory::open(params.write_);
     if (writeImg.get() == 0) {
         std::cerr << params.progname() << 
             ": Could not read file (" << params.write_ << ")\n";

@@ -114,7 +114,7 @@ void print(const std::string& file)
 
 int read(const std::string& path)
 {
-    Image::AutoPtr image = ImageFactory::instance().open(path);
+    Image::AutoPtr image = ImageFactory::open(path);
     assert(image.get() != 0);
     
     int rc = image->readMetadata();

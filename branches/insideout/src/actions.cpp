@@ -560,7 +560,7 @@ namespace Action {
                       << ": Failed to open the file\n";
             return -1;
         }
-        Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::instance().open(path_);
+        Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(path_);
         if (image.get() == 0) {
             std::cerr << path_
                       << ": The file contains data of an unknown image type\n";
@@ -972,7 +972,7 @@ namespace {
             return -1;
         }
         Exiv2::Image::AutoPtr sourceImage 
-            = Exiv2::ImageFactory::instance().open(source);
+            = Exiv2::ImageFactory::open(source);
         if (sourceImage.get() == 0) {
             std::cerr << source
                       << ": The file contains data of an unknown image type\n";
@@ -985,10 +985,10 @@ namespace {
             return 1;
         }
         Exiv2::Image::AutoPtr targetImage 
-            = Exiv2::ImageFactory::instance().open(target);
+            = Exiv2::ImageFactory::open(target);
         if (targetImage.get() == 0) {
             targetImage 
-                = Exiv2::ImageFactory::instance().create(Exiv2::Image::exv, target);
+                = Exiv2::ImageFactory::create(Exiv2::Image::exv, target);
         }
         if (targetImage.get() == 0) {
             std::cerr << target 
