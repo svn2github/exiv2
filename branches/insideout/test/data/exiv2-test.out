@@ -2,7 +2,7 @@ Exiv2 test directory -----------------------------------------------------
 tmp/
 
 Exiv2 version ------------------------------------------------------------
-..\..\src/exiv2
+../../src/exiv2
 Exiv2 0.6, Copyright (C) 2004 Andreas Huggel.
 
 This is free software; see the source for copying conditions.  There is NO 
@@ -92,23 +92,23 @@ Rename -------------------------------------------------------------------
 File 1/9: exiv2-empty.jpg
 exiv2-empty.jpg: No Exif data found in the file
 File 2/9: exiv2-canon-powershot-s40.jpg
-Renaming file to .\20031214_000043.jpg
+Renaming file to ./20031214_000043.jpg
 File 3/9: exiv2-nikon-e990.jpg
-Renaming file to .\20000506_020544.jpg
+Renaming file to ./20000506_020544.jpg
 File 4/9: exiv2-nikon-d70.jpg
-Renaming file to .\20040329_224245.jpg
+Renaming file to ./20040329_224245.jpg
 File 5/9: exiv2-nikon-e950.jpg
-Renaming file to .\20010405_235039.jpg
+Renaming file to ./20010405_235039.jpg
 File 6/9: exiv2-canon-eos-300d.jpg
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
  Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
-Renaming file to .\20030925_201850.jpg
+Renaming file to ./20030925_201850.jpg
 File 7/9: exiv2-kodak-dc210.jpg
-Renaming file to .\20001026_044550.jpg
+Renaming file to ./20001026_044550.jpg
 File 8/9: exiv2-fujifilm-finepix-s2pro.jpg
-Renaming file to .\20030926_111535.jpg
+Renaming file to ./20030926_111535.jpg
 File 9/9: exiv2-sigma-d10.jpg
-Renaming file to .\20040316_075137.jpg
+Renaming file to ./20040316_075137.jpg
 
 Print --------------------------------------------------------------------
 File 1/9: exiv2-empty.jpg
@@ -911,44 +911,44 @@ Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
 Extract Exif data --------------------------------------------------------
 File 1/9: exiv2-empty.jpg
 File 2/9: 20031214_000043.jpg
-Writing Exif data from 20031214_000043.jpg to .\20031214_000043.exv
+Writing Exif data from 20031214_000043.jpg to ./20031214_000043.exv
 File 3/9: 20000506_020544.jpg
-Writing Exif data from 20000506_020544.jpg to .\20000506_020544.exv
+Writing Exif data from 20000506_020544.jpg to ./20000506_020544.exv
 File 4/9: 20040329_224245.jpg
-Writing Exif data from 20040329_224245.jpg to .\20040329_224245.exv
+Writing Exif data from 20040329_224245.jpg to ./20040329_224245.exv
 File 5/9: 20010405_235039.jpg
-Writing Exif data from 20010405_235039.jpg to .\20010405_235039.exv
+Writing Exif data from 20010405_235039.jpg to ./20010405_235039.exv
 File 6/9: 20030925_201850.jpg
-Writing Exif data from 20030925_201850.jpg to .\20030925_201850.exv
+Writing Exif data from 20030925_201850.jpg to ./20030925_201850.exv
 File 7/9: 20001026_044550.jpg
-Writing Exif data from 20001026_044550.jpg to .\20001026_044550.exv
-Writing Jpeg comment from 20001026_044550.jpg to .\20001026_044550.exv
+Writing Exif data from 20001026_044550.jpg to ./20001026_044550.exv
+Writing Jpeg comment from 20001026_044550.jpg to ./20001026_044550.exv
 File 8/9: 20030926_111535.jpg
-Writing Exif data from 20030926_111535.jpg to .\20030926_111535.exv
+Writing Exif data from 20030926_111535.jpg to ./20030926_111535.exv
 File 9/9: 20040316_075137.jpg
-Writing Exif data from 20040316_075137.jpg to .\20040316_075137.exv
+Writing Exif data from 20040316_075137.jpg to ./20040316_075137.exv
 
 Extract Thumbnail --------------------------------------------------------
 File 1/9: exiv2-empty.jpg
 exiv2-empty.jpg: No Exif data found in the file
 File 2/9: 20031214_000043.jpg
-Writing JPEG thumbnail (5448 Bytes) to file .\20031214_000043-thumb.jpg
+Writing JPEG thumbnail (5448 Bytes) to file ./20031214_000043-thumb.jpg
 File 3/9: 20000506_020544.jpg
-Writing JPEG thumbnail (7829 Bytes) to file .\20000506_020544-thumb.jpg
+Writing JPEG thumbnail (7829 Bytes) to file ./20000506_020544-thumb.jpg
 File 4/9: 20040329_224245.jpg
-Writing JPEG thumbnail (8930 Bytes) to file .\20040329_224245-thumb.jpg
+Writing JPEG thumbnail (8930 Bytes) to file ./20040329_224245-thumb.jpg
 File 5/9: 20010405_235039.jpg
-Writing JPEG thumbnail (4662 Bytes) to file .\20010405_235039-thumb.jpg
+Writing JPEG thumbnail (4662 Bytes) to file ./20010405_235039-thumb.jpg
 File 6/9: 20030925_201850.jpg
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
  Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
-Writing JPEG thumbnail (9728 Bytes) to file .\20030925_201850-thumb.jpg
+Writing JPEG thumbnail (9728 Bytes) to file ./20030925_201850-thumb.jpg
 File 7/9: 20001026_044550.jpg
-Writing TIFF thumbnail (20916 Bytes) to file .\20001026_044550-thumb.tif
+Writing TIFF thumbnail (20916 Bytes) to file ./20001026_044550-thumb.tif
 File 8/9: 20030926_111535.jpg
-Writing JPEG thumbnail (9573 Bytes) to file .\20030926_111535-thumb.jpg
+Writing JPEG thumbnail (9573 Bytes) to file ./20030926_111535-thumb.jpg
 File 9/9: 20040316_075137.jpg
-Writing JPEG thumbnail (11998 Bytes) to file .\20040316_075137-thumb.jpg
+Writing JPEG thumbnail (11998 Bytes) to file ./20040316_075137-thumb.jpg
 exiv2-empty.exv: No Exif data found in the file
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
  Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
@@ -1070,22 +1070,22 @@ File 9/9: 20040316_075137.jpg
 Insert Exif data ---------------------------------------------------------
 File 1/9: exiv2-empty.jpg
 File 2/9: 20031214_000043.jpg
-Writing Exif data from .\20031214_000043.exv to 20031214_000043.jpg
+Writing Exif data from ./20031214_000043.exv to 20031214_000043.jpg
 File 3/9: 20000506_020544.jpg
-Writing Exif data from .\20000506_020544.exv to 20000506_020544.jpg
+Writing Exif data from ./20000506_020544.exv to 20000506_020544.jpg
 File 4/9: 20040329_224245.jpg
-Writing Exif data from .\20040329_224245.exv to 20040329_224245.jpg
+Writing Exif data from ./20040329_224245.exv to 20040329_224245.jpg
 File 5/9: 20010405_235039.jpg
-Writing Exif data from .\20010405_235039.exv to 20010405_235039.jpg
+Writing Exif data from ./20010405_235039.exv to 20010405_235039.jpg
 File 6/9: 20030925_201850.jpg
-Writing Exif data from .\20030925_201850.exv to 20030925_201850.jpg
+Writing Exif data from ./20030925_201850.exv to 20030925_201850.jpg
 File 7/9: 20001026_044550.jpg
-Writing Exif data from .\20001026_044550.exv to 20001026_044550.jpg
-Writing Jpeg comment from .\20001026_044550.exv to 20001026_044550.jpg
+Writing Exif data from ./20001026_044550.exv to 20001026_044550.jpg
+Writing Jpeg comment from ./20001026_044550.exv to 20001026_044550.jpg
 File 8/9: 20030926_111535.jpg
-Writing Exif data from .\20030926_111535.exv to 20030926_111535.jpg
+Writing Exif data from ./20030926_111535.exv to 20030926_111535.jpg
 File 9/9: 20040316_075137.jpg
-Writing Exif data from .\20040316_075137.exv to 20040316_075137.jpg
+Writing Exif data from ./20040316_075137.exv to 20040316_075137.jpg
 exiv2-empty.exv: No Exif data found in the file
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
  Offset = 1384, size = 48, exceeds buffer size by 24 Bytes; Truncating the data.
