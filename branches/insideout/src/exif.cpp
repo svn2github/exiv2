@@ -120,6 +120,42 @@ namespace Exiv2 {
         return *this;
     } // Exifdatum::operator=
     
+    Exifdatum& Exifdatum::operator=(const std::string& value)
+    { 
+        setValue(value); 
+        return *this; 
+    }
+
+    Exifdatum& Exifdatum::operator=(const uint16_t& value) 
+    {
+        return Exiv2::setValue(*this, value); 
+    }
+
+    Exifdatum& Exifdatum::operator=(const uint32_t& value)
+    {
+        return Exiv2::setValue(*this, value); 
+    }
+
+    Exifdatum& Exifdatum::operator=(const URational& value)
+    {
+        return Exiv2::setValue(*this, value); 
+    }
+
+    Exifdatum& Exifdatum::operator=(const int16_t& value)
+    {
+        return Exiv2::setValue(*this, value); 
+    }
+
+    Exifdatum& Exifdatum::operator=(const int32_t& value)
+    {
+        return Exiv2::setValue(*this, value); 
+    }
+
+    Exifdatum& Exifdatum::operator=(const Rational& value)
+    {
+        return Exiv2::setValue(*this, value); 
+    }
+
     void Exifdatum::setValue(const Value* pValue)
     {
         value_.reset();
@@ -701,6 +737,8 @@ namespace Exiv2 {
 
     long ExifData::eraseThumbnail()
     {
+        // First, determine if the thumbnail is at the end of the Exif data
+        bool stp = stdThumbPosition();
         // Delete all Exif.Thumbnail.* (IFD1) metadata 
         ExifMetadata::iterator i = begin(); 
         while (i != end()) {
@@ -712,12 +750,13 @@ namespace Exiv2 {
             }
         }
         long delta = 0;
-        if (stdThumbPosition()) {
+        if (stp) {
             delta = size_;
             if (size_ > 0 && ifd0_.next() > 0) {
                 // Truncate IFD1 and thumbnail data from the data buffer
                 size_ = ifd0_.next();
                 ifd0_.setNext(0, byteOrder());
+                ifd1_.clear();
             }
             delta -= size_;
         }

@@ -101,7 +101,7 @@ int main(int argc, char* const argv[])
     for (Params::Files::const_iterator i = params.files_.begin(); i != e; ++i) {
         if (params.verbose_) {
             std::cout << "File " << std::setw(w) << n++ << "/" << s << ": " 
-                      << *i << "\n";
+                      << *i << std::endl;
         }
         task->run(*i);
     }
@@ -378,6 +378,7 @@ int Params::nonoption(const std::string& argv)
             }
             action = true;
             action_ = Action::erase;
+            target_ = ctExif;
         }
         if (argv == "ex" || argv == "extract") {
             if (action_ != Action::none && action_ != Action::extract) {

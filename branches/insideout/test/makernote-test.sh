@@ -1,13 +1,12 @@
 #! /bin/sh
-# Test driver for write unit tests to build Exif metadata from scratch
-results="./tmp/write2-test.out"
-good="./data/write2-test.out"
+# Test driver for tests of MakerNoteFactory::match
+results="./tmp/makernote-test.out"
+good="./data/makernote-test.out"
 (
 LD_LIBRARY_PATH=../../src:$LD_LIBRARY_PATH
 binpath="../../src"
-cp -f ./data/exiv2-empty.jpg ./tmp
 cd ./tmp
-$binpath/write2-test exiv2-empty.jpg
+$binpath/makernote-test
 ) > $results
 
 diff -q $results $good
