@@ -5,6 +5,8 @@ del  Iptc.Application2.Headline
 
 add   Exif.Image.WhitePoint	Short	32 12 4 5 6 
 
+set Iptc.Application2.Headline	 Headline
+
 set  Exif.Image.DateTime	Ascii	"Zwanzig nach fuenf"
  set Exif.Image.Artist		Ascii	nobody
   set Exif.Image.Artist			"Vincent van Gogh"
