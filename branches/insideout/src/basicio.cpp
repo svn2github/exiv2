@@ -138,7 +138,7 @@ namespace Exiv2 {
         
         FileIo *fileIo = dynamic_cast<FileIo*>(&src);
         if (fileIo) {
-            // Special processing if this is another instance of FileIo
+            // Optimization if this is another instance of FileIo
             close();
             fileIo->close();
             // MSVCRT rename that does not overwrite existing files
@@ -171,7 +171,7 @@ namespace Exiv2 {
         return putc(data, fp_);
     }
     
-    int FileIo::seek(long offset, BasicIo::Position pos)
+    int FileIo::seek(long offset, Position pos)
     {
         assert(fp_ != 0);
         int fileSeek;
@@ -277,18 +277,9 @@ namespace Exiv2 {
     MemIo::MemIo(const byte* data, long size)
     {
         // If copying data is too slow it might be worth
-        // creating a readonly memio variant
+        // creating a readonly MemIo variant
         data_.reserve(size);
         data_.assign(data, data+size);
-        idx_ = 0;
-    }
-
-    MemIo::MemIo(const ByteVector& data)
-    {
-        // If copying data is too slow it might be worth
-        // creating a readonly memio variant
-        data_.reserve(data.size());
-        data_.assign(data.begin(), data.end());
         idx_ = 0;
     }
 
@@ -318,12 +309,12 @@ namespace Exiv2 {
     {
         MemIo *memIo = dynamic_cast<MemIo*>(&src);
         if (memIo) {
-            // Special processing if this is another instance of memIo
+            // Optimization if this is another instance of MemIo
             data_.swap(memIo->data_);
             idx_ = 0;
         }
         else{
-            // Generic reopen src to reset to start
+            // Generic reopen to reset position to start
             data_.clear();
             idx_ = 0;
             if (src.open() != 0) return 1;
@@ -356,7 +347,7 @@ namespace Exiv2 {
         return data;
     }
     
-    int MemIo::seek(long offset, BasicIo::Position pos)
+    int MemIo::seek(long offset, Position pos)
     {
         ByteVector::size_type newIdx;
         
