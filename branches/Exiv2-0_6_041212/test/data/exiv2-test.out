@@ -3,13 +3,13 @@ tmp/
 
 Exiv2 version ------------------------------------------------------------
 ../../src/exiv2
-Exiv2 0.6, Copyright (C) 2004 Andreas Huggel.
+Exiv2 0.6.1, Copyright (C) 2004, 2005 Andreas Huggel.
 
 This is free software; see the source for copying conditions.  There is NO 
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 Exiv2 help ---------------------------------------------------------------
-Usage: exiv2 [ options ] [ action ] file ...
+Usage: C:\msys\1.0\home\huggel_andreas\src\exiv2\branches\Exiv2-0_6_041212\src\exiv2.exe [ options ] [ action ] file ...
 
 Manipulate the Exif metadata of images.
 
@@ -22,6 +22,8 @@ Actions:
   ex | extract  Extract metadata to *.exv and thumbnail image files.
   mv | rename   Rename files according to the Exif create timestamp.
                 The filename format can be set with -r format.
+  mo | modify   Apply commands to modify (add, set, delete) the Exif
+                and Iptc metadata of image files. Requires option -m
 
 Options:
    -h      Display this help and exit.
@@ -50,6 +52,8 @@ Options:
            are the same as those for the -d option.
    -r fmt  Filename format for the `rename' action. The format string
            follows strftime(3). Default filename format is %Y%m%d_%H%M%S.
+   -m file Command file for the modify action. The format for the commands
+           set|add|del <key> [[<Type>] <value>].
 
 
 Adjust -------------------------------------------------------------------
@@ -402,7 +406,7 @@ File 2/9: 20031214_000043.jpg
 0x011a IFD1      XResolution                 180
 0x011b IFD1      YResolution                 180
 0x0128 IFD1      ResolutionUnit              inch
-0x0201 IFD1      JPEGInterchangeFormat       2036
+0x0201 IFD1      JPEGInterchangeFormat       0
 0x0202 IFD1      JPEGInterchangeFormatLength 5448
 File 3/9: 20000506_020544.jpg
 0x010e IFD0      ImageDescription                      
@@ -461,7 +465,7 @@ File 3/9: 20000506_020544.jpg
 0x011a IFD1      XResolution                 300
 0x011b IFD1      YResolution                 300
 0x0128 IFD1      ResolutionUnit              inch
-0x0201 IFD1      JPEGInterchangeFormat       4084
+0x0201 IFD1      JPEGInterchangeFormat       0
 0x0202 IFD1      JPEGInterchangeFormatLength 7829
 File 4/9: 20040329_224245.jpg
 0x010f IFD0      Make                        NIKON CORPORATION
@@ -564,7 +568,7 @@ File 4/9: 20040329_224245.jpg
 0x011a IFD1      XResolution                 300
 0x011b IFD1      YResolution                 300
 0x0128 IFD1      ResolutionUnit              inch
-0x0201 IFD1      JPEGInterchangeFormat       30444
+0x0201 IFD1      JPEGInterchangeFormat       0
 0x0202 IFD1      JPEGInterchangeFormatLength 8930
 0x0213 IFD1      YCbCrPositioning            Co-sited
 File 5/9: 20010405_235039.jpg
@@ -619,7 +623,7 @@ File 5/9: 20010405_235039.jpg
 0x011a IFD1      XResolution                 300
 0x011b IFD1      YResolution                 300
 0x0128 IFD1      ResolutionUnit              inch
-0x0201 IFD1      JPEGInterchangeFormat       2036
+0x0201 IFD1      JPEGInterchangeFormat       0
 0x0202 IFD1      JPEGInterchangeFormatLength 4662
 File 6/9: 20030925_201850.jpg
 Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
@@ -721,7 +725,7 @@ Warning: Upper boundary of data for Makernote entry 25 is out of bounds:
 0x011a IFD1      XResolution                 180
 0x011b IFD1      YResolution                 180
 0x0128 IFD1      ResolutionUnit              inch
-0x0201 IFD1      JPEGInterchangeFormat       2548
+0x0201 IFD1      JPEGInterchangeFormat       0
 0x0202 IFD1      JPEGInterchangeFormatLength 9728
 File 7/9: 20001026_044550.jpg
 0x010e IFD0      ImageDescription            
@@ -835,7 +839,7 @@ File 8/9: 20030926_111535.jpg
 0x011a IFD1      XResolution                 72
 0x011b IFD1      YResolution                 72
 0x0128 IFD1      ResolutionUnit              inch
-0x0201 IFD1      JPEGInterchangeFormat       1204
+0x0201 IFD1      JPEGInterchangeFormat       0
 0x0202 IFD1      JPEGInterchangeFormatLength 9573
 0x0213 IFD1      YCbCrPositioning            Co-sited
 File 9/9: 20040316_075137.jpg
@@ -901,7 +905,7 @@ File 9/9: 20040316_075137.jpg
 0x011a IFD1      XResolution                 180
 0x011b IFD1      YResolution                 180
 0x0128 IFD1      ResolutionUnit              inch
-0x0201 IFD1      JPEGInterchangeFormat       303
+0x0201 IFD1      JPEGInterchangeFormat       0
 0x0202 IFD1      JPEGInterchangeFormatLength 11998
 0x0213 IFD1      YCbCrPositioning            Co-sited
 exiv2-empty.jpg: No Exif data found in the file
