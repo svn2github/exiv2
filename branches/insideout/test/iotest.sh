@@ -38,6 +38,7 @@ diffCheck()
 # **********************************************************************
 # main
 
+LD_LIBRARY_PATH=../../src:$LD_LIBRARY_PATH
 binpath="../../src"
 datapath="../data"
 
