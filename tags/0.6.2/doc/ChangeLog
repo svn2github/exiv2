@@ -1,0 +1,198 @@
+Changes from version 0.6.1 to 0.6.2
+-----------------------------------
+
+* Exiv2 utility
+	         - [feature] New -M option to run modification commands directly 
+                   from the command line.
+	- 0000421: [tools] Command parser fails if no type is specified with a 
+	           modify command.
+	- 0000416: [exif] Fix Exiv2 modify action to use non-intrusive writing
+	           whenever possible.
+	- 0000418: [feature] Add Exiv2 option to specify path of extracted.
+	           and inserted files. (Suggested by Brian Pugh)
+
+* Exiv2 library
+	- 0000408: [build environment] 0.6.1 does not build on OS X: Add libtool
+	           support for automatic library creation (see README).
+	           (Reported by Thomas Lunde and others)
+	- 0000409: [build environment] compiling emits type warnings. (Thomas Lunde
+	           and others)
+	- 0000410: [build environment] config.h must be installed, -DHAVE_CONFIG_H
+                   flag should not be necessary. (Daniel Foote and others)
+	- 0000411: [exif] Support non-standard Ifd layout. (Jeffrey J. Early)
+
+
+Changes from version 0.6 to 0.6.1
+---------------------------------
+
+* Exiv2 utility
+
+	* Added option to modify Iptc and Exif metadata based on a command file
+	
+* Exiv2 library
+
+	* Fixed bug #407: Writing metadata to image after modifications may
+	  lose thumbnail. Thanks to Jeffrey J. Early for pointing out this bug.
+	
+	* Added CommentValue
+
+
+Changes from version 0.5 to 0.6
+-------------------------------
+
+* Exiv2 utility
+
+	* Added options to extract, insert and delete different types of metadata 
+
+	* Added option to print the Jpeg comment 
+
+	* Changed semantics of print option `i' to Iptc
+	  (`t' for translated Exif data)
+
+	* Replaced std::cout << "\n" with std::endl to flush and get the 
+	  sequence with error output right
+	
+* Exiv2 library
+
+	* Added support to build Makernotes from scratch
+
+	* Added support to build IFD1 (Thumbnail) entries from scratch
+	
+	* Open image files on demand rather than keeping them open. Bug #393 (Brad)
+	
+	* Added data area concept to Value, ValueType, Entry, Ifd. Feature #395
+	
+	* Revamped Thumbnail classes to use the new data area feature. Feature #398
+
+	* Added ExifData::setJpegThumbnail 
+	
+	* Improved implementation of Exif and Iptc keys, added support for
+          keys with unknown tag names
+		
+	* Added ExifData::op[] and Exifdatum op= and similar operators to 
+	  IptcData and Iptcdatum. This operator stuff allows for things like: 
+	  exifData["Exif.Thumbnail.Compression"] = uint16_t(6);
+	
+	* Converted class hierarchies to use std::auto_ptr where appropriate
+
+	* Replaced custom integer types with C99 types
+
+	* Added test data and drivers to the repository
+	
+	* Right align output stream for date and time writes. Bug #397 (Brad)
+		
+	* Updated documentation
+
+* MSVC related (Thanks to Brad Schick)
+	
+	* Added exivsimple: a Windows dll that allows languages such as 
+	  C# and VB to access limited metadata capabilities (Brad)
+
+	* Added and write2-test projects to MSVC build (Brad)
+	
+	* Added mn.cpp to all MSVC projects. Fixes bug #396 (Brad)
+	
+	* Fixed various MSVC 7.1 build errors. Bug #394 (Brad)
+	
+	* Added write-test to MSVC build project (Brad)
+
+
+Changes from version 0.4 to 0.5
+-------------------------------
+
+* Exiv2 utility
+
+	* Added -pI print mode to print Iptc data.
+
+	* Bugfix: Use timegm() and gmtime() instead of mktime() and
+	  localtime() to avoid problems when adjusting timestamps.
+	  Thanks to Samir Rostum for pointing out this bug.
+
+	* Added timegm() from the tz distribution for platforms which
+	  do not have this function.
+
+* Exiv2 library
+
+	* Added full Iptc read and write support. Thanks to Brad Schick for
+          this and a lot more contributions to this release.
+
+	* Converted Metadatum to an abstract base class, added Exifdatum
+	  and Iptcdatum classes. Migration of existing programs: Use class
+	  Exifdatum instead of Metadatum. (Brad Schick)
+	
+	* Added Key, ExifKey and IptcKey class hierarchy. Requires changes
+	  to existing pograms: Use class ExifKey where plain std::string
+	  keys were used before (e.g., ExifData::findKey()).
+
+	* Changed Exif keys to 'Exif.ifdItem.tagName' to be consistent
+	  with the new Iptc keys. All keys of existing programs need to be
+	  updated. See the web pages or documentation for the new keys.
+	
+	* Revamped class Image and introduced byte* interface. (Brad Schick)
+	
+	* Added autoconf configure script.
+
+	* Added MSVC project files. (Brad Schick)
+	
+	* Appended 'Id' to Ifd ids to work around a g++-3.4 problem.
+
+	* Updated documentation.
+
+	
+Changes from version 0.3 to 0.4
+-------------------------------
+
+* Exiv2 utility
+
+	* Less rigid command line argument parsing: Guess the action from the 
+          option given and use print as the default action.
+
+	* Print Nikon makernote values for ISO Speed, Quality and WhiteBalance
+          in the summary.
+
+* Exiv2 library
+
+	* Fixed ExifData::copyFromMetadata to automatically add missing
+          offset tags. Thanks to Joseph Heled for identifying this bug.
+
+	* Started to fix MSVC errors and warnings. Thanks to Steven R. King for
+	  his work to get Exiv2 to compile on MSVC. The task is not yet 
+	  completed but the library should compile without too many warnings.
+
+	* Added three different Nikon makernote formats.
+
+	* IfdMakerNote: Replaced too simple prefix with a more general concept 
+          of a makernote header. 
+
+	* Added the makernote buffer to the arguments passed to the makernote 
+	  create function. This allows the makernote create function to 
+          determine the exact makernote needed based on its content. The new 
+          concept is used to automatically determine which of the three Nikon 
+          makernotes to create.
+
+	* Fixed MakerNoteFactory::match() to prefer an exact match over a 
+          wildcard match with the same number of matching characters (Key 
+          "Nikon" now prefers registry entry "Nikon" over "Nikon*"), simplified
+          the return value of match() to an integer score value.
+
+	* Sigma makernote: Added "FOVEON" and "*" to registry. 
+
+	* Added len argument and boundary checks to various read functions,
+	  in particular, the IFD read method. 
+
+	* Improved handling of corrupt IFDs: Truncate field if offset points 
+	  outside of the available buffer.
+
+	* Slightly improved error handling: strError() is now a static member 
+	  of ExifData.
+
+	* Added exifcomment example program.
+
+	* Fixed an embarassing bug in ExifData::updateEntries, which caused 
+	  write after erasing metadata to write back the original metadata.
+
+	* Fixed TypeInfoTable to return invalid if typeId is too large.
+
+	* Makefile: (un)install targets now only (un)install exiv2.
+
+	* Code cleanup, documentation updates and miscellaneous bug fixes.
