@@ -1,3 +1,23 @@
+Changes from version 0.6.1 to 0.6.2
+-----------------------------------
+
+* Exiv2 utility
+	- 0000416: [exif] Fix Exiv2 modify action to use non-intrusive writing
+	           whenever possible
+	- 0000418: [feature] Add Exiv2 option to specify path of extracted
+	           and inserted files. (Suggested by Brian Pugh)
+
+* Exiv2 library
+	- 0000408: [build environment] 0.6.1 does not build on OS X: Add libtool
+	           support for automatic library creation (see README)
+	           (Reported by Thomas Lunde and others)
+	- 0000409: [build environment] compiling emits type warnings. (Thomas Lunde
+	           and others)
+	- 0000410: [build environment] config.h must be installed. (Daniel Foote 
+	           and others)
+	- 0000411: [exif] Support non-standard Ifd layout. (Jeffrey J. Early)
+
+
 Changes from version 0.6 to 0.6.1
 ---------------------------------
 
@@ -8,7 +28,7 @@ Changes from version 0.6 to 0.6.1
 * Exiv2 library
 
 	* Fixed bug #407: Writing metadata to image after modifications may
-	  loose thumbnail 
+	  lose thumbnail. Thanks to Jeffrey J. Early for pointing out this bug.
 	
 	* Added CommentValue
 
