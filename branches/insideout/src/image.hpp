@@ -29,6 +29,7 @@
   @date    09-Jan-04, ahu: created<BR>
            11-Feb-04, ahu: isolated as a component<BR>
            19-Jul-04, brad: revamped to be more flexible and support Iptc
+           15-Jan-05, brad: inside-out design changes
  */
 #ifndef IMAGE_HPP_
 #define IMAGE_HPP_
@@ -48,13 +49,20 @@
 namespace Exiv2 {
 
 // *****************************************************************************
-// enumerations
+// class declarations
+    class ExifData;
+    class IptcData;
+
 
 // *****************************************************************************
 // class definitions
-
     /*!
-      @brief Abstract base class defining the interface for an image.
+      @brief Abstract base class defining the interface for an image. This is
+         the top-level interface to the Exiv2 library.
+
+      Most client apps will obtain an Image instance by calling a static
+      ImageFactory method. The Image class can then be used to to
+      read, write, and save metadata.      
      */
     class Image {
     public:
@@ -73,63 +81,67 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         /*!
-          @brief Read metadata from assigned image file into internal 
-                 buffers.
+          @brief Read metadata from assigned image. Before this method
+              is called, the various metadata types (Iptc, Exif) will be empty.
           @return 0 if successful.
          */
         virtual int readMetadata() =0;
         /*!
-          @brief Write metadata from internal buffers into to the image fle.
+          @brief Write metadata back to the image. 
+
+          All existing metadata sections in the image are either created,
+          replaced, or erased. If values for a given metadata type have been
+          assigned, a section for that metadata type will either be created or
+          replaced. If no values have been assigned to a given metadata type,
+          any exists section for that metadata type will be removed from the
+          image.
+          
           @return 0 if successful.
          */
         virtual int writeMetadata() =0;
         /*!
-          @brief Set the Exif data. The data is copied into an internal data
-                 buffer and is not written until writeMetadata is called.
-          @param buf Pointer to the new Exif data.
-          @param size Size in bytes of new Exif data.
+          @brief Assign new exif data. The new exif data is not written
+              to the image until the writeMetadata() method is called.
+          @param exifData An ExifData instance holding exif data to be copied
          */
-        virtual void setExifData(const byte* buf, long size) =0;
-//        virtual void setExifData( const ExifData& exifData ) =0;
+        virtual void setExifData(const ExifData& exifData) =0;
         /*!
-          @brief Erase any buffered Exif data. Exif data is not removed
-                from the actual file until writeMetadata is called.
+          @brief Erase any buffered Exif data. Exif data is not removed from
+              the actual image until the writeMetadata() method is called.
          */
         virtual void clearExifData() =0;
         /*!
-          @brief Set the Iptc data. The data is copied into an internal data
-                 buffer and is not written until writeMetadata is called.
-          @param buf Pointer to the new Iptc data.
-          @param size Size in bytes of new Iptc data.
+          @brief Assign new iptc data. The new iptc data is not written
+              to the image until the writeMetadata() method is called.
+          @param iptcData An IptcData instance holding iptc data to be copied
          */
-        virtual void setIptcData(const byte* buf, long size) =0;
-//        virtual void setIptcData( const IptcData& iptcData ) =0;
+        virtual void setIptcData(const IptcData& iptcData) =0;
         /*!
-          @brief Erase any buffered Iptc data. Iptc data is not removed
-                from the actual file until writeMetadata is called.
+          @brief Erase any buffered Iptc data. Iptc data is not removed from
+              the actual image until the writeMetadata() method is called.
          */
         virtual void clearIptcData() =0;
         /*!
-          @brief Set the image comment. The data is copied into an internal data
-                 buffer and is not written until writeMetadata is called.
+          @brief Set the image comment. The new comment is not written
+              to the image until the writeMetadata() method is called.
           @param comment String containing comment.
          */
         virtual void setComment(const std::string& comment) =0;
         /*!
           @brief Erase any buffered comment. Comment is not removed
-                 from the actual file until writeMetadata is called.
+              from the actual image until the writeMetadata() method is called.
          */
         virtual void clearComment() =0;
         /*!
-          @brief Copy all existing metadata from source %Image. The data is
-                 copied into internal buffers and is not written until
-                 writeMetadata is called.
+          @brief Copy all existing metadata from source Image. The data is
+              copied into internal buffers and is not written to the image
+              until the writeMetadata() method is called.
           @param image Metadata source. All metadata types are copied.
          */
         virtual void setMetadata(const Image& image) =0;
         /*!
           @brief Erase all buffered metadata. Metadata is not removed
-                 from the actual file until writeMetadata is called.
+              from the actual image until the writeMetadata() method is called.
          */
         virtual void clearMetadata() =0;
         //@}
@@ -137,44 +149,90 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         /*!
-          @brief Check if the %Image instance is valid. Use after object 
+          @brief Check if the Image instance is valid. Use after object 
                  construction.
-          @return true if the %Image is in a valid state.
+          @return true if the Image is in a valid state.
          */
         virtual bool good() const =0;
-        //! Return the size of the Exif data in bytes.
-        virtual long sizeExifData() const =0;
         /*!
-          @brief Return a read-only pointer to an Exif data buffer. Do not
-                 attempt to write to this buffer.
+          @brief Returns an ExifData instance containing currently buffered
+              exif data.
+
+          The exif data may have been read from the image by
+          a previous call to readMetadata() or added directly. The exif
+          data in the returned instance will be written to the image when
+          writeMetadata() is called.
+          
+          @return read only ExifData instance containing exif values
          */
-        virtual const byte* exifData() const =0;
-        //! Return the size of the Iptc data in bytes.
-        virtual long sizeIptcData() const =0;
-//        virtual const ExifData& exifData() const =0;
-//        virtual IptcData& exifData() =0;
+        virtual const ExifData& exifData() const =0;
         /*!
-          @brief Return a read-only pointer to an Iptc data buffer. Do not
-                 attempt to write to this buffer.
+          @brief Returns an ExifData instance containing currently buffered
+              exif data.
+
+          The contained exif data may have been read from the image by
+          a previous call to readMetadata() or added directly. The exif
+          data in the returned instance will be written to the image when
+          writeMetadata() is called.
+          
+          @return modifiable ExifData instance containing exif values
          */
-        virtual const byte* iptcData() const =0;
-//        virtual const IptcData& iptcData() const =0;
-  //      virtual IptcData& iptcData() =0;
+        virtual ExifData& exifData() =0;
+        /*!
+          @brief Returns an IptcData instance containing currently buffered
+              iptc data.
+
+          The contained iptc data may have been read from the image by
+          a previous call to readMetadata() or added directly. The iptc
+          data in the returned instance will be written to the image when
+          writeMetadata() is called.
+          
+          @return modifiable IptcData instance containing iptc values
+         */
+        virtual const IptcData& iptcData() const =0;
+        /*!
+          @brief Returns an ExifData instance containing currently buffered
+              exif data.
+
+          The contained iptc data may have been read from the image by
+          a previous call to readMetadata() or added directly. The iptc
+          data in the returned instance will be written to the image when
+          writeMetadata() is called.
+          
+          @return modifiable IptcData instance containing iptc values
+         */
+        virtual IptcData& iptcData() =0;
         /*!
           @brief Return a copy of the image comment. May be an empty string.
          */
         virtual std::string comment() const =0;
-//        virtual const std::string& comment() const =0;
-  //      virtual std::string& comment() =0;
         /*!
           @brief Return a reference to the BasicIo instance being used for Io.
-               This refence is particularly useful to reading the results of
-               operations on a MemIo instance. If the data is modified,
-               the changes will not be noticed by this class until the
-               next call to readMetadata.
+          
+          This refence is particularly useful to reading the results of
+          operations on a MemIo instance. For example after metadata has
+          been modified and the writeMetadata() method has been called,
+          this method can be used to get access to the modified image. 
+          
+          @return BasicIo instance that can be used to read or write image
+             data directly.
+          @note If the returned BasicIo is used to write to the image, the
+             Image class will not see those changes until the readMetadata()
+             method is called.
          */
         virtual BasicIo& io() const = 0;
+        /*!
+          @brief Convert the return code \em rc from various methods
+              in this class to string messages.
+          @param rc Error code.
+          @param path %Image file or other identifying string.
+          @return String containing error message.
+          
+           Todo: Implement global handling of error messages
+         */
+        static std::string strError(int rc, const std::string& path);
         //@}
+
 
     protected:
         //! @name Creators
@@ -198,11 +256,10 @@ namespace Exiv2 {
     typedef bool (*IsThisTypeFct)(BasicIo& iIo, bool advance);
 
     /*!
-      @brief Image factory.
+      @brief Returns an Image instance of the specified type.
 
-      Creates an instance of the image of the requested type.  The factory is
-      implemented as a singleton, which can be accessed only through the static
-      member function instance().
+      The factory is implemented as a singleton, which can be accessed
+      through static member functions.
     */
     class ImageFactory {
     public:
@@ -211,10 +268,10 @@ namespace Exiv2 {
         /*!
           @brief Register image type together with its function pointers.
 
-          The image factory creates new images calling their associated
+          The image factory creates new images by calling their associated
           function pointer. Additional images can be added by registering
           new type and function pointers. If called for a type that already
-          exists in the list, the corresponding prototype is replaced.
+          exists in the list, the corresponding functions are replaced.
 
           @param type Image type.
           @param newInst Function pointer for creating image instances.
@@ -228,37 +285,96 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         /*!
-          @brief  Create an %Image of the appropriate type by opening the
-                  specified file. File type is derived from the contents of the
-                  file.
+          @brief Create an Image subclass of the appropriate type by reading
+              the specified file. %Image type is derived from the file
+              contents.
           @param  path %Image file. The contents of the file are tested to
-                  determine the image type to open. File extension is ignored.
-          @return An auto-pointer that owns an %Image of the type derived from
-                  the file. If no image type could be determined, the pointer is 0.
+              determine the image type. File extension is ignored.
+          @return An auto-pointer that owns an Image instance whose type 
+              matches that of the file. If no image type could be determined,
+              the pointer is 0.
          */
         static Image::AutoPtr open(const std::string& path);
+        /*!
+          @brief Create an Image subclass of the appropriate type by reading
+              the provided memory. %Image type is derived from the memory
+              contents.
+          @param data Pointer to a data buffer containing an image. The contents
+              of the memory are tested to determine the image type.
+          @param size Number of bytes pointed to by \em data.
+          @return An auto-pointer that owns an Image instance whose type 
+              matches that of the data buffer. If no image type could be
+              determined, the pointer is 0.
+         */
         static Image::AutoPtr open(const byte* data, long size);
+        /*!
+          @brief Create an Image subclass of the appropriate type by reading
+              the provided BasicIo instance. %Image type is derived from the
+              data provided by \em io.
+          @param io An auto-pointer that owns a BasicIo instance that provides
+              image data. The contents of the image data are tested to determine
+              the type. \b Important: This method takes ownership of the passed
+              in BasicIo instance through the auto-pointer. Callers should not
+              continue to use the BasicIo instance after it is passed to this method. 
+              Use theImage::io() method to get a temporary reference.
+          @return An auto-pointer that owns an Image instance whose type 
+              matches that of the \em io data. If no image type could be
+              determined, the pointer is 0.
+         */
         static Image::AutoPtr open(BasicIo::AutoPtr io);
         /*!
-          @brief  Create an %Image of the requested type by creating a new
-                  file. If the file already exists, it will be overwritten.
-          @param  type Type of the image to be created.
-          @param  path %Image file. The contents of the file are tested to
-                  determine the image type to open. File extension is ignored.
-          @return An auto-pointer that owns an %Image of the requested type. 
-                  If the image type is not supported, the pointer is 0.
+          @brief Create an Image subclass of the requested type by creating a
+              new image file. If the file already exists, it will be overwritten.
+          @param type Type of the image to be created.
+          @param path %Image file to create. File extension is ignored.
+          @return An auto-pointer that owns an Image instance of the requested
+              type. If the image type is not supported, the pointer is 0.
          */
         static Image::AutoPtr create(Image::Type type, const std::string& path);
+        /*!
+          @brief Create an Image subclass of the requested type by creating a
+              new image in memory.
+          @param type Type of the image to be created.
+          @return An auto-pointer that owns an Image instance of the requested
+              type. If the image type is not supported, the pointer is 0.
+         */
         static Image::AutoPtr create(Image::Type type);
+        /*!
+          @brief Create an Image subclass of the requested type by writing a
+              new image to a BasicIo instance. If the BasicIo instance already
+              contains data, it will be overwritten.
+          @param type Type of the image to be created.
+          @param io An auto-pointer that owns a BasicIo instance that will
+              be written to when creating a new image. \b Important: This
+              method takes ownership of the passed in BasicIo instance through
+              the auto-pointer. Callers should not continue to use the BasicIo
+              instance after it is passed to this method.  Use theImage::io()
+              method to get a temporary reference.
+          @return An auto-pointer that owns an Image instance of the requested
+              type. If the image type is not supported, the pointer is 0.
+         */
         static Image::AutoPtr create(Image::Type type, BasicIo::AutoPtr io);
         /*!
-          @brief  Returns the image type of the provided file. 
-          @param  path %Image file. The contents of the file are tested to
-                  determine the image type. File extension is ignored.
-          @return %Image type of Image::none if the type is not recognized.
+          @brief Returns the image type of the provided file. 
+          @param path %Image file. The contents of the file are tested to
+              determine the image type. File extension is ignored.
+          @return %Image type or Image::none if the type is not recognized.
          */
         static Image::Type getType(const std::string& path);
+        /*!
+          @brief Returns the image type of the provided data buffer. 
+          @param data Pointer to a data buffer containing an image. The contents
+              of the memory are tested to determine the image type.
+          @param size Number of bytes pointed to by \em data.
+          @return %Image type or Image::none if the type is not recognized.
+         */
         static Image::Type getType(const byte* data, long size);
+        /*!
+          @brief Returns the image type of data provided by a BasicIo instance.
+          @param io A BasicIo instance that provides image data. The contents
+              of the image data are tested to determine the type.
+          @return %Image type or Image::none if the type is not recognized.
+         */
         static Image::Type getType(BasicIo& io);
         //@}
 
@@ -270,6 +386,8 @@ namespace Exiv2 {
         ImageFactory();
         //! Prevent copy construction: not implemented.
         ImageFactory(const ImageFactory& rhs);
+        //! Creates the private static instance
+        static void init();
         //@}
 
         //! Struct for storing image function pointers.
@@ -281,9 +399,6 @@ namespace Exiv2 {
                 : newInstance(newInst), isThisType(isType) {}
             ImageFcts() : newInstance(0), isThisType(0) {}
         };
-
-        //! Make sure statis data is created
-        static void ImageFactory::init();
 
         // DATA
         //! Type used to store Image creation functions

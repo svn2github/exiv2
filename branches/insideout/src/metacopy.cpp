@@ -28,6 +28,8 @@
  */
 // *****************************************************************************
 // included header files
+#include "image.hpp"
+#include "iptc.hpp"
 #include "exif.hpp"
 #include "types.hpp"
 #include "metacopy.hpp"
@@ -89,10 +91,10 @@ try {
         }
     }
     if (params.iptc_) {
-        writeImg->setIptcData(readImg->iptcData(), readImg->sizeIptcData());
+        writeImg->setIptcData(readImg->iptcData());
     }
     if (params.exif_) {
-        writeImg->setExifData(readImg->exifData(), readImg->sizeExifData());
+        writeImg->setExifData(readImg->exifData());
     }
     if (params.comment_) {
         writeImg->setComment(readImg->comment());

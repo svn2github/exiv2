@@ -43,6 +43,7 @@ EXIV2_RCSID("@(#) $Id$");
 // + standard includes
 #include <iostream>
 #include <algorithm>
+#include <cassert>
 
 // *****************************************************************************
 // class member definitions
@@ -50,13 +51,13 @@ namespace Exiv2 {
 
     Iptcdatum::Iptcdatum(const IptcKey& key, 
                          const Value* pValue)
-        : key_(key.clone()), modified_(false)
+        : key_(key.clone())
     {
         if (pValue) value_ = pValue->clone();
     }
 
     Iptcdatum::Iptcdatum(const Iptcdatum& rhs)
-        : Metadatum(rhs), modified_(false)
+        : Metadatum(rhs)
     {
         if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
         if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
@@ -70,7 +71,6 @@ namespace Exiv2 {
     {
         if (this == &rhs) return *this;
         Metadatum::operator=(rhs);
-        modified_ = true;
 
         key_.reset();
         if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
@@ -86,7 +86,6 @@ namespace Exiv2 {
         UShortValue::AutoPtr v = UShortValue::AutoPtr(new UShortValue);
         v->value_.push_back(value);
         value_ = v;
-        modified_ = true;
         return *this;
     }
 
@@ -104,7 +103,6 @@ namespace Exiv2 {
 
     void Iptcdatum::setValue(const Value* pValue)
     {
-        modified_ = true;
         value_.reset();
         if (pValue) value_ = pValue->clone();
     }
@@ -116,20 +114,9 @@ namespace Exiv2 {
             value_ = Value::create(type);
         }
         value_->read(value);
-        modified_ = true;
     }
 
     const byte IptcData::marker_ = 0x1C;          // Dataset marker
-
-    IptcData::IptcData() 
-        : size_(0), pData_(0), modified_(false)
-    {
-    }
-
-    IptcData::~IptcData()
-    {
-        delete[] pData_;
-    }
 
     Iptcdatum& IptcData::operator[](const std::string& key)
     {
@@ -142,35 +129,9 @@ namespace Exiv2 {
         return *pos;
     }
 
-    int IptcData::read(const std::string& path)
+    int IptcData::load(const byte* buf, long len)
     {
-        if (!fileExists(path, true)) return -1;
-        Image::AutoPtr image = ImageFactory::open(path);
-        if (image.get() == 0) {
-            // We don't know this type of file
-            return -2;
-        }
-        
-        int rc = image->readMetadata();
-        if (rc == 0) {
-            if (image->sizeIptcData() > 0) {
-                rc = read(image->iptcData(), image->sizeIptcData());
-            }
-            else {
-                rc = 3;
-            }
-        }
-        return rc;
-    }
-
-    int IptcData::read(const byte* buf, long len)
-    {
-        // Copy the data buffer
-        delete[] pData_;
-        pData_ = new byte[len];
-        memcpy(pData_, buf, len);
-        size_ = len;
-        const byte* pRead = pData_;
+        const byte* pRead = buf;
         iptcMetadata_.clear();
 
         int rc = 0;
@@ -179,7 +140,7 @@ namespace Exiv2 {
         uint32_t sizeData = 0;
         byte extTest = 0;
 
-        while (pRead < pData_ + size_) {
+        while (pRead < buf + len) {
             if (*pRead++ != marker_) return 5;
             record = *pRead++;
             dataSet = *pRead++;
@@ -205,7 +166,6 @@ namespace Exiv2 {
             pRead += sizeData;
         }
 
-        modified_ = false;
         return rc;
     } // IptcData::read
 
@@ -221,79 +181,10 @@ namespace Exiv2 {
         return 0;
     }
 
-    int IptcData::erase(const std::string& path) const
-    {
-        if (!fileExists(path, true)) return -1;
-        Image::AutoPtr image = ImageFactory::open(path);
-        if (image.get() == 0) return -2;
-
-        // Read all metadata then erase only Iptc data
-        int rc = image->readMetadata();
-        if (rc == 0) {
-            image->clearIptcData();
-            rc = image->writeMetadata();
-        }
-        return rc;
-    } // IptcData::erase
-
-    int IptcData::write(const std::string& path) 
-    {
-        // Remove the Iptc section from the file if there is no metadata 
-        if (count() == 0) return erase(path);
-
-        if (!fileExists(path, true)) return -1;
-        Image::AutoPtr image = ImageFactory::open(path);
-        if (image.get() == 0) return -2;
-
-        updateBuffer();
-
-        // Read all metadata to preserve non-Iptc data
-        int rc = image->readMetadata();
-        if (rc == 0) {
-            image->setIptcData(pData_, size_);
-            rc = image->writeMetadata();
-        }
-        return rc;
-    } // IptcData::write
-
-    bool IptcData::modified() const
-    {
-        if (!modified_) {
-            // check each metadata entry
-            const_iterator iter = iptcMetadata_.begin();
-            const_iterator end = iptcMetadata_.end();
-            for( ; iter != end && !modified_; ++iter ) {
-                modified_ = iter->modified();
-            }
-        }
-        return modified_;
-    }
-
-    void IptcData::clearModified()
-    {
-        // check each metadata entry
-        iterator iter = iptcMetadata_.begin();
-        iterator end = iptcMetadata_.end();
-        for( ; iter != end; ++iter ) {
-            iter->clearModified();
-        }
-        modified_ = false;
-    }
-    
     DataBuf IptcData::copy()
     {
-        updateBuffer();
-        return DataBuf(pData_, size_);
-    }
-
-    void IptcData::updateBuffer() 
-    {
-        if (!modified()) return;
-
-        delete [] pData_;
-        size_ = size();
-        pData_ = new byte[size_];
-        byte *pWrite = pData_;
+        DataBuf buf(size());
+        byte *pWrite = buf.pData_;
 
         const_iterator iter = iptcMetadata_.begin();
         const_iterator end = iptcMetadata_.end();
@@ -321,12 +212,11 @@ namespace Exiv2 {
             pWrite += iter->value().copy(pWrite, bigEndian);
         }
 
-        clearModified();
+        return buf;
     } // IptcData::updateBuffer
 
     long IptcData::size() const
     {
-        if (!modified()) return size_;
         long newSize = 0;
         const_iterator iter = iptcMetadata_.begin();
         const_iterator end = iptcMetadata_.end();
@@ -343,15 +233,6 @@ namespace Exiv2 {
         return newSize;
     } // IptcData::size
 
-    int IptcData::writeIptcData(const std::string& path)
-    {
-        updateBuffer();
-        Image::AutoPtr image(ImageFactory::create(Image::exv, path));
-        if (!image.get()) return -1;
-        image->setIptcData(pData_, size_);
-        return image->writeMetadata();
-    } 
-
     int IptcData::add(const IptcKey& key, Value* value)
     {
         return add(Iptcdatum(key, value));
@@ -364,7 +245,6 @@ namespace Exiv2 {
                findId(iptcDatum.tag(), iptcDatum.record()) != end()) {
              return 6;
         }
-        modified_ = true;
         // allow duplicates
         iptcMetadata_.push_back(iptcDatum);
         return 0;
@@ -406,7 +286,6 @@ namespace Exiv2 {
 
     IptcData::iterator IptcData::erase(IptcData::iterator pos)
     {
-        modified_ = true;
         return iptcMetadata_.erase(pos);
     }
 

@@ -167,8 +167,6 @@ namespace Exiv2 {
         long count() const { return value_.get() == 0 ? 0 : value_->count(); }
         //! Return the size of the value in bytes
         long size() const { return value_.get() == 0 ? 0 : value_->size(); }
-        //! Return true if value was modified, otherwise false
-        bool modified() const { return modified_; }
         //! Return the value as a string.
         std::string toString() const 
             { return value_.get() == 0 ? "" : value_->toString(); }
@@ -234,17 +232,10 @@ namespace Exiv2 {
             { if (value_.get() != 0) return *value_; throw Error("Value not set"); }
         //@}
 
-        /*! 
-          @brief Not really meant for public use, but public so IptcData doesn't
-                 have to be made a friend
-         */
-        void clearModified() { modified_ = false; }
-
     private:
         // DATA
         IptcKey::AutoPtr key_;                  //!< Key
         Value::AutoPtr   value_;                //!< Value
-        bool modified_;                         //!< Change indicator
 
     }; // class Iptcdatum
 
@@ -288,72 +279,25 @@ namespace Exiv2 {
       - extract Iptc metadata to files, insert from these files
     */
     class IptcData {
-        //! @name Not implemented
-        //@{
-        //! Copying not allowed
-        IptcData(const IptcData& rhs);
-        //! Assignment not allowed
-        IptcData& operator=(const IptcData& rhs);
-        //@}
     public:
         //! IptcMetadata iterator type
         typedef IptcMetadata::iterator iterator;
         //! IptcMetadata const iterator type
         typedef IptcMetadata::const_iterator const_iterator;
 
-        //! @name Creators
-        //@{
-        //! Default constructor
-        IptcData();
-        //! Destructor
-        ~IptcData();
-        //@}
+        // Use the compiler generated constructors and assignment operator
 
         //! @name Manipulators
         //@{
         /*!
-          @brief Read the Iptc data from file path.
-          @param path Path to the file
-          @return  0 if successful;<BR>
-                   3 if the file contains no Iptc data;<BR>
-                  the return code of Image::readMetadata()
-                    if the call to this function fails;<BR>
-                  the return code of read(const char* buf, long len)
-                    if the call to this function fails;<BR>
-         */
-        int read(const std::string& path);
-        /*!
-          @brief Read the Iptc data from a byte buffer. The format must follow
+          @brief Load the Iptc data from a byte buffer. The format must follow
                  the IPTC IIM4 standard.
           @param buf Pointer to the data buffer to read from
           @param len Number of bytes in the data buffer 
           @return 0 if successful;<BR>
                  5 if Iptc data is invalid or corrupt;<BR>
          */
-        int read(const byte* buf, long len);
-        /*!
-          @brief Write the Iptc data to file path. If an Iptc data section
-                 already exists in the file, it is replaced.  If there is no
-                 metadata to write, the Iptc data section is
-                 deleted from the file.  Otherwise, an Iptc data section is
-                 created.
-          @return 0 if successful;<BR>
-                -2 if the file contains an unknown image type;<BR>
-                the return code of Image::writeMetadata()
-                    if the call to this function fails;<BR>
-         */
-        int write(const std::string& path);
-        /*!
-          @brief Write the Iptc data to a binary file. By convention, the
-                 filename extension should be ".exv". This file format contains
-                 the Iptc data as it is found in a JPEG file. Exv files can
-                 be read with int read(const std::string& path) just like
-                 normal image files.
-          @return 0 if successful;<BR>
-                 the return code of Image::writeMetadata()
-                    if the call to this function fails;<BR>
-         */
-        int writeIptcData(const std::string& path);
+        int load(const byte* buf, long len);
         /*!
           @brief Write the Iptc data to a data buffer and return the data buffer.
                  Caller owns this buffer. The copied data follows the IPTC IIM4
@@ -392,6 +336,10 @@ namespace Exiv2 {
                  by this call.
          */
         iterator erase(iterator pos);
+        /*!
+          @brief Delete all Iptcdatum instances resulting in an empty container.
+         */
+        void clear() { iptcMetadata_.clear(); }
         //! Sort metadata by key
         void sortByKey();
         //! Sort metadata by tag (aka dataset)
@@ -418,17 +366,6 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
-        /*!
-          @brief Erase the Iptc data from file path. 
-          @param path Path to the file.
-          @return 0 if successful;<BR>
-                -2 if the file contains an unknown image type;<BR>
-                the return code of Image::writeMetadata()
-                    if the call to this function fails;<BR>
-         */
-        int erase(const std::string& path) const;
-        //! Return true if any metadata was modified, added, or erased.
-        bool modified() const;
         //! Begin of the metadata
         const_iterator begin() const { return iptcMetadata_.begin(); }
         //! End of the metadata
@@ -456,15 +393,14 @@ namespace Exiv2 {
         //@}
 
         /*!
-          @brief Convert the return code from 
-                 int read(const std::string& path),
-                 int read(const byte* buf, long len),
-                 int write(const std::string& path),
-                 int writeIptcData(const std::string& path), 
-                 int erase(const std::string& path) const 
+          @brief Convert the return code from \n 
+                 int read(const byte* buf, long len), \n
                  into an error message.
+          @param rc Error code.
+          @param path %Image file or other identifying string.
+          @return String containing error message.
 
-                 Todo: Implement global handling of error messages
+          Todo: Implement global handling of error messages
          */
         static std::string strError(int rc, const std::string& path);
 
@@ -480,27 +416,11 @@ namespace Exiv2 {
         int readData(uint16_t dataSet, uint16_t record, 
                      const byte* data, uint32_t sizeData);
 
-        //! Resets modified flag
-        void clearModified();
-        
-        //! @name Manipulators
-        //@{
-        /*!
-          @brief Rebuilds the Iptc data buffer from scratch using the current
-                metadata. After this method is called, pData_ points to the
-                updated data.
-         */
-        void updateBuffer();
-        //@}
-
         // Constant data
         static const byte marker_;          // Dataset marker
         
         // DATA
         IptcMetadata iptcMetadata_;
-        long size_;              //!< Size of the Iptc raw data in bytes
-        byte* pData_;            //!< Iptc raw data buffer
-        mutable bool modified_;
     }; // class IptcData
 
 }                                       // namespace Exiv2

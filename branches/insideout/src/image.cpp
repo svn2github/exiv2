@@ -26,6 +26,7 @@
   History:   26-Jan-04, ahu: created
              11-Feb-04, ahu: isolated as a component
              19-Jul-04, brad: revamped to be more flexible and support Iptc
+             15-Jan-05, brad: inside-out design changes
  */
 // *****************************************************************************
 #include "rcsid.hpp"
@@ -171,6 +172,37 @@ namespace Exiv2 {
         }
         return Image::AutoPtr();
     } // ImageFactory::create
+
+    std::string Image::strError(int rc, const std::string& path)
+    {
+        std::string error = path + ": ";
+        switch (rc) {
+        case -1:
+            error += "Failed to open the file";
+            break;
+        case -2:
+            error += "The file contains data of an unknown image type";
+            break;
+        case -3:
+            error += "Couldn't open temporary file";
+            break;
+        case -4:
+            error += "Renaming temporary file failed";
+            break;
+        case 1:
+            error += "Couldn't read from the input file";
+            break;
+        case 2:
+            error += "This does not look like a JPEG image";
+            break;
+        default:
+            error += "Accessing image data failed, rc = " + toString(rc);
+            break;
+        }
+        return error;
+    } // Image::strError
+
+
 
     TiffHeader::TiffHeader(ByteOrder byteOrder) 
         : byteOrder_(byteOrder), tag_(0x002a), offset_(0x00000008)

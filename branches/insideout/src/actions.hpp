@@ -37,6 +37,10 @@
 #include <string>
 #include <map>
 
+#include "exiv2.hpp"
+#include "exif.hpp"
+#include "iptc.hpp"
+
 // *****************************************************************************
 // class declarations
 
@@ -53,7 +57,7 @@ namespace Exiv2 {
 namespace Action {
 
     //! Enumerates all tasks
-    enum TaskType { none, adjust, print, rename, erase, extract, insert };
+    enum TaskType { none, adjust, print, rename, erase, extract, insert, modify };
 
 // *****************************************************************************
 // class definitions
@@ -288,6 +292,33 @@ namespace Action {
         virtual Insert* clone_() const;
 
     }; // class Insert
+
+    /*!
+      @brief %Modify the Exif data according to the commands in the 
+             modification table.
+     */
+    class Modify : public Task {
+    public:
+        virtual ~Modify() {}
+        virtual int run(const std::string& path);
+        typedef std::auto_ptr<Modify> AutoPtr;
+        AutoPtr clone() const;
+        Modify() {} 
+
+    private:
+        virtual Modify* clone_() const;
+        //! Copy contructor needed because of AutoPtr memeber 
+        Modify(const Modify& src) {} 
+
+        //! Add a metadatum according to \em modifyCmd 
+        void addMetadatum(const ModifyCmd& modifyCmd);
+        //! Set a metadatum according to \em modifyCmd 
+        void setMetadatum(const ModifyCmd& modifyCmd);
+        //! Delete a metadatum according to \em modifyCmd 
+        void delMetadatum(const ModifyCmd& modifyCmd);
+
+        Exiv2::Image::AutoPtr image_;        //!< Image to modify 
+    }; // class Modify
 
 }                                       // namespace Action 
 

@@ -23,9 +23,8 @@
   Version:   $Rev$
   Author(s): Andreas Huggel (ahu) <ahuggel@gmx.net>
              Brad Schick (brad) <brad@robotbattle.com>
-  History:   26-Jan-04, ahu: created
-             11-Feb-04, ahu: isolated as a component
-             19-Jul-04, brad: revamped to be more flexible and support Iptc
+  History:   15-Jan-05, brad: split out from image.cpp
+             
  */
 // *****************************************************************************
 #include "rcsid.hpp"
@@ -85,8 +84,7 @@ namespace Exiv2 {
 
     JpegBase::JpegBase(BasicIo::AutoPtr io, bool create, 
                        const byte initData[], long dataSize) 
-        : io_(io), sizeExifData_(0), pExifData_(0),
-          sizeIptcData_(0), pIptcData_(0)
+        : io_(io)
     {
         if (create) {
             initImage(initData, dataSize);
@@ -101,12 +99,6 @@ namespace Exiv2 {
             return 4;
         }
         return 0;
-    }
-
-    JpegBase::~JpegBase()
-    {
-        delete[] pExifData_;
-        delete[] pIptcData_;
     }
 
     bool JpegBase::good() const
@@ -125,16 +117,12 @@ namespace Exiv2 {
     
     void JpegBase::clearIptcData()
     {
-        delete[] pIptcData_;
-        pIptcData_ = 0;
-        sizeIptcData_ = 0;
+        iptcData_.clear();
     }
 
     void JpegBase::clearExifData()
     {
-        delete[] pExifData_;
-        pExifData_ = 0;
-        sizeExifData_ = 0;
+        exifData_.clear();
     }
 
     void JpegBase::clearComment()
@@ -142,25 +130,14 @@ namespace Exiv2 {
         comment_.erase();
     }
 
-    void JpegBase::setExifData(const byte* buf, long size)
+    void JpegBase::setExifData(const ExifData& exifData)
     {
-        if (size > 0xfffd) throw Error("Exif data too large");
-        clearExifData();
-        if (size) {
-            sizeExifData_ = size;
-            pExifData_ = new byte[size];
-            memcpy(pExifData_, buf, size);
-        }
+        exifData_ = exifData;
     }
 
-    void JpegBase::setIptcData(const byte* buf, long size)
+    void JpegBase::setIptcData(const IptcData& iptcData)
     {
-        clearIptcData();
-        if (size) {
-            sizeIptcData_ = size;
-            pIptcData_ = new byte[size];
-            memcpy(pIptcData_, buf, size);
-        }
+        iptcData_ = iptcData;
     }
 
     void JpegBase::setComment(const std::string& comment)
@@ -170,8 +147,8 @@ namespace Exiv2 {
 
     void JpegBase::setMetadata(const Image& image)
     {
-        setIptcData(image.iptcData(), image.sizeIptcData());
-        setExifData(image.exifData(), image.sizeExifData());
+        setIptcData(image.iptcData());
+        setExifData(image.exifData());
         setComment(image.comment());
     }
 
@@ -221,15 +198,12 @@ namespace Exiv2 {
                 // Seek to begining and read the Exif data
                 io_->seek(8-bufRead, BasicIo::cur); 
                 long sizeExifData = size - 8;
-                pExifData_ = new byte[sizeExifData];
-                io_->read(pExifData_, sizeExifData);
+                DataBuf rawExif(sizeExifData);
+                io_->read(rawExif.pData_, sizeExifData);
                 if (io_->error() || io_->eof()) {
-                    delete[] pExifData_;
-                    pExifData_ = 0;
                     return 1;
                 }
-                // Set the size and offset of the Exif data buffer
-                sizeExifData_ = sizeExifData;
+                if (exifData_.load(rawExif.pData_, sizeExifData)) return 2;
                 --search;
             }
             else if (marker == app13_ && memcmp(buf.pData_ + 2, ps3Id_, 14) == 0) {
@@ -246,9 +220,7 @@ namespace Exiv2 {
                 if (!locateIptcData(psData.pData_, psData.size_, &record,
                             &sizeHdr, &sizeIptc)) {
                     assert(sizeIptc);
-                    sizeIptcData_ = sizeIptc;
-                    pIptcData_ = new byte[sizeIptc];
-                    memcpy( pIptcData_, record + sizeHdr, sizeIptc );
+                    if (iptcData_.load(record + sizeHdr, sizeIptc)) return 2;
                 }
                 --search;
             }
@@ -340,7 +312,7 @@ namespace Exiv2 {
         return rc;
     } // JpegBase::writeMetadata
 
-    int JpegBase::doWriteMetadata(BasicIo& outIo) const
+    int JpegBase::doWriteMetadata(BasicIo& outIo)
     {
         if (!io_->isopen()) return 1;
         if (!outIo.isopen()) return 4;
@@ -417,8 +389,8 @@ namespace Exiv2 {
             ++count;
         }
 
-        if (pExifData_) ++search;
-        if (pIptcData_) ++search;
+        if (exifData_.count() > 0) ++search;
+        if (iptcData_.count() > 0) ++search;
         if (!comment_.empty()) ++search;
 
         io_->seek(seek, BasicIo::beg);
@@ -453,17 +425,18 @@ namespace Exiv2 {
                     if (outIo.error()) return 4;
                     --search;
                 }
-                if (pExifData_) {
+                if (exifData_.count() > 0) {
                     // Write APP1 marker, size of APP1 field, Exif id and Exif data
+                    DataBuf rawExif(exifData_.copy());
                     tmpBuf[0] = 0xff;
                     tmpBuf[1] = app1_;
                     us2Data(tmpBuf + 2, 
-                            static_cast<uint16_t>(sizeExifData_+8), 
+                            static_cast<uint16_t>(rawExif.size_+8), 
                             bigEndian);
                     memcpy(tmpBuf + 4, exifId_, 6);
                     if (outIo.write(tmpBuf, 10) != 10) return 4;
-                    if (outIo.write(pExifData_, sizeExifData_) 
-                        != sizeExifData_) return 4;
+                    if (outIo.write(rawExif.pData_, rawExif.size_) 
+                        != rawExif.size_) return 4;
                     if (outIo.error()) return 4;
                     --search;
                 }
@@ -476,12 +449,14 @@ namespace Exiv2 {
 
                 // Data is rounded to be even
                 const int sizeOldData = sizeHdr + sizeIptc + (sizeIptc & 1);
-                if (psData.size_ > sizeOldData || pIptcData_) {
+                if (psData.size_ > sizeOldData || iptcData_.count() > 0) {
+                    // rawIptc may have size of zero.
+                    DataBuf rawIptc(iptcData_.copy());
                     // write app13 marker, new size, and ps3Id
                     tmpBuf[0] = 0xff;
                     tmpBuf[1] = app13_;
-                    const int sizeNewData = sizeIptcData_ ? 
-                            sizeIptcData_+(sizeIptcData_&1)+12 : 0;
+                    const int sizeNewData = rawIptc.size_ ? 
+                            rawIptc.size_ + (rawIptc.size_ & 1) + 12 : 0;
                     us2Data(tmpBuf + 2, 
                             static_cast<uint16_t>(psData.size_-sizeOldData+sizeNewData+16),
                             bigEndian);
@@ -495,17 +470,17 @@ namespace Exiv2 {
                     if (outIo.write(psData.pData_, sizeFront) != sizeFront) return 4;
 
                     // write new iptc record if we have it
-                    if (pIptcData_) {
+                    if (iptcData_.count() > 0) {
                         memcpy(tmpBuf, bimId_, 4);
                         us2Data(tmpBuf+4, iptc_, bigEndian);
                         tmpBuf[6] = 0;
                         tmpBuf[7] = 0;
-                        ul2Data(tmpBuf + 8, sizeIptcData_, bigEndian);
+                        ul2Data(tmpBuf + 8, rawIptc.size_, bigEndian);
                         if (outIo.write(tmpBuf, 12) != 12) return 4;
-                        if (outIo.write(pIptcData_, sizeIptcData_) 
-                            != sizeIptcData_) return 4;
+                        if (outIo.write(rawIptc.pData_, rawIptc.size_) 
+                            != rawIptc.size_) return 4;
                         // data is padded to be even (but not included in size)
-                        if (sizeIptcData_ & 1) {
+                        if (rawIptc.size_ & 1) {
                             if (outIo.putb(0)==EOF) return 4;
                         }
                         if (outIo.error()) return 4;
@@ -578,12 +553,14 @@ namespace Exiv2 {
     {
     }
 
+    //! @cond IGNORE
     JpegImage::JpegRegister::JpegRegister()
     {
         ImageFactory::registerImage(
             Image::jpeg, newJpegInstance, isJpegType);
     }
-
+    //! @endcond
+  
     int JpegImage::writeHeader(BasicIo& outIo) const
     {
         // Jpeg header
@@ -637,11 +614,13 @@ namespace Exiv2 {
     {
     }
 
+    //! @cond IGNORE
     ExvImage::ExvRegister::ExvRegister()
     {
         ImageFactory::registerImage(
             Image::exv, newExvInstance, isExvType);
     }
+    //! @endcond
 
     int ExvImage::writeHeader(BasicIo& outIo) const
     {
