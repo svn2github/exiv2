@@ -297,7 +297,7 @@ namespace Exiv2 {
         return BasicIo::AutoPtr(new MemIo);
     }
         
-    void MemIo::CheckSize(long wcount)
+    void MemIo::checkSize(long wcount)
     {
         ByteVector::size_type need = wcount + idx_;
         if (need > data_.size()) {
@@ -307,7 +307,7 @@ namespace Exiv2 {
 
     long MemIo::write(const byte* data, long wcount )
     {
-        CheckSize(wcount);
+        checkSize(wcount);
         // According to Josuttis 6.2.3 this is safe
         memcpy(&data_[idx_], data, wcount);
         idx_ += wcount;
@@ -351,7 +351,7 @@ namespace Exiv2 {
 
     int MemIo::putb(byte data)
     {
-        CheckSize(1);
+        checkSize(1);
         data_[idx_++] = data;
         return data;
     }

@@ -230,7 +230,7 @@ namespace Exiv2 {
         ByteVector::size_type idx_;
 
         //METHODS
-        void CheckSize(long wcount);
+        void checkSize(long wcount);
     }; // class MemIo    
 }                                       // namespace Exiv2
 
