@@ -32,6 +32,7 @@
 // *****************************************************************************
 // included header files
 #include "tifffwd.hpp"
+#include "image.hpp"
 #include "types.hpp"
 
 // + standard includes
@@ -52,14 +53,17 @@ namespace Exiv2 {
     public:
         /*!
           @brief Create the TiffComponent for TIFF entry \em extendedTag and
-                 \em group based on the embedded lookup table.
-
-          If a tag and group combination is not found in the table, a TiffEntry
-          is created.  If the pointer that is returned is 0, then the TIFF entry
-          should be ignored.
+                 \em group based on the embedded lookup table. If the pointer 
+                 that is returned is 0, then the TIFF entry should be ignored.
         */
         static std::auto_ptr<TiffComponent> create(uint32_t extendedTag,
                                                    uint16_t group);
+        /*!  
+          @brief Get the path, i.e., a list of TiffStructure pointers, from
+                 the root TIFF element to the TIFF entry \em extendedTag and 
+                 \em group.
+        */
+        static void getPath(TiffPath& tiffPath, uint32_t extendedTag, uint16_t group);
 
     private:
         static const TiffStructure tiffStructure_[]; //<! TIFF structure
@@ -92,16 +96,44 @@ namespace Exiv2 {
                                  uint32_t           size,
                                  TiffCompFactoryFct createFct,
                                  FindDecoderFct     findDecoderFct);
+
+        /*!
+          @brief Encode TIFF metadata from \em pImage into a memory block
+                 \em blob.
+        */
+        static void encode(      Blob&              blob,
+                           const byte*              pData,
+                                 uint32_t           size,
+                           const Image*             pImage,
+                                 TiffCompFactoryFct createFct,
+                                 FindEncoderFct     findEncoderFct);
+
+    private:
+        /*!
+          @brief Parse TIFF metadata from a data buffer \em pData of length
+                 \em size into a TIFF composite structure. 
+
+          @param pData     Pointer to the data buffer. Must point to data
+                           in TIFF format; no checks are performed.
+          @param size      Length of the data buffer.
+          @return          An auto pointer with the root element of the TIFF
+                           composite structure.
+         */
+        static std::auto_ptr<TiffComponent> 
+        parse(const byte*              pData, 
+                    uint32_t           size,
+                    TiffCompFactoryFct createFct);
+
     }; // class TiffParser
 
     /*!
-      @brief Table of TIFF decoding functions and find function.
-             This class is separated from the metadata decoder visitor so that
-             the parser can be parametrized with a different table if needed.
-             This is used, eg., for CR2 format, which uses a different decoder
-             table.
+      @brief Table of TIFF decoding and encoding functions and find functions.
+             This class is separated from the metadata decoder and encoder
+             visitors so that the parser can be parametrized with a different 
+             table if needed. This is used, eg., for CR2 format, which uses a 
+             different decoder table.
      */
-    class TiffDecoder {
+    class TiffMapping {
     public:
         /*!
           @brief Find the decoder function for a key. 
@@ -118,11 +150,26 @@ namespace Exiv2 {
         static const DecoderFct findDecoder(const std::string& make, 
                                                   uint32_t     extendedTag,
                                                   uint16_t     group);
+        /*!
+          @brief Find the encoder function for a key. 
+
+          If the returned pointer is 0, the tag should not be encoded, 
+          else the encoder function should be used.
+
+          @param make Camera make
+          @param extendedTag Extended tag
+          @param group %Group
+
+          @return Pointer to the encoder function
+         */
+        static const EncoderFct findEncoder(const std::string& make, 
+                                                  uint32_t     extendedTag,
+                                                  uint16_t     group);
 
     private:
-        static const TiffDecoderInfo tiffDecoderInfo_[]; //<! TIFF decoder table
+        static const TiffMappingInfo tiffMappingInfo_[]; //<! TIFF mapping table
 
-    }; // class TiffDecoder
+    }; // class TiffMapping
 
 }                                       // namespace Exiv2
 

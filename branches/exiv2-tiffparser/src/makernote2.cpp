@@ -49,22 +49,34 @@ EXIV2_RCSID("@(#) $Id$")
 namespace Exiv2 {
 
     const TiffMnRegistry TiffMnCreator::registry_[] = {
-        { "Canon",          newCanonMn,     Group::canonmn   },
-        { "FOVEON",         newSigmaMn,     Group::sigmamn   },
-        { "FUJIFILM",       newFujiMn,      Group::fujimn    },
-        { "KONICA MINOLTA", newMinoltaMn,   Group::minoltamn },
-        { "Minolta",        newMinoltaMn,   Group::minoltamn },
-        { "NIKON",          newNikonMn,     Group::nikonmn   },
-        { "OLYMPUS",        newOlympusMn,   Group::olympmn   },
-        { "Panasonic",      newPanasonicMn, Group::panamn    },
-        { "SIGMA",          newSigmaMn,     Group::sigmamn   },
-        { "SONY",           newSonyMn,      Group::sonymn    }
+        { "Canon",          Group::canonmn,   newIfdMn,       newIfdMn2       },
+        { "FOVEON",         Group::sigmamn,   newSigmaMn,     newSigmaMn2     },
+        { "FUJIFILM",       Group::fujimn,    newFujiMn,      newFujiMn2      },
+        { "KONICA MINOLTA", Group::minoltamn, newIfdMn,       newIfdMn2       },
+        { "Minolta",        Group::minoltamn, newIfdMn,       newIfdMn2       },
+        { "NIKON",          Group::nikonmn,   newNikonMn,     0               },
+        { "OLYMPUS",        Group::olympmn,   newOlympusMn,   newOlympusMn2   },
+        { "Panasonic",      Group::panamn,    newPanasonicMn, newPanasonicMn2 },
+        { "SIGMA",          Group::sigmamn,   newSigmaMn,     newSigmaMn2     },
+        { "SONY",           Group::sonymn,    newSonyMn,      0               },
+        // Entries below are only used for lookup by group
+        { "-",              Group::nikon1mn,  0,              newIfdMn2       },
+        { "-",              Group::nikon2mn,  0,              newNikon2Mn2    },
+        { "-",              Group::nikon3mn,  0,              newNikon3Mn2    },
+        { "-",              Group::sony1mn,   0,              newSony1Mn2     },
+        { "-",              Group::sony2mn,   0,              newSony2Mn2     }
+
     };
 
-    bool TiffMnRegistry::operator==(const TiffMnRegistry::Key& key) const
+    bool TiffMnRegistry::operator==(const std::string& key) const
     {
         std::string make(make_);
-        return make == key.make_.substr(0, make.length());
+        return make == key.substr(0, make.length());
+    }
+
+    bool TiffMnRegistry::operator==(const uint16_t& key) const
+    {
+        return mnGroup_ == key;
     }
 
     TiffComponent* TiffMnCreator::create(uint16_t           tag,
@@ -75,13 +87,29 @@ namespace Exiv2 {
                                          ByteOrder          byteOrder)
     {
         TiffComponent* tc = 0;
-        const TiffMnRegistry* tmr = find(registry_, TiffMnRegistry::Key(make));
-        if (tmr) tc = tmr->newMnFct_(tag,
-                                     group,
-                                     tmr->mnGroup_,
-                                     pData,
-                                     size,
-                                     byteOrder);
+        const TiffMnRegistry* tmr = find(registry_, make);
+        if (tmr) {
+            assert(tmr->newMnFct_);
+            tc = tmr->newMnFct_(tag,
+                                group,
+                                tmr->mnGroup_,
+                                pData,
+                                size,
+                                byteOrder);
+        }
+        return tc;
+    } // TiffMnCreator::create
+
+    TiffComponent* TiffMnCreator::create(uint16_t           tag,
+                                         uint16_t           group,
+                                         uint16_t           mnGroup)
+    {
+        TiffComponent* tc = 0;
+        const TiffMnRegistry* tmr = find(registry_, mnGroup);
+        if (tmr) {
+            assert(tmr->newMnFct2_);
+            tc = tmr->newMnFct2_(tag, group, mnGroup);
+        }
         return tc;
     } // TiffMnCreator::create
 
@@ -116,14 +144,19 @@ namespace Exiv2 {
         return pHeader_->read(pData, size, byteOrder);
     }
 
-    void TiffIfdMakernote::doAddChild(TiffComponent::AutoPtr tiffComponent)
+    TiffComponent* TiffIfdMakernote::doAddPath(uint16_t tag, TiffPath& tiffPath)
     {
-        ifd_.addChild(tiffComponent);
+        return ifd_.addPath(tag, tiffPath);
     }
 
-    void TiffIfdMakernote::doAddNext(TiffComponent::AutoPtr tiffComponent)
+    TiffComponent* TiffIfdMakernote::doAddChild(TiffComponent::AutoPtr tiffComponent)
     {
-        ifd_.addNext(tiffComponent);
+        return ifd_.addChild(tiffComponent);
+    }
+
+    TiffComponent* TiffIfdMakernote::doAddNext(TiffComponent::AutoPtr tiffComponent)
+    {
+        return ifd_.addNext(tiffComponent);
     }
 
     void TiffIfdMakernote::doAccept(TiffVisitor& visitor)
@@ -330,22 +363,19 @@ namespace Exiv2 {
     // *************************************************************************
     // free functions
 
-    TiffComponent* newCanonMn(uint16_t    tag,
-                              uint16_t    group,
-                              uint16_t    mnGroup,
-                              const byte* /*pData*/,
-                              uint32_t    /*size*/,
-                              ByteOrder   /*byteOrder*/)
+    TiffComponent* newIfdMn(uint16_t    tag,
+                            uint16_t    group,
+                            uint16_t    mnGroup,
+                            const byte* /*pData*/,
+                            uint32_t    /*size*/,
+                            ByteOrder   /*byteOrder*/)
     {
-        return new TiffIfdMakernote(tag, group, mnGroup, 0);
+        return newIfdMn2(tag, group, mnGroup);
     }
 
-    TiffComponent* newMinoltaMn(uint16_t    tag,
-                                uint16_t    group,
-                                uint16_t    mnGroup,
-                                const byte* /*pData*/,
-                                uint32_t    /*size*/,
-                                ByteOrder   /*byteOrder*/)
+    TiffComponent* newIfdMn2(uint16_t tag,
+                             uint16_t group,
+                             uint16_t mnGroup)
     {
         return new TiffIfdMakernote(tag, group, mnGroup, 0);
     }
@@ -357,6 +387,13 @@ namespace Exiv2 {
                                 uint32_t    /*size*/,
                                 ByteOrder   /*byteOrder*/)
     {
+        return newOlympusMn2(tag, group, mnGroup);
+    }
+
+    TiffComponent* newOlympusMn2(uint16_t tag,
+                                 uint16_t group,
+                                 uint16_t mnGroup)
+    {
         return new TiffIfdMakernote(tag, group, mnGroup, new OlympusMnHeader);
     }
 
@@ -366,6 +403,13 @@ namespace Exiv2 {
                              const byte* /*pData*/,
                              uint32_t    /*size*/,
                              ByteOrder   /*byteOrder*/)
+    {
+        return newFujiMn2(tag, group, mnGroup);
+    }
+
+    TiffComponent* newFujiMn2(uint16_t tag,
+                              uint16_t group,
+                              uint16_t mnGroup)
     {
         return new TiffIfdMakernote(tag, group, mnGroup, new FujiMnHeader);
     }
@@ -380,7 +424,7 @@ namespace Exiv2 {
         // If there is no "Nikon" string it must be Nikon1 format
         if (size < 6 ||    std::string(reinterpret_cast<const char*>(pData), 6)
                         != std::string("Nikon\0", 6)) {
-            return new TiffIfdMakernote(tag, group, Group::nikon1mn, 0);
+            return newIfdMn2(tag, group, Group::nikon1mn);
         }
         // If the "Nikon" string is not followed by a TIFF header, we assume
         // Nikon2 format
@@ -388,10 +432,24 @@ namespace Exiv2 {
         if (   size < 18
             || !tiffHeader.read(pData + 10, size - 10)
             || tiffHeader.tag() != 0x002a) {
-            return new TiffIfdMakernote(tag, group, Group::nikon2mn, new Nikon2MnHeader);
+            return newNikon2Mn2(tag, group, Group::nikon2mn);
         }
         // Else we have a Nikon3 makernote
-        return new TiffIfdMakernote(tag, group, Group::nikon3mn, new Nikon3MnHeader);
+        return newNikon3Mn2(tag, group, Group::nikon3mn);
+    }
+
+    TiffComponent* newNikon2Mn2(uint16_t tag,
+                                uint16_t group,
+                                uint16_t mnGroup)
+    {
+        return new TiffIfdMakernote(tag, group, mnGroup, new Nikon2MnHeader);
+    }
+
+    TiffComponent* newNikon3Mn2(uint16_t tag, 
+                                uint16_t group, 
+                                uint16_t mnGroup)
+    {
+        return new TiffIfdMakernote(tag, group, mnGroup, new Nikon3MnHeader);
     }
 
     TiffComponent* newPanasonicMn(uint16_t    tag,
@@ -400,6 +458,13 @@ namespace Exiv2 {
                                   const byte* /*pData*/,
                                   uint32_t    /*size*/,
                                   ByteOrder   /*byteOrder*/)
+    {
+        return newPanasonicMn2(tag, group, mnGroup);
+    }
+
+    TiffComponent* newPanasonicMn2(uint16_t tag,
+                                   uint16_t group,
+                                   uint16_t mnGroup)
     {
         return new TiffIfdMakernote(tag, group, mnGroup, new PanasonicMnHeader, false);
     }
@@ -410,6 +475,13 @@ namespace Exiv2 {
                               const byte* /*pData*/,
                               uint32_t    /*size*/,
                               ByteOrder   /*byteOrder*/)
+    {
+        return newSigmaMn2(tag, group, mnGroup);
+    }
+
+    TiffComponent* newSigmaMn2(uint16_t tag,
+                               uint16_t group,
+                               uint16_t mnGroup)
     {
         return new TiffIfdMakernote(tag, group, mnGroup, new SigmaMnHeader);
     }
@@ -424,9 +496,23 @@ namespace Exiv2 {
         // If there is no "SONY DSC " string we assume it's a simple IFD Makernote
         if (size < 12 ||   std::string(reinterpret_cast<const char*>(pData), 12)
                         != std::string("SONY DSC \0\0\0", 12)) {
-            return new TiffIfdMakernote(tag, group, Group::sony2mn, 0, true);
+            return newSony2Mn2(tag, group, Group::sony2mn);
         }
-        return new TiffIfdMakernote(tag, group, Group::sony1mn, new SonyMnHeader, false);
+        return newSony1Mn2(tag, group, Group::sony1mn);
+    }
+
+    TiffComponent* newSony1Mn2(uint16_t tag,
+                               uint16_t group,
+                               uint16_t mnGroup)
+    {
+        return new TiffIfdMakernote(tag, group, mnGroup, new SonyMnHeader, false);
+    }
+
+    TiffComponent* newSony2Mn2(uint16_t tag,
+                               uint16_t group,
+                               uint16_t mnGroup)
+    {
+        return new TiffIfdMakernote(tag, group, mnGroup, 0, true);
     }
 
 }                                       // namespace Exiv2

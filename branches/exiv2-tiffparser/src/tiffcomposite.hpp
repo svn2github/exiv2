@@ -88,7 +88,7 @@ namespace Exiv2 {
              implement this interface.  A component can be uniquely identified
              by a tag, group tupel.  This class is implemented as a NVI
              (Non-Virtual Interface) and it has an interface for visitors
-             (Visitor pattern).
+             (Visitor pattern) to perform operations on all components.
      */
     class TiffComponent {
     public:
@@ -109,12 +109,32 @@ namespace Exiv2 {
 
         //! @name Manipulators
         //@{
-        //! Add a child to the component. Default is to do nothing.
-        void addChild(AutoPtr tiffComponent);
-        //! Add a "next" component to the component. Default is to do nothing.
-        void addNext(AutoPtr tiffComponent);
         /*!
-          @brief Interface to accept visitors (Visitor pattern).
+          @brief Add a TIFF entry \em tag to the component. Components on 
+                 the path to the entry are added if they don't exist yet.
+
+          @param tag      The tag of the new entry
+          @param tiffPath A path from the TIFF root element to a TIFF entry.
+
+          @return A pointer to the newly added TIFF entry.
+         */
+        TiffComponent* addPath(uint16_t tag, TiffPath& tiffPath);
+        /*!
+          @brief Add a child to the component. Default is to do nothing.
+          @param tiffComponent Auto pointer to the component to add.
+          @return Return a pointer to the newly added child element or 0.
+         */
+        TiffComponent* addChild(AutoPtr tiffComponent);
+        /*! 
+            @brief Add a "next" component to the component. Default is to do 
+                   nothing.
+            @param tiffComponent Auto pointer to the component to add.
+            @return Return a pointer to the newly added "next" element or 0.
+         */
+        TiffComponent* addNext(AutoPtr tiffComponent);
+        /*!
+          @brief Interface to accept visitors (Visitor pattern). Visitors
+                 can perform operations on all components of the composite.
 
           @param visitor The visitor.
          */
@@ -133,19 +153,21 @@ namespace Exiv2 {
         uint16_t tag()                        const { return tag_; }
         //! Return the group id of this component
         uint16_t group()                      const { return group_; }
-        //! Return the group name of this component
-        std::string groupName() const;
         //! Return a pointer to the start of the binary representation of the component
-        const byte* start()                   const { return pData_; }
+        byte* start()                         const { return pData_; }
 
     protected:
         //! @name Manipulators
         //@{
+        //! Implements addPath(). The default implementation does nothing.
+        virtual TiffComponent* doAddPath(uint16_t  /*tag*/, 
+                                         TiffPath& /*tiffPath*/) { return this; }
+
         //! Implements addChild(). The default implementation does nothing.
-        virtual void doAddChild(AutoPtr /*tiffComponent*/) {}
+        virtual TiffComponent* doAddChild(AutoPtr /*tiffComponent*/) { return 0; }
 
         //! Implements addNext(). The default implementation does nothing.
-        virtual void doAddNext(AutoPtr /*tiffComponent*/) {}
+        virtual TiffComponent* doAddNext(AutoPtr /*tiffComponent*/) { return 0; }
 
         //! Implements accept()
         virtual void doAccept(TiffVisitor& visitor) =0;
@@ -179,8 +201,10 @@ namespace Exiv2 {
         // DATA
         uint32_t       extendedTag_;    //!< Tag (32 bit so that it can contain special tags)
         uint16_t       group_;          //!< Group that contains the tag
-        NewTiffCompFct newTiffCompFct_; //!< Function to create the correct TIFF component
         uint16_t       newGroup_;       //!< Group of the newly created component
+        uint32_t       parentExtTag_;   //!< Parent tag (32 bit so that it can contain special tags)
+        uint16_t       parentGroup_;    //!< Parent group
+        NewTiffCompFct newTiffCompFct_; //!< Function to create the correct TIFF component
     };
 
     //! Search key for TIFF structure.
@@ -191,13 +215,13 @@ namespace Exiv2 {
         uint16_t g_;                    //!< %Group
     };
 
-    //! TIFF decoder table for functions to decode special cases
-    struct TiffDecoderInfo {
+    //! TIFF mapping table for functions to decode special cases
+    struct TiffMappingInfo {
         struct Key;
         /*!
-          @brief Compare a TiffDecoderInfo with a TiffDecoderInfo::Key.
-                 The two are equal if TiffDecoderInfo::make_ equals a substring
-                 of the key of the same size. E.g., decoder info = "OLYMPUS",
+          @brief Compare a TiffMappingInfo with a TiffMappingInfo::Key.
+                 The two are equal if TiffMappingInfo::make_ equals a substring
+                 of the key of the same size. E.g., mapping info = "OLYMPUS",
                  key = "OLYMPUS OPTICAL CO.,LTD" (found in the image) match,
                  the extendedTag is Tag::all or equal to the extended tag of the
                  key, and the group is equal to that of the key.
@@ -207,15 +231,16 @@ namespace Exiv2 {
         uint16_t tag() const { return static_cast<uint16_t>(extendedTag_ & 0xffff); }
 
         // DATA
-        const char* make_;        //!< Camera make for which this decoder function applies
+        const char* make_;        //!< Camera make for which these mapping functions apply
         uint32_t    extendedTag_; //!< Tag (32 bit so that it can contain special tags)
         uint16_t    group_;       //!< Group that contains the tag
         DecoderFct  decoderFct_;  //!< Decoder function for matching tags
+        EncoderFct  encoderFct_;  //!< Encoder function for matching tags
 
-    }; // struct TiffDecoderInfo
+    }; // struct TiffMappingInfo
 
-    //! Search key for TIFF decoder structures.
-    struct TiffDecoderInfo::Key {
+    //! Search key for TIFF mapping structures.
+    struct TiffMappingInfo::Key {
         //! Constructor
         Key(const std::string& m, uint32_t e, uint16_t g) : m_(m), e_(e), g_(g) {}
         std::string m_;                    //!< Camera make
@@ -231,14 +256,15 @@ namespace Exiv2 {
      */
     class TiffEntryBase : public TiffComponent {
         friend class TiffReader;
+        friend class TiffEncoder;
     public:
         //! @name Creators
         //@{
         //! Default constructor
         TiffEntryBase(uint16_t tag, uint16_t group)
             : TiffComponent(tag, group),
-              type_(0), count_(0), offset_(0),
-              size_(0), pData_(0), isAllocated_(false), pValue_(0) {}
+              type_(0), count_(0), offset_(0), size_(0), pData_(0), 
+              isMalloced_(false), isDeleted_(false), pValue_(0) {}
         //! Virtual destructor.
         virtual ~TiffEntryBase();
         //@}
@@ -262,19 +288,31 @@ namespace Exiv2 {
         const Value* pValue()    const { return pValue_; }
         //@}
 
+        //! @name Manipulators
+        //@{
+
+        // Todo: Using these invalidates pValue_ and size_
+
+        //! Set the field type
+        void setTypeId(TypeId typeId) { type_ = typeId; }
+        //! Set the number of components in this entry
+        void setCount(uint32_t count) { count_ = count; }
+        //@}
+
     private:
         // DATA
-        uint16_t type_;     //!< Field Type
-        uint32_t count_;    //!< The number of values of the indicated Type
-        uint32_t offset_;   //!< Offset to the data area
+        uint16_t type_;       //!< Field Type
+        uint32_t count_;      //!< The number of values of the indicated Type
+        uint32_t offset_;     //!< Offset to the data area
         /*!
           Size of the data buffer holding the value in bytes, there is no
           minimum size.
          */
         uint32_t size_;
-        const byte* pData_; //!< Pointer to the data area
-        bool     isAllocated_; //!< True if this entry owns the value data
-        Value*   pValue_;   //!< Converted data value
+        byte*    pData_;      //!< Pointer to the data area
+        bool     isMalloced_; //!< True if this entry owns the value data
+        bool     isDeleted_;  //!< True if this entry is deleted
+        Value*   pValue_;     //!< Converted data value
 
     }; // class TiffEntryBase
 
@@ -402,8 +440,9 @@ namespace Exiv2 {
     private:
         //! @name Manipulators
         //@{
-        virtual void doAddChild(TiffComponent::AutoPtr tiffComponent);
-        virtual void doAddNext(TiffComponent::AutoPtr tiffComponent);
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
+        virtual TiffComponent* doAddNext(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
@@ -431,8 +470,7 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Default constructor
-        TiffSubIfd(uint16_t tag, uint16_t group, uint16_t newGroup)
-            : TiffEntryBase(tag, group), newGroup_(newGroup) {}
+        TiffSubIfd(uint16_t tag, uint16_t group, uint16_t newGroup);
         //! Virtual destructor
         virtual ~TiffSubIfd();
         //@}
@@ -440,7 +478,8 @@ namespace Exiv2 {
     private:
         //! @name Manipulators
         //@{
-        virtual void doAddChild(TiffComponent::AutoPtr tiffComponent);
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
@@ -460,7 +499,8 @@ namespace Exiv2 {
      */
     class TiffMnEntry : public TiffEntryBase {
         friend class TiffReader;
-        friend class TiffMetadataDecoder;
+        friend class TiffDecoder;
+        friend class TiffEncoder;
         friend class TiffPrinter;
     public:
         //! @name Creators
@@ -475,8 +515,9 @@ namespace Exiv2 {
     private:
         //! @name Manipulators
         //@{
-        virtual void doAddChild(TiffComponent::AutoPtr tiffComponent);
-        virtual void doAddNext(TiffComponent::AutoPtr tiffComponent);
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
+        virtual TiffComponent* doAddNext(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
@@ -501,10 +542,7 @@ namespace Exiv2 {
         TiffArrayEntry(uint16_t tag,
                        uint16_t group,
                        uint16_t elGroup,
-                       uint16_t elSize)
-            : TiffEntryBase(tag, group),
-              elSize_(elSize),
-              elGroup_(elGroup) {}
+                       TypeId   elTypeId);
         //! Virtual destructor
         virtual ~TiffArrayEntry();
         //@}
@@ -520,7 +558,8 @@ namespace Exiv2 {
     private:
         //! @name Manipulators
         //@{
-        virtual void doAddChild(TiffComponent::AutoPtr tiffComponent);
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
@@ -577,9 +616,16 @@ namespace Exiv2 {
     //! Return the group name for a group
     const char* tiffGroupName(uint16_t group);
 
+    //! Return the TIFF group id for a group name
+    uint16_t tiffGroupId(const std::string& groupName);
+
     //! Function to create and initialize a new TIFF directory
     TiffComponent::AutoPtr newTiffDirectory(uint16_t tag,
                                             const TiffStructure* ts);
+
+    //! Function to create and initialize a new TIFF entry
+    TiffComponent::AutoPtr newTiffEntry(uint16_t tag, 
+                                        const TiffStructure* ts);
 
     //! Function to create and initialize a new TIFF sub-directory
     TiffComponent::AutoPtr newTiffSubIfd(uint16_t tag,
@@ -590,13 +636,13 @@ namespace Exiv2 {
                                           const TiffStructure* ts);
 
     //! Function to create and initialize a new array entry
-    template<uint16_t elSize>
+    template<TypeId typeId>
     TiffComponent::AutoPtr newTiffArrayEntry(uint16_t tag,
                                              const TiffStructure* ts)
     {
         assert(ts);
         return TiffComponent::AutoPtr(
-            new TiffArrayEntry(tag, ts->group_, ts->newGroup_, elSize));
+            new TiffArrayEntry(tag, ts->group_, ts->newGroup_, typeId));
     }
 
     //! Function to create and initialize a new array element

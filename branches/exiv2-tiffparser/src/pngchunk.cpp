@@ -238,7 +238,7 @@ namespace Exiv2 {
 #endif
                             pos = pos + sizeof(exifHeader);
                             TiffParser::decode(pImage, exifData.pData_ + pos, length - pos, 
-                                               TiffCreator::create, TiffDecoder::findDecoder);
+                                               TiffCreator::create, TiffMapping::findDecoder);
                         }
                     }
                 }

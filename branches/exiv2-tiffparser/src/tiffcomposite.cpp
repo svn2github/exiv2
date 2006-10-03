@@ -52,14 +52,16 @@ namespace Exiv2 {
 
     //! Structure for group and group name info
     struct TiffGroupInfo {
-        //! comparison operator
-        bool operator==(uint16_t group) const;
+        //! Comparison operator for group (id)
+        bool operator==(const uint16_t& group) const;
+        //! Comparison operator for group name
+        bool operator==(const std::string& groupName) const;
 
         uint16_t group_;   //!< group
         const char* name_; //!< group name
     };
 
-    // Todo: This mapping table probably still belongs somewhere else
+    // Todo: This mapping table probably belongs somewhere else - move it
     //! List of groups and their names
     extern const TiffGroupInfo tiffGroupInfo[] = {
         {   1, "Image"        },
@@ -95,9 +97,15 @@ namespace Exiv2 {
         { 278, "CanonPa"      }
     };
 
-    bool TiffGroupInfo::operator==(uint16_t group) const
+    bool TiffGroupInfo::operator==(const uint16_t& group) const
     {
         return group_ == group;
+    }
+
+    bool TiffGroupInfo::operator==(const std::string& groupName) const
+    {
+        std::string name(name_);
+        return name == groupName;
     }
 
     const char* tiffGroupName(uint16_t group)
@@ -107,18 +115,42 @@ namespace Exiv2 {
         return gi->name_;
     }
 
+    uint16_t tiffGroupId(const std::string& groupName)
+    {
+        const TiffGroupInfo* gi = find(tiffGroupInfo, groupName);
+        if (!gi) return 0;
+        return gi->group_;
+    }
+
     bool TiffStructure::operator==(const TiffStructure::Key& key) const
     {
         return    (Tag::all == extendedTag_ || key.e_ == extendedTag_)
                && key.g_ == group_;
     }
 
-    bool TiffDecoderInfo::operator==(const TiffDecoderInfo::Key& key) const
+    bool TiffMappingInfo::operator==(const TiffMappingInfo::Key& key) const
     {
         std::string make(make_);
         return    ("*" == make || make == key.m_.substr(0, make.length()))
                && (Tag::all == extendedTag_ || key.e_ == extendedTag_)
                && key.g_ == group_;
+    }
+
+    TiffSubIfd::TiffSubIfd(uint16_t tag, uint16_t group, uint16_t newGroup)
+        : TiffEntryBase(tag, group), newGroup_(newGroup) 
+    {
+        this->setTypeId(unsignedLong);
+    }
+
+    TiffArrayEntry::TiffArrayEntry(uint16_t tag, 
+                                   uint16_t group,
+                                   uint16_t elGroup,
+                                   TypeId elTypeId)
+        : TiffEntryBase(tag, group),
+          elSize_(static_cast<uint16_t>(TypeInfo::typeSize(elTypeId))),
+          elGroup_(elGroup) 
+    {
+        this->setTypeId(elTypeId);
     }
 
     TiffDirectory::~TiffDirectory()
@@ -140,7 +172,7 @@ namespace Exiv2 {
 
     TiffEntryBase::~TiffEntryBase()
     {
-        if (isAllocated_) {
+        if (isMalloced_) {
             delete[] pData_;
         }
         delete pValue_;
@@ -160,52 +192,186 @@ namespace Exiv2 {
         }
     } // TiffArrayEntry::~TiffArrayEntry
 
-    // Possibly this function shouldn't be in this class...
-    std::string TiffComponent::groupName() const
+    TiffComponent* TiffComponent::addPath(uint16_t tag, TiffPath& tiffPath)
     {
-        return tiffGroupName(group_);
-    }
+        return doAddPath(tag, tiffPath);
+    } // TiffComponent::addPath
 
-    void TiffComponent::addChild(TiffComponent::AutoPtr tiffComponent)
+    TiffComponent* TiffDirectory::doAddPath(uint16_t tag, TiffPath& tiffPath)
     {
-        doAddChild(tiffComponent);
+        tiffPath.pop();
+        assert(!tiffPath.empty());
+        const TiffStructure* ts = tiffPath.top();
+        assert(ts != 0);
+        TiffComponent* tc = 0;
+        // To allow duplicate entries, we only check if the new component already 
+        // exists if there is still at least one composite tag on the stack
+        if (tiffPath.size() > 1) {
+            if (ts->extendedTag_ == Tag::next) {
+                tc = pNext_;
+            }
+            else {
+                for (Components::iterator i = components_.begin(); 
+                     i != components_.end(); ++i) {
+                    if ((*i)->tag() == ts->tag() && (*i)->group() == ts->group_) {
+                        tc = *i;
+                        break;
+                    }
+                }
+            }
+        }
+        if (tc == 0) {
+            assert(ts->newTiffCompFct_ != 0);
+            uint16_t tg = tiffPath.size() == 1 ? tag : ts->tag();
+            TiffComponent::AutoPtr atc(ts->newTiffCompFct_(tg, ts));
+            if (ts->extendedTag_ == Tag::next) {
+                tc = this->addNext(atc);
+            }
+            else {
+                tc = this->addChild(atc);
+            }
+        }
+        return tc->addPath(tag, tiffPath);
+
+    } // TiffDirectory::doAddPath
+
+    TiffComponent* TiffSubIfd::doAddPath(uint16_t tag, TiffPath& tiffPath)
+    {
+        const TiffStructure* ts1 = tiffPath.top();
+        assert(ts1 != 0);
+        tiffPath.pop();
+        assert(!tiffPath.empty());
+        const TiffStructure* ts2 = tiffPath.top();
+        assert(ts2 != 0);
+        tiffPath.push(ts1);
+        uint16_t dt = ts1->tag();
+        TiffComponent* tc = 0;
+        for (Ifds::iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
+            if ((*i)->group() == ts2->group_) {
+                tc = *i;
+                break;
+            }            
+        }
+        if (tc == 0) {
+            TiffComponent::AutoPtr atc(new TiffDirectory(dt, ts2->group_));
+            tc = this->addChild(atc);
+            this->setCount(this->count() + 1);
+        }
+        return tc->addPath(tag, tiffPath);
+
+    } // TiffSubIfd::doAddPath
+
+    TiffComponent* TiffMnEntry::doAddPath(uint16_t tag, TiffPath& tiffPath)
+    {
+        const TiffStructure* ts1 = tiffPath.top();
+        assert(ts1 != 0);
+        tiffPath.pop();
+        assert(!tiffPath.empty());
+        const TiffStructure* ts2 = tiffPath.top();
+        assert(ts2 != 0);
+        tiffPath.push(ts1);
+        if (mn_ == 0) {
+            mnGroup_ = ts2->group_;
+            mn_ = TiffMnCreator::create(ts1->tag(), ts1->group_, mnGroup_);
+            assert(mn_);
+        }
+        return mn_->addPath(tag, tiffPath);
+
+    } // TiffMnEntry::doAddPath
+
+    TiffComponent* TiffArrayEntry::doAddPath(uint16_t tag, TiffPath& tiffPath)
+    {
+        tiffPath.pop();
+        assert(!tiffPath.empty());
+        const TiffStructure* ts = tiffPath.top();
+        assert(ts != 0);
+        TiffComponent* tc = 0;
+        // To allow duplicate entries, we only check if the new component already 
+        // exists if there is still at least one composite tag on the stack
+        if (tiffPath.size() > 1) {
+            for (Components::iterator i = elements_.begin(); i != elements_.end(); ++i) {
+                if ((*i)->tag() == ts->tag() && (*i)->group() == ts->group_) {
+                    tc = *i;
+                    break;
+                }
+            }
+        }
+        if (tc == 0) {
+            assert(ts->newTiffCompFct_ != 0);
+            uint16_t tg = tiffPath.size() == 1 ? tag : ts->tag();
+            TiffComponent::AutoPtr atc(ts->newTiffCompFct_(tg, ts));
+            assert(ts->extendedTag_ != Tag::next);
+            tc = this->addChild(atc);
+            this->setCount(this->count() + 1);
+        }
+        return tc->addPath(tag, tiffPath);
+
+    } // TiffArrayEntry::doAddPath
+
+    TiffComponent* TiffComponent::addChild(TiffComponent::AutoPtr tiffComponent)
+    {
+        return doAddChild(tiffComponent);
     } // TiffComponent::addChild
 
-    void TiffDirectory::doAddChild(TiffComponent::AutoPtr tiffComponent)
+    TiffComponent* TiffDirectory::doAddChild(TiffComponent::AutoPtr tiffComponent)
     {
-        components_.push_back(tiffComponent.release());
+        TiffComponent* tc = tiffComponent.release();
+        components_.push_back(tc);
+        return tc;
+
     } // TiffDirectory::doAddChild
 
-    void TiffSubIfd::doAddChild(TiffComponent::AutoPtr tiffComponent)
+    TiffComponent* TiffSubIfd::doAddChild(TiffComponent::AutoPtr tiffComponent)
     {
         TiffDirectory* d = dynamic_cast<TiffDirectory*>(tiffComponent.release());
         assert(d);
         ifds_.push_back(d);
+        return d;
+
     } // TiffSubIfd::doAddChild
 
-    void TiffMnEntry::doAddChild(TiffComponent::AutoPtr tiffComponent)
+    TiffComponent* TiffMnEntry::doAddChild(TiffComponent::AutoPtr tiffComponent)
     {
-        if (mn_) mn_->addChild(tiffComponent);
+        TiffComponent* tc = 0;
+        if (mn_) {
+            tc =  mn_->addChild(tiffComponent);
+        }
+        return tc;
+
     } // TiffMnEntry::doAddChild
 
-    void TiffArrayEntry::doAddChild(TiffComponent::AutoPtr tiffComponent)
+    TiffComponent* TiffArrayEntry::doAddChild(TiffComponent::AutoPtr tiffComponent)
     {
-        elements_.push_back(tiffComponent.release());
+        TiffComponent* tc = tiffComponent.release();
+        elements_.push_back(tc);
+        return tc;
+
     } // TiffArrayEntry::doAddChild
 
-    void TiffComponent::addNext(TiffComponent::AutoPtr tiffComponent)
+    TiffComponent* TiffComponent::addNext(TiffComponent::AutoPtr tiffComponent)
     {
-        doAddNext(tiffComponent);
+        return doAddNext(tiffComponent);
     } // TiffComponent::addNext
 
-    void TiffDirectory::doAddNext(TiffComponent::AutoPtr tiffComponent)
+    TiffComponent* TiffDirectory::doAddNext(TiffComponent::AutoPtr tiffComponent)
     {
-        if (hasNext_) pNext_ = tiffComponent.release();
+        TiffComponent* tc = 0;
+        if (hasNext_) {
+            tc = tiffComponent.release();
+            pNext_ = tc;
+        }
+        return tc;
+
     } // TiffDirectory::doAddNext
 
-    void TiffMnEntry::doAddNext(TiffComponent::AutoPtr tiffComponent)
+    TiffComponent* TiffMnEntry::doAddNext(TiffComponent::AutoPtr tiffComponent)
     {
-        if (mn_) mn_->addNext(tiffComponent);
+        TiffComponent* tc = 0;
+        if (mn_) {
+            tc = mn_->addNext(tiffComponent);
+        }
+        return tc;
+
     } // TiffMnEntry::doAddNext
 
     void TiffComponent::accept(TiffVisitor& visitor)
@@ -284,6 +450,13 @@ namespace Exiv2 {
     {
         assert(ts);
         return TiffComponent::AutoPtr(new TiffDirectory(tag, ts->newGroup_));
+    }
+
+    TiffComponent::AutoPtr newTiffEntry(uint16_t tag, 
+                                        const TiffStructure* ts)
+    {
+        assert(ts);
+        return TiffComponent::AutoPtr(new TiffEntry(tag, ts->newGroup_));
     }
 
     TiffComponent::AutoPtr newTiffSubIfd(uint16_t tag,

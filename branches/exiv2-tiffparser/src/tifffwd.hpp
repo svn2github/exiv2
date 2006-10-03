@@ -35,6 +35,7 @@
 
 // + standard includes
 #include <memory>
+#include <stack>
 
 // *****************************************************************************
 // namespace extensions
@@ -59,28 +60,40 @@ namespace Exiv2 {
 
     class TiffVisitor;
     class TiffFinder;
-    class TiffMetadataDecoder;
+    class TiffDecoder;
+    class TiffEncoder;
     class TiffReader;
     class TiffPrinter;
 
     class TiffRwState;
-    struct TiffDecoderInfo;
+    struct TiffMappingInfo;
 
     class Image;
     class Value;
 
 // *****************************************************************************
-// class definitions
+// type definitions
 
     /*!
-      @brief Function pointer type for a TiffMetadataDecoder member function 
+      @brief Function pointer type for a TiffDecoder member function 
              to decode a TIFF component.
      */
-    typedef void (TiffMetadataDecoder::*DecoderFct)(const TiffEntryBase*);
+    typedef void (TiffDecoder::*DecoderFct)(const TiffEntryBase*);
+    /*!
+      @brief Function pointer type for a TiffDecoder member function 
+             to decode a TIFF component.
+     */
+    typedef void (TiffEncoder::*EncoderFct)(TiffEntryBase*);
     /*!
       @brief Type for a function pointer for a function to decode a TIFF component.
      */
     typedef const DecoderFct (*FindDecoderFct)(const std::string& make, 
+                                                     uint32_t     extendedTag,
+                                                     uint16_t     group);
+    /*!
+      @brief Type for a function pointer for a function to encode a TIFF component.
+     */
+    typedef const EncoderFct (*FindEncoderFct)(const std::string& make, 
                                                      uint32_t     extendedTag,
                                                      uint16_t     group);
     /*!
@@ -97,6 +110,9 @@ namespace Exiv2 {
      */
     typedef std::auto_ptr<TiffComponent> (*TiffCompFactoryFct)(uint32_t extendedTag,
                                                                uint16_t group);
+
+    //! Stack to hold a path from the TIFF root element to a TIFF entry
+    typedef std::stack<const TiffStructure*> TiffPath;
 
 }                                       // namespace Exiv2
 

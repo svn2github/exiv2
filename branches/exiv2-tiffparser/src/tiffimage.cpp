@@ -127,16 +127,12 @@ namespace Exiv2 {
         }
         clearMetadata();
         TiffParser::decode(this, io_->mmap(), io_->size(),
-                           TiffCreator::create, TiffDecoder::findDecoder);
+                           TiffCreator::create, TiffMapping::findDecoder);
 
     } // TiffImage::readMetadata
 
     void TiffImage::writeMetadata()
     {
-/*
-
-       Todo: implement me!
-
 #ifdef DEBUG
         std::cerr << "Writing TIFF file " << io_->path() << "\n";
 #endif
@@ -155,14 +151,13 @@ namespace Exiv2 {
             }
         }
 
-        // Parse image, starting with a TIFF header component
-        TiffHeade2::AutoPtr head(new TiffHeade2);
-        if (buf.size_ != 0) {
-            head->read(buf.pData_, buf.size_);
-        }
-
         Blob blob;
-        TiffParser::encode(blob, head.get(), this);
+        TiffParser::encode(blob, 
+                           buf.pData_, 
+                           buf.size_, 
+                           this,
+                           TiffCreator::create,
+                           TiffMapping::findEncoder);
 
         // Write new buffer to file
         BasicIo::AutoPtr tempIo(io_->temporary()); // may throw
@@ -170,7 +165,7 @@ namespace Exiv2 {
         tempIo->write(&blob[0], static_cast<long>(blob.size()));
         io_->close();
         io_->transfer(*tempIo); // may throw
-*/
+
     } // TiffImage::writeMetadata
 
     bool TiffImage::isThisType(BasicIo& iIo, bool advance) const

@@ -141,7 +141,7 @@ namespace Exiv2 {
     public:
         //! @name Creators
         //@{
-        //! Constructor, taking the image to add the metadata to
+        //! Constructor, taking \em tag and \em group of the component to find.
         TiffFinder(uint16_t tag, uint16_t group)
             : tag_(tag), group_(group), tiffComponent_(0) {}
         //! Virtual destructor
@@ -196,23 +196,19 @@ namespace Exiv2 {
              pattern). Used by TiffParser to decode the metadata from a
              TIFF composite.
      */
-    class TiffMetadataDecoder : public TiffVisitor {
+    class TiffDecoder : public TiffVisitor {
     public:
         //! @name Creators
         //@{
         /*!
           @brief Constructor, taking the image to add the metadata to, the root
-                 element of the composite to decode and an optional
-                 threshold. Unknown tags with values larger (in bytes) than the
-                 threshold will be ignored.  Default is not to ignore any
-                 tags (0).
+                 element of the composite to decode.
          */
-        TiffMetadataDecoder(Image* pImage,
-                            TiffComponent* const pRoot,
-                            FindDecoderFct findDecoderFct =0,
-                            uint32_t threshold =0);
+        TiffDecoder(Image*               pImage,
+                    TiffComponent* const pRoot,
+                    FindDecoderFct       findDecoderFct);
         //! Virtual destructor
-        virtual ~TiffMetadataDecoder() {}
+        virtual ~TiffDecoder() {}
         //@}
 
         //! @name Manipulators
@@ -256,14 +252,153 @@ namespace Exiv2 {
         Image* pImage_;              //!< Pointer to the image to which the metadata is added
         TiffComponent* const pRoot_; //!< Root element of the composite
         const FindDecoderFct findDecoderFct_; //!< Ptr to the function to find special decoding functions
-        const uint32_t threshold_;   //!< Threshold, see constructor documentation.
         std::string make_;           //!< Camera make, determined from the tags to decode
 
         //! Type used to remember tag 0x00fe (NewSubfileType) for each group
         typedef std::map<uint16_t, uint32_t> GroupType;
         GroupType groupType_;        //!< NewSubfileType for each group
 
-    }; // class TiffMetadataDecoder
+    }; // class TiffDecoder
+
+    /*!
+      @brief TIFF composite visitor to encode metadata from an image to the TIFF
+             tree (Visitor pattern). Both, image and root element of the tree
+             are supplied in the constructor. Used by TiffParser to encode the
+             metadata into a TIFF composite. 
+
+      @note  Encoded tags are removed from the \em pImage metadata.
+     */
+    class TiffEncoder : public TiffVisitor {
+    public:
+        //! @name Creators
+        //@{
+        /*!
+          @brief Constructor, taking the root element of the composite to encode
+                 to, the image with the metadata to encode and a function to
+                 find special encoders.
+         */
+        TiffEncoder(const Image*   pImage,
+                    TiffComponent* pRoot,
+                    ByteOrder      byteOrder,
+                    FindEncoderFct findEncoderFct);
+        //! Virtual destructor
+        virtual ~TiffEncoder() {}
+        //@}
+
+        //! @name Manipulators
+        //@{
+        //! Encode a TIFF entry
+        virtual void visitEntry(TiffEntry* object);
+        //! Encode a TIFF data entry
+        virtual void visitDataEntry(TiffDataEntry* object);
+        //! Encode a TIFF size entry
+        virtual void visitSizeEntry(TiffSizeEntry* object);
+        //! Encode a TIFF directory
+        virtual void visitDirectory(TiffDirectory* object);
+        //! Encode a TIFF sub-IFD
+        virtual void visitSubIfd(TiffSubIfd* object);
+        //! Encode a TIFF makernote
+        virtual void visitMnEntry(TiffMnEntry* object);
+        //! Encode an IFD makernote
+        virtual void visitIfdMakernote(TiffIfdMakernote* object);
+        //! Reset encoder to its original state, undo makernote specific settings
+        virtual void visitIfdMakernoteEnd(TiffIfdMakernote* object);
+        //! Encode an array entry component
+        virtual void visitArrayEntry(TiffArrayEntry* object);
+        //! Encode an array element
+        virtual void visitArrayElement(TiffArrayElement* object);
+
+        //! Entry function, determines how to encode each tag
+        void encodeTiffEntry(TiffEntryBase* object);
+        //! Encode a standard TIFF entry
+        void encodeStdTiffEntry(TiffEntryBase* object);
+        //! Encode Olympus Thumbnail from the TIFF makernote into IFD1
+        void encodeOlympThumb(TiffEntryBase* object);
+        //! Encode SubIFD contents to Image group if it contains primary image data
+        void encodeSubIfd(TiffEntryBase* object);
+        //! Encode IPTC data from a Photoshop IRB tag
+        void encodeIrbIptc(TiffEntryBase* object);
+        //! Encode an entry using big endian byte order and the standard encoding function
+        void encodeBigEndianEntry(TiffEntryBase* object);
+
+        /*!
+          @brief Add metadata from image to the TIFF composite. 
+
+          When the encoder is used as a visitor (by passing it to the accept()
+          member of a TiffComponent), the composite tree is traversed and a
+          metadatum from the image is used to encode each component.  This
+          function works the other way around: For each metadatum in the image,
+          the corresponding TiffComponent is created if necessary and populated.
+          In order to encode all tags, both of the above mappings need to be
+          performed.
+        */
+        void add(TiffComponent* pRootDir, TiffCompFactoryFct createFct);
+        //@}
+
+        //! @name Accessors
+        //@{
+        /*!
+          @brief Return the applicable byte order. May be different for
+                 the Makernote and the rest of the TIFF entries.
+         */
+        ByteOrder byteOrder() const { return byteOrder_; }
+        //@}
+
+    private:
+        // DATA
+        const Image* pImage_;        //!< Pointer to the image with the metadata to encode
+        ExifData exifData_;          //!< Copy of the Exif data to encode
+        TiffComponent* pRoot_;       //!< Root element of the composite
+        ByteOrder byteOrder_;        //!< Byteorder for encoding
+        ByteOrder origByteOrder_;    //!< Byteorder as set in the c'tor
+        const FindEncoderFct findEncoderFct_; //!< Ptr to the function to find special encoding functions
+        std::string make_;           //!< Camera make, determined from the tags to encode
+        bool dirty_;                 //!< Signals if any tag is deleted or allocated
+    }; // class TiffEncoder
+
+    /*!
+      @brief Add TIFF component for \em tag and \em group to the composite.
+             Creates all the nodes required from the root element, which must
+             already exist (to invoke the visitor on).
+    */
+    class TiffAdder : public TiffVisitor {
+    public:
+        //! @name Creators
+        //@{
+        //! Constructor, taking \em tag and \em group of the component to add. 
+        TiffAdder(uint16_t tag, uint16_t group);
+        //! Virtual destructor
+        virtual ~TiffAdder() {}
+        //@}
+
+        //! @name Manipulators
+        //@{
+        //! Find tag and group in a TIFF entry
+        virtual void visitEntry(TiffEntry* object);
+        //! Find tag and group in a TIFF data entry
+        virtual void visitDataEntry(TiffDataEntry* object);
+        //! Find tag and group in a TIFF size entry
+        virtual void visitSizeEntry(TiffSizeEntry* object);
+        //! Find tag and group in a TIFF directory
+        virtual void visitDirectory(TiffDirectory* object);
+        //! Find tag and group in a TIFF sub-IFD
+        virtual void visitSubIfd(TiffSubIfd* object);
+        //! Find tag and group in a TIFF makernote
+        virtual void visitMnEntry(TiffMnEntry* object);
+        //! Find tag and group in an IFD makernote
+        virtual void visitIfdMakernote(TiffIfdMakernote* object);
+        //! Find tag and group in an array entry component
+        virtual void visitArrayEntry(TiffArrayEntry* object);
+        //! Find tag and group in an array element
+        virtual void visitArrayElement(TiffArrayElement* object);
+        //@}
+
+    private:
+        const uint16_t tag_;      //!< Tag of the new component 
+        const uint16_t group_;    //!< Group of the new component
+        TiffPath       tiffPath_; //!< Path to the component
+
+    }; // class TiffAdder
 
     /*!
       @brief Simple state class containing relevant state information for
@@ -288,7 +423,7 @@ namespace Exiv2 {
               createFct_(createFct) {}
         //@}
 
-        //! @name Manipulators
+        //! @name Accessors
         //@{
         /*!
           @brief Return the applicable byte order. May be different for
@@ -339,7 +474,7 @@ namespace Exiv2 {
           @param pData     Pointer to the data buffer, starting with a TIFF header.
           @param size      Number of bytes in the data buffer.
           @param pRoot     Root element of the TIFF composite.
-          @param state     State object for creation function, byteorder and
+          @param state     State object for creation function, byte order and
                            base offset.
          */
         TiffReader(const byte*          pData,
