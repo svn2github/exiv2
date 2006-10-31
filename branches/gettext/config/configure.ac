@@ -3,6 +3,12 @@
 
 AC_PREREQ(2.59)
 AC_INIT(Exiv2, 0.11, ahuggel@gmx.net)
+PACKAGE=$PACKAGE_NAME
+VERSION=$PACKAGE_VERSION
+AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
+AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
+AC_SUBST(PACKAGE)
+AC_SUBST(VERSION)
 AC_CONFIG_SRCDIR([src/exif.cpp])
 AC_CONFIG_HEADER([./config/config.h])
 AC_CONFIG_AUX_DIR([./config])
@@ -16,6 +22,9 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
+
+# I18n support
+AM_GNU_GETTEXT([external])
 
 # Libtool support
 AC_PROG_LIBTOOL
@@ -65,4 +74,5 @@ AC_SUBST(DEP_TRACKING,$DEP_TRACKING)
 AC_CONFIG_FILES([./config/config.mk])
 AC_CONFIG_FILES([./config/exiv2-config], [chmod +x ./config/exiv2-config])
 AC_CONFIG_FILES([./config/exiv2.pc])
+AC_CONFIG_FILES([./po/Makefile.in])
 AC_OUTPUT
