@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-02 16:24+0100\n"
+"POT-Creation-Date: 2006-11-02 21:51+0100\n"
 "PO-Revision-Date: 2005-03-12 05:42+0100\n"
 "Last-Translator: Arnaud Launay <asl@launay.org>\n"
-"Language-Team: FranÃ§ais <traduc@traduc.org>\n"
+"Language-Team: FranÃÂ§ais <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,4 +22,439 @@ msgstr ""
 
 #: src/tags.cpp:105
 msgid "Image data structure"
+msgstr ""
+
+#: src/tags.cpp:106
+msgid "Recording offset"
+msgstr ""
+
+#: src/tags.cpp:107
+msgid "Image data characteristics"
+msgstr ""
+
+#: src/tags.cpp:108
+msgid "Other data"
+msgstr ""
+
+#: src/tags.cpp:109
+msgid "Exif data structure"
+msgstr ""
+
+#: src/tags.cpp:110
+msgid "Exif version"
+msgstr ""
+
+#: src/tags.cpp:111
+msgid "Image configuration"
+msgstr ""
+
+#: src/tags.cpp:112
+msgid "User information"
+msgstr ""
+
+#: src/tags.cpp:113
+msgid "Related file"
+msgstr ""
+
+#: src/tags.cpp:114
+msgid "Date and time"
+msgstr ""
+
+#: src/tags.cpp:115
+msgid "Picture taking conditions"
+msgstr ""
+
+#: src/tags.cpp:116
+msgid "GPS information"
+msgstr ""
+
+#: src/tags.cpp:117
+msgid "Interoperability information"
+msgstr ""
+
+#: src/tags.cpp:118
+msgid "Vendor specific information"
+msgstr ""
+
+#: src/tags.cpp:119
+msgid "Last section"
+msgstr ""
+
+#: src/tags.cpp:139
+msgid "Primary image"
+msgstr ""
+
+#: src/tags.cpp:140
+msgid "Thumbnail/Preview image"
+msgstr ""
+
+#: src/tags.cpp:141
+msgid "Primary image, Multi page file"
+msgstr ""
+
+#: src/tags.cpp:142
+msgid "Thumbnail/Preview image, Multi page file"
+msgstr ""
+
+#: src/tags.cpp:143
+msgid "Primary image, Transparency mask"
+msgstr ""
+
+#: src/tags.cpp:144
+msgid "Thumbnail/Preview image, Transparency mask"
+msgstr ""
+
+#: src/tags.cpp:145
+msgid "Primary image, Multi page file, Transparency mask"
+msgstr ""
+
+#: src/tags.cpp:146
+msgid "Thumbnail/Preview image, Multi page file, Transparency mask"
+msgstr ""
+
+#: src/tags.cpp:151
+msgid "none"
+msgstr ""
+
+#: src/tags.cpp:152
+msgid "inch"
+msgstr ""
+
+#: src/tags.cpp:153
+msgid "cm"
+msgstr ""
+
+#: src/tags.cpp:158
+msgid "Uncompressed"
+msgstr ""
+
+#: src/tags.cpp:159
+msgid "CCITT RLE"
+msgstr ""
+
+#: src/tags.cpp:160
+msgid "T4/Group 3 Fax"
+msgstr ""
+
+#: src/tags.cpp:161
+msgid "T6/Group 4 Fax"
+msgstr ""
+
+#: src/tags.cpp:162
+msgid "LZW"
+msgstr ""
+
+#: src/tags.cpp:163
+msgid "JPEG (old-style)"
+msgstr ""
+
+#: src/tags.cpp:164
+msgid "JPEG"
+msgstr ""
+
+#: src/tags.cpp:165
+msgid "Adobe Deflate"
+msgstr ""
+
+#: src/tags.cpp:166
+msgid "JBIG B&W"
+msgstr ""
+
+#: src/tags.cpp:167
+msgid "JBIG Color"
+msgstr ""
+
+#: src/tags.cpp:168
+msgid "Next 2-bits RLE"
+msgstr ""
+
+#: src/tags.cpp:169
+msgid "CCITT RLE 1-word"
+msgstr ""
+
+#: src/tags.cpp:170
+msgid "PackBits (Macintosh RLE)"
+msgstr ""
+
+#: src/tags.cpp:171
+msgid "Thunderscan RLE"
+msgstr ""
+
+#: src/tags.cpp:172
+msgid "IT8 CT Padding"
+msgstr ""
+
+#: src/tags.cpp:173
+msgid "IT8 Linework RLE"
+msgstr ""
+
+#: src/tags.cpp:174
+msgid "IT8 Monochrome Picture"
+msgstr ""
+
+#: src/tags.cpp:175
+msgid "IT8 Binary Lineart"
+msgstr ""
+
+#: src/tags.cpp:176
+msgid "Pixar Film (10-bits LZW)"
+msgstr ""
+
+#: src/tags.cpp:177
+msgid "Pixar Log (11-bits ZIP)"
+msgstr ""
+
+#: src/tags.cpp:178
+msgid "Pixar Deflate"
+msgstr ""
+
+#: src/tags.cpp:179
+msgid "Kodak DCS Encoding"
+msgstr ""
+
+#: src/tags.cpp:180
+msgid "ISO JBIG"
+msgstr ""
+
+#: src/tags.cpp:181
+msgid "SGI Log Luminance RLE"
+msgstr ""
+
+#: src/tags.cpp:182
+msgid "SGI Log 24-bits packed"
+msgstr ""
+
+#: src/tags.cpp:183
+msgid "Leadtools JPEG 2000"
+msgstr ""
+
+#: src/tags.cpp:184
+msgid "Nikon NEF Compressed"
+msgstr ""
+
+#: src/tags.cpp:189
+msgid "White Is Zero"
+msgstr ""
+
+#: src/tags.cpp:190
+msgid "Black Is Zero"
+msgstr ""
+
+#: src/tags.cpp:191
+msgid "RGB"
+msgstr ""
+
+#: src/tags.cpp:192
+msgid "RGB Palette"
+msgstr ""
+
+#: src/tags.cpp:193
+msgid "Transparency Mask"
+msgstr ""
+
+#: src/tags.cpp:194
+msgid "CMYK"
+msgstr ""
+
+#: src/tags.cpp:195
+msgid "YCbCr"
+msgstr ""
+
+#: src/tags.cpp:196
+msgid "CIELab"
+msgstr ""
+
+#: src/tags.cpp:197
+msgid "ICCLab"
+msgstr ""
+
+#: src/tags.cpp:198
+msgid "ITULab"
+msgstr ""
+
+#: src/tags.cpp:199
+msgid "Color Filter Array"
+msgstr ""
+
+#: src/tags.cpp:200
+msgid "Pixar LogL"
+msgstr ""
+
+#: src/tags.cpp:201
+msgid "Pixar LogLuv"
+msgstr ""
+
+#: src/tags.cpp:202
+msgid "Linear Raw"
+msgstr ""
+
+#: src/tags.cpp:207
+msgid "top, left"
+msgstr ""
+
+#: src/tags.cpp:208
+msgid "top, right"
+msgstr ""
+
+#: src/tags.cpp:209
+msgid "bottom, right"
+msgstr ""
+
+#: src/tags.cpp:210
+msgid "bottom, left"
+msgstr ""
+
+#: src/tags.cpp:211
+msgid "left, top"
+msgstr ""
+
+#: src/tags.cpp:212
+msgid "right, top"
+msgstr ""
+
+#: src/tags.cpp:213
+msgid "right, bottom"
+msgstr ""
+
+#: src/tags.cpp:214
+msgid "left, bottom"
+msgstr ""
+
+#: src/tags.cpp:219
+msgid "Centered"
+msgstr ""
+
+#: src/tags.cpp:220
+msgid "Co-sited"
+msgstr ""
+
+#: src/tags.cpp:225
+msgid "New Subfile Type"
+msgstr ""
+
+#: src/tags.cpp:226
+msgid "A general indication of the kind of data contained in this subfile."
+msgstr ""
+
+#: src/tags.cpp:228
+msgid "Image Width"
+msgstr "Largeur de l'image"
+
+#: src/tags.cpp:229
+msgid ""
+"The number of columns of image data, equal to the number of pixels per row. "
+"In JPEG compressed data a JPEG marker is used instead of this tag."
+msgstr ""
+
+#: src/tags.cpp:233
+msgid "Image Length"
+msgstr "Hauteur de l'image"
+
+#: src/tags.cpp:234
+msgid ""
+"The number of rows of image data. In JPEG compressed data a JPEG marker is "
+"used instead of this tag."
+msgstr ""
+
+#: src/tags.cpp:237
+msgid "Bits per Sample"
+msgstr ""
+
+#: src/tags.cpp:238
+msgid ""
+"The number of bits per image component. In this standard each component of "
+"the image is 8 bits, so the value for this tag is 8. See also "
+"<SamplesPerPixel>. In JPEG compressed data a JPEG marker is used instead of "
+"this tag."
+msgstr ""
+
+#: src/tags.cpp:243
+msgid "Compression"
+msgstr ""
+
+#: src/tags.cpp:244
+msgid ""
+"The compression scheme used for the image data. When a primary image is JPEG "
+"compressed, this designation is not necessary and is omitted. When "
+"thumbnails use JPEG compression, this tag value is set to 6."
+msgstr ""
+
+#: src/tags.cpp:249
+msgid "Photometric Interpretation"
+msgstr ""
+
+#: src/tags.cpp:250
+msgid ""
+"The pixel composition. In JPEG compressed data a JPEG marker is used instead "
+"of this tag."
+msgstr ""
+
+#: src/tags.cpp:253
+msgid "Fill Order"
+msgstr ""
+
+#: src/tags.cpp:254
+msgid "The logical order of bits within a byte"
+msgstr ""
+
+#: src/tags.cpp:256
+msgid "Document Name"
+msgstr ""
+
+#: src/tags.cpp:257
+msgid "The name of the document from which this image was scanned"
+msgstr ""
+
+#: src/tags.cpp:259
+msgid "Image Description"
+msgstr ""
+
+#: src/tags.cpp:260
+msgid ""
+"A character string giving the title of the image. It may be a comment such "
+"as \"1988 company picnic\" or the like. Two-bytes character codes cannot be "
+"used. When a 2-bytes code is necessary, the Exif Private tag <UserComment> "
+"is to be used."
+msgstr ""
+
+#: src/tags.cpp:266
+msgid "Manufacturer"
+msgstr ""
+
+#: src/tags.cpp:267
+msgid ""
+"The manufacturer of the recording equipment. This is the manufacturer of the "
+"DSC, scanner, video digitizer or other equipment that generated the image. "
+"When the field is left blank, it is treated as unknown."
+msgstr ""
+
+#: src/tags.cpp:272
+msgid "Model"
+msgstr ""
+
+#: src/tags.cpp:273
+msgid ""
+"The model name or model number of the equipment. This is the model name or "
+"number of the DSC, scanner, video digitizer or other equipment that "
+"generated the image. When the field is left blank, it is treated as unknown."
+msgstr ""
+
+#: src/tags.cpp:278
+msgid "Strip Offsets"
+msgstr ""
+
+#: src/tags.cpp:279
+msgid ""
+"For each strip, the byte offset of that strip. It is recommended that this "
+"be selected so the number of strip bytes does not exceed 64 Kbytes. With "
+"JPEG compressed data this designation is not needed and is omitted. See also "
+"<RowsPerStrip> and <StripByteCounts>."
+msgstr ""
+
+#: src/tags.cpp:285
+msgid "Orientation"
+msgstr ""
+
+#: src/tags.cpp:286
+msgid "The image orientation viewed in terms of rows and columns."
 msgstr ""

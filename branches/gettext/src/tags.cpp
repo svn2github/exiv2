@@ -48,6 +48,9 @@ EXIV2_RCSID("@(#) $Id$")
 #include <cassert>
 #include <cmath>
 
+// i18n support.
+#include "i18n.h"
+
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
@@ -98,22 +101,22 @@ namespace Exiv2 {
     }
 
     const SectionInfo ExifTags::sectionInfo_[] = {
-        SectionInfo(sectionIdNotSet, "(UnknownSection)", "Unknown section"),
-        SectionInfo(imgStruct, "ImageStructure", "Image data structure"),
-        SectionInfo(recOffset, "RecordingOffset", "Recording offset"),
-        SectionInfo(imgCharacter, "ImageCharacteristics", "Image data characteristics"),
-        SectionInfo(otherTags, "OtherTags", "Other data"),
-        SectionInfo(exifFormat, "ExifFormat", "Exif data structure"),
-        SectionInfo(exifVersion, "ExifVersion", "Exif Version"),
-        SectionInfo(imgConfig, "ImageConfig", "Image configuration"),
-        SectionInfo(userInfo, "UserInfo", "User information"),
-        SectionInfo(relatedFile, "RelatedFile", "Related file"),
-        SectionInfo(dateTime, "DateTime", "Date and time"),
-        SectionInfo(captureCond, "CaptureConditions", "Picture taking conditions"),
-        SectionInfo(gpsTags, "GPS", "GPS information"),
-        SectionInfo(iopTags, "Interoperability", "Interoperability information"),
-        SectionInfo(makerTags, "Makernote", "Vendor specific information"),
-        SectionInfo(lastSectionId, "(LastSection)", "Last section")
+        SectionInfo(sectionIdNotSet, "(UnknownSection)", N_("Unknown section")),
+        SectionInfo(imgStruct, "ImageStructure", N_("Image data structure")),
+        SectionInfo(recOffset, "RecordingOffset", N_("Recording offset")),
+        SectionInfo(imgCharacter, "ImageCharacteristics", N_("Image data characteristics")),
+        SectionInfo(otherTags, "OtherTags", N_("Other data")),
+        SectionInfo(exifFormat, "ExifFormat", N_("Exif data structure")),
+        SectionInfo(exifVersion, "ExifVersion", N_("Exif version")),
+        SectionInfo(imgConfig, "ImageConfig", N_("Image configuration")),
+        SectionInfo(userInfo, "UserInfo", N_("User information")),
+        SectionInfo(relatedFile, "RelatedFile", N_("Related file")),
+        SectionInfo(dateTime, "DateTime", N_("Date and time")),
+        SectionInfo(captureCond, "CaptureConditions", N_("Picture taking conditions")),
+        SectionInfo(gpsTags, "GPS", N_("GPS information")),
+        SectionInfo(iopTags, "Interoperability", N_("Interoperability information")),
+        SectionInfo(makerTags, "Makernote", N_("Vendor specific information")),
+        SectionInfo(lastSectionId, "(LastSection)", N_("Last section"))
     };
 
     TagInfo::TagInfo(
@@ -133,154 +136,154 @@ namespace Exiv2 {
 
     //! NewSubfileType, TIFF tag 0x00fe - this is actually a bitmask
     extern const TagDetails exifNewSubfileType[] = {
-        {  0, "Primary image"                                               },
-        {  1, "Thumbnail/Preview image"                                     },
-        {  2, "Primary image, Multi page file"                              },
-        {  3, "Thumbnail/Preview image, Multi page file"                    },
-        {  4, "Primary image, Transparency mask"                            },
-        {  5, "Thumbnail/Preview image, Transparency mask"                  },
-        {  6, "Primary image, Multi page file, Transparency mask"           },
-        {  7, "Thumbnail/Preview image, Multi page file, Transparency mask" }
+        {  0, N_("Primary image")                                               },
+        {  1, N_("Thumbnail/Preview image")                                     },
+        {  2, N_("Primary image, Multi page file")                              },
+        {  3, N_("Thumbnail/Preview image, Multi page file")                    },
+        {  4, N_("Primary image, Transparency mask")                            },
+        {  5, N_("Thumbnail/Preview image, Transparency mask")                  },
+        {  6, N_("Primary image, Multi page file, Transparency mask")           },
+        {  7, N_("Thumbnail/Preview image, Multi page file, Transparency mask") }
     };
 
     //! Units for measuring X and Y resolution, tags 0x0128, 0xa210
     extern const TagDetails exifUnit[] = {
-        { 1, "none" },
-        { 2, "inch" },
-        { 3, "cm"   }
+        { 1, N_("none") },
+        { 2, N_("inch") },
+        { 3, N_("cm")   }
     };
 
     //! Compression, tag 0x0103
     extern const TagDetails exifCompression[] = {
-        {     1, "Uncompressed"             },
-        {     2, "CCITT RLE"                },
-        {     3, "T4/Group 3 Fax"           },
-        {     4, "T6/Group 4 Fax"           },
-        {     5, "LZW"                      },
-        {     6, "JPEG (old-style)"         },
-        {     7, "JPEG"                     },
-        {     8, "Adobe Deflate"            },
-        {     9, "JBIG B&W"                 },
-        {    10, "JBIG Color"               },
-        { 32766, "Next 2-bits RLE"          },
-        { 32771, "CCITT RLE 1-word"         },
-        { 32773, "PackBits (Macintosh RLE)" },
-        { 32809, "Thunderscan RLE"          },
-        { 32895, "IT8 CT Padding"           },
-        { 32896, "IT8 Linework RLE"         },
-        { 32897, "IT8 Monochrome Picture"   },
-        { 32898, "IT8 Binary Lineart"       },
-        { 32908, "Pixar Film (10-bits LZW)" },
-        { 32909, "Pixar Log (11-bits ZIP)"  },
-        { 32946, "Pixar Deflate"            },
-        { 32947, "Kodak DCS Encoding"       },
-        { 34661, "ISO JBIG"                 },
-        { 34676, "SGI Log Luminance RLE"    },
-        { 34677, "SGI Log 24-bits packed"   },
-        { 34712, "Leadtools JPEG 2000"      },
-        { 34713, "Nikon NEF Compressed"     }
+        {     1, N_("Uncompressed")             },
+        {     2, N_("CCITT RLE")                },
+        {     3, N_("T4/Group 3 Fax")           },
+        {     4, N_("T6/Group 4 Fax")           },
+        {     5, N_("LZW")                      },
+        {     6, N_("JPEG (old-style)")         },
+        {     7, N_("JPEG")                     },
+        {     8, N_("Adobe Deflate")            },
+        {     9, N_("JBIG B&W")                 },
+        {    10, N_("JBIG Color")               },
+        { 32766, N_("Next 2-bits RLE")          },
+        { 32771, N_("CCITT RLE 1-word")         },
+        { 32773, N_("PackBits (Macintosh RLE)") },
+        { 32809, N_("Thunderscan RLE")          },
+        { 32895, N_("IT8 CT Padding")           },
+        { 32896, N_("IT8 Linework RLE")         },
+        { 32897, N_("IT8 Monochrome Picture")   },
+        { 32898, N_("IT8 Binary Lineart")       },
+        { 32908, N_("Pixar Film (10-bits LZW)") },
+        { 32909, N_("Pixar Log (11-bits ZIP)")  },
+        { 32946, N_("Pixar Deflate")            },
+        { 32947, N_("Kodak DCS Encoding")       },
+        { 34661, N_("ISO JBIG")                 },
+        { 34676, N_("SGI Log Luminance RLE")    },
+        { 34677, N_("SGI Log 24-bits packed")   },
+        { 34712, N_("Leadtools JPEG 2000")      },
+        { 34713, N_("Nikon NEF Compressed")     }
     };
 
     //! PhotometricInterpretation, tag 0x0106
     extern const TagDetails exifPhotometricInterpretation[] = {
-        {     0, "White Is Zero"      },
-        {     1, "Black Is Zero"      },
-        {     2, "RGB"                },
-        {     3, "RGB Palette"        },
-        {     4, "Transparency Mask"  },
-        {     5, "CMYK"               },
-        {     6, "YCbCr"              },
-        {     8, "CIELab"             },
-        {     9, "ICCLab"             },
-        {    10, "ITULab"             },
-        { 32803, "Color Filter Array" },
-        { 32844, "Pixar LogL"         },
-        { 32845, "Pixar LogLuv"       },
-        { 34892, "Linear Raw"         }
+        {     0, N_("White Is Zero")      },
+        {     1, N_("Black Is Zero")      },
+        {     2, N_("RGB")                },
+        {     3, N_("RGB Palette")        },
+        {     4, N_("Transparency Mask")  },
+        {     5, N_("CMYK")               },
+        {     6, N_("YCbCr")              },
+        {     8, N_("CIELab")             },
+        {     9, N_("ICCLab")             },
+        {    10, N_("ITULab")             },
+        { 32803, N_("Color Filter Array") },
+        { 32844, N_("Pixar LogL")         },
+        { 32845, N_("Pixar LogLuv")       },
+        { 34892, N_("Linear Raw")         }
     };
 
     //! Orientation, tag 0x0112
     extern const TagDetails exifOrientation[] = {
-        { 1, "top, left"     },
-        { 2, "top, right"    },
-        { 3, "bottom, right" },
-        { 4, "bottom, left"  },
-        { 5, "left, top"     },
-        { 6, "right, top"    },
-        { 7, "right, bottom" },
-        { 8, "left, bottom"  }
+        { 1, N_("top, left")     },
+        { 2, N_("top, right")    },
+        { 3, N_("bottom, right") },
+        { 4, N_("bottom, left")  },
+        { 5, N_("left, top")     },
+        { 6, N_("right, top")    },
+        { 7, N_("right, bottom") },
+        { 8, N_("left, bottom")  }
     };
 
     //! YCbCrPositioning, tag 0x0213
     extern const TagDetails exifYCbCrPositioning[] = {
-        { 1, "Centered" },
-        { 2, "Co-sited" }
+        { 1, N_("Centered") },
+        { 2, N_("Co-sited") }
     };
 
     //! Base IFD Tags (IFD0 and IFD1)
     static const TagInfo ifdTagInfo[] = {
-        TagInfo(0x00fe, "NewSubfileType", "New Subfile Type", 
-                "A general indication of the kind of data contained in this subfile.",
+        TagInfo(0x00fe, "NewSubfileType", N_("New Subfile Type"), 
+                N_("A general indication of the kind of data contained in this subfile."),
                 ifd0Id, imgStruct, unsignedLong, EXV_PRINT_TAG(exifNewSubfileType)), // TIFF tag
-        TagInfo(0x0100, "ImageWidth", "Image Width",
-                "The number of columns of image data, equal to the number of "
+        TagInfo(0x0100, "ImageWidth", N_("Image Width"),
+                N_("The number of columns of image data, equal to the number of "
                 "pixels per row. In JPEG compressed data a JPEG marker is "
-                "used instead of this tag.",
+                "used instead of this tag."),
                 ifd0Id, imgStruct, unsignedLong, printValue),
-        TagInfo(0x0101, "ImageLength", "Image Length",
-                "The number of rows of image data. In JPEG compressed data a "
-                "JPEG marker is used instead of this tag.",
+        TagInfo(0x0101, "ImageLength", N_("Image Length"),
+                N_("The number of rows of image data. In JPEG compressed data a "
+                "JPEG marker is used instead of this tag."),
                 ifd0Id, imgStruct, unsignedLong, printValue),
-        TagInfo(0x0102, "BitsPerSample", "Bits per Sample",
-                "The number of bits per image component. In this standard each "
+        TagInfo(0x0102, "BitsPerSample", N_("Bits per Sample"),
+                N_("The number of bits per image component. In this standard each "
                 "component of the image is 8 bits, so the value for this "
                 "tag is 8. See also <SamplesPerPixel>. In JPEG compressed data "
-                "a JPEG marker is used instead of this tag.",
+                "a JPEG marker is used instead of this tag."),
                 ifd0Id, imgStruct, unsignedShort, printValue),
-        TagInfo(0x0103, "Compression", "Compression",
-                "The compression scheme used for the image data. When a "
+        TagInfo(0x0103, "Compression", N_("Compression"),
+                N_("The compression scheme used for the image data. When a "
                 "primary image is JPEG compressed, this designation is "
                 "not necessary and is omitted. When thumbnails use JPEG "
-                "compression, this tag value is set to 6.",
+                "compression, this tag value is set to 6."),
                 ifd0Id, imgStruct, unsignedShort, EXV_PRINT_TAG(exifCompression)),
-        TagInfo(0x0106, "PhotometricInterpretation", "Photometric Interpretation", 
-                "The pixel composition. In JPEG compressed data a JPEG "
-                "marker is used instead of this tag.",
+        TagInfo(0x0106, "PhotometricInterpretation", N_("Photometric Interpretation"), 
+                N_("The pixel composition. In JPEG compressed data a JPEG "
+                "marker is used instead of this tag."),
                 ifd0Id, imgStruct, unsignedShort, EXV_PRINT_TAG(exifPhotometricInterpretation)),
-        TagInfo(0x010a, "FillOrder", "Fill Order", 
-                "The logical order of bits within a byte", 
+        TagInfo(0x010a, "FillOrder", N_("Fill Order"), 
+                N_("The logical order of bits within a byte"), 
                 ifd0Id, imgStruct, unsignedShort, printValue), // TIFF tag
-        TagInfo(0x010d, "DocumentName", "Document Name", 
-                "The name of the document from which this image was scanned", 
+        TagInfo(0x010d, "DocumentName", N_("Document Name"), 
+                N_("The name of the document from which this image was scanned"), 
                 ifd0Id, imgStruct, asciiString, printValue), // TIFF tag
-        TagInfo(0x010e, "ImageDescription", "Image Description",
-                "A character string giving the title of the image. It may be "
+        TagInfo(0x010e, "ImageDescription", N_("Image Description"),
+                N_("A character string giving the title of the image. It may be "
                 "a comment such as \"1988 company picnic\" or "
                 "the like. Two-bytes character codes cannot be used. "
                 "When a 2-bytes code is necessary, the Exif Private tag "
-                "<UserComment> is to be used.",
+                "<UserComment> is to be used."),
                 ifd0Id, otherTags, asciiString, printValue),
-        TagInfo(0x010f, "Make", "Manufacturer",
-                "The manufacturer of the recording "
+        TagInfo(0x010f, "Make", N_("Manufacturer"),
+                N_("The manufacturer of the recording "
                 "equipment. This is the manufacturer of the DSC, scanner, "
                 "video digitizer or other equipment that generated the "
-                "image. When the field is left blank, it is treated as unknown.",
+                "image. When the field is left blank, it is treated as unknown."),
                 ifd0Id, otherTags, asciiString, printValue),
-        TagInfo(0x0110, "Model", "Model",
-                "The model name or model number of the equipment. This is the "
+        TagInfo(0x0110, "Model", N_("Model"),
+                N_("The model name or model number of the equipment. This is the "
                 "model name or number of the DSC, scanner, video digitizer "
                 "or other equipment that generated the image. When the field "
-                "is left blank, it is treated as unknown.",
+                "is left blank, it is treated as unknown."),
                 ifd0Id, otherTags, asciiString, printValue),
-        TagInfo(0x0111, "StripOffsets", "Strip Offsets",
-                "For each strip, the byte offset of that strip. It is "
+        TagInfo(0x0111, "StripOffsets", N_("Strip Offsets"),
+                N_("For each strip, the byte offset of that strip. It is "
                 "recommended that this be selected so the number of strip "
                 "bytes does not exceed 64 Kbytes. With JPEG compressed "
                 "data this designation is not needed and is omitted. See also "
-                "<RowsPerStrip> and <StripByteCounts>.",
+                "<RowsPerStrip> and <StripByteCounts>."),
                 ifd0Id, recOffset, unsignedLong, printValue),
-        TagInfo(0x0112, "Orientation", "Orientation",
-                "The image orientation viewed in terms of rows and columns.",
+        TagInfo(0x0112, "Orientation", N_("Orientation"),
+                N_("The image orientation viewed in terms of rows and columns."),
                 ifd0Id, imgStruct, unsignedShort, EXV_PRINT_TAG(exifOrientation)),
         TagInfo(0x0115, "SamplesPerPixel", "Samples per Pixel",
                 "The number of components per pixel. Since this standard applies "
