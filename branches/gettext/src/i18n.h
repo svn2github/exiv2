@@ -25,6 +25,7 @@
 #include "gettext.h"
 
 #ifdef ENABLE_NLS
+#include <libintl.h>
 #define _(String) (String)
 #define N_(String) (String)
 #endif
