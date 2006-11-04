@@ -39,7 +39,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "value.hpp"
 #include "makernote.hpp"
 #include "mn.hpp"                // To ensure that all makernotes are registered
-#include "i18n.h"                // i18n support
+#include "i18n.h"                // NLS support.
 
 #include <iostream>
 #include <iomanip>

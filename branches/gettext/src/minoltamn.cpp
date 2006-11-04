@@ -38,14 +38,12 @@ EXIV2_RCSID("@(#) $Id$")
 #include "makernote.hpp"
 #include "value.hpp"
 #include "tags.hpp"
+#include "i18n.h"                // NLS support.
 
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include <cassert>
-
-// i18n support.
-#include "i18n.h"
 
 // *****************************************************************************
 // class member definitions

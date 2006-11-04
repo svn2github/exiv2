@@ -36,13 +36,11 @@ EXIV2_RCSID("@(#) $Id$")
 #include "types.hpp"
 #include "value.hpp"
 #include "metadatum.hpp"
+#include "i18n.h"                // NLS support.
 
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-
-// i18n support.
-#include "i18n.h"
 
 // *****************************************************************************
 // class member definitions
@@ -191,7 +189,8 @@ namespace Exiv2 {
                 N_("Used as a shorthand reference for the object. Changes to exist-ing "
                 "data, such as updated stories or new crops on photos, should be "
                 "identified in tag <EditStatus>."), 
-                false, false, 0, 64, Exiv2::string, IptcDataSets::application2, "Document title"),
+                false, false, 0, 64, Exiv2::string, IptcDataSets::application2, 
+                N_("Document Title")),
         DataSet(IptcDataSets::EditStatus, "EditStatus", N_("Edit Status"), 
                 N_("Status of the object data, according to the practice of the provider."), 
                 false, false, 0, 64, Exiv2::string, IptcDataSets::application2, ""),
@@ -204,7 +203,8 @@ namespace Exiv2 {
                 N_("Specifies the editorial urgency of content and not necessarily the "
                 "envelope handling priority (see tag <EnvelopePriority>). The \"1\" "
                 "is most urgent, \"5\" normal and \"8\" denotes the least-urgent copy."), 
-                false, false, 1, 1, Exiv2::string, IptcDataSets::application2, "Urgency"),
+                false, false, 1, 1, Exiv2::string, IptcDataSets::application2, 
+                N_("Urgency")),
         DataSet(IptcDataSets::Subject, "Subject", N_("Subject"), 
                 N_("The Subject Reference is a structured definition of the subject matter."), 
                 false, true, 13, 236, Exiv2::string, IptcDataSets::application2, ""),
@@ -212,13 +212,15 @@ namespace Exiv2 {
                 N_("Identifies the subject of the object data in the opinion of the provider. "
                 "A list of categories will be maintained by a regional registry, "
                 "where available, otherwise by the provider."), 
-                false, false, 0, 3, Exiv2::string, IptcDataSets::application2, "Category"),
+                false, false, 0, 3, Exiv2::string, IptcDataSets::application2, 
+                N_("Category")),
         DataSet(IptcDataSets::SuppCategory, "SuppCategory", N_("Supplemental Category"), 
                 N_("Supplemental categories further refine the subject of an "
                 "object data. A supplemental category may include "
                 "any of the recognised categories as used in tag <Category>. Otherwise, "
                 "selection of supplemental categories are left to the provider."), 
-                false, true, 0, 32, Exiv2::string, IptcDataSets::application2, "Supplemental Categories"),
+                false, true, 0, 32, Exiv2::string, IptcDataSets::application2, 
+                N_("Supplemental Categories")),
         DataSet(IptcDataSets::FixtureId, "FixtureId", N_("Fixture Id"), 
                 N_("Identifies object data that recurs often and predictably. Enables "
                 "users to immediately find or recall such an object."), 
@@ -228,7 +230,8 @@ namespace Exiv2 {
                 "It is expected that a provider of various types of data that are related "
                 "in subject matter uses the same keyword, enabling the receiving system "
                 "or subsystems to search across all types of data for related material."), 
-                false, true, 0, 64, Exiv2::string, IptcDataSets::application2, "Keywords"),
+                false, true, 0, 64, Exiv2::string, IptcDataSets::application2, 
+                N_("Keywords")),
         DataSet(IptcDataSets::LocationCode, "LocationCode", N_("Location Code"), 
                 N_("Indicates the code of a country/geographical location referenced "
                 "by the content of the object. Where ISO has established an appropriate "
@@ -261,7 +264,8 @@ namespace Exiv2 {
         DataSet(IptcDataSets::SpecialInstructions, "SpecialInstructions", N_("Special Instructions"), 
                 N_("Other editorial instructions concerning the use of the object data, "
                 "such as embargoes and warnings."), 
-                false, false, 0, 256, Exiv2::string, IptcDataSets::application2, "Instructions"),
+                false, false, 0, 256, Exiv2::string, IptcDataSets::application2, 
+                N_("Instructions")),
         DataSet(IptcDataSets::ActionAdvised, "ActionAdvised", N_("Action Advised"), 
                 N_("Indicates the type of action that this object provides to a "
                 "previous object. The link to the previous object is made using "
@@ -281,7 +285,8 @@ namespace Exiv2 {
                 N_("Represented in the form CCYYMMDD to designate the date the "
                 "intellectual content of the object data was created rather than the "
                 "date of the creation of the physical representation. Follows ISO 8601 standard."), 
-                false, false, 8, 8, Exiv2::date, IptcDataSets::application2, "Date created"),
+                false, false, 8, 8, Exiv2::date, IptcDataSets::application2, 
+                N_("Date Created")),
         DataSet(IptcDataSets::TimeCreated, "TimeCreated", N_("Time Created"), 
                 N_("Represented in the form HHMMSS:HHMM to designate the "
                 "time the intellectual content of the object data current source "
@@ -309,7 +314,8 @@ namespace Exiv2 {
         DataSet(IptcDataSets::Byline, "Byline", N_("By-line"), 
                 N_("Contains name of the creator of the object data, e.g. writer, photographer "
                 "or graphic artist."), 
-                false, true, 0, 32, Exiv2::string, IptcDataSets::application2, "Author"),
+                false, true, 0, 32, Exiv2::string, IptcDataSets::application2, 
+                N_("Author")),
         DataSet(IptcDataSets::BylineTitle, "BylineTitle", N_("By-line Title"), 
                 N_("A by-line title is the title of the creator or creators of an "
                 "object data. Where used, a by-line title should follow the by-line it modifies."), 
@@ -317,7 +323,8 @@ namespace Exiv2 {
         DataSet(IptcDataSets::City, "City", N_("City"), 
                 N_("Identifies city of object data origin according to guidelines established "
                 "by the provider."), 
-                false, false, 0, 32, Exiv2::string, IptcDataSets::application2, "City"),
+                false, false, 0, 32, Exiv2::string, IptcDataSets::application2, 
+                N_("City")),
         DataSet(IptcDataSets::SubLocation, "SubLocation", N_("Sub Location"), 
                 N_("Identifies the location within a city from which the object data "
                 "originates, according to guidelines established by the provider."), 
@@ -325,7 +332,8 @@ namespace Exiv2 {
         DataSet(IptcDataSets::ProvinceState, "ProvinceState", N_("Province State"), 
                 N_("Identifies Province/State of origin according to guidelines "
                 "established by the provider."), 
-                false, false, 0, 32, Exiv2::string, IptcDataSets::application2, "State/Province"),
+                false, false, 0, 32, Exiv2::string, IptcDataSets::application2, 
+                N_("State/Province")),
         DataSet(IptcDataSets::CountryCode, "CountryCode", N_("Country Code"), 
                 N_("Indicates the code of the country/primary location where the "
                 "intellectual property of the object data was created, e.g. a photo "
@@ -340,31 +348,38 @@ namespace Exiv2 {
                 N_("Provides full, publishable, name of the country/primary location "
                 "where the intellectual property of the object data was created, "
                 "according to guidelines of the provider."), 
-                false, false, 0, 64, Exiv2::string, IptcDataSets::application2, "Country"),
+                false, false, 0, 64, Exiv2::string, IptcDataSets::application2, 
+                N_("Country")),
         DataSet(IptcDataSets::TransmissionReference, "TransmissionReference", N_("Transmission Reference"), 
                 N_("A code representing the location of original transmission according "
                 "to practices of the provider."), 
-                false, false, 0, 32, Exiv2::string, IptcDataSets::application2, "Transmission Reference"),
+                false, false, 0, 32, Exiv2::string, IptcDataSets::application2, 
+                N_("Transmission Reference")),
         DataSet(IptcDataSets::Headline, "Headline", N_("Headline"), 
                 N_("A publishable entry providing a synopsis of the contents of the object data."), 
-                false, false, 0, 256, Exiv2::string, IptcDataSets::application2, "Headline"),
+                false, false, 0, 256, Exiv2::string, IptcDataSets::application2, 
+                N_("Headline")),
         DataSet(IptcDataSets::Credit, "Credit", N_("Credit"), 
                 N_("Identifies the provider of the object data, not necessarily the owner/creator."), 
-                false, false, 0, 32, Exiv2::string, IptcDataSets::application2, "Credit"),
+                false, false, 0, 32, Exiv2::string, IptcDataSets::application2, 
+                N_("Credit")),
         DataSet(IptcDataSets::Source, "Source", N_("Source"), 
                 N_("Identifies the original owner of the intellectual content of the "
                 "object data. This could be an agency, a member of an agency or an individual."), 
-                false, false, 0, 32, Exiv2::string, IptcDataSets::application2, "Source"),
+                false, false, 0, 32, Exiv2::string, IptcDataSets::application2, 
+                N_("Source")),
         DataSet(IptcDataSets::Copyright, "Copyright", N_("Copyright"), 
                 N_("Contains any necessary copyright notice."), 
-                false, false, 0, 128, Exiv2::string, IptcDataSets::application2, "Copyright notice"),
+                false, false, 0, 128, Exiv2::string, IptcDataSets::application2, 
+                N_("Copyright Notice")),
         DataSet(IptcDataSets::Contact, "Contact", N_("Contact"), 
                 N_("Identifies the person or organisation which can provide further "
                 "background information on the object data."), 
                 false, true, 0, 128, Exiv2::string, IptcDataSets::application2, ""),
         DataSet(IptcDataSets::Caption, "Caption", N_("Caption"), 
                 N_("A textual description of the object data."), 
-                false, false, 0, 2000, Exiv2::string, IptcDataSets::application2, "Description"),
+                false, false, 0, 2000, Exiv2::string, IptcDataSets::application2, 
+                N_("Description")),
         DataSet(IptcDataSets::Writer, "Writer", N_("Writer"), 
                 N_("Identification of the name of the person involved in the writing, "
                 "editing or correcting the object data or caption/abstract."), 
@@ -421,7 +436,8 @@ namespace Exiv2 {
     static const DataSet unknownDataSet(0xffff, "Unknown dataset", N_("Unknown dataset"), 
                                         N_("Unknown dataset"), 
                                         false, true, 0, 0xffffffff, Exiv2::string, 
-                                        IptcDataSets::invalidRecord, "Unknown dataset");
+                                        IptcDataSets::invalidRecord, 
+                                        N_("Unknown dataset"));
 
     // Dataset lookup lists.This is an array with pointers to one list per IIM4 Record.
     // The record id is used as the index into the array.
