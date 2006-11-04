@@ -110,6 +110,11 @@ namespace {
 // Main
 int main(int argc, char* const argv[])
 {
+    // NLS support.
+    setlocale(LC_ALL, "");
+    bindtextdomain(EXV_PACKAGE, EXV_LOCALEDIR);
+    textdomain(EXV_PACKAGE);
+
     // Handle command line arguments
     Params& params = Params::instance();
     if (params.getopt(argc, argv)) {
@@ -124,9 +129,6 @@ int main(int argc, char* const argv[])
         params.version();
         return 0;
     }
-
-    // NLS support.
-    bindtextdomain(EXV_PACKAGE, EXV_LOCALEDIR);
 
     // Create the required action class
     Action::TaskFactory& taskFactory = Action::TaskFactory::instance();
