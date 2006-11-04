@@ -22,12 +22,10 @@
   File:      fujimn.cpp
   Version:   $Rev$
   Author(s): Andreas Huggel (ahu) <ahuggel@gmx.net>
+             Gilles Caulier (gc) <caulier.gilles@kdemail.net>
   History:   18-Feb-04, ahu: created
              07-Mar-04, ahu: isolated as a separate component
-  Credits:   Fujifilm MakerNote implemented according to the specification
-             in "Appendix 4: Makernote of Fujifilm" of the document
-             "Exif file format" by TsuruZoh Tachibanaya
-             <http://park2.wakwak.com/%7Etsuruzoh/Computer/Digicams/exif-e.html>
+  Credits:   See header file.
  */
 // *****************************************************************************
 #include "rcsid.hpp"
