@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-04 13:12+0100\n"
+"POT-Creation-Date: 2006-11-04 17:58+0100\n"
 "PO-Revision-Date: 2005-03-12 05:43+0100\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -882,7 +882,7 @@ msgstr ""
 msgid "Contains an IPTC/NAA record"
 msgstr ""
 
-#: src/tags.cpp:429 src/datasets.cpp:358
+#: src/tags.cpp:429 src/datasets.cpp:371
 msgid "Copyright"
 msgstr "Copyright"
 
@@ -978,27 +978,27 @@ msgstr "Desconocido"
 msgid "Not defined"
 msgstr "No definido"
 
-#: src/tags.cpp:471 src/tags.cpp:583 src/tags.cpp:590 src/minoltamn.cpp:293
-#: src/minoltamn.cpp:759 src/minoltamn.cpp:790 src/minoltamn.cpp:798
-#: src/minoltamn.cpp:958 src/minoltamn.cpp:989
+#: src/tags.cpp:471 src/tags.cpp:583 src/tags.cpp:590 src/minoltamn.cpp:291
+#: src/minoltamn.cpp:757 src/minoltamn.cpp:788 src/minoltamn.cpp:796
+#: src/minoltamn.cpp:956 src/minoltamn.cpp:987
 msgid "Manual"
 msgstr "Manual"
 
-#: src/tags.cpp:472 src/tags.cpp:582 src/tags.cpp:589 src/minoltamn.cpp:306
-#: src/minoltamn.cpp:424 src/minoltamn.cpp:760 src/minoltamn.cpp:783
-#: src/minoltamn.cpp:822 src/minoltamn.cpp:959 src/minoltamn.cpp:981
-#: src/minoltamn.cpp:1007
+#: src/tags.cpp:472 src/tags.cpp:582 src/tags.cpp:589 src/minoltamn.cpp:304
+#: src/minoltamn.cpp:422 src/minoltamn.cpp:758 src/minoltamn.cpp:781
+#: src/minoltamn.cpp:820 src/minoltamn.cpp:957 src/minoltamn.cpp:979
+#: src/minoltamn.cpp:1005
 #, fuzzy
 msgid "Auto"
 msgstr "acción"
 
-#: src/tags.cpp:473 src/minoltamn.cpp:291 src/minoltamn.cpp:757
-#: src/minoltamn.cpp:956
+#: src/tags.cpp:473 src/minoltamn.cpp:289 src/minoltamn.cpp:755
+#: src/minoltamn.cpp:954
 msgid "Aperture priority"
 msgstr "Prioridad de apertura"
 
-#: src/tags.cpp:474 src/minoltamn.cpp:292 src/minoltamn.cpp:758
-#: src/minoltamn.cpp:957
+#: src/tags.cpp:474 src/minoltamn.cpp:290 src/minoltamn.cpp:756
+#: src/minoltamn.cpp:955
 msgid "Shutter priority"
 msgstr "Prioridad del obturador"
 
@@ -1022,8 +1022,8 @@ msgstr "Retrato"
 msgid "Landscape mode"
 msgstr "Paisaje"
 
-#: src/tags.cpp:483 src/tags.cpp:495 src/tags.cpp:633 src/tags.cpp:1800
-#: src/tags.cpp:1871
+#: src/tags.cpp:483 src/tags.cpp:495 src/tags.cpp:633 src/tags.cpp:1791
+#: src/tags.cpp:1862
 msgid "Unknown"
 msgstr "Desconocido"
 
@@ -1036,8 +1036,8 @@ msgstr "Promedio"
 msgid "Center weighted average"
 msgstr "Promedio Ponderado en el Centro"
 
-#: src/tags.cpp:486 src/minoltamn.cpp:353 src/minoltamn.cpp:1002
-#: src/minoltamn.cpp:1055
+#: src/tags.cpp:486 src/minoltamn.cpp:351 src/minoltamn.cpp:1000
+#: src/minoltamn.cpp:1053
 msgid "Spot"
 msgstr "Lugar"
 
@@ -1046,7 +1046,7 @@ msgstr "Lugar"
 msgid "Multi-spot"
 msgstr "multi-lugar"
 
-#: src/tags.cpp:488 src/minoltamn.cpp:351 src/minoltamn.cpp:1000
+#: src/tags.cpp:488 src/minoltamn.cpp:349 src/minoltamn.cpp:998
 #, fuzzy
 msgid "Multi-segment"
 msgstr "multi-lugar"
@@ -1060,13 +1060,13 @@ msgstr "Parcial"
 msgid "Other"
 msgstr "otro"
 
-#: src/tags.cpp:496 src/minoltamn.cpp:307 src/minoltamn.cpp:784
-#: src/minoltamn.cpp:982
+#: src/tags.cpp:496 src/minoltamn.cpp:305 src/minoltamn.cpp:782
+#: src/minoltamn.cpp:980
 msgid "Daylight"
 msgstr "Luz de día"
 
-#: src/tags.cpp:497 src/minoltamn.cpp:311 src/minoltamn.cpp:788
-#: src/minoltamn.cpp:986
+#: src/tags.cpp:497 src/minoltamn.cpp:309 src/minoltamn.cpp:786
+#: src/minoltamn.cpp:984
 msgid "Fluorescent"
 msgstr "Fluorescente"
 
@@ -1075,9 +1075,9 @@ msgstr "Fluorescente"
 msgid "Tungsten (incandescent light)"
 msgstr "Tungsteno (luz incandescente)"
 
-#: src/tags.cpp:499 src/tags.cpp:719 src/minoltamn.cpp:649
-#: src/minoltamn.cpp:883 src/minoltamn.cpp:884 src/minoltamn.cpp:987
-#: src/minoltamn.cpp:1116 src/minoltamn.cpp:1117
+#: src/tags.cpp:499 src/tags.cpp:719 src/minoltamn.cpp:647
+#: src/minoltamn.cpp:881 src/minoltamn.cpp:882 src/minoltamn.cpp:985
+#: src/minoltamn.cpp:1114 src/minoltamn.cpp:1115
 msgid "Flash"
 msgstr "Flash"
 
@@ -1089,7 +1089,7 @@ msgstr "Tiempo bueno"
 msgid "Cloudy weather"
 msgstr "Tiempo nublado"
 
-#: src/tags.cpp:502 src/minoltamn.cpp:785 src/minoltamn.cpp:984
+#: src/tags.cpp:502 src/minoltamn.cpp:783 src/minoltamn.cpp:982
 msgid "Shade"
 msgstr "Sombra"
 
@@ -1156,8 +1156,8 @@ msgstr "El tipo de fuente de luz."
 msgid "No flash"
 msgstr "Flash"
 
-#: src/tags.cpp:521 src/minoltamn.cpp:392 src/minoltamn.cpp:464
-#: src/minoltamn.cpp:817 src/minoltamn.cpp:995
+#: src/tags.cpp:521 src/minoltamn.cpp:390 src/minoltamn.cpp:462
+#: src/minoltamn.cpp:815 src/minoltamn.cpp:993
 msgid "Fired"
 msgstr ""
 
@@ -1275,7 +1275,7 @@ msgstr ""
 msgid "sRGB"
 msgstr "sRVA"
 
-#: src/tags.cpp:547 src/minoltamn.cpp:458 src/minoltamn.cpp:835
+#: src/tags.cpp:547 src/minoltamn.cpp:456 src/minoltamn.cpp:833
 msgid "Adobe RGB"
 msgstr ""
 
@@ -1340,15 +1340,15 @@ msgstr "Proceso personalizado"
 msgid "Auto bracket"
 msgstr "Auto bracket"
 
-#: src/tags.cpp:595 src/minoltamn.cpp:79 src/minoltamn.cpp:333
+#: src/tags.cpp:595 src/minoltamn.cpp:77 src/minoltamn.cpp:331
 msgid "Standard"
 msgstr "Estándar"
 
-#: src/tags.cpp:596 src/minoltamn.cpp:68
+#: src/tags.cpp:596 src/minoltamn.cpp:66
 msgid "Landscape"
 msgstr "Paisaje"
 
-#: src/tags.cpp:597 src/minoltamn.cpp:65 src/minoltamn.cpp:411
+#: src/tags.cpp:597 src/minoltamn.cpp:63 src/minoltamn.cpp:409
 msgid "Portrait"
 msgstr "Retrato"
 
@@ -1356,7 +1356,7 @@ msgstr "Retrato"
 msgid "Night scene"
 msgstr "Escena nocturna"
 
-#: src/tags.cpp:603 src/minoltamn.cpp:410 src/minoltamn.cpp:504
+#: src/tags.cpp:603 src/minoltamn.cpp:408 src/minoltamn.cpp:502
 msgid "None"
 msgstr ""
 
@@ -1376,16 +1376,16 @@ msgstr "Ganancia baja baja"
 msgid "High gain down"
 msgstr "Ganancia alta baja"
 
-#: src/tags.cpp:612 src/tags.cpp:619 src/tags.cpp:626 src/minoltamn.cpp:404
-#: src/minoltamn.cpp:776 src/minoltamn.cpp:974
+#: src/tags.cpp:612 src/tags.cpp:619 src/tags.cpp:626 src/minoltamn.cpp:402
+#: src/minoltamn.cpp:774 src/minoltamn.cpp:972
 msgid "Normal"
 msgstr "Normal"
 
-#: src/tags.cpp:613 src/tags.cpp:627 src/minoltamn.cpp:405
+#: src/tags.cpp:613 src/tags.cpp:627 src/minoltamn.cpp:403
 msgid "Soft"
 msgstr "Suave"
 
-#: src/tags.cpp:614 src/tags.cpp:628 src/minoltamn.cpp:403
+#: src/tags.cpp:614 src/tags.cpp:628 src/minoltamn.cpp:401
 msgid "Hard"
 msgstr "Duro"
 
@@ -1410,8 +1410,8 @@ msgstr "Vista cercana"
 msgid "Distant view"
 msgstr "Vista distante"
 
-#: src/tags.cpp:641 src/minoltamn.cpp:619 src/minoltamn.cpp:921
-#: src/minoltamn.cpp:1134
+#: src/tags.cpp:641 src/minoltamn.cpp:617 src/minoltamn.cpp:919
+#: src/minoltamn.cpp:1132
 msgid "Exposure Time"
 msgstr "Tiempo de exposición"
 
@@ -1419,8 +1419,8 @@ msgstr "Tiempo de exposición"
 msgid "Exposure time, given in seconds (sec)."
 msgstr "Tiempo de exposición, dado en segundos (seg)."
 
-#: src/tags.cpp:644 src/minoltamn.cpp:622 src/minoltamn.cpp:918
-#: src/minoltamn.cpp:1137
+#: src/tags.cpp:644 src/minoltamn.cpp:620 src/minoltamn.cpp:916
+#: src/minoltamn.cpp:1135
 #, fuzzy
 msgid "FNumber"
 msgstr "El número F."
@@ -1574,7 +1574,7 @@ msgstr "Apertura"
 msgid "The lens aperture. The unit is the APEX value."
 msgstr "La apertura de la lente. La unidad es el valor APEX."
 
-#: src/tags.cpp:697 src/minoltamn.cpp:715 src/minoltamn.cpp:716
+#: src/tags.cpp:697 src/minoltamn.cpp:713 src/minoltamn.cpp:714
 msgid "Brightness"
 msgstr "Brillo"
 
@@ -1620,7 +1620,7 @@ msgstr "Distancia del sujeto"
 msgid "The distance to the subject, given in meters."
 msgstr "La distancia al sujeto, dada en metros."
 
-#: src/tags.cpp:713 src/minoltamn.cpp:613 src/minoltamn.cpp:1119
+#: src/tags.cpp:713 src/minoltamn.cpp:611 src/minoltamn.cpp:1117
 msgid "Metering Mode"
 msgstr "Modo de métrica"
 
@@ -1643,7 +1643,7 @@ msgstr ""
 "Esta etiqueta se registra cuando se toma una imagen usando una luz "
 "estrosboscópica (flash)."
 
-#: src/tags.cpp:722 src/minoltamn.cpp:643
+#: src/tags.cpp:722 src/minoltamn.cpp:641
 msgid "Focal Length"
 msgstr "Distancia focal"
 
@@ -1733,7 +1733,7 @@ msgstr "Flash"
 msgid "The FlashPix format version supported by a FPXR file."
 msgstr "La versión del formato FlashPix soportada por un archivo FPXR."
 
-#: src/tags.cpp:751 src/minoltamn.cpp:895
+#: src/tags.cpp:751 src/minoltamn.cpp:893
 msgid "Color Space"
 msgstr "Espacio de color"
 
@@ -1983,8 +1983,8 @@ msgstr ""
 "procesamiento especial, se espera que el lector deshabilite o minimice el "
 "procesado siguiente."
 
-#: src/tags.cpp:847 src/minoltamn.cpp:595 src/minoltamn.cpp:865
-#: src/minoltamn.cpp:1098
+#: src/tags.cpp:847 src/minoltamn.cpp:593 src/minoltamn.cpp:863
+#: src/minoltamn.cpp:1096
 msgid "Exposure Mode"
 msgstr "Modo de exposición"
 
@@ -1998,8 +1998,8 @@ msgstr ""
 "imagen. En el modo auto-bracketing, la cámara toma una serie de cuadros de "
 "la misma escena con ajustes de exposición diferentes."
 
-#: src/tags.cpp:852 src/minoltamn.cpp:601 src/minoltamn.cpp:874
-#: src/minoltamn.cpp:1107
+#: src/tags.cpp:852 src/minoltamn.cpp:599 src/minoltamn.cpp:872
+#: src/minoltamn.cpp:1105
 msgid "White Balance"
 msgstr "Balance de blanco"
 
@@ -2062,9 +2062,9 @@ msgid "This tag indicates the degree of overall image gain adjustment."
 msgstr ""
 "Esta etiqueta indica el grado del ajuste de ganancia general de imagen."
 
-#: src/tags.cpp:874 src/minoltamn.cpp:491 src/minoltamn.cpp:679
-#: src/minoltamn.cpp:680 src/minoltamn.cpp:901 src/minoltamn.cpp:902
-#: src/minoltamn.cpp:1128 src/minoltamn.cpp:1129
+#: src/tags.cpp:874 src/minoltamn.cpp:489 src/minoltamn.cpp:677
+#: src/minoltamn.cpp:678 src/minoltamn.cpp:899 src/minoltamn.cpp:900
+#: src/minoltamn.cpp:1126 src/minoltamn.cpp:1127
 msgid "Contrast"
 msgstr "Contraste"
 
@@ -2076,9 +2076,9 @@ msgstr ""
 "Esta etiqueta indica la dirección del procesamiento de contraste aplicado "
 "por la cámara cuando se tomó la imagen."
 
-#: src/tags.cpp:878 src/minoltamn.cpp:492 src/minoltamn.cpp:676
-#: src/minoltamn.cpp:677 src/minoltamn.cpp:904 src/minoltamn.cpp:905
-#: src/minoltamn.cpp:1131 src/minoltamn.cpp:1132
+#: src/tags.cpp:878 src/minoltamn.cpp:490 src/minoltamn.cpp:674
+#: src/minoltamn.cpp:675 src/minoltamn.cpp:902 src/minoltamn.cpp:903
+#: src/minoltamn.cpp:1129 src/minoltamn.cpp:1130
 msgid "Saturation"
 msgstr "Saturación"
 
@@ -2090,9 +2090,9 @@ msgstr ""
 "Esta etiqueta indica la dirección del procesamiento de stauración aplicado "
 "por la cámara cuando se tomó la imagen."
 
-#: src/tags.cpp:882 src/minoltamn.cpp:682 src/minoltamn.cpp:683
-#: src/minoltamn.cpp:898 src/minoltamn.cpp:899 src/minoltamn.cpp:1125
-#: src/minoltamn.cpp:1126
+#: src/tags.cpp:882 src/minoltamn.cpp:680 src/minoltamn.cpp:681
+#: src/minoltamn.cpp:896 src/minoltamn.cpp:897 src/minoltamn.cpp:1123
+#: src/minoltamn.cpp:1124
 msgid "Sharpness"
 msgstr "Nitidez"
 
@@ -2629,56 +2629,56 @@ msgstr "Versión Exif"
 msgid "Unknown tag"
 msgstr "Desconocido"
 
-#: src/tags.cpp:1803
+#: src/tags.cpp:1794
 msgid "Infinity"
 msgstr ""
 
-#: src/tags.cpp:1855
+#: src/tags.cpp:1846
 #, fuzzy
 msgid "Digital zoom not used"
 msgstr "Relación de zoom digital"
 
-#: src/datasets.cpp:81
+#: src/datasets.cpp:79
 msgid "(invalid)"
 msgstr ""
 
-#: src/datasets.cpp:82
+#: src/datasets.cpp:80
 msgid "IIM envelope record"
 msgstr ""
 
-#: src/datasets.cpp:83
+#: src/datasets.cpp:81
 msgid "IIM application record 2"
 msgstr ""
 
-#: src/datasets.cpp:87
+#: src/datasets.cpp:85
 #, fuzzy
 msgid "Model Version"
 msgstr "Versión Exif"
 
-#: src/datasets.cpp:88
+#: src/datasets.cpp:86
 msgid ""
 "A binary number identifying the version of the Information Interchange "
 "Model, Part I, utilised by the provider. Version numbers are assigned by "
 "IPTC and NAA organizations."
 msgstr ""
 
-#: src/datasets.cpp:92
+#: src/datasets.cpp:90
 #, fuzzy
 msgid "Destination"
 msgstr "Orientación"
 
-#: src/datasets.cpp:93
+#: src/datasets.cpp:91
 msgid ""
 "This DataSet is to accommodate some providers who require routing "
 "information above the appropriate OSI layers."
 msgstr ""
 
-#: src/datasets.cpp:96
+#: src/datasets.cpp:94
 #, fuzzy
 msgid "File Format"
 msgstr "Fuente de archivo"
 
-#: src/datasets.cpp:97
+#: src/datasets.cpp:95
 msgid ""
 "A binary number representing the file format. The file format must be "
 "registered with IPTC or NAA with a unique number assigned to it. The "
@@ -2686,30 +2686,30 @@ msgid ""
 "the receiving system to perform the appropriate actions there to."
 msgstr ""
 
-#: src/datasets.cpp:103
+#: src/datasets.cpp:101
 #, fuzzy
 msgid "File Version"
 msgstr "Versión Exif"
 
-#: src/datasets.cpp:104
+#: src/datasets.cpp:102
 msgid ""
 "A binary number representing the particular version of the File Format "
 "specified by <FileFormat> tag."
 msgstr ""
 
-#: src/datasets.cpp:107
+#: src/datasets.cpp:105
 msgid "Service Id"
 msgstr ""
 
-#: src/datasets.cpp:108
+#: src/datasets.cpp:106
 msgid "Identifies the provider and product"
 msgstr ""
 
-#: src/datasets.cpp:110
+#: src/datasets.cpp:108
 msgid "Envelope Number"
 msgstr ""
 
-#: src/datasets.cpp:111
+#: src/datasets.cpp:109
 msgid ""
 "The characters form a number that will be unique for the date specified in "
 "<DateSent> tag and for the Service Identifier specified by "
@@ -2719,23 +2719,23 @@ msgid ""
 "reception check."
 msgstr ""
 
-#: src/datasets.cpp:119
+#: src/datasets.cpp:117
 msgid "Product Id"
 msgstr ""
 
-#: src/datasets.cpp:120
+#: src/datasets.cpp:118
 msgid ""
 "Allows a provider to identify subsets of its overall service. Used to "
 "provide receiving organisation data on which to select, route, or otherwise "
 "handle data."
 msgstr ""
 
-#: src/datasets.cpp:124
+#: src/datasets.cpp:122
 #, fuzzy
 msgid "Envelope Priority"
 msgstr "Prioridad de apertura"
 
-#: src/datasets.cpp:125
+#: src/datasets.cpp:123
 msgid ""
 "Specifies the envelope handling priority and not the editorial urgency (see "
 "<Urgency> tag). \"1\" indicates the most urgent, \"5\" the normal urgency, "
@@ -2743,22 +2743,22 @@ msgid ""
 "Priority. The numeral \"0\" is reserved for future use."
 msgstr ""
 
-#: src/datasets.cpp:131
+#: src/datasets.cpp:129
 #, fuzzy
 msgid "Date Sent"
 msgstr "Fecha y hora"
 
-#: src/datasets.cpp:132
+#: src/datasets.cpp:130
 msgid ""
 "Uses the format CCYYMMDD (century, year, month, day) as de-fined in ISO 8601 "
 "to indicate year, month and day the service sent the material."
 msgstr ""
 
-#: src/datasets.cpp:135
+#: src/datasets.cpp:133
 msgid "Time Sent"
 msgstr ""
 
-#: src/datasets.cpp:136
+#: src/datasets.cpp:134
 msgid ""
 "Uses the format HHMMSS:HHMM where HHMMSS refers to local hour, minute and "
 "seconds and HHMM refers to hours and minutes ahead (+) or behind (-) "
@@ -2766,11 +2766,11 @@ msgid ""
 "service sent the material."
 msgstr ""
 
-#: src/datasets.cpp:141
+#: src/datasets.cpp:139
 msgid "Character Set"
 msgstr ""
 
-#: src/datasets.cpp:142
+#: src/datasets.cpp:140
 msgid ""
 "This tag consisting of one or more control functions used for the "
 "announcement, invocation or designation of coded character sets. The control "
@@ -2778,57 +2778,57 @@ msgid ""
 "character and one or more graphic characters."
 msgstr ""
 
-#: src/datasets.cpp:147
+#: src/datasets.cpp:145
 msgid "Unique Name Object"
 msgstr ""
 
-#: src/datasets.cpp:148
+#: src/datasets.cpp:146
 msgid ""
 "This tag provide a globally unique identification for objects as specified "
 "in the IIM, independent of provider and for any media form. The provider "
 "must ensure the UNO is unique. Objects with the same UNO are identical."
 msgstr ""
 
-#: src/datasets.cpp:153
+#: src/datasets.cpp:151
 msgid "ARM Identifier"
 msgstr ""
 
-#: src/datasets.cpp:154
+#: src/datasets.cpp:152
 msgid ""
 "The DataSet identifies the Abstract Relationship Method identifier (ARM) "
 "which is described in a document registered by the originator of the ARM "
 "with the IPTC and NAA organizations."
 msgstr ""
 
-#: src/datasets.cpp:158
+#: src/datasets.cpp:156
 #, fuzzy
 msgid "ARM Version"
 msgstr "Versión Exif"
 
-#: src/datasets.cpp:159
+#: src/datasets.cpp:157
 msgid ""
 "This tag consisting of a binary number representing the particular version "
 "of the ARM specified by tag <ARMId>."
 msgstr ""
 
-#: src/datasets.cpp:167
+#: src/datasets.cpp:165
 #, fuzzy
 msgid "Record Version"
 msgstr "Versión Exif"
 
-#: src/datasets.cpp:168
+#: src/datasets.cpp:166
 msgid ""
 "A binary number identifying the version of the Information Interchange "
 "Model, Part II, utilised by the provider. Version numbers are assigned by "
 "IPTC and NAA organizations."
 msgstr ""
 
-#: src/datasets.cpp:172
+#: src/datasets.cpp:170
 #, fuzzy
 msgid "Object Type"
 msgstr "Área del sujeto"
 
-#: src/datasets.cpp:173
+#: src/datasets.cpp:171
 msgid ""
 "The Object Type is used to distinguish between different types of objects "
 "within the IIM. The first part is a number representing a language "
@@ -2838,12 +2838,12 @@ msgid ""
 "or in the language of the service as indicated in tag <LanguageIdentifier>"
 msgstr ""
 
-#: src/datasets.cpp:181
+#: src/datasets.cpp:179
 #, fuzzy
 msgid "Object Attribute"
 msgstr "Área del sujeto"
 
-#: src/datasets.cpp:182
+#: src/datasets.cpp:180
 msgid ""
 "The Object Attribute defines the nature of the object independent of the "
 "Subject. The first part is a number representing a language independent "
@@ -2854,42 +2854,47 @@ msgid ""
 "<LanguageIdentifier>"
 msgstr ""
 
-#: src/datasets.cpp:190
+#: src/datasets.cpp:188
 #, fuzzy
 msgid "Object Name"
 msgstr "Área del sujeto"
 
-#: src/datasets.cpp:191
+#: src/datasets.cpp:189
 msgid ""
 "Used as a shorthand reference for the object. Changes to exist-ing data, "
 "such as updated stories or new crops on photos, should be identified in tag "
 "<EditStatus>."
 msgstr ""
 
-#: src/datasets.cpp:195
+#: src/datasets.cpp:193
+#, fuzzy
+msgid "Document Title"
+msgstr "Nombre del documento"
+
+#: src/datasets.cpp:194
 msgid "Edit Status"
 msgstr ""
 
-#: src/datasets.cpp:196
+#: src/datasets.cpp:195
 msgid "Status of the object data, according to the practice of the provider."
 msgstr ""
 
-#: src/datasets.cpp:198
+#: src/datasets.cpp:197
 msgid "Editorial Update"
 msgstr ""
 
-#: src/datasets.cpp:199
+#: src/datasets.cpp:198
 msgid ""
 "Indicates the type of update that this object provides to a previous object. "
 "The link to the previous object is made using the tags <ARMIdentifier> and "
 "<ARMVersion>, according to the practices of the provider."
 msgstr ""
 
-#: src/datasets.cpp:203
+#: src/datasets.cpp:202 src/datasets.cpp:207
 msgid "Urgency"
 msgstr ""
 
-#: src/datasets.cpp:204
+#: src/datasets.cpp:203
 msgid ""
 "Specifies the editorial urgency of content and not necessarily the envelope "
 "handling priority (see tag <EnvelopePriority>). The \"1\" is most urgent, \"5"
@@ -2905,7 +2910,7 @@ msgstr "Área del sujeto"
 msgid "The Subject Reference is a structured definition of the subject matter."
 msgstr ""
 
-#: src/datasets.cpp:211
+#: src/datasets.cpp:211 src/datasets.cpp:216
 msgid "Category"
 msgstr ""
 
@@ -2916,11 +2921,11 @@ msgid ""
 "available, otherwise by the provider."
 msgstr ""
 
-#: src/datasets.cpp:216
+#: src/datasets.cpp:217
 msgid "Supplemental Category"
 msgstr ""
 
-#: src/datasets.cpp:217
+#: src/datasets.cpp:218
 msgid ""
 "Supplemental categories further refine the subject of an object data. A "
 "supplemental category may include any of the recognised categories as used "
@@ -2928,21 +2933,25 @@ msgid ""
 "to the provider."
 msgstr ""
 
-#: src/datasets.cpp:222
+#: src/datasets.cpp:223
+msgid "Supplemental Categories"
+msgstr ""
+
+#: src/datasets.cpp:224
 msgid "Fixture Id"
 msgstr ""
 
-#: src/datasets.cpp:223
+#: src/datasets.cpp:225
 msgid ""
 "Identifies object data that recurs often and predictably. Enables users to "
 "immediately find or recall such an object."
 msgstr ""
 
-#: src/datasets.cpp:226
+#: src/datasets.cpp:228 src/datasets.cpp:234
 msgid "Keywords"
 msgstr ""
 
-#: src/datasets.cpp:227
+#: src/datasets.cpp:229
 msgid ""
 "Used to indicate specific information retrieval words. It is expected that a "
 "provider of various types of data that are related in subject matter uses "
@@ -2950,11 +2959,11 @@ msgid ""
 "across all types of data for related material."
 msgstr ""
 
-#: src/datasets.cpp:232
+#: src/datasets.cpp:235
 msgid "Location Code"
 msgstr ""
 
-#: src/datasets.cpp:233
+#: src/datasets.cpp:236
 msgid ""
 "Indicates the code of a country/geographical location referenced by the "
 "content of the object. Where ISO has established an appropriate country code "
@@ -2964,239 +2973,253 @@ msgid ""
 "provisions of ISO 3166 to avoid conflicts."
 msgstr ""
 
-#: src/datasets.cpp:240
+#: src/datasets.cpp:243
 #, fuzzy
 msgid "Location Name"
 msgstr "Nombre del documento"
 
-#: src/datasets.cpp:241
+#: src/datasets.cpp:244
 msgid ""
 "Provides a full, publishable name of a country/geographical location "
 "referenced by the content of the object, according to guidelines of the "
 "provider."
 msgstr ""
 
-#: src/datasets.cpp:245
+#: src/datasets.cpp:248
 msgid "Release Date"
 msgstr ""
 
-#: src/datasets.cpp:246
+#: src/datasets.cpp:249
 msgid ""
 "Designates in the form CCYYMMDD the earliest date the provider intends the "
 "object to be used. Follows ISO 8601 standard."
 msgstr ""
 
-#: src/datasets.cpp:249
+#: src/datasets.cpp:252
 msgid "Release Time"
 msgstr ""
 
-#: src/datasets.cpp:250
+#: src/datasets.cpp:253
 msgid ""
 "Designates in the form HHMMSS:HHMM the earliest time the provider intends "
 "the object to be used. Follows ISO 8601 standard."
 msgstr ""
 
-#: src/datasets.cpp:253
+#: src/datasets.cpp:256
 msgid "Expiration Date"
 msgstr ""
 
-#: src/datasets.cpp:254
+#: src/datasets.cpp:257
 msgid ""
 "Designates in the form CCYYMMDD the latest date the provider or owner "
 "intends the object data to be used. Follows ISO 8601 standard."
 msgstr ""
 
-#: src/datasets.cpp:257
+#: src/datasets.cpp:260
 msgid "ExpirationTime"
 msgstr ""
 
-#: src/datasets.cpp:258
+#: src/datasets.cpp:261
 msgid ""
 "Designates in the form HHMMSS:HHMM the latest time the provider or owner "
 "intends the object data to be used. Follows ISO 8601 standard."
 msgstr ""
 
-#: src/datasets.cpp:261
+#: src/datasets.cpp:264
 msgid "Special Instructions"
 msgstr ""
 
-#: src/datasets.cpp:262
+#: src/datasets.cpp:265
 msgid ""
 "Other editorial instructions concerning the use of the object data, such as "
 "embargoes and warnings."
 msgstr ""
 
-#: src/datasets.cpp:265
+#: src/datasets.cpp:268
+#, fuzzy
+msgid "Instructions"
+msgstr "Proceso personalizado"
+
+#: src/datasets.cpp:269
 #, fuzzy
 msgid "Action Advised"
 msgstr "acción"
 
-#: src/datasets.cpp:266
+#: src/datasets.cpp:270
 msgid ""
 "Indicates the type of action that this object provides to a previous object. "
 "The link to the previous object is made using tags <ARMIdentifier> and "
 "<ARMVersion>, according to the practices of the provider."
 msgstr ""
 
-#: src/datasets.cpp:270
+#: src/datasets.cpp:274
 #, fuzzy
 msgid "Reference Service"
 msgstr "Referencia Blanco/Negro"
 
-#: src/datasets.cpp:271
+#: src/datasets.cpp:275
 msgid ""
 "Identifies the Service Identifier of a prior envelope to which the current "
 "object refers."
 msgstr ""
 
-#: src/datasets.cpp:274
+#: src/datasets.cpp:278
 #, fuzzy
 msgid "Reference Date"
 msgstr "Referencia Blanco/Negro"
 
-#: src/datasets.cpp:275
+#: src/datasets.cpp:279
 msgid ""
 "Identifies the date of a prior envelope to which the current object refers."
 msgstr ""
 
-#: src/datasets.cpp:277
+#: src/datasets.cpp:281
 #, fuzzy
 msgid "Reference Number"
 msgstr "El número F."
 
-#: src/datasets.cpp:278
+#: src/datasets.cpp:282
 msgid ""
 "Identifies the Envelope Number of a prior envelope to which the current "
 "object refers."
 msgstr ""
 
-#: src/datasets.cpp:280
+#: src/datasets.cpp:284 src/datasets.cpp:289
 #, fuzzy
 msgid "Date Created"
 msgstr "Fecha y hora"
 
-#: src/datasets.cpp:281
+#: src/datasets.cpp:285
 msgid ""
 "Represented in the form CCYYMMDD to designate the date the intellectual "
 "content of the object data was created rather than the date of the creation "
 "of the physical representation. Follows ISO 8601 standard."
 msgstr ""
 
-#: src/datasets.cpp:285
+#: src/datasets.cpp:290
 msgid "Time Created"
 msgstr ""
 
-#: src/datasets.cpp:286
+#: src/datasets.cpp:291
 msgid ""
 "Represented in the form HHMMSS:HHMM to designate the time the intellectual "
 "content of the object data current source material was created rather than "
 "the creation of the physical representation. Follows ISO 8601 standard."
 msgstr ""
 
-#: src/datasets.cpp:291
+#: src/datasets.cpp:296
 msgid "Digitization Date"
 msgstr ""
 
-#: src/datasets.cpp:292
+#: src/datasets.cpp:297
 msgid ""
 "Represented in the form CCYYMMDD to designate the date the digital "
 "representation of the object data was created. Follows ISO 8601 standard."
 msgstr ""
 
-#: src/datasets.cpp:295
+#: src/datasets.cpp:300
 #, fuzzy
 msgid "Digitization Time"
 msgstr "Fecha y hora"
 
-#: src/datasets.cpp:296
+#: src/datasets.cpp:301
 msgid ""
 "Represented in the form HHMMSS:HHMM to designate the time the digital "
 "representation of the object data was created. Follows ISO 8601 standard."
 msgstr ""
 
-#: src/datasets.cpp:300 src/minoltamn.cpp:290 src/minoltamn.cpp:756
-#: src/minoltamn.cpp:955
+#: src/datasets.cpp:305 src/minoltamn.cpp:288 src/minoltamn.cpp:754
+#: src/minoltamn.cpp:953
 #, fuzzy
 msgid "Program"
 msgstr "Modo de exposición"
 
-#: src/datasets.cpp:301
+#: src/datasets.cpp:306
 msgid "Identifies the type of program used to originate the object data."
 msgstr ""
 
-#: src/datasets.cpp:303
+#: src/datasets.cpp:308
 #, fuzzy
 msgid "Program Version"
 msgstr "Versión Exif"
 
-#: src/datasets.cpp:304
+#: src/datasets.cpp:309
 msgid "Used to identify the version of the program mentioned in tag <Program>."
 msgstr ""
 
-#: src/datasets.cpp:306
+#: src/datasets.cpp:311
 msgid "Object Cycle"
 msgstr ""
 
-#: src/datasets.cpp:307
+#: src/datasets.cpp:312
 msgid "Used to identify the editorial cycle of object data."
 msgstr ""
 
-#: src/datasets.cpp:309
+#: src/datasets.cpp:314
 msgid "By-line"
 msgstr ""
 
-#: src/datasets.cpp:310
+#: src/datasets.cpp:315
 msgid ""
 "Contains name of the creator of the object data, e.g. writer, photographer "
 "or graphic artist."
 msgstr ""
 
-#: src/datasets.cpp:313
+#: src/datasets.cpp:318
+#, fuzzy
+msgid "Author"
+msgstr "acción"
+
+#: src/datasets.cpp:319
 msgid "By-line Title"
 msgstr ""
 
-#: src/datasets.cpp:314
+#: src/datasets.cpp:320
 msgid ""
 "A by-line title is the title of the creator or creators of an object data. "
 "Where used, a by-line title should follow the by-line it modifies."
 msgstr ""
 
-#: src/datasets.cpp:317
+#: src/datasets.cpp:323 src/datasets.cpp:327
 msgid "City"
 msgstr ""
 
-#: src/datasets.cpp:318
+#: src/datasets.cpp:324
 msgid ""
 "Identifies city of object data origin according to guidelines established by "
 "the provider."
 msgstr ""
 
-#: src/datasets.cpp:321
+#: src/datasets.cpp:328
 #, fuzzy
 msgid "Sub Location"
 msgstr "Ubicación del sujeto"
 
-#: src/datasets.cpp:322
+#: src/datasets.cpp:329
 msgid ""
 "Identifies the location within a city from which the object data originates, "
 "according to guidelines established by the provider."
 msgstr ""
 
-#: src/datasets.cpp:325
+#: src/datasets.cpp:332
 msgid "Province State"
 msgstr ""
 
-#: src/datasets.cpp:326
+#: src/datasets.cpp:333
 msgid ""
 "Identifies Province/State of origin according to guidelines established by "
 "the provider."
 msgstr ""
 
-#: src/datasets.cpp:329
+#: src/datasets.cpp:336
+msgid "State/Province"
+msgstr ""
+
+#: src/datasets.cpp:337
 msgid "Country Code"
 msgstr ""
 
-#: src/datasets.cpp:330
+#: src/datasets.cpp:338
 msgid ""
 "Indicates the code of the country/primary location where the intellectual "
 "property of the object data was created, e.g. a photo was taken, an event "
@@ -3207,1372 +3230,1929 @@ msgid ""
 "ISO 3166 to avoid conflicts."
 msgstr ""
 
-#: src/datasets.cpp:339
+#: src/datasets.cpp:347
 #, fuzzy
 msgid "Country Name"
 msgstr "Nombre del documento"
 
-#: src/datasets.cpp:340
+#: src/datasets.cpp:348
 msgid ""
 "Provides full, publishable, name of the country/primary location where the "
 "intellectual property of the object data was created, according to "
 "guidelines of the provider."
 msgstr ""
 
-#: src/datasets.cpp:344
+#: src/datasets.cpp:352
+#, fuzzy
+msgid "Country"
+msgstr "Nombre del documento"
+
+#: src/datasets.cpp:353 src/datasets.cpp:357
 msgid "Transmission Reference"
 msgstr ""
 
-#: src/datasets.cpp:345
+#: src/datasets.cpp:354
 msgid ""
 "A code representing the location of original transmission according to "
 "practices of the provider."
 msgstr ""
 
-#: src/datasets.cpp:348
+#: src/datasets.cpp:358 src/datasets.cpp:361
 msgid "Headline"
 msgstr ""
 
-#: src/datasets.cpp:349
+#: src/datasets.cpp:359
 msgid ""
 "A publishable entry providing a synopsis of the contents of the object data."
 msgstr ""
 
-#: src/datasets.cpp:351
+#: src/datasets.cpp:362 src/datasets.cpp:365
 msgid "Credit"
 msgstr ""
 
-#: src/datasets.cpp:352
+#: src/datasets.cpp:363
 msgid ""
 "Identifies the provider of the object data, not necessarily the owner/"
 "creator."
 msgstr ""
 
-#: src/datasets.cpp:354
+#: src/datasets.cpp:366 src/datasets.cpp:370
 #, fuzzy
 msgid "Source"
 msgstr "Fuente de archivo"
 
-#: src/datasets.cpp:355
+#: src/datasets.cpp:367
 msgid ""
 "Identifies the original owner of the intellectual content of the object "
 "data. This could be an agency, a member of an agency or an individual."
 msgstr ""
 
-#: src/datasets.cpp:359
+#: src/datasets.cpp:372
 msgid "Contains any necessary copyright notice."
 msgstr ""
 
-#: src/datasets.cpp:361
+#: src/datasets.cpp:374
+#, fuzzy
+msgid "Copyright Notice"
+msgstr "Copyright"
+
+#: src/datasets.cpp:375
 #, fuzzy
 msgid "Contact"
 msgstr "Contraste"
 
-#: src/datasets.cpp:362
+#: src/datasets.cpp:376
 msgid ""
 "Identifies the person or organisation which can provide further background "
 "information on the object data."
 msgstr ""
 
-#: src/datasets.cpp:365
+#: src/datasets.cpp:379
 #, fuzzy
 msgid "Caption"
 msgstr "acción"
 
-#: src/datasets.cpp:366
+#: src/datasets.cpp:380
 msgid "A textual description of the object data."
 msgstr ""
 
-#: src/datasets.cpp:368
+#: src/datasets.cpp:382
+#, fuzzy
+msgid "Description"
+msgstr "Descripción de la imagen"
+
+#: src/datasets.cpp:383
 msgid "Writer"
 msgstr ""
 
-#: src/datasets.cpp:369
+#: src/datasets.cpp:384
 msgid ""
 "Identification of the name of the person involved in the writing, editing or "
 "correcting the object data or caption/abstract."
 msgstr ""
 
-#: src/datasets.cpp:372
+#: src/datasets.cpp:387
 msgid "Rasterized Caption"
 msgstr ""
 
-#: src/datasets.cpp:373
+#: src/datasets.cpp:388
 msgid ""
 "Contains the rasterized object data description and is used where characters "
 "that have not been coded are required for the caption."
 msgstr ""
 
-#: src/datasets.cpp:376
+#: src/datasets.cpp:391
 #, fuzzy
 msgid "Image Type"
 msgstr "Ancho de la imagen"
 
-#: src/datasets.cpp:377
+#: src/datasets.cpp:392
 msgid "Indicates the color components of an image."
 msgstr ""
 
-#: src/datasets.cpp:379
+#: src/datasets.cpp:394
 #, fuzzy
 msgid "Image Orientation"
 msgstr "Orientación"
 
-#: src/datasets.cpp:380
+#: src/datasets.cpp:395
 msgid "Indicates the layout of an image."
 msgstr ""
 
-#: src/datasets.cpp:382
+#: src/datasets.cpp:397
 msgid "Language"
 msgstr ""
 
-#: src/datasets.cpp:383
+#: src/datasets.cpp:398
 msgid ""
 "Describes the major national language of the object, according to the 2-"
 "letter codes of ISO 639:1988. Does not define or imply any coded character "
 "set, but is used for internal routing, e.g. to various editorial desks."
 msgstr ""
 
-#: src/datasets.cpp:388
+#: src/datasets.cpp:403
 msgid "Audio Type"
 msgstr ""
 
-#: src/datasets.cpp:389
+#: src/datasets.cpp:404
 #, fuzzy
 msgid "Indicates the type of an audio content."
 msgstr "Esta etiqueta indica la distancia al sujeto."
 
-#: src/datasets.cpp:391
+#: src/datasets.cpp:406
 msgid "Audio Rate"
 msgstr ""
 
-#: src/datasets.cpp:392
+#: src/datasets.cpp:407
 #, fuzzy
 msgid "Indicates the sampling rate in Hertz of an audio content."
 msgstr "Esta etiqueta indica la distancia al sujeto."
 
-#: src/datasets.cpp:394
+#: src/datasets.cpp:409
 #, fuzzy
 msgid "Audio Resolution"
 msgstr "Resolución Y"
 
-#: src/datasets.cpp:395
+#: src/datasets.cpp:410
 #, fuzzy
 msgid "Indicates the sampling resolution of an audio content."
 msgstr "Esta etiqueta indica la distancia al sujeto."
 
-#: src/datasets.cpp:397
+#: src/datasets.cpp:412
 #, fuzzy
 msgid "Audio Duration"
 msgstr "Baja saturación"
 
-#: src/datasets.cpp:398
+#: src/datasets.cpp:413
 #, fuzzy
 msgid "Indicates the duration of an audio content."
 msgstr "Esta etiqueta indica la distancia al sujeto."
 
-#: src/datasets.cpp:400
+#: src/datasets.cpp:415
 msgid "Audio Outcue"
 msgstr ""
 
-#: src/datasets.cpp:401
+#: src/datasets.cpp:416
 msgid ""
 "Identifies the content of the end of an audio object data, according to "
 "guidelines established by the provider."
 msgstr ""
 
-#: src/datasets.cpp:404
+#: src/datasets.cpp:419
 msgid "Preview Format"
 msgstr ""
 
-#: src/datasets.cpp:405
+#: src/datasets.cpp:420
 msgid ""
 "A binary number representing the file format of the object data preview. The "
 "file format must be registered with IPTC or NAA organizations with a unique "
 "number assigned to it."
 msgstr ""
 
-#: src/datasets.cpp:409
+#: src/datasets.cpp:424
 #, fuzzy
 msgid "Preview Version"
 msgstr "Versión Exif"
 
-#: src/datasets.cpp:410
+#: src/datasets.cpp:425
 msgid ""
 "A binary number representing the particular version of the object data "
 "preview file format specified in tag <PreviewFormat>."
 msgstr ""
 
-#: src/datasets.cpp:413
+#: src/datasets.cpp:428
 msgid "Preview Data"
 msgstr ""
 
-#: src/datasets.cpp:414
+#: src/datasets.cpp:429
 msgid "Binary image preview data."
 msgstr ""
 
-#: src/datasets.cpp:416 src/datasets.cpp:417
+#: src/datasets.cpp:431 src/datasets.cpp:432
 msgid "(Invalid)"
 msgstr ""
 
-#: src/datasets.cpp:421 src/datasets.cpp:422
+#: src/datasets.cpp:436 src/datasets.cpp:437 src/datasets.cpp:440
 #, fuzzy
 msgid "Unknown dataset"
 msgstr "Desconocido"
 
-#: src/minoltamn.cpp:58
+#: src/minoltamn.cpp:56
 msgid "Natural Color"
 msgstr ""
 
-#: src/minoltamn.cpp:59
+#: src/minoltamn.cpp:57
 msgid "Black & White"
 msgstr ""
 
-#: src/minoltamn.cpp:60
+#: src/minoltamn.cpp:58
 msgid "Vivid Color"
 msgstr ""
 
-#: src/minoltamn.cpp:61 src/minoltamn.cpp:457
+#: src/minoltamn.cpp:59 src/minoltamn.cpp:455
 #, fuzzy
 msgid "Solarization"
 msgstr "Saturación"
 
-#: src/minoltamn.cpp:62
+#: src/minoltamn.cpp:60
 msgid "AdobeRGB"
 msgstr ""
 
-#: src/minoltamn.cpp:63
+#: src/minoltamn.cpp:61
 msgid "Sepia"
 msgstr ""
 
-#: src/minoltamn.cpp:64
+#: src/minoltamn.cpp:62
 #, fuzzy
 msgid "Natural"
 msgstr "Manual"
 
-#: src/minoltamn.cpp:66
+#: src/minoltamn.cpp:64
 msgid "Natural sRGB"
 msgstr ""
 
-#: src/minoltamn.cpp:67
+#: src/minoltamn.cpp:65
 msgid "Natural+ sRGB"
 msgstr ""
 
-#: src/minoltamn.cpp:69
+#: src/minoltamn.cpp:67
 msgid "Evening"
 msgstr ""
 
-#: src/minoltamn.cpp:70
+#: src/minoltamn.cpp:68
 #, fuzzy
 msgid "Night Scene"
 msgstr "Escena nocturna"
 
-#: src/minoltamn.cpp:71
+#: src/minoltamn.cpp:69
 #, fuzzy
 msgid "Night Portrait"
 msgstr "Retrato"
 
-#: src/minoltamn.cpp:76 src/minoltamn.cpp:330 src/minoltamn.cpp:774
-#: src/minoltamn.cpp:972
+#: src/minoltamn.cpp:74 src/minoltamn.cpp:328 src/minoltamn.cpp:772
+#: src/minoltamn.cpp:970
 msgid "Raw"
 msgstr ""
 
-#: src/minoltamn.cpp:77
+#: src/minoltamn.cpp:75
 msgid "Super Fine"
 msgstr ""
 
-#: src/minoltamn.cpp:78 src/minoltamn.cpp:332 src/minoltamn.cpp:775
-#: src/minoltamn.cpp:973
+#: src/minoltamn.cpp:76 src/minoltamn.cpp:330 src/minoltamn.cpp:773
+#: src/minoltamn.cpp:971
 #, fuzzy
 msgid "Fine"
 msgstr "pulg"
 
-#: src/minoltamn.cpp:80 src/minoltamn.cpp:334 src/minoltamn.cpp:778
-#: src/minoltamn.cpp:976
+#: src/minoltamn.cpp:78 src/minoltamn.cpp:332 src/minoltamn.cpp:776
+#: src/minoltamn.cpp:974
 msgid "Economy"
 msgstr ""
 
-#: src/minoltamn.cpp:81
+#: src/minoltamn.cpp:79
 msgid "Extra Fine"
 msgstr ""
 
-#: src/minoltamn.cpp:86
+#: src/minoltamn.cpp:84
 #, fuzzy
 msgid "ISO Setting Used"
 msgstr "Velocidad ISO"
 
-#: src/minoltamn.cpp:87
+#: src/minoltamn.cpp:85
 #, fuzzy
 msgid "High Key"
 msgstr "Luz de día"
 
-#: src/minoltamn.cpp:88
+#: src/minoltamn.cpp:86
 msgid "Low Key"
 msgstr ""
 
-#: src/minoltamn.cpp:93 src/minoltamn.cpp:358 src/minoltamn.cpp:364
-#: src/minoltamn.cpp:397 src/minoltamn.cpp:847 src/minoltamn.cpp:853
-#: src/minoltamn.cpp:859 src/minoltamn.cpp:1027 src/minoltamn.cpp:1033
+#: src/minoltamn.cpp:91 src/minoltamn.cpp:356 src/minoltamn.cpp:362
+#: src/minoltamn.cpp:395 src/minoltamn.cpp:845 src/minoltamn.cpp:851
+#: src/minoltamn.cpp:857 src/minoltamn.cpp:1025 src/minoltamn.cpp:1031
 msgid "Off"
 msgstr ""
 
-#: src/minoltamn.cpp:94 src/minoltamn.cpp:359 src/minoltamn.cpp:398
-#: src/minoltamn.cpp:848 src/minoltamn.cpp:854 src/minoltamn.cpp:860
-#: src/minoltamn.cpp:1028 src/minoltamn.cpp:1034
+#: src/minoltamn.cpp:92 src/minoltamn.cpp:357 src/minoltamn.cpp:396
+#: src/minoltamn.cpp:846 src/minoltamn.cpp:852 src/minoltamn.cpp:858
+#: src/minoltamn.cpp:1026 src/minoltamn.cpp:1032
 msgid "On"
 msgstr ""
 
-#: src/minoltamn.cpp:222
+#: src/minoltamn.cpp:220
 #, fuzzy
 msgid "Makernote Version"
 msgstr "Versión Exif"
 
-#: src/minoltamn.cpp:223
+#: src/minoltamn.cpp:221
 msgid "String 'MLT0' (not null terminated)"
 msgstr ""
 
-#: src/minoltamn.cpp:225
+#: src/minoltamn.cpp:223
 msgid "Camera Settings (Std Old)"
 msgstr ""
 
-#: src/minoltamn.cpp:226
+#: src/minoltamn.cpp:224
 msgid ""
 "Standard Camera settings (Old Camera models like D5, D7, S304, and S404)"
 msgstr ""
 
-#: src/minoltamn.cpp:228
+#: src/minoltamn.cpp:226
 msgid "Camera Settings (Std New)"
 msgstr ""
 
-#: src/minoltamn.cpp:229
+#: src/minoltamn.cpp:227
 msgid "Standard Camera settings (New Camera Models like D7u, D7i, and D7hi)"
 msgstr ""
 
-#: src/minoltamn.cpp:231
+#: src/minoltamn.cpp:229
 #, fuzzy
 msgid "Camera Settings (7D)"
 msgstr "Contraste"
 
-#: src/minoltamn.cpp:232
+#: src/minoltamn.cpp:230
 msgid "Camera Settings (for Dynax 7D model)"
 msgstr ""
 
-#: src/minoltamn.cpp:234
+#: src/minoltamn.cpp:232
 msgid "Image Stabilization Data"
 msgstr ""
 
-#: src/minoltamn.cpp:235
+#: src/minoltamn.cpp:233
 msgid "Image stabilization data"
 msgstr ""
 
-#: src/minoltamn.cpp:237
+#: src/minoltamn.cpp:235
 #, fuzzy
 msgid "Compressed Image Size"
 msgstr "Bits comprimidos por pixel"
 
-#: src/minoltamn.cpp:238
+#: src/minoltamn.cpp:236
 #, fuzzy
 msgid "Compressed image size"
 msgstr "Bits comprimidos por pixel"
 
-#: src/minoltamn.cpp:240
+#: src/minoltamn.cpp:238
 msgid "Thumbnail"
 msgstr ""
 
-#: src/minoltamn.cpp:241
+#: src/minoltamn.cpp:239
 msgid "Jpeg thumbnail 640x480 pixels"
 msgstr ""
 
-#: src/minoltamn.cpp:243
+#: src/minoltamn.cpp:241
 #, fuzzy
 msgid "Thumbnail Offset"
 msgstr "Desplazamiento de tira"
 
-#: src/minoltamn.cpp:244
+#: src/minoltamn.cpp:242
 msgid "Offset of the thumbnail"
 msgstr ""
 
-#: src/minoltamn.cpp:246
+#: src/minoltamn.cpp:244
 #, fuzzy
 msgid "Thumbnail Length"
 msgstr "Longitud de la imagen"
 
-#: src/minoltamn.cpp:247
+#: src/minoltamn.cpp:245
 msgid "Size of the thumbnail"
 msgstr ""
 
-#: src/minoltamn.cpp:249
+#: src/minoltamn.cpp:247
 #, fuzzy
 msgid "Color Mode"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:250
+#: src/minoltamn.cpp:248
 #, fuzzy
 msgid "Color mode"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:252 src/minoltamn.cpp:607 src/minoltamn.cpp:871
-#: src/minoltamn.cpp:1104
+#: src/minoltamn.cpp:250 src/minoltamn.cpp:605 src/minoltamn.cpp:869
+#: src/minoltamn.cpp:1102
 #, fuzzy
 msgid "Image Quality"
 msgstr "Ancho de la imagen"
 
-#: src/minoltamn.cpp:253 src/minoltamn.cpp:608 src/minoltamn.cpp:872
-#: src/minoltamn.cpp:1105
+#: src/minoltamn.cpp:251 src/minoltamn.cpp:606 src/minoltamn.cpp:870
+#: src/minoltamn.cpp:1103
 #, fuzzy
 msgid "Image quality"
 msgstr "Ancho de la imagen"
 
-#: src/minoltamn.cpp:258 src/minoltamn.cpp:938 src/minoltamn.cpp:1173
+#: src/minoltamn.cpp:256 src/minoltamn.cpp:936 src/minoltamn.cpp:1171
 #, fuzzy
 msgid "Image Stabilization"
 msgstr "Orientación"
 
-#: src/minoltamn.cpp:259 src/minoltamn.cpp:939 src/minoltamn.cpp:1174
+#: src/minoltamn.cpp:257 src/minoltamn.cpp:937 src/minoltamn.cpp:1172
 #, fuzzy
 msgid "Image stabilization"
 msgstr "Orientación"
 
-#: src/minoltamn.cpp:261
+#: src/minoltamn.cpp:259
 msgid "Zone Matching"
 msgstr ""
 
-#: src/minoltamn.cpp:262
+#: src/minoltamn.cpp:260
 msgid "Zone matching"
 msgstr ""
 
-#: src/minoltamn.cpp:264 src/minoltamn.cpp:910 src/minoltamn.cpp:1149
+#: src/minoltamn.cpp:262 src/minoltamn.cpp:908 src/minoltamn.cpp:1147
 #, fuzzy
 msgid "Color Temperature"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:265 src/minoltamn.cpp:911 src/minoltamn.cpp:1150
+#: src/minoltamn.cpp:263 src/minoltamn.cpp:909 src/minoltamn.cpp:1148
 #, fuzzy
 msgid "Color temperature"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:267
+#: src/minoltamn.cpp:265
 #, fuzzy
 msgid "Lens ID"
 msgstr "Ancho de la imagen"
 
-#: src/minoltamn.cpp:268
+#: src/minoltamn.cpp:266
 msgid "Lens identifier"
 msgstr ""
 
-#: src/minoltamn.cpp:270
+#: src/minoltamn.cpp:268
 #, fuzzy
 msgid "Camera Settings (5D)"
 msgstr "Contraste"
 
-#: src/minoltamn.cpp:271
+#: src/minoltamn.cpp:269
 msgid "Camera Settings (for Dynax 5D model)"
 msgstr ""
 
-#: src/minoltamn.cpp:273
+#: src/minoltamn.cpp:271
 msgid "PIM IFD"
 msgstr ""
 
-#: src/minoltamn.cpp:274
+#: src/minoltamn.cpp:272
 msgid "PIM information"
 msgstr ""
 
-#: src/minoltamn.cpp:276
+#: src/minoltamn.cpp:274
 #, fuzzy
 msgid "Camera Settings (Z1)"
 msgstr "Contraste"
 
-#: src/minoltamn.cpp:277
+#: src/minoltamn.cpp:275
 msgid "Camera Settings (for Z1, DImage X, and F100 models)"
 msgstr ""
 
-#: src/minoltamn.cpp:282
+#: src/minoltamn.cpp:280
 #, fuzzy
 msgid "Unknown Minolta MakerNote tag"
 msgstr "Versión Exif"
 
-#: src/minoltamn.cpp:298
+#: src/minoltamn.cpp:296
 #, fuzzy
 msgid "Fill flash"
 msgstr "Flash"
 
-#: src/minoltamn.cpp:299
+#: src/minoltamn.cpp:297
 #, fuzzy
 msgid "Red-eye reduction"
 msgstr "El flash disparó, modo de reducción de ojos rojos."
 
-#: src/minoltamn.cpp:300
+#: src/minoltamn.cpp:298
 msgid "Rear flash sync"
 msgstr ""
 
-#: src/minoltamn.cpp:301
+#: src/minoltamn.cpp:299
 msgid "Wireless"
 msgstr ""
 
-#: src/minoltamn.cpp:308 src/minoltamn.cpp:786 src/minoltamn.cpp:983
+#: src/minoltamn.cpp:306 src/minoltamn.cpp:784 src/minoltamn.cpp:981
 #, fuzzy
 msgid "Cloudy"
 msgstr "nublado"
 
-#: src/minoltamn.cpp:309 src/minoltamn.cpp:787 src/minoltamn.cpp:985
+#: src/minoltamn.cpp:307 src/minoltamn.cpp:785 src/minoltamn.cpp:983
 #, fuzzy
 msgid "Tungsten"
 msgstr "tungsteno"
 
-#: src/minoltamn.cpp:310
+#: src/minoltamn.cpp:308
 #, fuzzy
 msgid "Custom"
 msgstr "Proceso personalizado"
 
-#: src/minoltamn.cpp:312
+#: src/minoltamn.cpp:310
 #, fuzzy
 msgid "Fluorescent 2"
 msgstr "Fluorescente"
 
-#: src/minoltamn.cpp:313
+#: src/minoltamn.cpp:311
 #, fuzzy
 msgid "Custom 2"
 msgstr "Proceso personalizado"
 
-#: src/minoltamn.cpp:314
+#: src/minoltamn.cpp:312
 #, fuzzy
 msgid "Custom 3"
 msgstr "Proceso personalizado"
 
-#: src/minoltamn.cpp:319
+#: src/minoltamn.cpp:317
 msgid "Full size"
 msgstr ""
 
-#: src/minoltamn.cpp:331
+#: src/minoltamn.cpp:329
 msgid "Super fine"
 msgstr ""
 
-#: src/minoltamn.cpp:335
+#: src/minoltamn.cpp:333
 msgid "Extra fine"
 msgstr ""
 
-#: src/minoltamn.cpp:340
+#: src/minoltamn.cpp:338
 msgid "Single"
 msgstr ""
 
-#: src/minoltamn.cpp:341
+#: src/minoltamn.cpp:339
 msgid "Continuous"
 msgstr ""
 
-#: src/minoltamn.cpp:342
+#: src/minoltamn.cpp:340
 #, fuzzy
 msgid "Self-timer"
 msgstr "Centímetro"
 
-#: src/minoltamn.cpp:343
+#: src/minoltamn.cpp:341
 #, fuzzy
 msgid "Bracketing"
 msgstr "acción"
 
-#: src/minoltamn.cpp:344
+#: src/minoltamn.cpp:342
 msgid "Interval"
 msgstr ""
 
-#: src/minoltamn.cpp:345
+#: src/minoltamn.cpp:343
 msgid "UHS continuous"
 msgstr ""
 
-#: src/minoltamn.cpp:346
+#: src/minoltamn.cpp:344
 msgid "HS continuous"
 msgstr ""
 
-#: src/minoltamn.cpp:352 src/minoltamn.cpp:1001
+#: src/minoltamn.cpp:350 src/minoltamn.cpp:999
 #, fuzzy
 msgid "Center weighted"
 msgstr "peso centrado"
 
-#: src/minoltamn.cpp:365
+#: src/minoltamn.cpp:363
 msgid "Electronic magnification"
 msgstr ""
 
-#: src/minoltamn.cpp:378 src/minoltamn.cpp:803
+#: src/minoltamn.cpp:376 src/minoltamn.cpp:801
 #, fuzzy
 msgid "Center"
 msgstr "Centímetro"
 
-#: src/minoltamn.cpp:379 src/minoltamn.cpp:804
+#: src/minoltamn.cpp:377 src/minoltamn.cpp:802
 msgid "Top"
 msgstr ""
 
-#: src/minoltamn.cpp:380 src/minoltamn.cpp:805
+#: src/minoltamn.cpp:378 src/minoltamn.cpp:803
 #, fuzzy
 msgid "Top-right"
 msgstr "Copyright"
 
-#: src/minoltamn.cpp:381 src/minoltamn.cpp:806 src/minoltamn.cpp:1043
+#: src/minoltamn.cpp:379 src/minoltamn.cpp:804 src/minoltamn.cpp:1041
 #, fuzzy
 msgid "Right"
 msgstr "Escena nocturna"
 
-#: src/minoltamn.cpp:382 src/minoltamn.cpp:807
+#: src/minoltamn.cpp:380 src/minoltamn.cpp:805
 #, fuzzy
 msgid "Bottom-right"
 msgstr "abajo - derecha"
 
-#: src/minoltamn.cpp:383 src/minoltamn.cpp:808
+#: src/minoltamn.cpp:381 src/minoltamn.cpp:806
 msgid "Bottom"
 msgstr ""
 
-#: src/minoltamn.cpp:384 src/minoltamn.cpp:809
+#: src/minoltamn.cpp:382 src/minoltamn.cpp:807
 #, fuzzy
 msgid "Bottom-left"
 msgstr "abajo - izquierda"
 
-#: src/minoltamn.cpp:385 src/minoltamn.cpp:810 src/minoltamn.cpp:1047
+#: src/minoltamn.cpp:383 src/minoltamn.cpp:808 src/minoltamn.cpp:1045
 msgid "Left"
 msgstr ""
 
-#: src/minoltamn.cpp:386 src/minoltamn.cpp:811
+#: src/minoltamn.cpp:384 src/minoltamn.cpp:809
 #, fuzzy
 msgid "Top-left"
 msgstr "arriba - izquierda"
 
-#: src/minoltamn.cpp:391 src/minoltamn.cpp:463 src/minoltamn.cpp:816
-#: src/minoltamn.cpp:994
+#: src/minoltamn.cpp:389 src/minoltamn.cpp:461 src/minoltamn.cpp:814
+#: src/minoltamn.cpp:992
 #, fuzzy
 msgid "Did not fire"
 msgstr "El flash no disparó."
 
-#: src/minoltamn.cpp:412 src/minoltamn.cpp:507
+#: src/minoltamn.cpp:410 src/minoltamn.cpp:505
 msgid "Text"
 msgstr ""
 
-#: src/minoltamn.cpp:413
+#: src/minoltamn.cpp:411
 #, fuzzy
 msgid "Night portrait"
 msgstr "retrato"
 
-#: src/minoltamn.cpp:414
+#: src/minoltamn.cpp:412
 #, fuzzy
 msgid "Sunset"
 msgstr "Área del sujeto"
 
-#: src/minoltamn.cpp:415
+#: src/minoltamn.cpp:413
 #, fuzzy
 msgid "Sports action"
 msgstr "Lugar"
 
-#: src/minoltamn.cpp:442
+#: src/minoltamn.cpp:440
 msgid "Still image"
 msgstr ""
 
-#: src/minoltamn.cpp:443
+#: src/minoltamn.cpp:441
 msgid "Time-lapse movie"
 msgstr ""
 
-#: src/minoltamn.cpp:448
+#: src/minoltamn.cpp:446
 #, fuzzy
 msgid "Standard form"
 msgstr "Estándar"
 
-#: src/minoltamn.cpp:449
+#: src/minoltamn.cpp:447
 #, fuzzy
 msgid "Data form"
 msgstr "formato planar"
 
-#: src/minoltamn.cpp:454
+#: src/minoltamn.cpp:452
 msgid "Natural color"
 msgstr ""
 
-#: src/minoltamn.cpp:455
+#: src/minoltamn.cpp:453
 msgid "Black and white"
 msgstr ""
 
-#: src/minoltamn.cpp:456
+#: src/minoltamn.cpp:454
 msgid "Vivid color"
 msgstr ""
 
-#: src/minoltamn.cpp:469
+#: src/minoltamn.cpp:467
 msgid "No zone"
 msgstr ""
 
-#: src/minoltamn.cpp:470
+#: src/minoltamn.cpp:468
 msgid "Center zone (horizontal orientation)"
 msgstr ""
 
-#: src/minoltamn.cpp:471
+#: src/minoltamn.cpp:469
 msgid "Center zone (vertical orientation)"
 msgstr ""
 
-#: src/minoltamn.cpp:472
+#: src/minoltamn.cpp:470
 msgid "Left zone"
 msgstr ""
 
-#: src/minoltamn.cpp:473
+#: src/minoltamn.cpp:471
 #, fuzzy
 msgid "Right zone"
 msgstr "Escena nocturna"
 
-#: src/minoltamn.cpp:478
+#: src/minoltamn.cpp:476
 #, fuzzy
 msgid "Auto focus"
 msgstr "Exposición automática"
 
-#: src/minoltamn.cpp:479
+#: src/minoltamn.cpp:477
 #, fuzzy
 msgid "Manual focus"
 msgstr "Exposición manual"
 
-#: src/minoltamn.cpp:484
+#: src/minoltamn.cpp:482
 msgid "Wide focus (normal)"
 msgstr ""
 
-#: src/minoltamn.cpp:485
+#: src/minoltamn.cpp:483
 #, fuzzy
 msgid "Spot focus"
 msgstr "Lugar"
 
-#: src/minoltamn.cpp:490
+#: src/minoltamn.cpp:488
 #, fuzzy
 msgid "Exposure"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:493
+#: src/minoltamn.cpp:491
 #, fuzzy
 msgid "Filter"
 msgstr "Orden de llenado"
 
-#: src/minoltamn.cpp:498
+#: src/minoltamn.cpp:496
 #, fuzzy
 msgid "Not embedded"
 msgstr "No definido"
 
-#: src/minoltamn.cpp:499
+#: src/minoltamn.cpp:497
 msgid "Embedded"
 msgstr ""
 
-#: src/minoltamn.cpp:508
+#: src/minoltamn.cpp:506
 msgid "Text + ID#"
 msgstr ""
 
-#: src/minoltamn.cpp:513
+#: src/minoltamn.cpp:511
 msgid "ADI (Advanced Distance Integration)"
 msgstr ""
 
-#: src/minoltamn.cpp:514
+#: src/minoltamn.cpp:512
 msgid "Pre-flash TTl"
 msgstr ""
 
-#: src/minoltamn.cpp:515
+#: src/minoltamn.cpp:513
 msgid "Manual flash control"
 msgstr ""
 
-#: src/minoltamn.cpp:596 src/minoltamn.cpp:866 src/minoltamn.cpp:1099
+#: src/minoltamn.cpp:594 src/minoltamn.cpp:864 src/minoltamn.cpp:1097
 #, fuzzy
 msgid "Exposure mode"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:598 src/minoltamn.cpp:886
+#: src/minoltamn.cpp:596 src/minoltamn.cpp:884
 #, fuzzy
 msgid "Flash Mode"
 msgstr "Flash"
 
-#: src/minoltamn.cpp:599 src/minoltamn.cpp:650 src/minoltamn.cpp:887
+#: src/minoltamn.cpp:597 src/minoltamn.cpp:648 src/minoltamn.cpp:885
 #, fuzzy
 msgid "Flash mode"
 msgstr "Flash"
 
-#: src/minoltamn.cpp:602 src/minoltamn.cpp:875 src/minoltamn.cpp:1108
+#: src/minoltamn.cpp:600 src/minoltamn.cpp:873 src/minoltamn.cpp:1106
 #, fuzzy
 msgid "White balance"
 msgstr "Balance de blanco"
 
-#: src/minoltamn.cpp:604 src/minoltamn.cpp:868 src/minoltamn.cpp:1101
+#: src/minoltamn.cpp:602 src/minoltamn.cpp:866 src/minoltamn.cpp:1099
 #, fuzzy
 msgid "Image Size"
 msgstr "Ancho de la imagen"
 
-#: src/minoltamn.cpp:605 src/minoltamn.cpp:869 src/minoltamn.cpp:1102
+#: src/minoltamn.cpp:603 src/minoltamn.cpp:867 src/minoltamn.cpp:1100
 #, fuzzy
 msgid "Image size"
 msgstr "Ancho de la imagen"
 
-#: src/minoltamn.cpp:610
+#: src/minoltamn.cpp:608
 #, fuzzy
 msgid "Drive Mode"
 msgstr "Modo de métrica"
 
-#: src/minoltamn.cpp:611
+#: src/minoltamn.cpp:609
 #, fuzzy
 msgid "Drive mode"
 msgstr "Retrato"
 
-#: src/minoltamn.cpp:614 src/minoltamn.cpp:1120
+#: src/minoltamn.cpp:612 src/minoltamn.cpp:1118
 #, fuzzy
 msgid "Metering mode"
 msgstr "Modo de métrica"
 
-#: src/minoltamn.cpp:616
+#: src/minoltamn.cpp:614
 #, fuzzy
 msgid "Exposure Speed"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:617
+#: src/minoltamn.cpp:615
 #, fuzzy
 msgid "Exposure speed"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:620 src/minoltamn.cpp:922 src/minoltamn.cpp:1135
+#: src/minoltamn.cpp:618 src/minoltamn.cpp:920 src/minoltamn.cpp:1133
 #, fuzzy
 msgid "Exposure time"
 msgstr "Tiempo de exposición"
 
-#: src/minoltamn.cpp:623 src/minoltamn.cpp:919 src/minoltamn.cpp:1138
+#: src/minoltamn.cpp:621 src/minoltamn.cpp:917 src/minoltamn.cpp:1136
 #, fuzzy
 msgid "The F-Number"
 msgstr "El número F."
 
-#: src/minoltamn.cpp:625
+#: src/minoltamn.cpp:623
 #, fuzzy
 msgid "Macro Mode"
 msgstr "Macro"
 
-#: src/minoltamn.cpp:626
+#: src/minoltamn.cpp:624
 #, fuzzy
 msgid "Macro mode"
 msgstr "Macro"
 
-#: src/minoltamn.cpp:628
+#: src/minoltamn.cpp:626
 #, fuzzy
 msgid "Digital Zoom"
 msgstr "Relación de zoom digital"
 
-#: src/minoltamn.cpp:629
+#: src/minoltamn.cpp:627
 #, fuzzy
 msgid "Digital zoom"
 msgstr "Relación de zoom digital"
 
-#: src/minoltamn.cpp:631 src/minoltamn.cpp:892 src/minoltamn.cpp:1155
+#: src/minoltamn.cpp:629 src/minoltamn.cpp:890 src/minoltamn.cpp:1153
 #, fuzzy
 msgid "Exposure Compensation"
 msgstr "Tiempo de exposición"
 
-#: src/minoltamn.cpp:632 src/minoltamn.cpp:893 src/minoltamn.cpp:1156
+#: src/minoltamn.cpp:630 src/minoltamn.cpp:891 src/minoltamn.cpp:1154
 #, fuzzy
 msgid "Exposure compensation"
 msgstr "Tiempo de exposición"
 
-#: src/minoltamn.cpp:634
+#: src/minoltamn.cpp:632
 #, fuzzy
 msgid "Bracket Step"
 msgstr "acción"
 
-#: src/minoltamn.cpp:635
+#: src/minoltamn.cpp:633
 #, fuzzy
 msgid "Bracket step"
 msgstr "acción"
 
-#: src/minoltamn.cpp:637
+#: src/minoltamn.cpp:635
 #, fuzzy
 msgid "Interval Length"
 msgstr "Distancia focal"
 
-#: src/minoltamn.cpp:638
+#: src/minoltamn.cpp:636
 msgid "Interval length"
 msgstr ""
 
-#: src/minoltamn.cpp:640
+#: src/minoltamn.cpp:638
 #, fuzzy
 msgid "Interval Number"
 msgstr "El número F."
 
-#: src/minoltamn.cpp:641
+#: src/minoltamn.cpp:639
 #, fuzzy
 msgid "Interval number"
 msgstr "El número F."
 
-#: src/minoltamn.cpp:644
+#: src/minoltamn.cpp:642
 #, fuzzy
 msgid "Focal length"
 msgstr "Distancia focal"
 
-#: src/minoltamn.cpp:646
+#: src/minoltamn.cpp:644
 #, fuzzy
 msgid "Focus Distance"
 msgstr "Balance de blanco manual"
 
-#: src/minoltamn.cpp:647
+#: src/minoltamn.cpp:645
 #, fuzzy
 msgid "Focus distance"
 msgstr "Balance de blanco manual"
 
-#: src/minoltamn.cpp:652
+#: src/minoltamn.cpp:650
 msgid "Minolta Date"
 msgstr ""
 
-#: src/minoltamn.cpp:653
+#: src/minoltamn.cpp:651
 msgid "Minolta date"
 msgstr ""
 
-#: src/minoltamn.cpp:655
+#: src/minoltamn.cpp:653
 msgid "Minolta Time"
 msgstr ""
 
-#: src/minoltamn.cpp:656
+#: src/minoltamn.cpp:654
 msgid "Minolta time"
 msgstr ""
 
-#: src/minoltamn.cpp:658
+#: src/minoltamn.cpp:656
 #, fuzzy
 msgid "Max Aperture"
 msgstr "Apertura"
 
-#: src/minoltamn.cpp:659
+#: src/minoltamn.cpp:657
 #, fuzzy
 msgid "Max aperture"
 msgstr "apertura"
 
-#: src/minoltamn.cpp:661
+#: src/minoltamn.cpp:659
 msgid "File Number Memory"
 msgstr ""
 
-#: src/minoltamn.cpp:662
+#: src/minoltamn.cpp:660
 msgid "File number memory"
 msgstr ""
 
-#: src/minoltamn.cpp:664 src/minoltamn.cpp:928 src/minoltamn.cpp:935
-#: src/minoltamn.cpp:1167
+#: src/minoltamn.cpp:662 src/minoltamn.cpp:926 src/minoltamn.cpp:933
+#: src/minoltamn.cpp:1165
 #, fuzzy
 msgid "Image Number"
 msgstr "ID único de imagen"
 
-#: src/minoltamn.cpp:665 src/minoltamn.cpp:929 src/minoltamn.cpp:936
-#: src/minoltamn.cpp:1168
+#: src/minoltamn.cpp:663 src/minoltamn.cpp:927 src/minoltamn.cpp:934
+#: src/minoltamn.cpp:1166
 #, fuzzy
 msgid "Image number"
 msgstr "ID único de imagen"
 
-#: src/minoltamn.cpp:667
+#: src/minoltamn.cpp:665
 #, fuzzy
 msgid "Color Balance Red"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:668
+#: src/minoltamn.cpp:666
 #, fuzzy
 msgid "Color balance red"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:670
+#: src/minoltamn.cpp:668
 #, fuzzy
 msgid "Color Balance Green"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:671
+#: src/minoltamn.cpp:669
 #, fuzzy
 msgid "Color balance green"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:673
+#: src/minoltamn.cpp:671
 #, fuzzy
 msgid "Color Balance Blue"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:674
+#: src/minoltamn.cpp:672
 #, fuzzy
 msgid "Color balance blue"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:685
+#: src/minoltamn.cpp:683
 #, fuzzy
 msgid "Subject Program"
 msgstr "Área del sujeto"
 
-#: src/minoltamn.cpp:686
+#: src/minoltamn.cpp:684
 #, fuzzy
 msgid "Subject program"
 msgstr "Área del sujeto"
 
-#: src/minoltamn.cpp:688
+#: src/minoltamn.cpp:686
 msgid "Flash Exposure Compensation"
 msgstr ""
 
-#: src/minoltamn.cpp:689
+#: src/minoltamn.cpp:687
 msgid "Flash exposure compensation in EV"
 msgstr ""
 
-#: src/minoltamn.cpp:691 src/minoltamn.cpp:889 src/minoltamn.cpp:1122
+#: src/minoltamn.cpp:689 src/minoltamn.cpp:887 src/minoltamn.cpp:1120
 #, fuzzy
 msgid "ISO Speed Mode"
 msgstr "Velocidad ISO"
 
-#: src/minoltamn.cpp:692 src/minoltamn.cpp:890 src/minoltamn.cpp:1123
+#: src/minoltamn.cpp:690 src/minoltamn.cpp:888 src/minoltamn.cpp:1121
 #, fuzzy
 msgid "ISO speed setting"
 msgstr "Velocidad ISO"
 
-#: src/minoltamn.cpp:694
+#: src/minoltamn.cpp:692
 #, fuzzy
 msgid "Minolta Model"
 msgstr "Modo de métrica"
 
-#: src/minoltamn.cpp:695
+#: src/minoltamn.cpp:693
 #, fuzzy
 msgid "Minolta model"
 msgstr "Retrato"
 
-#: src/minoltamn.cpp:697
+#: src/minoltamn.cpp:695
 #, fuzzy
 msgid "Interval Mode"
 msgstr "Modo de métrica"
 
-#: src/minoltamn.cpp:698
+#: src/minoltamn.cpp:696
 #, fuzzy
 msgid "Interval mode"
 msgstr "Retrato"
 
-#: src/minoltamn.cpp:700
+#: src/minoltamn.cpp:698
 #, fuzzy
 msgid "Folder Name"
 msgstr "Nombre del documento"
 
-#: src/minoltamn.cpp:701
+#: src/minoltamn.cpp:699
 msgid "Folder name"
 msgstr ""
 
-#: src/minoltamn.cpp:703 src/minoltamn.cpp:704
+#: src/minoltamn.cpp:701 src/minoltamn.cpp:702
 #, fuzzy
 msgid "ColorMode"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:706
+#: src/minoltamn.cpp:704
 #, fuzzy
 msgid "Color Filter"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:707
+#: src/minoltamn.cpp:705
 #, fuzzy
 msgid "Color filter"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:709
+#: src/minoltamn.cpp:707
 msgid "Black and White Filter"
 msgstr ""
 
-#: src/minoltamn.cpp:710
+#: src/minoltamn.cpp:708
 msgid "Black and white filter"
 msgstr ""
 
-#: src/minoltamn.cpp:712
+#: src/minoltamn.cpp:710
 msgid "Internal Flash"
 msgstr ""
 
-#: src/minoltamn.cpp:713
+#: src/minoltamn.cpp:711
 msgid "Internal flash"
 msgstr ""
 
-#: src/minoltamn.cpp:718
+#: src/minoltamn.cpp:716
 msgid "Spot Focus Point X"
 msgstr ""
 
-#: src/minoltamn.cpp:719
+#: src/minoltamn.cpp:717
 msgid "Spot focus point X"
 msgstr ""
 
-#: src/minoltamn.cpp:721
+#: src/minoltamn.cpp:719
 msgid "Spot Focus Point Y"
 msgstr ""
 
-#: src/minoltamn.cpp:722
+#: src/minoltamn.cpp:720
 msgid "Spot focus point Y"
 msgstr ""
 
-#: src/minoltamn.cpp:724
+#: src/minoltamn.cpp:722
 #, fuzzy
 msgid "Wide Focus Zone"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:725
+#: src/minoltamn.cpp:723
 msgid "Wide focus zone"
 msgstr ""
 
-#: src/minoltamn.cpp:727 src/minoltamn.cpp:877 src/minoltamn.cpp:1146
+#: src/minoltamn.cpp:725 src/minoltamn.cpp:875 src/minoltamn.cpp:1144
 #, fuzzy
 msgid "Focus Mode"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:728 src/minoltamn.cpp:878 src/minoltamn.cpp:1147
+#: src/minoltamn.cpp:726 src/minoltamn.cpp:876 src/minoltamn.cpp:1145
 #, fuzzy
 msgid "Focus mode"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:730 src/minoltamn.cpp:731 src/minoltamn.cpp:1114
+#: src/minoltamn.cpp:728 src/minoltamn.cpp:729 src/minoltamn.cpp:1112
 #, fuzzy
 msgid "Focus area"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:733
+#: src/minoltamn.cpp:731
 msgid "DEC Switch Position"
 msgstr ""
 
-#: src/minoltamn.cpp:734
+#: src/minoltamn.cpp:732
 msgid "DEC switch position"
 msgstr ""
 
-#: src/minoltamn.cpp:736
+#: src/minoltamn.cpp:734
 #, fuzzy
 msgid "Color Profile"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:737
+#: src/minoltamn.cpp:735
 #, fuzzy
 msgid "Color profile"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:739 src/minoltamn.cpp:740
+#: src/minoltamn.cpp:737 src/minoltamn.cpp:738
 msgid "Data Imprint"
 msgstr ""
 
-#: src/minoltamn.cpp:742
+#: src/minoltamn.cpp:740
 #, fuzzy
 msgid "Flash Metering"
 msgstr "Contraste"
 
-#: src/minoltamn.cpp:743
+#: src/minoltamn.cpp:741
 #, fuzzy
 msgid "Flash metering"
 msgstr "Contraste"
 
-#: src/minoltamn.cpp:748
+#: src/minoltamn.cpp:746
 msgid "Unknown Minolta Camera Settings tag"
 msgstr ""
 
-#: src/minoltamn.cpp:761
+#: src/minoltamn.cpp:759
 #, fuzzy
 msgid "Program-shift A"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:762
+#: src/minoltamn.cpp:760
 #, fuzzy
 msgid "Program-shift S"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:767 src/minoltamn.cpp:965
+#: src/minoltamn.cpp:765 src/minoltamn.cpp:963
 #, fuzzy
 msgid "Large"
 msgstr "promedio"
 
-#: src/minoltamn.cpp:768 src/minoltamn.cpp:966
+#: src/minoltamn.cpp:766 src/minoltamn.cpp:964
 msgid "Medium"
 msgstr ""
 
-#: src/minoltamn.cpp:769 src/minoltamn.cpp:967
+#: src/minoltamn.cpp:767 src/minoltamn.cpp:965
 msgid "Small"
 msgstr ""
 
-#: src/minoltamn.cpp:777 src/minoltamn.cpp:975
+#: src/minoltamn.cpp:775 src/minoltamn.cpp:973
 msgid "Raw+Jpeg"
 msgstr ""
 
-#: src/minoltamn.cpp:789 src/minoltamn.cpp:988
+#: src/minoltamn.cpp:787 src/minoltamn.cpp:986
 msgid "Kelvin"
 msgstr ""
 
-#: src/minoltamn.cpp:795
+#: src/minoltamn.cpp:793
 msgid "Single-shot AF"
 msgstr ""
 
-#: src/minoltamn.cpp:796
+#: src/minoltamn.cpp:794
 msgid "Continuous AF"
 msgstr ""
 
-#: src/minoltamn.cpp:797
+#: src/minoltamn.cpp:795
 msgid "Automatic AF"
 msgstr ""
 
-#: src/minoltamn.cpp:833
+#: src/minoltamn.cpp:831
 msgid "sRGB (Natural)"
 msgstr ""
 
-#: src/minoltamn.cpp:834
+#: src/minoltamn.cpp:832
 msgid "sRGB (Natural+)"
 msgstr ""
 
-#: src/minoltamn.cpp:840 src/minoltamn.cpp:1020
+#: src/minoltamn.cpp:838 src/minoltamn.cpp:1018
 msgid "Horizontal (normal)"
 msgstr ""
 
-#: src/minoltamn.cpp:841 src/minoltamn.cpp:1021
+#: src/minoltamn.cpp:839 src/minoltamn.cpp:1019
 msgid "Rotate 90 CW"
 msgstr ""
 
-#: src/minoltamn.cpp:842 src/minoltamn.cpp:1022
+#: src/minoltamn.cpp:840 src/minoltamn.cpp:1020
 msgid "Rotate 270 CW"
 msgstr ""
 
-#: src/minoltamn.cpp:880
+#: src/minoltamn.cpp:878
 #, fuzzy
 msgid "AF Points"
 msgstr "Punto blanco"
 
-#: src/minoltamn.cpp:881
+#: src/minoltamn.cpp:879
 msgid "AF points"
 msgstr ""
 
-#: src/minoltamn.cpp:896
+#: src/minoltamn.cpp:894
 #, fuzzy
 msgid "Color space"
 msgstr "Espacio de color"
 
-#: src/minoltamn.cpp:907 src/minoltamn.cpp:925 src/minoltamn.cpp:1140
-#: src/minoltamn.cpp:1158
+#: src/minoltamn.cpp:905 src/minoltamn.cpp:923 src/minoltamn.cpp:1138
+#: src/minoltamn.cpp:1156
 msgid "Free Memory Card Images"
 msgstr ""
 
-#: src/minoltamn.cpp:908 src/minoltamn.cpp:926 src/minoltamn.cpp:1141
-#: src/minoltamn.cpp:1159
+#: src/minoltamn.cpp:906 src/minoltamn.cpp:924 src/minoltamn.cpp:1139
+#: src/minoltamn.cpp:1157
 msgid "Free memory card images"
 msgstr ""
 
-#: src/minoltamn.cpp:913
+#: src/minoltamn.cpp:911
 msgid "Hue"
 msgstr ""
 
-#: src/minoltamn.cpp:915 src/minoltamn.cpp:916 src/minoltamn.cpp:1152
-#: src/minoltamn.cpp:1153
+#: src/minoltamn.cpp:913 src/minoltamn.cpp:914 src/minoltamn.cpp:1150
+#: src/minoltamn.cpp:1151
 #, fuzzy
 msgid "Rotation"
 msgstr "acción"
 
-#: src/minoltamn.cpp:931 src/minoltamn.cpp:1170
+#: src/minoltamn.cpp:929 src/minoltamn.cpp:1168
 #, fuzzy
 msgid "Noise Reduction"
 msgstr "El flash disparó, modo de reducción de ojos rojos."
 
-#: src/minoltamn.cpp:932 src/minoltamn.cpp:1171
+#: src/minoltamn.cpp:930 src/minoltamn.cpp:1169
 #, fuzzy
 msgid "Noise reduction"
 msgstr "El flash disparó, modo de reducción de ojos rojos."
 
-#: src/minoltamn.cpp:941
+#: src/minoltamn.cpp:939
 msgid "Zone Matching On"
 msgstr ""
 
-#: src/minoltamn.cpp:942
+#: src/minoltamn.cpp:940
 msgid "Zone matching on"
 msgstr ""
 
-#: src/minoltamn.cpp:947
+#: src/minoltamn.cpp:945
 msgid "Unknown Minolta Camera Settings 7D tag"
 msgstr ""
 
-#: src/minoltamn.cpp:960
+#: src/minoltamn.cpp:958
 msgid "Connected copying"
 msgstr ""
 
-#: src/minoltamn.cpp:1014
+#: src/minoltamn.cpp:1012
 msgid "200 (Zone Matching High)"
 msgstr ""
 
-#: src/minoltamn.cpp:1015
+#: src/minoltamn.cpp:1013
 msgid "80 (Zone Matching Low)"
 msgstr ""
 
-#: src/minoltamn.cpp:1039 src/minoltamn.cpp:1053
+#: src/minoltamn.cpp:1037 src/minoltamn.cpp:1051
 msgid "Wide"
 msgstr ""
 
-#: src/minoltamn.cpp:1040
+#: src/minoltamn.cpp:1038
 #, fuzzy
 msgid "Central"
 msgstr "Centímetro"
 
-#: src/minoltamn.cpp:1041
+#: src/minoltamn.cpp:1039
 msgid "Up"
 msgstr ""
 
-#: src/minoltamn.cpp:1042
+#: src/minoltamn.cpp:1040
 #, fuzzy
 msgid "Up right"
 msgstr "arriba - derecha"
 
-#: src/minoltamn.cpp:1044
+#: src/minoltamn.cpp:1042
 #, fuzzy
 msgid "Down right"
 msgstr "arriba - derecha"
 
-#: src/minoltamn.cpp:1045
+#: src/minoltamn.cpp:1043
 msgid "Down"
 msgstr ""
 
-#: src/minoltamn.cpp:1046
+#: src/minoltamn.cpp:1044
 #, fuzzy
 msgid "Down left"
 msgstr "arriba - izquierda"
 
-#: src/minoltamn.cpp:1048
+#: src/minoltamn.cpp:1046
 #, fuzzy
 msgid "Up left"
 msgstr "arriba - izquierda"
 
-#: src/minoltamn.cpp:1054
+#: src/minoltamn.cpp:1052
 #, fuzzy
 msgid "Selection"
 msgstr "El flash disparó, modo de reducción de ojos rojos."
 
-#: src/minoltamn.cpp:1110
+#: src/minoltamn.cpp:1108
 #, fuzzy
 msgid "Focus Position"
 msgstr "Posicionamiento YCbCr"
 
-#: src/minoltamn.cpp:1111
+#: src/minoltamn.cpp:1109
 msgid "Focus position"
 msgstr ""
 
-#: src/minoltamn.cpp:1113
+#: src/minoltamn.cpp:1111
 #, fuzzy
 msgid "Focus Area"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:1143
+#: src/minoltamn.cpp:1141
 #, fuzzy
 msgid "Exposure Revision"
 msgstr "Ajuste de exposición"
 
-#: src/minoltamn.cpp:1144
+#: src/minoltamn.cpp:1142
 #, fuzzy
 msgid "Exposure revision"
 msgstr "Ajuste de exposición"
 
-#: src/minoltamn.cpp:1161
+#: src/minoltamn.cpp:1159
 #, fuzzy
 msgid "Exposure Manual Bias"
 msgstr "Ajuste de exposición"
 
-#: src/minoltamn.cpp:1162
+#: src/minoltamn.cpp:1160
 #, fuzzy
 msgid "Exposure manual bias"
 msgstr "Ajuste de exposición"
 
-#: src/minoltamn.cpp:1164
+#: src/minoltamn.cpp:1162
 #, fuzzy
 msgid "AF Mode"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:1165
+#: src/minoltamn.cpp:1163
 #, fuzzy
 msgid "AF mode"
 msgstr "Flash"
 
-#: src/minoltamn.cpp:1185
+#: src/minoltamn.cpp:1183
 msgid "Unknown Minolta Camera Settings 5D tag"
 msgstr ""
 
-#: src/exiv2.cpp:197
+#: src/exiv2.cpp:146
+#, fuzzy
+msgid "File "
+msgstr "Orden de llenado"
+
+#: src/exiv2.cpp:179
+msgid "Copyright (C) 2004, 2005, 2006 Andreas Huggel.\n"
+msgstr ""
+
+#: src/exiv2.cpp:181
+msgid "This program is free software; you can redistribute it and/or\n"
+msgstr ""
+
+#: src/exiv2.cpp:182
+msgid "modify it under the terms of the GNU General Public License\n"
+msgstr ""
+
+#: src/exiv2.cpp:183
+msgid "as published by the Free Software Foundation; either version 2\n"
+msgstr ""
+
+#: src/exiv2.cpp:184
+msgid "of the License, or (at your option) any later version.\n"
+msgstr ""
+
+#: src/exiv2.cpp:186
+msgid "This program is distributed in the hope that it will be useful,\n"
+msgstr ""
+
+#: src/exiv2.cpp:187
+msgid "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+msgstr ""
+
+#: src/exiv2.cpp:188
+msgid "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+msgstr ""
+
+#: src/exiv2.cpp:189
+msgid "GNU General Public License for more details.\n"
+msgstr ""
+
+#: src/exiv2.cpp:191
+msgid "You should have received a copy of the GNU General Public\n"
+msgstr ""
+
+#: src/exiv2.cpp:192
+msgid "License along with this program; if not, write to the Free\n"
+msgstr ""
+
+#: src/exiv2.cpp:193
+msgid "Software Foundation, Inc., 51 Franklin Street, Fifth Floor,\n"
+msgstr ""
+
+#: src/exiv2.cpp:194
+msgid "Boston, MA 02110-1301 USA\n"
+msgstr ""
+
+#: src/exiv2.cpp:199
 msgid "Usage: "
 msgstr ""
 
-#: src/exiv2.cpp:198
+#: src/exiv2.cpp:200
 msgid ""
 " [ options ] [ action ] file ...\n"
 "\n"
 msgstr ""
 
-#: src/exiv2.cpp:199
+#: src/exiv2.cpp:201
 msgid "Manipulate the Exif metadata of images.\n"
+msgstr ""
+
+#: src/exiv2.cpp:207
+msgid ""
+"\n"
+"Actions:\n"
+msgstr ""
+
+#: src/exiv2.cpp:208
+msgid "  ad | adjust   Adjust Exif timestamps by the given time. This\n"
+msgstr ""
+
+#: src/exiv2.cpp:209
+msgid "                action requires the option -a time.\n"
+msgstr ""
+
+#: src/exiv2.cpp:210
+msgid "  pr | print    Print image metadata.\n"
+msgstr ""
+
+#: src/exiv2.cpp:211
+msgid "  rm | delete   Delete image metadata from the files.\n"
+msgstr ""
+
+#: src/exiv2.cpp:212
+msgid "  in | insert   Insert metadata from corresponding *.exv files.\n"
+msgstr ""
+
+#: src/exiv2.cpp:213
+msgid ""
+"                Use option -S to change the suffix of the input files.\n"
+msgstr ""
+
+#: src/exiv2.cpp:214
+msgid "  ex | extract  Extract metadata to *.exv and thumbnail image files.\n"
+msgstr ""
+
+#: src/exiv2.cpp:215
+msgid ""
+"  mv | rename   Rename files and/or set file timestamps according to the\n"
+msgstr ""
+
+#: src/exiv2.cpp:216
+msgid ""
+"                Exif create timestamp. The filename format can be set with\n"
+msgstr ""
+
+#: src/exiv2.cpp:217
+msgid ""
+"                -r format, timestamp options are controlled with -t and -T.\n"
+msgstr ""
+
+#: src/exiv2.cpp:218
+msgid ""
+"  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n"
+msgstr ""
+
+#: src/exiv2.cpp:219
+msgid "                Iptc metadata of image files or set the Jpeg comment.\n"
+msgstr ""
+
+#: src/exiv2.cpp:220
+msgid "                Requires option -c, -m or -M.\n"
+msgstr ""
+
+#: src/exiv2.cpp:221
+msgid ""
+"  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n"
+msgstr ""
+
+#: src/exiv2.cpp:222
+msgid "                Exif tag.\n"
+msgstr ""
+
+#: src/exiv2.cpp:223
+msgid ""
+"\n"
+"Options:\n"
+msgstr ""
+
+#: src/exiv2.cpp:224
+msgid "   -h      Display this help and exit.\n"
+msgstr ""
+
+#: src/exiv2.cpp:225
+msgid "   -V      Show the program version and exit.\n"
+msgstr ""
+
+#: src/exiv2.cpp:226
+msgid "   -v      Be verbose during the program run.\n"
+msgstr ""
+
+#: src/exiv2.cpp:227
+msgid "   -b      Show large binary values.\n"
+msgstr ""
+
+#: src/exiv2.cpp:228
+msgid "   -u      Don't show unknown tags.\n"
+msgstr ""
+
+#: src/exiv2.cpp:229
+msgid "   -k      Preserve file timestamps (keep).\n"
+msgstr ""
+
+#: src/exiv2.cpp:230
+msgid ""
+"   -t      Also set the file timestamp in 'rename' action (overrides -k).\n"
+msgstr ""
+
+#: src/exiv2.cpp:231
+msgid ""
+"   -T      Only set the file timestamp in 'rename' action, do not rename\n"
+msgstr ""
+
+#: src/exiv2.cpp:232
+msgid "           the file (overrides -k).\n"
+msgstr ""
+
+#: src/exiv2.cpp:233
+msgid "   -f      Do not prompt before overwriting existing files (force).\n"
+msgstr ""
+
+#: src/exiv2.cpp:234
+msgid "   -F      Do not prompt before renaming files (Force).\n"
+msgstr ""
+
+#: src/exiv2.cpp:235
+msgid "   -a time Time adjustment in the format [-]HH[:MM[:SS]]. This option\n"
+msgstr ""
+
+#: src/exiv2.cpp:236
+msgid "           is only used with the 'adjust' action.\n"
+msgstr ""
+
+#: src/exiv2.cpp:237
+msgid "   -p mode Print mode for the 'print' action. Possible modes are:\n"
+msgstr ""
+
+#: src/exiv2.cpp:238
+msgid "             s : print a summary of the Exif metadata (the default)\n"
+msgstr ""
+
+#: src/exiv2.cpp:239
+msgid ""
+"             t : interpreted (translated) Exif data (shortcut for -Pkyct)\n"
+msgstr ""
+
+#: src/exiv2.cpp:240
+msgid "             v : plain Exif data values (shortcut for -Pxgnycv)\n"
+msgstr ""
+
+#: src/exiv2.cpp:241
+msgid "             h : hexdump of the Exif data (shortcut for -Pxgnycsh)\n"
+msgstr ""
+
+#: src/exiv2.cpp:242
+msgid "             i : Iptc data values\n"
+msgstr ""
+
+#: src/exiv2.cpp:243 src/exiv2.cpp:261
+msgid "             c : Jpeg comment\n"
+msgstr ""
+
+#: src/exiv2.cpp:244
+msgid ""
+"   -P cols Print columns for the Exif taglist ('print' action). Valid are:\n"
+msgstr ""
+
+#: src/exiv2.cpp:245
+msgid "             x : print a column with the tag value\n"
+msgstr ""
+
+#: src/exiv2.cpp:246
+msgid "             g : group name\n"
+msgstr ""
+
+#: src/exiv2.cpp:247
+msgid "             k : key\n"
+msgstr ""
+
+#: src/exiv2.cpp:248
+msgid "             l : tag label\n"
+msgstr ""
+
+#: src/exiv2.cpp:249
+msgid "             n : tag name\n"
+msgstr ""
+
+#: src/exiv2.cpp:250
+msgid "             y : type\n"
+msgstr ""
+
+#: src/exiv2.cpp:251
+msgid "             c : number of components (count)\n"
+msgstr ""
+
+#: src/exiv2.cpp:252
+msgid "             s : size in bytes\n"
+msgstr ""
+
+#: src/exiv2.cpp:253
+msgid "             v : plain data value\n"
+msgstr ""
+
+#: src/exiv2.cpp:254
+msgid "             t : interpreted (translated) data\n"
+msgstr ""
+
+#: src/exiv2.cpp:255
+msgid "             h : hexdump of the data\n"
+msgstr ""
+
+#: src/exiv2.cpp:256
+msgid ""
+"   -d tgt  Delete target(s) for the 'delete' action. Possible targets are:\n"
+msgstr ""
+
+#: src/exiv2.cpp:257
+msgid "             a : all supported metadata (the default)\n"
+msgstr ""
+
+#: src/exiv2.cpp:258
+msgid "             e : Exif section\n"
+msgstr ""
+
+#: src/exiv2.cpp:259
+msgid "             t : Exif thumbnail only\n"
+msgstr ""
+
+#: src/exiv2.cpp:260
+msgid "             i : Iptc data\n"
+msgstr ""
+
+#: src/exiv2.cpp:262
+msgid ""
+"   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
+msgstr ""
+
+#: src/exiv2.cpp:263
+msgid ""
+"           the same as those for the -d option. Only Jpeg thumbnails can\n"
+msgstr ""
+
+#: src/exiv2.cpp:264
+msgid "           be inserted, they need to be named <file>-thumb.jpg\n"
+msgstr ""
+
+#: src/exiv2.cpp:265
+msgid ""
+"   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
+msgstr ""
+
+#: src/exiv2.cpp:266
+msgid "           are the same as those for the -d option.\n"
+msgstr ""
+
+#: src/exiv2.cpp:267
+msgid "   -r fmt  Filename format for the 'rename' action. The format string\n"
+msgstr ""
+
+#: src/exiv2.cpp:268
+msgid "           follows strftime(3). Default filename format is "
+msgstr ""
+
+#: src/exiv2.cpp:270
+msgid "   -c txt  Jpeg comment string to set in the image.\n"
+msgstr ""
+
+#: src/exiv2.cpp:271
+msgid ""
+"   -m file Command file for the modify action. The format for commands is\n"
+msgstr ""
+
+#: src/exiv2.cpp:272
+msgid "           set|add|del <key> [[<type>] <value>].\n"
+msgstr ""
+
+#: src/exiv2.cpp:273
+msgid "   -M cmd  Command line for the modify action. The format for the\n"
+msgstr ""
+
+#: src/exiv2.cpp:274
+msgid ""
+"           commands is the same as that of the lines of a command file.\n"
+msgstr ""
+
+#: src/exiv2.cpp:275
+msgid ""
+"   -l dir  Location (directory) for files to be inserted from or extracted "
+"to.\n"
+msgstr ""
+
+#: src/exiv2.cpp:276
+msgid ""
+"   -S .suf Use suffix .suf for source files for insert command.\n"
+"\n"
+msgstr ""
+
+#: src/exiv2.cpp:306 src/exiv2.cpp:345 src/exiv2.cpp:547
+msgid ": Option -"
+msgstr ""
+
+#: src/exiv2.cpp:307
+msgid " requires an argument\n"
+msgstr ""
+
+#: src/exiv2.cpp:311
+msgid ": Unrecognized option -"
+msgstr ""
+
+#: src/exiv2.cpp:317
+msgid ": getopt returned unexpected character code "
+msgstr ""
+
+#: src/exiv2.cpp:340
+msgid ": Ignoring surplus option -r \""
+msgstr ""
+
+#: src/exiv2.cpp:346 src/exiv2.cpp:548
+msgid " is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:361
+msgid ": Error parsing -a option argument `"
+msgstr ""
+
+#: src/exiv2.cpp:368
+msgid ": Ignoring surplus option -a "
+msgstr ""
+
+#: src/exiv2.cpp:372
+msgid ": Option -a is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:392
+msgid ": Unrecognized print mode `"
+msgstr ""
+
+#: src/exiv2.cpp:400
+msgid ": Ignoring surplus option -p"
+msgstr ""
+
+#: src/exiv2.cpp:404
+msgid ": Option -p is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:432
+msgid ": Unrecognized print item `"
+msgstr ""
+
+#: src/exiv2.cpp:441
+msgid ": Ignoring surplus option -P"
+msgstr ""
+
+#: src/exiv2.cpp:445
+msgid ": Option -P is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:472
+msgid ": Option -d is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:499
+msgid ": Option -e is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:526
+msgid ": Option -i is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:564
+msgid ": Action adjust is not "
+msgstr ""
+
+#: src/exiv2.cpp:565 src/exiv2.cpp:574 src/exiv2.cpp:583 src/exiv2.cpp:592
+#: src/exiv2.cpp:601 src/exiv2.cpp:610 src/exiv2.cpp:619 src/exiv2.cpp:628
+msgid "compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:573
+msgid ": Action print is not "
+msgstr ""
+
+#: src/exiv2.cpp:582
+msgid ": Action delete is not "
+msgstr ""
+
+#: src/exiv2.cpp:591
+msgid ": Action extract is not "
+msgstr ""
+
+#: src/exiv2.cpp:600
+msgid ": Action insert is not "
+msgstr ""
+
+#: src/exiv2.cpp:609
+msgid ": Action rename is not "
+msgstr ""
+
+#: src/exiv2.cpp:618
+msgid ": Action modify is not "
+msgstr ""
+
+#: src/exiv2.cpp:627
+msgid ": Action fixiso is not "
+msgstr ""
+
+#: src/exiv2.cpp:652
+msgid ": An action must be specified\n"
+msgstr ""
+
+#: src/exiv2.cpp:657
+msgid ": Adjust action requires option -a time\n"
+msgstr ""
+
+#: src/exiv2.cpp:663
+msgid ": Modify action requires at least one -c, -m or -M option\n"
+msgstr ""
+
+#: src/exiv2.cpp:667
+msgid ": At least one file is required\n"
+msgstr ""
+
+#: src/exiv2.cpp:673
+msgid ": Error parsing -m option arguments\n"
+msgstr ""
+
+#: src/exiv2.cpp:680
+msgid ": Error parsing -M option arguments\n"
+msgstr ""
+
+#: src/exiv2.cpp:687
+msgid ": -l option can only be used with extract or insert actions\n"
+msgstr ""
+
+#: src/exiv2.cpp:692
+msgid ": -S option can only be used with insert action\n"
+msgstr ""
+
+#: src/exiv2.cpp:697
+msgid ": -t option can only be used with rename action\n"
+msgstr ""
+
+#: src/exiv2.cpp:702
+msgid ": -T option can only be used with rename action\n"
+msgstr ""
+
+#: src/exiv2.cpp:767
+msgid ": Unrecognized "
+msgstr ""
+
+#: src/exiv2.cpp:768
+msgid " target `"
+msgstr ""
+
+#: src/exiv2.cpp:786
+msgid ": Failed to open command file for reading\n"
+msgstr ""
+
+#: src/exiv2.cpp:799
+msgid ", line "
+msgstr ""
+
+#: src/exiv2.cpp:822
+msgid "-M option "
+msgstr ""
+
+#: src/exiv2.cpp:843
+msgid ": Invalid command line"
+msgstr ""
+
+#: src/exiv2.cpp:850
+msgid ": Invalid command `"
+msgstr ""
+
+#: src/exiv2.cpp:874
+msgid ": Invalid key `"
+msgstr ""
+
+#: src/exiv2.cpp:893
+msgid ": Invalid command line "
+msgstr ""
+
+#: src/exiv2.cpp:903
+msgid ": Invalid command line  "
 msgstr ""
 
 #~ msgid "Invalid format '%s', expected '%s'."
@@ -4648,10 +5228,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Flourescent"
 #~ msgstr "Fluorescente"
-
-#, fuzzy
-#~ msgid "Custom functions"
-#~ msgstr "Proceso personalizado"
 
 #, fuzzy
 #~ msgid "Focus type"
