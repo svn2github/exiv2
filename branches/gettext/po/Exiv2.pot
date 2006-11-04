@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-04 17:58+0100\n"
+"POT-Creation-Date: 2006-11-04 20:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -819,14 +819,16 @@ msgstr ""
 
 #: src/tags.cpp:471 src/tags.cpp:583 src/tags.cpp:590 src/minoltamn.cpp:291
 #: src/minoltamn.cpp:757 src/minoltamn.cpp:788 src/minoltamn.cpp:796
-#: src/minoltamn.cpp:956 src/minoltamn.cpp:987
+#: src/minoltamn.cpp:956 src/minoltamn.cpp:987 src/fujimn.cpp:118
+#: src/fujimn.cpp:143
 msgid "Manual"
 msgstr ""
 
 #: src/tags.cpp:472 src/tags.cpp:582 src/tags.cpp:589 src/minoltamn.cpp:304
 #: src/minoltamn.cpp:422 src/minoltamn.cpp:758 src/minoltamn.cpp:781
 #: src/minoltamn.cpp:820 src/minoltamn.cpp:957 src/minoltamn.cpp:979
-#: src/minoltamn.cpp:1005
+#: src/minoltamn.cpp:1005 src/fujimn.cpp:82 src/fujimn.cpp:109
+#: src/fujimn.cpp:117 src/fujimn.cpp:123
 msgid "Auto"
 msgstr ""
 
@@ -857,7 +859,7 @@ msgid "Landscape mode"
 msgstr ""
 
 #: src/tags.cpp:483 src/tags.cpp:495 src/tags.cpp:633 src/tags.cpp:1791
-#: src/tags.cpp:1862
+#: src/tags.cpp:1862 src/fujimn.cpp:222 src/fujimn.cpp:231 src/fujimn.cpp:240
 msgid "Unknown"
 msgstr ""
 
@@ -891,7 +893,7 @@ msgid "Other"
 msgstr ""
 
 #: src/tags.cpp:496 src/minoltamn.cpp:305 src/minoltamn.cpp:782
-#: src/minoltamn.cpp:980
+#: src/minoltamn.cpp:980 src/fujimn.cpp:83
 msgid "Daylight"
 msgstr ""
 
@@ -1128,18 +1130,20 @@ msgid "Auto bracket"
 msgstr ""
 
 #: src/tags.cpp:595 src/minoltamn.cpp:77 src/minoltamn.cpp:331
+#: src/fujimn.cpp:155 src/fujimn.cpp:162
 msgid "Standard"
 msgstr ""
 
-#: src/tags.cpp:596 src/minoltamn.cpp:66
+#: src/tags.cpp:596 src/minoltamn.cpp:66 src/fujimn.cpp:125
 msgid "Landscape"
 msgstr ""
 
 #: src/tags.cpp:597 src/minoltamn.cpp:63 src/minoltamn.cpp:409
+#: src/fujimn.cpp:124
 msgid "Portrait"
 msgstr ""
 
-#: src/tags.cpp:598
+#: src/tags.cpp:598 src/fujimn.cpp:127
 msgid "Night scene"
 msgstr ""
 
@@ -1164,7 +1168,8 @@ msgid "High gain down"
 msgstr ""
 
 #: src/tags.cpp:612 src/tags.cpp:619 src/tags.cpp:626 src/minoltamn.cpp:402
-#: src/minoltamn.cpp:774 src/minoltamn.cpp:972
+#: src/minoltamn.cpp:774 src/minoltamn.cpp:972 src/fujimn.cpp:75
+#: src/fujimn.cpp:94 src/fujimn.cpp:102
 msgid "Normal"
 msgstr ""
 
@@ -1176,15 +1181,15 @@ msgstr ""
 msgid "Hard"
 msgstr ""
 
-#: src/tags.cpp:620
+#: src/tags.cpp:620 src/fujimn.cpp:96 src/fujimn.cpp:104
 msgid "Low"
 msgstr ""
 
-#: src/tags.cpp:621
+#: src/tags.cpp:621 src/fujimn.cpp:95 src/fujimn.cpp:103
 msgid "High"
 msgstr ""
 
-#: src/tags.cpp:634
+#: src/tags.cpp:634 src/fujimn.cpp:215
 msgid "Macro"
 msgstr ""
 
@@ -1605,7 +1610,7 @@ msgstr ""
 msgid "Indicates the image sensor type on the camera or input device."
 msgstr ""
 
-#: src/tags.cpp:826
+#: src/tags.cpp:826 src/fujimn.cpp:278
 msgid "File Source"
 msgstr ""
 
@@ -1660,7 +1665,7 @@ msgid ""
 msgstr ""
 
 #: src/tags.cpp:852 src/minoltamn.cpp:599 src/minoltamn.cpp:872
-#: src/minoltamn.cpp:1105
+#: src/minoltamn.cpp:1105 src/fujimn.cpp:200
 msgid "White Balance"
 msgstr ""
 
@@ -1735,7 +1740,7 @@ msgstr ""
 
 #: src/tags.cpp:882 src/minoltamn.cpp:680 src/minoltamn.cpp:681
 #: src/minoltamn.cpp:896 src/minoltamn.cpp:897 src/minoltamn.cpp:1123
-#: src/minoltamn.cpp:1124
+#: src/minoltamn.cpp:1124 src/fujimn.cpp:197
 msgid "Sharpness"
 msgstr ""
 
@@ -2990,1014 +2995,6 @@ msgstr ""
 msgid "Unknown dataset"
 msgstr ""
 
-#: src/minoltamn.cpp:56
-msgid "Natural Color"
-msgstr ""
-
-#: src/minoltamn.cpp:57
-msgid "Black & White"
-msgstr ""
-
-#: src/minoltamn.cpp:58
-msgid "Vivid Color"
-msgstr ""
-
-#: src/minoltamn.cpp:59 src/minoltamn.cpp:455
-msgid "Solarization"
-msgstr ""
-
-#: src/minoltamn.cpp:60
-msgid "AdobeRGB"
-msgstr ""
-
-#: src/minoltamn.cpp:61
-msgid "Sepia"
-msgstr ""
-
-#: src/minoltamn.cpp:62
-msgid "Natural"
-msgstr ""
-
-#: src/minoltamn.cpp:64
-msgid "Natural sRGB"
-msgstr ""
-
-#: src/minoltamn.cpp:65
-msgid "Natural+ sRGB"
-msgstr ""
-
-#: src/minoltamn.cpp:67
-msgid "Evening"
-msgstr ""
-
-#: src/minoltamn.cpp:68
-msgid "Night Scene"
-msgstr ""
-
-#: src/minoltamn.cpp:69
-msgid "Night Portrait"
-msgstr ""
-
-#: src/minoltamn.cpp:74 src/minoltamn.cpp:328 src/minoltamn.cpp:772
-#: src/minoltamn.cpp:970
-msgid "Raw"
-msgstr ""
-
-#: src/minoltamn.cpp:75
-msgid "Super Fine"
-msgstr ""
-
-#: src/minoltamn.cpp:76 src/minoltamn.cpp:330 src/minoltamn.cpp:773
-#: src/minoltamn.cpp:971
-msgid "Fine"
-msgstr ""
-
-#: src/minoltamn.cpp:78 src/minoltamn.cpp:332 src/minoltamn.cpp:776
-#: src/minoltamn.cpp:974
-msgid "Economy"
-msgstr ""
-
-#: src/minoltamn.cpp:79
-msgid "Extra Fine"
-msgstr ""
-
-#: src/minoltamn.cpp:84
-msgid "ISO Setting Used"
-msgstr ""
-
-#: src/minoltamn.cpp:85
-msgid "High Key"
-msgstr ""
-
-#: src/minoltamn.cpp:86
-msgid "Low Key"
-msgstr ""
-
-#: src/minoltamn.cpp:91 src/minoltamn.cpp:356 src/minoltamn.cpp:362
-#: src/minoltamn.cpp:395 src/minoltamn.cpp:845 src/minoltamn.cpp:851
-#: src/minoltamn.cpp:857 src/minoltamn.cpp:1025 src/minoltamn.cpp:1031
-msgid "Off"
-msgstr ""
-
-#: src/minoltamn.cpp:92 src/minoltamn.cpp:357 src/minoltamn.cpp:396
-#: src/minoltamn.cpp:846 src/minoltamn.cpp:852 src/minoltamn.cpp:858
-#: src/minoltamn.cpp:1026 src/minoltamn.cpp:1032
-msgid "On"
-msgstr ""
-
-#: src/minoltamn.cpp:220
-msgid "Makernote Version"
-msgstr ""
-
-#: src/minoltamn.cpp:221
-msgid "String 'MLT0' (not null terminated)"
-msgstr ""
-
-#: src/minoltamn.cpp:223
-msgid "Camera Settings (Std Old)"
-msgstr ""
-
-#: src/minoltamn.cpp:224
-msgid ""
-"Standard Camera settings (Old Camera models like D5, D7, S304, and S404)"
-msgstr ""
-
-#: src/minoltamn.cpp:226
-msgid "Camera Settings (Std New)"
-msgstr ""
-
-#: src/minoltamn.cpp:227
-msgid "Standard Camera settings (New Camera Models like D7u, D7i, and D7hi)"
-msgstr ""
-
-#: src/minoltamn.cpp:229
-msgid "Camera Settings (7D)"
-msgstr ""
-
-#: src/minoltamn.cpp:230
-msgid "Camera Settings (for Dynax 7D model)"
-msgstr ""
-
-#: src/minoltamn.cpp:232
-msgid "Image Stabilization Data"
-msgstr ""
-
-#: src/minoltamn.cpp:233
-msgid "Image stabilization data"
-msgstr ""
-
-#: src/minoltamn.cpp:235
-msgid "Compressed Image Size"
-msgstr ""
-
-#: src/minoltamn.cpp:236
-msgid "Compressed image size"
-msgstr ""
-
-#: src/minoltamn.cpp:238
-msgid "Thumbnail"
-msgstr ""
-
-#: src/minoltamn.cpp:239
-msgid "Jpeg thumbnail 640x480 pixels"
-msgstr ""
-
-#: src/minoltamn.cpp:241
-msgid "Thumbnail Offset"
-msgstr ""
-
-#: src/minoltamn.cpp:242
-msgid "Offset of the thumbnail"
-msgstr ""
-
-#: src/minoltamn.cpp:244
-msgid "Thumbnail Length"
-msgstr ""
-
-#: src/minoltamn.cpp:245
-msgid "Size of the thumbnail"
-msgstr ""
-
-#: src/minoltamn.cpp:247
-msgid "Color Mode"
-msgstr ""
-
-#: src/minoltamn.cpp:248
-msgid "Color mode"
-msgstr ""
-
-#: src/minoltamn.cpp:250 src/minoltamn.cpp:605 src/minoltamn.cpp:869
-#: src/minoltamn.cpp:1102
-msgid "Image Quality"
-msgstr ""
-
-#: src/minoltamn.cpp:251 src/minoltamn.cpp:606 src/minoltamn.cpp:870
-#: src/minoltamn.cpp:1103
-msgid "Image quality"
-msgstr ""
-
-#: src/minoltamn.cpp:256 src/minoltamn.cpp:936 src/minoltamn.cpp:1171
-msgid "Image Stabilization"
-msgstr ""
-
-#: src/minoltamn.cpp:257 src/minoltamn.cpp:937 src/minoltamn.cpp:1172
-msgid "Image stabilization"
-msgstr ""
-
-#: src/minoltamn.cpp:259
-msgid "Zone Matching"
-msgstr ""
-
-#: src/minoltamn.cpp:260
-msgid "Zone matching"
-msgstr ""
-
-#: src/minoltamn.cpp:262 src/minoltamn.cpp:908 src/minoltamn.cpp:1147
-msgid "Color Temperature"
-msgstr ""
-
-#: src/minoltamn.cpp:263 src/minoltamn.cpp:909 src/minoltamn.cpp:1148
-msgid "Color temperature"
-msgstr ""
-
-#: src/minoltamn.cpp:265
-msgid "Lens ID"
-msgstr ""
-
-#: src/minoltamn.cpp:266
-msgid "Lens identifier"
-msgstr ""
-
-#: src/minoltamn.cpp:268
-msgid "Camera Settings (5D)"
-msgstr ""
-
-#: src/minoltamn.cpp:269
-msgid "Camera Settings (for Dynax 5D model)"
-msgstr ""
-
-#: src/minoltamn.cpp:271
-msgid "PIM IFD"
-msgstr ""
-
-#: src/minoltamn.cpp:272
-msgid "PIM information"
-msgstr ""
-
-#: src/minoltamn.cpp:274
-msgid "Camera Settings (Z1)"
-msgstr ""
-
-#: src/minoltamn.cpp:275
-msgid "Camera Settings (for Z1, DImage X, and F100 models)"
-msgstr ""
-
-#: src/minoltamn.cpp:280
-msgid "Unknown Minolta MakerNote tag"
-msgstr ""
-
-#: src/minoltamn.cpp:296
-msgid "Fill flash"
-msgstr ""
-
-#: src/minoltamn.cpp:297
-msgid "Red-eye reduction"
-msgstr ""
-
-#: src/minoltamn.cpp:298
-msgid "Rear flash sync"
-msgstr ""
-
-#: src/minoltamn.cpp:299
-msgid "Wireless"
-msgstr ""
-
-#: src/minoltamn.cpp:306 src/minoltamn.cpp:784 src/minoltamn.cpp:981
-msgid "Cloudy"
-msgstr ""
-
-#: src/minoltamn.cpp:307 src/minoltamn.cpp:785 src/minoltamn.cpp:983
-msgid "Tungsten"
-msgstr ""
-
-#: src/minoltamn.cpp:308
-msgid "Custom"
-msgstr ""
-
-#: src/minoltamn.cpp:310
-msgid "Fluorescent 2"
-msgstr ""
-
-#: src/minoltamn.cpp:311
-msgid "Custom 2"
-msgstr ""
-
-#: src/minoltamn.cpp:312
-msgid "Custom 3"
-msgstr ""
-
-#: src/minoltamn.cpp:317
-msgid "Full size"
-msgstr ""
-
-#: src/minoltamn.cpp:329
-msgid "Super fine"
-msgstr ""
-
-#: src/minoltamn.cpp:333
-msgid "Extra fine"
-msgstr ""
-
-#: src/minoltamn.cpp:338
-msgid "Single"
-msgstr ""
-
-#: src/minoltamn.cpp:339
-msgid "Continuous"
-msgstr ""
-
-#: src/minoltamn.cpp:340
-msgid "Self-timer"
-msgstr ""
-
-#: src/minoltamn.cpp:341
-msgid "Bracketing"
-msgstr ""
-
-#: src/minoltamn.cpp:342
-msgid "Interval"
-msgstr ""
-
-#: src/minoltamn.cpp:343
-msgid "UHS continuous"
-msgstr ""
-
-#: src/minoltamn.cpp:344
-msgid "HS continuous"
-msgstr ""
-
-#: src/minoltamn.cpp:350 src/minoltamn.cpp:999
-msgid "Center weighted"
-msgstr ""
-
-#: src/minoltamn.cpp:363
-msgid "Electronic magnification"
-msgstr ""
-
-#: src/minoltamn.cpp:376 src/minoltamn.cpp:801
-msgid "Center"
-msgstr ""
-
-#: src/minoltamn.cpp:377 src/minoltamn.cpp:802
-msgid "Top"
-msgstr ""
-
-#: src/minoltamn.cpp:378 src/minoltamn.cpp:803
-msgid "Top-right"
-msgstr ""
-
-#: src/minoltamn.cpp:379 src/minoltamn.cpp:804 src/minoltamn.cpp:1041
-msgid "Right"
-msgstr ""
-
-#: src/minoltamn.cpp:380 src/minoltamn.cpp:805
-msgid "Bottom-right"
-msgstr ""
-
-#: src/minoltamn.cpp:381 src/minoltamn.cpp:806
-msgid "Bottom"
-msgstr ""
-
-#: src/minoltamn.cpp:382 src/minoltamn.cpp:807
-msgid "Bottom-left"
-msgstr ""
-
-#: src/minoltamn.cpp:383 src/minoltamn.cpp:808 src/minoltamn.cpp:1045
-msgid "Left"
-msgstr ""
-
-#: src/minoltamn.cpp:384 src/minoltamn.cpp:809
-msgid "Top-left"
-msgstr ""
-
-#: src/minoltamn.cpp:389 src/minoltamn.cpp:461 src/minoltamn.cpp:814
-#: src/minoltamn.cpp:992
-msgid "Did not fire"
-msgstr ""
-
-#: src/minoltamn.cpp:410 src/minoltamn.cpp:505
-msgid "Text"
-msgstr ""
-
-#: src/minoltamn.cpp:411
-msgid "Night portrait"
-msgstr ""
-
-#: src/minoltamn.cpp:412
-msgid "Sunset"
-msgstr ""
-
-#: src/minoltamn.cpp:413
-msgid "Sports action"
-msgstr ""
-
-#: src/minoltamn.cpp:440
-msgid "Still image"
-msgstr ""
-
-#: src/minoltamn.cpp:441
-msgid "Time-lapse movie"
-msgstr ""
-
-#: src/minoltamn.cpp:446
-msgid "Standard form"
-msgstr ""
-
-#: src/minoltamn.cpp:447
-msgid "Data form"
-msgstr ""
-
-#: src/minoltamn.cpp:452
-msgid "Natural color"
-msgstr ""
-
-#: src/minoltamn.cpp:453
-msgid "Black and white"
-msgstr ""
-
-#: src/minoltamn.cpp:454
-msgid "Vivid color"
-msgstr ""
-
-#: src/minoltamn.cpp:467
-msgid "No zone"
-msgstr ""
-
-#: src/minoltamn.cpp:468
-msgid "Center zone (horizontal orientation)"
-msgstr ""
-
-#: src/minoltamn.cpp:469
-msgid "Center zone (vertical orientation)"
-msgstr ""
-
-#: src/minoltamn.cpp:470
-msgid "Left zone"
-msgstr ""
-
-#: src/minoltamn.cpp:471
-msgid "Right zone"
-msgstr ""
-
-#: src/minoltamn.cpp:476
-msgid "Auto focus"
-msgstr ""
-
-#: src/minoltamn.cpp:477
-msgid "Manual focus"
-msgstr ""
-
-#: src/minoltamn.cpp:482
-msgid "Wide focus (normal)"
-msgstr ""
-
-#: src/minoltamn.cpp:483
-msgid "Spot focus"
-msgstr ""
-
-#: src/minoltamn.cpp:488
-msgid "Exposure"
-msgstr ""
-
-#: src/minoltamn.cpp:491
-msgid "Filter"
-msgstr ""
-
-#: src/minoltamn.cpp:496
-msgid "Not embedded"
-msgstr ""
-
-#: src/minoltamn.cpp:497
-msgid "Embedded"
-msgstr ""
-
-#: src/minoltamn.cpp:506
-msgid "Text + ID#"
-msgstr ""
-
-#: src/minoltamn.cpp:511
-msgid "ADI (Advanced Distance Integration)"
-msgstr ""
-
-#: src/minoltamn.cpp:512
-msgid "Pre-flash TTl"
-msgstr ""
-
-#: src/minoltamn.cpp:513
-msgid "Manual flash control"
-msgstr ""
-
-#: src/minoltamn.cpp:594 src/minoltamn.cpp:864 src/minoltamn.cpp:1097
-msgid "Exposure mode"
-msgstr ""
-
-#: src/minoltamn.cpp:596 src/minoltamn.cpp:884
-msgid "Flash Mode"
-msgstr ""
-
-#: src/minoltamn.cpp:597 src/minoltamn.cpp:648 src/minoltamn.cpp:885
-msgid "Flash mode"
-msgstr ""
-
-#: src/minoltamn.cpp:600 src/minoltamn.cpp:873 src/minoltamn.cpp:1106
-msgid "White balance"
-msgstr ""
-
-#: src/minoltamn.cpp:602 src/minoltamn.cpp:866 src/minoltamn.cpp:1099
-msgid "Image Size"
-msgstr ""
-
-#: src/minoltamn.cpp:603 src/minoltamn.cpp:867 src/minoltamn.cpp:1100
-msgid "Image size"
-msgstr ""
-
-#: src/minoltamn.cpp:608
-msgid "Drive Mode"
-msgstr ""
-
-#: src/minoltamn.cpp:609
-msgid "Drive mode"
-msgstr ""
-
-#: src/minoltamn.cpp:612 src/minoltamn.cpp:1118
-msgid "Metering mode"
-msgstr ""
-
-#: src/minoltamn.cpp:614
-msgid "Exposure Speed"
-msgstr ""
-
-#: src/minoltamn.cpp:615
-msgid "Exposure speed"
-msgstr ""
-
-#: src/minoltamn.cpp:618 src/minoltamn.cpp:920 src/minoltamn.cpp:1133
-msgid "Exposure time"
-msgstr ""
-
-#: src/minoltamn.cpp:621 src/minoltamn.cpp:917 src/minoltamn.cpp:1136
-msgid "The F-Number"
-msgstr ""
-
-#: src/minoltamn.cpp:623
-msgid "Macro Mode"
-msgstr ""
-
-#: src/minoltamn.cpp:624
-msgid "Macro mode"
-msgstr ""
-
-#: src/minoltamn.cpp:626
-msgid "Digital Zoom"
-msgstr ""
-
-#: src/minoltamn.cpp:627
-msgid "Digital zoom"
-msgstr ""
-
-#: src/minoltamn.cpp:629 src/minoltamn.cpp:890 src/minoltamn.cpp:1153
-msgid "Exposure Compensation"
-msgstr ""
-
-#: src/minoltamn.cpp:630 src/minoltamn.cpp:891 src/minoltamn.cpp:1154
-msgid "Exposure compensation"
-msgstr ""
-
-#: src/minoltamn.cpp:632
-msgid "Bracket Step"
-msgstr ""
-
-#: src/minoltamn.cpp:633
-msgid "Bracket step"
-msgstr ""
-
-#: src/minoltamn.cpp:635
-msgid "Interval Length"
-msgstr ""
-
-#: src/minoltamn.cpp:636
-msgid "Interval length"
-msgstr ""
-
-#: src/minoltamn.cpp:638
-msgid "Interval Number"
-msgstr ""
-
-#: src/minoltamn.cpp:639
-msgid "Interval number"
-msgstr ""
-
-#: src/minoltamn.cpp:642
-msgid "Focal length"
-msgstr ""
-
-#: src/minoltamn.cpp:644
-msgid "Focus Distance"
-msgstr ""
-
-#: src/minoltamn.cpp:645
-msgid "Focus distance"
-msgstr ""
-
-#: src/minoltamn.cpp:650
-msgid "Minolta Date"
-msgstr ""
-
-#: src/minoltamn.cpp:651
-msgid "Minolta date"
-msgstr ""
-
-#: src/minoltamn.cpp:653
-msgid "Minolta Time"
-msgstr ""
-
-#: src/minoltamn.cpp:654
-msgid "Minolta time"
-msgstr ""
-
-#: src/minoltamn.cpp:656
-msgid "Max Aperture"
-msgstr ""
-
-#: src/minoltamn.cpp:657
-msgid "Max aperture"
-msgstr ""
-
-#: src/minoltamn.cpp:659
-msgid "File Number Memory"
-msgstr ""
-
-#: src/minoltamn.cpp:660
-msgid "File number memory"
-msgstr ""
-
-#: src/minoltamn.cpp:662 src/minoltamn.cpp:926 src/minoltamn.cpp:933
-#: src/minoltamn.cpp:1165
-msgid "Image Number"
-msgstr ""
-
-#: src/minoltamn.cpp:663 src/minoltamn.cpp:927 src/minoltamn.cpp:934
-#: src/minoltamn.cpp:1166
-msgid "Image number"
-msgstr ""
-
-#: src/minoltamn.cpp:665
-msgid "Color Balance Red"
-msgstr ""
-
-#: src/minoltamn.cpp:666
-msgid "Color balance red"
-msgstr ""
-
-#: src/minoltamn.cpp:668
-msgid "Color Balance Green"
-msgstr ""
-
-#: src/minoltamn.cpp:669
-msgid "Color balance green"
-msgstr ""
-
-#: src/minoltamn.cpp:671
-msgid "Color Balance Blue"
-msgstr ""
-
-#: src/minoltamn.cpp:672
-msgid "Color balance blue"
-msgstr ""
-
-#: src/minoltamn.cpp:683
-msgid "Subject Program"
-msgstr ""
-
-#: src/minoltamn.cpp:684
-msgid "Subject program"
-msgstr ""
-
-#: src/minoltamn.cpp:686
-msgid "Flash Exposure Compensation"
-msgstr ""
-
-#: src/minoltamn.cpp:687
-msgid "Flash exposure compensation in EV"
-msgstr ""
-
-#: src/minoltamn.cpp:689 src/minoltamn.cpp:887 src/minoltamn.cpp:1120
-msgid "ISO Speed Mode"
-msgstr ""
-
-#: src/minoltamn.cpp:690 src/minoltamn.cpp:888 src/minoltamn.cpp:1121
-msgid "ISO speed setting"
-msgstr ""
-
-#: src/minoltamn.cpp:692
-msgid "Minolta Model"
-msgstr ""
-
-#: src/minoltamn.cpp:693
-msgid "Minolta model"
-msgstr ""
-
-#: src/minoltamn.cpp:695
-msgid "Interval Mode"
-msgstr ""
-
-#: src/minoltamn.cpp:696
-msgid "Interval mode"
-msgstr ""
-
-#: src/minoltamn.cpp:698
-msgid "Folder Name"
-msgstr ""
-
-#: src/minoltamn.cpp:699
-msgid "Folder name"
-msgstr ""
-
-#: src/minoltamn.cpp:701 src/minoltamn.cpp:702
-msgid "ColorMode"
-msgstr ""
-
-#: src/minoltamn.cpp:704
-msgid "Color Filter"
-msgstr ""
-
-#: src/minoltamn.cpp:705
-msgid "Color filter"
-msgstr ""
-
-#: src/minoltamn.cpp:707
-msgid "Black and White Filter"
-msgstr ""
-
-#: src/minoltamn.cpp:708
-msgid "Black and white filter"
-msgstr ""
-
-#: src/minoltamn.cpp:710
-msgid "Internal Flash"
-msgstr ""
-
-#: src/minoltamn.cpp:711
-msgid "Internal flash"
-msgstr ""
-
-#: src/minoltamn.cpp:716
-msgid "Spot Focus Point X"
-msgstr ""
-
-#: src/minoltamn.cpp:717
-msgid "Spot focus point X"
-msgstr ""
-
-#: src/minoltamn.cpp:719
-msgid "Spot Focus Point Y"
-msgstr ""
-
-#: src/minoltamn.cpp:720
-msgid "Spot focus point Y"
-msgstr ""
-
-#: src/minoltamn.cpp:722
-msgid "Wide Focus Zone"
-msgstr ""
-
-#: src/minoltamn.cpp:723
-msgid "Wide focus zone"
-msgstr ""
-
-#: src/minoltamn.cpp:725 src/minoltamn.cpp:875 src/minoltamn.cpp:1144
-msgid "Focus Mode"
-msgstr ""
-
-#: src/minoltamn.cpp:726 src/minoltamn.cpp:876 src/minoltamn.cpp:1145
-msgid "Focus mode"
-msgstr ""
-
-#: src/minoltamn.cpp:728 src/minoltamn.cpp:729 src/minoltamn.cpp:1112
-msgid "Focus area"
-msgstr ""
-
-#: src/minoltamn.cpp:731
-msgid "DEC Switch Position"
-msgstr ""
-
-#: src/minoltamn.cpp:732
-msgid "DEC switch position"
-msgstr ""
-
-#: src/minoltamn.cpp:734
-msgid "Color Profile"
-msgstr ""
-
-#: src/minoltamn.cpp:735
-msgid "Color profile"
-msgstr ""
-
-#: src/minoltamn.cpp:737 src/minoltamn.cpp:738
-msgid "Data Imprint"
-msgstr ""
-
-#: src/minoltamn.cpp:740
-msgid "Flash Metering"
-msgstr ""
-
-#: src/minoltamn.cpp:741
-msgid "Flash metering"
-msgstr ""
-
-#: src/minoltamn.cpp:746
-msgid "Unknown Minolta Camera Settings tag"
-msgstr ""
-
-#: src/minoltamn.cpp:759
-msgid "Program-shift A"
-msgstr ""
-
-#: src/minoltamn.cpp:760
-msgid "Program-shift S"
-msgstr ""
-
-#: src/minoltamn.cpp:765 src/minoltamn.cpp:963
-msgid "Large"
-msgstr ""
-
-#: src/minoltamn.cpp:766 src/minoltamn.cpp:964
-msgid "Medium"
-msgstr ""
-
-#: src/minoltamn.cpp:767 src/minoltamn.cpp:965
-msgid "Small"
-msgstr ""
-
-#: src/minoltamn.cpp:775 src/minoltamn.cpp:973
-msgid "Raw+Jpeg"
-msgstr ""
-
-#: src/minoltamn.cpp:787 src/minoltamn.cpp:986
-msgid "Kelvin"
-msgstr ""
-
-#: src/minoltamn.cpp:793
-msgid "Single-shot AF"
-msgstr ""
-
-#: src/minoltamn.cpp:794
-msgid "Continuous AF"
-msgstr ""
-
-#: src/minoltamn.cpp:795
-msgid "Automatic AF"
-msgstr ""
-
-#: src/minoltamn.cpp:831
-msgid "sRGB (Natural)"
-msgstr ""
-
-#: src/minoltamn.cpp:832
-msgid "sRGB (Natural+)"
-msgstr ""
-
-#: src/minoltamn.cpp:838 src/minoltamn.cpp:1018
-msgid "Horizontal (normal)"
-msgstr ""
-
-#: src/minoltamn.cpp:839 src/minoltamn.cpp:1019
-msgid "Rotate 90 CW"
-msgstr ""
-
-#: src/minoltamn.cpp:840 src/minoltamn.cpp:1020
-msgid "Rotate 270 CW"
-msgstr ""
-
-#: src/minoltamn.cpp:878
-msgid "AF Points"
-msgstr ""
-
-#: src/minoltamn.cpp:879
-msgid "AF points"
-msgstr ""
-
-#: src/minoltamn.cpp:894
-msgid "Color space"
-msgstr ""
-
-#: src/minoltamn.cpp:905 src/minoltamn.cpp:923 src/minoltamn.cpp:1138
-#: src/minoltamn.cpp:1156
-msgid "Free Memory Card Images"
-msgstr ""
-
-#: src/minoltamn.cpp:906 src/minoltamn.cpp:924 src/minoltamn.cpp:1139
-#: src/minoltamn.cpp:1157
-msgid "Free memory card images"
-msgstr ""
-
-#: src/minoltamn.cpp:911
-msgid "Hue"
-msgstr ""
-
-#: src/minoltamn.cpp:913 src/minoltamn.cpp:914 src/minoltamn.cpp:1150
-#: src/minoltamn.cpp:1151
-msgid "Rotation"
-msgstr ""
-
-#: src/minoltamn.cpp:929 src/minoltamn.cpp:1168
-msgid "Noise Reduction"
-msgstr ""
-
-#: src/minoltamn.cpp:930 src/minoltamn.cpp:1169
-msgid "Noise reduction"
-msgstr ""
-
-#: src/minoltamn.cpp:939
-msgid "Zone Matching On"
-msgstr ""
-
-#: src/minoltamn.cpp:940
-msgid "Zone matching on"
-msgstr ""
-
-#: src/minoltamn.cpp:945
-msgid "Unknown Minolta Camera Settings 7D tag"
-msgstr ""
-
-#: src/minoltamn.cpp:958
-msgid "Connected copying"
-msgstr ""
-
-#: src/minoltamn.cpp:1012
-msgid "200 (Zone Matching High)"
-msgstr ""
-
-#: src/minoltamn.cpp:1013
-msgid "80 (Zone Matching Low)"
-msgstr ""
-
-#: src/minoltamn.cpp:1037 src/minoltamn.cpp:1051
-msgid "Wide"
-msgstr ""
-
-#: src/minoltamn.cpp:1038
-msgid "Central"
-msgstr ""
-
-#: src/minoltamn.cpp:1039
-msgid "Up"
-msgstr ""
-
-#: src/minoltamn.cpp:1040
-msgid "Up right"
-msgstr ""
-
-#: src/minoltamn.cpp:1042
-msgid "Down right"
-msgstr ""
-
-#: src/minoltamn.cpp:1043
-msgid "Down"
-msgstr ""
-
-#: src/minoltamn.cpp:1044
-msgid "Down left"
-msgstr ""
-
-#: src/minoltamn.cpp:1046
-msgid "Up left"
-msgstr ""
-
-#: src/minoltamn.cpp:1052
-msgid "Selection"
-msgstr ""
-
-#: src/minoltamn.cpp:1108
-msgid "Focus Position"
-msgstr ""
-
-#: src/minoltamn.cpp:1109
-msgid "Focus position"
-msgstr ""
-
-#: src/minoltamn.cpp:1111
-msgid "Focus Area"
-msgstr ""
-
-#: src/minoltamn.cpp:1141
-msgid "Exposure Revision"
-msgstr ""
-
-#: src/minoltamn.cpp:1142
-msgid "Exposure revision"
-msgstr ""
-
-#: src/minoltamn.cpp:1159
-msgid "Exposure Manual Bias"
-msgstr ""
-
-#: src/minoltamn.cpp:1160
-msgid "Exposure manual bias"
-msgstr ""
-
-#: src/minoltamn.cpp:1162
-msgid "AF Mode"
-msgstr ""
-
-#: src/minoltamn.cpp:1163
-msgid "AF mode"
-msgstr ""
-
-#: src/minoltamn.cpp:1183
-msgid "Unknown Minolta Camera Settings 5D tag"
-msgstr ""
-
 #: src/exiv2.cpp:146
 msgid "File "
 msgstr ""
@@ -4551,4 +3548,1378 @@ msgstr ""
 
 #: src/exiv2.cpp:903
 msgid ": Invalid command line  "
+msgstr ""
+
+#: src/minoltamn.cpp:56
+msgid "Natural Color"
+msgstr ""
+
+#: src/minoltamn.cpp:57
+msgid "Black & White"
+msgstr ""
+
+#: src/minoltamn.cpp:58
+msgid "Vivid Color"
+msgstr ""
+
+#: src/minoltamn.cpp:59 src/minoltamn.cpp:455
+msgid "Solarization"
+msgstr ""
+
+#: src/minoltamn.cpp:60
+msgid "AdobeRGB"
+msgstr ""
+
+#: src/minoltamn.cpp:61
+msgid "Sepia"
+msgstr ""
+
+#: src/minoltamn.cpp:62
+msgid "Natural"
+msgstr ""
+
+#: src/minoltamn.cpp:64
+msgid "Natural sRGB"
+msgstr ""
+
+#: src/minoltamn.cpp:65
+msgid "Natural+ sRGB"
+msgstr ""
+
+#: src/minoltamn.cpp:67
+msgid "Evening"
+msgstr ""
+
+#: src/minoltamn.cpp:68
+msgid "Night Scene"
+msgstr ""
+
+#: src/minoltamn.cpp:69
+msgid "Night Portrait"
+msgstr ""
+
+#: src/minoltamn.cpp:74 src/minoltamn.cpp:328 src/minoltamn.cpp:772
+#: src/minoltamn.cpp:970 src/fujimn.cpp:178
+msgid "Raw"
+msgstr ""
+
+#: src/minoltamn.cpp:75
+msgid "Super Fine"
+msgstr ""
+
+#: src/minoltamn.cpp:76 src/minoltamn.cpp:330 src/minoltamn.cpp:773
+#: src/minoltamn.cpp:971
+msgid "Fine"
+msgstr ""
+
+#: src/minoltamn.cpp:78 src/minoltamn.cpp:332 src/minoltamn.cpp:776
+#: src/minoltamn.cpp:974
+msgid "Economy"
+msgstr ""
+
+#: src/minoltamn.cpp:79
+msgid "Extra Fine"
+msgstr ""
+
+#: src/minoltamn.cpp:84
+msgid "ISO Setting Used"
+msgstr ""
+
+#: src/minoltamn.cpp:85
+msgid "High Key"
+msgstr ""
+
+#: src/minoltamn.cpp:86
+msgid "Low Key"
+msgstr ""
+
+#: src/minoltamn.cpp:91 src/minoltamn.cpp:356 src/minoltamn.cpp:362
+#: src/minoltamn.cpp:395 src/minoltamn.cpp:845 src/minoltamn.cpp:851
+#: src/minoltamn.cpp:857 src/minoltamn.cpp:1025 src/minoltamn.cpp:1031
+#: src/fujimn.cpp:67 src/fujimn.cpp:111 src/fujimn.cpp:148
+msgid "Off"
+msgstr ""
+
+#: src/minoltamn.cpp:92 src/minoltamn.cpp:357 src/minoltamn.cpp:396
+#: src/minoltamn.cpp:846 src/minoltamn.cpp:852 src/minoltamn.cpp:858
+#: src/minoltamn.cpp:1026 src/minoltamn.cpp:1032 src/fujimn.cpp:68
+#: src/fujimn.cpp:110 src/fujimn.cpp:149
+msgid "On"
+msgstr ""
+
+#: src/minoltamn.cpp:220
+msgid "Makernote Version"
+msgstr ""
+
+#: src/minoltamn.cpp:221
+msgid "String 'MLT0' (not null terminated)"
+msgstr ""
+
+#: src/minoltamn.cpp:223
+msgid "Camera Settings (Std Old)"
+msgstr ""
+
+#: src/minoltamn.cpp:224
+msgid ""
+"Standard Camera settings (Old Camera models like D5, D7, S304, and S404)"
+msgstr ""
+
+#: src/minoltamn.cpp:226
+msgid "Camera Settings (Std New)"
+msgstr ""
+
+#: src/minoltamn.cpp:227
+msgid "Standard Camera settings (New Camera Models like D7u, D7i, and D7hi)"
+msgstr ""
+
+#: src/minoltamn.cpp:229
+msgid "Camera Settings (7D)"
+msgstr ""
+
+#: src/minoltamn.cpp:230
+msgid "Camera Settings (for Dynax 7D model)"
+msgstr ""
+
+#: src/minoltamn.cpp:232
+msgid "Image Stabilization Data"
+msgstr ""
+
+#: src/minoltamn.cpp:233
+msgid "Image stabilization data"
+msgstr ""
+
+#: src/minoltamn.cpp:235
+msgid "Compressed Image Size"
+msgstr ""
+
+#: src/minoltamn.cpp:236
+msgid "Compressed image size"
+msgstr ""
+
+#: src/minoltamn.cpp:238
+msgid "Thumbnail"
+msgstr ""
+
+#: src/minoltamn.cpp:239
+msgid "Jpeg thumbnail 640x480 pixels"
+msgstr ""
+
+#: src/minoltamn.cpp:241
+msgid "Thumbnail Offset"
+msgstr ""
+
+#: src/minoltamn.cpp:242
+msgid "Offset of the thumbnail"
+msgstr ""
+
+#: src/minoltamn.cpp:244
+msgid "Thumbnail Length"
+msgstr ""
+
+#: src/minoltamn.cpp:245
+msgid "Size of the thumbnail"
+msgstr ""
+
+#: src/minoltamn.cpp:247
+msgid "Color Mode"
+msgstr ""
+
+#: src/minoltamn.cpp:248
+msgid "Color mode"
+msgstr ""
+
+#: src/minoltamn.cpp:250 src/minoltamn.cpp:605 src/minoltamn.cpp:869
+#: src/minoltamn.cpp:1102
+msgid "Image Quality"
+msgstr ""
+
+#: src/minoltamn.cpp:251 src/minoltamn.cpp:606 src/minoltamn.cpp:870
+#: src/minoltamn.cpp:1103
+msgid "Image quality"
+msgstr ""
+
+#: src/minoltamn.cpp:256 src/minoltamn.cpp:936 src/minoltamn.cpp:1171
+msgid "Image Stabilization"
+msgstr ""
+
+#: src/minoltamn.cpp:257 src/minoltamn.cpp:937 src/minoltamn.cpp:1172
+msgid "Image stabilization"
+msgstr ""
+
+#: src/minoltamn.cpp:259
+msgid "Zone Matching"
+msgstr ""
+
+#: src/minoltamn.cpp:260
+msgid "Zone matching"
+msgstr ""
+
+#: src/minoltamn.cpp:262 src/minoltamn.cpp:908 src/minoltamn.cpp:1147
+msgid "Color Temperature"
+msgstr ""
+
+#: src/minoltamn.cpp:263 src/minoltamn.cpp:909 src/minoltamn.cpp:1148
+msgid "Color temperature"
+msgstr ""
+
+#: src/minoltamn.cpp:265
+msgid "Lens ID"
+msgstr ""
+
+#: src/minoltamn.cpp:266
+msgid "Lens identifier"
+msgstr ""
+
+#: src/minoltamn.cpp:268
+msgid "Camera Settings (5D)"
+msgstr ""
+
+#: src/minoltamn.cpp:269
+msgid "Camera Settings (for Dynax 5D model)"
+msgstr ""
+
+#: src/minoltamn.cpp:271
+msgid "PIM IFD"
+msgstr ""
+
+#: src/minoltamn.cpp:272
+msgid "PIM information"
+msgstr ""
+
+#: src/minoltamn.cpp:274
+msgid "Camera Settings (Z1)"
+msgstr ""
+
+#: src/minoltamn.cpp:275
+msgid "Camera Settings (for Z1, DImage X, and F100 models)"
+msgstr ""
+
+#: src/minoltamn.cpp:280
+msgid "Unknown Minolta MakerNote tag"
+msgstr ""
+
+#: src/minoltamn.cpp:296
+msgid "Fill flash"
+msgstr ""
+
+#: src/minoltamn.cpp:297 src/fujimn.cpp:112
+msgid "Red-eye reduction"
+msgstr ""
+
+#: src/minoltamn.cpp:298
+msgid "Rear flash sync"
+msgstr ""
+
+#: src/minoltamn.cpp:299
+msgid "Wireless"
+msgstr ""
+
+#: src/minoltamn.cpp:306 src/minoltamn.cpp:784 src/minoltamn.cpp:981
+#: src/fujimn.cpp:84
+msgid "Cloudy"
+msgstr ""
+
+#: src/minoltamn.cpp:307 src/minoltamn.cpp:785 src/minoltamn.cpp:983
+msgid "Tungsten"
+msgstr ""
+
+#: src/minoltamn.cpp:308 src/fujimn.cpp:89
+msgid "Custom"
+msgstr ""
+
+#: src/minoltamn.cpp:310
+msgid "Fluorescent 2"
+msgstr ""
+
+#: src/minoltamn.cpp:311
+msgid "Custom 2"
+msgstr ""
+
+#: src/minoltamn.cpp:312
+msgid "Custom 3"
+msgstr ""
+
+#: src/minoltamn.cpp:317
+msgid "Full size"
+msgstr ""
+
+#: src/minoltamn.cpp:329
+msgid "Super fine"
+msgstr ""
+
+#: src/minoltamn.cpp:333
+msgid "Extra fine"
+msgstr ""
+
+#: src/minoltamn.cpp:338
+msgid "Single"
+msgstr ""
+
+#: src/minoltamn.cpp:339 src/fujimn.cpp:233
+msgid "Continuous"
+msgstr ""
+
+#: src/minoltamn.cpp:340
+msgid "Self-timer"
+msgstr ""
+
+#: src/minoltamn.cpp:341
+msgid "Bracketing"
+msgstr ""
+
+#: src/minoltamn.cpp:342
+msgid "Interval"
+msgstr ""
+
+#: src/minoltamn.cpp:343
+msgid "UHS continuous"
+msgstr ""
+
+#: src/minoltamn.cpp:344
+msgid "HS continuous"
+msgstr ""
+
+#: src/minoltamn.cpp:350 src/minoltamn.cpp:999
+msgid "Center weighted"
+msgstr ""
+
+#: src/minoltamn.cpp:363
+msgid "Electronic magnification"
+msgstr ""
+
+#: src/minoltamn.cpp:376 src/minoltamn.cpp:801
+msgid "Center"
+msgstr ""
+
+#: src/minoltamn.cpp:377 src/minoltamn.cpp:802
+msgid "Top"
+msgstr ""
+
+#: src/minoltamn.cpp:378 src/minoltamn.cpp:803
+msgid "Top-right"
+msgstr ""
+
+#: src/minoltamn.cpp:379 src/minoltamn.cpp:804 src/minoltamn.cpp:1041
+msgid "Right"
+msgstr ""
+
+#: src/minoltamn.cpp:380 src/minoltamn.cpp:805
+msgid "Bottom-right"
+msgstr ""
+
+#: src/minoltamn.cpp:381 src/minoltamn.cpp:806
+msgid "Bottom"
+msgstr ""
+
+#: src/minoltamn.cpp:382 src/minoltamn.cpp:807
+msgid "Bottom-left"
+msgstr ""
+
+#: src/minoltamn.cpp:383 src/minoltamn.cpp:808 src/minoltamn.cpp:1045
+msgid "Left"
+msgstr ""
+
+#: src/minoltamn.cpp:384 src/minoltamn.cpp:809
+msgid "Top-left"
+msgstr ""
+
+#: src/minoltamn.cpp:389 src/minoltamn.cpp:461 src/minoltamn.cpp:814
+#: src/minoltamn.cpp:992
+msgid "Did not fire"
+msgstr ""
+
+#: src/minoltamn.cpp:410 src/minoltamn.cpp:505 src/fujimn.cpp:135
+msgid "Text"
+msgstr ""
+
+#: src/minoltamn.cpp:411
+msgid "Night portrait"
+msgstr ""
+
+#: src/minoltamn.cpp:412 src/fujimn.cpp:131
+msgid "Sunset"
+msgstr ""
+
+#: src/minoltamn.cpp:413
+msgid "Sports action"
+msgstr ""
+
+#: src/minoltamn.cpp:440
+msgid "Still image"
+msgstr ""
+
+#: src/minoltamn.cpp:441
+msgid "Time-lapse movie"
+msgstr ""
+
+#: src/minoltamn.cpp:446
+msgid "Standard form"
+msgstr ""
+
+#: src/minoltamn.cpp:447
+msgid "Data form"
+msgstr ""
+
+#: src/minoltamn.cpp:452
+msgid "Natural color"
+msgstr ""
+
+#: src/minoltamn.cpp:453
+msgid "Black and white"
+msgstr ""
+
+#: src/minoltamn.cpp:454
+msgid "Vivid color"
+msgstr ""
+
+#: src/minoltamn.cpp:467
+msgid "No zone"
+msgstr ""
+
+#: src/minoltamn.cpp:468
+msgid "Center zone (horizontal orientation)"
+msgstr ""
+
+#: src/minoltamn.cpp:469
+msgid "Center zone (vertical orientation)"
+msgstr ""
+
+#: src/minoltamn.cpp:470
+msgid "Left zone"
+msgstr ""
+
+#: src/minoltamn.cpp:471
+msgid "Right zone"
+msgstr ""
+
+#: src/minoltamn.cpp:476
+msgid "Auto focus"
+msgstr ""
+
+#: src/minoltamn.cpp:477
+msgid "Manual focus"
+msgstr ""
+
+#: src/minoltamn.cpp:482
+msgid "Wide focus (normal)"
+msgstr ""
+
+#: src/minoltamn.cpp:483
+msgid "Spot focus"
+msgstr ""
+
+#: src/minoltamn.cpp:488
+msgid "Exposure"
+msgstr ""
+
+#: src/minoltamn.cpp:491
+msgid "Filter"
+msgstr ""
+
+#: src/minoltamn.cpp:496
+msgid "Not embedded"
+msgstr ""
+
+#: src/minoltamn.cpp:497
+msgid "Embedded"
+msgstr ""
+
+#: src/minoltamn.cpp:506
+msgid "Text + ID#"
+msgstr ""
+
+#: src/minoltamn.cpp:511
+msgid "ADI (Advanced Distance Integration)"
+msgstr ""
+
+#: src/minoltamn.cpp:512
+msgid "Pre-flash TTl"
+msgstr ""
+
+#: src/minoltamn.cpp:513
+msgid "Manual flash control"
+msgstr ""
+
+#: src/minoltamn.cpp:594 src/minoltamn.cpp:864 src/minoltamn.cpp:1097
+msgid "Exposure mode"
+msgstr ""
+
+#: src/minoltamn.cpp:596 src/minoltamn.cpp:884 src/fujimn.cpp:209
+msgid "Flash Mode"
+msgstr ""
+
+#: src/minoltamn.cpp:597 src/minoltamn.cpp:648 src/minoltamn.cpp:885
+msgid "Flash mode"
+msgstr ""
+
+#: src/minoltamn.cpp:600 src/minoltamn.cpp:873 src/minoltamn.cpp:1106
+msgid "White balance"
+msgstr ""
+
+#: src/minoltamn.cpp:602 src/minoltamn.cpp:866 src/minoltamn.cpp:1099
+msgid "Image Size"
+msgstr ""
+
+#: src/minoltamn.cpp:603 src/minoltamn.cpp:867 src/minoltamn.cpp:1100
+msgid "Image size"
+msgstr ""
+
+#: src/minoltamn.cpp:608
+msgid "Drive Mode"
+msgstr ""
+
+#: src/minoltamn.cpp:609
+msgid "Drive mode"
+msgstr ""
+
+#: src/minoltamn.cpp:612 src/minoltamn.cpp:1118
+msgid "Metering mode"
+msgstr ""
+
+#: src/minoltamn.cpp:614
+msgid "Exposure Speed"
+msgstr ""
+
+#: src/minoltamn.cpp:615
+msgid "Exposure speed"
+msgstr ""
+
+#: src/minoltamn.cpp:618 src/minoltamn.cpp:920 src/minoltamn.cpp:1133
+msgid "Exposure time"
+msgstr ""
+
+#: src/minoltamn.cpp:621 src/minoltamn.cpp:917 src/minoltamn.cpp:1136
+msgid "The F-Number"
+msgstr ""
+
+#: src/minoltamn.cpp:623
+msgid "Macro Mode"
+msgstr ""
+
+#: src/minoltamn.cpp:624
+msgid "Macro mode"
+msgstr ""
+
+#: src/minoltamn.cpp:626
+msgid "Digital Zoom"
+msgstr ""
+
+#: src/minoltamn.cpp:627
+msgid "Digital zoom"
+msgstr ""
+
+#: src/minoltamn.cpp:629 src/minoltamn.cpp:890 src/minoltamn.cpp:1153
+msgid "Exposure Compensation"
+msgstr ""
+
+#: src/minoltamn.cpp:630 src/minoltamn.cpp:891 src/minoltamn.cpp:1154
+msgid "Exposure compensation"
+msgstr ""
+
+#: src/minoltamn.cpp:632
+msgid "Bracket Step"
+msgstr ""
+
+#: src/minoltamn.cpp:633
+msgid "Bracket step"
+msgstr ""
+
+#: src/minoltamn.cpp:635
+msgid "Interval Length"
+msgstr ""
+
+#: src/minoltamn.cpp:636
+msgid "Interval length"
+msgstr ""
+
+#: src/minoltamn.cpp:638
+msgid "Interval Number"
+msgstr ""
+
+#: src/minoltamn.cpp:639
+msgid "Interval number"
+msgstr ""
+
+#: src/minoltamn.cpp:642
+msgid "Focal length"
+msgstr ""
+
+#: src/minoltamn.cpp:644
+msgid "Focus Distance"
+msgstr ""
+
+#: src/minoltamn.cpp:645
+msgid "Focus distance"
+msgstr ""
+
+#: src/minoltamn.cpp:650
+msgid "Minolta Date"
+msgstr ""
+
+#: src/minoltamn.cpp:651
+msgid "Minolta date"
+msgstr ""
+
+#: src/minoltamn.cpp:653
+msgid "Minolta Time"
+msgstr ""
+
+#: src/minoltamn.cpp:654
+msgid "Minolta time"
+msgstr ""
+
+#: src/minoltamn.cpp:656
+msgid "Max Aperture"
+msgstr ""
+
+#: src/minoltamn.cpp:657
+msgid "Max aperture"
+msgstr ""
+
+#: src/minoltamn.cpp:659
+msgid "File Number Memory"
+msgstr ""
+
+#: src/minoltamn.cpp:660
+msgid "File number memory"
+msgstr ""
+
+#: src/minoltamn.cpp:662 src/minoltamn.cpp:926 src/minoltamn.cpp:933
+#: src/minoltamn.cpp:1165
+msgid "Image Number"
+msgstr ""
+
+#: src/minoltamn.cpp:663 src/minoltamn.cpp:927 src/minoltamn.cpp:934
+#: src/minoltamn.cpp:1166
+msgid "Image number"
+msgstr ""
+
+#: src/minoltamn.cpp:665
+msgid "Color Balance Red"
+msgstr ""
+
+#: src/minoltamn.cpp:666
+msgid "Color balance red"
+msgstr ""
+
+#: src/minoltamn.cpp:668
+msgid "Color Balance Green"
+msgstr ""
+
+#: src/minoltamn.cpp:669
+msgid "Color balance green"
+msgstr ""
+
+#: src/minoltamn.cpp:671
+msgid "Color Balance Blue"
+msgstr ""
+
+#: src/minoltamn.cpp:672
+msgid "Color balance blue"
+msgstr ""
+
+#: src/minoltamn.cpp:683
+msgid "Subject Program"
+msgstr ""
+
+#: src/minoltamn.cpp:684
+msgid "Subject program"
+msgstr ""
+
+#: src/minoltamn.cpp:686
+msgid "Flash Exposure Compensation"
+msgstr ""
+
+#: src/minoltamn.cpp:687
+msgid "Flash exposure compensation in EV"
+msgstr ""
+
+#: src/minoltamn.cpp:689 src/minoltamn.cpp:887 src/minoltamn.cpp:1120
+msgid "ISO Speed Mode"
+msgstr ""
+
+#: src/minoltamn.cpp:690 src/minoltamn.cpp:888 src/minoltamn.cpp:1121
+msgid "ISO speed setting"
+msgstr ""
+
+#: src/minoltamn.cpp:692
+msgid "Minolta Model"
+msgstr ""
+
+#: src/minoltamn.cpp:693
+msgid "Minolta model"
+msgstr ""
+
+#: src/minoltamn.cpp:695
+msgid "Interval Mode"
+msgstr ""
+
+#: src/minoltamn.cpp:696
+msgid "Interval mode"
+msgstr ""
+
+#: src/minoltamn.cpp:698
+msgid "Folder Name"
+msgstr ""
+
+#: src/minoltamn.cpp:699
+msgid "Folder name"
+msgstr ""
+
+#: src/minoltamn.cpp:701 src/minoltamn.cpp:702
+msgid "ColorMode"
+msgstr ""
+
+#: src/minoltamn.cpp:704
+msgid "Color Filter"
+msgstr ""
+
+#: src/minoltamn.cpp:705
+msgid "Color filter"
+msgstr ""
+
+#: src/minoltamn.cpp:707
+msgid "Black and White Filter"
+msgstr ""
+
+#: src/minoltamn.cpp:708
+msgid "Black and white filter"
+msgstr ""
+
+#: src/minoltamn.cpp:710
+msgid "Internal Flash"
+msgstr ""
+
+#: src/minoltamn.cpp:711
+msgid "Internal flash"
+msgstr ""
+
+#: src/minoltamn.cpp:716
+msgid "Spot Focus Point X"
+msgstr ""
+
+#: src/minoltamn.cpp:717
+msgid "Spot focus point X"
+msgstr ""
+
+#: src/minoltamn.cpp:719
+msgid "Spot Focus Point Y"
+msgstr ""
+
+#: src/minoltamn.cpp:720
+msgid "Spot focus point Y"
+msgstr ""
+
+#: src/minoltamn.cpp:722
+msgid "Wide Focus Zone"
+msgstr ""
+
+#: src/minoltamn.cpp:723
+msgid "Wide focus zone"
+msgstr ""
+
+#: src/minoltamn.cpp:725 src/minoltamn.cpp:875 src/minoltamn.cpp:1144
+#: src/fujimn.cpp:218
+msgid "Focus Mode"
+msgstr ""
+
+#: src/minoltamn.cpp:726 src/minoltamn.cpp:876 src/minoltamn.cpp:1145
+msgid "Focus mode"
+msgstr ""
+
+#: src/minoltamn.cpp:728 src/minoltamn.cpp:729 src/minoltamn.cpp:1112
+msgid "Focus area"
+msgstr ""
+
+#: src/minoltamn.cpp:731
+msgid "DEC Switch Position"
+msgstr ""
+
+#: src/minoltamn.cpp:732
+msgid "DEC switch position"
+msgstr ""
+
+#: src/minoltamn.cpp:734
+msgid "Color Profile"
+msgstr ""
+
+#: src/minoltamn.cpp:735
+msgid "Color profile"
+msgstr ""
+
+#: src/minoltamn.cpp:737 src/minoltamn.cpp:738
+msgid "Data Imprint"
+msgstr ""
+
+#: src/minoltamn.cpp:740
+msgid "Flash Metering"
+msgstr ""
+
+#: src/minoltamn.cpp:741
+msgid "Flash metering"
+msgstr ""
+
+#: src/minoltamn.cpp:746
+msgid "Unknown Minolta Camera Settings tag"
+msgstr ""
+
+#: src/minoltamn.cpp:759
+msgid "Program-shift A"
+msgstr ""
+
+#: src/minoltamn.cpp:760
+msgid "Program-shift S"
+msgstr ""
+
+#: src/minoltamn.cpp:765 src/minoltamn.cpp:963
+msgid "Large"
+msgstr ""
+
+#: src/minoltamn.cpp:766 src/minoltamn.cpp:964
+msgid "Medium"
+msgstr ""
+
+#: src/minoltamn.cpp:767 src/minoltamn.cpp:965
+msgid "Small"
+msgstr ""
+
+#: src/minoltamn.cpp:775 src/minoltamn.cpp:973
+msgid "Raw+Jpeg"
+msgstr ""
+
+#: src/minoltamn.cpp:787 src/minoltamn.cpp:986
+msgid "Kelvin"
+msgstr ""
+
+#: src/minoltamn.cpp:793
+msgid "Single-shot AF"
+msgstr ""
+
+#: src/minoltamn.cpp:794
+msgid "Continuous AF"
+msgstr ""
+
+#: src/minoltamn.cpp:795
+msgid "Automatic AF"
+msgstr ""
+
+#: src/minoltamn.cpp:831
+msgid "sRGB (Natural)"
+msgstr ""
+
+#: src/minoltamn.cpp:832
+msgid "sRGB (Natural+)"
+msgstr ""
+
+#: src/minoltamn.cpp:838 src/minoltamn.cpp:1018
+msgid "Horizontal (normal)"
+msgstr ""
+
+#: src/minoltamn.cpp:839 src/minoltamn.cpp:1019
+msgid "Rotate 90 CW"
+msgstr ""
+
+#: src/minoltamn.cpp:840 src/minoltamn.cpp:1020
+msgid "Rotate 270 CW"
+msgstr ""
+
+#: src/minoltamn.cpp:878
+msgid "AF Points"
+msgstr ""
+
+#: src/minoltamn.cpp:879
+msgid "AF points"
+msgstr ""
+
+#: src/minoltamn.cpp:894
+msgid "Color space"
+msgstr ""
+
+#: src/minoltamn.cpp:905 src/minoltamn.cpp:923 src/minoltamn.cpp:1138
+#: src/minoltamn.cpp:1156
+msgid "Free Memory Card Images"
+msgstr ""
+
+#: src/minoltamn.cpp:906 src/minoltamn.cpp:924 src/minoltamn.cpp:1139
+#: src/minoltamn.cpp:1157
+msgid "Free memory card images"
+msgstr ""
+
+#: src/minoltamn.cpp:911
+msgid "Hue"
+msgstr ""
+
+#: src/minoltamn.cpp:913 src/minoltamn.cpp:914 src/minoltamn.cpp:1150
+#: src/minoltamn.cpp:1151
+msgid "Rotation"
+msgstr ""
+
+#: src/minoltamn.cpp:929 src/minoltamn.cpp:1168
+msgid "Noise Reduction"
+msgstr ""
+
+#: src/minoltamn.cpp:930 src/minoltamn.cpp:1169
+msgid "Noise reduction"
+msgstr ""
+
+#: src/minoltamn.cpp:939
+msgid "Zone Matching On"
+msgstr ""
+
+#: src/minoltamn.cpp:940
+msgid "Zone matching on"
+msgstr ""
+
+#: src/minoltamn.cpp:945
+msgid "Unknown Minolta Camera Settings 7D tag"
+msgstr ""
+
+#: src/minoltamn.cpp:958
+msgid "Connected copying"
+msgstr ""
+
+#: src/minoltamn.cpp:1012
+msgid "200 (Zone Matching High)"
+msgstr ""
+
+#: src/minoltamn.cpp:1013
+msgid "80 (Zone Matching Low)"
+msgstr ""
+
+#: src/minoltamn.cpp:1037 src/minoltamn.cpp:1051 src/fujimn.cpp:163
+msgid "Wide"
+msgstr ""
+
+#: src/minoltamn.cpp:1038
+msgid "Central"
+msgstr ""
+
+#: src/minoltamn.cpp:1039
+msgid "Up"
+msgstr ""
+
+#: src/minoltamn.cpp:1040
+msgid "Up right"
+msgstr ""
+
+#: src/minoltamn.cpp:1042
+msgid "Down right"
+msgstr ""
+
+#: src/minoltamn.cpp:1043
+msgid "Down"
+msgstr ""
+
+#: src/minoltamn.cpp:1044
+msgid "Down left"
+msgstr ""
+
+#: src/minoltamn.cpp:1046
+msgid "Up left"
+msgstr ""
+
+#: src/minoltamn.cpp:1052
+msgid "Selection"
+msgstr ""
+
+#: src/minoltamn.cpp:1108
+msgid "Focus Position"
+msgstr ""
+
+#: src/minoltamn.cpp:1109
+msgid "Focus position"
+msgstr ""
+
+#: src/minoltamn.cpp:1111
+msgid "Focus Area"
+msgstr ""
+
+#: src/minoltamn.cpp:1141
+msgid "Exposure Revision"
+msgstr ""
+
+#: src/minoltamn.cpp:1142
+msgid "Exposure revision"
+msgstr ""
+
+#: src/minoltamn.cpp:1159
+msgid "Exposure Manual Bias"
+msgstr ""
+
+#: src/minoltamn.cpp:1160
+msgid "Exposure manual bias"
+msgstr ""
+
+#: src/minoltamn.cpp:1162
+msgid "AF Mode"
+msgstr ""
+
+#: src/minoltamn.cpp:1163
+msgid "AF mode"
+msgstr ""
+
+#: src/minoltamn.cpp:1183
+msgid "Unknown Minolta Camera Settings 5D tag"
+msgstr ""
+
+#: src/fujimn.cpp:73
+msgid "Soft mode 1"
+msgstr ""
+
+#: src/fujimn.cpp:74
+msgid "Soft mode 2"
+msgstr ""
+
+#: src/fujimn.cpp:76
+msgid "Hard mode 1"
+msgstr ""
+
+#: src/fujimn.cpp:77
+msgid "Hard mode 2"
+msgstr ""
+
+#: src/fujimn.cpp:85
+msgid "Fluorescent (daylight)"
+msgstr ""
+
+#: src/fujimn.cpp:86
+msgid "Fluorescent (warm white)"
+msgstr ""
+
+#: src/fujimn.cpp:87
+msgid "Fluorescent (cool white)"
+msgstr ""
+
+#: src/fujimn.cpp:88
+msgid "Incandescent"
+msgstr ""
+
+#: src/fujimn.cpp:97
+msgid "None (black & white)"
+msgstr ""
+
+#: src/fujimn.cpp:126
+msgid "Sports"
+msgstr ""
+
+#: src/fujimn.cpp:128
+msgid "Program AE"
+msgstr ""
+
+#: src/fujimn.cpp:129
+msgid "Natural light"
+msgstr ""
+
+#: src/fujimn.cpp:130
+msgid "Anti-blur"
+msgstr ""
+
+#: src/fujimn.cpp:132
+msgid "Museum"
+msgstr ""
+
+#: src/fujimn.cpp:133
+msgid "Party"
+msgstr ""
+
+#: src/fujimn.cpp:134
+msgid "Flower"
+msgstr ""
+
+#: src/fujimn.cpp:136
+msgid "Natural light & flash"
+msgstr ""
+
+#: src/fujimn.cpp:137
+msgid "Beach"
+msgstr ""
+
+#: src/fujimn.cpp:138
+msgid "Snow"
+msgstr ""
+
+#: src/fujimn.cpp:139
+msgid "Fireworks"
+msgstr ""
+
+#: src/fujimn.cpp:140
+msgid "Underwater"
+msgstr ""
+
+#: src/fujimn.cpp:141
+msgid "Aperture-priority AE"
+msgstr ""
+
+#: src/fujimn.cpp:142
+msgid "Shutter speed priority AE"
+msgstr ""
+
+#: src/fujimn.cpp:150
+msgid "No flash & flash"
+msgstr ""
+
+#: src/fujimn.cpp:156
+msgid "Chrome"
+msgstr ""
+
+#: src/fujimn.cpp:157
+msgid "Black & white"
+msgstr ""
+
+#: src/fujimn.cpp:168
+msgid "F0/Standard"
+msgstr ""
+
+#: src/fujimn.cpp:169
+msgid "F1/Studio portrait"
+msgstr ""
+
+#: src/fujimn.cpp:170
+msgid "F2/Fujichrome"
+msgstr ""
+
+#: src/fujimn.cpp:171
+msgid "F3/Studio portrait Ex"
+msgstr ""
+
+#: src/fujimn.cpp:172
+msgid "F4/Velvia"
+msgstr ""
+
+#: src/fujimn.cpp:177
+msgid "Auto (100-400%)"
+msgstr ""
+
+#: src/fujimn.cpp:179
+msgid "Standard (100%)"
+msgstr ""
+
+#: src/fujimn.cpp:180
+msgid "Wide mode 1 (230%)"
+msgstr ""
+
+#: src/fujimn.cpp:181
+msgid "Wide mode 2 (400%)"
+msgstr ""
+
+#: src/fujimn.cpp:182
+msgid "Film simulation mode"
+msgstr ""
+
+#: src/fujimn.cpp:187
+msgid "Version"
+msgstr ""
+
+#: src/fujimn.cpp:188
+msgid "Fujifilm Makernote version"
+msgstr ""
+
+#: src/fujimn.cpp:190
+msgid "Internal Serial Number"
+msgstr ""
+
+#: src/fujimn.cpp:191
+msgid ""
+"This number is unique, and contains the date of manufacture, but doesn't "
+"necessarily correspond to the camera body number"
+msgstr ""
+
+#: src/fujimn.cpp:194
+msgid "Quality"
+msgstr ""
+
+#: src/fujimn.cpp:195
+msgid "Image quality setting"
+msgstr ""
+
+#: src/fujimn.cpp:198
+msgid "Sharpness setting"
+msgstr ""
+
+#: src/fujimn.cpp:201
+msgid "White balance setting"
+msgstr ""
+
+#: src/fujimn.cpp:203
+msgid "Color"
+msgstr ""
+
+#: src/fujimn.cpp:204
+msgid "Chroma saturation setting"
+msgstr ""
+
+#: src/fujimn.cpp:206
+msgid "Tone"
+msgstr ""
+
+#: src/fujimn.cpp:207
+msgid "Contrast setting"
+msgstr ""
+
+#: src/fujimn.cpp:210
+msgid "Flash firing mode setting"
+msgstr ""
+
+#: src/fujimn.cpp:212
+msgid "Flash Strength"
+msgstr ""
+
+#: src/fujimn.cpp:213
+msgid "Flash firing strength compensation setting"
+msgstr ""
+
+#: src/fujimn.cpp:216
+msgid "Macro mode setting"
+msgstr ""
+
+#: src/fujimn.cpp:219
+msgid "Focusing mode setting"
+msgstr ""
+
+#: src/fujimn.cpp:224
+msgid "Slow Sync"
+msgstr ""
+
+#: src/fujimn.cpp:225
+msgid "Slow synchro mode setting"
+msgstr ""
+
+#: src/fujimn.cpp:227
+msgid "Picture Mode"
+msgstr ""
+
+#: src/fujimn.cpp:228
+msgid "Picture mode setting"
+msgstr ""
+
+#: src/fujimn.cpp:234
+msgid "Continuous shooting or auto bracketing setting"
+msgstr ""
+
+#: src/fujimn.cpp:236
+msgid "Sequence Number"
+msgstr ""
+
+#: src/fujimn.cpp:237
+msgid "Sequence number"
+msgstr ""
+
+#: src/fujimn.cpp:242
+msgid "FinePix Color"
+msgstr ""
+
+#: src/fujimn.cpp:243
+msgid "Fuji FinePix color setting"
+msgstr ""
+
+#: src/fujimn.cpp:245
+msgid "Blur Warning"
+msgstr ""
+
+#: src/fujimn.cpp:246
+msgid "Blur warning status"
+msgstr ""
+
+#: src/fujimn.cpp:248
+msgid "Focus Warning"
+msgstr ""
+
+#: src/fujimn.cpp:249
+msgid "Auto Focus warning status"
+msgstr ""
+
+#: src/fujimn.cpp:251
+msgid "Exposure Warning"
+msgstr ""
+
+#: src/fujimn.cpp:252
+msgid "Auto exposure warning status"
+msgstr ""
+
+#: src/fujimn.cpp:254
+msgid "Dynamic Range"
+msgstr ""
+
+#: src/fujimn.cpp:255
+msgid "Dynamic range"
+msgstr ""
+
+#: src/fujimn.cpp:257
+msgid "Film Mode"
+msgstr ""
+
+#: src/fujimn.cpp:258
+msgid "Film mode"
+msgstr ""
+
+#: src/fujimn.cpp:260
+msgid "Dynamic Range Setting"
+msgstr ""
+
+#: src/fujimn.cpp:261
+msgid "Dynamic range settings"
+msgstr ""
+
+#: src/fujimn.cpp:263
+msgid "Development Dynamic Range"
+msgstr ""
+
+#: src/fujimn.cpp:264
+msgid "Development dynamic range"
+msgstr ""
+
+#: src/fujimn.cpp:266
+msgid "Minimum Focal Length"
+msgstr ""
+
+#: src/fujimn.cpp:267
+msgid "Minimum focal length"
+msgstr ""
+
+#: src/fujimn.cpp:269
+msgid "Maximum Focal Length"
+msgstr ""
+
+#: src/fujimn.cpp:270
+msgid "Maximum focal length"
+msgstr ""
+
+#: src/fujimn.cpp:272
+msgid "Maximum Aperture at Mininimum Focal"
+msgstr ""
+
+#: src/fujimn.cpp:273
+msgid "Maximum aperture at mininimum focal"
+msgstr ""
+
+#: src/fujimn.cpp:275
+msgid "Maximum Aperture at Maxinimum Focal"
+msgstr ""
+
+#: src/fujimn.cpp:276
+msgid "Maximum aperture at maxinimum focal"
+msgstr ""
+
+#: src/fujimn.cpp:279
+msgid "File source"
+msgstr ""
+
+#: src/fujimn.cpp:281
+msgid "Order Number"
+msgstr ""
+
+#: src/fujimn.cpp:282
+msgid "Order number"
+msgstr ""
+
+#: src/fujimn.cpp:284
+msgid "Frame Number"
+msgstr ""
+
+#: src/fujimn.cpp:285
+msgid "Frame number"
+msgstr ""
+
+#: src/fujimn.cpp:290
+msgid "Unknown FujiMakerNote tag"
 msgstr ""

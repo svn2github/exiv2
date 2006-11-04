@@ -1,5 +1,6 @@
 # List of source files which contain translatable strings.
 src/tags.cpp
 src/datasets.cpp
-src/minoltamn.cpp
 src/exiv2.cpp
+src/minoltamn.cpp
+src/fujimn.cpp
