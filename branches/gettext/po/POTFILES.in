@@ -2,3 +2,4 @@
 src/tags.cpp
 src/datasets.cpp
 src/minoltamn.cpp
+src/exiv2.cpp

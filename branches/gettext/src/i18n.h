@@ -35,7 +35,37 @@
 
 #include "gettext.h"
 
-#define _(String) (String)
-#define N_(String) (String)
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else
+#  if ! defined(textdomain)
+#    define textdomain(String) (String)
+#  endif
+#  if ! defined(gettext)
+#    define gettext(String) (String)
+#  endif
+#  if ! defined(dgettext)
+#    define dgettext(Domain,Message) (Message)
+#  endif
+#  if ! defined(dcgettext)
+#    define dcgettext(Domain,Message,Type) (Message)
+#  endif
+#  if ! defined(bindtextdomain)
+#    define bindtextdomain(Domain,Directory) (Domain)
+#  endif
+#  if ! defined(_)
+#    define _(String) (String)
+#  endif
+#  if ! defined(N_)
+#    define N_(String) (String)
+#  endif
+#endif
 
 #endif /* I18N_H_ */

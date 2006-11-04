@@ -1214,13 +1214,13 @@ namespace Exiv2 {
 
     const char* ExifTags::tagTitle(uint16_t tag, IfdId ifdId)
     {
-//TODO        bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
+        bindtextdomain(EXV_PACKAGE, EXV_LOCALEDIR);
         return tagLabel(tag, ifdId);
     } // ExifTags::tagTitle
 
     const char* ExifTags::tagLabel(uint16_t tag, IfdId ifdId)
     {
-//TODO        bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
+        bindtextdomain(EXV_PACKAGE, EXV_LOCALEDIR);
 
         if (isExifIfd(ifdId)) {
             int idx = tagInfoIdx(tag, ifdId);
@@ -1236,7 +1236,7 @@ namespace Exiv2 {
 
     const char* ExifTags::tagDesc(uint16_t tag, IfdId ifdId)
     {
-//TODO        bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
+        bindtextdomain(EXV_PACKAGE, EXV_LOCALEDIR);
 
         if (isExifIfd(ifdId)) {
             int idx = tagInfoIdx(tag, ifdId);
@@ -1252,7 +1252,7 @@ namespace Exiv2 {
 
     const char* ExifTags::sectionName(uint16_t tag, IfdId ifdId)
     {
-//TODO        bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
+        bindtextdomain(EXV_PACKAGE, EXV_LOCALEDIR);
 
         if (isExifIfd(ifdId)) {
             int idx = tagInfoIdx(tag, ifdId);
@@ -1269,7 +1269,7 @@ namespace Exiv2 {
 
     const char* ExifTags::sectionDesc(uint16_t tag, IfdId ifdId)
     {
-//TODO        bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
+        bindtextdomain(EXV_PACKAGE, EXV_LOCALEDIR);
 
         if (isExifIfd(ifdId)) {
             int idx = tagInfoIdx(tag, ifdId);

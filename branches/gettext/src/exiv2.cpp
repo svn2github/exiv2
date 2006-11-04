@@ -41,6 +41,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "exiv2.hpp"
 #include "actions.hpp"
 #include "utils.hpp"
+#include "i18n.h"      // NLS support.
 
 #include <string>
 #include <iostream>
@@ -124,6 +125,9 @@ int main(int argc, char* const argv[])
         return 0;
     }
 
+    // NLS support.
+    bindtextdomain(EXV_PACKAGE, EXV_LOCALEDIR);
+
     // Create the required action class
     Action::TaskFactory& taskFactory = Action::TaskFactory::instance();
     Action::Task::AutoPtr task
@@ -190,9 +194,9 @@ void Params::version(std::ostream& os) const
 
 void Params::usage(std::ostream& os) const
 {
-    os << "Usage: " << progname()
-       << " [ options ] [ action ] file ...\n\n"
-       << "Manipulate the Exif metadata of images.\n";
+    os << _("Usage: ") << progname()
+       << _(" [ options ] [ action ] file ...\n\n")
+       << _("Manipulate the Exif metadata of images.\n");
 }
 
 void Params::help(std::ostream& os) const
