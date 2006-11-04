@@ -1,5 +1,6 @@
-/****************************************************************************
- * Copyright (C) 2004, 2005, 2006 Andreas Huggel <ahuggel@gmx.net>
+/* **************************************************************** -*- C -*- */
+/*
+ * Copyright (C) 2006 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -16,18 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
- *****************************************************************************/
+ */
+/*
+  File:      i18n.h
+  Version:   $Rev$
+  Author(s): Gilles Caulier (gc) <caulier.gilles@kdemail.net>
+  History:   01-Nov-06, gc: created
+ */
+#ifndef I18N_H_
+#define I18N_H_
 
-#ifndef __I18N_H__
-#define __I18N_H__
-
-#include "../config/config.h"
-#include "gettext.h"
-
-#ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(String) (String)
-#define N_(String) (String)
+#ifdef _MSC_VER
+# include "exv_msvc.h"
+#else
+# include "exv_conf.h"
 #endif
 
-#endif /* __I18N_H__ */
+#include "gettext.h"
+
+#define _(String) (String)
+#define N_(String) (String)
+
+#endif /* I18N_H_ */

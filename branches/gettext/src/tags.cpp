@@ -39,6 +39,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "value.hpp"
 #include "makernote.hpp"
 #include "mn.hpp"                // To ensure that all makernotes are registered
+#include "i18n.h"                // i18n support
 
 #include <iostream>
 #include <iomanip>
@@ -47,9 +48,6 @@ EXIV2_RCSID("@(#) $Id$")
 #include <cstdlib>
 #include <cassert>
 #include <cmath>
-
-// i18n support.
-#include "i18n.h"
 
 // *****************************************************************************
 // class member definitions
