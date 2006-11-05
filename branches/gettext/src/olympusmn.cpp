@@ -37,6 +37,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "olympusmn.hpp"
 #include "makernote.hpp"
 #include "value.hpp"
+#include "i18n.h"                // NLS support.
 
 // + standard includes
 #include <string>
@@ -62,17 +63,23 @@ namespace Exiv2 {
 
     //! Quality, tag 0x0201
     extern const TagDetails olympusQuality[] = {
-        { 1, "Standard Quality (SQ)"    },
-        { 2, "High Quality (HQ)"        },
-        { 3, "Super High Quality (SHQ)" },
-        { 6, "Raw"                      }
+        { 1, N_("Standard Quality (SQ)")    },
+        { 2, N_("High Quality (HQ)")        },
+        { 3, N_("Super High Quality (SHQ)") },
+        { 6, N_("Raw")                      }
     };
 
     //! Macro, tag 0x0202
     extern const TagDetails olympusMacro[] = {
-        {  0, "Off"         },
-        {  1, "On"          },
-        {  2, "Super Macro" }
+        {  0, N_("Off")         },
+        {  1, N_("On")          },
+        {  2, N_("Super macro") }
+    };
+
+    //! BWMode, tag 0x0203
+    extern const TagDetails olympusBWMode[] = {
+        {  0, N_("Off") },
+        {  1, N_("On")  }
     };
 
     //! OneTouchWB, tag 0x0302
@@ -92,16 +99,49 @@ namespace Exiv2 {
 
     // Olympus Tag Info
     const TagInfo OlympusMakerNote::tagInfo_[] = {
-        TagInfo(0x0200, "SpecialMode", "SpecialMode", "Picture taking mode", olympusIfdId, makerTags, unsignedLong, print0x0200),
-        TagInfo(0x0201, "Quality", "Quality", "Image quality setting", olympusIfdId, makerTags, unsignedShort, EXV_PRINT_TAG(olympusQuality)),
-        TagInfo(0x0202, "Macro", "Macro", "Macro mode", olympusIfdId, makerTags, unsignedShort, EXV_PRINT_TAG(olympusMacro)),
-        TagInfo(0x0203, "BWMode", "BWMode", "Black and White Mode", olympusIfdId, makerTags, unsignedShort, printValue),
-        TagInfo(0x0204, "DigitalZoom", "DigitalZoom", "Digital zoom ratio", olympusIfdId, makerTags, unsignedRational, print0x0204),
-        TagInfo(0x0205, "FocalPlaneDiagonal", "FocalPlaneDiagonal", "Focal plane diagonal", olympusIfdId, makerTags, unsignedRational, printValue),
-        TagInfo(0x0206, "0x0206", "0x0206", "Unknown", olympusIfdId, makerTags, signedShort, printValue),
-        TagInfo(0x0207, "FirmwareVersion", "FirmwareVersion", "Software firmware version", olympusIfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0208, "PictureInfo", "PictureInfo", "ASCII format data such as [PictureInfo]", olympusIfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0209, "CameraID", "CameraID", "CameraID data", olympusIfdId, makerTags, undefined, printValue),
+        TagInfo(0x0200, "SpecialMode", N_("Special Mode"), 
+                N_("Picture taking mode"), 
+                olympusIfdId, makerTags, unsignedLong, print0x0200),
+        TagInfo(0x0201, "Quality", N_("Quality"), 
+                N_("Image quality setting"), 
+                olympusIfdId, makerTags, unsignedShort, EXV_PRINT_TAG(olympusQuality)),
+        TagInfo(0x0202, "Macro", N_("Macro"), 
+                N_("Macro mode"), 
+                olympusIfdId, makerTags, unsignedShort, EXV_PRINT_TAG(olympusMacro)),
+        TagInfo(0x0203, "BWMode", N_("Black & White Mode"), 
+                N_("Black and white mode"), 
+                olympusIfdId, makerTags, unsignedShort, EXV_PRINT_TAG(olympusBWMode)),
+        TagInfo(0x0204, "DigitalZoom", N_("Digital Zoom"), 
+                N_("Digital zoom ratio"), 
+                olympusIfdId, makerTags, unsignedRational, print0x0204),
+        TagInfo(0x0205, "FocalPlaneDiagonal", N_("Focal Plane Diagonal"), 
+                N_("Focal plane diagonal"), 
+                olympusIfdId, makerTags, unsignedRational, printValue),
+        TagInfo(0x0206, "LensDistortionParams", N_("Lens Distortion Parameters"), 
+                N_("Lens distortion parameters"), 
+                olympusIfdId, makerTags, signedShort, printValue),
+        TagInfo(0x0207, "FirmwareVersion", N_("Firmware Version"), 
+                N_("Software firmware version"), 
+                olympusIfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0208, "PictureInfo", N_("Picture Info"),             // TODO: decode Olympus TextIngo Tags.
+                N_("ASCII format data such as [PictureInfo]"),         //       See ExifTool database.
+                olympusIfdId, makerTags, asciiString, printValue),  
+        TagInfo(0x0209, "CameraID", N_("Camera ID"), 
+                N_("Camera ID data"), 
+                olympusIfdId, makerTags, undefined, printValue),
+        TagInfo(0x020b, "ImageWidth", N_("Image Width"),                // Epson Camera
+                N_("Image width"), 
+                olympusIfdId, makerTags, unsignedShort, printValue),
+        TagInfo(0x020c, "ImageHeight", N_("Image Height"),              // Epson Camera
+                N_("Image height"), 
+                olympusIfdId, makerTags, unsignedShort, printValue),
+        TagInfo(0x020d, "Software", N_("Software"),                     // Epson Camera
+                N_("Software"), 
+                olympusIfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0280, "PreviewImage", N_("Preview Image"),            // Epson Camera
+                N_("Preview image"), 
+                olympusIfdId, makerTags, unsignedByte, printValue),
+
         TagInfo(0x0300, "PreCaptureFrames", "PreCaptureFrames", "Pre-capture frames", olympusIfdId, makerTags, unsignedShort, printValue),
         TagInfo(0x0301, "0x0301", "0x0301", "Unknown", olympusIfdId, makerTags, unsignedShort, printValue),
         TagInfo(0x0302, "OneTouchWB", "OneTouchWB", "OneTouchWB", olympusIfdId, makerTags, unsignedShort, EXV_PRINT_TAG(olympusOneTouchWb)),
@@ -235,24 +275,24 @@ namespace Exiv2 {
         }
         long l0 = value.toLong(0);
         switch (l0) {
-        case 0: os << "Normal"; break;
-        case 2: os << "Fast"; break;
-        case 3: os << "Panorama"; break;
+        case 0: os << _("Normal"); break;
+        case 2: os << _("Fast"); break;
+        case 3: os << _("Panorama"); break;
         default: os << "(" << l0 << ")"; break;
         }
         if (l0 != 0) {
             os << ", ";
             long l1 = value.toLong(1);
-            os << "Sequence number " << l1;
+            os << _("Sequence number") << " " << l1;
         }
         if (l0 != 0 && l0 != 2) {
             os << ", ";
             long l2 = value.toLong(2);
             switch (l2) {
-            case 1: os << "Left to Right"; break;
-            case 2: os << "Right to Left"; break;
-            case 3: os << "Bottom to Top"; break;
-            case 4: os << "Top to Bottom"; break;
+            case 1: os << _("Left to right"); break;
+            case 2: os << _("Right to left"); break;
+            case 3: os << _("Bottom to top"); break;
+            case 4: os << _("Top to bottom"); break;
             default: os << "(" << l2 << ")"; break;
             }
         }
@@ -263,7 +303,7 @@ namespace Exiv2 {
                                                 const Value& value)
     {
         float f = value.toFloat();
-        if (f == 0.0 || f == 1.0) return os << "None";
+        if (f == 0.0 || f == 1.0) return os << _("None");
         std::ostringstream oss;
         oss.copyfmt(os);
         os << std::fixed << std::setprecision(1) << f << "x";
