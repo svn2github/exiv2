@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-05 10:35+0100\n"
+"POT-Creation-Date: 2006-11-05 13:44+0100\n"
 "PO-Revision-Date: 2005-09-18 19:25+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -3837,7 +3837,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/exiv2.cpp:306 src/exiv2.cpp:345
+#: src/exiv2.cpp:306 src/exiv2.cpp:345 src/exiv2.cpp:547
 #, fuzzy
 msgid "Option"
 msgstr "Bruch"
@@ -3858,7 +3858,7 @@ msgstr ""
 msgid "Ignoring surplus option"
 msgstr ""
 
-#: src/exiv2.cpp:346
+#: src/exiv2.cpp:346 src/exiv2.cpp:548
 msgid "is not compatible with a previous option\n"
 msgstr ""
 
@@ -3875,164 +3875,146 @@ msgid "Option -a is not compatible with a previous option\n"
 msgstr ""
 
 #: src/exiv2.cpp:392
-msgid ": Unrecognized print mode `"
+msgid "Unrecognized print mode"
 msgstr ""
 
 #: src/exiv2.cpp:400
-msgid ": Ignoring surplus option -p"
+msgid "Ignoring surplus option -p"
 msgstr ""
 
 #: src/exiv2.cpp:404
-msgid ": Option -p is not compatible with a previous option\n"
+msgid "Option -p is not compatible with a previous option\n"
 msgstr ""
 
 #: src/exiv2.cpp:432
-msgid ": Unrecognized print item `"
+msgid "Unrecognized print item"
 msgstr ""
 
 #: src/exiv2.cpp:441
-msgid ": Ignoring surplus option -P"
+msgid "Ignoring surplus option -P"
 msgstr ""
 
 #: src/exiv2.cpp:445
-msgid ": Option -P is not compatible with a previous option\n"
+msgid "Option -P is not compatible with a previous option\n"
 msgstr ""
 
 #: src/exiv2.cpp:472
-msgid ": Option -d is not compatible with a previous option\n"
+msgid "Option -d is not compatible with a previous option\n"
 msgstr ""
 
 #: src/exiv2.cpp:499
-msgid ": Option -e is not compatible with a previous option\n"
+msgid "Option -e is not compatible with a previous option\n"
 msgstr ""
 
 #: src/exiv2.cpp:526
-msgid ": Option -i is not compatible with a previous option\n"
+msgid "Option -i is not compatible with a previous option\n"
 msgstr ""
 
-#: src/exiv2.cpp:547
-msgid ": Option -"
+#: src/exiv2.cpp:565
+msgid "Action adjust is not compatible with the given options\n"
 msgstr ""
 
-#: src/exiv2.cpp:548
-msgid " is not compatible with a previous option\n"
+#: src/exiv2.cpp:574
+msgid "Action print is not compatible with the given options\n"
 msgstr ""
 
-#: src/exiv2.cpp:564
-msgid ": Action adjust is not "
+#: src/exiv2.cpp:583
+msgid "Action delete is not compatible with the given options\n"
 msgstr ""
 
-#: src/exiv2.cpp:565 src/exiv2.cpp:574 src/exiv2.cpp:583 src/exiv2.cpp:592
-#: src/exiv2.cpp:601 src/exiv2.cpp:610 src/exiv2.cpp:619 src/exiv2.cpp:628
-msgid "compatible with the given options\n"
+#: src/exiv2.cpp:592
+msgid "Action extract is not compatible with the given options\n"
 msgstr ""
 
-#: src/exiv2.cpp:573
-msgid ": Action print is not "
+#: src/exiv2.cpp:601
+msgid "Action insert is not compatible with the given options\n"
 msgstr ""
 
-#: src/exiv2.cpp:582
-msgid ": Action delete is not "
+#: src/exiv2.cpp:610
+msgid "Action rename is not compatible with the given options\n"
 msgstr ""
 
-#: src/exiv2.cpp:591
-msgid ": Action extract is not "
+#: src/exiv2.cpp:619
+msgid "Action modify is not compatible with the given options\n"
 msgstr ""
 
-#: src/exiv2.cpp:600
-msgid ": Action insert is not "
-msgstr ""
-
-#: src/exiv2.cpp:609
-msgid ": Action rename is not "
-msgstr ""
-
-#: src/exiv2.cpp:618
-msgid ": Action modify is not "
-msgstr ""
-
-#: src/exiv2.cpp:627
-msgid ": Action fixiso is not "
+#: src/exiv2.cpp:628
+msgid "Action fixiso is not compatible with the given options\n"
 msgstr ""
 
 #: src/exiv2.cpp:652
-msgid ": An action must be specified\n"
+msgid "An action must be specified\n"
 msgstr ""
 
 #: src/exiv2.cpp:657
-msgid ": Adjust action requires option -a time\n"
+msgid "Adjust action requires option -a time\n"
 msgstr ""
 
 #: src/exiv2.cpp:663
-msgid ": Modify action requires at least one -c, -m or -M option\n"
+msgid "Modify action requires at least one -c, -m or -M option\n"
 msgstr ""
 
 #: src/exiv2.cpp:667
-msgid ": At least one file is required\n"
+msgid "At least one file is required\n"
 msgstr ""
 
 #: src/exiv2.cpp:673
-msgid ": Error parsing -m option arguments\n"
+msgid "Error parsing -m option arguments\n"
 msgstr ""
 
 #: src/exiv2.cpp:680
-msgid ": Error parsing -M option arguments\n"
+msgid "Error parsing -M option arguments\n"
 msgstr ""
 
 #: src/exiv2.cpp:687
-msgid ": -l option can only be used with extract or insert actions\n"
+msgid "-l option can only be used with extract or insert actions\n"
 msgstr ""
 
 #: src/exiv2.cpp:692
-msgid ": -S option can only be used with insert action\n"
+msgid "-S option can only be used with insert action\n"
 msgstr ""
 
 #: src/exiv2.cpp:697
-msgid ": -t option can only be used with rename action\n"
+msgid "-t option can only be used with rename action\n"
 msgstr ""
 
 #: src/exiv2.cpp:702
-msgid ": -T option can only be used with rename action\n"
+msgid "-T option can only be used with rename action\n"
 msgstr ""
 
 #: src/exiv2.cpp:767
-msgid ": Unrecognized "
+msgid "Unrecognized "
 msgstr ""
 
 #: src/exiv2.cpp:768
-msgid " target `"
-msgstr ""
+#, fuzzy
+msgid "target"
+msgstr "Groß"
 
 #: src/exiv2.cpp:786
-msgid ": Failed to open command file for reading\n"
+msgid "Failed to open command file for reading\n"
 msgstr ""
 
 #: src/exiv2.cpp:799
-msgid ", line "
-msgstr ""
+#, fuzzy
+msgid "line"
+msgstr "VGA Fein"
 
 #: src/exiv2.cpp:822
-msgid "-M option "
-msgstr ""
+#, fuzzy
+msgid "-M option"
+msgstr "Bruch"
 
-#: src/exiv2.cpp:843
-msgid ": Invalid command line"
+#: src/exiv2.cpp:843 src/exiv2.cpp:893 src/exiv2.cpp:903
+msgid "Invalid command line"
 msgstr ""
 
 #: src/exiv2.cpp:850
-msgid ": Invalid command `"
+msgid "Invalid command"
 msgstr ""
 
 #: src/exiv2.cpp:874
-msgid ": Invalid key `"
-msgstr ""
-
-#: src/exiv2.cpp:893
-msgid ": Invalid command line "
-msgstr ""
-
-#: src/exiv2.cpp:903
-msgid ": Invalid command line  "
+msgid "Invalid key"
 msgstr ""
 
 #: src/tiffimage.cpp:206

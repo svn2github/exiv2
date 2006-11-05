@@ -389,19 +389,19 @@ int Params::evalPrint(const std::string& optarg)
         case 'i': printMode_ = pmIptc; break;
         case 'c': printMode_ = pmComment; break;
         default:
-            std::cerr << progname() << _(": Unrecognized print mode `")
+            std::cerr << progname() << ": " << _("Unrecognized print mode") << " `" 
                       << optarg << "'\n";
             rc = 1;
             break;
         }
         break;
     case Action::print:
-        std::cerr << progname()
-                  << _(": Ignoring surplus option -p") << optarg << "\n";
+        std::cerr << progname() << ": " 
+                  << _("Ignoring surplus option -p") << optarg << "\n";
         break;
     default:
-        std::cerr << progname()
-                  << _(": Option -p is not compatible with a previous option\n");
+        std::cerr << progname() << ": " 
+                  << _("Option -p is not compatible with a previous option\n");
         rc = 1;
         break;
     }
@@ -429,7 +429,7 @@ int Params::evalPrintCols(const std::string& optarg)
             case 't': printItems_ |= prTrans; break;
             case 'h': printItems_ |= prHex;   break;
             default:
-                std::cerr << progname() << _(": Unrecognized print item `")
+                std::cerr << progname() << ": " << _("Unrecognized print item") << " `" 
                           << optarg[i] << "'\n";
                 rc = 1;
                 break;
@@ -437,12 +437,12 @@ int Params::evalPrintCols(const std::string& optarg)
         }
         break;
     case Action::print:
-        std::cerr << progname()
-                  << _(": Ignoring surplus option -P") << optarg << "\n";
+        std::cerr << progname() << ": " 
+                  << _("Ignoring surplus option -P") << optarg << "\n";
         break;
     default:
-        std::cerr << progname()
-                  << _(": Option -P is not compatible with a previous option\n");
+        std::cerr << progname() << ": " 
+                  << _("Option -P is not compatible with a previous option\n");
         rc = 1;
         break;
     }
@@ -468,8 +468,8 @@ int Params::evalDelete(const std::string& optarg)
         }
         break;
     default:
-        std::cerr << progname()
-                  << _(": Option -d is not compatible with a previous option\n");
+        std::cerr << progname() << ": " 
+                  << _("Option -d is not compatible with a previous option\n");
         rc = 1;
         break;
     }
@@ -495,8 +495,8 @@ int Params::evalExtract(const std::string& optarg)
         }
         break;
     default:
-        std::cerr << progname()
-                  << _(": Option -e is not compatible with a previous option\n");
+        std::cerr << progname() << ": " 
+                  << _("Option -e is not compatible with a previous option\n");
         rc = 1;
         break;
     }
@@ -522,8 +522,8 @@ int Params::evalInsert(const std::string& optarg)
         }
         break;
     default:
-        std::cerr << progname()
-                  << _(": Option -i is not compatible with a previous option\n");
+        std::cerr << progname() << ": " 
+                  << _("Option -i is not compatible with a previous option\n");
         rc = 1;
         break;
     }
@@ -543,9 +543,9 @@ int Params::evalModify(int opt, const std::string& optarg)
         if (opt == 'M') cmdLines_.push_back(optarg);  // parse the commands later
         break;
     default:
-        std::cerr << progname()
-                  << _(": Option -") << (char)opt
-                  << _(" is not compatible with a previous option\n");
+        std::cerr << progname() << ": " 
+                  << _("Option") << " -" << (char)opt << " "
+                  << _("is not compatible with a previous option\n");
         rc = 1;
         break;
     }
@@ -561,8 +561,8 @@ int Params::nonoption(const std::string& argv)
         first_ = false;
         if (argv == "ad" || argv == "adjust") {
             if (action_ != Action::none && action_ != Action::adjust) {
-                std::cerr << progname() << _(": Action adjust is not ")
-                          << _("compatible with the given options\n");
+                std::cerr << progname() << ": " 
+                          << _("Action adjust is not compatible with the given options\n");
                 rc = 1;
             }
             action = true;
@@ -570,8 +570,8 @@ int Params::nonoption(const std::string& argv)
         }
         if (argv == "pr" || argv == "print") {
             if (action_ != Action::none && action_ != Action::print) {
-                std::cerr << progname() << _(": Action print is not ")
-                          << _("compatible with the given options\n");
+                std::cerr << progname() << ": " 
+                          << _("Action print is not compatible with the given options\n");
                 rc = 1;
             }
             action = true;
@@ -579,8 +579,8 @@ int Params::nonoption(const std::string& argv)
         }
         if (argv == "rm" || argv == "delete") {
             if (action_ != Action::none && action_ != Action::erase) {
-                std::cerr << progname() << _(": Action delete is not ")
-                          << _("compatible with the given options\n");
+                std::cerr << progname() << ": " 
+                          << _("Action delete is not compatible with the given options\n");
                 rc = 1;
             }
             action = true;
@@ -588,8 +588,8 @@ int Params::nonoption(const std::string& argv)
         }
         if (argv == "ex" || argv == "extract") {
             if (action_ != Action::none && action_ != Action::extract) {
-                std::cerr << progname() << _(": Action extract is not ")
-                          << _("compatible with the given options\n");
+                std::cerr << progname() << ": " 
+                          << _("Action extract is not compatible with the given options\n");
                 rc = 1;
             }
             action = true;
@@ -597,8 +597,8 @@ int Params::nonoption(const std::string& argv)
         }
         if (argv == "in" || argv == "insert") {
             if (action_ != Action::none && action_ != Action::insert) {
-                std::cerr << progname() << _(": Action insert is not ")
-                          << _("compatible with the given options\n");
+                std::cerr << progname() << ": " 
+                          << _("Action insert is not compatible with the given options\n");
                 rc = 1;
             }
             action = true;
@@ -606,8 +606,8 @@ int Params::nonoption(const std::string& argv)
         }
         if (argv == "mv" || argv == "rename") {
             if (action_ != Action::none && action_ != Action::rename) {
-                std::cerr << progname() << _(": Action rename is not ")
-                          << _("compatible with the given options\n");
+                std::cerr << progname() << ": " 
+                          << _("Action rename is not compatible with the given options\n");
                 rc = 1;
             }
             action = true;
@@ -615,8 +615,8 @@ int Params::nonoption(const std::string& argv)
         }
         if (argv == "mo" || argv == "modify") {
             if (action_ != Action::none && action_ != Action::modify) {
-                std::cerr << progname() << _(": Action modify is not ")
-                          << _("compatible with the given options\n");
+                std::cerr << progname() << ": " 
+                          << _("Action modify is not compatible with the given options\n");
                 rc = 1;
             }
             action = true;
@@ -624,8 +624,8 @@ int Params::nonoption(const std::string& argv)
         }
         if (argv == "fi" || argv == "fixiso") {
             if (action_ != Action::none && action_ != Action::fixiso) {
-                std::cerr << progname() << _(": Action fixiso is not ")
-                          << _("compatible with the given options\n");
+                std::cerr << progname() << ": " 
+                          << _("Action fixiso is not compatible with the given options\n");
                 rc = 1;
             }
             action = true;
@@ -649,57 +649,57 @@ int Params::getopt(int argc, char* const argv[])
     if (help_ || version_) return 0;
     if (action_ == Action::none) {
         // This shouldn't happen since print is taken as default action
-        std::cerr << progname() << _(": An action must be specified\n");
+        std::cerr << progname() << ": " << _("An action must be specified\n");
         rc = 1;
     }
     if (action_ == Action::adjust && !adjust_) {
-        std::cerr << progname()
-                  << _(": Adjust action requires option -a time\n");
+        std::cerr << progname() << ": " 
+                  << _("Adjust action requires option -a time\n");
         rc = 1;
     }
     if (   action_ == Action::modify
         && cmdFiles_.empty() && cmdLines_.empty() && jpegComment_.empty()) {
-        std::cerr << progname()
-                  << _(": Modify action requires at least one -c, -m or -M option\n");
+        std::cerr << progname() << ": " 
+                  << _("Modify action requires at least one -c, -m or -M option\n");
         rc = 1;
     }
     if (0 == files_.size()) {
-        std::cerr << progname() << _(": At least one file is required\n");
+        std::cerr << progname() << ": " << _("At least one file is required\n");
         rc = 1;
     }
     if (rc == 0 && action_ == Action::modify) {
         // Parse command files
         if (!parseCmdFiles(modifyCmds_, cmdFiles_)) {
-            std::cerr << progname() << _(": Error parsing -m option arguments\n");
+            std::cerr << progname() << ": " << _("Error parsing -m option arguments\n");
             rc = 1;
         }
     }
     if (rc ==0 && action_ == Action::modify) {
         // Parse command lines
         if (!parseCmdLines(modifyCmds_, cmdLines_)) {
-            std::cerr << progname() << _(": Error parsing -M option arguments\n");
+            std::cerr << progname() << ": " << _("Error parsing -M option arguments\n");
             rc = 1;
         }
     }
     if (   !directory_.empty()
         && !(action_ == Action::insert || action_ == Action::extract)) {
-        std::cerr << progname()
-                  << _(": -l option can only be used with extract or insert actions\n");
+        std::cerr << progname() << ": " 
+                  << _("-l option can only be used with extract or insert actions\n");
         rc = 1;
     }
     if (!suffix_.empty() && !(action_ == Action::insert)) {
-        std::cerr << progname()
-                  << _(": -S option can only be used with insert action\n");
+        std::cerr << progname() << ": " 
+                  << _("-S option can only be used with insert action\n");
         rc = 1;
     }
     if (timestamp_ && !(action_ == Action::rename)) {
-        std::cerr << progname()
-                  << _(": -t option can only be used with rename action\n");
+        std::cerr << progname() << ": " 
+                  << _("-t option can only be used with rename action\n");
         rc = 1;
     }
     if (timestampOnly_ && !(action_ == Action::rename)) {
-        std::cerr << progname()
-                  << _(": -T option can only be used with rename action\n");
+        std::cerr << progname() << ": " 
+                  << _("-T option can only be used with rename action\n");
         rc = 1;
     }
     return rc;
@@ -764,8 +764,8 @@ namespace {
                                 | Params::ctIptc
                                 | Params::ctComment; break;
             default:
-                std::cerr << Params::instance().progname() << _(": Unrecognized ")
-                          << action << _(" target `") << optarg[i] << "'\n";
+                std::cerr << Params::instance().progname() << ": " << _("Unrecognized ")
+                          << action << " " << _("target") << " `"  << optarg[i] << "'\n";
                 rc = -1;
                 break;
             }
@@ -782,8 +782,8 @@ namespace {
             try {
                 std::ifstream file(filename->c_str());
                 if (!file) {
-                    std::cerr << *filename
-                              << _(": Failed to open command file for reading\n");
+                    std::cerr << *filename << ": " 
+                              << _("Failed to open command file for reading\n");
                     return false;
                 }
                 int num = 0;
@@ -796,7 +796,7 @@ namespace {
                 }
             }
             catch (const Exiv2::AnyError& error) {
-                std::cerr << *filename << _(", line ") << error << "\n";
+                std::cerr << *filename << ", " << _("line") << " " << error << "\n";
                 return false;
             }
         }
@@ -819,7 +819,7 @@ namespace {
             return true;
         }
         catch (const Exiv2::AnyError& error) {
-            std::cerr << _("-M option ") << error << "\n";
+            std::cerr << _("-M option") << " " << error << "\n";
             return false;
 	}
     } // parseCmdLines
@@ -840,14 +840,14 @@ namespace {
             || cmdEnd == std::string::npos
             || keyStart == std::string::npos) {
             throw Exiv2::Error(1, Exiv2::toString(num)
-                               + _(": Invalid command line"));
+                               + ": " + _("Invalid command line"));
         }
 
         std::string cmd(line.substr(cmdStart, cmdEnd-cmdStart));
         CmdId cmdId = commandId(cmd);
         if (cmdId == invalidCmdId) {
             throw Exiv2::Error(1, Exiv2::toString(num)
-                               + _(": Invalid command `") + cmd + "'");
+                               + ": " + _("Invalid command") + " `" + cmd + "'");
         }
 
         Exiv2::TypeId defaultType = Exiv2::invalidTypeId;
@@ -871,7 +871,7 @@ namespace {
         }
         if (metadataId == invalidMetadataId) {
             throw Exiv2::Error(1, Exiv2::toString(num)
-                                + _(": Invalid key `") + key + "'");
+                               + ": " + _("Invalid key") + " `" + key + "'");
         }
 
         std::string value;
@@ -890,7 +890,7 @@ namespace {
                 || typeStart == std::string::npos
                 || valStart == std::string::npos) {
                 throw Exiv2::Error(1, Exiv2::toString(num)
-                                    + _(": Invalid command line "));
+                                   + ": " + _("Invalid command line") + " " );
             }
 
             if (typeEnd != std::string::npos) {
@@ -900,7 +900,7 @@ namespace {
                     valStart = line.find_first_not_of(delim, typeEnd+1);
                     if (valStart == std::string::npos) {
                         throw Exiv2::Error(1, Exiv2::toString(num)
-                                            + _(": Invalid command line  "));
+                                           + ": " + _("Invalid command line") + " " );
                     }
                     type = tmpType;
                     explicitType = true;
