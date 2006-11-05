@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-05 10:06+0100\n"
+"POT-Creation-Date: 2006-11-05 10:35+0100\n"
 "PO-Revision-Date: 2005-03-12 05:43+0100\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -3480,7 +3480,7 @@ msgstr "Desconocido"
 
 #: src/exiv2.cpp:146
 #, fuzzy
-msgid "File "
+msgid "File"
 msgstr "Orden de llenado"
 
 #: src/exiv2.cpp:179
@@ -3536,12 +3536,12 @@ msgid "Boston, MA 02110-1301 USA\n"
 msgstr ""
 
 #: src/exiv2.cpp:199
-msgid "Usage: "
+msgid "Usage:"
 msgstr ""
 
 #: src/exiv2.cpp:200
 msgid ""
-" [ options ] [ action ] file ...\n"
+"[ options ] [ action ] file ...\n"
 "\n"
 msgstr ""
 
@@ -3845,40 +3845,41 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/exiv2.cpp:306 src/exiv2.cpp:345 src/exiv2.cpp:547
-msgid ": Option -"
-msgstr ""
+#: src/exiv2.cpp:306 src/exiv2.cpp:345
+#, fuzzy
+msgid "Option"
+msgstr "acción"
 
 #: src/exiv2.cpp:307
-msgid " requires an argument\n"
+msgid "requires an argument\n"
 msgstr ""
 
 #: src/exiv2.cpp:311
-msgid ": Unrecognized option -"
+msgid "Unrecognized option"
 msgstr ""
 
 #: src/exiv2.cpp:317
-msgid ": getopt returned unexpected character code "
+msgid "getopt returned unexpected character code"
 msgstr ""
 
 #: src/exiv2.cpp:340
-msgid ": Ignoring surplus option -r \""
+msgid "Ignoring surplus option"
 msgstr ""
 
-#: src/exiv2.cpp:346 src/exiv2.cpp:548
-msgid " is not compatible with a previous option\n"
+#: src/exiv2.cpp:346
+msgid "is not compatible with a previous option\n"
 msgstr ""
 
 #: src/exiv2.cpp:361
-msgid ": Error parsing -a option argument `"
+msgid "Error parsing -a option argument"
 msgstr ""
 
 #: src/exiv2.cpp:368
-msgid ": Ignoring surplus option -a "
+msgid "Ignoring surplus option -a"
 msgstr ""
 
 #: src/exiv2.cpp:372
-msgid ": Option -a is not compatible with a previous option\n"
+msgid "Option -a is not compatible with a previous option\n"
 msgstr ""
 
 #: src/exiv2.cpp:392
@@ -3915,6 +3916,14 @@ msgstr ""
 
 #: src/exiv2.cpp:526
 msgid ": Option -i is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:547
+msgid ": Option -"
+msgstr ""
+
+#: src/exiv2.cpp:548
+msgid " is not compatible with a previous option\n"
 msgstr ""
 
 #: src/exiv2.cpp:564
@@ -4032,6 +4041,18 @@ msgstr ""
 
 #: src/exiv2.cpp:903
 msgid ": Invalid command line  "
+msgstr ""
+
+#: src/tiffimage.cpp:206
+msgid "Header, offset"
+msgstr ""
+
+#: src/tiffimage.cpp:210
+msgid "little endian encoded"
+msgstr ""
+
+#: src/tiffimage.cpp:211
+msgid "big endian encoded"
 msgstr ""
 
 #: src/minoltamn.cpp:56

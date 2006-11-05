@@ -143,7 +143,7 @@ int main(int argc, char* const argv[])
     Params::Files::const_iterator e = params.files_.end();
     for (Params::Files::const_iterator i = params.files_.begin(); i != e; ++i) {
         if (params.verbose_) {
-            std::cout << _("File ") << std::setw(w) << n++ << "/" << s << ": "
+            std::cout << _("File") << " " << std::setw(w) << n++ << "/" << s << ": "
                       << *i << std::endl;
         }
         task->run(*i);
@@ -196,8 +196,8 @@ void Params::version(std::ostream& os) const
 
 void Params::usage(std::ostream& os) const
 {
-    os << _("Usage: ") << progname()
-       << _(" [ options ] [ action ] file ...\n\n")
+    os << _("Usage:") << " " << progname()
+       << " " << _("[ options ] [ action ] file ...\n\n")
        << _("Manipulate the Exif metadata of images.\n");
 }
 
@@ -303,18 +303,18 @@ int Params::option(int opt, const std::string& optarg, int optopt)
     case 'l': directory_ = optarg; break;
     case 'S': suffix_ = optarg; break;
     case ':':
-        std::cerr << progname() << _(": Option -") << static_cast<char>(optopt)
-                  << _(" requires an argument\n");
+        std::cerr << progname() << ": " << _("Option") << " -" << static_cast<char>(optopt)
+                   << " " << _("requires an argument\n");
         rc = 1;
         break;
     case '?':
-        std::cerr << progname() << _(": Unrecognized option -")
+        std::cerr << progname() << ": " << _("Unrecognized option") << " -"
                   << static_cast<char>(optopt) << "\n";
         rc = 1;
         break;
     default:
         std::cerr << progname()
-                  << _(": getopt returned unexpected character code ")
+                  << ": " << _("getopt returned unexpected character code") << " " 
                   << std::hex << opt << "\n";
         rc = 1;
         break;
@@ -337,13 +337,13 @@ int Params::evalRename(int opt, const std::string& optarg)
     case Action::rename:
         if (opt == 'r' && !format_.empty()) {
             std::cerr << progname()
-                      << _(": Ignoring surplus option -r \"") << optarg << "\"\n";
+                      << ": " << _("Ignoring surplus option") << " -r \"" << optarg << "\"\n";
         }
         break;
     default:
         std::cerr << progname()
-                  << _(": Option -") << (char)opt
-                  << _(" is not compatible with a previous option\n");
+                  << ": " << _("Option") << " -" << (char)opt
+                  << " " << _("is not compatible with a previous option\n");
         rc = 1;
         break;
     }
@@ -358,18 +358,18 @@ int Params::evalAdjust(const std::string& optarg)
         action_ = Action::adjust;
         adjust_ = parseTime(optarg, adjustment_);
         if (!adjust_) {
-            std::cerr << progname() << _(": Error parsing -a option argument `")
+            std::cerr << progname() << ": " << _("Error parsing -a option argument") << " `" 
                       << optarg << "'\n";
             rc = 1;
         }
         break;
     case Action::adjust:
         std::cerr << progname()
-                  << _(": Ignoring surplus option -a ") << optarg << "\n";
+                  << ": " << _("Ignoring surplus option -a")  << " " << optarg << "\n";
         break;
     default:
         std::cerr << progname()
-                  << _(": Option -a is not compatible with a previous option\n");
+                  << ": " << _("Option -a is not compatible with a previous option\n");
         rc = 1;
         break;
     }
