@@ -40,9 +40,9 @@
 #ifdef EXV_ENABLE_NLS
 
 // Definition is in types.cpp
-const char* exvGettext(const char* str);
+const char* _exvGettext(const char* str);
 
-# define _(String) exvGettext (String)
+# define _(String) _exvGettext(String)
 # define N_(String) gettext_noop(String)
 
 #else /* NLS is disabled */
