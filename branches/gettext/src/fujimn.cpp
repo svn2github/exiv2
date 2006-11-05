@@ -185,9 +185,9 @@ namespace Exiv2 {
         TagInfo(0x0000, "Version", N_("Version"), 
                 N_("Fujifilm Makernote version"), 
                 fujiIfdId, makerTags, undefined, printValue),
-        TagInfo(0x0010, "InternalSerialNumber", N_("Internal Serial Number"), 
+        TagInfo(0x0010, "SerialNumber", N_("Serial Number"), 
                 N_("This number is unique, and contains the date of manufacture, "
-                   "but doesn't necessarily correspond to the camera body number"), 
+                   "but is not the same as the number printed on the camera body."), 
                 fujiIfdId, makerTags, asciiString, printValue),
         TagInfo(0x1000, "Quality", N_("Quality"), 
                 N_("Image quality setting"), 

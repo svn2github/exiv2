@@ -5,3 +5,4 @@ src/exiv2.cpp
 src/minoltamn.cpp
 src/fujimn.cpp
 src/sigmamn.cpp
+src/panasonicmn.cpp

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-05 08:51+0100\n"
+"POT-Creation-Date: 2006-11-05 10:06+0100\n"
 "PO-Revision-Date: 2005-03-21 09:30+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -979,7 +979,8 @@ msgstr "Nieokreślony"
 #: src/tags.cpp:471 src/tags.cpp:583 src/tags.cpp:590 src/minoltamn.cpp:291
 #: src/minoltamn.cpp:757 src/minoltamn.cpp:788 src/minoltamn.cpp:796
 #: src/minoltamn.cpp:956 src/minoltamn.cpp:987 src/fujimn.cpp:116
-#: src/fujimn.cpp:141
+#: src/fujimn.cpp:141 src/panasonicmn.cpp:76 src/panasonicmn.cpp:84
+#: src/panasonicmn.cpp:114
 msgid "Manual"
 msgstr "Ręczny"
 
@@ -987,12 +988,13 @@ msgstr "Ręczny"
 #: src/minoltamn.cpp:422 src/minoltamn.cpp:758 src/minoltamn.cpp:781
 #: src/minoltamn.cpp:820 src/minoltamn.cpp:957 src/minoltamn.cpp:979
 #: src/minoltamn.cpp:1005 src/fujimn.cpp:80 src/fujimn.cpp:107
-#: src/fujimn.cpp:115 src/fujimn.cpp:121
+#: src/fujimn.cpp:115 src/fujimn.cpp:121 src/panasonicmn.cpp:72
+#: src/panasonicmn.cpp:83
 msgid "Auto"
 msgstr "Auto"
 
 #: src/tags.cpp:473 src/minoltamn.cpp:289 src/minoltamn.cpp:755
-#: src/minoltamn.cpp:954
+#: src/minoltamn.cpp:954 src/panasonicmn.cpp:111
 msgid "Aperture priority"
 msgstr "Priorytet przysłony"
 
@@ -1023,6 +1025,9 @@ msgstr "Pejzaż"
 
 #: src/tags.cpp:483 src/tags.cpp:495 src/tags.cpp:633 src/tags.cpp:1791
 #: src/tags.cpp:1862 src/fujimn.cpp:220 src/fujimn.cpp:229 src/fujimn.cpp:238
+#: src/panasonicmn.cpp:194 src/panasonicmn.cpp:217 src/panasonicmn.cpp:230
+#: src/panasonicmn.cpp:233 src/panasonicmn.cpp:239 src/panasonicmn.cpp:257
+#: src/panasonicmn.cpp:263 src/panasonicmn.cpp:275
 msgid "Unknown"
 msgstr "Brak informacji"
 
@@ -1059,7 +1064,7 @@ msgid "Other"
 msgstr "Inny"
 
 #: src/tags.cpp:496 src/minoltamn.cpp:305 src/minoltamn.cpp:782
-#: src/minoltamn.cpp:980 src/fujimn.cpp:81
+#: src/minoltamn.cpp:980 src/fujimn.cpp:81 src/panasonicmn.cpp:73
 msgid "Daylight"
 msgstr "Światło dzienne"
 
@@ -1075,7 +1080,7 @@ msgstr "Żarówka wolframowa"
 
 #: src/tags.cpp:499 src/tags.cpp:719 src/minoltamn.cpp:647
 #: src/minoltamn.cpp:881 src/minoltamn.cpp:882 src/minoltamn.cpp:985
-#: src/minoltamn.cpp:1114 src/minoltamn.cpp:1115
+#: src/minoltamn.cpp:1114 src/minoltamn.cpp:1115 src/panasonicmn.cpp:77
 msgid "Flash"
 msgstr "Flesz"
 
@@ -1339,7 +1344,8 @@ msgid "Auto bracket"
 msgstr "Auto bracket"
 
 #: src/tags.cpp:595 src/minoltamn.cpp:77 src/minoltamn.cpp:331
-#: src/fujimn.cpp:153 src/fujimn.cpp:160
+#: src/fujimn.cpp:153 src/fujimn.cpp:160 src/panasonicmn.cpp:151
+#: src/panasonicmn.cpp:157
 msgid "Standard"
 msgstr "Standardowy"
 
@@ -1348,7 +1354,7 @@ msgid "Landscape"
 msgstr "Pejzaż"
 
 #: src/tags.cpp:597 src/minoltamn.cpp:63 src/minoltamn.cpp:409
-#: src/fujimn.cpp:122
+#: src/fujimn.cpp:122 src/panasonicmn.cpp:106
 msgid "Portrait"
 msgstr "Portret"
 
@@ -1379,7 +1385,8 @@ msgstr "Wysokie wzmocnienie na górze"
 
 #: src/tags.cpp:612 src/tags.cpp:619 src/tags.cpp:626 src/minoltamn.cpp:402
 #: src/minoltamn.cpp:774 src/minoltamn.cpp:972 src/fujimn.cpp:73
-#: src/fujimn.cpp:92 src/fujimn.cpp:100
+#: src/fujimn.cpp:92 src/fujimn.cpp:100 src/panasonicmn.cpp:65
+#: src/panasonicmn.cpp:105 src/panasonicmn.cpp:147 src/panasonicmn.cpp:178
 msgid "Normal"
 msgstr "Standard"
 
@@ -1392,14 +1399,18 @@ msgid "Hard"
 msgstr "Duża"
 
 #: src/tags.cpp:620 src/fujimn.cpp:94 src/fujimn.cpp:102
+#: src/panasonicmn.cpp:148 src/panasonicmn.cpp:150 src/panasonicmn.cpp:158
 msgid "Low"
 msgstr "Mało"
 
 #: src/tags.cpp:621 src/fujimn.cpp:93 src/fujimn.cpp:101
+#: src/panasonicmn.cpp:64 src/panasonicmn.cpp:149 src/panasonicmn.cpp:152
+#: src/panasonicmn.cpp:159
 msgid "High"
 msgstr "Dużo"
 
-#: src/tags.cpp:634 src/fujimn.cpp:213
+#: src/tags.cpp:634 src/fujimn.cpp:213 src/panasonicmn.cpp:113
+#: src/panasonicmn.cpp:204
 msgid "Macro"
 msgstr "Makro"
 
@@ -1993,6 +2004,7 @@ msgstr ""
 
 #: src/tags.cpp:852 src/minoltamn.cpp:599 src/minoltamn.cpp:872
 #: src/minoltamn.cpp:1105 src/fujimn.cpp:198 src/sigmamn.cpp:80
+#: src/panasonicmn.cpp:190
 msgid "White Balance"
 msgstr "Balans bieli"
 
@@ -2056,7 +2068,7 @@ msgstr "Ten znacznik określa stopień wzmocnienia całego obrazu."
 #: src/tags.cpp:874 src/minoltamn.cpp:489 src/minoltamn.cpp:677
 #: src/minoltamn.cpp:678 src/minoltamn.cpp:899 src/minoltamn.cpp:900
 #: src/minoltamn.cpp:1126 src/minoltamn.cpp:1127 src/sigmamn.cpp:98
-#: src/sigmamn.cpp:99
+#: src/sigmamn.cpp:99 src/panasonicmn.cpp:247
 msgid "Contrast"
 msgstr "Kontrastowość"
 
@@ -3127,7 +3139,7 @@ msgid ""
 msgstr ""
 
 #: src/datasets.cpp:305 src/minoltamn.cpp:288 src/minoltamn.cpp:754
-#: src/minoltamn.cpp:953
+#: src/minoltamn.cpp:953 src/panasonicmn.cpp:110
 #, fuzzy
 msgid "Program"
 msgstr "Tryb ekspozycji"
@@ -4033,11 +4045,11 @@ msgstr "Nasycenie"
 msgid "AdobeRGB"
 msgstr ""
 
-#: src/minoltamn.cpp:61
+#: src/minoltamn.cpp:61 src/panasonicmn.cpp:135
 msgid "Sepia"
 msgstr "Sepia"
 
-#: src/minoltamn.cpp:62
+#: src/minoltamn.cpp:62 src/panasonicmn.cpp:179
 #, fuzzy
 msgid "Natural"
 msgstr "Ręczny"
@@ -4065,7 +4077,7 @@ msgid "Night Portrait"
 msgstr "Portret"
 
 #: src/minoltamn.cpp:74 src/minoltamn.cpp:328 src/minoltamn.cpp:772
-#: src/minoltamn.cpp:970 src/fujimn.cpp:176
+#: src/minoltamn.cpp:970 src/fujimn.cpp:176 src/panasonicmn.cpp:67
 msgid "Raw"
 msgstr ""
 
@@ -4108,13 +4120,16 @@ msgstr "Mało"
 #: src/minoltamn.cpp:395 src/minoltamn.cpp:845 src/minoltamn.cpp:851
 #: src/minoltamn.cpp:857 src/minoltamn.cpp:1025 src/minoltamn.cpp:1031
 #: src/fujimn.cpp:65 src/fujimn.cpp:109 src/fujimn.cpp:146
+#: src/panasonicmn.cpp:92 src/panasonicmn.cpp:99 src/panasonicmn.cpp:131
+#: src/panasonicmn.cpp:140 src/panasonicmn.cpp:164 src/panasonicmn.cpp:353
 msgid "Off"
 msgstr "Wyłączony"
 
 #: src/minoltamn.cpp:92 src/minoltamn.cpp:357 src/minoltamn.cpp:396
 #: src/minoltamn.cpp:846 src/minoltamn.cpp:852 src/minoltamn.cpp:858
 #: src/minoltamn.cpp:1026 src/minoltamn.cpp:1032 src/fujimn.cpp:66
-#: src/fujimn.cpp:108 src/fujimn.cpp:147
+#: src/fujimn.cpp:108 src/fujimn.cpp:147 src/panasonicmn.cpp:98
+#: src/panasonicmn.cpp:352
 msgid "On"
 msgstr ""
 
@@ -4197,18 +4212,18 @@ msgstr "Długość obrazu"
 msgid "Size of the thumbnail"
 msgstr ""
 
-#: src/minoltamn.cpp:247
+#: src/minoltamn.cpp:247 src/panasonicmn.cpp:265
 #, fuzzy
 msgid "Color Mode"
 msgstr "Tryb koloru"
 
-#: src/minoltamn.cpp:248
+#: src/minoltamn.cpp:248 src/panasonicmn.cpp:266
 #, fuzzy
 msgid "Color mode"
 msgstr "Tryb koloru"
 
 #: src/minoltamn.cpp:250 src/minoltamn.cpp:605 src/minoltamn.cpp:869
-#: src/minoltamn.cpp:1102
+#: src/minoltamn.cpp:1102 src/panasonicmn.cpp:185
 #, fuzzy
 msgid "Image Quality"
 msgstr "Jakość"
@@ -4265,13 +4280,14 @@ msgstr "Ustawienie kontrastu"
 msgid "Camera Settings (for Dynax 5D model)"
 msgstr ""
 
-#: src/minoltamn.cpp:271
-msgid "PIM IFD"
+#: src/minoltamn.cpp:271 src/panasonicmn.cpp:271
+msgid "Print IM"
 msgstr ""
 
-#: src/minoltamn.cpp:272
-msgid "PIM information"
-msgstr ""
+#: src/minoltamn.cpp:272 src/panasonicmn.cpp:272
+#, fuzzy
+msgid "PrintIM information"
+msgstr "Ustawienia PrintIM"
 
 #: src/minoltamn.cpp:274
 #, fuzzy
@@ -4306,7 +4322,7 @@ msgid "Wireless"
 msgstr ""
 
 #: src/minoltamn.cpp:306 src/minoltamn.cpp:784 src/minoltamn.cpp:981
-#: src/fujimn.cpp:82
+#: src/fujimn.cpp:82 src/panasonicmn.cpp:74
 msgid "Cloudy"
 msgstr "Pochmurno"
 
@@ -4438,7 +4454,7 @@ msgstr "Flesz się nie uruchomił"
 msgid "Text"
 msgstr ""
 
-#: src/minoltamn.cpp:411
+#: src/minoltamn.cpp:411 src/panasonicmn.cpp:109
 #, fuzzy
 msgid "Night portrait"
 msgstr "Portret"
@@ -4475,7 +4491,7 @@ msgstr "format płaski"
 msgid "Natural color"
 msgstr ""
 
-#: src/minoltamn.cpp:453
+#: src/minoltamn.cpp:453 src/panasonicmn.cpp:78 src/panasonicmn.cpp:134
 msgid "Black and white"
 msgstr ""
 
@@ -4631,7 +4647,7 @@ msgstr "Liczba F."
 msgid "Macro Mode"
 msgstr "Tryb makro : "
 
-#: src/minoltamn.cpp:624
+#: src/minoltamn.cpp:624 src/panasonicmn.cpp:205
 #, fuzzy
 msgid "Macro mode"
 msgstr "Tryb makro : "
@@ -4894,11 +4910,12 @@ msgid "Wide focus zone"
 msgstr ""
 
 #: src/minoltamn.cpp:725 src/minoltamn.cpp:875 src/minoltamn.cpp:1144
-#: src/fujimn.cpp:216
+#: src/fujimn.cpp:216 src/panasonicmn.cpp:196
 msgid "Focus Mode"
 msgstr "Tryb ogniskowania"
 
 #: src/minoltamn.cpp:726 src/minoltamn.cpp:876 src/minoltamn.cpp:1145
+#: src/panasonicmn.cpp:197
 #, fuzzy
 msgid "Focus mode"
 msgstr "Tryb ogniskowania"
@@ -5001,15 +5018,15 @@ msgstr ""
 msgid "sRGB (Natural+)"
 msgstr ""
 
-#: src/minoltamn.cpp:838 src/minoltamn.cpp:1018
+#: src/minoltamn.cpp:838 src/minoltamn.cpp:1018 src/panasonicmn.cpp:171
 msgid "Horizontal (normal)"
 msgstr ""
 
-#: src/minoltamn.cpp:839 src/minoltamn.cpp:1019
+#: src/minoltamn.cpp:839 src/minoltamn.cpp:1019 src/panasonicmn.cpp:172
 msgid "Rotate 90 CW"
 msgstr ""
 
-#: src/minoltamn.cpp:840 src/minoltamn.cpp:1020
+#: src/minoltamn.cpp:840 src/minoltamn.cpp:1020 src/panasonicmn.cpp:173
 msgid "Rotate 270 CW"
 msgstr ""
 
@@ -5043,7 +5060,7 @@ msgid "Hue"
 msgstr ""
 
 #: src/minoltamn.cpp:913 src/minoltamn.cpp:914 src/minoltamn.cpp:1150
-#: src/minoltamn.cpp:1151
+#: src/minoltamn.cpp:1151 src/panasonicmn.cpp:259 src/panasonicmn.cpp:260
 #, fuzzy
 msgid "Rotation"
 msgstr "SRational"
@@ -5053,7 +5070,7 @@ msgstr "SRational"
 msgid "Noise Reduction"
 msgstr "Redukcja szumów"
 
-#: src/minoltamn.cpp:930 src/minoltamn.cpp:1169
+#: src/minoltamn.cpp:930 src/minoltamn.cpp:1169 src/panasonicmn.cpp:251
 #, fuzzy
 msgid "Noise reduction"
 msgstr "Redukcja szumów"
@@ -5217,7 +5234,7 @@ msgstr "Żarówka"
 msgid "None (black & white)"
 msgstr "Czarno-białe"
 
-#: src/fujimn.cpp:124
+#: src/fujimn.cpp:124 src/panasonicmn.cpp:108
 #, fuzzy
 msgid "Sports"
 msgstr "Punktowy"
@@ -5241,7 +5258,7 @@ msgstr ""
 msgid "Museum"
 msgstr "Średni"
 
-#: src/fujimn.cpp:131
+#: src/fujimn.cpp:131 src/panasonicmn.cpp:117
 #, fuzzy
 msgid "Party"
 msgstr "Częściowy"
@@ -5259,11 +5276,11 @@ msgstr ""
 msgid "Beach"
 msgstr ""
 
-#: src/fujimn.cpp:136
+#: src/fujimn.cpp:136 src/panasonicmn.cpp:118
 msgid "Snow"
 msgstr ""
 
-#: src/fujimn.cpp:137
+#: src/fujimn.cpp:137 src/panasonicmn.cpp:116
 msgid "Fireworks"
 msgstr ""
 
@@ -5349,18 +5366,19 @@ msgstr "Wersja Exif"
 msgid "Fujifilm Makernote version"
 msgstr "Wersja Exif"
 
-#: src/fujimn.cpp:188
+#: src/fujimn.cpp:188 src/sigmamn.cpp:66 src/panasonicmn.cpp:225
 #, fuzzy
-msgid "Internal Serial Number"
+msgid "Serial Number"
 msgstr "Numer seryjny"
 
-#: src/fujimn.cpp:189
+#: src/fujimn.cpp:189 src/panasonicmn.cpp:226
 msgid ""
-"This number is unique, and contains the date of manufacture, but doesn't "
-"necessarily correspond to the camera body number"
+"This number is unique, and contains the date of manufacture, but is not the "
+"same as the number printed on the camera body."
 msgstr ""
 
 #: src/fujimn.cpp:192 src/sigmamn.cpp:122 src/sigmamn.cpp:123
+#: src/panasonicmn.cpp:184
 #, fuzzy
 msgid "Quality"
 msgstr "Jakość"
@@ -5375,7 +5393,7 @@ msgstr "Szerokość obrazu"
 msgid "Sharpness setting"
 msgstr "Ustawienie ostrości"
 
-#: src/fujimn.cpp:199
+#: src/fujimn.cpp:199 src/panasonicmn.cpp:191
 #, fuzzy
 msgid "White balance setting"
 msgstr "Ustawienie balansu bieli"
@@ -5395,7 +5413,7 @@ msgstr "Duże nasycenie"
 msgid "Tone"
 msgstr "Brak"
 
-#: src/fujimn.cpp:205
+#: src/fujimn.cpp:205 src/panasonicmn.cpp:248
 #, fuzzy
 msgid "Contrast setting"
 msgstr "Krzywa kontrastu"
@@ -5447,12 +5465,12 @@ msgstr ""
 msgid "Continuous shooting or auto bracketing setting"
 msgstr ""
 
-#: src/fujimn.cpp:234
+#: src/fujimn.cpp:234 src/panasonicmn.cpp:244
 #, fuzzy
 msgid "Sequence Number"
 msgstr " / Numer sekwencyjny : %u"
 
-#: src/fujimn.cpp:235
+#: src/fujimn.cpp:235 src/panasonicmn.cpp:245
 #, fuzzy
 msgid "Sequence number"
 msgstr " / Numer sekwencyjny : %u"
@@ -5593,11 +5611,6 @@ msgstr "Numer zdjęcia"
 msgid "Unknown FujiMakerNote tag"
 msgstr "Nieznana wersja Exif"
 
-#: src/sigmamn.cpp:66
-#, fuzzy
-msgid "Serial Number"
-msgstr "Numer seryjny"
-
 #: src/sigmamn.cpp:67
 #, fuzzy
 msgid "Camera serial number"
@@ -5698,6 +5711,229 @@ msgstr "Auto bracket"
 msgid "Unknown SigmaMakerNote tag"
 msgstr "Nieznana wersja Exif"
 
+#: src/panasonicmn.cpp:66
+#, fuzzy
+msgid "Very High"
+msgstr "Dużo"
+
+#: src/panasonicmn.cpp:75
+msgid "Halogen"
+msgstr ""
+
+#: src/panasonicmn.cpp:85
+#, fuzzy
+msgid "Auto, focus button"
+msgstr "AI Focus"
+
+#: src/panasonicmn.cpp:86
+#, fuzzy
+msgid "Auto, continuous"
+msgstr "ciągły"
+
+#: src/panasonicmn.cpp:91
+msgid "On, Mode 1"
+msgstr ""
+
+#: src/panasonicmn.cpp:93
+msgid "On, Mode 2"
+msgstr ""
+
+#: src/panasonicmn.cpp:100
+#, fuzzy
+msgid "Tele-macro"
+msgstr "Makro"
+
+#: src/panasonicmn.cpp:107
+#, fuzzy
+msgid "Scenery"
+msgstr "środek"
+
+#: src/panasonicmn.cpp:112
+#, fuzzy
+msgid "Shutter-speed priority"
+msgstr "Priorytet migawki"
+
+#: src/panasonicmn.cpp:115
+msgid "Panning"
+msgstr ""
+
+#: src/panasonicmn.cpp:119
+#, fuzzy
+msgid "Night scenery"
+msgstr "Scena nocna"
+
+#: src/panasonicmn.cpp:120
+#, fuzzy
+msgid "Food"
+msgstr "Dobra"
+
+#: src/panasonicmn.cpp:125
+msgid "Yes"
+msgstr "Tak"
+
+#: src/panasonicmn.cpp:126
+msgid "No"
+msgstr "Nie"
+
+#: src/panasonicmn.cpp:132
+msgid "Warm"
+msgstr ""
+
+#: src/panasonicmn.cpp:133
+#, fuzzy
+msgid "Cool"
+msgstr "Tryb koloru"
+
+#: src/panasonicmn.cpp:141
+#, fuzzy
+msgid "Low/High quality"
+msgstr "Szerokość obrazu"
+
+#: src/panasonicmn.cpp:142
+#, fuzzy
+msgid "Infinite"
+msgstr "Nieskończoność"
+
+#: src/panasonicmn.cpp:165
+#, fuzzy
+msgid "10s"
+msgstr "100"
+
+#: src/panasonicmn.cpp:166
+msgid "2s"
+msgstr ""
+
+#: src/panasonicmn.cpp:187
+#, fuzzy
+msgid "Firmware Version"
+msgstr "Wersja firmware"
+
+#: src/panasonicmn.cpp:188
+#, fuzzy
+msgid "Firmware version"
+msgstr "Wersja firmware"
+
+#: src/panasonicmn.cpp:199
+#, fuzzy
+msgid "Spot Mode"
+msgstr "Tryb pomiaru"
+
+#: src/panasonicmn.cpp:199
+#, fuzzy
+msgid "Spot mode"
+msgstr "Portret"
+
+#: src/panasonicmn.cpp:201
+#, fuzzy
+msgid "ImageStabilizer"
+msgstr "Orientacja"
+
+#: src/panasonicmn.cpp:202
+#, fuzzy
+msgid "Image stabilizer"
+msgstr "Orientacja"
+
+#: src/panasonicmn.cpp:207
+#, fuzzy
+msgid "Shooting Mode"
+msgstr " / Tryb łatwego robienia zdjęć : "
+
+#: src/panasonicmn.cpp:208
+#, fuzzy
+msgid "Shooting mode"
+msgstr " / Tryb łatwego robienia zdjęć : "
+
+#: src/panasonicmn.cpp:210 src/panasonicmn.cpp:211
+#, fuzzy
+msgid "Audio"
+msgstr "Auto"
+
+#: src/panasonicmn.cpp:213
+#, fuzzy
+msgid "Data Dump"
+msgstr "format płaski"
+
+#: src/panasonicmn.cpp:214
+#, fuzzy
+msgid "Data dump"
+msgstr "format płaski"
+
+#: src/panasonicmn.cpp:219
+#, fuzzy
+msgid "White Balance Bias"
+msgstr "Balans bieli"
+
+#: src/panasonicmn.cpp:220
+#, fuzzy
+msgid "White balance adjustment"
+msgstr "Dokładne ustawienie balansu bieli"
+
+#: src/panasonicmn.cpp:222
+#, fuzzy
+msgid "FlashBias"
+msgstr "Użyto flesza"
+
+#: src/panasonicmn.cpp:223
+#, fuzzy
+msgid "Flash bias"
+msgstr "Użyto flesza"
+
+#: src/panasonicmn.cpp:235
+#, fuzzy
+msgid "Color Effect"
+msgstr "Tryb koloru"
+
+#: src/panasonicmn.cpp:236
+#, fuzzy
+msgid "Color effect"
+msgstr "Tryb koloru"
+
+#: src/panasonicmn.cpp:241
+#, fuzzy
+msgid "Burst Mode"
+msgstr "Tryb ogniskowania"
+
+#: src/panasonicmn.cpp:242
+#, fuzzy
+msgid "Burst mode"
+msgstr "Tryb ogniskowania"
+
+#: src/panasonicmn.cpp:250
+#, fuzzy
+msgid "NoiseReduction"
+msgstr "Redukcja szumów"
+
+#: src/panasonicmn.cpp:253
+#, fuzzy
+msgid "Self Timer"
+msgstr "Centymetr"
+
+#: src/panasonicmn.cpp:254
+#, fuzzy
+msgid "Self timer"
+msgstr "Centymetr"
+
+#: src/panasonicmn.cpp:268
+msgid "Travel Day"
+msgstr ""
+
+#: src/panasonicmn.cpp:269
+msgid "Travel day"
+msgstr ""
+
+#: src/panasonicmn.cpp:279
+#, fuzzy
+msgid "Unknown PanasonicMakerNote tag"
+msgstr "Nieznana wersja Exif"
+
+#: src/panasonicmn.cpp:364
+msgid " EV"
+msgstr ""
+
+#, fuzzy
+#~ msgid "Internal Serial Number"
+#~ msgstr "Numer seryjny"
+
 #~ msgid "Invalid format '%s', expected '%s'."
 #~ msgstr "Błędny format '%s', oczekiwano '%s'."
 
@@ -5706,10 +5942,6 @@ msgstr "Nieznana wersja Exif"
 
 #~ msgid "Invalid number of components (%i, expected %i or %i)."
 #~ msgstr "Błędna liczba składowych (%i, a oczekiwano %i lub %i)."
-
-#, fuzzy
-#~ msgid "macro"
-#~ msgstr "Makro"
 
 #~ msgid "normal"
 #~ msgstr "normalny"
@@ -5774,9 +6006,6 @@ msgstr "Nieznana wersja Exif"
 #~ msgid "high"
 #~ msgstr "Dużo"
 
-#~ msgid "100"
-#~ msgstr "100"
-
 #~ msgid "200"
 #~ msgstr "200"
 
@@ -5800,9 +6029,6 @@ msgstr "Nieznana wersja Exif"
 
 #~ msgid "right"
 #~ msgstr "prawy"
-
-#~ msgid "center"
-#~ msgstr "środek"
 
 #~ msgid "left"
 #~ msgstr "lewy"
@@ -5855,10 +6081,6 @@ msgstr "Nieznana wersja Exif"
 #~ msgstr " / Tryb ciągłego przesuwania : "
 
 #, fuzzy
-#~ msgid "Easy shooting mode"
-#~ msgstr " / Tryb łatwego robienia zdjęć : "
-
-#, fuzzy
 #~ msgid "ISO"
 #~ msgstr "ISO80"
 
@@ -5889,10 +6111,6 @@ msgstr "Nieznana wersja Exif"
 #, fuzzy
 #~ msgid "Zoomed resolution"
 #~ msgstr "Rozdzielczość X"
-
-#, fuzzy
-#~ msgid "Flash bias"
-#~ msgstr "Użyto flesza"
 
 #, fuzzy
 #~ msgid "Subject distance"
@@ -5973,9 +6191,6 @@ msgstr "Nieznana wersja Exif"
 
 #~ msgid "Flash fired."
 #~ msgstr "Flesz się uruchomił."
-
-#~ msgid "Yes"
-#~ msgstr "Tak"
 
 #~ msgid "W/o strobe"
 #~ msgstr "Bez światła stroboskopowego"
@@ -6332,9 +6547,6 @@ msgstr "Nieznana wersja Exif"
 #~ msgid "SHQ"
 #~ msgstr "SHQ"
 
-#~ msgid "No"
-#~ msgstr "Nie"
-
 #~ msgid "1x"
 #~ msgstr "1x"
 
@@ -6398,9 +6610,6 @@ msgstr "Nieznana wersja Exif"
 #~ msgid "Image Sharpening"
 #~ msgstr "Wyostrzanie obrazu"
 
-#~ msgid "Whitebalance fine ajustment"
-#~ msgstr "Dokładne ustawienie balansu bieli"
-
 #~ msgid "Whitebalance RB"
 #~ msgstr "Balans bieli RB"
 
@@ -6455,9 +6664,6 @@ msgstr "Nieznana wersja Exif"
 #~ msgid "Night-scene"
 #~ msgstr "Scena nocna"
 
-#~ msgid "Good"
-#~ msgstr "Dobra"
-
 #~ msgid "Better"
 #~ msgstr "Lepsza"
 
@@ -6466,9 +6672,6 @@ msgstr "Nieznana wersja Exif"
 
 #~ msgid "Flash off"
 #~ msgstr "Flesz wyłączony"
-
-#~ msgid "PrintIM Settings"
-#~ msgstr "Ustawienia PrintIM"
 
 #~ msgid "TimeZone"
 #~ msgstr "Strefa czasowa"
