@@ -20,6 +20,7 @@
  */
 /*
   File:      i18n.h
+  Brief:     i18n definitions. Do not use. This is an Exiv2 internal header. 
   Version:   $Rev$
   Author(s): Gilles Caulier (gc) <caulier.gilles@kdemail.net>
   History:   01-Nov-06, gc: created
@@ -33,39 +34,22 @@
 # include "exv_conf.h"
 #endif
 
+/* Includes <libintl.h> and provides most of the defines */
 #include "gettext.h"
 
 #ifdef EXV_ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (EXV_PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  if ! defined(textdomain)
-#    define textdomain(String) (String)
-#  endif
-#  if ! defined(gettext)
-#    define gettext(String) (String)
-#  endif
-#  if ! defined(dgettext)
-#    define dgettext(Domain,Message) (Message)
-#  endif
-#  if ! defined(dcgettext)
-#    define dcgettext(Domain,Message,Type) (Message)
-#  endif
-#  if ! defined(bindtextdomain)
-#    define bindtextdomain(Domain,Directory) (Domain)
-#  endif
-#  if ! defined(_)
-#    define _(String) (String)
-#  endif
-#  if ! defined(N_)
-#    define N_(String) (String)
-#  endif
-#endif
+
+// Definition is in types.cpp
+const char* exvGettext(const char* str);
+
+# define _(String) exvGettext (String)
+# define N_(String) gettext_noop(String)
+
+#else /* NLS is disabled */
+
+# define _(String) (String)
+# define N_(String) String
+
+#endif /* EXV_ENABLE_NLS */
 
 #endif /* I18N_H_ */

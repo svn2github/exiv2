@@ -335,3 +335,21 @@ namespace Exiv2 {
     } // exifTime
 
 }                                       // namespace Exiv2
+
+#ifdef EXV_ENABLE_NLS
+// Declaration is in i18n.h
+const char* exvGettext(const char* str)
+{
+    static bool exvGettextInitialized = false;
+
+    if (!exvGettextInitialized) {
+        bindtextdomain(EXV_PACKAGE, EXV_LOCALEDIR);
+# ifdef HAVE_BIND_TEXTDOMAIN_CODESET
+        bind_textdomain_codeset (EXV_PACKAGE, "UTF-8");
+# endif
+        exvGettextInitialized = true;
+    }
+  
+    return dgettext(EXV_PACKAGE, str);
+}
+#endif // EXV_ENABLE_NLS

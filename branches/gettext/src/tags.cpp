@@ -1221,12 +1221,12 @@ namespace Exiv2 {
     {
         if (isExifIfd(ifdId)) {
             int idx = tagInfoIdx(tag, ifdId);
-            if (idx == -1) return unknownTag.title_;
-            return tagInfos_[ifdId][idx].title_;
+            if (idx == -1) return _(unknownTag.title_);
+            return _(tagInfos_[ifdId][idx].title_);
         }
         if (isMakerIfd(ifdId)) {
             const TagInfo* tagInfo = makerTagInfo(tag, ifdId);
-            if (tagInfo != 0) return tagInfo->title_;
+            if (tagInfo != 0) return _(tagInfo->title_);
         }
         return "";
     } // ExifTags::tagLabel
@@ -1235,12 +1235,12 @@ namespace Exiv2 {
     {
         if (isExifIfd(ifdId)) {
             int idx = tagInfoIdx(tag, ifdId);
-            if (idx == -1) return unknownTag.desc_;
-            return tagInfos_[ifdId][idx].desc_;
+            if (idx == -1) return _(unknownTag.desc_);
+            return _(tagInfos_[ifdId][idx].desc_);
         }
         if (isMakerIfd(ifdId)) {
             const TagInfo* tagInfo = makerTagInfo(tag, ifdId);
-            if (tagInfo != 0) return tagInfo->desc_;
+            if (tagInfo != 0) return _(tagInfo->desc_);
         }
         return "";
     } // ExifTags::tagDesc
@@ -1264,13 +1264,13 @@ namespace Exiv2 {
     {
         if (isExifIfd(ifdId)) {
             int idx = tagInfoIdx(tag, ifdId);
-            if (idx == -1) return sectionInfo_[unknownTag.sectionId_].desc_;
+            if (idx == -1) return _(sectionInfo_[unknownTag.sectionId_].desc_);
             const TagInfo* tagInfo = tagInfos_[ifdId];
-            return sectionInfo_[tagInfo[idx].sectionId_].desc_;
+            return _(sectionInfo_[tagInfo[idx].sectionId_].desc_);
         }
         if (isMakerIfd(ifdId)) {
             const TagInfo* tagInfo = makerTagInfo(tag, ifdId);
-            if (tagInfo != 0) return sectionInfo_[tagInfo->sectionId_].desc_;
+            if (tagInfo != 0) return _(sectionInfo_[tagInfo->sectionId_].desc_);
         }
         return "";
     } // ExifTags::sectionDesc
