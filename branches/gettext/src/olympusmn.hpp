@@ -127,6 +127,8 @@ namespace Exiv2 {
         static std::ostream& print0x0200(std::ostream& os, const Value& value);
         //! Print Digital Zoom Factor
         static std::ostream& print0x0204(std::ostream& os, const Value& value);
+        //! Print White Balance Mode
+        static std::ostream& print0x1015(std::ostream& os, const Value& value);
         //@}
 
         //! @cond IGNORE

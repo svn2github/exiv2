@@ -7,3 +7,4 @@ src/minoltamn.cpp
 src/fujimn.cpp
 src/sigmamn.cpp
 src/panasonicmn.cpp
+src/olympusmn.cpp

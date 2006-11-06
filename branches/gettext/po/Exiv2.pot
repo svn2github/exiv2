@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-05 13:44+0100\n"
+"POT-Creation-Date: 2006-11-06 12:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -336,7 +336,7 @@ msgstr ""
 msgid "A general indication of the kind of data contained in this subfile."
 msgstr ""
 
-#: src/tags.cpp:226
+#: src/tags.cpp:226 src/olympusmn.cpp:344
 msgid "Image Width"
 msgstr ""
 
@@ -821,7 +821,7 @@ msgstr ""
 #: src/minoltamn.cpp:757 src/minoltamn.cpp:788 src/minoltamn.cpp:796
 #: src/minoltamn.cpp:956 src/minoltamn.cpp:987 src/fujimn.cpp:116
 #: src/fujimn.cpp:141 src/panasonicmn.cpp:76 src/panasonicmn.cpp:84
-#: src/panasonicmn.cpp:114
+#: src/panasonicmn.cpp:114 src/olympusmn.cpp:103
 msgid "Manual"
 msgstr ""
 
@@ -830,7 +830,8 @@ msgstr ""
 #: src/minoltamn.cpp:820 src/minoltamn.cpp:957 src/minoltamn.cpp:979
 #: src/minoltamn.cpp:1005 src/fujimn.cpp:80 src/fujimn.cpp:107
 #: src/fujimn.cpp:115 src/fujimn.cpp:121 src/panasonicmn.cpp:72
-#: src/panasonicmn.cpp:83
+#: src/panasonicmn.cpp:83 src/olympusmn.cpp:102 src/olympusmn.cpp:511
+#: src/olympusmn.cpp:517 src/olympusmn.cpp:518
 msgid "Auto"
 msgstr ""
 
@@ -864,7 +865,15 @@ msgstr ""
 #: src/tags.cpp:1862 src/fujimn.cpp:220 src/fujimn.cpp:229 src/fujimn.cpp:238
 #: src/panasonicmn.cpp:194 src/panasonicmn.cpp:217 src/panasonicmn.cpp:230
 #: src/panasonicmn.cpp:233 src/panasonicmn.cpp:239 src/panasonicmn.cpp:257
-#: src/panasonicmn.cpp:263 src/panasonicmn.cpp:275
+#: src/panasonicmn.cpp:263 src/panasonicmn.cpp:275 src/olympusmn.cpp:183
+#: src/olympusmn.cpp:189 src/olympusmn.cpp:192 src/olympusmn.cpp:234
+#: src/olympusmn.cpp:237 src/olympusmn.cpp:264 src/olympusmn.cpp:267
+#: src/olympusmn.cpp:273 src/olympusmn.cpp:282 src/olympusmn.cpp:288
+#: src/olympusmn.cpp:291 src/olympusmn.cpp:294 src/olympusmn.cpp:297
+#: src/olympusmn.cpp:300 src/olympusmn.cpp:303 src/olympusmn.cpp:306
+#: src/olympusmn.cpp:309 src/olympusmn.cpp:315 src/olympusmn.cpp:318
+#: src/olympusmn.cpp:351 src/olympusmn.cpp:354 src/olympusmn.cpp:357
+#: src/olympusmn.cpp:360
 msgid "Unknown"
 msgstr ""
 
@@ -1154,6 +1163,7 @@ msgid "Night scene"
 msgstr ""
 
 #: src/tags.cpp:603 src/minoltamn.cpp:408 src/minoltamn.cpp:502
+#: src/olympusmn.cpp:94 src/olympusmn.cpp:495
 msgid "None"
 msgstr ""
 
@@ -1177,30 +1187,34 @@ msgstr ""
 #: src/minoltamn.cpp:774 src/minoltamn.cpp:972 src/fujimn.cpp:73
 #: src/fujimn.cpp:92 src/fujimn.cpp:100 src/panasonicmn.cpp:65
 #: src/panasonicmn.cpp:105 src/panasonicmn.cpp:147 src/panasonicmn.cpp:178
+#: src/olympusmn.cpp:108 src/olympusmn.cpp:116 src/olympusmn.cpp:467
 msgid "Normal"
 msgstr ""
 
 #: src/tags.cpp:613 src/tags.cpp:627 src/minoltamn.cpp:403
+#: src/olympusmn.cpp:110
 msgid "Soft"
 msgstr ""
 
 #: src/tags.cpp:614 src/tags.cpp:628 src/minoltamn.cpp:401
+#: src/olympusmn.cpp:109
 msgid "Hard"
 msgstr ""
 
 #: src/tags.cpp:620 src/fujimn.cpp:94 src/fujimn.cpp:102
 #: src/panasonicmn.cpp:148 src/panasonicmn.cpp:150 src/panasonicmn.cpp:158
+#: src/olympusmn.cpp:117
 msgid "Low"
 msgstr ""
 
 #: src/tags.cpp:621 src/fujimn.cpp:93 src/fujimn.cpp:101
 #: src/panasonicmn.cpp:64 src/panasonicmn.cpp:149 src/panasonicmn.cpp:152
-#: src/panasonicmn.cpp:159
+#: src/panasonicmn.cpp:159 src/olympusmn.cpp:115
 msgid "High"
 msgstr ""
 
 #: src/tags.cpp:634 src/fujimn.cpp:213 src/panasonicmn.cpp:113
-#: src/panasonicmn.cpp:204
+#: src/panasonicmn.cpp:204 src/olympusmn.cpp:138
 msgid "Macro"
 msgstr ""
 
@@ -1343,6 +1357,7 @@ msgid "The lens aperture. The unit is the APEX value."
 msgstr ""
 
 #: src/tags.cpp:697 src/minoltamn.cpp:713 src/minoltamn.cpp:714
+#: src/olympusmn.cpp:215
 msgid "Brightness"
 msgstr ""
 
@@ -1678,7 +1693,7 @@ msgstr ""
 
 #: src/tags.cpp:852 src/minoltamn.cpp:599 src/minoltamn.cpp:872
 #: src/minoltamn.cpp:1105 src/fujimn.cpp:198 src/sigmamn.cpp:80
-#: src/panasonicmn.cpp:190
+#: src/panasonicmn.cpp:190 src/olympusmn.cpp:269
 msgid "White Balance"
 msgstr ""
 
@@ -1730,7 +1745,7 @@ msgstr ""
 #: src/tags.cpp:874 src/minoltamn.cpp:489 src/minoltamn.cpp:677
 #: src/minoltamn.cpp:678 src/minoltamn.cpp:899 src/minoltamn.cpp:900
 #: src/minoltamn.cpp:1126 src/minoltamn.cpp:1127 src/sigmamn.cpp:98
-#: src/sigmamn.cpp:99 src/panasonicmn.cpp:247
+#: src/sigmamn.cpp:99 src/panasonicmn.cpp:247 src/olympusmn.cpp:329
 msgid "Contrast"
 msgstr ""
 
@@ -2206,7 +2221,7 @@ msgstr ""
 msgid "Related Image Width"
 msgstr ""
 
-#: src/tags.cpp:1103
+#: src/tags.cpp:1103 src/olympusmn.cpp:345
 msgid "Image width"
 msgstr ""
 
@@ -2214,7 +2229,7 @@ msgstr ""
 msgid "Related Image Length"
 msgstr ""
 
-#: src/tags.cpp:1106
+#: src/tags.cpp:1106 src/olympusmn.cpp:348
 msgid "Image height"
 msgstr ""
 
@@ -3615,6 +3630,7 @@ msgstr ""
 
 #: src/minoltamn.cpp:74 src/minoltamn.cpp:328 src/minoltamn.cpp:772
 #: src/minoltamn.cpp:970 src/fujimn.cpp:176 src/panasonicmn.cpp:67
+#: src/olympusmn.cpp:75
 msgid "Raw"
 msgstr ""
 
@@ -3654,6 +3670,7 @@ msgstr ""
 #: src/fujimn.cpp:65 src/fujimn.cpp:109 src/fujimn.cpp:146
 #: src/panasonicmn.cpp:92 src/panasonicmn.cpp:99 src/panasonicmn.cpp:131
 #: src/panasonicmn.cpp:140 src/panasonicmn.cpp:164 src/panasonicmn.cpp:353
+#: src/olympusmn.cpp:66 src/olympusmn.cpp:80 src/olympusmn.cpp:87
 msgid "Off"
 msgstr ""
 
@@ -3661,7 +3678,8 @@ msgstr ""
 #: src/minoltamn.cpp:846 src/minoltamn.cpp:852 src/minoltamn.cpp:858
 #: src/minoltamn.cpp:1026 src/minoltamn.cpp:1032 src/fujimn.cpp:66
 #: src/fujimn.cpp:108 src/fujimn.cpp:147 src/panasonicmn.cpp:98
-#: src/panasonicmn.cpp:352
+#: src/panasonicmn.cpp:352 src/olympusmn.cpp:67 src/olympusmn.cpp:81
+#: src/olympusmn.cpp:88
 msgid "On"
 msgstr ""
 
@@ -3714,7 +3732,7 @@ msgstr ""
 msgid "Compressed image size"
 msgstr ""
 
-#: src/minoltamn.cpp:238
+#: src/minoltamn.cpp:238 src/olympusmn.cpp:365
 msgid "Thumbnail"
 msgstr ""
 
@@ -3722,7 +3740,7 @@ msgstr ""
 msgid "Jpeg thumbnail 640x480 pixels"
 msgstr ""
 
-#: src/minoltamn.cpp:241
+#: src/minoltamn.cpp:241 src/olympusmn.cpp:368
 msgid "Thumbnail Offset"
 msgstr ""
 
@@ -3730,7 +3748,7 @@ msgstr ""
 msgid "Offset of the thumbnail"
 msgstr ""
 
-#: src/minoltamn.cpp:244
+#: src/minoltamn.cpp:244 src/olympusmn.cpp:371
 msgid "Thumbnail Length"
 msgstr ""
 
@@ -3796,11 +3814,11 @@ msgstr ""
 msgid "Camera Settings (for Dynax 5D model)"
 msgstr ""
 
-#: src/minoltamn.cpp:271 src/panasonicmn.cpp:271
+#: src/minoltamn.cpp:271 src/panasonicmn.cpp:271 src/olympusmn.cpp:197
 msgid "Print IM"
 msgstr ""
 
-#: src/minoltamn.cpp:272 src/panasonicmn.cpp:272
+#: src/minoltamn.cpp:272 src/panasonicmn.cpp:272 src/olympusmn.cpp:198
 msgid "PrintIM information"
 msgstr ""
 
@@ -4068,6 +4086,7 @@ msgid "Flash Mode"
 msgstr ""
 
 #: src/minoltamn.cpp:597 src/minoltamn.cpp:648 src/minoltamn.cpp:885
+#: src/olympusmn.cpp:219
 msgid "Flash mode"
 msgstr ""
 
@@ -4116,11 +4135,11 @@ msgstr ""
 msgid "Macro Mode"
 msgstr ""
 
-#: src/minoltamn.cpp:624 src/panasonicmn.cpp:205
+#: src/minoltamn.cpp:624 src/panasonicmn.cpp:205 src/olympusmn.cpp:139
 msgid "Macro mode"
 msgstr ""
 
-#: src/minoltamn.cpp:626
+#: src/minoltamn.cpp:626 src/olympusmn.cpp:144
 msgid "Digital Zoom"
 msgstr ""
 
@@ -4164,7 +4183,7 @@ msgstr ""
 msgid "Focal length"
 msgstr ""
 
-#: src/minoltamn.cpp:644
+#: src/minoltamn.cpp:644 src/olympusmn.cpp:242
 msgid "Focus Distance"
 msgstr ""
 
@@ -4339,12 +4358,12 @@ msgid "Wide focus zone"
 msgstr ""
 
 #: src/minoltamn.cpp:725 src/minoltamn.cpp:875 src/minoltamn.cpp:1144
-#: src/fujimn.cpp:216 src/panasonicmn.cpp:196
+#: src/fujimn.cpp:216 src/panasonicmn.cpp:196 src/olympusmn.cpp:239
 msgid "Focus Mode"
 msgstr ""
 
 #: src/minoltamn.cpp:726 src/minoltamn.cpp:876 src/minoltamn.cpp:1145
-#: src/panasonicmn.cpp:197
+#: src/panasonicmn.cpp:197 src/olympusmn.cpp:240
 msgid "Focus mode"
 msgstr ""
 
@@ -4475,11 +4494,12 @@ msgstr ""
 msgid "Rotation"
 msgstr ""
 
-#: src/minoltamn.cpp:929 src/minoltamn.cpp:1168
+#: src/minoltamn.cpp:929 src/minoltamn.cpp:1168 src/olympusmn.cpp:377
 msgid "Noise Reduction"
 msgstr ""
 
 #: src/minoltamn.cpp:930 src/minoltamn.cpp:1169 src/panasonicmn.cpp:251
+#: src/olympusmn.cpp:378
 msgid "Noise reduction"
 msgstr ""
 
@@ -4736,6 +4756,7 @@ msgid "Fujifilm Makernote version"
 msgstr ""
 
 #: src/fujimn.cpp:188 src/sigmamn.cpp:66 src/panasonicmn.cpp:225
+#: src/olympusmn.cpp:194
 msgid "Serial Number"
 msgstr ""
 
@@ -4746,11 +4767,11 @@ msgid ""
 msgstr ""
 
 #: src/fujimn.cpp:192 src/sigmamn.cpp:122 src/sigmamn.cpp:123
-#: src/panasonicmn.cpp:184
+#: src/panasonicmn.cpp:184 src/olympusmn.cpp:135
 msgid "Quality"
 msgstr ""
 
-#: src/fujimn.cpp:193
+#: src/fujimn.cpp:193 src/olympusmn.cpp:136
 msgid "Image quality setting"
 msgstr ""
 
@@ -4774,7 +4795,7 @@ msgstr ""
 msgid "Tone"
 msgstr ""
 
-#: src/fujimn.cpp:205 src/panasonicmn.cpp:248
+#: src/fujimn.cpp:205 src/panasonicmn.cpp:248 src/olympusmn.cpp:330
 msgid "Contrast setting"
 msgstr ""
 
@@ -4822,7 +4843,7 @@ msgstr ""
 msgid "Sequence Number"
 msgstr ""
 
-#: src/fujimn.cpp:235 src/panasonicmn.cpp:245
+#: src/fujimn.cpp:235 src/panasonicmn.cpp:245 src/olympusmn.cpp:475
 msgid "Sequence number"
 msgstr ""
 
@@ -5106,7 +5127,7 @@ msgstr ""
 msgid "2s"
 msgstr ""
 
-#: src/panasonicmn.cpp:187
+#: src/panasonicmn.cpp:187 src/olympusmn.cpp:153
 msgid "Firmware Version"
 msgstr ""
 
@@ -5208,4 +5229,444 @@ msgstr ""
 
 #: src/panasonicmn.cpp:364
 msgid " EV"
+msgstr ""
+
+#: src/olympusmn.cpp:72
+msgid "Standard Quality (SQ)"
+msgstr ""
+
+#: src/olympusmn.cpp:73
+msgid "High Quality (HQ)"
+msgstr ""
+
+#: src/olympusmn.cpp:74
+msgid "Super High Quality (SHQ)"
+msgstr ""
+
+#: src/olympusmn.cpp:82
+msgid "Super macro"
+msgstr ""
+
+#: src/olympusmn.cpp:89
+msgid "On (preset)"
+msgstr ""
+
+#: src/olympusmn.cpp:95
+msgid "Internal"
+msgstr ""
+
+#: src/olympusmn.cpp:96
+msgid "External"
+msgstr ""
+
+#: src/olympusmn.cpp:97
+msgid "Internal + External"
+msgstr ""
+
+#: src/olympusmn.cpp:122
+msgid "Interlaced"
+msgstr ""
+
+#: src/olympusmn.cpp:123
+msgid "Progressive"
+msgstr ""
+
+#: src/olympusmn.cpp:132
+msgid "Special Mode"
+msgstr ""
+
+#: src/olympusmn.cpp:133
+msgid "Picture taking mode"
+msgstr ""
+
+#: src/olympusmn.cpp:141
+msgid "Black & White Mode"
+msgstr ""
+
+#: src/olympusmn.cpp:142
+msgid "Black and white mode"
+msgstr ""
+
+#: src/olympusmn.cpp:145
+msgid "Digital zoom ratio"
+msgstr ""
+
+#: src/olympusmn.cpp:147
+msgid "Focal Plane Diagonal"
+msgstr ""
+
+#: src/olympusmn.cpp:148
+msgid "Focal plane diagonal"
+msgstr ""
+
+#: src/olympusmn.cpp:150
+msgid "Lens Distortion Parameters"
+msgstr ""
+
+#: src/olympusmn.cpp:151
+msgid "Lens distortion parameters"
+msgstr ""
+
+#: src/olympusmn.cpp:154
+msgid "Software firmware version"
+msgstr ""
+
+#: src/olympusmn.cpp:156
+msgid "Picture Info"
+msgstr ""
+
+#: src/olympusmn.cpp:157
+msgid "ASCII format data such as [PictureInfo]"
+msgstr ""
+
+#: src/olympusmn.cpp:159
+msgid "Camera ID"
+msgstr ""
+
+#: src/olympusmn.cpp:160
+msgid "Camera ID data"
+msgstr ""
+
+#: src/olympusmn.cpp:179
+msgid "Pre Capture Frames"
+msgstr ""
+
+#: src/olympusmn.cpp:180
+msgid "Pre-capture frames"
+msgstr ""
+
+#: src/olympusmn.cpp:185
+msgid "One Touch WB"
+msgstr ""
+
+#: src/olympusmn.cpp:186
+msgid "One touch white balance"
+msgstr ""
+
+#: src/olympusmn.cpp:195
+msgid "Serial number"
+msgstr ""
+
+#: src/olympusmn.cpp:200
+msgid "Data Dump 1"
+msgstr ""
+
+#: src/olympusmn.cpp:201
+msgid "Various camera settings 1"
+msgstr ""
+
+#: src/olympusmn.cpp:203
+msgid "Data Dump 2"
+msgstr ""
+
+#: src/olympusmn.cpp:204
+msgid "Various camera settings 2"
+msgstr ""
+
+#: src/olympusmn.cpp:206
+msgid "Shutter Speed"
+msgstr ""
+
+#: src/olympusmn.cpp:207
+msgid "Shutter speed value"
+msgstr ""
+
+#: src/olympusmn.cpp:209
+msgid "ISO Speed"
+msgstr ""
+
+#: src/olympusmn.cpp:210
+msgid "ISO speed value"
+msgstr ""
+
+#: src/olympusmn.cpp:212
+msgid "Aperture Value"
+msgstr ""
+
+#: src/olympusmn.cpp:213
+msgid "Aperture value"
+msgstr ""
+
+#: src/olympusmn.cpp:216
+msgid "Brightness value"
+msgstr ""
+
+#: src/olympusmn.cpp:218
+msgid "FlashMode"
+msgstr ""
+
+#: src/olympusmn.cpp:221
+msgid "FlashDevice"
+msgstr ""
+
+#: src/olympusmn.cpp:222
+msgid "Flash device"
+msgstr ""
+
+#: src/olympusmn.cpp:224
+msgid "Bracket"
+msgstr ""
+
+#: src/olympusmn.cpp:225
+msgid "Exposure compensation value"
+msgstr ""
+
+#: src/olympusmn.cpp:227
+msgid "Sensor Temperature"
+msgstr ""
+
+#: src/olympusmn.cpp:228
+msgid "Sensor temperature"
+msgstr ""
+
+#: src/olympusmn.cpp:230
+msgid "Lens Temperature"
+msgstr ""
+
+#: src/olympusmn.cpp:231
+msgid "Lens temperature"
+msgstr ""
+
+#: src/olympusmn.cpp:243
+msgid "Manual focus distance"
+msgstr ""
+
+#: src/olympusmn.cpp:245
+msgid "Zoom"
+msgstr ""
+
+#: src/olympusmn.cpp:246
+msgid "Zoom step count"
+msgstr ""
+
+#: src/olympusmn.cpp:248
+msgid "Macro Focus"
+msgstr ""
+
+#: src/olympusmn.cpp:249
+msgid "Macro focus step count"
+msgstr ""
+
+#: src/olympusmn.cpp:251 src/olympusmn.cpp:332
+msgid "Sharpness Factor"
+msgstr ""
+
+#: src/olympusmn.cpp:252 src/olympusmn.cpp:333
+msgid "Sharpness factor"
+msgstr ""
+
+#: src/olympusmn.cpp:254
+msgid "Flash Charge Level"
+msgstr ""
+
+#: src/olympusmn.cpp:255
+msgid "Flash charge level"
+msgstr ""
+
+#: src/olympusmn.cpp:257
+msgid "Color Matrix"
+msgstr ""
+
+#: src/olympusmn.cpp:258
+msgid "Color matrix"
+msgstr ""
+
+#: src/olympusmn.cpp:260
+msgid "BlackLevel"
+msgstr ""
+
+#: src/olympusmn.cpp:261
+msgid "Black level"
+msgstr ""
+
+#: src/olympusmn.cpp:270
+msgid "White balance mode"
+msgstr ""
+
+#: src/olympusmn.cpp:275
+msgid "Red Balance"
+msgstr ""
+
+#: src/olympusmn.cpp:276
+msgid "Red balance"
+msgstr ""
+
+#: src/olympusmn.cpp:278
+msgid "Blue Balance"
+msgstr ""
+
+#: src/olympusmn.cpp:279
+msgid "Blue balance"
+msgstr ""
+
+#: src/olympusmn.cpp:284
+msgid "Serial Number 2"
+msgstr ""
+
+#: src/olympusmn.cpp:285
+msgid "Serial number 2"
+msgstr ""
+
+#: src/olympusmn.cpp:311
+msgid "Flash Bias"
+msgstr ""
+
+#: src/olympusmn.cpp:312
+msgid "Flash exposure compensation"
+msgstr ""
+
+#: src/olympusmn.cpp:320
+msgid "External Flash Bounce"
+msgstr ""
+
+#: src/olympusmn.cpp:321
+msgid "External flash bounce"
+msgstr ""
+
+#: src/olympusmn.cpp:323
+msgid "External Flash Zoom"
+msgstr ""
+
+#: src/olympusmn.cpp:324
+msgid "External flash zoom"
+msgstr ""
+
+#: src/olympusmn.cpp:326
+msgid "External Flash Mode"
+msgstr ""
+
+#: src/olympusmn.cpp:327
+msgid "External flash mode"
+msgstr ""
+
+#: src/olympusmn.cpp:335
+msgid "Color Control"
+msgstr ""
+
+#: src/olympusmn.cpp:336
+msgid "Color control"
+msgstr ""
+
+#: src/olympusmn.cpp:338
+msgid "ValidBits"
+msgstr ""
+
+#: src/olympusmn.cpp:339
+msgid "Valid bits"
+msgstr ""
+
+#: src/olympusmn.cpp:341
+msgid "CoringFilter"
+msgstr ""
+
+#: src/olympusmn.cpp:342
+msgid "Coring filter"
+msgstr ""
+
+#: src/olympusmn.cpp:347
+msgid "Image Height"
+msgstr ""
+
+#: src/olympusmn.cpp:362
+msgid "Compression Ratio"
+msgstr ""
+
+#: src/olympusmn.cpp:363
+msgid "Compression ratio"
+msgstr ""
+
+#: src/olympusmn.cpp:366
+msgid "Preview image embedded"
+msgstr ""
+
+#: src/olympusmn.cpp:369
+msgid "Offset of the preview image"
+msgstr ""
+
+#: src/olympusmn.cpp:372
+msgid "Size of the preview image"
+msgstr ""
+
+#: src/olympusmn.cpp:374
+msgid "CCD Scan Mode"
+msgstr ""
+
+#: src/olympusmn.cpp:375
+msgid "CCD scan mode"
+msgstr ""
+
+#: src/olympusmn.cpp:380
+msgid "Infinity Lens Step"
+msgstr ""
+
+#: src/olympusmn.cpp:381
+msgid "Infinity lens step"
+msgstr ""
+
+#: src/olympusmn.cpp:383
+msgid "Near Lens Step"
+msgstr ""
+
+#: src/olympusmn.cpp:384
+msgid "Near lens step"
+msgstr ""
+
+#: src/olympusmn.cpp:392
+msgid "Unknown OlympusMakerNote tag"
+msgstr ""
+
+#: src/olympusmn.cpp:468
+msgid "Fast"
+msgstr ""
+
+#: src/olympusmn.cpp:469
+msgid "Panorama"
+msgstr ""
+
+#: src/olympusmn.cpp:481
+msgid "Left to right"
+msgstr ""
+
+#: src/olympusmn.cpp:482
+msgid "Right to left"
+msgstr ""
+
+#: src/olympusmn.cpp:483
+msgid "Bottom to top"
+msgstr ""
+
+#: src/olympusmn.cpp:484
+msgid "Top to bottom"
+msgstr ""
+
+#: src/olympusmn.cpp:523
+msgid "3000 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:524
+msgid "3700 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:525
+msgid "4000 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:526
+msgid "4500 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:527
+msgid "5500 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:528
+msgid "6500 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:529
+msgid "7500 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:535
+msgid "One-touch"
 msgstr ""
