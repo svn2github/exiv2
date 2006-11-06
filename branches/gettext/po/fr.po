@@ -1,20 +1,27 @@
+# translation of fr.po to Français
 # French translations of Exiv2.
 # Copyright:
 #   Free Software Foundation, Inc., 2002
-#   Arnaud Launay <asl@launay.org>, 2002
 # This file is distributed under the same license as the Exiv2 package.
+# Caulier Gilles <caulier dot gilles at kdemail dot net>, 2006.
+# Caulier Gilles <caulier dot gilles at kdemail dot net>, 2006.
+# Caulier Gilles <caulier dot gilles at kdemail dot net>, 2006.
+# Caulier Gilles <caulier dot gilles at kdemail dot net>, 2006.
+#   Arnaud Launay <asl@launay.org>, 2002.
+# Caulier Gilles <caulier dot gilles at kdemail dot net>, 2006.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Exiv2\n"
+"Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-06 12:40+0100\n"
-"PO-Revision-Date: 2005-03-12 05:42+0100\n"
-"Last-Translator: Arnaud Launay <asl@launay.org>\n"
-"Language-Team: Français <traduc@traduc.org>\n"
+"POT-Creation-Date: 2006-11-06 16:19+0100\n"
+"PO-Revision-Date: 2006-11-06 16:31+0100\n"
+"Last-Translator: Caulier Gilles <caulier dot gilles at kdemail dot net>\n"
+"Language-Team: Français <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.10.2\n"
 
 #: src/tags.cpp:102
 #, fuzzy
@@ -61,7 +68,6 @@ msgid "Related file"
 msgstr ""
 
 #: src/tags.cpp:112
-#, fuzzy
 msgid "Date and time"
 msgstr "Date et heure"
 
@@ -221,7 +227,7 @@ msgstr ""
 
 #: src/tags.cpp:178
 msgid "ISO JBIG"
-msgstr ""
+msgstr "ISO JBIG"
 
 #: src/tags.cpp:179
 msgid "SGI Log Luminance RLE"
@@ -353,7 +359,7 @@ msgstr ""
 msgid "A general indication of the kind of data contained in this subfile."
 msgstr ""
 
-#: src/tags.cpp:226 src/olympusmn.cpp:344
+#: src/tags.cpp:226 src/olympusmn.cpp:334
 msgid "Image Width"
 msgstr "Hauteur de l'image"
 
@@ -931,7 +937,7 @@ msgstr "Non défini"
 #: src/minoltamn.cpp:757 src/minoltamn.cpp:788 src/minoltamn.cpp:796
 #: src/minoltamn.cpp:956 src/minoltamn.cpp:987 src/fujimn.cpp:116
 #: src/fujimn.cpp:141 src/panasonicmn.cpp:76 src/panasonicmn.cpp:84
-#: src/panasonicmn.cpp:114 src/olympusmn.cpp:103
+#: src/panasonicmn.cpp:114 src/olympusmn.cpp:93
 msgid "Manual"
 msgstr "Manuel"
 
@@ -940,8 +946,8 @@ msgstr "Manuel"
 #: src/minoltamn.cpp:820 src/minoltamn.cpp:957 src/minoltamn.cpp:979
 #: src/minoltamn.cpp:1005 src/fujimn.cpp:80 src/fujimn.cpp:107
 #: src/fujimn.cpp:115 src/fujimn.cpp:121 src/panasonicmn.cpp:72
-#: src/panasonicmn.cpp:83 src/olympusmn.cpp:102 src/olympusmn.cpp:511
-#: src/olympusmn.cpp:517 src/olympusmn.cpp:518
+#: src/panasonicmn.cpp:83 src/olympusmn.cpp:92 src/olympusmn.cpp:521
+#: src/olympusmn.cpp:527 src/olympusmn.cpp:528
 #, fuzzy
 msgid "Auto"
 msgstr "action"
@@ -980,15 +986,15 @@ msgstr "Paysage"
 #: src/tags.cpp:1862 src/fujimn.cpp:220 src/fujimn.cpp:229 src/fujimn.cpp:238
 #: src/panasonicmn.cpp:194 src/panasonicmn.cpp:217 src/panasonicmn.cpp:230
 #: src/panasonicmn.cpp:233 src/panasonicmn.cpp:239 src/panasonicmn.cpp:257
-#: src/panasonicmn.cpp:263 src/panasonicmn.cpp:275 src/olympusmn.cpp:183
-#: src/olympusmn.cpp:189 src/olympusmn.cpp:192 src/olympusmn.cpp:234
-#: src/olympusmn.cpp:237 src/olympusmn.cpp:264 src/olympusmn.cpp:267
-#: src/olympusmn.cpp:273 src/olympusmn.cpp:282 src/olympusmn.cpp:288
-#: src/olympusmn.cpp:291 src/olympusmn.cpp:294 src/olympusmn.cpp:297
-#: src/olympusmn.cpp:300 src/olympusmn.cpp:303 src/olympusmn.cpp:306
-#: src/olympusmn.cpp:309 src/olympusmn.cpp:315 src/olympusmn.cpp:318
-#: src/olympusmn.cpp:351 src/olympusmn.cpp:354 src/olympusmn.cpp:357
-#: src/olympusmn.cpp:360
+#: src/panasonicmn.cpp:263 src/panasonicmn.cpp:275 src/olympusmn.cpp:173
+#: src/olympusmn.cpp:179 src/olympusmn.cpp:182 src/olympusmn.cpp:224
+#: src/olympusmn.cpp:227 src/olympusmn.cpp:254 src/olympusmn.cpp:257
+#: src/olympusmn.cpp:263 src/olympusmn.cpp:272 src/olympusmn.cpp:278
+#: src/olympusmn.cpp:281 src/olympusmn.cpp:284 src/olympusmn.cpp:287
+#: src/olympusmn.cpp:290 src/olympusmn.cpp:293 src/olympusmn.cpp:296
+#: src/olympusmn.cpp:299 src/olympusmn.cpp:305 src/olympusmn.cpp:308
+#: src/olympusmn.cpp:341 src/olympusmn.cpp:344 src/olympusmn.cpp:347
+#: src/olympusmn.cpp:350
 msgid "Unknown"
 msgstr "Inconnu"
 
@@ -1007,14 +1013,12 @@ msgid "Spot"
 msgstr "Spot"
 
 #: src/tags.cpp:487
-#, fuzzy
 msgid "Multi-spot"
-msgstr "multi-spots"
+msgstr "Multi-spots"
 
 #: src/tags.cpp:488 src/minoltamn.cpp:349 src/minoltamn.cpp:998
-#, fuzzy
 msgid "Multi-segment"
-msgstr "multi-spots"
+msgstr "Multi-segments"
 
 #: src/tags.cpp:489
 msgid "Partial"
@@ -1139,18 +1143,16 @@ msgstr ""
 #: src/tags.cpp:525
 #, fuzzy
 msgid "Yes, compulsory, return light not detected"
-msgstr ""
-"Flash déclenché, mode de flash obligatoire, lumière de retour non détectée."
+msgstr "Flash déclenché, mode de flash obligatoire, lumière de retour non détectée."
 
 #: src/tags.cpp:526
 #, fuzzy
 msgid "Yes, compulsory, return light detected"
-msgstr ""
-"Flash déclenché, mode de flash obligatoire, lumière de retour détectée."
+msgstr "Flash déclenché, mode de flash obligatoire, lumière de retour détectée."
 
 #: src/tags.cpp:527
 msgid "No, compulsory"
-msgstr ""
+msgstr "Non, inhibé"
 
 #: src/tags.cpp:528
 #, fuzzy
@@ -1185,8 +1187,7 @@ msgstr "Flash déclenché, mode anti-yeux rouges."
 #: src/tags.cpp:534
 #, fuzzy
 msgid "Yes, red-eye reduction, return light not detected"
-msgstr ""
-"Flash déclenché, mode anti-yeux rouges, lumière de retour non détectée."
+msgstr "Flash déclenché, mode anti-yeux rouges, lumière de retour non détectée."
 
 #: src/tags.cpp:535
 #, fuzzy
@@ -1220,8 +1221,7 @@ msgstr "Flash déclenché, mode anti-yeux rouges."
 #: src/tags.cpp:540
 #, fuzzy
 msgid "Yes, auto, red-eye reduction, return light not detected"
-msgstr ""
-"Flash déclenché, mode anti-yeux rouges, lumière de retour non détectée."
+msgstr "Flash déclenché, mode anti-yeux rouges, lumière de retour non détectée."
 
 #: src/tags.cpp:541
 #, fuzzy
@@ -1314,7 +1314,7 @@ msgid "Night scene"
 msgstr "Scène de nuit"
 
 #: src/tags.cpp:603 src/minoltamn.cpp:408 src/minoltamn.cpp:502
-#: src/olympusmn.cpp:94 src/olympusmn.cpp:495
+#: src/olympusmn.cpp:84 src/olympusmn.cpp:506
 msgid "None"
 msgstr ""
 
@@ -1339,35 +1339,35 @@ msgstr "Saturation forte"
 #: src/minoltamn.cpp:774 src/minoltamn.cpp:972 src/fujimn.cpp:73
 #: src/fujimn.cpp:92 src/fujimn.cpp:100 src/panasonicmn.cpp:65
 #: src/panasonicmn.cpp:105 src/panasonicmn.cpp:147 src/panasonicmn.cpp:178
-#: src/olympusmn.cpp:108 src/olympusmn.cpp:116 src/olympusmn.cpp:467
+#: src/olympusmn.cpp:98 src/olympusmn.cpp:106 src/olympusmn.cpp:479
 msgid "Normal"
 msgstr "Normal"
 
 #: src/tags.cpp:613 src/tags.cpp:627 src/minoltamn.cpp:403
-#: src/olympusmn.cpp:110
+#: src/olympusmn.cpp:100
 msgid "Soft"
 msgstr "Doux"
 
 #: src/tags.cpp:614 src/tags.cpp:628 src/minoltamn.cpp:401
-#: src/olympusmn.cpp:109
+#: src/olympusmn.cpp:99
 msgid "Hard"
 msgstr "Dur"
 
 #: src/tags.cpp:620 src/fujimn.cpp:94 src/fujimn.cpp:102
 #: src/panasonicmn.cpp:148 src/panasonicmn.cpp:150 src/panasonicmn.cpp:158
-#: src/olympusmn.cpp:117
+#: src/olympusmn.cpp:107
 msgid "Low"
 msgstr ""
 
 #: src/tags.cpp:621 src/fujimn.cpp:93 src/fujimn.cpp:101
 #: src/panasonicmn.cpp:64 src/panasonicmn.cpp:149 src/panasonicmn.cpp:152
-#: src/panasonicmn.cpp:159 src/olympusmn.cpp:115
+#: src/panasonicmn.cpp:159 src/olympusmn.cpp:105
 #, fuzzy
 msgid "High"
 msgstr "Lumière du jour"
 
 #: src/tags.cpp:634 src/fujimn.cpp:213 src/panasonicmn.cpp:113
-#: src/panasonicmn.cpp:204 src/olympusmn.cpp:138
+#: src/panasonicmn.cpp:204 src/olympusmn.cpp:128
 msgid "Macro"
 msgstr "Macro"
 
@@ -1390,18 +1390,16 @@ msgstr "Temps d'exposition, en secondes (sec)."
 
 #: src/tags.cpp:644 src/minoltamn.cpp:620 src/minoltamn.cpp:916
 #: src/minoltamn.cpp:1135
-#, fuzzy
 msgid "FNumber"
-msgstr "Le nombre F."
+msgstr "Ouverture"
 
 #: src/tags.cpp:645
 msgid "The F number."
 msgstr "Le nombre F."
 
 #: src/tags.cpp:647
-#, fuzzy
 msgid "Exposure Program"
-msgstr "Mode d'exposition"
+msgstr "Programme d'exposition"
 
 #: src/tags.cpp:648
 msgid ""
@@ -1423,9 +1421,8 @@ msgid ""
 msgstr ""
 
 #: src/tags.cpp:656
-#, fuzzy
 msgid "ISO Speed Ratings"
-msgstr "Netteté"
+msgstr "Vitesse en ISO"
 
 #: src/tags.cpp:657
 msgid ""
@@ -1521,7 +1518,7 @@ msgid "The lens aperture. The unit is the APEX value."
 msgstr "Ouverture de la lentille. L'unité est la valeur APEX."
 
 #: src/tags.cpp:697 src/minoltamn.cpp:713 src/minoltamn.cpp:714
-#: src/olympusmn.cpp:215
+#: src/olympusmn.cpp:205
 msgid "Brightness"
 msgstr "Luminosité"
 
@@ -1532,9 +1529,8 @@ msgid ""
 msgstr ""
 
 #: src/tags.cpp:701
-#, fuzzy
 msgid "Exposure Bias"
-msgstr "Temps d'exposition"
+msgstr "Correction d'exposition"
 
 #: src/tags.cpp:702
 msgid ""
@@ -1579,8 +1575,7 @@ msgid "The kind of light source."
 msgstr "Le type de source lumineuse."
 
 #: src/tags.cpp:720
-msgid ""
-"This tag is recorded when an image is taken using a strobe light (flash)."
+msgid "This tag is recorded when an image is taken using a strobe light (flash)."
 msgstr ""
 
 #: src/tags.cpp:722 src/minoltamn.cpp:641
@@ -1644,8 +1639,7 @@ msgid "Sub-seconds Time Original"
 msgstr "Date et heure (originel)"
 
 #: src/tags.cpp:743
-msgid ""
-"A tag used to record fractions of seconds for the <DateTimeOriginal> tag."
+msgid "A tag used to record fractions of seconds for the <DateTimeOriginal> tag."
 msgstr ""
 "Marqueur utilisé pour enregistrer des fractions de secondes pour le marqueur "
 "<DateTimeOriginal>."
@@ -1656,8 +1650,7 @@ msgid "Sub-seconds Time Digitized"
 msgstr "Date et heure (numérique)"
 
 #: src/tags.cpp:746
-msgid ""
-"A tag used to record fractions of seconds for the <DateTimeDigitized> tag."
+msgid "A tag used to record fractions of seconds for the <DateTimeDigitized> tag."
 msgstr ""
 "Marqueur utilisé pour enregistrer des fractions de secondes pour le marqueur "
 "<DateTimeDigitized>."
@@ -1887,7 +1880,7 @@ msgstr ""
 
 #: src/tags.cpp:852 src/minoltamn.cpp:599 src/minoltamn.cpp:872
 #: src/minoltamn.cpp:1105 src/fujimn.cpp:198 src/sigmamn.cpp:80
-#: src/panasonicmn.cpp:190 src/olympusmn.cpp:269
+#: src/panasonicmn.cpp:190 src/olympusmn.cpp:259
 msgid "White Balance"
 msgstr "Balance des blancs"
 
@@ -1952,7 +1945,7 @@ msgstr "Ce marqueur indique le degré général d'ajustement du gain de l'image.
 #: src/tags.cpp:874 src/minoltamn.cpp:489 src/minoltamn.cpp:677
 #: src/minoltamn.cpp:678 src/minoltamn.cpp:899 src/minoltamn.cpp:900
 #: src/minoltamn.cpp:1126 src/minoltamn.cpp:1127 src/sigmamn.cpp:98
-#: src/sigmamn.cpp:99 src/panasonicmn.cpp:247 src/olympusmn.cpp:329
+#: src/sigmamn.cpp:99 src/panasonicmn.cpp:247 src/olympusmn.cpp:319
 msgid "Contrast"
 msgstr "Contraste"
 
@@ -2410,8 +2403,7 @@ msgid "GPS Differential"
 msgstr ""
 
 #: src/tags.cpp:1079
-msgid ""
-"Indicates whether differential correction is applied to the GPS receiver."
+msgid "Indicates whether differential correction is applied to the GPS receiver."
 msgstr ""
 
 #: src/tags.cpp:1082 src/tags.cpp:1083
@@ -2457,7 +2449,7 @@ msgstr ""
 msgid "Related Image Width"
 msgstr "Hauteur de l'image"
 
-#: src/tags.cpp:1103 src/olympusmn.cpp:345
+#: src/tags.cpp:1103 src/olympusmn.cpp:335
 #, fuzzy
 msgid "Image width"
 msgstr "Hauteur de l'image"
@@ -2467,7 +2459,7 @@ msgstr "Hauteur de l'image"
 msgid "Related Image Length"
 msgstr "Longeur de l'image"
 
-#: src/tags.cpp:1106 src/olympusmn.cpp:348
+#: src/tags.cpp:1106 src/olympusmn.cpp:338
 #, fuzzy
 msgid "Image height"
 msgstr "Longeur de l'image"
@@ -2923,8 +2915,7 @@ msgid "Reference Date"
 msgstr "Référence Noir/Blanc"
 
 #: src/datasets.cpp:279
-msgid ""
-"Identifies the date of a prior envelope to which the current object refers."
+msgid "Identifies the date of a prior envelope to which the current object refers."
 msgstr ""
 
 #: src/datasets.cpp:281
@@ -3116,8 +3107,7 @@ msgid "Headline"
 msgstr ""
 
 #: src/datasets.cpp:359
-msgid ""
-"A publishable entry providing a synopsis of the contents of the object data."
+msgid "A publishable entry providing a synopsis of the contents of the object data."
 msgstr ""
 
 #: src/datasets.cpp:362 src/datasets.cpp:365
@@ -3413,8 +3403,7 @@ msgid "  in | insert   Insert metadata from corresponding *.exv files.\n"
 msgstr ""
 
 #: src/exiv2.cpp:213
-msgid ""
-"                Use option -S to change the suffix of the input files.\n"
+msgid "                Use option -S to change the suffix of the input files.\n"
 msgstr ""
 
 #: src/exiv2.cpp:214
@@ -3422,23 +3411,19 @@ msgid "  ex | extract  Extract metadata to *.exv and thumbnail image files.\n"
 msgstr ""
 
 #: src/exiv2.cpp:215
-msgid ""
-"  mv | rename   Rename files and/or set file timestamps according to the\n"
+msgid "  mv | rename   Rename files and/or set file timestamps according to the\n"
 msgstr ""
 
 #: src/exiv2.cpp:216
-msgid ""
-"                Exif create timestamp. The filename format can be set with\n"
+msgid "                Exif create timestamp. The filename format can be set with\n"
 msgstr ""
 
 #: src/exiv2.cpp:217
-msgid ""
-"                -r format, timestamp options are controlled with -t and -T.\n"
+msgid "                -r format, timestamp options are controlled with -t and -T.\n"
 msgstr ""
 
 #: src/exiv2.cpp:218
-msgid ""
-"  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n"
+msgid "  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n"
 msgstr ""
 
 #: src/exiv2.cpp:219
@@ -3450,8 +3435,7 @@ msgid "                Requires option -c, -m or -M.\n"
 msgstr ""
 
 #: src/exiv2.cpp:221
-msgid ""
-"  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n"
+msgid "  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n"
 msgstr ""
 
 #: src/exiv2.cpp:222
@@ -3489,13 +3473,11 @@ msgid "   -k      Preserve file timestamps (keep).\n"
 msgstr ""
 
 #: src/exiv2.cpp:230
-msgid ""
-"   -t      Also set the file timestamp in 'rename' action (overrides -k).\n"
+msgid "   -t      Also set the file timestamp in 'rename' action (overrides -k).\n"
 msgstr ""
 
 #: src/exiv2.cpp:231
-msgid ""
-"   -T      Only set the file timestamp in 'rename' action, do not rename\n"
+msgid "   -T      Only set the file timestamp in 'rename' action, do not rename\n"
 msgstr ""
 
 #: src/exiv2.cpp:232
@@ -3527,8 +3509,7 @@ msgid "             s : print a summary of the Exif metadata (the default)\n"
 msgstr ""
 
 #: src/exiv2.cpp:239
-msgid ""
-"             t : interpreted (translated) Exif data (shortcut for -Pkyct)\n"
+msgid "             t : interpreted (translated) Exif data (shortcut for -Pkyct)\n"
 msgstr ""
 
 #: src/exiv2.cpp:240
@@ -3548,8 +3529,7 @@ msgid "             c : Jpeg comment\n"
 msgstr ""
 
 #: src/exiv2.cpp:244
-msgid ""
-"   -P cols Print columns for the Exif taglist ('print' action). Valid are:\n"
+msgid "   -P cols Print columns for the Exif taglist ('print' action). Valid are:\n"
 msgstr ""
 
 #: src/exiv2.cpp:245
@@ -3597,8 +3577,7 @@ msgid "             h : hexdump of the data\n"
 msgstr ""
 
 #: src/exiv2.cpp:256
-msgid ""
-"   -d tgt  Delete target(s) for the 'delete' action. Possible targets are:\n"
+msgid "   -d tgt  Delete target(s) for the 'delete' action. Possible targets are:\n"
 msgstr ""
 
 #: src/exiv2.cpp:257
@@ -3618,13 +3597,11 @@ msgid "             i : Iptc data\n"
 msgstr ""
 
 #: src/exiv2.cpp:262
-msgid ""
-"   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
+msgid "   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
 msgstr ""
 
 #: src/exiv2.cpp:263
-msgid ""
-"           the same as those for the -d option. Only Jpeg thumbnails can\n"
+msgid "           the same as those for the -d option. Only Jpeg thumbnails can\n"
 msgstr ""
 
 #: src/exiv2.cpp:264
@@ -3632,8 +3609,7 @@ msgid "           be inserted, they need to be named <file>-thumb.jpg\n"
 msgstr ""
 
 #: src/exiv2.cpp:265
-msgid ""
-"   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
+msgid "   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
 msgstr ""
 
 #: src/exiv2.cpp:266
@@ -3653,8 +3629,7 @@ msgid "   -c txt  Jpeg comment string to set in the image.\n"
 msgstr ""
 
 #: src/exiv2.cpp:271
-msgid ""
-"   -m file Command file for the modify action. The format for commands is\n"
+msgid "   -m file Command file for the modify action. The format for commands is\n"
 msgstr ""
 
 #: src/exiv2.cpp:272
@@ -3666,8 +3641,7 @@ msgid "   -M cmd  Command line for the modify action. The format for the\n"
 msgstr ""
 
 #: src/exiv2.cpp:274
-msgid ""
-"           commands is the same as that of the lines of a command file.\n"
+msgid "           commands is the same as that of the lines of a command file.\n"
 msgstr ""
 
 #: src/exiv2.cpp:275
@@ -3928,7 +3902,7 @@ msgstr "Portrait"
 
 #: src/minoltamn.cpp:74 src/minoltamn.cpp:328 src/minoltamn.cpp:772
 #: src/minoltamn.cpp:970 src/fujimn.cpp:176 src/panasonicmn.cpp:67
-#: src/olympusmn.cpp:75
+#: src/olympusmn.cpp:65
 msgid "Raw"
 msgstr ""
 
@@ -3971,7 +3945,7 @@ msgstr ""
 #: src/fujimn.cpp:65 src/fujimn.cpp:109 src/fujimn.cpp:146
 #: src/panasonicmn.cpp:92 src/panasonicmn.cpp:99 src/panasonicmn.cpp:131
 #: src/panasonicmn.cpp:140 src/panasonicmn.cpp:164 src/panasonicmn.cpp:353
-#: src/olympusmn.cpp:66 src/olympusmn.cpp:80 src/olympusmn.cpp:87
+#: src/olympusmn.cpp:56 src/olympusmn.cpp:70 src/olympusmn.cpp:77
 msgid "Off"
 msgstr ""
 
@@ -3979,8 +3953,8 @@ msgstr ""
 #: src/minoltamn.cpp:846 src/minoltamn.cpp:852 src/minoltamn.cpp:858
 #: src/minoltamn.cpp:1026 src/minoltamn.cpp:1032 src/fujimn.cpp:66
 #: src/fujimn.cpp:108 src/fujimn.cpp:147 src/panasonicmn.cpp:98
-#: src/panasonicmn.cpp:352 src/olympusmn.cpp:67 src/olympusmn.cpp:81
-#: src/olympusmn.cpp:88
+#: src/panasonicmn.cpp:352 src/olympusmn.cpp:57 src/olympusmn.cpp:71
+#: src/olympusmn.cpp:78
 msgid "On"
 msgstr ""
 
@@ -3998,8 +3972,7 @@ msgid "Camera Settings (Std Old)"
 msgstr ""
 
 #: src/minoltamn.cpp:224
-msgid ""
-"Standard Camera settings (Old Camera models like D5, D7, S304, and S404)"
+msgid "Standard Camera settings (Old Camera models like D5, D7, S304, and S404)"
 msgstr ""
 
 #: src/minoltamn.cpp:226
@@ -4037,7 +4010,7 @@ msgstr "Bits compressés par pixel"
 msgid "Compressed image size"
 msgstr "Bits compressés par pixel"
 
-#: src/minoltamn.cpp:238 src/olympusmn.cpp:365
+#: src/minoltamn.cpp:238 src/olympusmn.cpp:355
 msgid "Thumbnail"
 msgstr ""
 
@@ -4045,7 +4018,7 @@ msgstr ""
 msgid "Jpeg thumbnail 640x480 pixels"
 msgstr ""
 
-#: src/minoltamn.cpp:241 src/olympusmn.cpp:368
+#: src/minoltamn.cpp:241 src/olympusmn.cpp:358
 msgid "Thumbnail Offset"
 msgstr ""
 
@@ -4053,7 +4026,7 @@ msgstr ""
 msgid "Offset of the thumbnail"
 msgstr ""
 
-#: src/minoltamn.cpp:244 src/olympusmn.cpp:371
+#: src/minoltamn.cpp:244 src/olympusmn.cpp:361
 #, fuzzy
 msgid "Thumbnail Length"
 msgstr "Longeur de l'image"
@@ -4130,11 +4103,11 @@ msgstr "Contraste"
 msgid "Camera Settings (for Dynax 5D model)"
 msgstr ""
 
-#: src/minoltamn.cpp:271 src/panasonicmn.cpp:271 src/olympusmn.cpp:197
+#: src/minoltamn.cpp:271 src/panasonicmn.cpp:271 src/olympusmn.cpp:187
 msgid "Print IM"
 msgstr ""
 
-#: src/minoltamn.cpp:272 src/panasonicmn.cpp:272 src/olympusmn.cpp:198
+#: src/minoltamn.cpp:272 src/panasonicmn.cpp:272 src/olympusmn.cpp:188
 #, fuzzy
 msgid "PrintIM information"
 msgstr "Orientation"
@@ -4437,7 +4410,7 @@ msgid "Flash Mode"
 msgstr "Flash"
 
 #: src/minoltamn.cpp:597 src/minoltamn.cpp:648 src/minoltamn.cpp:885
-#: src/olympusmn.cpp:219
+#: src/olympusmn.cpp:209
 #, fuzzy
 msgid "Flash mode"
 msgstr "Flash"
@@ -4498,12 +4471,12 @@ msgstr "Le nombre F."
 msgid "Macro Mode"
 msgstr "Macro"
 
-#: src/minoltamn.cpp:624 src/panasonicmn.cpp:205 src/olympusmn.cpp:139
+#: src/minoltamn.cpp:624 src/panasonicmn.cpp:205 src/olympusmn.cpp:129
 #, fuzzy
 msgid "Macro mode"
 msgstr "Macro"
 
-#: src/minoltamn.cpp:626 src/olympusmn.cpp:144
+#: src/minoltamn.cpp:626 src/olympusmn.cpp:134
 #, fuzzy
 msgid "Digital Zoom"
 msgstr "Valeur du zoom numérique"
@@ -4557,7 +4530,7 @@ msgstr "Le nombre F."
 msgid "Focal length"
 msgstr "Longueur focale"
 
-#: src/minoltamn.cpp:644 src/olympusmn.cpp:242
+#: src/minoltamn.cpp:644 src/olympusmn.cpp:232
 #, fuzzy
 msgid "Focus Distance"
 msgstr "Balance des blancs manuelle"
@@ -4757,13 +4730,13 @@ msgid "Wide focus zone"
 msgstr ""
 
 #: src/minoltamn.cpp:725 src/minoltamn.cpp:875 src/minoltamn.cpp:1144
-#: src/fujimn.cpp:216 src/panasonicmn.cpp:196 src/olympusmn.cpp:239
+#: src/fujimn.cpp:216 src/panasonicmn.cpp:196 src/olympusmn.cpp:229
 #, fuzzy
 msgid "Focus Mode"
 msgstr "Mode d'exposition"
 
 #: src/minoltamn.cpp:726 src/minoltamn.cpp:876 src/minoltamn.cpp:1145
-#: src/panasonicmn.cpp:197 src/olympusmn.cpp:240
+#: src/panasonicmn.cpp:197 src/olympusmn.cpp:230
 #, fuzzy
 msgid "Focus mode"
 msgstr "Mode d'exposition"
@@ -4906,13 +4879,13 @@ msgstr ""
 msgid "Rotation"
 msgstr "action"
 
-#: src/minoltamn.cpp:929 src/minoltamn.cpp:1168 src/olympusmn.cpp:377
+#: src/minoltamn.cpp:929 src/minoltamn.cpp:1168 src/olympusmn.cpp:367
 #, fuzzy
 msgid "Noise Reduction"
 msgstr "Flash déclenché, mode anti-yeux rouges."
 
 #: src/minoltamn.cpp:930 src/minoltamn.cpp:1169 src/panasonicmn.cpp:251
-#: src/olympusmn.cpp:378
+#: src/olympusmn.cpp:368
 #, fuzzy
 msgid "Noise reduction"
 msgstr "Flash déclenché, mode anti-yeux rouges."
@@ -5203,7 +5176,7 @@ msgid "Fujifilm Makernote version"
 msgstr "Version d'exif"
 
 #: src/fujimn.cpp:188 src/sigmamn.cpp:66 src/panasonicmn.cpp:225
-#: src/olympusmn.cpp:194
+#: src/olympusmn.cpp:184
 #, fuzzy
 msgid "Serial Number"
 msgstr "Le nombre F."
@@ -5215,12 +5188,12 @@ msgid ""
 msgstr ""
 
 #: src/fujimn.cpp:192 src/sigmamn.cpp:122 src/sigmamn.cpp:123
-#: src/panasonicmn.cpp:184 src/olympusmn.cpp:135
+#: src/panasonicmn.cpp:184 src/olympusmn.cpp:125
 #, fuzzy
 msgid "Quality"
 msgstr "Niveau de charge"
 
-#: src/fujimn.cpp:193 src/olympusmn.cpp:136
+#: src/fujimn.cpp:193 src/olympusmn.cpp:126
 #, fuzzy
 msgid "Image quality setting"
 msgstr "Hauteur de l'image"
@@ -5248,7 +5221,7 @@ msgstr ""
 msgid "Tone"
 msgstr ""
 
-#: src/fujimn.cpp:205 src/panasonicmn.cpp:248 src/olympusmn.cpp:330
+#: src/fujimn.cpp:205 src/panasonicmn.cpp:248 src/olympusmn.cpp:320
 #, fuzzy
 msgid "Contrast setting"
 msgstr "Contraste"
@@ -5303,7 +5276,7 @@ msgstr ""
 msgid "Sequence Number"
 msgstr "Le nombre F."
 
-#: src/fujimn.cpp:235 src/panasonicmn.cpp:245 src/olympusmn.cpp:475
+#: src/fujimn.cpp:235 src/panasonicmn.cpp:245 src/olympusmn.cpp:487
 #, fuzzy
 msgid "Sequence number"
 msgstr "Le nombre F."
@@ -5633,7 +5606,7 @@ msgstr ""
 msgid "2s"
 msgstr ""
 
-#: src/panasonicmn.cpp:187 src/olympusmn.cpp:153
+#: src/panasonicmn.cpp:187 src/olympusmn.cpp:143
 #, fuzzy
 msgid "Firmware Version"
 msgstr "Version d'exif"
@@ -5758,1015 +5731,569 @@ msgstr "Version d'exif"
 msgid " EV"
 msgstr ""
 
-#: src/olympusmn.cpp:72
+#: src/olympusmn.cpp:62
 #, fuzzy
 msgid "Standard Quality (SQ)"
 msgstr "Lumière standard A"
 
-#: src/olympusmn.cpp:73
+#: src/olympusmn.cpp:63
 #, fuzzy
 msgid "High Quality (HQ)"
 msgstr "Hauteur de l'image"
 
-#: src/olympusmn.cpp:74
+#: src/olympusmn.cpp:64
 msgid "Super High Quality (SHQ)"
 msgstr ""
 
-#: src/olympusmn.cpp:82
+#: src/olympusmn.cpp:72
 msgid "Super macro"
 msgstr ""
 
-#: src/olympusmn.cpp:89
+#: src/olympusmn.cpp:79
 msgid "On (preset)"
 msgstr ""
 
-#: src/olympusmn.cpp:95
+#: src/olympusmn.cpp:85
 #, fuzzy
 msgid "Internal"
 msgstr "Intel"
 
-#: src/olympusmn.cpp:96
+#: src/olympusmn.cpp:86
 #, fuzzy
 msgid "External"
 msgstr "Intel"
 
-#: src/olympusmn.cpp:97
+#: src/olympusmn.cpp:87
 #, fuzzy
 msgid "Internal + External"
 msgstr "Le nombre F."
 
-#: src/olympusmn.cpp:122
+#: src/olympusmn.cpp:112
 #, fuzzy
 msgid "Interlaced"
 msgstr "Intel"
 
-#: src/olympusmn.cpp:123
+#: src/olympusmn.cpp:113
 #, fuzzy
 msgid "Progressive"
 msgstr "Version d'exif"
 
-#: src/olympusmn.cpp:132
+#: src/olympusmn.cpp:122
 #, fuzzy
 msgid "Special Mode"
 msgstr "Mode de mesure"
 
-#: src/olympusmn.cpp:133
+#: src/olympusmn.cpp:123
 #, fuzzy
 msgid "Picture taking mode"
 msgstr "Mode d'exposition"
 
-#: src/olympusmn.cpp:141
+#: src/olympusmn.cpp:131
 msgid "Black & White Mode"
 msgstr ""
 
-#: src/olympusmn.cpp:142
+#: src/olympusmn.cpp:132
 msgid "Black and white mode"
 msgstr ""
 
-#: src/olympusmn.cpp:145
+#: src/olympusmn.cpp:135
 #, fuzzy
 msgid "Digital zoom ratio"
 msgstr "Valeur du zoom numérique"
 
-#: src/olympusmn.cpp:147
+#: src/olympusmn.cpp:137
 #, fuzzy
 msgid "Focal Plane Diagonal"
 msgstr "y-Résolution du plan focal"
 
-#: src/olympusmn.cpp:148
+#: src/olympusmn.cpp:138
 #, fuzzy
 msgid "Focal plane diagonal"
 msgstr "y-Résolution du plan focal"
 
-#: src/olympusmn.cpp:150
+#: src/olympusmn.cpp:140
 msgid "Lens Distortion Parameters"
 msgstr ""
 
-#: src/olympusmn.cpp:151
+#: src/olympusmn.cpp:141
 msgid "Lens distortion parameters"
 msgstr ""
 
-#: src/olympusmn.cpp:154
+#: src/olympusmn.cpp:144
 #, fuzzy
 msgid "Software firmware version"
 msgstr "Version d'exif"
 
-#: src/olympusmn.cpp:156
+#: src/olympusmn.cpp:146
 #, fuzzy
 msgid "Picture Info"
 msgstr "Mode d'exposition"
 
-#: src/olympusmn.cpp:157
+#: src/olympusmn.cpp:147
 msgid "ASCII format data such as [PictureInfo]"
 msgstr ""
 
-#: src/olympusmn.cpp:159
+#: src/olympusmn.cpp:149
 msgid "Camera ID"
 msgstr ""
 
-#: src/olympusmn.cpp:160
+#: src/olympusmn.cpp:150
 msgid "Camera ID data"
 msgstr ""
 
-#: src/olympusmn.cpp:179
+#: src/olympusmn.cpp:169
 #, fuzzy
 msgid "Pre Capture Frames"
 msgstr "Type de capture de la scène"
 
-#: src/olympusmn.cpp:180
+#: src/olympusmn.cpp:170
 msgid "Pre-capture frames"
 msgstr ""
 
-#: src/olympusmn.cpp:185
+#: src/olympusmn.cpp:175
 msgid "One Touch WB"
 msgstr ""
 
-#: src/olympusmn.cpp:186
+#: src/olympusmn.cpp:176
 #, fuzzy
 msgid "One touch white balance"
 msgstr "Balance des blancs automatique"
 
-#: src/olympusmn.cpp:195
+#: src/olympusmn.cpp:185
 #, fuzzy
 msgid "Serial number"
 msgstr "Le nombre F."
 
-#: src/olympusmn.cpp:200
+#: src/olympusmn.cpp:190
 msgid "Data Dump 1"
 msgstr ""
 
-#: src/olympusmn.cpp:201
+#: src/olympusmn.cpp:191
 #, fuzzy
 msgid "Various camera settings 1"
 msgstr "Contraste"
 
-#: src/olympusmn.cpp:203
+#: src/olympusmn.cpp:193
 msgid "Data Dump 2"
 msgstr ""
 
-#: src/olympusmn.cpp:204
+#: src/olympusmn.cpp:194
 #, fuzzy
 msgid "Various camera settings 2"
 msgstr "Macro"
 
-#: src/olympusmn.cpp:206
+#: src/olympusmn.cpp:196
 #, fuzzy
 msgid "Shutter Speed"
 msgstr "Vitesse d'obturation"
 
-#: src/olympusmn.cpp:207
+#: src/olympusmn.cpp:197
 #, fuzzy
 msgid "Shutter speed value"
 msgstr "Vitesse d'obturation"
 
-#: src/olympusmn.cpp:209
+#: src/olympusmn.cpp:199
 #, fuzzy
 msgid "ISO Speed"
 msgstr "Netteté"
 
-#: src/olympusmn.cpp:210
+#: src/olympusmn.cpp:200
 #, fuzzy
 msgid "ISO speed value"
 msgstr "Netteté"
 
-#: src/olympusmn.cpp:212
+#: src/olympusmn.cpp:202
 #, fuzzy
 msgid "Aperture Value"
 msgstr "ouverture"
 
-#: src/olympusmn.cpp:213
+#: src/olympusmn.cpp:203
 #, fuzzy
 msgid "Aperture value"
 msgstr "ouverture"
 
-#: src/olympusmn.cpp:216
+#: src/olympusmn.cpp:206
 #, fuzzy
 msgid "Brightness value"
 msgstr "Luminosité"
 
-#: src/olympusmn.cpp:218
+#: src/olympusmn.cpp:208
 #, fuzzy
 msgid "FlashMode"
 msgstr "Flash"
 
-#: src/olympusmn.cpp:221
+#: src/olympusmn.cpp:211
 #, fuzzy
 msgid "FlashDevice"
 msgstr "Flash"
 
-#: src/olympusmn.cpp:222
+#: src/olympusmn.cpp:212
 #, fuzzy
 msgid "Flash device"
 msgstr "Flash"
 
-#: src/olympusmn.cpp:224
+#: src/olympusmn.cpp:214
 #, fuzzy
 msgid "Bracket"
 msgstr "action"
 
-#: src/olympusmn.cpp:225
+#: src/olympusmn.cpp:215
 #, fuzzy
 msgid "Exposure compensation value"
 msgstr "Temps d'exposition"
 
-#: src/olympusmn.cpp:227
+#: src/olympusmn.cpp:217
 #, fuzzy
 msgid "Sensor Temperature"
 msgstr "Espace des couleurs"
 
-#: src/olympusmn.cpp:228
+#: src/olympusmn.cpp:218
 #, fuzzy
 msgid "Sensor temperature"
 msgstr "Espace des couleurs"
 
-#: src/olympusmn.cpp:230
+#: src/olympusmn.cpp:220
 #, fuzzy
 msgid "Lens Temperature"
 msgstr "Espace des couleurs"
 
-#: src/olympusmn.cpp:231
+#: src/olympusmn.cpp:221
 #, fuzzy
 msgid "Lens temperature"
 msgstr "Espace des couleurs"
 
-#: src/olympusmn.cpp:243
+#: src/olympusmn.cpp:233
 #, fuzzy
 msgid "Manual focus distance"
 msgstr "Balance des blancs manuelle"
 
-#: src/olympusmn.cpp:245
+#: src/olympusmn.cpp:235
 msgid "Zoom"
 msgstr ""
 
-#: src/olympusmn.cpp:246
+#: src/olympusmn.cpp:236
 msgid "Zoom step count"
 msgstr ""
 
-#: src/olympusmn.cpp:248
+#: src/olympusmn.cpp:238
 #, fuzzy
 msgid "Macro Focus"
 msgstr "Macro"
 
-#: src/olympusmn.cpp:249
+#: src/olympusmn.cpp:239
 msgid "Macro focus step count"
 msgstr ""
 
-#: src/olympusmn.cpp:251 src/olympusmn.cpp:332
+#: src/olympusmn.cpp:241 src/olympusmn.cpp:322
 #, fuzzy
 msgid "Sharpness Factor"
 msgstr "Netteté"
 
-#: src/olympusmn.cpp:252 src/olympusmn.cpp:333
+#: src/olympusmn.cpp:242 src/olympusmn.cpp:323
 #, fuzzy
 msgid "Sharpness factor"
 msgstr "Netteté"
 
-#: src/olympusmn.cpp:254
+#: src/olympusmn.cpp:244
 msgid "Flash Charge Level"
 msgstr ""
 
-#: src/olympusmn.cpp:255
+#: src/olympusmn.cpp:245
 msgid "Flash charge level"
 msgstr ""
 
-#: src/olympusmn.cpp:257
+#: src/olympusmn.cpp:247
 #, fuzzy
 msgid "Color Matrix"
 msgstr "Espace des couleurs"
 
-#: src/olympusmn.cpp:258
+#: src/olympusmn.cpp:248
 #, fuzzy
 msgid "Color matrix"
 msgstr "Espace des couleurs"
 
-#: src/olympusmn.cpp:260
+#: src/olympusmn.cpp:250
 #, fuzzy
 msgid "BlackLevel"
 msgstr "Niveau de charge"
 
-#: src/olympusmn.cpp:261
+#: src/olympusmn.cpp:251
 msgid "Black level"
 msgstr ""
 
-#: src/olympusmn.cpp:270
+#: src/olympusmn.cpp:260
 #, fuzzy
 msgid "White balance mode"
 msgstr "Balance des blancs"
 
-#: src/olympusmn.cpp:275
+#: src/olympusmn.cpp:265
 #, fuzzy
 msgid "Red Balance"
 msgstr "Balance des blancs"
 
-#: src/olympusmn.cpp:276
+#: src/olympusmn.cpp:266
 #, fuzzy
 msgid "Red balance"
 msgstr "Balance des blancs"
 
-#: src/olympusmn.cpp:278
+#: src/olympusmn.cpp:268
 #, fuzzy
 msgid "Blue Balance"
 msgstr "Balance des blancs"
 
-#: src/olympusmn.cpp:279
+#: src/olympusmn.cpp:269
 #, fuzzy
 msgid "Blue balance"
 msgstr "Balance des blancs"
 
-#: src/olympusmn.cpp:284
+#: src/olympusmn.cpp:274
 #, fuzzy
 msgid "Serial Number 2"
 msgstr "Le nombre F."
 
-#: src/olympusmn.cpp:285
+#: src/olympusmn.cpp:275
 #, fuzzy
 msgid "Serial number 2"
 msgstr "Le nombre F."
 
-#: src/olympusmn.cpp:311
+#: src/olympusmn.cpp:301
 #, fuzzy
 msgid "Flash Bias"
 msgstr "Le flash s'est déclenché."
 
-#: src/olympusmn.cpp:312
+#: src/olympusmn.cpp:302
 #, fuzzy
 msgid "Flash exposure compensation"
 msgstr "Temps d'exposition"
 
-#: src/olympusmn.cpp:320
+#: src/olympusmn.cpp:310
 msgid "External Flash Bounce"
 msgstr ""
 
-#: src/olympusmn.cpp:321
+#: src/olympusmn.cpp:311
 msgid "External flash bounce"
 msgstr ""
 
-#: src/olympusmn.cpp:323
+#: src/olympusmn.cpp:313
 msgid "External Flash Zoom"
 msgstr ""
 
-#: src/olympusmn.cpp:324
+#: src/olympusmn.cpp:314
 msgid "External flash zoom"
 msgstr ""
 
-#: src/olympusmn.cpp:326
+#: src/olympusmn.cpp:316
 #, fuzzy
 msgid "External Flash Mode"
 msgstr "Flash"
 
-#: src/olympusmn.cpp:327
+#: src/olympusmn.cpp:317
 #, fuzzy
 msgid "External flash mode"
 msgstr "Portrait"
 
-#: src/olympusmn.cpp:335
+#: src/olympusmn.cpp:325
 #, fuzzy
 msgid "Color Control"
 msgstr "Espace des couleurs"
 
-#: src/olympusmn.cpp:336
+#: src/olympusmn.cpp:326
 #, fuzzy
 msgid "Color control"
 msgstr "Espace des couleurs"
 
-#: src/olympusmn.cpp:338
+#: src/olympusmn.cpp:328
 msgid "ValidBits"
 msgstr ""
 
-#: src/olympusmn.cpp:339
+#: src/olympusmn.cpp:329
 msgid "Valid bits"
 msgstr ""
 
-#: src/olympusmn.cpp:341
+#: src/olympusmn.cpp:331
 #, fuzzy
 msgid "CoringFilter"
 msgstr "Espace des couleurs"
 
-#: src/olympusmn.cpp:342
+#: src/olympusmn.cpp:332
 #, fuzzy
 msgid "Coring filter"
 msgstr "Espace des couleurs"
 
-#: src/olympusmn.cpp:347
+#: src/olympusmn.cpp:337
 #, fuzzy
 msgid "Image Height"
 msgstr "Longeur de l'image"
 
-#: src/olympusmn.cpp:362
+#: src/olympusmn.cpp:352
 #, fuzzy
 msgid "Compression Ratio"
 msgstr "Compression"
 
-#: src/olympusmn.cpp:363
+#: src/olympusmn.cpp:353
 #, fuzzy
 msgid "Compression ratio"
 msgstr "Compression"
 
-#: src/olympusmn.cpp:366
+#: src/olympusmn.cpp:356
 msgid "Preview image embedded"
 msgstr ""
 
-#: src/olympusmn.cpp:369
+#: src/olympusmn.cpp:359
 msgid "Offset of the preview image"
 msgstr ""
 
-#: src/olympusmn.cpp:372
+#: src/olympusmn.cpp:362
 msgid "Size of the preview image"
 msgstr ""
 
-#: src/olympusmn.cpp:374
+#: src/olympusmn.cpp:364
 msgid "CCD Scan Mode"
 msgstr ""
 
-#: src/olympusmn.cpp:375
+#: src/olympusmn.cpp:365
 msgid "CCD scan mode"
 msgstr ""
 
-#: src/olympusmn.cpp:380
+#: src/olympusmn.cpp:370
 #, fuzzy
 msgid "Infinity Lens Step"
 msgstr "Intel"
 
-#: src/olympusmn.cpp:381
+#: src/olympusmn.cpp:371
 #, fuzzy
 msgid "Infinity lens step"
 msgstr "Intel"
 
-#: src/olympusmn.cpp:383
+#: src/olympusmn.cpp:373
 msgid "Near Lens Step"
 msgstr ""
 
-#: src/olympusmn.cpp:384
+#: src/olympusmn.cpp:374
 msgid "Near lens step"
+msgstr ""
+
+#: src/olympusmn.cpp:376
+msgid "Equipment Info"
+msgstr ""
+
+#: src/olympusmn.cpp:377
+#, fuzzy
+msgid "Camera equipment information"
+msgstr "Orientation"
+
+#: src/olympusmn.cpp:379
+#, fuzzy
+msgid "Camera Settings"
+msgstr "Contraste"
+
+#: src/olympusmn.cpp:380
+#, fuzzy
+msgid "Camera Settings information"
+msgstr "Contraste"
+
+#: src/olympusmn.cpp:382
+msgid "Raw Development"
+msgstr ""
+
+#: src/olympusmn.cpp:383
+#, fuzzy
+msgid "Raw development information"
+msgstr "Orientation"
+
+#: src/olympusmn.cpp:385
+#, fuzzy
+msgid "Image Processing"
+msgstr "Longeur de l'image"
+
+#: src/olympusmn.cpp:386
+#, fuzzy
+msgid "Image processing information"
+msgstr "Configuration du plan"
+
+#: src/olympusmn.cpp:388
+#, fuzzy
+msgid "Focus Info"
+msgstr "Mode d'exposition"
+
+#: src/olympusmn.cpp:389
+#, fuzzy
+msgid "Focus information"
+msgstr "Positionnement YCbCr"
+
+#: src/olympusmn.cpp:391
+msgid "Raw Info"
 msgstr ""
 
 #: src/olympusmn.cpp:392
 #, fuzzy
+msgid "Raw information"
+msgstr "Orientation"
+
+#: src/olympusmn.cpp:397
+#, fuzzy
 msgid "Unknown OlympusMakerNote tag"
 msgstr "Version d'exif"
 
-#: src/olympusmn.cpp:468
+#: src/olympusmn.cpp:480
 #, fuzzy
 msgid "Fast"
 msgstr "Flash"
 
-#: src/olympusmn.cpp:469
+#: src/olympusmn.cpp:481
 #, fuzzy
 msgid "Panorama"
 msgstr "normal"
 
-#: src/olympusmn.cpp:481
+#: src/olympusmn.cpp:493
 #, fuzzy
 msgid "Left to right"
 msgstr "bas - droit"
 
-#: src/olympusmn.cpp:482
+#: src/olympusmn.cpp:494
 #, fuzzy
 msgid "Right to left"
 msgstr "droit - haut"
 
-#: src/olympusmn.cpp:483
+#: src/olympusmn.cpp:495
 #, fuzzy
 msgid "Bottom to top"
 msgstr "bas - gauche"
 
-#: src/olympusmn.cpp:484
+#: src/olympusmn.cpp:496
 #, fuzzy
 msgid "Top to bottom"
 msgstr "gauche - bas"
 
-#: src/olympusmn.cpp:523
+#: src/olympusmn.cpp:533
 msgid "3000 Kelvin"
 msgstr ""
 
-#: src/olympusmn.cpp:524
+#: src/olympusmn.cpp:534
 msgid "3700 Kelvin"
 msgstr ""
 
-#: src/olympusmn.cpp:525
+#: src/olympusmn.cpp:535
 msgid "4000 Kelvin"
 msgstr ""
 
-#: src/olympusmn.cpp:526
+#: src/olympusmn.cpp:536
 msgid "4500 Kelvin"
 msgstr ""
 
-#: src/olympusmn.cpp:527
+#: src/olympusmn.cpp:537
 msgid "5500 Kelvin"
 msgstr ""
 
-#: src/olympusmn.cpp:528
+#: src/olympusmn.cpp:538
 msgid "6500 Kelvin"
 msgstr ""
 
-#: src/olympusmn.cpp:529
+#: src/olympusmn.cpp:539
 msgid "7500 Kelvin"
 msgstr ""
 
-#: src/olympusmn.cpp:535
+#: src/olympusmn.cpp:545
 msgid "One-touch"
 msgstr ""
 
-#~ msgid "Invalid format '%s', expected '%s'."
-#~ msgstr "Format invalide '%s', attendait '%s'."
-
-#~ msgid "Invalid number of components (%i, expected %i)."
-#~ msgstr "Nombre invalide de composants (%i, attendait %i)."
-
-#, fuzzy
-#~ msgid "Invalid number of components (%i, expected %i or %i)."
-#~ msgstr "Nombre invalide de composants (%i, attendait %i)."
-
-#~ msgid "normal"
-#~ msgstr "normal"
-
-#, fuzzy
-#~ msgid "flash did not fire"
-#~ msgstr "Le flash ne s'est pas déclenché."
-
-#, fuzzy
-#~ msgid "on + red eyes reduction"
-#~ msgstr "Flash déclenché, mode anti-yeux rouges."
-
-#, fuzzy
-#~ msgid "one-Shot"
-#~ msgstr "Spot"
-
-#, fuzzy
-#~ msgid "full auto"
-#~ msgstr "action"
-
-#~ msgid "manual"
-#~ msgstr "manuel"
-
-#~ msgid "landscape"
-#~ msgstr "paysage"
-
-#, fuzzy
-#~ msgid "fast shutter"
-#~ msgstr "obturation"
-
-#, fuzzy
-#~ msgid "slow shutter"
-#~ msgstr "obturation"
-
-#, fuzzy
-#~ msgid "evaluative"
-#~ msgstr "créatif"
-
-#~ msgid "partial"
-#~ msgstr "partiel"
-
-#, fuzzy
-#~ msgid "none (manual focus)"
-#~ msgstr "Exposition manuel"
-
-#, fuzzy
-#~ msgid "right"
-#~ msgstr "Copyright"
-
-#, fuzzy
-#~ msgid "Sunny"
-#~ msgstr "ensoleillé"
-
-#, fuzzy
-#~ msgid "Flourescent"
-#~ msgstr "Fluorescent"
-
-#, fuzzy
-#~ msgid "Focus type"
-#~ msgstr "Mode d'exposition"
-
-#, fuzzy
-#~ msgid "Flash details"
-#~ msgstr "Flash"
-
-#, fuzzy
-#~ msgid "Zoomed resolution"
-#~ msgstr "x-résolution"
-
-#, fuzzy
-#~ msgid "Subject distance"
-#~ msgstr "Distance au sujet"
-
-#~ msgid "Motorola"
-#~ msgstr "Motorola"
-
-#, fuzzy
-#~ msgid "Unknown encoding."
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Ignore unknown tags"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid ""
-#~ "The tag '%s' contains data of an invalid format ('%s', expected '%s')."
-#~ msgstr "Format invalide '%s', attendait '%s'."
-
-#, fuzzy
-#~ msgid ""
-#~ "The tag '%s' contains an invalid number of components (%i, expected %i)."
-#~ msgstr "Nombre invalide de composants (%i, attendait %i)."
-
-#~ msgid "Manual exposure"
-#~ msgstr "Exposition manuel"
-
-#~ msgid "Manual white balance"
-#~ msgstr "Balance des blancs manuelle"
-
-#, fuzzy
-#~ msgid "avg"
-#~ msgstr "moyenne"
-
-#, fuzzy
-#~ msgid "Center-Weight"
-#~ msgstr "Centre pondéré"
-
-#~ msgid "Multi Spot"
-#~ msgstr "Multi spot"
-
-#~ msgid "Pattern"
-#~ msgstr "Motif"
-
-#, fuzzy
-#~ msgid "LZW compression"
-#~ msgstr "Compression JPEG"
-
-#~ msgid "cloudy"
-#~ msgstr "nuageux"
-
-#~ msgid "Normal program"
-#~ msgstr "Programme normal"
-
-#, fuzzy
-#~ msgid "Shutter"
-#~ msgstr "obturation"
-
-#~ msgid "Creative program (biased toward depth of field)"
-#~ msgstr "Programme créatif (grande profondeur de champ)"
-
-#, fuzzy
-#~ msgid "Creative program (biased toward fast shutter speed)"
-#~ msgstr "Programme action (vitesse d'obturation élevée)"
-
-#, fuzzy
-#~ msgid "Portrait mode (for closeup photos with the background out of focus)"
-#~ msgstr "Mode portrait (photos en gros plan avec arrière-plan flou)"
-
-#, fuzzy
-#~ msgid "Landscape mode (for landscape photos with the background in focus)"
-#~ msgstr "Mode paysage (paysages avec arrière-plan net)"
-
-#~ msgid "Flash did not fire."
-#~ msgstr "Le flash ne s'est pas déclenché."
-
-#~ msgid "Flash fired."
-#~ msgstr "Le flash s'est déclenché."
-
-#, fuzzy
-#~ msgid "Flash fired, compulsatory flash mode"
-#~ msgstr "Flash non déclenché, mode de flash obligatoire."
-
-#, fuzzy
-#~ msgid "Flash did not fire, compulsatory flash mode."
-#~ msgstr "Flash non déclenché, mode de flash obligatoire."
-
-#~ msgid "Flash did not fire, auto mode."
-#~ msgstr "Flash non déclenché, mode auto."
-
-#~ msgid "Flash fired, auto mode."
-#~ msgstr "Flash déclenché, mode auto."
-
-#~ msgid "Flash fired, red-eye reduction mode."
-#~ msgstr "Flash déclenché, mode anti-yeux rouges."
-
-#, fuzzy
-#~ msgid "Flash did not fire, auto mode, red-eye reduction mode"
-#~ msgstr "Flash déclenché, mode auto, mode anti-yeux rouges."
-
-#, fuzzy
-#~ msgid "Flash fired, auto mode, red-eye reduction mode"
-#~ msgstr "Flash déclenché, mode auto, mode anti-yeux rouges."
-
-#~ msgid ""
-#~ "Flash fired, auto mode, return light not detected, red-eye reduction mode."
-#~ msgstr ""
-#~ "Flash déclenché, mode auto, lumière de retour non détectée, mode anti-"
-#~ "yeux rouges."
-
-#~ msgid ""
-#~ "Flash fired, auto mode, return light detected, red-eye reduction mode."
-#~ msgstr ""
-#~ "Flash déclenché, mode auto, lumière de retour détectée, mode anti-yeux "
-#~ "rouges."
-
-#, fuzzy
-#~ msgid "distant"
-#~ msgstr "Vue de loin"
-
-#, fuzzy
-#~ msgid "Invalid size of entry (%i, expected %li x %i)."
-#~ msgstr "Nombre invalide de composants (%i, attendait %i)."
-
-#, fuzzy
-#~ msgid "Exif Version %d.%d"
-#~ msgstr "Version d'exif"
-
-#~ msgid " (35 equivalent: %d mm)"
-#~ msgstr " (équivalent 35mm: %d mm)"
-
-#, fuzzy
-#~ msgid "1/%d"
-#~ msgstr "1/%d sec."
-
-#, fuzzy
-#~ msgid " sec."
-#~ msgstr "%d sec."
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "Y"
-#~ msgstr "Y"
-
-#~ msgid "Cb"
-#~ msgstr "Cb"
-
-#~ msgid "Cr"
-#~ msgstr "Cr"
-
-#~ msgid "R"
-#~ msgstr "R"
-
-#~ msgid "G"
-#~ msgstr "G"
-
-#~ msgid "B"
-#~ msgstr "B"
-
-#~ msgid "reserved"
-#~ msgstr "réservé"
-
-#~ msgid "YCbCr4:2:2"
-#~ msgstr "YCbCr4:2:2"
-
-#~ msgid "YCbCr4:2:0"
-#~ msgstr "YCbCr4:2:0"
-
-#~ msgid "%i bytes unknown data"
-#~ msgstr "%i de données inconnues"
-
-#~ msgid "Within distance %i of (x,y) = (%i,%i)"
-#~ msgstr "Dans la distance %i de (x,y) = (%i,%i)"
-
-#~ msgid "Within rectangle (width %i, height %i) around (x,y) = (%i,%i)"
-#~ msgstr ""
-#~ "Dans le rectangle (largeur %i, hauteur %i) autour de (x,y) = (%i,%i)"
-
-#~ msgid "Unexpected number of components (%li, expected 2, 3, or 4)."
-#~ msgstr "Nombre inattendu de composants (%li, attendait 2, 3, ou 4)."
-
-#, fuzzy
-#~ msgid "Byte"
-#~ msgstr "Centimère"
-
-#, fuzzy
-#~ msgid "Short"
-#~ msgstr "Spot"
-
-#, fuzzy
-#~ msgid "SShort"
-#~ msgstr "Spot"
-
-#~ msgid "Undefined"
-#~ msgstr "Non défini"
-
-#, fuzzy
-#~ msgid "VGA Normal"
-#~ msgstr "Normal"
-
-#, fuzzy
-#~ msgid "SXGA Normal"
-#~ msgstr "Normal"
-
-#, fuzzy
-#~ msgid "Bright+"
-#~ msgstr "Copyright"
-
-#, fuzzy
-#~ msgid "Bright-"
-#~ msgstr "Copyright"
-
-#, fuzzy
-#~ msgid "Contrast+"
-#~ msgstr "Contraste"
-
-#, fuzzy
-#~ msgid "Contrast-"
-#~ msgstr "Contraste"
-
-#, fuzzy
-#~ msgid "Fisheye On"
-#~ msgstr "Flash"
-
-#, fuzzy
-#~ msgid "No manual focus selection"
-#~ msgstr "Balance des blancs manuelle"
-
-#, fuzzy
-#~ msgid "Unknown value %hi"
-#~ msgstr "Inconnu"
-
-#~ msgid "unknown"
-#~ msgstr "inconnu"
-
-#, fuzzy
-#~ msgid "Manual: Unknown"
-#~ msgstr "inconnu"
-
-#, fuzzy
-#~ msgid "%li bytes unknown data: "
-#~ msgstr "%i de données inconnues"
-
-#, fuzzy
-#~ msgid "Whitebalance"
-#~ msgstr "Balance des blancs"
-
-#, fuzzy
-#~ msgid "Image Sharpening"
-#~ msgstr "Longeur de l'image"
-
-#, fuzzy
-#~ msgid "Whitebalance RB"
-#~ msgstr "Balance des blancs"
-
-#, fuzzy
-#~ msgid "Exposurediff ?"
-#~ msgstr "Mode d'exposition"
-
-#, fuzzy
-#~ msgid "Flash used"
-#~ msgstr "Le flash s'est déclenché."
-
-#, fuzzy
-#~ msgid "Lightype"
-#~ msgstr "Scène de nuit"
-
-#, fuzzy
-#~ msgid "CCD Sensitivity"
-#~ msgstr "Sensitivité spectrale"
-
-#, fuzzy
-#~ msgid "Focus"
-#~ msgstr "Mode d'exposition"
-
-#, fuzzy
-#~ msgid "Converter"
-#~ msgstr "Centimère"
-
-#, fuzzy
-#~ msgid "Night-scene"
-#~ msgstr "Scène de nuit"
-
-#, fuzzy
-#~ msgid "Better"
-#~ msgstr "Centimère"
-
-#, fuzzy
-#~ msgid "Flash off"
-#~ msgstr "Flash"
-
-#, fuzzy
-#~ msgid "DaylightSavings"
-#~ msgstr "Lumière du jour"
-
-#, fuzzy
-#~ msgid "Flash not fired"
-#~ msgstr "Le flash ne s'est pas déclenché."
-
-#, fuzzy
-#~ msgid " / Contrast : "
-#~ msgstr "Contraste"
-
-#, fuzzy
-#~ msgid " / Saturation : "
-#~ msgstr "Saturation"
-
-#, fuzzy
-#~ msgid " / Sharpness : "
-#~ msgstr "Netteté"
-
-#, fuzzy
-#~ msgid " / Metering mode : "
-#~ msgstr "Mode de mesure"
-
-#, fuzzy
-#~ msgid " / Exposure mode : "
-#~ msgstr "Mode d'exposition"
-
-#, fuzzy
-#~ msgid " / Focus mode2 : "
-#~ msgstr "Mode d'exposition"
-
-#, fuzzy
-#~ msgid "White balance : "
-#~ msgstr "Balance des blancs"
-
-#, fuzzy
-#~ msgid " / Flash bias : %.2f EV"
-#~ msgstr "Flash"
-
-#, fuzzy
-#~ msgid " / Subject Distance (mm) : %u"
-#~ msgstr "Distance au sujet"
-
-#~ msgid "center-weight"
-#~ msgstr "Centre pondéré"
-
-#~ msgid "spot"
-#~ msgstr "spot"
-
-#~ msgid "matrix"
-#~ msgstr "matrice"
-
-#~ msgid "sunny"
-#~ msgstr "ensoleillé"
-
-#~ msgid "fluorescent"
-#~ msgstr "fluorescent"
-
-#~ msgid "tungsten"
-#~ msgstr "tungsten"
-
-#~ msgid "yes"
-#~ msgstr "oui"
-
-#, fuzzy
-#~ msgid "Unknown 1"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 2"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 3"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 4"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 5"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 6"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 8"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 9"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 14"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 15"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 16"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 17"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 18"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 19"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 21"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 24"
-#~ msgstr "Inconnu"
-
-#, fuzzy
-#~ msgid "Unknown 25"
-#~ msgstr "Inconnu"
