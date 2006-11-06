@@ -373,9 +373,24 @@ namespace Exiv2 {
         TagInfo(0x103c, "NearLensStep", N_("Near Lens Step"), 
                 N_("Near lens step"), 
                 olympusIfdId, makerTags, unsignedShort, printValue),
-
-        /* TODO: 
-           add Olympus camera settings tags here (0x2010-0x3000). See Exiftool database.*/
+        TagInfo(0x2010, "Equipment", N_("Equipment Info"), 
+                N_("Camera equipment information"), 
+                minoltaIfdId, makerTags, undefined, printValue),
+        TagInfo(0x2020, "CameraSettings", N_("Camera Settings"), 
+                N_("Camera Settings information"), 
+                minoltaIfdId, makerTags, undefined, printValue),
+        TagInfo(0x2030, "RawDevelopment", N_("Raw Development"), 
+                N_("Raw development information"), 
+                minoltaIfdId, makerTags, undefined, printValue),
+        TagInfo(0x2040, "ImageProcessing", N_("Image Processing"), 
+                N_("Image processing information"), 
+                minoltaIfdId, makerTags, undefined, printValue),
+        TagInfo(0x2050, "FocusInfo", N_("Focus Info"), 
+                N_("Focus information"), 
+                minoltaIfdId, makerTags, undefined, printValue),
+        TagInfo(0x3000, "RawInfo", N_("Raw Info"), 
+                N_("Raw information"), 
+                minoltaIfdId, makerTags, undefined, printValue),
 
         // End of list marker
         TagInfo(0xffff, "(UnknownOlympusMakerNoteTag)", "(UnknownOlympusMakerNoteTag)", 
