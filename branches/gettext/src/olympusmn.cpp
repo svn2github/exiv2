@@ -50,17 +50,6 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
-    //! @cond IGNORE
-    OlympusMakerNote::RegisterMn::RegisterMn()
-    {
-        MakerNoteFactory::registerMakerNote(
-            "OLYMPUS*", "*", createOlympusMakerNote);
-        MakerNoteFactory::registerMakerNote(
-            olympusIfdId, MakerNote::AutoPtr(new OlympusMakerNote));
-
-        ExifTags::registerMakerTagInfo(olympusIfdId, tagInfo_);
-    }
-    //! @endcond
 
     //! OffOn, multiple tags
     extern const TagDetails olympusOffOn[] = {
@@ -394,6 +383,16 @@ namespace Exiv2 {
                 olympusIfdId, makerTags, invalidTypeId, printValue)
     };
 
+    //! @cond IGNORE
+    OlympusMakerNote::RegisterMn::RegisterMn()
+    {
+        MakerNoteFactory::registerMakerNote("OLYMPUS*", "*", createOlympusMakerNote);
+        MakerNoteFactory::registerMakerNote(olympusIfdId, MakerNote::AutoPtr(new OlympusMakerNote));
+
+        ExifTags::registerMakerTagInfo(olympusIfdId, tagInfo_);
+    }
+    //! @endcond
+
     OlympusMakerNote::OlympusMakerNote(bool alloc)
         : IfdMakerNote(olympusIfdId, alloc)
     {
@@ -408,9 +407,7 @@ namespace Exiv2 {
     {
     }
 
-    int OlympusMakerNote::readHeader(const byte* buf,
-                                     long        len,
-                                     ByteOrder   /*byteOrder*/)
+    int OlympusMakerNote::readHeader(const byte* buf, long len, ByteOrder /*byteOrder*/)
     {
         if (len < 8) return 1;
 
@@ -457,8 +454,7 @@ namespace Exiv2 {
         return new OlympusMakerNote(*this);
     }
 
-    std::ostream& OlympusMakerNote::print0x0200(std::ostream& os,
-                                                const Value& value)
+    std::ostream& OlympusMakerNote::print0x0200(std::ostream& os, const Value& value)
     {
         if (value.count() != 3 || value.typeId() != unsignedLong) {
             return os << value;
@@ -489,8 +485,7 @@ namespace Exiv2 {
         return os;
     } // OlympusMakerNote::print0x0200
 
-    std::ostream& OlympusMakerNote::print0x0204(std::ostream& os,
-                                                const Value& value)
+    std::ostream& OlympusMakerNote::print0x0204(std::ostream& os, const Value& value)
     {
         float f = value.toFloat();
         if (f == 0.0 || f == 1.0) return os << _("None");
@@ -501,8 +496,7 @@ namespace Exiv2 {
         return os;
     } // OlympusMakerNote::print0x0204
 
-    std::ostream& OlympusMakerNote::print0x1015(std::ostream& os,
-                                                const Value& value)
+    std::ostream& OlympusMakerNote::print0x1015(std::ostream& os, const Value& value)
     {
         if (value.count() != 2 || value.typeId() != unsignedShort) {
             return os << value;
@@ -547,11 +541,8 @@ namespace Exiv2 {
 // *****************************************************************************
 // free functions
 
-    MakerNote::AutoPtr createOlympusMakerNote(bool        alloc,
-                                              const byte* /*buf*/,
-                                              long        /*len*/,
-                                              ByteOrder   /*byteOrder*/,
-                                              long        /*offset*/)
+    MakerNote::AutoPtr createOlympusMakerNote(bool alloc, const byte* /*buf*/, long /*len*/,
+                                              ByteOrder /*byteOrder*/, long /*offset*/)
     {
         return MakerNote::AutoPtr(new OlympusMakerNote(alloc));
     }

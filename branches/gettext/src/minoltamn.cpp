@@ -1399,10 +1399,7 @@ namespace Exiv2 {
         return headerSize() + ifd.size() + ifd.dataSize();
     } // MinoltaMakerNote::size
 
-    long MinoltaMakerNote::assemble(Entry&    e,
-                                    IfdId     ifdId, 
-                                    uint16_t  tag, 
-                                    ByteOrder /*byteOrder*/) const
+    long MinoltaMakerNote::assemble(Entry& e, IfdId ifdId, uint16_t tag, ByteOrder /*byteOrder*/) const
     {
         DataBuf buf(1024);
         memset(buf.pData_, 0x0, 1024);
@@ -1427,10 +1424,7 @@ namespace Exiv2 {
         return len;
     } // MinoltaMakerNote::assemble
 
-    long MinoltaMakerNote::assembleStd(Entry&    e,
-                                       IfdId     ifdId,
-                                       uint32_t  tag,
-                                       ByteOrder /*byteOrder*/) const
+    long MinoltaMakerNote::assembleStd(Entry& e, IfdId ifdId, uint32_t tag, ByteOrder /*byteOrder*/) const
     {
         DataBuf buf(1024);
         memset(buf.pData_, 0x0, 1024);
