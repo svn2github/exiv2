@@ -30,6 +30,8 @@
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @author  Will Stokes (wuz)
            <a href="mailto:wstokes@gmail.com">wstokes@gmail.com</a>
+  @author  Gilles Caulier (gc)
+           <a href="mailto:caulier dot gilles at kdemail dot net">caulier dot gilles at kdemail dot net</a>
   @date    10-Mar-05, wuz: created
  */
 #ifndef OLYMPUSMN_HPP_

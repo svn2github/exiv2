@@ -23,6 +23,7 @@
   Version:   $Rev$
   Author(s): Will Stokes (wuz) <wstokes@gmail.com>
              Andreas Huggel (ahu) <ahuggel@gmx.net>
+             Gilles Caulier (gc) <caulier.gilles@kdemail.net>
   History:   10-Mar-05, wuz: created
   Credits:   See header file.
  */
