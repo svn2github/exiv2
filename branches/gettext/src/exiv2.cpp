@@ -178,20 +178,20 @@ void Params::version(std::ostream& os) const
     os << EXV_PACKAGE_STRING << "\n"
        << _("Copyright (C) 2004, 2005, 2006 Andreas Huggel.\n")
        << "\n"
-       << _("This program is free software; you can redistribute it and/or\n")
-       << _("modify it under the terms of the GNU General Public License\n")
-       << _("as published by the Free Software Foundation; either version 2\n")
-       << _("of the License, or (at your option) any later version.\n")
+       << _("This program is free software; you can redistribute it and/or\n"
+            "modify it under the terms of the GNU General Public License\n"
+            "as published by the Free Software Foundation; either version 2\n"
+            "of the License, or (at your option) any later version.\n")
        << "\n"
-       << _("This program is distributed in the hope that it will be useful,\n")
-       << _("but WITHOUT ANY WARRANTY; without even the implied warranty of\n")
-       << _("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n")
-       << _("GNU General Public License for more details.\n")
+       << _("This program is distributed in the hope that it will be useful,\n"
+            "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+            "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+            "GNU General Public License for more details.\n")
        << "\n"
-       << _("You should have received a copy of the GNU General Public\n")
-       << _("License along with this program; if not, write to the Free\n")
-       << _("Software Foundation, Inc., 51 Franklin Street, Fifth Floor,\n")
-       << _("Boston, MA 02110-1301 USA\n");
+       << _("You should have received a copy of the GNU General Public\n"
+            "License along with this program; if not, write to the Free\n"
+            "Software Foundation, Inc., 51 Franklin Street, Fifth Floor,\n"
+            "Boston, MA 02110-1301 USA\n");
 }
 
 void Params::usage(std::ostream& os) const
@@ -205,21 +205,21 @@ void Params::help(std::ostream& os) const
 {
     usage(os);
     os << _("\nActions:\n")
-       << _("  ad | adjust   Adjust Exif timestamps by the given time. This\n")
-       << _("                action requires the option -a time.\n")
+       << _("  ad | adjust   Adjust Exif timestamps by the given time. This\n"
+            "                action requires the option -a time.\n")
        << _("  pr | print    Print image metadata.\n")
        << _("  rm | delete   Delete image metadata from the files.\n")
-       << _("  in | insert   Insert metadata from corresponding *.exv files.\n")
-       << _("                Use option -S to change the suffix of the input files.\n")
+       << _("  in | insert   Insert metadata from corresponding *.exv files.\n"
+            "                Use option -S to change the suffix of the input files.\n")
        << _("  ex | extract  Extract metadata to *.exv and thumbnail image files.\n")
-       << _("  mv | rename   Rename files and/or set file timestamps according to the\n")
-       << _("                Exif create timestamp. The filename format can be set with\n")
-       << _("                -r format, timestamp options are controlled with -t and -T.\n")
-       << _("  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n")
-       << _("                Iptc metadata of image files or set the Jpeg comment.\n")
-       << _("                Requires option -c, -m or -M.\n")
-       << _("  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n")
-       << _("                Exif tag.\n")
+       << _("  mv | rename   Rename files and/or set file timestamps according to the\n"
+            "                Exif create timestamp. The filename format can be set with\n"
+            "                -r format, timestamp options are controlled with -t and -T.\n")
+       << _("  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n"
+            "                Iptc metadata of image files or set the Jpeg comment.\n"
+            "                Requires option -c, -m or -M.\n")
+       << _("  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n"
+            "                Exif tag.\n")
        << _("\nOptions:\n")
        << _("   -h      Display this help and exit.\n")
        << _("   -V      Show the program version and exit.\n")
@@ -228,12 +228,12 @@ void Params::help(std::ostream& os) const
        << _("   -u      Don't show unknown tags.\n")
        << _("   -k      Preserve file timestamps (keep).\n")
        << _("   -t      Also set the file timestamp in 'rename' action (overrides -k).\n")
-       << _("   -T      Only set the file timestamp in 'rename' action, do not rename\n")
-       << _("           the file (overrides -k).\n")
+       << _("   -T      Only set the file timestamp in 'rename' action, do not rename\n"
+            "           the file (overrides -k).\n")
        << _("   -f      Do not prompt before overwriting existing files (force).\n")
        << _("   -F      Do not prompt before renaming files (Force).\n")
-       << _("   -a time Time adjustment in the format [-]HH[:MM[:SS]]. This option\n")
-       << _("           is only used with the 'adjust' action.\n")
+       << _("   -a time Time adjustment in the format [-]HH[:MM[:SS]]. This option\n"
+            "           is only used with the 'adjust' action.\n")
        << _("   -p mode Print mode for the 'print' action. Possible modes are:\n")
        << _("             s : print a summary of the Exif metadata (the default)\n")
        << _("             t : interpreted (translated) Exif data (shortcut for -Pkyct)\n")
@@ -259,19 +259,19 @@ void Params::help(std::ostream& os) const
        << _("             t : Exif thumbnail only\n")
        << _("             i : Iptc data\n")
        << _("             c : Jpeg comment\n")
-       << _("   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n")
-       << _("           the same as those for the -d option. Only Jpeg thumbnails can\n")
-       << _("           be inserted, they need to be named <file>-thumb.jpg\n")
-       << _("   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n")
-       << _("           are the same as those for the -d option.\n")
-       << _("   -r fmt  Filename format for the 'rename' action. The format string\n")
-       << _("           follows strftime(3). Default filename format is ")
-       <<             format_ << ".\n"
+       << _("   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
+            "           the same as those for the -d option. Only Jpeg thumbnails can\n"
+            "           be inserted, they need to be named <file>-thumb.jpg\n")
+       << _("   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
+            "           are the same as those for the -d option.\n")
+       << _("   -r fmt  Filename format for the 'rename' action. The format string\n"
+            "           follows strftime(3). Default filename format is ")
+       <<               format_ << ".\n"
        << _("   -c txt  Jpeg comment string to set in the image.\n")
-       << _("   -m file Command file for the modify action. The format for commands is\n")
-       << _("           set|add|del <key> [[<type>] <value>].\n")
-       << _("   -M cmd  Command line for the modify action. The format for the\n")
-       << _("           commands is the same as that of the lines of a command file.\n")
+       << _("   -m file Command file for the modify action. The format for commands is\n"
+            "           set|add|del <key> [[<type>] <value>].\n")
+       << _("   -M cmd  Command line for the modify action. The format for the\n"
+            "           commands is the same as that of the lines of a command file.\n")
        << _("   -l dir  Location (directory) for files to be inserted from or extracted to.\n")
        << _("   -S .suf Use suffix .suf for source files for insert command.\n\n");
 } // Params::help
