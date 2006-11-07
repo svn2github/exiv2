@@ -781,7 +781,8 @@ msgid "Reference Date"
 msgstr "Référence Noir/Blanc"
 
 #: src/datasets.cpp:279
-msgid "Identifies the date of a prior envelope to which the current object refers."
+msgid ""
+"Identifies the date of a prior envelope to which the current object refers."
 msgstr ""
 
 #: src/datasets.cpp:281
@@ -973,7 +974,8 @@ msgid "Headline"
 msgstr ""
 
 #: src/datasets.cpp:359
-msgid "A publishable entry providing a synopsis of the contents of the object data."
+msgid ""
+"A publishable entry providing a synopsis of the contents of the object data."
 msgstr ""
 
 #: src/datasets.cpp:362 src/datasets.cpp:365
@@ -1264,7 +1266,8 @@ msgid "  in | insert   Insert metadata from corresponding *.exv files.\n"
 msgstr ""
 
 #: src/exiv2.cpp:213
-msgid "                Use option -S to change the suffix of the input files.\n"
+msgid ""
+"                Use option -S to change the suffix of the input files.\n"
 msgstr ""
 
 #: src/exiv2.cpp:214
@@ -1272,19 +1275,23 @@ msgid "  ex | extract  Extract metadata to *.exv and thumbnail image files.\n"
 msgstr ""
 
 #: src/exiv2.cpp:215
-msgid "  mv | rename   Rename files and/or set file timestamps according to the\n"
+msgid ""
+"  mv | rename   Rename files and/or set file timestamps according to the\n"
 msgstr ""
 
 #: src/exiv2.cpp:216
-msgid "                Exif create timestamp. The filename format can be set with\n"
+msgid ""
+"                Exif create timestamp. The filename format can be set with\n"
 msgstr ""
 
 #: src/exiv2.cpp:217
-msgid "                -r format, timestamp options are controlled with -t and -T.\n"
+msgid ""
+"                -r format, timestamp options are controlled with -t and -T.\n"
 msgstr ""
 
 #: src/exiv2.cpp:218
-msgid "  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n"
+msgid ""
+"  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n"
 msgstr ""
 
 #: src/exiv2.cpp:219
@@ -1296,7 +1303,8 @@ msgid "                Requires option -c, -m or -M.\n"
 msgstr ""
 
 #: src/exiv2.cpp:221
-msgid "  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n"
+msgid ""
+"  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n"
 msgstr ""
 
 #: src/exiv2.cpp:222
@@ -1334,11 +1342,13 @@ msgid "   -k      Preserve file timestamps (keep).\n"
 msgstr ""
 
 #: src/exiv2.cpp:230
-msgid "   -t      Also set the file timestamp in 'rename' action (overrides -k).\n"
+msgid ""
+"   -t      Also set the file timestamp in 'rename' action (overrides -k).\n"
 msgstr ""
 
 #: src/exiv2.cpp:231
-msgid "   -T      Only set the file timestamp in 'rename' action, do not rename\n"
+msgid ""
+"   -T      Only set the file timestamp in 'rename' action, do not rename\n"
 msgstr ""
 
 #: src/exiv2.cpp:232
@@ -1370,7 +1380,8 @@ msgid "             s : print a summary of the Exif metadata (the default)\n"
 msgstr ""
 
 #: src/exiv2.cpp:239
-msgid "             t : interpreted (translated) Exif data (shortcut for -Pkyct)\n"
+msgid ""
+"             t : interpreted (translated) Exif data (shortcut for -Pkyct)\n"
 msgstr ""
 
 #: src/exiv2.cpp:240
@@ -1390,7 +1401,8 @@ msgid "             c : Jpeg comment\n"
 msgstr ""
 
 #: src/exiv2.cpp:244
-msgid "   -P cols Print columns for the Exif taglist ('print' action). Valid are:\n"
+msgid ""
+"   -P cols Print columns for the Exif taglist ('print' action). Valid are:\n"
 msgstr ""
 
 #: src/exiv2.cpp:245
@@ -1438,7 +1450,8 @@ msgid "             h : hexdump of the data\n"
 msgstr ""
 
 #: src/exiv2.cpp:256
-msgid "   -d tgt  Delete target(s) for the 'delete' action. Possible targets are:\n"
+msgid ""
+"   -d tgt  Delete target(s) for the 'delete' action. Possible targets are:\n"
 msgstr ""
 
 #: src/exiv2.cpp:257
@@ -1458,11 +1471,13 @@ msgid "             i : Iptc data\n"
 msgstr ""
 
 #: src/exiv2.cpp:262
-msgid "   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
+msgid ""
+"   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
 msgstr ""
 
 #: src/exiv2.cpp:263
-msgid "           the same as those for the -d option. Only Jpeg thumbnails can\n"
+msgid ""
+"           the same as those for the -d option. Only Jpeg thumbnails can\n"
 msgstr ""
 
 #: src/exiv2.cpp:264
@@ -1470,7 +1485,8 @@ msgid "           be inserted, they need to be named <file>-thumb.jpg\n"
 msgstr ""
 
 #: src/exiv2.cpp:265
-msgid "   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
+msgid ""
+"   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
 msgstr ""
 
 #: src/exiv2.cpp:266
@@ -1490,7 +1506,8 @@ msgid "   -c txt  Jpeg comment string to set in the image.\n"
 msgstr ""
 
 #: src/exiv2.cpp:271
-msgid "   -m file Command file for the modify action. The format for commands is\n"
+msgid ""
+"   -m file Command file for the modify action. The format for commands is\n"
 msgstr ""
 
 #: src/exiv2.cpp:272
@@ -1502,7 +1519,8 @@ msgid "   -M cmd  Command line for the modify action. The format for the\n"
 msgstr ""
 
 #: src/exiv2.cpp:274
-msgid "           commands is the same as that of the lines of a command file.\n"
+msgid ""
+"           commands is the same as that of the lines of a command file.\n"
 msgstr ""
 
 #: src/exiv2.cpp:275
@@ -2996,12 +3014,14 @@ msgstr ""
 #: src/tags.cpp:525
 #, fuzzy
 msgid "Yes, compulsory, return light not detected"
-msgstr "Flash déclenché, mode de flash obligatoire, lumière de retour non détectée."
+msgstr ""
+"Flash déclenché, mode de flash obligatoire, lumière de retour non détectée."
 
 #: src/tags.cpp:526
 #, fuzzy
 msgid "Yes, compulsory, return light detected"
-msgstr "Flash déclenché, mode de flash obligatoire, lumière de retour détectée."
+msgstr ""
+"Flash déclenché, mode de flash obligatoire, lumière de retour détectée."
 
 #: src/tags.cpp:527
 msgid "No, compulsory"
@@ -3040,7 +3060,8 @@ msgstr "Flash déclenché, mode anti-yeux rouges."
 #: src/tags.cpp:534
 #, fuzzy
 msgid "Yes, red-eye reduction, return light not detected"
-msgstr "Flash déclenché, mode anti-yeux rouges, lumière de retour non détectée."
+msgstr ""
+"Flash déclenché, mode anti-yeux rouges, lumière de retour non détectée."
 
 #: src/tags.cpp:535
 #, fuzzy
@@ -3074,7 +3095,8 @@ msgstr "Flash déclenché, mode anti-yeux rouges."
 #: src/tags.cpp:540
 #, fuzzy
 msgid "Yes, auto, red-eye reduction, return light not detected"
-msgstr "Flash déclenché, mode anti-yeux rouges, lumière de retour non détectée."
+msgstr ""
+"Flash déclenché, mode anti-yeux rouges, lumière de retour non détectée."
 
 #: src/tags.cpp:541
 #, fuzzy
@@ -3419,7 +3441,8 @@ msgid "The kind of light source."
 msgstr "Le type de source lumineuse."
 
 #: src/tags.cpp:720
-msgid "This tag is recorded when an image is taken using a strobe light (flash)."
+msgid ""
+"This tag is recorded when an image is taken using a strobe light (flash)."
 msgstr ""
 
 #: src/tags.cpp:722 src/minoltamn.cpp:641
@@ -3483,7 +3506,8 @@ msgid "Sub-seconds Time Original"
 msgstr "Date et heure (originel)"
 
 #: src/tags.cpp:743
-msgid "A tag used to record fractions of seconds for the <DateTimeOriginal> tag."
+msgid ""
+"A tag used to record fractions of seconds for the <DateTimeOriginal> tag."
 msgstr ""
 "Marqueur utilisé pour enregistrer des fractions de secondes pour le marqueur "
 "<DateTimeOriginal>."
@@ -3494,7 +3518,8 @@ msgid "Sub-seconds Time Digitized"
 msgstr "Date et heure (numérique)"
 
 #: src/tags.cpp:746
-msgid "A tag used to record fractions of seconds for the <DateTimeDigitized> tag."
+msgid ""
+"A tag used to record fractions of seconds for the <DateTimeDigitized> tag."
 msgstr ""
 "Marqueur utilisé pour enregistrer des fractions de secondes pour le marqueur "
 "<DateTimeDigitized>."
@@ -4247,7 +4272,8 @@ msgid "GPS Differential"
 msgstr ""
 
 #: src/tags.cpp:1079
-msgid "Indicates whether differential correction is applied to the GPS receiver."
+msgid ""
+"Indicates whether differential correction is applied to the GPS receiver."
 msgstr ""
 
 #: src/tags.cpp:1082 src/tags.cpp:1083
@@ -4452,7 +4478,8 @@ msgid "Camera Settings (Std Old)"
 msgstr ""
 
 #: src/minoltamn.cpp:224
-msgid "Standard Camera settings (Old Camera models like D5, D7, S304, and S404)"
+msgid ""
+"Standard Camera settings (Old Camera models like D5, D7, S304, and S404)"
 msgstr ""
 
 #: src/minoltamn.cpp:226
@@ -6723,4 +6750,3 @@ msgstr ""
 #: src/olympusmn.cpp:545
 msgid "One-touch"
 msgstr ""
-

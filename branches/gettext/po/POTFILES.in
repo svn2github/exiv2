@@ -3,10 +3,10 @@
 # Common Library implementation.
 
 src/actions.cpp
-src/datasets.cpp
-src/exiv2.cpp
 src/cr2image.cpp
 src/crwimage.cpp
+src/datasets.cpp
+src/exiv2.cpp
 src/error.cpp
 src/tags.cpp
 src/tiffimage.cpp
