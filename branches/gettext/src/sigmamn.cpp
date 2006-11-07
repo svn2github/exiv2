@@ -220,10 +220,10 @@ namespace Exiv2 {
                                               const Value& value)
     {
         switch (value.toString()[0]) {
-        case 'P': os << "Program"; break;
-        case 'A': os << "Aperture priority"; break;
-        case 'S': os << "Shutter priority"; break;
-        case 'M': os << "Manual"; break;
+        case 'P': os << _("Program"); break;
+        case 'A': os << _("Aperture priority"); break;
+        case 'S': os << _("Shutter priority"); break;
+        case 'M': os << _("Manual"); break;
         default: os << "(" << value << ")"; break;
         }
         return os;
@@ -233,9 +233,9 @@ namespace Exiv2 {
                                               const Value& value)
     {
         switch (value.toString()[0]) {
-        case 'A': os << "Average"; break;
-        case 'C': os << "Center"; break;
-        case '8': os << "8-Segment"; break;
+        case 'A': os << _("Average"); break;
+        case 'C': os << _("Center"); break;
+        case '8': os << _("8-Segment"); break;
         default: os << "(" << value << ")"; break;
         }
         return os;
