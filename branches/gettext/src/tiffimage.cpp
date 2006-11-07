@@ -203,7 +203,7 @@ namespace Exiv2 {
     void TiffHeade2::print(std::ostream& os, const std::string& prefix) const
     {
         os << prefix
-           << _("Header, offset") << "= 0x" << std::setw(8) << std::setfill('0')
+           << _("Header, offset") << " = 0x" << std::setw(8) << std::setfill('0')
            << std::hex << std::right << offset_;
 
         switch (byteOrder_) {

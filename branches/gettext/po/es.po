@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 10:21+0100\n"
+"POT-Creation-Date: 2006-11-07 10:37+0100\n"
 "PO-Revision-Date: 2005-03-12 05:43+0100\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -4344,15 +4344,15 @@ msgstr ""
 msgid "Failed to rename"
 msgstr ""
 
-#: src/tiffimage.cpp:206
+#: src/cr2image.cpp:241 src/tiffimage.cpp:206
 msgid "Header, offset"
 msgstr ""
 
-#: src/tiffimage.cpp:210
+#: src/cr2image.cpp:245 src/tiffimage.cpp:210
 msgid "little endian encoded"
 msgstr ""
 
-#: src/tiffimage.cpp:211
+#: src/cr2image.cpp:246 src/tiffimage.cpp:211
 msgid "big endian encoded"
 msgstr ""
 

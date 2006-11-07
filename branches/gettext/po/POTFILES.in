@@ -3,6 +3,7 @@ src/tags.cpp
 src/datasets.cpp
 src/exiv2.cpp
 src/actions.cpp
+src/cr2image.cpp
 src/tiffimage.cpp
 src/minoltamn.cpp
 src/fujimn.cpp

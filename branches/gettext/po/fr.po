@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 10:21+0100\n"
+"POT-Creation-Date: 2006-11-07 10:37+0100\n"
 "PO-Revision-Date: 2006-11-06 16:31+0100\n"
 "Last-Translator: Caulier Gilles <caulier dot gilles at kdemail dot net>\n"
 "Language-Team: Français <fr@li.org>\n"
@@ -4163,15 +4163,15 @@ msgstr ""
 msgid "Failed to rename"
 msgstr ""
 
-#: src/tiffimage.cpp:206
+#: src/cr2image.cpp:241 src/tiffimage.cpp:206
 msgid "Header, offset"
 msgstr ""
 
-#: src/tiffimage.cpp:210
+#: src/cr2image.cpp:245 src/tiffimage.cpp:210
 msgid "little endian encoded"
 msgstr ""
 
-#: src/tiffimage.cpp:211
+#: src/cr2image.cpp:246 src/tiffimage.cpp:211
 msgid "big endian encoded"
 msgstr ""
 
