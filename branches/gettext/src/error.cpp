@@ -97,7 +97,7 @@ namespace Exiv2 {
     std::string Error::what() const
     {
         int idx = errorIdx(code_);
-        std::string msg = std::string(errMsg_[idx].message_);
+        std::string msg = std::string(_(errMsg_[idx].message_));
         std::string::size_type pos;
         pos = msg.find("%0");
         if (pos != std::string::npos) {
