@@ -57,22 +57,47 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
+    //! Focus area for Nikon cameras.
+    static const char *nikonFocusarea[] = {
+        N_("Single area"),
+        N_("Dynamic area"),
+        N_("Dynamic area, closest subject"),
+        N_("Group dynamic"),
+        N_("Single area (wide)"),
+        N_("Dynamic area (wide")
+    };
+
     // Roger Larsson: My guess is that focuspoints will follow autofocus sensor
     // module. Note that relative size and position will vary depending on if
     // "wide" or not
     //! Focus points for Nikon cameras, used for Nikon 1 and Nikon 3 makernotes.
     static const char *nikonFocuspoints[] = {
-        "Center",
-        "Top",
-        "Bottom",
-        "Left",
-        "Right",
-        "Upper left",
-        "Upper right",
-        "Lower left",
-        "Lower right",
-        "Leftmost",
-        "Rightmost"
+        N_("Center"),
+        N_("Top"),
+        N_("Bottom"),
+        N_("Left"),
+        N_("Right"),
+        N_("Upper-left"),
+        N_("Upper-right"),
+        N_("Lower-left"),
+        N_("Lower-right"),
+        N_("Left-most"),
+        N_("Right-most")
+    };
+
+    //! ColorSpace, tag 0x001e
+    extern const TagDetails nikonColorSpace[] = {
+        { 1, N_("sRGB")      },
+        { 2, N_("Adobe RGB") }
+    };
+
+    //! FlashMode, tag 0x0087
+    extern const TagDetails nikonFlashMode[] = {
+        { 0, N_("Did not fire")         },
+        { 1, N_("Fire, manual")         },
+        { 7, N_("Fire, external")       },
+        { 8, N_("Fire, commander mode") },
+        { 9, N_("Fire, TTL mode")       }
     };
 
     //! @cond IGNORE
@@ -109,8 +134,8 @@ namespace Exiv2 {
         TagInfo(0x0007, "Focus", N_("Focus"), 
                 N_("Focus mode"), 
                 nikon1IfdId, makerTags, asciiString, print0x0007),
-        TagInfo(0x0008, "FlashMode", N_("Flash Mode"), 
-                N_("Flash mode"), 
+        TagInfo(0x0008, "FlashSetting", N_("Flash Setting"), 
+                N_("Flash setting"), 
                 nikon1IfdId, makerTags, asciiString, printValue),
         TagInfo(0x0009, "FlashDevice", N_("Flash Device"), 
                 N_("Flash device"), 
@@ -145,14 +170,61 @@ namespace Exiv2 {
         TagInfo(0x0013, "ISOSettings", N_("ISO Settings"),
                 N_("ISO setting"), 
                 nikon1IfdId, makerTags, unsignedShort, printValue),
+        TagInfo(0x0016, "ImageBoundary", N_("Image Boundary"),
+                N_("Image boundary"), 
+                nikon1IfdId, makerTags, unsignedShort, printValue),
+        TagInfo(0x0018, "FlashBiasBracket", N_("Flash Bias Bracket"), 
+                N_("Flash exposure bracket value"), 
+                minoltaIfdId, makerTags, undefined, printValue),
+        TagInfo(0x0019, "ExposureBracket", N_("Exposure Bracket"),
+                N_("Exposure bracket value"), 
+                nikon1IfdId, makerTags, signedRational, printValue),
+        TagInfo(0x001a, "ImageProcessing", N_("Image Processing"), 
+                N_("Image processing"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x001b, "CropHiSpeed", N_("Crop High Speed"),
+                N_("Crop high speed"), 
+                nikon1IfdId, makerTags, unsignedShort, printValue),
+        TagInfo(0x001d, "SerialNumber", N_("Serial Number"), 
+                N_("Serial Number"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x001e, "ColorSpace", N_("Color Space"),
+                N_("Color space"), 
+                nikon1IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonColorSpace)),
+        TagInfo(0x0080, "ImageAdjustment", N_("Image Adjustment"), 
+                N_("Image adjustment setting"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0081, "ToneComp", N_("Tone Compensation"), 
+                N_("Tone compensation"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0082, "Adapter", N_("Lens Adapter"), 
+                N_("Lens adapter used"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0083, "LensType", N_("Lens Type"),
+                N_("Lens type"), 
+                nikon1IfdId, makerTags, unsignedByte, print0x0083),
+        TagInfo(0x0084, "Lens", N_("Lens"),
+                N_("Lens"), 
+                nikon1IfdId, makerTags, unsignedRational, printValue),
+        TagInfo(0x0085, "FocusDistance", N_("Focus Distance"), 
+                N_("Manual focus distance"), 
+                nikon1IfdId, makerTags, unsignedRational, printValue),
+        TagInfo(0x0086, "DigitalZoom", N_("Digital Zoom"), 
+                N_("Digital zoom setting"), 
+                nikon1IfdId, makerTags, unsignedRational, print0x0086),
+        TagInfo(0x0087, "FlashMode", N_("Flash Mode"),
+                N_("Flash mode"), 
+                nikon1IfdId, makerTags, unsignedByte, EXV_PRINT_TAG(nikonFlashMode)),
+        TagInfo(0x0088, "AFFocusPos", N_("AF Focus Position"), 
+                N_("AF focus position information"), 
+                nikon1IfdId, makerTags, undefined, print0x0088),
 
-        TagInfo(0x0080, "ImageAdjustment", "ImageAdjustment", "Image adjustment setting", nikon1IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0082, "Adapter", "Adapter", "Adapter used", nikon1IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0085, "FocusDistance", "FocusDistance", "Manual focus distance", nikon1IfdId, makerTags, unsignedRational, print0x0085),
-        TagInfo(0x0086, "DigitalZoom", "DigitalZoom", "Digital zoom setting", nikon1IfdId, makerTags, unsignedRational, print0x0086),
-        TagInfo(0x0088, "AFFocusPos", "AFFocusPos", "AF focus position", nikon1IfdId, makerTags, undefined, print0x0088),
+        // TODO: add missing tags here.
+
         // End of list marker
-        TagInfo(0xffff, "(UnknownNikon1MnTag)", "(UnknownNikon1MnTag)", "Unknown Nikon1MakerNote tag", nikon1IfdId, makerTags, invalidTypeId, printValue)
+        TagInfo(0xffff, "(UnknownNikon1MnTag)", "(UnknownNikon1MnTag)", 
+                N_("Unknown Nikon1MakerNote tag"), 
+                nikon1IfdId, makerTags, invalidTypeId, printValue)
     };
 
     Nikon1MakerNote::Nikon1MakerNote(bool alloc)
@@ -207,6 +279,18 @@ namespace Exiv2 {
         return os;
     }
 
+    std::ostream& Nikon1MakerNote::print0x0083(std::ostream& os,
+                                               const Value& value)
+    {
+        unsigned char lensType = (unsigned char)value.toLong();
+
+        if (lensType & 0x01) os << "MF ";
+        if (lensType & 0x02) os << "D ";
+        if (lensType & 0x04) os << "G ";
+        if (lensType & 0x08) os << "VR";
+        return os;
+    }
+
     std::ostream& Nikon1MakerNote::print0x0085(std::ostream& os,
                                                const Value& value)
     {
@@ -253,9 +337,13 @@ namespace Exiv2 {
                                                const Value& value)
     {
         if (value.count() > 1) {
-            unsigned long focusPoint = value.toLong(1);
+            unsigned long focusArea        = value.toLong(0);
+            unsigned long focusPoint       = value.toLong(1);
+            unsigned long focusPointsUsed1 = value.toLong(2);
+            unsigned long focusPointsUsed2 = value.toLong(3);
 
-            os << value.toLong(0) << "; ";
+            os << nikonFocusarea[focusArea] << "; ";
+
             switch (focusPoint) {
             // Could use array nikonFokuspoints
             case 0:
@@ -271,6 +359,34 @@ namespace Exiv2 {
                     os << " " << _("guess") << " " << nikonFocuspoints[focusPoint];
                 break;
             }
+
+            os << "; [";
+
+            if (focusPointsUsed1 & 1)
+                os << nikonFocuspoints[0] << " ";
+            if (focusPointsUsed1 & 2)
+                os << nikonFocuspoints[1] << " ";
+            if (focusPointsUsed1 & 4)
+                os << nikonFocuspoints[2] << " ";
+            if (focusPointsUsed1 & 8)
+                os << nikonFocuspoints[3] << " ";
+            if (focusPointsUsed1 & 16)
+                os << nikonFocuspoints[4] << " ";
+            if (focusPointsUsed1 & 32)
+                os << nikonFocuspoints[5] << " ";
+            if (focusPointsUsed1 & 64)
+                os << nikonFocuspoints[6] << " ";
+            if (focusPointsUsed1 & 128)
+                os << nikonFocuspoints[7] << " ";
+
+            if (focusPointsUsed2 & 1)
+                os << nikonFocuspoints[8] << " ";
+            if (focusPointsUsed2 & 2)
+                os << nikonFocuspoints[9] << " ";
+            if (focusPointsUsed2 & 4)
+                os << nikonFocuspoints[10] << " ";
+
+            os << "]";
         }
         else {
             os << value;

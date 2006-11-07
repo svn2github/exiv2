@@ -18,6 +18,7 @@ src/tiffvisitor.cpp
 
 src/fujimn.cpp
 src/minoltamn.cpp
+src/nikonmn.cpp
 src/olympusmn.cpp
 src/panasonicmn.cpp
 src/sigmamn.cpp
