@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 11:42+0100\n"
+"POT-Creation-Date: 2006-11-07 13:42+0100\n"
 "PO-Revision-Date: 2006-11-07 10:54+0100\n"
 "Last-Translator: Caulier Gilles <caulier dot gilles at kdemail dot net>\n"
 "Language-Team: Français <fr@li.org>\n"
@@ -362,7 +362,7 @@ msgstr ""
 msgid "big endian encoded"
 msgstr ""
 
-#: src/crwimage.cpp:659
+#: src/crwimage.cpp:659 src/tiffvisitor.cpp:381 src/tiffvisitor.cpp:404
 #, fuzzy
 msgid "tag"
 msgstr "moyenne"
@@ -371,7 +371,7 @@ msgstr "moyenne"
 msgid "dir"
 msgstr ""
 
-#: src/crwimage.cpp:663
+#: src/crwimage.cpp:663 src/tiffvisitor.cpp:383
 msgid "type"
 msgstr ""
 
@@ -380,7 +380,7 @@ msgstr ""
 msgid "size"
 msgstr "Source du fichier"
 
-#: src/crwimage.cpp:665
+#: src/crwimage.cpp:665 src/tiffvisitor.cpp:387
 #, fuzzy
 msgid "offset"
 msgstr "Doux"
@@ -4375,6 +4375,57 @@ msgstr "Intel"
 #, fuzzy
 msgid "Digital zoom not used"
 msgstr "Valeur du zoom numérique"
+
+#: src/tiffvisitor.cpp:320
+#, fuzzy
+msgid "Data area"
+msgstr "Date et heure"
+
+#: src/tiffvisitor.cpp:322
+msgid "bytes.\n"
+msgstr ""
+
+#: src/tiffvisitor.cpp:335
+msgid "directory with"
+msgstr ""
+
+#: src/tiffvisitor.cpp:338
+#, fuzzy
+msgid "entry:\n"
+msgstr "Centimère"
+
+#: src/tiffvisitor.cpp:339
+msgid "entries:\n"
+msgstr ""
+
+#: src/tiffvisitor.cpp:348
+msgid "Next directory:\n"
+msgstr ""
+
+#: src/tiffvisitor.cpp:349
+msgid "No next directory\n"
+msgstr ""
+
+#: src/tiffvisitor.cpp:360
+msgid "Sub-IFD"
+msgstr ""
+
+#: src/tiffvisitor.cpp:367
+#, fuzzy
+msgid "Makernote"
+msgstr "Note du créateur"
+
+#: src/tiffvisitor.cpp:384
+msgid "component"
+msgstr ""
+
+#: src/tiffvisitor.cpp:386
+msgid "bytes"
+msgstr ""
+
+#: src/tiffvisitor.cpp:403
+msgid "Array Entry"
+msgstr ""
 
 #: src/fujimn.cpp:65 src/fujimn.cpp:109 src/fujimn.cpp:146
 #: src/minoltamn.cpp:91 src/minoltamn.cpp:356 src/minoltamn.cpp:362

@@ -11,6 +11,7 @@ src/error.cpp
 src/ifd.cpp
 src/tags.cpp
 src/tiffimage.cpp
+src/tiffvisitor.cpp
 
 # Makernotes parser.
 
