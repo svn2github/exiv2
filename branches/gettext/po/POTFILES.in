@@ -8,6 +8,7 @@ src/crwimage.cpp
 src/datasets.cpp
 src/exiv2.cpp
 src/error.cpp
+src/ifd.cpp
 src/tags.cpp
 src/tiffimage.cpp
 

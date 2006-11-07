@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 10:48+0100\n"
+"POT-Creation-Date: 2006-11-07 11:26+0100\n"
 "PO-Revision-Date: 2005-09-18 19:25+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -342,6 +342,42 @@ msgstr ""
 #: src/actions.cpp:1640
 msgid "Failed to rename"
 msgstr ""
+
+#: src/cr2image.cpp:241 src/crwimage.cpp:642 src/tiffimage.cpp:206
+msgid "Header, offset"
+msgstr ""
+
+#: src/cr2image.cpp:245 src/tiffimage.cpp:210
+msgid "little endian encoded"
+msgstr ""
+
+#: src/cr2image.cpp:246 src/tiffimage.cpp:211
+msgid "big endian encoded"
+msgstr ""
+
+#: src/crwimage.cpp:659
+#, fuzzy
+msgid "tag"
+msgstr "mittel"
+
+#: src/crwimage.cpp:661
+msgid "dir"
+msgstr ""
+
+#: src/crwimage.cpp:663
+#, fuzzy
+msgid "type"
+msgstr "Lichtart"
+
+#: src/crwimage.cpp:664
+#, fuzzy
+msgid "size"
+msgstr "Voll"
+
+#: src/crwimage.cpp:665
+#, fuzzy
+msgid "offset"
+msgstr "Weich"
 
 #: src/datasets.cpp:79
 msgid "(invalid)"
@@ -1704,42 +1740,6 @@ msgstr ""
 msgid "Invalid key"
 msgstr ""
 
-#: src/cr2image.cpp:241 src/crwimage.cpp:642 src/tiffimage.cpp:206
-msgid "Header, offset"
-msgstr ""
-
-#: src/cr2image.cpp:245 src/tiffimage.cpp:210
-msgid "little endian encoded"
-msgstr ""
-
-#: src/cr2image.cpp:246 src/tiffimage.cpp:211
-msgid "big endian encoded"
-msgstr ""
-
-#: src/crwimage.cpp:659
-#, fuzzy
-msgid "tag"
-msgstr "mittel"
-
-#: src/crwimage.cpp:661
-msgid "dir"
-msgstr ""
-
-#: src/crwimage.cpp:663
-#, fuzzy
-msgid "type"
-msgstr "Lichtart"
-
-#: src/crwimage.cpp:664
-#, fuzzy
-msgid "size"
-msgstr "Voll"
-
-#: src/crwimage.cpp:665
-#, fuzzy
-msgid "offset"
-msgstr "Weich"
-
 #: src/error.cpp:44
 msgid "Error %0: arg1=%1, arg2=%2, arg3=%3."
 msgstr ""
@@ -1895,6 +1895,28 @@ msgstr ""
 #, fuzzy
 msgid "(Unknown Error)"
 msgstr "Unbekannt"
+
+#: src/ifd.cpp:691
+#, fuzzy
+msgid "IFD Offset"
+msgstr "Strip Offsets"
+
+#: src/ifd.cpp:694
+msgid "IFD Entries"
+msgstr ""
+
+#: src/ifd.cpp:697
+msgid "Entry     Tag  Format   (Bytes each)  Number  Offset\n"
+msgstr ""
+
+#: src/ifd.cpp:729
+msgid "Next IFD"
+msgstr ""
+
+#: src/ifd.cpp:736
+#, fuzzy
+msgid "Data of entry"
+msgstr "lineares Format"
 
 #: src/tags.cpp:102
 #, fuzzy
