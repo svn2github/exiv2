@@ -336,13 +336,13 @@ namespace Exiv2 {
     std::ostream& Nikon1MakerNote::print0x0088(std::ostream& os,
                                                const Value& value)
     {
-        if (value.count() > 1) {
-            unsigned long focusArea        = value.toLong(0);
-            unsigned long focusPoint       = value.toLong(1);
-            unsigned long focusPointsUsed1 = value.toLong(2);
-            unsigned long focusPointsUsed2 = value.toLong(3);
-
-            os << nikonFocusarea[focusArea] << "; ";
+        if (value.count() >= 1) {
+            unsigned long focusArea = value.toLong(0);
+            os << nikonFocusarea[focusArea] ;
+        }
+        if (value.count() >= 2) {
+            os << "; ";
+            unsigned long focusPoint = value.toLong(1);
 
             switch (focusPoint) {
             // Could use array nikonFokuspoints
@@ -359,34 +359,41 @@ namespace Exiv2 {
                     os << " " << _("guess") << " " << nikonFocuspoints[focusPoint];
                 break;
             }
+        }
+        if (value.count() >= 3) {
+            unsigned long focusPointsUsed1 = value.toLong(2);
+            unsigned long focusPointsUsed2 = value.toLong(3);
 
-            os << "; [";
+            if (focusPointsUsed1 != 0 && focusPointsUsed2 != 0)
+            {
+                os << "; [";
+    
+                if (focusPointsUsed1 & 1)
+                    os << nikonFocuspoints[0] << " ";
+                if (focusPointsUsed1 & 2)
+                    os << nikonFocuspoints[1] << " ";
+                if (focusPointsUsed1 & 4)
+                    os << nikonFocuspoints[2] << " ";
+                if (focusPointsUsed1 & 8)
+                    os << nikonFocuspoints[3] << " ";
+                if (focusPointsUsed1 & 16)
+                    os << nikonFocuspoints[4] << " ";
+                if (focusPointsUsed1 & 32)
+                    os << nikonFocuspoints[5] << " ";
+                if (focusPointsUsed1 & 64)
+                    os << nikonFocuspoints[6] << " ";
+                if (focusPointsUsed1 & 128)
+                    os << nikonFocuspoints[7] << " ";
+    
+                if (focusPointsUsed2 & 1)
+                    os << nikonFocuspoints[8] << " ";
+                if (focusPointsUsed2 & 2)
+                    os << nikonFocuspoints[9] << " ";
+                if (focusPointsUsed2 & 4)
+                    os << nikonFocuspoints[10] << " ";
 
-            if (focusPointsUsed1 & 1)
-                os << nikonFocuspoints[0] << " ";
-            if (focusPointsUsed1 & 2)
-                os << nikonFocuspoints[1] << " ";
-            if (focusPointsUsed1 & 4)
-                os << nikonFocuspoints[2] << " ";
-            if (focusPointsUsed1 & 8)
-                os << nikonFocuspoints[3] << " ";
-            if (focusPointsUsed1 & 16)
-                os << nikonFocuspoints[4] << " ";
-            if (focusPointsUsed1 & 32)
-                os << nikonFocuspoints[5] << " ";
-            if (focusPointsUsed1 & 64)
-                os << nikonFocuspoints[6] << " ";
-            if (focusPointsUsed1 & 128)
-                os << nikonFocuspoints[7] << " ";
-
-            if (focusPointsUsed2 & 1)
-                os << nikonFocuspoints[8] << " ";
-            if (focusPointsUsed2 & 2)
-                os << nikonFocuspoints[9] << " ";
-            if (focusPointsUsed2 & 4)
-                os << nikonFocuspoints[10] << " ";
-
-            os << "]";
+                os << "]";
+            }
         }
         else {
             os << value;
