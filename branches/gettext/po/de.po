@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 10:42+0100\n"
+"POT-Creation-Date: 2006-11-07 10:47+0100\n"
 "PO-Revision-Date: 2005-09-18 19:25+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -4368,6 +4368,162 @@ msgstr "Voll"
 msgid "offset"
 msgstr "Weich"
 
+#: src/error.cpp:44
+msgid "Error %0: arg1=%1, arg2=%2, arg3=%3."
+msgstr ""
+
+#: src/error.cpp:45
+#, fuzzy
+msgid "Success"
+msgstr "Dateiquelle"
+
+#: src/error.cpp:48
+msgid "This does not look like a %1 image"
+msgstr ""
+
+#: src/error.cpp:49
+msgid "Invalid dataset name `%1'"
+msgstr ""
+
+#: src/error.cpp:50
+msgid "Invalid record name `%1'"
+msgstr ""
+
+#: src/error.cpp:51
+msgid "Invalid key `%1'"
+msgstr ""
+
+#: src/error.cpp:52
+msgid "Invalid tag name or ifdId `%1', ifdId %2"
+msgstr ""
+
+#: src/error.cpp:53
+msgid "Value not set"
+msgstr ""
+
+#: src/error.cpp:54
+msgid "%1: Failed to open the data source: %2"
+msgstr ""
+
+#: src/error.cpp:55
+msgid "%1: Failed to open file (%2): %3"
+msgstr ""
+
+#: src/error.cpp:56
+msgid "%1: The file contains data of an unknown image type"
+msgstr ""
+
+#: src/error.cpp:57
+msgid "The memory contains data of an unknown image type"
+msgstr ""
+
+#: src/error.cpp:58
+msgid "Image type %1 is not supported"
+msgstr ""
+
+#: src/error.cpp:59
+msgid "Failed to read image data"
+msgstr ""
+
+#: src/error.cpp:60
+msgid "This does not look like a JPEG image"
+msgstr ""
+
+#: src/error.cpp:61
+msgid "MakerTagInfo registry full"
+msgstr ""
+
+#: src/error.cpp:62
+msgid "%1: Failed to rename file to %2: %3"
+msgstr ""
+
+#: src/error.cpp:63
+msgid "%1: Transfer failed: %2"
+msgstr ""
+
+#: src/error.cpp:64
+msgid "Memory transfer failed: %1"
+msgstr ""
+
+#: src/error.cpp:65
+msgid "Failed to read input data"
+msgstr ""
+
+#: src/error.cpp:66
+msgid "Failed to write image"
+msgstr ""
+
+#: src/error.cpp:67
+msgid "Input data does not contain a valid image"
+msgstr ""
+
+#: src/error.cpp:68
+msgid "Failed to create Makernote for ifdId %1"
+msgstr ""
+
+#: src/error.cpp:69
+msgid "Entry::setValue: Value too large (tag=%1, size=%2, requested=%3)"
+msgstr ""
+
+#: src/error.cpp:70
+msgid "Entry::setDataArea: Value too large (tag=%1, size=%2, requested=%3)"
+msgstr ""
+
+#: src/error.cpp:71
+msgid "Offset out of range"
+msgstr ""
+
+#: src/error.cpp:72
+msgid "Unsupported data area offset type"
+msgstr ""
+
+#: src/error.cpp:73
+msgid "Invalid charset: `%1'"
+msgstr ""
+
+#: src/error.cpp:74
+#, fuzzy
+msgid "Unsupported date format"
+msgstr "Nicht unterstützter JIS String."
+
+#: src/error.cpp:75
+#, fuzzy
+msgid "Unsupported time format"
+msgstr "Nicht unterstützter JIS String."
+
+#: src/error.cpp:76
+msgid "%1: CRW images don't support IPTC metadata"
+msgstr ""
+
+#: src/error.cpp:77
+msgid "%1: CRW images don't support JPEG comments"
+msgstr ""
+
+#: src/error.cpp:78
+msgid "This does not look like a CRW image"
+msgstr ""
+
+#: src/error.cpp:79
+msgid "%1: Not supported"
+msgstr ""
+
+#: src/error.cpp:80
+msgid "ImageFactory registry full"
+msgstr ""
+
+#: src/error.cpp:81
+msgid "Failed to decode %1 metadata"
+msgstr ""
+
+#: src/error.cpp:82
+msgid "Size of %1 JPEG segment is larger than 65535 bytes"
+msgstr ""
+
+#: src/error.cpp:85
+#, fuzzy
+msgid "(Unknown Error)"
+msgstr "Unbekannt"
+
 #: src/minoltamn.cpp:56
 msgid "Natural Color"
 msgstr ""
@@ -7287,9 +7443,6 @@ msgstr ""
 
 #~ msgid "Unsupported UNICODE string"
 #~ msgstr "Nicht unterstützter UNICODE String."
-
-#~ msgid "Unsupported JIS string"
-#~ msgstr "Nicht unterstützter JIS String."
 
 #~ msgid "Tag UserComment does not comply with standard but contains data."
 #~ msgstr ""

@@ -5,6 +5,7 @@ src/exiv2.cpp
 src/actions.cpp
 src/cr2image.cpp
 src/crwimage.cpp
+src/error.cpp
 src/tiffimage.cpp
 src/minoltamn.cpp
 src/fujimn.cpp
