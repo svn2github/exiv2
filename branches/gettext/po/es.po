@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 11:26+0100\n"
+"POT-Creation-Date: 2006-11-07 11:41+0100\n"
 "PO-Revision-Date: 2005-03-12 05:43+0100\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -871,7 +871,7 @@ msgid ""
 msgstr ""
 
 #: src/datasets.cpp:305 src/minoltamn.cpp:288 src/minoltamn.cpp:754
-#: src/minoltamn.cpp:953 src/panasonicmn.cpp:110
+#: src/minoltamn.cpp:953 src/sigmamn.cpp:223 src/panasonicmn.cpp:110
 #, fuzzy
 msgid "Program"
 msgstr "Modo de exposición"
@@ -2878,8 +2878,8 @@ msgstr "No definido"
 #: src/tags.cpp:471 src/tags.cpp:583 src/tags.cpp:590 src/minoltamn.cpp:291
 #: src/minoltamn.cpp:757 src/minoltamn.cpp:788 src/minoltamn.cpp:796
 #: src/minoltamn.cpp:956 src/minoltamn.cpp:987 src/fujimn.cpp:116
-#: src/fujimn.cpp:141 src/panasonicmn.cpp:76 src/panasonicmn.cpp:84
-#: src/panasonicmn.cpp:114 src/olympusmn.cpp:93
+#: src/fujimn.cpp:141 src/sigmamn.cpp:226 src/panasonicmn.cpp:76
+#: src/panasonicmn.cpp:84 src/panasonicmn.cpp:114 src/olympusmn.cpp:93
 msgid "Manual"
 msgstr "Manual"
 
@@ -2895,12 +2895,12 @@ msgid "Auto"
 msgstr "acción"
 
 #: src/tags.cpp:473 src/minoltamn.cpp:289 src/minoltamn.cpp:755
-#: src/minoltamn.cpp:954 src/panasonicmn.cpp:111
+#: src/minoltamn.cpp:954 src/sigmamn.cpp:224 src/panasonicmn.cpp:111
 msgid "Aperture priority"
 msgstr "Prioridad de apertura"
 
 #: src/tags.cpp:474 src/minoltamn.cpp:290 src/minoltamn.cpp:756
-#: src/minoltamn.cpp:955
+#: src/minoltamn.cpp:955 src/sigmamn.cpp:225
 msgid "Shutter priority"
 msgstr "Prioridad del obturador"
 
@@ -2940,7 +2940,7 @@ msgstr "Paisaje"
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: src/tags.cpp:484
+#: src/tags.cpp:484 src/sigmamn.cpp:236
 msgid "Average"
 msgstr "Promedio"
 
@@ -4926,7 +4926,7 @@ msgstr "peso centrado"
 msgid "Electronic magnification"
 msgstr ""
 
-#: src/minoltamn.cpp:376 src/minoltamn.cpp:801
+#: src/minoltamn.cpp:376 src/minoltamn.cpp:801 src/sigmamn.cpp:237
 #, fuzzy
 msgid "Center"
 msgstr "Centímetro"
@@ -6177,6 +6177,11 @@ msgstr "Auto bracket"
 #, fuzzy
 msgid "Unknown SigmaMakerNote tag"
 msgstr "Versión Exif"
+
+#: src/sigmamn.cpp:238
+#, fuzzy
+msgid "8-Segment"
+msgstr "multi-lugar"
 
 #: src/panasonicmn.cpp:66
 #, fuzzy
