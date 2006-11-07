@@ -25,6 +25,7 @@
   File:      nikonmn.cpp
   Version:   $Rev$
   Author(s): Andreas Huggel (ahu) <ahuggel@gmx.net>
+             Gilles Caulier (gc) <caulier.gilles@kdemail.net>
   History:   17-May-04, ahu: created
              25-May-04, ahu: combined all Nikon formats in one component
  */
@@ -41,6 +42,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "image.hpp"
 #include "tags.hpp"
 #include "error.hpp"
+#include "i18n.h"                // NLS support.
 
 // + standard includes
 #include <string>
@@ -86,17 +88,64 @@ namespace Exiv2 {
 
     // Nikon1 MakerNote Tag Info
     const TagInfo Nikon1MakerNote::tagInfo_[] = {
-        TagInfo(0x0001, "Version", "Version", "Nikon Makernote version", nikon1IfdId, makerTags, undefined, printValue),
-        TagInfo(0x0002, "ISOSpeed", "ISOSpeed", "ISO speed setting", nikon1IfdId, makerTags, unsignedShort, print0x0002),
-        TagInfo(0x0003, "ColorMode", "ColorMode", "Color mode", nikon1IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0004, "Quality", "Quality", "Image quality setting", nikon1IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0005, "WhiteBalance", "WhiteBalance", "White balance", nikon1IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0006, "Sharpening", "Sharpening", "Image sharpening setting", nikon1IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0007, "Focus", "Focus", "Focus mode", nikon1IfdId, makerTags, asciiString, print0x0007),
-        TagInfo(0x0008, "Flash", "Flash", "Flash mode", nikon1IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x000a, "0x000a", "0x000a", "Unknown", nikon1IfdId, makerTags, unsignedRational, printValue),
-        TagInfo(0x000f, "ISOSelection", "ISOSelection", "ISO selection", nikon1IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0010, "DataDump", "DataDump", "Data dump", nikon1IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0001, "Version", N_("Version"), 
+                N_("Nikon Makernote version"), 
+                nikon1IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0002, "ISOSpeed", N_("ISO Speed"),
+                N_("ISO speed setting"), 
+                nikon1IfdId, makerTags, unsignedShort, print0x0002),
+        TagInfo(0x0003, "ColorMode", N_("Color Mode"), 
+                N_("Color mode"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0004, "Quality", N_("Quality"), 
+                N_("Image quality setting"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0005, "WhiteBalance", N_("White Balance"), 
+                N_("White balance"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0006, "Sharpening", N_("Sharpening"), 
+                N_("Image sharpening setting"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0007, "Focus", N_("Focus"), 
+                N_("Focus mode"), 
+                nikon1IfdId, makerTags, asciiString, print0x0007),
+        TagInfo(0x0008, "FlashMode", N_("Flash Mode"), 
+                N_("Flash mode"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0009, "FlashDevice", N_("Flash Device"), 
+                N_("Flash device"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x000a, "0x000a", "0x000a", 
+                N_("Unknown"), 
+                nikon1IfdId, makerTags, unsignedRational, printValue),
+        TagInfo(0x000b, "WBFineTune", N_("WB Fine Tune"),
+                N_("White balance fine tune"), 
+                nikon1IfdId, makerTags, signedShort, printValue),
+        TagInfo(0x000c, "ColorBalance1", N_("Color Balance 1"),
+                N_("Color balance 1"), 
+                nikon1IfdId, makerTags, unsignedRational, printValue),
+        TagInfo(0x000d, "ProgramShift", N_("Program Shift"),
+                N_("Program shift"), 
+                nikon1IfdId, makerTags, undefined, printValue),
+        TagInfo(0x000e, "ExposureDiff", N_("Exposure Difference"),
+                N_("Exposure difference"), 
+                nikon1IfdId, makerTags, undefined, printValue),
+        TagInfo(0x000f, "ISOSelection", N_("ISO Selection"), 
+                N_("ISO selection"), 
+                nikon1IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0010, "DataDump", N_("Data Dump"), 
+                N_("Data dump"), 
+                nikon1IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0011, "Preview", N_("Preview Informations"), 
+                N_("Preview informations"), 
+                minoltaIfdId, makerTags, undefined, printValue),
+        TagInfo(0x0012, "FlashBias", N_("Flash Bias"), 
+                N_("Flash exposure compensation"), 
+                minoltaIfdId, makerTags, undefined, printValue),
+        TagInfo(0x0013, "ISOSettings", N_("ISO Settings"),
+                N_("ISO setting"), 
+                nikon1IfdId, makerTags, unsignedShort, printValue),
+
         TagInfo(0x0080, "ImageAdjustment", "ImageAdjustment", "Image adjustment setting", nikon1IfdId, makerTags, asciiString, printValue),
         TagInfo(0x0082, "Adapter", "Adapter", "Adapter used", nikon1IfdId, makerTags, asciiString, printValue),
         TagInfo(0x0085, "FocusDistance", "FocusDistance", "Manual focus distance", nikon1IfdId, makerTags, unsignedRational, print0x0085),
@@ -152,8 +201,8 @@ namespace Exiv2 {
                                                const Value& value)
     {
         std::string focus = value.toString();
-        if      (focus == "AF-C  ") os << "Continuous autofocus";
-        else if (focus == "AF-S  ") os << "Single autofocus";
+        if      (focus == "AF-C  ") os << _("Continuous autofocus");
+        else if (focus == "AF-S  ") os << _("Single autofocus");
         else                      os << "(" << value << ")";
         return os;
     }
@@ -163,7 +212,7 @@ namespace Exiv2 {
     {
         Rational distance = value.toRational();
         if (distance.first == 0) {
-            os << "Unknown";
+            os << _("Unknown");
         }
         else if (distance.second != 0) {
             std::ostringstream oss;
@@ -184,7 +233,7 @@ namespace Exiv2 {
     {
         Rational zoom = value.toRational();
         if (zoom.first == 0) {
-            os << "Not used";
+            os << _("Not used");
         }
         else if (zoom.second != 0) {
             std::ostringstream oss;
@@ -219,7 +268,7 @@ namespace Exiv2 {
             default:
                 os << value;
                 if (focusPoint < sizeof(nikonFocuspoints)/sizeof(nikonFocuspoints[0]))
-                    os << " guess " << nikonFocuspoints[focusPoint];
+                    os << " " << _("guess") << " " << nikonFocuspoints[focusPoint];
                 break;
             }
         }
