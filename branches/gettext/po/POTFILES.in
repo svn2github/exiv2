@@ -14,8 +14,9 @@ src/tiffimage.cpp
 
 # Makernotes parser.
 
-src/minoltamn.cpp
 src/fujimn.cpp
-src/sigmamn.cpp
-src/panasonicmn.cpp
+src/minoltamn.cpp
 src/olympusmn.cpp
+src/panasonicmn.cpp
+src/sigmamn.cpp
+src/sonymn.cpp
