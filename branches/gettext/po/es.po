@@ -8,13 +8,1892 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 10:47+0100\n"
+"POT-Creation-Date: 2006-11-07 10:48+0100\n"
 "PO-Revision-Date: 2005-03-12 05:43+0100\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: src/actions.cpp:218 src/actions.cpp:574 src/actions.cpp:694
+#: src/actions.cpp:732 src/actions.cpp:759 src/actions.cpp:840
+#: src/actions.cpp:966 src/actions.cpp:1025 src/actions.cpp:1068
+#: src/actions.cpp:1073 src/actions.cpp:1101 src/actions.cpp:1270
+#: src/actions.cpp:1354 src/actions.cpp:1507
+msgid "Failed to open the file\n"
+msgstr ""
+
+#: src/actions.cpp:227 src/actions.cpp:583 src/actions.cpp:772
+#: src/actions.cpp:975 src/actions.cpp:1283 src/actions.cpp:1367
+msgid "No Exif data found in the file\n"
+msgstr ""
+
+#: src/actions.cpp:233
+#, fuzzy
+msgid "File name"
+msgstr "Nombre del documento"
+
+#: src/actions.cpp:239
+#, fuzzy
+msgid "File size"
+msgstr "Fuente de archivo"
+
+#: src/actions.cpp:240 src/actions.cpp:528 src/actions.cpp:993
+#, fuzzy
+msgid "Bytes"
+msgstr "Centímetro"
+
+#: src/actions.cpp:244
+#, fuzzy
+msgid "Camera make"
+msgstr "Contraste"
+
+#: src/actions.cpp:247
+#, fuzzy
+msgid "Camera model"
+msgstr "Retrato"
+
+#: src/actions.cpp:250
+#, fuzzy
+msgid "Image timestamp"
+msgstr "Ancho de la imagen"
+
+#: src/actions.cpp:254 src/minoltamn.cpp:663 src/minoltamn.cpp:927
+#: src/minoltamn.cpp:934 src/minoltamn.cpp:1166
+#, fuzzy
+msgid "Image number"
+msgstr "ID único de imagen"
+
+#: src/actions.cpp:259 src/minoltamn.cpp:618 src/minoltamn.cpp:920
+#: src/minoltamn.cpp:1133
+#, fuzzy
+msgid "Exposure time"
+msgstr "Tiempo de exposición"
+
+#: src/actions.cpp:271 src/tags.cpp:694
+msgid "Aperture"
+msgstr "Apertura"
+
+#: src/actions.cpp:281
+#, fuzzy
+msgid "Exposure bias"
+msgstr "Ajuste de exposición"
+
+#: src/actions.cpp:284 src/tags.cpp:499 src/tags.cpp:719 src/minoltamn.cpp:647
+#: src/minoltamn.cpp:881 src/minoltamn.cpp:882 src/minoltamn.cpp:985
+#: src/minoltamn.cpp:1114 src/minoltamn.cpp:1115 src/panasonicmn.cpp:77
+msgid "Flash"
+msgstr "Flash"
+
+#: src/actions.cpp:289 src/panasonicmn.cpp:223
+#, fuzzy
+msgid "Flash bias"
+msgstr "El flash disparó."
+
+#: src/actions.cpp:304 src/minoltamn.cpp:642
+#, fuzzy
+msgid "Focal length"
+msgstr "Distancia focal"
+
+#: src/actions.cpp:309
+#, fuzzy
+msgid "35 mm equivalent"
+msgstr " (equivalente 35: %d mm)"
+
+#: src/actions.cpp:315
+#, fuzzy
+msgid "Subject distance"
+msgstr "Distancia del sujeto"
+
+#: src/actions.cpp:327
+#, fuzzy
+msgid "ISO speed"
+msgstr "Velocidad ISO"
+
+#: src/actions.cpp:360 src/minoltamn.cpp:594 src/minoltamn.cpp:864
+#: src/minoltamn.cpp:1097 src/sigmamn.cpp:84
+#, fuzzy
+msgid "Exposure mode"
+msgstr "Modo de exposición"
+
+#: src/actions.cpp:383 src/minoltamn.cpp:612 src/minoltamn.cpp:1118
+#: src/sigmamn.cpp:87
+#, fuzzy
+msgid "Metering mode"
+msgstr "Modo de métrica"
+
+#: src/actions.cpp:387 src/minoltamn.cpp:624 src/panasonicmn.cpp:205
+#: src/olympusmn.cpp:129
+#, fuzzy
+msgid "Macro mode"
+msgstr "Macro"
+
+#: src/actions.cpp:411 src/minoltamn.cpp:251 src/minoltamn.cpp:606
+#: src/minoltamn.cpp:870 src/minoltamn.cpp:1103
+#, fuzzy
+msgid "Image quality"
+msgstr "Ancho de la imagen"
+
+#: src/actions.cpp:455
+#, fuzzy
+msgid "Exif Resolution"
+msgstr "Resolución Y"
+
+#: src/actions.cpp:479 src/minoltamn.cpp:600 src/minoltamn.cpp:873
+#: src/minoltamn.cpp:1106 src/sigmamn.cpp:81
+#, fuzzy
+msgid "White balance"
+msgstr "Balance de blanco"
+
+#: src/actions.cpp:520 src/minoltamn.cpp:238 src/olympusmn.cpp:355
+msgid "Thumbnail"
+msgstr ""
+
+#: src/actions.cpp:523 src/tags.cpp:603 src/minoltamn.cpp:408
+#: src/minoltamn.cpp:502 src/olympusmn.cpp:84 src/olympusmn.cpp:506
+msgid "None"
+msgstr ""
+
+#: src/actions.cpp:533 src/datasets.cpp:371 src/tags.cpp:429
+msgid "Copyright"
+msgstr "Copyright"
+
+#: src/actions.cpp:536
+msgid "Exif comment"
+msgstr ""
+
+#: src/actions.cpp:655 src/actions.cpp:666 src/actions.cpp:677
+msgid "(Binary value suppressed)"
+msgstr ""
+
+#: src/actions.cpp:703
+msgid "No Iptc data found in the file\n"
+msgstr ""
+
+#: src/actions.cpp:739
+#, fuzzy
+msgid "Jpeg comment"
+msgstr "Comentario del usuario"
+
+#: src/actions.cpp:778
+msgid "Metadatum with key"
+msgstr ""
+
+#: src/actions.cpp:779
+msgid "not found in the file"
+msgstr ""
+
+#: src/actions.cpp:784
+msgid "Image file creation timestamp not set in the file"
+msgstr ""
+
+#: src/actions.cpp:790
+msgid "Failed to parse timestamp"
+msgstr ""
+
+#: src/actions.cpp:791
+#, fuzzy
+msgid "in the file"
+msgstr "El flash no disparó."
+
+#: src/actions.cpp:802
+msgid "Updating timestamp to"
+msgstr ""
+
+#: src/actions.cpp:889
+msgid "Erasing"
+msgstr ""
+
+#: src/actions.cpp:890
+msgid "Bytes of thumbnail data"
+msgstr ""
+
+#: src/actions.cpp:898
+msgid "Erasing Exif data from the file"
+msgstr ""
+
+#: src/actions.cpp:907
+msgid "Erasing Iptc data from the file"
+msgstr ""
+
+#: src/actions.cpp:916
+msgid "Erasing Jpeg comment from the file"
+msgstr ""
+
+#: src/actions.cpp:946 src/actions.cpp:998
+msgid "Overwrite"
+msgstr ""
+
+#: src/actions.cpp:986
+msgid "Image does not contain an Exif thumbnail\n"
+msgstr ""
+
+#: src/actions.cpp:991
+msgid "Writing"
+msgstr ""
+
+#: src/actions.cpp:992
+#, fuzzy
+msgid "thumbnail"
+msgstr "Desplazamiento de tira"
+
+#: src/actions.cpp:993
+#, fuzzy
+msgid "to file"
+msgstr "Espacio de color"
+
+#: src/actions.cpp:1005
+msgid "Exif data doesn't contain a thumbnail\n"
+msgstr ""
+
+#: src/actions.cpp:1114
+msgid "Setting Jpeg comment"
+msgstr ""
+
+#: src/actions.cpp:1162
+msgid "Add"
+msgstr ""
+
+#: src/actions.cpp:1183
+#, fuzzy
+msgid "Set"
+msgstr "Área del sujeto"
+
+#: src/actions.cpp:1233
+msgid "Del"
+msgstr ""
+
+#: src/actions.cpp:1325
+msgid "Timestamp of metadatum with key"
+msgstr ""
+
+#: src/actions.cpp:1326
+msgid "not set\n"
+msgstr ""
+
+#: src/actions.cpp:1331
+msgid "Failed to parse or convert timestamp"
+msgstr ""
+
+#: src/actions.cpp:1336
+msgid "Adjusting"
+msgstr ""
+
+#: src/actions.cpp:1336
+msgid "by"
+msgstr ""
+
+#: src/actions.cpp:1338
+msgid " s to "
+msgstr ""
+
+#: src/actions.cpp:1384
+msgid "Setting Exif ISO value to"
+msgstr ""
+
+#: src/actions.cpp:1528
+msgid "Writing Exif data from"
+msgstr ""
+
+#: src/actions.cpp:1529 src/actions.cpp:1537 src/actions.cpp:1545
+#: src/actions.cpp:1641
+#, fuzzy
+msgid "to"
+msgstr "acción"
+
+#: src/actions.cpp:1536
+msgid "Writing Iptc data from"
+msgstr ""
+
+#: src/actions.cpp:1544
+msgid "Writing Jpeg comment from"
+msgstr ""
+
+#: src/actions.cpp:1554
+msgid "Could not write metadata to file"
+msgstr ""
+
+#: src/actions.cpp:1567
+msgid "Filename format yields empty filename for the file"
+msgstr ""
+
+#: src/actions.cpp:1576
+msgid "This file already has the correct name"
+msgstr ""
+
+#: src/actions.cpp:1600 src/exiv2.cpp:146
+#, fuzzy
+msgid "File"
+msgstr "Orden de llenado"
+
+#: src/actions.cpp:1601
+msgid "exists. [O]verwrite, [r]ename or [s]kip?"
+msgstr ""
+
+#: src/actions.cpp:1629
+#, fuzzy
+msgid "Renaming file to"
+msgstr "Método de sensado"
+
+#: src/actions.cpp:1631
+msgid "updating timestamp"
+msgstr ""
+
+#: src/actions.cpp:1640
+msgid "Failed to rename"
+msgstr ""
+
+#: src/datasets.cpp:79
+msgid "(invalid)"
+msgstr ""
+
+#: src/datasets.cpp:80
+msgid "IIM envelope record"
+msgstr ""
+
+#: src/datasets.cpp:81
+msgid "IIM application record 2"
+msgstr ""
+
+#: src/datasets.cpp:85
+#, fuzzy
+msgid "Model Version"
+msgstr "Versión Exif"
+
+#: src/datasets.cpp:86
+msgid ""
+"A binary number identifying the version of the Information Interchange "
+"Model, Part I, utilised by the provider. Version numbers are assigned by "
+"IPTC and NAA organizations."
+msgstr ""
+
+#: src/datasets.cpp:90
+#, fuzzy
+msgid "Destination"
+msgstr "Orientación"
+
+#: src/datasets.cpp:91
+msgid ""
+"This DataSet is to accommodate some providers who require routing "
+"information above the appropriate OSI layers."
+msgstr ""
+
+#: src/datasets.cpp:94
+#, fuzzy
+msgid "File Format"
+msgstr "Fuente de archivo"
+
+#: src/datasets.cpp:95
+msgid ""
+"A binary number representing the file format. The file format must be "
+"registered with IPTC or NAA with a unique number assigned to it. The "
+"information is used to route the data to the appropriate system and to allow "
+"the receiving system to perform the appropriate actions there to."
+msgstr ""
+
+#: src/datasets.cpp:101
+#, fuzzy
+msgid "File Version"
+msgstr "Versión Exif"
+
+#: src/datasets.cpp:102
+msgid ""
+"A binary number representing the particular version of the File Format "
+"specified by <FileFormat> tag."
+msgstr ""
+
+#: src/datasets.cpp:105
+msgid "Service Id"
+msgstr ""
+
+#: src/datasets.cpp:106
+msgid "Identifies the provider and product"
+msgstr ""
+
+#: src/datasets.cpp:108
+msgid "Envelope Number"
+msgstr ""
+
+#: src/datasets.cpp:109
+msgid ""
+"The characters form a number that will be unique for the date specified in "
+"<DateSent> tag and for the Service Identifier specified by "
+"<ServiceIdentifier> tag. If identical envelope numbers appear with the same "
+"date and with the same Service Identifier, records 2-9 must be unchanged "
+"from the original. This is not intended to be a sequential serial number "
+"reception check."
+msgstr ""
+
+#: src/datasets.cpp:117
+msgid "Product Id"
+msgstr ""
+
+#: src/datasets.cpp:118
+msgid ""
+"Allows a provider to identify subsets of its overall service. Used to "
+"provide receiving organisation data on which to select, route, or otherwise "
+"handle data."
+msgstr ""
+
+#: src/datasets.cpp:122
+#, fuzzy
+msgid "Envelope Priority"
+msgstr "Prioridad de apertura"
+
+#: src/datasets.cpp:123
+msgid ""
+"Specifies the envelope handling priority and not the editorial urgency (see "
+"<Urgency> tag). \"1\" indicates the most urgent, \"5\" the normal urgency, "
+"and \"8\" the least urgent copy. The numeral \"9\" indicates a User Defined "
+"Priority. The numeral \"0\" is reserved for future use."
+msgstr ""
+
+#: src/datasets.cpp:129
+#, fuzzy
+msgid "Date Sent"
+msgstr "Fecha y hora"
+
+#: src/datasets.cpp:130
+msgid ""
+"Uses the format CCYYMMDD (century, year, month, day) as de-fined in ISO 8601 "
+"to indicate year, month and day the service sent the material."
+msgstr ""
+
+#: src/datasets.cpp:133
+msgid "Time Sent"
+msgstr ""
+
+#: src/datasets.cpp:134
+msgid ""
+"Uses the format HHMMSS:HHMM where HHMMSS refers to local hour, minute and "
+"seconds and HHMM refers to hours and minutes ahead (+) or behind (-) "
+"Universal Coordinated Time as described in ISO 8601. This is the time the "
+"service sent the material."
+msgstr ""
+
+#: src/datasets.cpp:139
+msgid "Character Set"
+msgstr ""
+
+#: src/datasets.cpp:140
+msgid ""
+"This tag consisting of one or more control functions used for the "
+"announcement, invocation or designation of coded character sets. The control "
+"functions follow the ISO 2022 standard and may consist of the escape control "
+"character and one or more graphic characters."
+msgstr ""
+
+#: src/datasets.cpp:145
+msgid "Unique Name Object"
+msgstr ""
+
+#: src/datasets.cpp:146
+msgid ""
+"This tag provide a globally unique identification for objects as specified "
+"in the IIM, independent of provider and for any media form. The provider "
+"must ensure the UNO is unique. Objects with the same UNO are identical."
+msgstr ""
+
+#: src/datasets.cpp:151
+msgid "ARM Identifier"
+msgstr ""
+
+#: src/datasets.cpp:152
+msgid ""
+"The DataSet identifies the Abstract Relationship Method identifier (ARM) "
+"which is described in a document registered by the originator of the ARM "
+"with the IPTC and NAA organizations."
+msgstr ""
+
+#: src/datasets.cpp:156
+#, fuzzy
+msgid "ARM Version"
+msgstr "Versión Exif"
+
+#: src/datasets.cpp:157
+msgid ""
+"This tag consisting of a binary number representing the particular version "
+"of the ARM specified by tag <ARMId>."
+msgstr ""
+
+#: src/datasets.cpp:165
+#, fuzzy
+msgid "Record Version"
+msgstr "Versión Exif"
+
+#: src/datasets.cpp:166
+msgid ""
+"A binary number identifying the version of the Information Interchange "
+"Model, Part II, utilised by the provider. Version numbers are assigned by "
+"IPTC and NAA organizations."
+msgstr ""
+
+#: src/datasets.cpp:170
+#, fuzzy
+msgid "Object Type"
+msgstr "Área del sujeto"
+
+#: src/datasets.cpp:171
+msgid ""
+"The Object Type is used to distinguish between different types of objects "
+"within the IIM. The first part is a number representing a language "
+"independent international reference to an Object Type followed by a colon "
+"separator. The second part, if used, is a text representation of the Object "
+"Type Number consisting of graphic characters plus spaces either in English "
+"or in the language of the service as indicated in tag <LanguageIdentifier>"
+msgstr ""
+
+#: src/datasets.cpp:179
+#, fuzzy
+msgid "Object Attribute"
+msgstr "Área del sujeto"
+
+#: src/datasets.cpp:180
+msgid ""
+"The Object Attribute defines the nature of the object independent of the "
+"Subject. The first part is a number representing a language independent "
+"international reference to an Object Attribute followed by a colon "
+"separator. The second part, if used, is a text representation of the Object "
+"Attribute Number consisting of graphic characters plus spaces either in "
+"English, or in the language of the service as indicated in tag "
+"<LanguageIdentifier>"
+msgstr ""
+
+#: src/datasets.cpp:188
+#, fuzzy
+msgid "Object Name"
+msgstr "Área del sujeto"
+
+#: src/datasets.cpp:189
+msgid ""
+"Used as a shorthand reference for the object. Changes to exist-ing data, "
+"such as updated stories or new crops on photos, should be identified in tag "
+"<EditStatus>."
+msgstr ""
+
+#: src/datasets.cpp:193
+#, fuzzy
+msgid "Document Title"
+msgstr "Nombre del documento"
+
+#: src/datasets.cpp:194
+msgid "Edit Status"
+msgstr ""
+
+#: src/datasets.cpp:195
+msgid "Status of the object data, according to the practice of the provider."
+msgstr ""
+
+#: src/datasets.cpp:197
+msgid "Editorial Update"
+msgstr ""
+
+#: src/datasets.cpp:198
+msgid ""
+"Indicates the type of update that this object provides to a previous object. "
+"The link to the previous object is made using the tags <ARMIdentifier> and "
+"<ARMVersion>, according to the practices of the provider."
+msgstr ""
+
+#: src/datasets.cpp:202 src/datasets.cpp:207
+msgid "Urgency"
+msgstr ""
+
+#: src/datasets.cpp:203
+msgid ""
+"Specifies the editorial urgency of content and not necessarily the envelope "
+"handling priority (see tag <EnvelopePriority>). The \"1\" is most urgent, \"5"
+"\" normal and \"8\" denotes the least-urgent copy."
+msgstr ""
+
+#: src/datasets.cpp:208
+#, fuzzy
+msgid "Subject"
+msgstr "Área del sujeto"
+
+#: src/datasets.cpp:209
+msgid "The Subject Reference is a structured definition of the subject matter."
+msgstr ""
+
+#: src/datasets.cpp:211 src/datasets.cpp:216
+msgid "Category"
+msgstr ""
+
+#: src/datasets.cpp:212
+msgid ""
+"Identifies the subject of the object data in the opinion of the provider. A "
+"list of categories will be maintained by a regional registry, where "
+"available, otherwise by the provider."
+msgstr ""
+
+#: src/datasets.cpp:217
+msgid "Supplemental Category"
+msgstr ""
+
+#: src/datasets.cpp:218
+msgid ""
+"Supplemental categories further refine the subject of an object data. A "
+"supplemental category may include any of the recognised categories as used "
+"in tag <Category>. Otherwise, selection of supplemental categories are left "
+"to the provider."
+msgstr ""
+
+#: src/datasets.cpp:223
+msgid "Supplemental Categories"
+msgstr ""
+
+#: src/datasets.cpp:224
+msgid "Fixture Id"
+msgstr ""
+
+#: src/datasets.cpp:225
+msgid ""
+"Identifies object data that recurs often and predictably. Enables users to "
+"immediately find or recall such an object."
+msgstr ""
+
+#: src/datasets.cpp:228 src/datasets.cpp:234
+msgid "Keywords"
+msgstr ""
+
+#: src/datasets.cpp:229
+msgid ""
+"Used to indicate specific information retrieval words. It is expected that a "
+"provider of various types of data that are related in subject matter uses "
+"the same keyword, enabling the receiving system or subsystems to search "
+"across all types of data for related material."
+msgstr ""
+
+#: src/datasets.cpp:235
+msgid "Location Code"
+msgstr ""
+
+#: src/datasets.cpp:236
+msgid ""
+"Indicates the code of a country/geographical location referenced by the "
+"content of the object. Where ISO has established an appropriate country code "
+"under ISO 3166, that code will be used. When ISO 3166 does not adequately "
+"provide for identification of a location or a country, e.g. ships at sea, "
+"space, IPTC will assign an appropriate three-character code under the "
+"provisions of ISO 3166 to avoid conflicts."
+msgstr ""
+
+#: src/datasets.cpp:243
+#, fuzzy
+msgid "Location Name"
+msgstr "Nombre del documento"
+
+#: src/datasets.cpp:244
+msgid ""
+"Provides a full, publishable name of a country/geographical location "
+"referenced by the content of the object, according to guidelines of the "
+"provider."
+msgstr ""
+
+#: src/datasets.cpp:248
+msgid "Release Date"
+msgstr ""
+
+#: src/datasets.cpp:249
+msgid ""
+"Designates in the form CCYYMMDD the earliest date the provider intends the "
+"object to be used. Follows ISO 8601 standard."
+msgstr ""
+
+#: src/datasets.cpp:252
+msgid "Release Time"
+msgstr ""
+
+#: src/datasets.cpp:253
+msgid ""
+"Designates in the form HHMMSS:HHMM the earliest time the provider intends "
+"the object to be used. Follows ISO 8601 standard."
+msgstr ""
+
+#: src/datasets.cpp:256
+msgid "Expiration Date"
+msgstr ""
+
+#: src/datasets.cpp:257
+msgid ""
+"Designates in the form CCYYMMDD the latest date the provider or owner "
+"intends the object data to be used. Follows ISO 8601 standard."
+msgstr ""
+
+#: src/datasets.cpp:260
+msgid "ExpirationTime"
+msgstr ""
+
+#: src/datasets.cpp:261
+msgid ""
+"Designates in the form HHMMSS:HHMM the latest time the provider or owner "
+"intends the object data to be used. Follows ISO 8601 standard."
+msgstr ""
+
+#: src/datasets.cpp:264
+msgid "Special Instructions"
+msgstr ""
+
+#: src/datasets.cpp:265
+msgid ""
+"Other editorial instructions concerning the use of the object data, such as "
+"embargoes and warnings."
+msgstr ""
+
+#: src/datasets.cpp:268
+#, fuzzy
+msgid "Instructions"
+msgstr "Proceso personalizado"
+
+#: src/datasets.cpp:269
+#, fuzzy
+msgid "Action Advised"
+msgstr "acción"
+
+#: src/datasets.cpp:270
+msgid ""
+"Indicates the type of action that this object provides to a previous object. "
+"The link to the previous object is made using tags <ARMIdentifier> and "
+"<ARMVersion>, according to the practices of the provider."
+msgstr ""
+
+#: src/datasets.cpp:274
+#, fuzzy
+msgid "Reference Service"
+msgstr "Referencia Blanco/Negro"
+
+#: src/datasets.cpp:275
+msgid ""
+"Identifies the Service Identifier of a prior envelope to which the current "
+"object refers."
+msgstr ""
+
+#: src/datasets.cpp:278
+#, fuzzy
+msgid "Reference Date"
+msgstr "Referencia Blanco/Negro"
+
+#: src/datasets.cpp:279
+msgid ""
+"Identifies the date of a prior envelope to which the current object refers."
+msgstr ""
+
+#: src/datasets.cpp:281
+#, fuzzy
+msgid "Reference Number"
+msgstr "El número F."
+
+#: src/datasets.cpp:282
+msgid ""
+"Identifies the Envelope Number of a prior envelope to which the current "
+"object refers."
+msgstr ""
+
+#: src/datasets.cpp:284 src/datasets.cpp:289
+#, fuzzy
+msgid "Date Created"
+msgstr "Fecha y hora"
+
+#: src/datasets.cpp:285
+msgid ""
+"Represented in the form CCYYMMDD to designate the date the intellectual "
+"content of the object data was created rather than the date of the creation "
+"of the physical representation. Follows ISO 8601 standard."
+msgstr ""
+
+#: src/datasets.cpp:290
+msgid "Time Created"
+msgstr ""
+
+#: src/datasets.cpp:291
+msgid ""
+"Represented in the form HHMMSS:HHMM to designate the time the intellectual "
+"content of the object data current source material was created rather than "
+"the creation of the physical representation. Follows ISO 8601 standard."
+msgstr ""
+
+#: src/datasets.cpp:296
+msgid "Digitization Date"
+msgstr ""
+
+#: src/datasets.cpp:297
+msgid ""
+"Represented in the form CCYYMMDD to designate the date the digital "
+"representation of the object data was created. Follows ISO 8601 standard."
+msgstr ""
+
+#: src/datasets.cpp:300
+#, fuzzy
+msgid "Digitization Time"
+msgstr "Fecha y hora"
+
+#: src/datasets.cpp:301
+msgid ""
+"Represented in the form HHMMSS:HHMM to designate the time the digital "
+"representation of the object data was created. Follows ISO 8601 standard."
+msgstr ""
+
+#: src/datasets.cpp:305 src/minoltamn.cpp:288 src/minoltamn.cpp:754
+#: src/minoltamn.cpp:953 src/panasonicmn.cpp:110
+#, fuzzy
+msgid "Program"
+msgstr "Modo de exposición"
+
+#: src/datasets.cpp:306
+msgid "Identifies the type of program used to originate the object data."
+msgstr ""
+
+#: src/datasets.cpp:308
+#, fuzzy
+msgid "Program Version"
+msgstr "Versión Exif"
+
+#: src/datasets.cpp:309
+msgid "Used to identify the version of the program mentioned in tag <Program>."
+msgstr ""
+
+#: src/datasets.cpp:311
+msgid "Object Cycle"
+msgstr ""
+
+#: src/datasets.cpp:312
+msgid "Used to identify the editorial cycle of object data."
+msgstr ""
+
+#: src/datasets.cpp:314
+msgid "By-line"
+msgstr ""
+
+#: src/datasets.cpp:315
+msgid ""
+"Contains name of the creator of the object data, e.g. writer, photographer "
+"or graphic artist."
+msgstr ""
+
+#: src/datasets.cpp:318
+#, fuzzy
+msgid "Author"
+msgstr "acción"
+
+#: src/datasets.cpp:319
+msgid "By-line Title"
+msgstr ""
+
+#: src/datasets.cpp:320
+msgid ""
+"A by-line title is the title of the creator or creators of an object data. "
+"Where used, a by-line title should follow the by-line it modifies."
+msgstr ""
+
+#: src/datasets.cpp:323 src/datasets.cpp:327
+msgid "City"
+msgstr ""
+
+#: src/datasets.cpp:324
+msgid ""
+"Identifies city of object data origin according to guidelines established by "
+"the provider."
+msgstr ""
+
+#: src/datasets.cpp:328
+#, fuzzy
+msgid "Sub Location"
+msgstr "Ubicación del sujeto"
+
+#: src/datasets.cpp:329
+msgid ""
+"Identifies the location within a city from which the object data originates, "
+"according to guidelines established by the provider."
+msgstr ""
+
+#: src/datasets.cpp:332
+msgid "Province State"
+msgstr ""
+
+#: src/datasets.cpp:333
+msgid ""
+"Identifies Province/State of origin according to guidelines established by "
+"the provider."
+msgstr ""
+
+#: src/datasets.cpp:336
+msgid "State/Province"
+msgstr ""
+
+#: src/datasets.cpp:337
+msgid "Country Code"
+msgstr ""
+
+#: src/datasets.cpp:338
+msgid ""
+"Indicates the code of the country/primary location where the intellectual "
+"property of the object data was created, e.g. a photo was taken, an event "
+"occurred. Where ISO has established an appropriate country code under ISO "
+"3166, that code will be used. When ISO 3166 does not adequately provide for "
+"identification of a location or a new country, e.g. ships at sea, space, "
+"IPTC will assign an appropriate three-character code under the provisions of "
+"ISO 3166 to avoid conflicts."
+msgstr ""
+
+#: src/datasets.cpp:347
+#, fuzzy
+msgid "Country Name"
+msgstr "Nombre del documento"
+
+#: src/datasets.cpp:348
+msgid ""
+"Provides full, publishable, name of the country/primary location where the "
+"intellectual property of the object data was created, according to "
+"guidelines of the provider."
+msgstr ""
+
+#: src/datasets.cpp:352
+#, fuzzy
+msgid "Country"
+msgstr "Nombre del documento"
+
+#: src/datasets.cpp:353 src/datasets.cpp:357
+msgid "Transmission Reference"
+msgstr ""
+
+#: src/datasets.cpp:354
+msgid ""
+"A code representing the location of original transmission according to "
+"practices of the provider."
+msgstr ""
+
+#: src/datasets.cpp:358 src/datasets.cpp:361
+msgid "Headline"
+msgstr ""
+
+#: src/datasets.cpp:359
+msgid ""
+"A publishable entry providing a synopsis of the contents of the object data."
+msgstr ""
+
+#: src/datasets.cpp:362 src/datasets.cpp:365
+msgid "Credit"
+msgstr ""
+
+#: src/datasets.cpp:363
+msgid ""
+"Identifies the provider of the object data, not necessarily the owner/"
+"creator."
+msgstr ""
+
+#: src/datasets.cpp:366 src/datasets.cpp:370
+#, fuzzy
+msgid "Source"
+msgstr "Fuente de archivo"
+
+#: src/datasets.cpp:367
+msgid ""
+"Identifies the original owner of the intellectual content of the object "
+"data. This could be an agency, a member of an agency or an individual."
+msgstr ""
+
+#: src/datasets.cpp:372
+msgid "Contains any necessary copyright notice."
+msgstr ""
+
+#: src/datasets.cpp:374
+#, fuzzy
+msgid "Copyright Notice"
+msgstr "Copyright"
+
+#: src/datasets.cpp:375
+#, fuzzy
+msgid "Contact"
+msgstr "Contraste"
+
+#: src/datasets.cpp:376
+msgid ""
+"Identifies the person or organisation which can provide further background "
+"information on the object data."
+msgstr ""
+
+#: src/datasets.cpp:379
+#, fuzzy
+msgid "Caption"
+msgstr "acción"
+
+#: src/datasets.cpp:380
+msgid "A textual description of the object data."
+msgstr ""
+
+#: src/datasets.cpp:382
+#, fuzzy
+msgid "Description"
+msgstr "Descripción de la imagen"
+
+#: src/datasets.cpp:383
+msgid "Writer"
+msgstr ""
+
+#: src/datasets.cpp:384
+msgid ""
+"Identification of the name of the person involved in the writing, editing or "
+"correcting the object data or caption/abstract."
+msgstr ""
+
+#: src/datasets.cpp:387
+msgid "Rasterized Caption"
+msgstr ""
+
+#: src/datasets.cpp:388
+msgid ""
+"Contains the rasterized object data description and is used where characters "
+"that have not been coded are required for the caption."
+msgstr ""
+
+#: src/datasets.cpp:391
+#, fuzzy
+msgid "Image Type"
+msgstr "Ancho de la imagen"
+
+#: src/datasets.cpp:392
+msgid "Indicates the color components of an image."
+msgstr ""
+
+#: src/datasets.cpp:394
+#, fuzzy
+msgid "Image Orientation"
+msgstr "Orientación"
+
+#: src/datasets.cpp:395
+msgid "Indicates the layout of an image."
+msgstr ""
+
+#: src/datasets.cpp:397
+msgid "Language"
+msgstr ""
+
+#: src/datasets.cpp:398
+msgid ""
+"Describes the major national language of the object, according to the 2-"
+"letter codes of ISO 639:1988. Does not define or imply any coded character "
+"set, but is used for internal routing, e.g. to various editorial desks."
+msgstr ""
+
+#: src/datasets.cpp:403
+msgid "Audio Type"
+msgstr ""
+
+#: src/datasets.cpp:404
+#, fuzzy
+msgid "Indicates the type of an audio content."
+msgstr "Esta etiqueta indica la distancia al sujeto."
+
+#: src/datasets.cpp:406
+msgid "Audio Rate"
+msgstr ""
+
+#: src/datasets.cpp:407
+#, fuzzy
+msgid "Indicates the sampling rate in Hertz of an audio content."
+msgstr "Esta etiqueta indica la distancia al sujeto."
+
+#: src/datasets.cpp:409
+#, fuzzy
+msgid "Audio Resolution"
+msgstr "Resolución Y"
+
+#: src/datasets.cpp:410
+#, fuzzy
+msgid "Indicates the sampling resolution of an audio content."
+msgstr "Esta etiqueta indica la distancia al sujeto."
+
+#: src/datasets.cpp:412
+#, fuzzy
+msgid "Audio Duration"
+msgstr "Baja saturación"
+
+#: src/datasets.cpp:413
+#, fuzzy
+msgid "Indicates the duration of an audio content."
+msgstr "Esta etiqueta indica la distancia al sujeto."
+
+#: src/datasets.cpp:415
+msgid "Audio Outcue"
+msgstr ""
+
+#: src/datasets.cpp:416
+msgid ""
+"Identifies the content of the end of an audio object data, according to "
+"guidelines established by the provider."
+msgstr ""
+
+#: src/datasets.cpp:419
+msgid "Preview Format"
+msgstr ""
+
+#: src/datasets.cpp:420
+msgid ""
+"A binary number representing the file format of the object data preview. The "
+"file format must be registered with IPTC or NAA organizations with a unique "
+"number assigned to it."
+msgstr ""
+
+#: src/datasets.cpp:424
+#, fuzzy
+msgid "Preview Version"
+msgstr "Versión Exif"
+
+#: src/datasets.cpp:425
+msgid ""
+"A binary number representing the particular version of the object data "
+"preview file format specified in tag <PreviewFormat>."
+msgstr ""
+
+#: src/datasets.cpp:428
+msgid "Preview Data"
+msgstr ""
+
+#: src/datasets.cpp:429
+msgid "Binary image preview data."
+msgstr ""
+
+#: src/datasets.cpp:431 src/datasets.cpp:432
+msgid "(Invalid)"
+msgstr ""
+
+#: src/datasets.cpp:436 src/datasets.cpp:437 src/datasets.cpp:440
+#, fuzzy
+msgid "Unknown dataset"
+msgstr "Desconocido"
+
+#: src/exiv2.cpp:179
+msgid "Copyright (C) 2004, 2005, 2006 Andreas Huggel.\n"
+msgstr ""
+
+#: src/exiv2.cpp:181
+msgid "This program is free software; you can redistribute it and/or\n"
+msgstr ""
+
+#: src/exiv2.cpp:182
+msgid "modify it under the terms of the GNU General Public License\n"
+msgstr ""
+
+#: src/exiv2.cpp:183
+msgid "as published by the Free Software Foundation; either version 2\n"
+msgstr ""
+
+#: src/exiv2.cpp:184
+msgid "of the License, or (at your option) any later version.\n"
+msgstr ""
+
+#: src/exiv2.cpp:186
+msgid "This program is distributed in the hope that it will be useful,\n"
+msgstr ""
+
+#: src/exiv2.cpp:187
+msgid "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+msgstr ""
+
+#: src/exiv2.cpp:188
+msgid "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+msgstr ""
+
+#: src/exiv2.cpp:189
+msgid "GNU General Public License for more details.\n"
+msgstr ""
+
+#: src/exiv2.cpp:191
+msgid "You should have received a copy of the GNU General Public\n"
+msgstr ""
+
+#: src/exiv2.cpp:192
+msgid "License along with this program; if not, write to the Free\n"
+msgstr ""
+
+#: src/exiv2.cpp:193
+msgid "Software Foundation, Inc., 51 Franklin Street, Fifth Floor,\n"
+msgstr ""
+
+#: src/exiv2.cpp:194
+msgid "Boston, MA 02110-1301 USA\n"
+msgstr ""
+
+#: src/exiv2.cpp:199
+msgid "Usage:"
+msgstr ""
+
+#: src/exiv2.cpp:200
+msgid ""
+"[ options ] [ action ] file ...\n"
+"\n"
+msgstr ""
+
+#: src/exiv2.cpp:201
+msgid "Manipulate the Exif metadata of images.\n"
+msgstr ""
+
+#: src/exiv2.cpp:207
+msgid ""
+"\n"
+"Actions:\n"
+msgstr ""
+
+#: src/exiv2.cpp:208
+msgid "  ad | adjust   Adjust Exif timestamps by the given time. This\n"
+msgstr ""
+
+#: src/exiv2.cpp:209
+msgid "                action requires the option -a time.\n"
+msgstr ""
+
+#: src/exiv2.cpp:210
+msgid "  pr | print    Print image metadata.\n"
+msgstr ""
+
+#: src/exiv2.cpp:211
+msgid "  rm | delete   Delete image metadata from the files.\n"
+msgstr ""
+
+#: src/exiv2.cpp:212
+msgid "  in | insert   Insert metadata from corresponding *.exv files.\n"
+msgstr ""
+
+#: src/exiv2.cpp:213
+msgid ""
+"                Use option -S to change the suffix of the input files.\n"
+msgstr ""
+
+#: src/exiv2.cpp:214
+msgid "  ex | extract  Extract metadata to *.exv and thumbnail image files.\n"
+msgstr ""
+
+#: src/exiv2.cpp:215
+msgid ""
+"  mv | rename   Rename files and/or set file timestamps according to the\n"
+msgstr ""
+
+#: src/exiv2.cpp:216
+msgid ""
+"                Exif create timestamp. The filename format can be set with\n"
+msgstr ""
+
+#: src/exiv2.cpp:217
+msgid ""
+"                -r format, timestamp options are controlled with -t and -T.\n"
+msgstr ""
+
+#: src/exiv2.cpp:218
+msgid ""
+"  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n"
+msgstr ""
+
+#: src/exiv2.cpp:219
+msgid "                Iptc metadata of image files or set the Jpeg comment.\n"
+msgstr ""
+
+#: src/exiv2.cpp:220
+msgid "                Requires option -c, -m or -M.\n"
+msgstr ""
+
+#: src/exiv2.cpp:221
+msgid ""
+"  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n"
+msgstr ""
+
+#: src/exiv2.cpp:222
+msgid "                Exif tag.\n"
+msgstr ""
+
+#: src/exiv2.cpp:223
+msgid ""
+"\n"
+"Options:\n"
+msgstr ""
+
+#: src/exiv2.cpp:224
+msgid "   -h      Display this help and exit.\n"
+msgstr ""
+
+#: src/exiv2.cpp:225
+msgid "   -V      Show the program version and exit.\n"
+msgstr ""
+
+#: src/exiv2.cpp:226
+msgid "   -v      Be verbose during the program run.\n"
+msgstr ""
+
+#: src/exiv2.cpp:227
+msgid "   -b      Show large binary values.\n"
+msgstr ""
+
+#: src/exiv2.cpp:228
+msgid "   -u      Don't show unknown tags.\n"
+msgstr ""
+
+#: src/exiv2.cpp:229
+msgid "   -k      Preserve file timestamps (keep).\n"
+msgstr ""
+
+#: src/exiv2.cpp:230
+msgid ""
+"   -t      Also set the file timestamp in 'rename' action (overrides -k).\n"
+msgstr ""
+
+#: src/exiv2.cpp:231
+msgid ""
+"   -T      Only set the file timestamp in 'rename' action, do not rename\n"
+msgstr ""
+
+#: src/exiv2.cpp:232
+msgid "           the file (overrides -k).\n"
+msgstr ""
+
+#: src/exiv2.cpp:233
+msgid "   -f      Do not prompt before overwriting existing files (force).\n"
+msgstr ""
+
+#: src/exiv2.cpp:234
+msgid "   -F      Do not prompt before renaming files (Force).\n"
+msgstr ""
+
+#: src/exiv2.cpp:235
+msgid "   -a time Time adjustment in the format [-]HH[:MM[:SS]]. This option\n"
+msgstr ""
+
+#: src/exiv2.cpp:236
+msgid "           is only used with the 'adjust' action.\n"
+msgstr ""
+
+#: src/exiv2.cpp:237
+msgid "   -p mode Print mode for the 'print' action. Possible modes are:\n"
+msgstr ""
+
+#: src/exiv2.cpp:238
+msgid "             s : print a summary of the Exif metadata (the default)\n"
+msgstr ""
+
+#: src/exiv2.cpp:239
+msgid ""
+"             t : interpreted (translated) Exif data (shortcut for -Pkyct)\n"
+msgstr ""
+
+#: src/exiv2.cpp:240
+msgid "             v : plain Exif data values (shortcut for -Pxgnycv)\n"
+msgstr ""
+
+#: src/exiv2.cpp:241
+msgid "             h : hexdump of the Exif data (shortcut for -Pxgnycsh)\n"
+msgstr ""
+
+#: src/exiv2.cpp:242
+msgid "             i : Iptc data values\n"
+msgstr ""
+
+#: src/exiv2.cpp:243 src/exiv2.cpp:261
+msgid "             c : Jpeg comment\n"
+msgstr ""
+
+#: src/exiv2.cpp:244
+msgid ""
+"   -P cols Print columns for the Exif taglist ('print' action). Valid are:\n"
+msgstr ""
+
+#: src/exiv2.cpp:245
+msgid "             x : print a column with the tag value\n"
+msgstr ""
+
+#: src/exiv2.cpp:246
+msgid "             g : group name\n"
+msgstr ""
+
+#: src/exiv2.cpp:247
+msgid "             k : key\n"
+msgstr ""
+
+#: src/exiv2.cpp:248
+msgid "             l : tag label\n"
+msgstr ""
+
+#: src/exiv2.cpp:249
+msgid "             n : tag name\n"
+msgstr ""
+
+#: src/exiv2.cpp:250
+msgid "             y : type\n"
+msgstr ""
+
+#: src/exiv2.cpp:251
+msgid "             c : number of components (count)\n"
+msgstr ""
+
+#: src/exiv2.cpp:252
+msgid "             s : size in bytes\n"
+msgstr ""
+
+#: src/exiv2.cpp:253
+msgid "             v : plain data value\n"
+msgstr ""
+
+#: src/exiv2.cpp:254
+msgid "             t : interpreted (translated) data\n"
+msgstr ""
+
+#: src/exiv2.cpp:255
+msgid "             h : hexdump of the data\n"
+msgstr ""
+
+#: src/exiv2.cpp:256
+msgid ""
+"   -d tgt  Delete target(s) for the 'delete' action. Possible targets are:\n"
+msgstr ""
+
+#: src/exiv2.cpp:257
+msgid "             a : all supported metadata (the default)\n"
+msgstr ""
+
+#: src/exiv2.cpp:258
+msgid "             e : Exif section\n"
+msgstr ""
+
+#: src/exiv2.cpp:259
+msgid "             t : Exif thumbnail only\n"
+msgstr ""
+
+#: src/exiv2.cpp:260
+msgid "             i : Iptc data\n"
+msgstr ""
+
+#: src/exiv2.cpp:262
+msgid ""
+"   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
+msgstr ""
+
+#: src/exiv2.cpp:263
+msgid ""
+"           the same as those for the -d option. Only Jpeg thumbnails can\n"
+msgstr ""
+
+#: src/exiv2.cpp:264
+msgid "           be inserted, they need to be named <file>-thumb.jpg\n"
+msgstr ""
+
+#: src/exiv2.cpp:265
+msgid ""
+"   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
+msgstr ""
+
+#: src/exiv2.cpp:266
+msgid "           are the same as those for the -d option.\n"
+msgstr ""
+
+#: src/exiv2.cpp:267
+msgid "   -r fmt  Filename format for the 'rename' action. The format string\n"
+msgstr ""
+
+#: src/exiv2.cpp:268
+msgid "           follows strftime(3). Default filename format is "
+msgstr ""
+
+#: src/exiv2.cpp:270
+msgid "   -c txt  Jpeg comment string to set in the image.\n"
+msgstr ""
+
+#: src/exiv2.cpp:271
+msgid ""
+"   -m file Command file for the modify action. The format for commands is\n"
+msgstr ""
+
+#: src/exiv2.cpp:272
+msgid "           set|add|del <key> [[<type>] <value>].\n"
+msgstr ""
+
+#: src/exiv2.cpp:273
+msgid "   -M cmd  Command line for the modify action. The format for the\n"
+msgstr ""
+
+#: src/exiv2.cpp:274
+msgid ""
+"           commands is the same as that of the lines of a command file.\n"
+msgstr ""
+
+#: src/exiv2.cpp:275
+msgid ""
+"   -l dir  Location (directory) for files to be inserted from or extracted "
+"to.\n"
+msgstr ""
+
+#: src/exiv2.cpp:276
+msgid ""
+"   -S .suf Use suffix .suf for source files for insert command.\n"
+"\n"
+msgstr ""
+
+#: src/exiv2.cpp:306 src/exiv2.cpp:345 src/exiv2.cpp:547
+#, fuzzy
+msgid "Option"
+msgstr "acción"
+
+#: src/exiv2.cpp:307
+msgid "requires an argument\n"
+msgstr ""
+
+#: src/exiv2.cpp:311
+msgid "Unrecognized option"
+msgstr ""
+
+#: src/exiv2.cpp:317
+msgid "getopt returned unexpected character code"
+msgstr ""
+
+#: src/exiv2.cpp:340
+msgid "Ignoring surplus option"
+msgstr ""
+
+#: src/exiv2.cpp:346 src/exiv2.cpp:548
+msgid "is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:361
+msgid "Error parsing -a option argument"
+msgstr ""
+
+#: src/exiv2.cpp:368
+msgid "Ignoring surplus option -a"
+msgstr ""
+
+#: src/exiv2.cpp:372
+msgid "Option -a is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:392
+msgid "Unrecognized print mode"
+msgstr ""
+
+#: src/exiv2.cpp:400
+msgid "Ignoring surplus option -p"
+msgstr ""
+
+#: src/exiv2.cpp:404
+msgid "Option -p is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:432
+msgid "Unrecognized print item"
+msgstr ""
+
+#: src/exiv2.cpp:441
+msgid "Ignoring surplus option -P"
+msgstr ""
+
+#: src/exiv2.cpp:445
+msgid "Option -P is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:472
+msgid "Option -d is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:499
+msgid "Option -e is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:526
+msgid "Option -i is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:565
+msgid "Action adjust is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:574
+msgid "Action print is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:583
+msgid "Action delete is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:592
+msgid "Action extract is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:601
+msgid "Action insert is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:610
+msgid "Action rename is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:619
+msgid "Action modify is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:628
+msgid "Action fixiso is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:652
+msgid "An action must be specified\n"
+msgstr ""
+
+#: src/exiv2.cpp:657
+msgid "Adjust action requires option -a time\n"
+msgstr ""
+
+#: src/exiv2.cpp:663
+msgid "Modify action requires at least one -c, -m or -M option\n"
+msgstr ""
+
+#: src/exiv2.cpp:667
+msgid "At least one file is required\n"
+msgstr ""
+
+#: src/exiv2.cpp:673
+msgid "Error parsing -m option arguments\n"
+msgstr ""
+
+#: src/exiv2.cpp:680
+msgid "Error parsing -M option arguments\n"
+msgstr ""
+
+#: src/exiv2.cpp:687
+msgid "-l option can only be used with extract or insert actions\n"
+msgstr ""
+
+#: src/exiv2.cpp:692
+msgid "-S option can only be used with insert action\n"
+msgstr ""
+
+#: src/exiv2.cpp:697
+msgid "-t option can only be used with rename action\n"
+msgstr ""
+
+#: src/exiv2.cpp:702
+msgid "-T option can only be used with rename action\n"
+msgstr ""
+
+#: src/exiv2.cpp:767
+msgid "Unrecognized "
+msgstr ""
+
+#: src/exiv2.cpp:768
+#, fuzzy
+msgid "target"
+msgstr "promedio"
+
+#: src/exiv2.cpp:786
+msgid "Failed to open command file for reading\n"
+msgstr ""
+
+#: src/exiv2.cpp:799
+#, fuzzy
+msgid "line"
+msgstr "pulg"
+
+#: src/exiv2.cpp:822
+#, fuzzy
+msgid "-M option"
+msgstr "acción"
+
+#: src/exiv2.cpp:843 src/exiv2.cpp:893 src/exiv2.cpp:903
+msgid "Invalid command line"
+msgstr ""
+
+#: src/exiv2.cpp:850
+msgid "Invalid command"
+msgstr ""
+
+#: src/exiv2.cpp:874
+msgid "Invalid key"
+msgstr ""
+
+#: src/cr2image.cpp:241 src/crwimage.cpp:642 src/tiffimage.cpp:206
+msgid "Header, offset"
+msgstr ""
+
+#: src/cr2image.cpp:245 src/tiffimage.cpp:210
+msgid "little endian encoded"
+msgstr ""
+
+#: src/cr2image.cpp:246 src/tiffimage.cpp:211
+msgid "big endian encoded"
+msgstr ""
+
+#: src/crwimage.cpp:659
+#, fuzzy
+msgid "tag"
+msgstr "promedio"
+
+#: src/crwimage.cpp:661
+msgid "dir"
+msgstr ""
+
+#: src/crwimage.cpp:663
+#, fuzzy
+msgid "type"
+msgstr "Escena nocturna"
+
+#: src/crwimage.cpp:664
+#, fuzzy
+msgid "size"
+msgstr "Fuente de archivo"
+
+#: src/crwimage.cpp:665
+#, fuzzy
+msgid "offset"
+msgstr "Suave"
+
+#: src/error.cpp:44
+msgid "Error %0: arg1=%1, arg2=%2, arg3=%3."
+msgstr ""
+
+#: src/error.cpp:45
+#, fuzzy
+msgid "Success"
+msgstr "Fuente de archivo"
+
+#: src/error.cpp:48
+msgid "This does not look like a %1 image"
+msgstr ""
+
+#: src/error.cpp:49
+msgid "Invalid dataset name `%1'"
+msgstr ""
+
+#: src/error.cpp:50
+msgid "Invalid record name `%1'"
+msgstr ""
+
+#: src/error.cpp:51
+msgid "Invalid key `%1'"
+msgstr ""
+
+#: src/error.cpp:52
+msgid "Invalid tag name or ifdId `%1', ifdId %2"
+msgstr ""
+
+#: src/error.cpp:53
+msgid "Value not set"
+msgstr ""
+
+#: src/error.cpp:54
+msgid "%1: Failed to open the data source: %2"
+msgstr ""
+
+#: src/error.cpp:55
+msgid "%1: Failed to open file (%2): %3"
+msgstr ""
+
+#: src/error.cpp:56
+msgid "%1: The file contains data of an unknown image type"
+msgstr ""
+
+#: src/error.cpp:57
+msgid "The memory contains data of an unknown image type"
+msgstr ""
+
+#: src/error.cpp:58
+msgid "Image type %1 is not supported"
+msgstr ""
+
+#: src/error.cpp:59
+msgid "Failed to read image data"
+msgstr ""
+
+#: src/error.cpp:60
+msgid "This does not look like a JPEG image"
+msgstr ""
+
+#: src/error.cpp:61
+msgid "MakerTagInfo registry full"
+msgstr ""
+
+#: src/error.cpp:62
+msgid "%1: Failed to rename file to %2: %3"
+msgstr ""
+
+#: src/error.cpp:63
+msgid "%1: Transfer failed: %2"
+msgstr ""
+
+#: src/error.cpp:64
+msgid "Memory transfer failed: %1"
+msgstr ""
+
+#: src/error.cpp:65
+msgid "Failed to read input data"
+msgstr ""
+
+#: src/error.cpp:66
+msgid "Failed to write image"
+msgstr ""
+
+#: src/error.cpp:67
+msgid "Input data does not contain a valid image"
+msgstr ""
+
+#: src/error.cpp:68
+msgid "Failed to create Makernote for ifdId %1"
+msgstr ""
+
+#: src/error.cpp:69
+msgid "Entry::setValue: Value too large (tag=%1, size=%2, requested=%3)"
+msgstr ""
+
+#: src/error.cpp:70
+msgid "Entry::setDataArea: Value too large (tag=%1, size=%2, requested=%3)"
+msgstr ""
+
+#: src/error.cpp:71
+msgid "Offset out of range"
+msgstr ""
+
+#: src/error.cpp:72
+msgid "Unsupported data area offset type"
+msgstr ""
+
+#: src/error.cpp:73
+msgid "Invalid charset: `%1'"
+msgstr ""
+
+#: src/error.cpp:74
+msgid "Unsupported date format"
+msgstr ""
+
+#: src/error.cpp:75
+msgid "Unsupported time format"
+msgstr ""
+
+#: src/error.cpp:76
+msgid "%1: CRW images don't support IPTC metadata"
+msgstr ""
+
+#: src/error.cpp:77
+msgid "%1: CRW images don't support JPEG comments"
+msgstr ""
+
+#: src/error.cpp:78
+msgid "This does not look like a CRW image"
+msgstr ""
+
+#: src/error.cpp:79
+msgid "%1: Not supported"
+msgstr ""
+
+#: src/error.cpp:80
+msgid "ImageFactory registry full"
+msgstr ""
+
+#: src/error.cpp:81
+msgid "Failed to decode %1 metadata"
+msgstr ""
+
+#: src/error.cpp:82
+msgid "Size of %1 JPEG segment is larger than 65535 bytes"
+msgstr ""
+
+#: src/error.cpp:85
+#, fuzzy
+msgid "(Unknown Error)"
+msgstr "Desconocido"
 
 #: src/tags.cpp:102
 #, fuzzy
@@ -882,10 +2761,6 @@ msgstr ""
 msgid "Contains an IPTC/NAA record"
 msgstr ""
 
-#: src/tags.cpp:429 src/datasets.cpp:371 src/actions.cpp:533
-msgid "Copyright"
-msgstr "Copyright"
-
 #: src/tags.cpp:430
 #, fuzzy
 msgid ""
@@ -1090,12 +2965,6 @@ msgstr "Fluorescente"
 #, fuzzy
 msgid "Tungsten (incandescent light)"
 msgstr "Tungsteno (luz incandescente)"
-
-#: src/tags.cpp:499 src/tags.cpp:719 src/actions.cpp:284 src/minoltamn.cpp:647
-#: src/minoltamn.cpp:881 src/minoltamn.cpp:882 src/minoltamn.cpp:985
-#: src/minoltamn.cpp:1114 src/minoltamn.cpp:1115 src/panasonicmn.cpp:77
-msgid "Flash"
-msgstr "Flash"
 
 #: src/tags.cpp:500
 msgid "Fine weather"
@@ -1375,11 +3244,6 @@ msgstr "Retrato"
 msgid "Night scene"
 msgstr "Escena nocturna"
 
-#: src/tags.cpp:603 src/actions.cpp:523 src/minoltamn.cpp:408
-#: src/minoltamn.cpp:502 src/olympusmn.cpp:84 src/olympusmn.cpp:506
-msgid "None"
-msgstr ""
-
 #: src/tags.cpp:604
 msgid "Low gain up"
 msgstr "Ganancia baja alta"
@@ -1595,10 +3459,6 @@ msgid ""
 msgstr ""
 "Velocidad del obturador. La unidad es el ajuste APEX (Sistema aditivo de "
 "exposición fotográfica) (vea el Apéndice C)."
-
-#: src/tags.cpp:694 src/actions.cpp:271
-msgid "Aperture"
-msgstr "Apertura"
 
 #: src/tags.cpp:695
 msgid "The lens aperture. The unit is the APEX value."
@@ -2673,1866 +4533,6 @@ msgstr ""
 #, fuzzy
 msgid "Digital zoom not used"
 msgstr "Relación de zoom digital"
-
-#: src/datasets.cpp:79
-msgid "(invalid)"
-msgstr ""
-
-#: src/datasets.cpp:80
-msgid "IIM envelope record"
-msgstr ""
-
-#: src/datasets.cpp:81
-msgid "IIM application record 2"
-msgstr ""
-
-#: src/datasets.cpp:85
-#, fuzzy
-msgid "Model Version"
-msgstr "Versión Exif"
-
-#: src/datasets.cpp:86
-msgid ""
-"A binary number identifying the version of the Information Interchange "
-"Model, Part I, utilised by the provider. Version numbers are assigned by "
-"IPTC and NAA organizations."
-msgstr ""
-
-#: src/datasets.cpp:90
-#, fuzzy
-msgid "Destination"
-msgstr "Orientación"
-
-#: src/datasets.cpp:91
-msgid ""
-"This DataSet is to accommodate some providers who require routing "
-"information above the appropriate OSI layers."
-msgstr ""
-
-#: src/datasets.cpp:94
-#, fuzzy
-msgid "File Format"
-msgstr "Fuente de archivo"
-
-#: src/datasets.cpp:95
-msgid ""
-"A binary number representing the file format. The file format must be "
-"registered with IPTC or NAA with a unique number assigned to it. The "
-"information is used to route the data to the appropriate system and to allow "
-"the receiving system to perform the appropriate actions there to."
-msgstr ""
-
-#: src/datasets.cpp:101
-#, fuzzy
-msgid "File Version"
-msgstr "Versión Exif"
-
-#: src/datasets.cpp:102
-msgid ""
-"A binary number representing the particular version of the File Format "
-"specified by <FileFormat> tag."
-msgstr ""
-
-#: src/datasets.cpp:105
-msgid "Service Id"
-msgstr ""
-
-#: src/datasets.cpp:106
-msgid "Identifies the provider and product"
-msgstr ""
-
-#: src/datasets.cpp:108
-msgid "Envelope Number"
-msgstr ""
-
-#: src/datasets.cpp:109
-msgid ""
-"The characters form a number that will be unique for the date specified in "
-"<DateSent> tag and for the Service Identifier specified by "
-"<ServiceIdentifier> tag. If identical envelope numbers appear with the same "
-"date and with the same Service Identifier, records 2-9 must be unchanged "
-"from the original. This is not intended to be a sequential serial number "
-"reception check."
-msgstr ""
-
-#: src/datasets.cpp:117
-msgid "Product Id"
-msgstr ""
-
-#: src/datasets.cpp:118
-msgid ""
-"Allows a provider to identify subsets of its overall service. Used to "
-"provide receiving organisation data on which to select, route, or otherwise "
-"handle data."
-msgstr ""
-
-#: src/datasets.cpp:122
-#, fuzzy
-msgid "Envelope Priority"
-msgstr "Prioridad de apertura"
-
-#: src/datasets.cpp:123
-msgid ""
-"Specifies the envelope handling priority and not the editorial urgency (see "
-"<Urgency> tag). \"1\" indicates the most urgent, \"5\" the normal urgency, "
-"and \"8\" the least urgent copy. The numeral \"9\" indicates a User Defined "
-"Priority. The numeral \"0\" is reserved for future use."
-msgstr ""
-
-#: src/datasets.cpp:129
-#, fuzzy
-msgid "Date Sent"
-msgstr "Fecha y hora"
-
-#: src/datasets.cpp:130
-msgid ""
-"Uses the format CCYYMMDD (century, year, month, day) as de-fined in ISO 8601 "
-"to indicate year, month and day the service sent the material."
-msgstr ""
-
-#: src/datasets.cpp:133
-msgid "Time Sent"
-msgstr ""
-
-#: src/datasets.cpp:134
-msgid ""
-"Uses the format HHMMSS:HHMM where HHMMSS refers to local hour, minute and "
-"seconds and HHMM refers to hours and minutes ahead (+) or behind (-) "
-"Universal Coordinated Time as described in ISO 8601. This is the time the "
-"service sent the material."
-msgstr ""
-
-#: src/datasets.cpp:139
-msgid "Character Set"
-msgstr ""
-
-#: src/datasets.cpp:140
-msgid ""
-"This tag consisting of one or more control functions used for the "
-"announcement, invocation or designation of coded character sets. The control "
-"functions follow the ISO 2022 standard and may consist of the escape control "
-"character and one or more graphic characters."
-msgstr ""
-
-#: src/datasets.cpp:145
-msgid "Unique Name Object"
-msgstr ""
-
-#: src/datasets.cpp:146
-msgid ""
-"This tag provide a globally unique identification for objects as specified "
-"in the IIM, independent of provider and for any media form. The provider "
-"must ensure the UNO is unique. Objects with the same UNO are identical."
-msgstr ""
-
-#: src/datasets.cpp:151
-msgid "ARM Identifier"
-msgstr ""
-
-#: src/datasets.cpp:152
-msgid ""
-"The DataSet identifies the Abstract Relationship Method identifier (ARM) "
-"which is described in a document registered by the originator of the ARM "
-"with the IPTC and NAA organizations."
-msgstr ""
-
-#: src/datasets.cpp:156
-#, fuzzy
-msgid "ARM Version"
-msgstr "Versión Exif"
-
-#: src/datasets.cpp:157
-msgid ""
-"This tag consisting of a binary number representing the particular version "
-"of the ARM specified by tag <ARMId>."
-msgstr ""
-
-#: src/datasets.cpp:165
-#, fuzzy
-msgid "Record Version"
-msgstr "Versión Exif"
-
-#: src/datasets.cpp:166
-msgid ""
-"A binary number identifying the version of the Information Interchange "
-"Model, Part II, utilised by the provider. Version numbers are assigned by "
-"IPTC and NAA organizations."
-msgstr ""
-
-#: src/datasets.cpp:170
-#, fuzzy
-msgid "Object Type"
-msgstr "Área del sujeto"
-
-#: src/datasets.cpp:171
-msgid ""
-"The Object Type is used to distinguish between different types of objects "
-"within the IIM. The first part is a number representing a language "
-"independent international reference to an Object Type followed by a colon "
-"separator. The second part, if used, is a text representation of the Object "
-"Type Number consisting of graphic characters plus spaces either in English "
-"or in the language of the service as indicated in tag <LanguageIdentifier>"
-msgstr ""
-
-#: src/datasets.cpp:179
-#, fuzzy
-msgid "Object Attribute"
-msgstr "Área del sujeto"
-
-#: src/datasets.cpp:180
-msgid ""
-"The Object Attribute defines the nature of the object independent of the "
-"Subject. The first part is a number representing a language independent "
-"international reference to an Object Attribute followed by a colon "
-"separator. The second part, if used, is a text representation of the Object "
-"Attribute Number consisting of graphic characters plus spaces either in "
-"English, or in the language of the service as indicated in tag "
-"<LanguageIdentifier>"
-msgstr ""
-
-#: src/datasets.cpp:188
-#, fuzzy
-msgid "Object Name"
-msgstr "Área del sujeto"
-
-#: src/datasets.cpp:189
-msgid ""
-"Used as a shorthand reference for the object. Changes to exist-ing data, "
-"such as updated stories or new crops on photos, should be identified in tag "
-"<EditStatus>."
-msgstr ""
-
-#: src/datasets.cpp:193
-#, fuzzy
-msgid "Document Title"
-msgstr "Nombre del documento"
-
-#: src/datasets.cpp:194
-msgid "Edit Status"
-msgstr ""
-
-#: src/datasets.cpp:195
-msgid "Status of the object data, according to the practice of the provider."
-msgstr ""
-
-#: src/datasets.cpp:197
-msgid "Editorial Update"
-msgstr ""
-
-#: src/datasets.cpp:198
-msgid ""
-"Indicates the type of update that this object provides to a previous object. "
-"The link to the previous object is made using the tags <ARMIdentifier> and "
-"<ARMVersion>, according to the practices of the provider."
-msgstr ""
-
-#: src/datasets.cpp:202 src/datasets.cpp:207
-msgid "Urgency"
-msgstr ""
-
-#: src/datasets.cpp:203
-msgid ""
-"Specifies the editorial urgency of content and not necessarily the envelope "
-"handling priority (see tag <EnvelopePriority>). The \"1\" is most urgent, \"5"
-"\" normal and \"8\" denotes the least-urgent copy."
-msgstr ""
-
-#: src/datasets.cpp:208
-#, fuzzy
-msgid "Subject"
-msgstr "Área del sujeto"
-
-#: src/datasets.cpp:209
-msgid "The Subject Reference is a structured definition of the subject matter."
-msgstr ""
-
-#: src/datasets.cpp:211 src/datasets.cpp:216
-msgid "Category"
-msgstr ""
-
-#: src/datasets.cpp:212
-msgid ""
-"Identifies the subject of the object data in the opinion of the provider. A "
-"list of categories will be maintained by a regional registry, where "
-"available, otherwise by the provider."
-msgstr ""
-
-#: src/datasets.cpp:217
-msgid "Supplemental Category"
-msgstr ""
-
-#: src/datasets.cpp:218
-msgid ""
-"Supplemental categories further refine the subject of an object data. A "
-"supplemental category may include any of the recognised categories as used "
-"in tag <Category>. Otherwise, selection of supplemental categories are left "
-"to the provider."
-msgstr ""
-
-#: src/datasets.cpp:223
-msgid "Supplemental Categories"
-msgstr ""
-
-#: src/datasets.cpp:224
-msgid "Fixture Id"
-msgstr ""
-
-#: src/datasets.cpp:225
-msgid ""
-"Identifies object data that recurs often and predictably. Enables users to "
-"immediately find or recall such an object."
-msgstr ""
-
-#: src/datasets.cpp:228 src/datasets.cpp:234
-msgid "Keywords"
-msgstr ""
-
-#: src/datasets.cpp:229
-msgid ""
-"Used to indicate specific information retrieval words. It is expected that a "
-"provider of various types of data that are related in subject matter uses "
-"the same keyword, enabling the receiving system or subsystems to search "
-"across all types of data for related material."
-msgstr ""
-
-#: src/datasets.cpp:235
-msgid "Location Code"
-msgstr ""
-
-#: src/datasets.cpp:236
-msgid ""
-"Indicates the code of a country/geographical location referenced by the "
-"content of the object. Where ISO has established an appropriate country code "
-"under ISO 3166, that code will be used. When ISO 3166 does not adequately "
-"provide for identification of a location or a country, e.g. ships at sea, "
-"space, IPTC will assign an appropriate three-character code under the "
-"provisions of ISO 3166 to avoid conflicts."
-msgstr ""
-
-#: src/datasets.cpp:243
-#, fuzzy
-msgid "Location Name"
-msgstr "Nombre del documento"
-
-#: src/datasets.cpp:244
-msgid ""
-"Provides a full, publishable name of a country/geographical location "
-"referenced by the content of the object, according to guidelines of the "
-"provider."
-msgstr ""
-
-#: src/datasets.cpp:248
-msgid "Release Date"
-msgstr ""
-
-#: src/datasets.cpp:249
-msgid ""
-"Designates in the form CCYYMMDD the earliest date the provider intends the "
-"object to be used. Follows ISO 8601 standard."
-msgstr ""
-
-#: src/datasets.cpp:252
-msgid "Release Time"
-msgstr ""
-
-#: src/datasets.cpp:253
-msgid ""
-"Designates in the form HHMMSS:HHMM the earliest time the provider intends "
-"the object to be used. Follows ISO 8601 standard."
-msgstr ""
-
-#: src/datasets.cpp:256
-msgid "Expiration Date"
-msgstr ""
-
-#: src/datasets.cpp:257
-msgid ""
-"Designates in the form CCYYMMDD the latest date the provider or owner "
-"intends the object data to be used. Follows ISO 8601 standard."
-msgstr ""
-
-#: src/datasets.cpp:260
-msgid "ExpirationTime"
-msgstr ""
-
-#: src/datasets.cpp:261
-msgid ""
-"Designates in the form HHMMSS:HHMM the latest time the provider or owner "
-"intends the object data to be used. Follows ISO 8601 standard."
-msgstr ""
-
-#: src/datasets.cpp:264
-msgid "Special Instructions"
-msgstr ""
-
-#: src/datasets.cpp:265
-msgid ""
-"Other editorial instructions concerning the use of the object data, such as "
-"embargoes and warnings."
-msgstr ""
-
-#: src/datasets.cpp:268
-#, fuzzy
-msgid "Instructions"
-msgstr "Proceso personalizado"
-
-#: src/datasets.cpp:269
-#, fuzzy
-msgid "Action Advised"
-msgstr "acción"
-
-#: src/datasets.cpp:270
-msgid ""
-"Indicates the type of action that this object provides to a previous object. "
-"The link to the previous object is made using tags <ARMIdentifier> and "
-"<ARMVersion>, according to the practices of the provider."
-msgstr ""
-
-#: src/datasets.cpp:274
-#, fuzzy
-msgid "Reference Service"
-msgstr "Referencia Blanco/Negro"
-
-#: src/datasets.cpp:275
-msgid ""
-"Identifies the Service Identifier of a prior envelope to which the current "
-"object refers."
-msgstr ""
-
-#: src/datasets.cpp:278
-#, fuzzy
-msgid "Reference Date"
-msgstr "Referencia Blanco/Negro"
-
-#: src/datasets.cpp:279
-msgid ""
-"Identifies the date of a prior envelope to which the current object refers."
-msgstr ""
-
-#: src/datasets.cpp:281
-#, fuzzy
-msgid "Reference Number"
-msgstr "El número F."
-
-#: src/datasets.cpp:282
-msgid ""
-"Identifies the Envelope Number of a prior envelope to which the current "
-"object refers."
-msgstr ""
-
-#: src/datasets.cpp:284 src/datasets.cpp:289
-#, fuzzy
-msgid "Date Created"
-msgstr "Fecha y hora"
-
-#: src/datasets.cpp:285
-msgid ""
-"Represented in the form CCYYMMDD to designate the date the intellectual "
-"content of the object data was created rather than the date of the creation "
-"of the physical representation. Follows ISO 8601 standard."
-msgstr ""
-
-#: src/datasets.cpp:290
-msgid "Time Created"
-msgstr ""
-
-#: src/datasets.cpp:291
-msgid ""
-"Represented in the form HHMMSS:HHMM to designate the time the intellectual "
-"content of the object data current source material was created rather than "
-"the creation of the physical representation. Follows ISO 8601 standard."
-msgstr ""
-
-#: src/datasets.cpp:296
-msgid "Digitization Date"
-msgstr ""
-
-#: src/datasets.cpp:297
-msgid ""
-"Represented in the form CCYYMMDD to designate the date the digital "
-"representation of the object data was created. Follows ISO 8601 standard."
-msgstr ""
-
-#: src/datasets.cpp:300
-#, fuzzy
-msgid "Digitization Time"
-msgstr "Fecha y hora"
-
-#: src/datasets.cpp:301
-msgid ""
-"Represented in the form HHMMSS:HHMM to designate the time the digital "
-"representation of the object data was created. Follows ISO 8601 standard."
-msgstr ""
-
-#: src/datasets.cpp:305 src/minoltamn.cpp:288 src/minoltamn.cpp:754
-#: src/minoltamn.cpp:953 src/panasonicmn.cpp:110
-#, fuzzy
-msgid "Program"
-msgstr "Modo de exposición"
-
-#: src/datasets.cpp:306
-msgid "Identifies the type of program used to originate the object data."
-msgstr ""
-
-#: src/datasets.cpp:308
-#, fuzzy
-msgid "Program Version"
-msgstr "Versión Exif"
-
-#: src/datasets.cpp:309
-msgid "Used to identify the version of the program mentioned in tag <Program>."
-msgstr ""
-
-#: src/datasets.cpp:311
-msgid "Object Cycle"
-msgstr ""
-
-#: src/datasets.cpp:312
-msgid "Used to identify the editorial cycle of object data."
-msgstr ""
-
-#: src/datasets.cpp:314
-msgid "By-line"
-msgstr ""
-
-#: src/datasets.cpp:315
-msgid ""
-"Contains name of the creator of the object data, e.g. writer, photographer "
-"or graphic artist."
-msgstr ""
-
-#: src/datasets.cpp:318
-#, fuzzy
-msgid "Author"
-msgstr "acción"
-
-#: src/datasets.cpp:319
-msgid "By-line Title"
-msgstr ""
-
-#: src/datasets.cpp:320
-msgid ""
-"A by-line title is the title of the creator or creators of an object data. "
-"Where used, a by-line title should follow the by-line it modifies."
-msgstr ""
-
-#: src/datasets.cpp:323 src/datasets.cpp:327
-msgid "City"
-msgstr ""
-
-#: src/datasets.cpp:324
-msgid ""
-"Identifies city of object data origin according to guidelines established by "
-"the provider."
-msgstr ""
-
-#: src/datasets.cpp:328
-#, fuzzy
-msgid "Sub Location"
-msgstr "Ubicación del sujeto"
-
-#: src/datasets.cpp:329
-msgid ""
-"Identifies the location within a city from which the object data originates, "
-"according to guidelines established by the provider."
-msgstr ""
-
-#: src/datasets.cpp:332
-msgid "Province State"
-msgstr ""
-
-#: src/datasets.cpp:333
-msgid ""
-"Identifies Province/State of origin according to guidelines established by "
-"the provider."
-msgstr ""
-
-#: src/datasets.cpp:336
-msgid "State/Province"
-msgstr ""
-
-#: src/datasets.cpp:337
-msgid "Country Code"
-msgstr ""
-
-#: src/datasets.cpp:338
-msgid ""
-"Indicates the code of the country/primary location where the intellectual "
-"property of the object data was created, e.g. a photo was taken, an event "
-"occurred. Where ISO has established an appropriate country code under ISO "
-"3166, that code will be used. When ISO 3166 does not adequately provide for "
-"identification of a location or a new country, e.g. ships at sea, space, "
-"IPTC will assign an appropriate three-character code under the provisions of "
-"ISO 3166 to avoid conflicts."
-msgstr ""
-
-#: src/datasets.cpp:347
-#, fuzzy
-msgid "Country Name"
-msgstr "Nombre del documento"
-
-#: src/datasets.cpp:348
-msgid ""
-"Provides full, publishable, name of the country/primary location where the "
-"intellectual property of the object data was created, according to "
-"guidelines of the provider."
-msgstr ""
-
-#: src/datasets.cpp:352
-#, fuzzy
-msgid "Country"
-msgstr "Nombre del documento"
-
-#: src/datasets.cpp:353 src/datasets.cpp:357
-msgid "Transmission Reference"
-msgstr ""
-
-#: src/datasets.cpp:354
-msgid ""
-"A code representing the location of original transmission according to "
-"practices of the provider."
-msgstr ""
-
-#: src/datasets.cpp:358 src/datasets.cpp:361
-msgid "Headline"
-msgstr ""
-
-#: src/datasets.cpp:359
-msgid ""
-"A publishable entry providing a synopsis of the contents of the object data."
-msgstr ""
-
-#: src/datasets.cpp:362 src/datasets.cpp:365
-msgid "Credit"
-msgstr ""
-
-#: src/datasets.cpp:363
-msgid ""
-"Identifies the provider of the object data, not necessarily the owner/"
-"creator."
-msgstr ""
-
-#: src/datasets.cpp:366 src/datasets.cpp:370
-#, fuzzy
-msgid "Source"
-msgstr "Fuente de archivo"
-
-#: src/datasets.cpp:367
-msgid ""
-"Identifies the original owner of the intellectual content of the object "
-"data. This could be an agency, a member of an agency or an individual."
-msgstr ""
-
-#: src/datasets.cpp:372
-msgid "Contains any necessary copyright notice."
-msgstr ""
-
-#: src/datasets.cpp:374
-#, fuzzy
-msgid "Copyright Notice"
-msgstr "Copyright"
-
-#: src/datasets.cpp:375
-#, fuzzy
-msgid "Contact"
-msgstr "Contraste"
-
-#: src/datasets.cpp:376
-msgid ""
-"Identifies the person or organisation which can provide further background "
-"information on the object data."
-msgstr ""
-
-#: src/datasets.cpp:379
-#, fuzzy
-msgid "Caption"
-msgstr "acción"
-
-#: src/datasets.cpp:380
-msgid "A textual description of the object data."
-msgstr ""
-
-#: src/datasets.cpp:382
-#, fuzzy
-msgid "Description"
-msgstr "Descripción de la imagen"
-
-#: src/datasets.cpp:383
-msgid "Writer"
-msgstr ""
-
-#: src/datasets.cpp:384
-msgid ""
-"Identification of the name of the person involved in the writing, editing or "
-"correcting the object data or caption/abstract."
-msgstr ""
-
-#: src/datasets.cpp:387
-msgid "Rasterized Caption"
-msgstr ""
-
-#: src/datasets.cpp:388
-msgid ""
-"Contains the rasterized object data description and is used where characters "
-"that have not been coded are required for the caption."
-msgstr ""
-
-#: src/datasets.cpp:391
-#, fuzzy
-msgid "Image Type"
-msgstr "Ancho de la imagen"
-
-#: src/datasets.cpp:392
-msgid "Indicates the color components of an image."
-msgstr ""
-
-#: src/datasets.cpp:394
-#, fuzzy
-msgid "Image Orientation"
-msgstr "Orientación"
-
-#: src/datasets.cpp:395
-msgid "Indicates the layout of an image."
-msgstr ""
-
-#: src/datasets.cpp:397
-msgid "Language"
-msgstr ""
-
-#: src/datasets.cpp:398
-msgid ""
-"Describes the major national language of the object, according to the 2-"
-"letter codes of ISO 639:1988. Does not define or imply any coded character "
-"set, but is used for internal routing, e.g. to various editorial desks."
-msgstr ""
-
-#: src/datasets.cpp:403
-msgid "Audio Type"
-msgstr ""
-
-#: src/datasets.cpp:404
-#, fuzzy
-msgid "Indicates the type of an audio content."
-msgstr "Esta etiqueta indica la distancia al sujeto."
-
-#: src/datasets.cpp:406
-msgid "Audio Rate"
-msgstr ""
-
-#: src/datasets.cpp:407
-#, fuzzy
-msgid "Indicates the sampling rate in Hertz of an audio content."
-msgstr "Esta etiqueta indica la distancia al sujeto."
-
-#: src/datasets.cpp:409
-#, fuzzy
-msgid "Audio Resolution"
-msgstr "Resolución Y"
-
-#: src/datasets.cpp:410
-#, fuzzy
-msgid "Indicates the sampling resolution of an audio content."
-msgstr "Esta etiqueta indica la distancia al sujeto."
-
-#: src/datasets.cpp:412
-#, fuzzy
-msgid "Audio Duration"
-msgstr "Baja saturación"
-
-#: src/datasets.cpp:413
-#, fuzzy
-msgid "Indicates the duration of an audio content."
-msgstr "Esta etiqueta indica la distancia al sujeto."
-
-#: src/datasets.cpp:415
-msgid "Audio Outcue"
-msgstr ""
-
-#: src/datasets.cpp:416
-msgid ""
-"Identifies the content of the end of an audio object data, according to "
-"guidelines established by the provider."
-msgstr ""
-
-#: src/datasets.cpp:419
-msgid "Preview Format"
-msgstr ""
-
-#: src/datasets.cpp:420
-msgid ""
-"A binary number representing the file format of the object data preview. The "
-"file format must be registered with IPTC or NAA organizations with a unique "
-"number assigned to it."
-msgstr ""
-
-#: src/datasets.cpp:424
-#, fuzzy
-msgid "Preview Version"
-msgstr "Versión Exif"
-
-#: src/datasets.cpp:425
-msgid ""
-"A binary number representing the particular version of the object data "
-"preview file format specified in tag <PreviewFormat>."
-msgstr ""
-
-#: src/datasets.cpp:428
-msgid "Preview Data"
-msgstr ""
-
-#: src/datasets.cpp:429
-msgid "Binary image preview data."
-msgstr ""
-
-#: src/datasets.cpp:431 src/datasets.cpp:432
-msgid "(Invalid)"
-msgstr ""
-
-#: src/datasets.cpp:436 src/datasets.cpp:437 src/datasets.cpp:440
-#, fuzzy
-msgid "Unknown dataset"
-msgstr "Desconocido"
-
-#: src/exiv2.cpp:146 src/actions.cpp:1600
-#, fuzzy
-msgid "File"
-msgstr "Orden de llenado"
-
-#: src/exiv2.cpp:179
-msgid "Copyright (C) 2004, 2005, 2006 Andreas Huggel.\n"
-msgstr ""
-
-#: src/exiv2.cpp:181
-msgid "This program is free software; you can redistribute it and/or\n"
-msgstr ""
-
-#: src/exiv2.cpp:182
-msgid "modify it under the terms of the GNU General Public License\n"
-msgstr ""
-
-#: src/exiv2.cpp:183
-msgid "as published by the Free Software Foundation; either version 2\n"
-msgstr ""
-
-#: src/exiv2.cpp:184
-msgid "of the License, or (at your option) any later version.\n"
-msgstr ""
-
-#: src/exiv2.cpp:186
-msgid "This program is distributed in the hope that it will be useful,\n"
-msgstr ""
-
-#: src/exiv2.cpp:187
-msgid "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-msgstr ""
-
-#: src/exiv2.cpp:188
-msgid "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-msgstr ""
-
-#: src/exiv2.cpp:189
-msgid "GNU General Public License for more details.\n"
-msgstr ""
-
-#: src/exiv2.cpp:191
-msgid "You should have received a copy of the GNU General Public\n"
-msgstr ""
-
-#: src/exiv2.cpp:192
-msgid "License along with this program; if not, write to the Free\n"
-msgstr ""
-
-#: src/exiv2.cpp:193
-msgid "Software Foundation, Inc., 51 Franklin Street, Fifth Floor,\n"
-msgstr ""
-
-#: src/exiv2.cpp:194
-msgid "Boston, MA 02110-1301 USA\n"
-msgstr ""
-
-#: src/exiv2.cpp:199
-msgid "Usage:"
-msgstr ""
-
-#: src/exiv2.cpp:200
-msgid ""
-"[ options ] [ action ] file ...\n"
-"\n"
-msgstr ""
-
-#: src/exiv2.cpp:201
-msgid "Manipulate the Exif metadata of images.\n"
-msgstr ""
-
-#: src/exiv2.cpp:207
-msgid ""
-"\n"
-"Actions:\n"
-msgstr ""
-
-#: src/exiv2.cpp:208
-msgid "  ad | adjust   Adjust Exif timestamps by the given time. This\n"
-msgstr ""
-
-#: src/exiv2.cpp:209
-msgid "                action requires the option -a time.\n"
-msgstr ""
-
-#: src/exiv2.cpp:210
-msgid "  pr | print    Print image metadata.\n"
-msgstr ""
-
-#: src/exiv2.cpp:211
-msgid "  rm | delete   Delete image metadata from the files.\n"
-msgstr ""
-
-#: src/exiv2.cpp:212
-msgid "  in | insert   Insert metadata from corresponding *.exv files.\n"
-msgstr ""
-
-#: src/exiv2.cpp:213
-msgid ""
-"                Use option -S to change the suffix of the input files.\n"
-msgstr ""
-
-#: src/exiv2.cpp:214
-msgid "  ex | extract  Extract metadata to *.exv and thumbnail image files.\n"
-msgstr ""
-
-#: src/exiv2.cpp:215
-msgid ""
-"  mv | rename   Rename files and/or set file timestamps according to the\n"
-msgstr ""
-
-#: src/exiv2.cpp:216
-msgid ""
-"                Exif create timestamp. The filename format can be set with\n"
-msgstr ""
-
-#: src/exiv2.cpp:217
-msgid ""
-"                -r format, timestamp options are controlled with -t and -T.\n"
-msgstr ""
-
-#: src/exiv2.cpp:218
-msgid ""
-"  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n"
-msgstr ""
-
-#: src/exiv2.cpp:219
-msgid "                Iptc metadata of image files or set the Jpeg comment.\n"
-msgstr ""
-
-#: src/exiv2.cpp:220
-msgid "                Requires option -c, -m or -M.\n"
-msgstr ""
-
-#: src/exiv2.cpp:221
-msgid ""
-"  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n"
-msgstr ""
-
-#: src/exiv2.cpp:222
-msgid "                Exif tag.\n"
-msgstr ""
-
-#: src/exiv2.cpp:223
-msgid ""
-"\n"
-"Options:\n"
-msgstr ""
-
-#: src/exiv2.cpp:224
-msgid "   -h      Display this help and exit.\n"
-msgstr ""
-
-#: src/exiv2.cpp:225
-msgid "   -V      Show the program version and exit.\n"
-msgstr ""
-
-#: src/exiv2.cpp:226
-msgid "   -v      Be verbose during the program run.\n"
-msgstr ""
-
-#: src/exiv2.cpp:227
-msgid "   -b      Show large binary values.\n"
-msgstr ""
-
-#: src/exiv2.cpp:228
-msgid "   -u      Don't show unknown tags.\n"
-msgstr ""
-
-#: src/exiv2.cpp:229
-msgid "   -k      Preserve file timestamps (keep).\n"
-msgstr ""
-
-#: src/exiv2.cpp:230
-msgid ""
-"   -t      Also set the file timestamp in 'rename' action (overrides -k).\n"
-msgstr ""
-
-#: src/exiv2.cpp:231
-msgid ""
-"   -T      Only set the file timestamp in 'rename' action, do not rename\n"
-msgstr ""
-
-#: src/exiv2.cpp:232
-msgid "           the file (overrides -k).\n"
-msgstr ""
-
-#: src/exiv2.cpp:233
-msgid "   -f      Do not prompt before overwriting existing files (force).\n"
-msgstr ""
-
-#: src/exiv2.cpp:234
-msgid "   -F      Do not prompt before renaming files (Force).\n"
-msgstr ""
-
-#: src/exiv2.cpp:235
-msgid "   -a time Time adjustment in the format [-]HH[:MM[:SS]]. This option\n"
-msgstr ""
-
-#: src/exiv2.cpp:236
-msgid "           is only used with the 'adjust' action.\n"
-msgstr ""
-
-#: src/exiv2.cpp:237
-msgid "   -p mode Print mode for the 'print' action. Possible modes are:\n"
-msgstr ""
-
-#: src/exiv2.cpp:238
-msgid "             s : print a summary of the Exif metadata (the default)\n"
-msgstr ""
-
-#: src/exiv2.cpp:239
-msgid ""
-"             t : interpreted (translated) Exif data (shortcut for -Pkyct)\n"
-msgstr ""
-
-#: src/exiv2.cpp:240
-msgid "             v : plain Exif data values (shortcut for -Pxgnycv)\n"
-msgstr ""
-
-#: src/exiv2.cpp:241
-msgid "             h : hexdump of the Exif data (shortcut for -Pxgnycsh)\n"
-msgstr ""
-
-#: src/exiv2.cpp:242
-msgid "             i : Iptc data values\n"
-msgstr ""
-
-#: src/exiv2.cpp:243 src/exiv2.cpp:261
-msgid "             c : Jpeg comment\n"
-msgstr ""
-
-#: src/exiv2.cpp:244
-msgid ""
-"   -P cols Print columns for the Exif taglist ('print' action). Valid are:\n"
-msgstr ""
-
-#: src/exiv2.cpp:245
-msgid "             x : print a column with the tag value\n"
-msgstr ""
-
-#: src/exiv2.cpp:246
-msgid "             g : group name\n"
-msgstr ""
-
-#: src/exiv2.cpp:247
-msgid "             k : key\n"
-msgstr ""
-
-#: src/exiv2.cpp:248
-msgid "             l : tag label\n"
-msgstr ""
-
-#: src/exiv2.cpp:249
-msgid "             n : tag name\n"
-msgstr ""
-
-#: src/exiv2.cpp:250
-msgid "             y : type\n"
-msgstr ""
-
-#: src/exiv2.cpp:251
-msgid "             c : number of components (count)\n"
-msgstr ""
-
-#: src/exiv2.cpp:252
-msgid "             s : size in bytes\n"
-msgstr ""
-
-#: src/exiv2.cpp:253
-msgid "             v : plain data value\n"
-msgstr ""
-
-#: src/exiv2.cpp:254
-msgid "             t : interpreted (translated) data\n"
-msgstr ""
-
-#: src/exiv2.cpp:255
-msgid "             h : hexdump of the data\n"
-msgstr ""
-
-#: src/exiv2.cpp:256
-msgid ""
-"   -d tgt  Delete target(s) for the 'delete' action. Possible targets are:\n"
-msgstr ""
-
-#: src/exiv2.cpp:257
-msgid "             a : all supported metadata (the default)\n"
-msgstr ""
-
-#: src/exiv2.cpp:258
-msgid "             e : Exif section\n"
-msgstr ""
-
-#: src/exiv2.cpp:259
-msgid "             t : Exif thumbnail only\n"
-msgstr ""
-
-#: src/exiv2.cpp:260
-msgid "             i : Iptc data\n"
-msgstr ""
-
-#: src/exiv2.cpp:262
-msgid ""
-"   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
-msgstr ""
-
-#: src/exiv2.cpp:263
-msgid ""
-"           the same as those for the -d option. Only Jpeg thumbnails can\n"
-msgstr ""
-
-#: src/exiv2.cpp:264
-msgid "           be inserted, they need to be named <file>-thumb.jpg\n"
-msgstr ""
-
-#: src/exiv2.cpp:265
-msgid ""
-"   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
-msgstr ""
-
-#: src/exiv2.cpp:266
-msgid "           are the same as those for the -d option.\n"
-msgstr ""
-
-#: src/exiv2.cpp:267
-msgid "   -r fmt  Filename format for the 'rename' action. The format string\n"
-msgstr ""
-
-#: src/exiv2.cpp:268
-msgid "           follows strftime(3). Default filename format is "
-msgstr ""
-
-#: src/exiv2.cpp:270
-msgid "   -c txt  Jpeg comment string to set in the image.\n"
-msgstr ""
-
-#: src/exiv2.cpp:271
-msgid ""
-"   -m file Command file for the modify action. The format for commands is\n"
-msgstr ""
-
-#: src/exiv2.cpp:272
-msgid "           set|add|del <key> [[<type>] <value>].\n"
-msgstr ""
-
-#: src/exiv2.cpp:273
-msgid "   -M cmd  Command line for the modify action. The format for the\n"
-msgstr ""
-
-#: src/exiv2.cpp:274
-msgid ""
-"           commands is the same as that of the lines of a command file.\n"
-msgstr ""
-
-#: src/exiv2.cpp:275
-msgid ""
-"   -l dir  Location (directory) for files to be inserted from or extracted "
-"to.\n"
-msgstr ""
-
-#: src/exiv2.cpp:276
-msgid ""
-"   -S .suf Use suffix .suf for source files for insert command.\n"
-"\n"
-msgstr ""
-
-#: src/exiv2.cpp:306 src/exiv2.cpp:345 src/exiv2.cpp:547
-#, fuzzy
-msgid "Option"
-msgstr "acción"
-
-#: src/exiv2.cpp:307
-msgid "requires an argument\n"
-msgstr ""
-
-#: src/exiv2.cpp:311
-msgid "Unrecognized option"
-msgstr ""
-
-#: src/exiv2.cpp:317
-msgid "getopt returned unexpected character code"
-msgstr ""
-
-#: src/exiv2.cpp:340
-msgid "Ignoring surplus option"
-msgstr ""
-
-#: src/exiv2.cpp:346 src/exiv2.cpp:548
-msgid "is not compatible with a previous option\n"
-msgstr ""
-
-#: src/exiv2.cpp:361
-msgid "Error parsing -a option argument"
-msgstr ""
-
-#: src/exiv2.cpp:368
-msgid "Ignoring surplus option -a"
-msgstr ""
-
-#: src/exiv2.cpp:372
-msgid "Option -a is not compatible with a previous option\n"
-msgstr ""
-
-#: src/exiv2.cpp:392
-msgid "Unrecognized print mode"
-msgstr ""
-
-#: src/exiv2.cpp:400
-msgid "Ignoring surplus option -p"
-msgstr ""
-
-#: src/exiv2.cpp:404
-msgid "Option -p is not compatible with a previous option\n"
-msgstr ""
-
-#: src/exiv2.cpp:432
-msgid "Unrecognized print item"
-msgstr ""
-
-#: src/exiv2.cpp:441
-msgid "Ignoring surplus option -P"
-msgstr ""
-
-#: src/exiv2.cpp:445
-msgid "Option -P is not compatible with a previous option\n"
-msgstr ""
-
-#: src/exiv2.cpp:472
-msgid "Option -d is not compatible with a previous option\n"
-msgstr ""
-
-#: src/exiv2.cpp:499
-msgid "Option -e is not compatible with a previous option\n"
-msgstr ""
-
-#: src/exiv2.cpp:526
-msgid "Option -i is not compatible with a previous option\n"
-msgstr ""
-
-#: src/exiv2.cpp:565
-msgid "Action adjust is not compatible with the given options\n"
-msgstr ""
-
-#: src/exiv2.cpp:574
-msgid "Action print is not compatible with the given options\n"
-msgstr ""
-
-#: src/exiv2.cpp:583
-msgid "Action delete is not compatible with the given options\n"
-msgstr ""
-
-#: src/exiv2.cpp:592
-msgid "Action extract is not compatible with the given options\n"
-msgstr ""
-
-#: src/exiv2.cpp:601
-msgid "Action insert is not compatible with the given options\n"
-msgstr ""
-
-#: src/exiv2.cpp:610
-msgid "Action rename is not compatible with the given options\n"
-msgstr ""
-
-#: src/exiv2.cpp:619
-msgid "Action modify is not compatible with the given options\n"
-msgstr ""
-
-#: src/exiv2.cpp:628
-msgid "Action fixiso is not compatible with the given options\n"
-msgstr ""
-
-#: src/exiv2.cpp:652
-msgid "An action must be specified\n"
-msgstr ""
-
-#: src/exiv2.cpp:657
-msgid "Adjust action requires option -a time\n"
-msgstr ""
-
-#: src/exiv2.cpp:663
-msgid "Modify action requires at least one -c, -m or -M option\n"
-msgstr ""
-
-#: src/exiv2.cpp:667
-msgid "At least one file is required\n"
-msgstr ""
-
-#: src/exiv2.cpp:673
-msgid "Error parsing -m option arguments\n"
-msgstr ""
-
-#: src/exiv2.cpp:680
-msgid "Error parsing -M option arguments\n"
-msgstr ""
-
-#: src/exiv2.cpp:687
-msgid "-l option can only be used with extract or insert actions\n"
-msgstr ""
-
-#: src/exiv2.cpp:692
-msgid "-S option can only be used with insert action\n"
-msgstr ""
-
-#: src/exiv2.cpp:697
-msgid "-t option can only be used with rename action\n"
-msgstr ""
-
-#: src/exiv2.cpp:702
-msgid "-T option can only be used with rename action\n"
-msgstr ""
-
-#: src/exiv2.cpp:767
-msgid "Unrecognized "
-msgstr ""
-
-#: src/exiv2.cpp:768
-#, fuzzy
-msgid "target"
-msgstr "promedio"
-
-#: src/exiv2.cpp:786
-msgid "Failed to open command file for reading\n"
-msgstr ""
-
-#: src/exiv2.cpp:799
-#, fuzzy
-msgid "line"
-msgstr "pulg"
-
-#: src/exiv2.cpp:822
-#, fuzzy
-msgid "-M option"
-msgstr "acción"
-
-#: src/exiv2.cpp:843 src/exiv2.cpp:893 src/exiv2.cpp:903
-msgid "Invalid command line"
-msgstr ""
-
-#: src/exiv2.cpp:850
-msgid "Invalid command"
-msgstr ""
-
-#: src/exiv2.cpp:874
-msgid "Invalid key"
-msgstr ""
-
-#: src/actions.cpp:218 src/actions.cpp:574 src/actions.cpp:694
-#: src/actions.cpp:732 src/actions.cpp:759 src/actions.cpp:840
-#: src/actions.cpp:966 src/actions.cpp:1025 src/actions.cpp:1068
-#: src/actions.cpp:1073 src/actions.cpp:1101 src/actions.cpp:1270
-#: src/actions.cpp:1354 src/actions.cpp:1507
-msgid "Failed to open the file\n"
-msgstr ""
-
-#: src/actions.cpp:227 src/actions.cpp:583 src/actions.cpp:772
-#: src/actions.cpp:975 src/actions.cpp:1283 src/actions.cpp:1367
-msgid "No Exif data found in the file\n"
-msgstr ""
-
-#: src/actions.cpp:233
-#, fuzzy
-msgid "File name"
-msgstr "Nombre del documento"
-
-#: src/actions.cpp:239
-#, fuzzy
-msgid "File size"
-msgstr "Fuente de archivo"
-
-#: src/actions.cpp:240 src/actions.cpp:528 src/actions.cpp:993
-#, fuzzy
-msgid "Bytes"
-msgstr "Centímetro"
-
-#: src/actions.cpp:244
-#, fuzzy
-msgid "Camera make"
-msgstr "Contraste"
-
-#: src/actions.cpp:247
-#, fuzzy
-msgid "Camera model"
-msgstr "Retrato"
-
-#: src/actions.cpp:250
-#, fuzzy
-msgid "Image timestamp"
-msgstr "Ancho de la imagen"
-
-#: src/actions.cpp:254 src/minoltamn.cpp:663 src/minoltamn.cpp:927
-#: src/minoltamn.cpp:934 src/minoltamn.cpp:1166
-#, fuzzy
-msgid "Image number"
-msgstr "ID único de imagen"
-
-#: src/actions.cpp:259 src/minoltamn.cpp:618 src/minoltamn.cpp:920
-#: src/minoltamn.cpp:1133
-#, fuzzy
-msgid "Exposure time"
-msgstr "Tiempo de exposición"
-
-#: src/actions.cpp:281
-#, fuzzy
-msgid "Exposure bias"
-msgstr "Ajuste de exposición"
-
-#: src/actions.cpp:289 src/panasonicmn.cpp:223
-#, fuzzy
-msgid "Flash bias"
-msgstr "El flash disparó."
-
-#: src/actions.cpp:304 src/minoltamn.cpp:642
-#, fuzzy
-msgid "Focal length"
-msgstr "Distancia focal"
-
-#: src/actions.cpp:309
-#, fuzzy
-msgid "35 mm equivalent"
-msgstr " (equivalente 35: %d mm)"
-
-#: src/actions.cpp:315
-#, fuzzy
-msgid "Subject distance"
-msgstr "Distancia del sujeto"
-
-#: src/actions.cpp:327
-#, fuzzy
-msgid "ISO speed"
-msgstr "Velocidad ISO"
-
-#: src/actions.cpp:360 src/minoltamn.cpp:594 src/minoltamn.cpp:864
-#: src/minoltamn.cpp:1097 src/sigmamn.cpp:84
-#, fuzzy
-msgid "Exposure mode"
-msgstr "Modo de exposición"
-
-#: src/actions.cpp:383 src/minoltamn.cpp:612 src/minoltamn.cpp:1118
-#: src/sigmamn.cpp:87
-#, fuzzy
-msgid "Metering mode"
-msgstr "Modo de métrica"
-
-#: src/actions.cpp:387 src/minoltamn.cpp:624 src/panasonicmn.cpp:205
-#: src/olympusmn.cpp:129
-#, fuzzy
-msgid "Macro mode"
-msgstr "Macro"
-
-#: src/actions.cpp:411 src/minoltamn.cpp:251 src/minoltamn.cpp:606
-#: src/minoltamn.cpp:870 src/minoltamn.cpp:1103
-#, fuzzy
-msgid "Image quality"
-msgstr "Ancho de la imagen"
-
-#: src/actions.cpp:455
-#, fuzzy
-msgid "Exif Resolution"
-msgstr "Resolución Y"
-
-#: src/actions.cpp:479 src/minoltamn.cpp:600 src/minoltamn.cpp:873
-#: src/minoltamn.cpp:1106 src/sigmamn.cpp:81
-#, fuzzy
-msgid "White balance"
-msgstr "Balance de blanco"
-
-#: src/actions.cpp:520 src/minoltamn.cpp:238 src/olympusmn.cpp:355
-msgid "Thumbnail"
-msgstr ""
-
-#: src/actions.cpp:536
-msgid "Exif comment"
-msgstr ""
-
-#: src/actions.cpp:655 src/actions.cpp:666 src/actions.cpp:677
-msgid "(Binary value suppressed)"
-msgstr ""
-
-#: src/actions.cpp:703
-msgid "No Iptc data found in the file\n"
-msgstr ""
-
-#: src/actions.cpp:739
-#, fuzzy
-msgid "Jpeg comment"
-msgstr "Comentario del usuario"
-
-#: src/actions.cpp:778
-msgid "Metadatum with key"
-msgstr ""
-
-#: src/actions.cpp:779
-msgid "not found in the file"
-msgstr ""
-
-#: src/actions.cpp:784
-msgid "Image file creation timestamp not set in the file"
-msgstr ""
-
-#: src/actions.cpp:790
-msgid "Failed to parse timestamp"
-msgstr ""
-
-#: src/actions.cpp:791
-#, fuzzy
-msgid "in the file"
-msgstr "El flash no disparó."
-
-#: src/actions.cpp:802
-msgid "Updating timestamp to"
-msgstr ""
-
-#: src/actions.cpp:889
-msgid "Erasing"
-msgstr ""
-
-#: src/actions.cpp:890
-msgid "Bytes of thumbnail data"
-msgstr ""
-
-#: src/actions.cpp:898
-msgid "Erasing Exif data from the file"
-msgstr ""
-
-#: src/actions.cpp:907
-msgid "Erasing Iptc data from the file"
-msgstr ""
-
-#: src/actions.cpp:916
-msgid "Erasing Jpeg comment from the file"
-msgstr ""
-
-#: src/actions.cpp:946 src/actions.cpp:998
-msgid "Overwrite"
-msgstr ""
-
-#: src/actions.cpp:986
-msgid "Image does not contain an Exif thumbnail\n"
-msgstr ""
-
-#: src/actions.cpp:991
-msgid "Writing"
-msgstr ""
-
-#: src/actions.cpp:992
-#, fuzzy
-msgid "thumbnail"
-msgstr "Desplazamiento de tira"
-
-#: src/actions.cpp:993
-#, fuzzy
-msgid "to file"
-msgstr "Espacio de color"
-
-#: src/actions.cpp:1005
-msgid "Exif data doesn't contain a thumbnail\n"
-msgstr ""
-
-#: src/actions.cpp:1114
-msgid "Setting Jpeg comment"
-msgstr ""
-
-#: src/actions.cpp:1162
-msgid "Add"
-msgstr ""
-
-#: src/actions.cpp:1183
-#, fuzzy
-msgid "Set"
-msgstr "Área del sujeto"
-
-#: src/actions.cpp:1233
-msgid "Del"
-msgstr ""
-
-#: src/actions.cpp:1325
-msgid "Timestamp of metadatum with key"
-msgstr ""
-
-#: src/actions.cpp:1326
-msgid "not set\n"
-msgstr ""
-
-#: src/actions.cpp:1331
-msgid "Failed to parse or convert timestamp"
-msgstr ""
-
-#: src/actions.cpp:1336
-msgid "Adjusting"
-msgstr ""
-
-#: src/actions.cpp:1336
-msgid "by"
-msgstr ""
-
-#: src/actions.cpp:1338
-msgid " s to "
-msgstr ""
-
-#: src/actions.cpp:1384
-msgid "Setting Exif ISO value to"
-msgstr ""
-
-#: src/actions.cpp:1528
-msgid "Writing Exif data from"
-msgstr ""
-
-#: src/actions.cpp:1529 src/actions.cpp:1537 src/actions.cpp:1545
-#: src/actions.cpp:1641
-#, fuzzy
-msgid "to"
-msgstr "acción"
-
-#: src/actions.cpp:1536
-msgid "Writing Iptc data from"
-msgstr ""
-
-#: src/actions.cpp:1544
-msgid "Writing Jpeg comment from"
-msgstr ""
-
-#: src/actions.cpp:1554
-msgid "Could not write metadata to file"
-msgstr ""
-
-#: src/actions.cpp:1567
-msgid "Filename format yields empty filename for the file"
-msgstr ""
-
-#: src/actions.cpp:1576
-msgid "This file already has the correct name"
-msgstr ""
-
-#: src/actions.cpp:1601
-msgid "exists. [O]verwrite, [r]ename or [s]kip?"
-msgstr ""
-
-#: src/actions.cpp:1629
-#, fuzzy
-msgid "Renaming file to"
-msgstr "Método de sensado"
-
-#: src/actions.cpp:1631
-msgid "updating timestamp"
-msgstr ""
-
-#: src/actions.cpp:1640
-msgid "Failed to rename"
-msgstr ""
-
-#: src/cr2image.cpp:241 src/crwimage.cpp:642 src/tiffimage.cpp:206
-msgid "Header, offset"
-msgstr ""
-
-#: src/cr2image.cpp:245 src/tiffimage.cpp:210
-msgid "little endian encoded"
-msgstr ""
-
-#: src/cr2image.cpp:246 src/tiffimage.cpp:211
-msgid "big endian encoded"
-msgstr ""
-
-#: src/crwimage.cpp:659
-#, fuzzy
-msgid "tag"
-msgstr "promedio"
-
-#: src/crwimage.cpp:661
-msgid "dir"
-msgstr ""
-
-#: src/crwimage.cpp:663
-#, fuzzy
-msgid "type"
-msgstr "Escena nocturna"
-
-#: src/crwimage.cpp:664
-#, fuzzy
-msgid "size"
-msgstr "Fuente de archivo"
-
-#: src/crwimage.cpp:665
-#, fuzzy
-msgid "offset"
-msgstr "Suave"
-
-#: src/error.cpp:44
-msgid "Error %0: arg1=%1, arg2=%2, arg3=%3."
-msgstr ""
-
-#: src/error.cpp:45
-#, fuzzy
-msgid "Success"
-msgstr "Fuente de archivo"
-
-#: src/error.cpp:48
-msgid "This does not look like a %1 image"
-msgstr ""
-
-#: src/error.cpp:49
-msgid "Invalid dataset name `%1'"
-msgstr ""
-
-#: src/error.cpp:50
-msgid "Invalid record name `%1'"
-msgstr ""
-
-#: src/error.cpp:51
-msgid "Invalid key `%1'"
-msgstr ""
-
-#: src/error.cpp:52
-msgid "Invalid tag name or ifdId `%1', ifdId %2"
-msgstr ""
-
-#: src/error.cpp:53
-msgid "Value not set"
-msgstr ""
-
-#: src/error.cpp:54
-msgid "%1: Failed to open the data source: %2"
-msgstr ""
-
-#: src/error.cpp:55
-msgid "%1: Failed to open file (%2): %3"
-msgstr ""
-
-#: src/error.cpp:56
-msgid "%1: The file contains data of an unknown image type"
-msgstr ""
-
-#: src/error.cpp:57
-msgid "The memory contains data of an unknown image type"
-msgstr ""
-
-#: src/error.cpp:58
-msgid "Image type %1 is not supported"
-msgstr ""
-
-#: src/error.cpp:59
-msgid "Failed to read image data"
-msgstr ""
-
-#: src/error.cpp:60
-msgid "This does not look like a JPEG image"
-msgstr ""
-
-#: src/error.cpp:61
-msgid "MakerTagInfo registry full"
-msgstr ""
-
-#: src/error.cpp:62
-msgid "%1: Failed to rename file to %2: %3"
-msgstr ""
-
-#: src/error.cpp:63
-msgid "%1: Transfer failed: %2"
-msgstr ""
-
-#: src/error.cpp:64
-msgid "Memory transfer failed: %1"
-msgstr ""
-
-#: src/error.cpp:65
-msgid "Failed to read input data"
-msgstr ""
-
-#: src/error.cpp:66
-msgid "Failed to write image"
-msgstr ""
-
-#: src/error.cpp:67
-msgid "Input data does not contain a valid image"
-msgstr ""
-
-#: src/error.cpp:68
-msgid "Failed to create Makernote for ifdId %1"
-msgstr ""
-
-#: src/error.cpp:69
-msgid "Entry::setValue: Value too large (tag=%1, size=%2, requested=%3)"
-msgstr ""
-
-#: src/error.cpp:70
-msgid "Entry::setDataArea: Value too large (tag=%1, size=%2, requested=%3)"
-msgstr ""
-
-#: src/error.cpp:71
-msgid "Offset out of range"
-msgstr ""
-
-#: src/error.cpp:72
-msgid "Unsupported data area offset type"
-msgstr ""
-
-#: src/error.cpp:73
-msgid "Invalid charset: `%1'"
-msgstr ""
-
-#: src/error.cpp:74
-msgid "Unsupported date format"
-msgstr ""
-
-#: src/error.cpp:75
-msgid "Unsupported time format"
-msgstr ""
-
-#: src/error.cpp:76
-msgid "%1: CRW images don't support IPTC metadata"
-msgstr ""
-
-#: src/error.cpp:77
-msgid "%1: CRW images don't support JPEG comments"
-msgstr ""
-
-#: src/error.cpp:78
-msgid "This does not look like a CRW image"
-msgstr ""
-
-#: src/error.cpp:79
-msgid "%1: Not supported"
-msgstr ""
-
-#: src/error.cpp:80
-msgid "ImageFactory registry full"
-msgstr ""
-
-#: src/error.cpp:81
-msgid "Failed to decode %1 metadata"
-msgstr ""
-
-#: src/error.cpp:82
-msgid "Size of %1 JPEG segment is larger than 65535 bytes"
-msgstr ""
-
-#: src/error.cpp:85
-#, fuzzy
-msgid "(Unknown Error)"
-msgstr "Desconocido"
 
 #: src/minoltamn.cpp:56
 msgid "Natural Color"
