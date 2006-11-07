@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-06 16:19+0100\n"
+"POT-Creation-Date: 2006-11-07 10:21+0100\n"
 "PO-Revision-Date: 2005-03-12 05:43+0100\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -882,7 +882,7 @@ msgstr ""
 msgid "Contains an IPTC/NAA record"
 msgstr ""
 
-#: src/tags.cpp:429 src/datasets.cpp:371
+#: src/tags.cpp:429 src/datasets.cpp:371 src/actions.cpp:533
 msgid "Copyright"
 msgstr "Copyright"
 
@@ -1091,7 +1091,7 @@ msgstr "Fluorescente"
 msgid "Tungsten (incandescent light)"
 msgstr "Tungsteno (luz incandescente)"
 
-#: src/tags.cpp:499 src/tags.cpp:719 src/minoltamn.cpp:647
+#: src/tags.cpp:499 src/tags.cpp:719 src/actions.cpp:284 src/minoltamn.cpp:647
 #: src/minoltamn.cpp:881 src/minoltamn.cpp:882 src/minoltamn.cpp:985
 #: src/minoltamn.cpp:1114 src/minoltamn.cpp:1115 src/panasonicmn.cpp:77
 msgid "Flash"
@@ -1375,8 +1375,8 @@ msgstr "Retrato"
 msgid "Night scene"
 msgstr "Escena nocturna"
 
-#: src/tags.cpp:603 src/minoltamn.cpp:408 src/minoltamn.cpp:502
-#: src/olympusmn.cpp:84 src/olympusmn.cpp:506
+#: src/tags.cpp:603 src/actions.cpp:523 src/minoltamn.cpp:408
+#: src/minoltamn.cpp:502 src/olympusmn.cpp:84 src/olympusmn.cpp:506
 msgid "None"
 msgstr ""
 
@@ -1596,7 +1596,7 @@ msgstr ""
 "Velocidad del obturador. La unidad es el ajuste APEX (Sistema aditivo de "
 "exposición fotográfica) (vea el Apéndice C)."
 
-#: src/tags.cpp:694
+#: src/tags.cpp:694 src/actions.cpp:271
 msgid "Aperture"
 msgstr "Apertura"
 
@@ -3493,7 +3493,7 @@ msgstr ""
 msgid "Unknown dataset"
 msgstr "Desconocido"
 
-#: src/exiv2.cpp:146
+#: src/exiv2.cpp:146 src/actions.cpp:1600
 #, fuzzy
 msgid "File"
 msgstr "Orden de llenado"
@@ -4040,6 +4040,310 @@ msgstr ""
 msgid "Invalid key"
 msgstr ""
 
+#: src/actions.cpp:218 src/actions.cpp:574 src/actions.cpp:694
+#: src/actions.cpp:732 src/actions.cpp:759 src/actions.cpp:840
+#: src/actions.cpp:966 src/actions.cpp:1025 src/actions.cpp:1068
+#: src/actions.cpp:1073 src/actions.cpp:1101 src/actions.cpp:1270
+#: src/actions.cpp:1354 src/actions.cpp:1507
+msgid "Failed to open the file\n"
+msgstr ""
+
+#: src/actions.cpp:227 src/actions.cpp:583 src/actions.cpp:772
+#: src/actions.cpp:975 src/actions.cpp:1283 src/actions.cpp:1367
+msgid "No Exif data found in the file\n"
+msgstr ""
+
+#: src/actions.cpp:233
+#, fuzzy
+msgid "File name"
+msgstr "Nombre del documento"
+
+#: src/actions.cpp:239
+#, fuzzy
+msgid "File size"
+msgstr "Fuente de archivo"
+
+#: src/actions.cpp:240 src/actions.cpp:528 src/actions.cpp:993
+#, fuzzy
+msgid "Bytes"
+msgstr "Centímetro"
+
+#: src/actions.cpp:244
+#, fuzzy
+msgid "Camera make"
+msgstr "Contraste"
+
+#: src/actions.cpp:247
+#, fuzzy
+msgid "Camera model"
+msgstr "Retrato"
+
+#: src/actions.cpp:250
+#, fuzzy
+msgid "Image timestamp"
+msgstr "Ancho de la imagen"
+
+#: src/actions.cpp:254 src/minoltamn.cpp:663 src/minoltamn.cpp:927
+#: src/minoltamn.cpp:934 src/minoltamn.cpp:1166
+#, fuzzy
+msgid "Image number"
+msgstr "ID único de imagen"
+
+#: src/actions.cpp:259 src/minoltamn.cpp:618 src/minoltamn.cpp:920
+#: src/minoltamn.cpp:1133
+#, fuzzy
+msgid "Exposure time"
+msgstr "Tiempo de exposición"
+
+#: src/actions.cpp:281
+#, fuzzy
+msgid "Exposure bias"
+msgstr "Ajuste de exposición"
+
+#: src/actions.cpp:289 src/panasonicmn.cpp:223
+#, fuzzy
+msgid "Flash bias"
+msgstr "El flash disparó."
+
+#: src/actions.cpp:304 src/minoltamn.cpp:642
+#, fuzzy
+msgid "Focal length"
+msgstr "Distancia focal"
+
+#: src/actions.cpp:309
+#, fuzzy
+msgid "35 mm equivalent"
+msgstr " (equivalente 35: %d mm)"
+
+#: src/actions.cpp:315
+#, fuzzy
+msgid "Subject distance"
+msgstr "Distancia del sujeto"
+
+#: src/actions.cpp:327
+#, fuzzy
+msgid "ISO speed"
+msgstr "Velocidad ISO"
+
+#: src/actions.cpp:360 src/minoltamn.cpp:594 src/minoltamn.cpp:864
+#: src/minoltamn.cpp:1097 src/sigmamn.cpp:84
+#, fuzzy
+msgid "Exposure mode"
+msgstr "Modo de exposición"
+
+#: src/actions.cpp:383 src/minoltamn.cpp:612 src/minoltamn.cpp:1118
+#: src/sigmamn.cpp:87
+#, fuzzy
+msgid "Metering mode"
+msgstr "Modo de métrica"
+
+#: src/actions.cpp:387 src/minoltamn.cpp:624 src/panasonicmn.cpp:205
+#: src/olympusmn.cpp:129
+#, fuzzy
+msgid "Macro mode"
+msgstr "Macro"
+
+#: src/actions.cpp:411 src/minoltamn.cpp:251 src/minoltamn.cpp:606
+#: src/minoltamn.cpp:870 src/minoltamn.cpp:1103
+#, fuzzy
+msgid "Image quality"
+msgstr "Ancho de la imagen"
+
+#: src/actions.cpp:455
+#, fuzzy
+msgid "Exif Resolution"
+msgstr "Resolución Y"
+
+#: src/actions.cpp:479 src/minoltamn.cpp:600 src/minoltamn.cpp:873
+#: src/minoltamn.cpp:1106 src/sigmamn.cpp:81
+#, fuzzy
+msgid "White balance"
+msgstr "Balance de blanco"
+
+#: src/actions.cpp:520 src/minoltamn.cpp:238 src/olympusmn.cpp:355
+msgid "Thumbnail"
+msgstr ""
+
+#: src/actions.cpp:536
+msgid "Exif comment"
+msgstr ""
+
+#: src/actions.cpp:655 src/actions.cpp:666 src/actions.cpp:677
+msgid "(Binary value suppressed)"
+msgstr ""
+
+#: src/actions.cpp:703
+msgid "No Iptc data found in the file\n"
+msgstr ""
+
+#: src/actions.cpp:739
+#, fuzzy
+msgid "Jpeg comment"
+msgstr "Comentario del usuario"
+
+#: src/actions.cpp:778
+msgid "Metadatum with key"
+msgstr ""
+
+#: src/actions.cpp:779
+msgid "not found in the file"
+msgstr ""
+
+#: src/actions.cpp:784
+msgid "Image file creation timestamp not set in the file"
+msgstr ""
+
+#: src/actions.cpp:790
+msgid "Failed to parse timestamp"
+msgstr ""
+
+#: src/actions.cpp:791
+#, fuzzy
+msgid "in the file"
+msgstr "El flash no disparó."
+
+#: src/actions.cpp:802
+msgid "Updating timestamp to"
+msgstr ""
+
+#: src/actions.cpp:889
+msgid "Erasing"
+msgstr ""
+
+#: src/actions.cpp:890
+msgid "Bytes of thumbnail data"
+msgstr ""
+
+#: src/actions.cpp:898
+msgid "Erasing Exif data from the file"
+msgstr ""
+
+#: src/actions.cpp:907
+msgid "Erasing Iptc data from the file"
+msgstr ""
+
+#: src/actions.cpp:916
+msgid "Erasing Jpeg comment from the file"
+msgstr ""
+
+#: src/actions.cpp:946 src/actions.cpp:998
+msgid "Overwrite"
+msgstr ""
+
+#: src/actions.cpp:986
+msgid "Image does not contain an Exif thumbnail\n"
+msgstr ""
+
+#: src/actions.cpp:991
+msgid "Writing"
+msgstr ""
+
+#: src/actions.cpp:992
+#, fuzzy
+msgid "thumbnail"
+msgstr "Desplazamiento de tira"
+
+#: src/actions.cpp:993
+#, fuzzy
+msgid "to file"
+msgstr "Espacio de color"
+
+#: src/actions.cpp:1005
+msgid "Exif data doesn't contain a thumbnail\n"
+msgstr ""
+
+#: src/actions.cpp:1114
+msgid "Setting Jpeg comment"
+msgstr ""
+
+#: src/actions.cpp:1162
+msgid "Add"
+msgstr ""
+
+#: src/actions.cpp:1183
+#, fuzzy
+msgid "Set"
+msgstr "Área del sujeto"
+
+#: src/actions.cpp:1233
+msgid "Del"
+msgstr ""
+
+#: src/actions.cpp:1325
+msgid "Timestamp of metadatum with key"
+msgstr ""
+
+#: src/actions.cpp:1326
+msgid "not set\n"
+msgstr ""
+
+#: src/actions.cpp:1331
+msgid "Failed to parse or convert timestamp"
+msgstr ""
+
+#: src/actions.cpp:1336
+msgid "Adjusting"
+msgstr ""
+
+#: src/actions.cpp:1336
+msgid "by"
+msgstr ""
+
+#: src/actions.cpp:1338
+msgid " s to "
+msgstr ""
+
+#: src/actions.cpp:1384
+msgid "Setting Exif ISO value to"
+msgstr ""
+
+#: src/actions.cpp:1528
+msgid "Writing Exif data from"
+msgstr ""
+
+#: src/actions.cpp:1529 src/actions.cpp:1537 src/actions.cpp:1545
+#: src/actions.cpp:1641
+#, fuzzy
+msgid "to"
+msgstr "acción"
+
+#: src/actions.cpp:1536
+msgid "Writing Iptc data from"
+msgstr ""
+
+#: src/actions.cpp:1544
+msgid "Writing Jpeg comment from"
+msgstr ""
+
+#: src/actions.cpp:1554
+msgid "Could not write metadata to file"
+msgstr ""
+
+#: src/actions.cpp:1567
+msgid "Filename format yields empty filename for the file"
+msgstr ""
+
+#: src/actions.cpp:1576
+msgid "This file already has the correct name"
+msgstr ""
+
+#: src/actions.cpp:1601
+msgid "exists. [O]verwrite, [r]ename or [s]kip?"
+msgstr ""
+
+#: src/actions.cpp:1629
+#, fuzzy
+msgid "Renaming file to"
+msgstr "Método de sensado"
+
+#: src/actions.cpp:1631
+msgid "updating timestamp"
+msgstr ""
+
+#: src/actions.cpp:1640
+msgid "Failed to rename"
+msgstr ""
+
 #: src/tiffimage.cpp:206
 msgid "Header, offset"
 msgstr ""
@@ -4215,10 +4519,6 @@ msgstr "Bits comprimidos por pixel"
 msgid "Compressed image size"
 msgstr "Bits comprimidos por pixel"
 
-#: src/minoltamn.cpp:238 src/olympusmn.cpp:355
-msgid "Thumbnail"
-msgstr ""
-
 #: src/minoltamn.cpp:239
 msgid "Jpeg thumbnail 640x480 pixels"
 msgstr ""
@@ -4255,12 +4555,6 @@ msgstr "Espacio de color"
 #: src/minoltamn.cpp:1102 src/panasonicmn.cpp:185
 #, fuzzy
 msgid "Image Quality"
-msgstr "Ancho de la imagen"
-
-#: src/minoltamn.cpp:251 src/minoltamn.cpp:606 src/minoltamn.cpp:870
-#: src/minoltamn.cpp:1103
-#, fuzzy
-msgid "Image quality"
 msgstr "Ancho de la imagen"
 
 #: src/minoltamn.cpp:256 src/minoltamn.cpp:936 src/minoltamn.cpp:1171
@@ -4604,12 +4898,6 @@ msgstr ""
 msgid "Manual flash control"
 msgstr ""
 
-#: src/minoltamn.cpp:594 src/minoltamn.cpp:864 src/minoltamn.cpp:1097
-#: src/sigmamn.cpp:84
-#, fuzzy
-msgid "Exposure mode"
-msgstr "Modo de exposición"
-
 #: src/minoltamn.cpp:596 src/minoltamn.cpp:884 src/fujimn.cpp:207
 #, fuzzy
 msgid "Flash Mode"
@@ -4620,12 +4908,6 @@ msgstr "Flash"
 #, fuzzy
 msgid "Flash mode"
 msgstr "Flash"
-
-#: src/minoltamn.cpp:600 src/minoltamn.cpp:873 src/minoltamn.cpp:1106
-#: src/sigmamn.cpp:81
-#, fuzzy
-msgid "White balance"
-msgstr "Balance de blanco"
 
 #: src/minoltamn.cpp:602 src/minoltamn.cpp:866 src/minoltamn.cpp:1099
 #, fuzzy
@@ -4647,11 +4929,6 @@ msgstr "Modo de métrica"
 msgid "Drive mode"
 msgstr "Retrato"
 
-#: src/minoltamn.cpp:612 src/minoltamn.cpp:1118 src/sigmamn.cpp:87
-#, fuzzy
-msgid "Metering mode"
-msgstr "Modo de métrica"
-
 #: src/minoltamn.cpp:614
 #, fuzzy
 msgid "Exposure Speed"
@@ -4662,11 +4939,6 @@ msgstr "Modo de exposición"
 msgid "Exposure speed"
 msgstr "Modo de exposición"
 
-#: src/minoltamn.cpp:618 src/minoltamn.cpp:920 src/minoltamn.cpp:1133
-#, fuzzy
-msgid "Exposure time"
-msgstr "Tiempo de exposición"
-
 #: src/minoltamn.cpp:621 src/minoltamn.cpp:917 src/minoltamn.cpp:1136
 #, fuzzy
 msgid "The F-Number"
@@ -4675,11 +4947,6 @@ msgstr "El número F."
 #: src/minoltamn.cpp:623
 #, fuzzy
 msgid "Macro Mode"
-msgstr "Macro"
-
-#: src/minoltamn.cpp:624 src/panasonicmn.cpp:205 src/olympusmn.cpp:129
-#, fuzzy
-msgid "Macro mode"
 msgstr "Macro"
 
 #: src/minoltamn.cpp:626 src/olympusmn.cpp:134
@@ -4731,11 +4998,6 @@ msgstr "El número F."
 msgid "Interval number"
 msgstr "El número F."
 
-#: src/minoltamn.cpp:642
-#, fuzzy
-msgid "Focal length"
-msgstr "Distancia focal"
-
 #: src/minoltamn.cpp:644 src/olympusmn.cpp:232
 #, fuzzy
 msgid "Focus Distance"
@@ -4784,12 +5046,6 @@ msgstr ""
 #: src/minoltamn.cpp:1165
 #, fuzzy
 msgid "Image Number"
-msgstr "ID único de imagen"
-
-#: src/minoltamn.cpp:663 src/minoltamn.cpp:927 src/minoltamn.cpp:934
-#: src/minoltamn.cpp:1166
-#, fuzzy
-msgid "Image number"
 msgstr "ID único de imagen"
 
 #: src/minoltamn.cpp:665
@@ -5882,11 +6138,6 @@ msgstr "Balance de blanco"
 msgid "FlashBias"
 msgstr "El flash disparó."
 
-#: src/panasonicmn.cpp:223
-#, fuzzy
-msgid "Flash bias"
-msgstr "El flash disparó."
-
 #: src/panasonicmn.cpp:235
 #, fuzzy
 msgid "Color Effect"
@@ -6583,10 +6834,6 @@ msgstr ""
 #~ msgstr "Resolución X"
 
 #, fuzzy
-#~ msgid "Subject distance"
-#~ msgstr "Distancia del sujeto"
-
-#, fuzzy
 #~ msgid "Unknown encoding."
 #~ msgstr "Desconocido"
 
@@ -6729,9 +6976,6 @@ msgstr ""
 #~ msgid "Exif Version %d.%d"
 #~ msgstr "Versión Exif"
 
-#~ msgid " (35 equivalent: %d mm)"
-#~ msgstr " (equivalente 35: %d mm)"
-
 #, fuzzy
 #~ msgid "1/%d"
 #~ msgstr "1/%d seg."
@@ -6785,10 +7029,6 @@ msgstr ""
 
 #~ msgid "Unexpected number of components (%li, expected 2, 3, or 4)."
 #~ msgstr "Cantidad de componentes inesperada (%li, esperados 2, 3, o 4)."
-
-#, fuzzy
-#~ msgid "Byte"
-#~ msgstr "Centímetro"
 
 #, fuzzy
 #~ msgid "Short"
