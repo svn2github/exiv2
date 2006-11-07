@@ -1,4 +1,7 @@
 # List of source files which contain translatable strings.
+
+# Common Library implementation.
+
 src/actions.cpp
 src/datasets.cpp
 src/exiv2.cpp
@@ -7,6 +10,9 @@ src/crwimage.cpp
 src/error.cpp
 src/tags.cpp
 src/tiffimage.cpp
+
+# Makernotes parser.
+
 src/minoltamn.cpp
 src/fujimn.cpp
 src/sigmamn.cpp
