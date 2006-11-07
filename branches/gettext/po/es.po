@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 10:37+0100\n"
+"POT-Creation-Date: 2006-11-07 10:42+0100\n"
 "PO-Revision-Date: 2005-03-12 05:43+0100\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -4344,7 +4344,7 @@ msgstr ""
 msgid "Failed to rename"
 msgstr ""
 
-#: src/cr2image.cpp:241 src/tiffimage.cpp:206
+#: src/cr2image.cpp:241 src/crwimage.cpp:642 src/tiffimage.cpp:206
 msgid "Header, offset"
 msgstr ""
 
@@ -4355,6 +4355,30 @@ msgstr ""
 #: src/cr2image.cpp:246 src/tiffimage.cpp:211
 msgid "big endian encoded"
 msgstr ""
+
+#: src/crwimage.cpp:659
+#, fuzzy
+msgid "tag"
+msgstr "promedio"
+
+#: src/crwimage.cpp:661
+msgid "dir"
+msgstr ""
+
+#: src/crwimage.cpp:663
+#, fuzzy
+msgid "type"
+msgstr "Escena nocturna"
+
+#: src/crwimage.cpp:664
+#, fuzzy
+msgid "size"
+msgstr "Fuente de archivo"
+
+#: src/crwimage.cpp:665
+#, fuzzy
+msgid "offset"
+msgstr "Suave"
 
 #: src/minoltamn.cpp:56
 msgid "Natural Color"
@@ -6861,10 +6885,6 @@ msgstr ""
 #~ msgstr "Balance de blanco manual"
 
 #, fuzzy
-#~ msgid "avg"
-#~ msgstr "promedio"
-
-#, fuzzy
 #~ msgid "Center-Weight"
 #~ msgstr "peso centrado"
 
@@ -7204,10 +7224,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Flash used"
 #~ msgstr "El flash disparó."
-
-#, fuzzy
-#~ msgid "Lightype"
-#~ msgstr "Escena nocturna"
 
 #, fuzzy
 #~ msgid "CCD Sensitivity"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 10:37+0100\n"
+"POT-Creation-Date: 2006-11-07 10:42+0100\n"
 "PO-Revision-Date: 2005-09-18 19:25+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -4332,7 +4332,7 @@ msgstr ""
 msgid "Failed to rename"
 msgstr ""
 
-#: src/cr2image.cpp:241 src/tiffimage.cpp:206
+#: src/cr2image.cpp:241 src/crwimage.cpp:642 src/tiffimage.cpp:206
 msgid "Header, offset"
 msgstr ""
 
@@ -4343,6 +4343,30 @@ msgstr ""
 #: src/cr2image.cpp:246 src/tiffimage.cpp:211
 msgid "big endian encoded"
 msgstr ""
+
+#: src/crwimage.cpp:659
+#, fuzzy
+msgid "tag"
+msgstr "mittel"
+
+#: src/crwimage.cpp:661
+msgid "dir"
+msgstr ""
+
+#: src/crwimage.cpp:663
+#, fuzzy
+msgid "type"
+msgstr "Lichtart"
+
+#: src/crwimage.cpp:664
+#, fuzzy
+msgid "size"
+msgstr "Voll"
+
+#: src/crwimage.cpp:665
+#, fuzzy
+msgid "offset"
+msgstr "Weich"
 
 #: src/minoltamn.cpp:56
 msgid "Natural Color"
@@ -7159,9 +7183,6 @@ msgstr ""
 #~ msgid "Manual white balance"
 #~ msgstr "Manueller Weißabgleich"
 
-#~ msgid "avg"
-#~ msgstr "mittel"
-
 #~ msgid "Center-Weight"
 #~ msgstr "Mittelpunkt gewichtet"
 
@@ -7633,9 +7654,6 @@ msgstr ""
 
 #~ msgid "Flash used"
 #~ msgstr "Blitz löste aus"
-
-#~ msgid "Lightype"
-#~ msgstr "Lichtart"
 
 #~ msgid "Total number of pictures taken"
 #~ msgstr "Anzahl aller aufgenommenen Bilder"

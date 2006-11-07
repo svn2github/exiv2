@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 10:37+0100\n"
+"POT-Creation-Date: 2006-11-07 10:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3845,7 +3845,7 @@ msgstr ""
 msgid "Failed to rename"
 msgstr ""
 
-#: src/cr2image.cpp:241 src/tiffimage.cpp:206
+#: src/cr2image.cpp:241 src/crwimage.cpp:642 src/tiffimage.cpp:206
 msgid "Header, offset"
 msgstr ""
 
@@ -3855,6 +3855,26 @@ msgstr ""
 
 #: src/cr2image.cpp:246 src/tiffimage.cpp:211
 msgid "big endian encoded"
+msgstr ""
+
+#: src/crwimage.cpp:659
+msgid "tag"
+msgstr ""
+
+#: src/crwimage.cpp:661
+msgid "dir"
+msgstr ""
+
+#: src/crwimage.cpp:663
+msgid "type"
+msgstr ""
+
+#: src/crwimage.cpp:664
+msgid "size"
+msgstr ""
+
+#: src/crwimage.cpp:665
+msgid "offset"
 msgstr ""
 
 #: src/minoltamn.cpp:56

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 10:37+0100\n"
+"POT-Creation-Date: 2006-11-07 10:42+0100\n"
 "PO-Revision-Date: 2005-03-21 09:30+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -4334,7 +4334,7 @@ msgstr ""
 msgid "Failed to rename"
 msgstr ""
 
-#: src/cr2image.cpp:241 src/tiffimage.cpp:206
+#: src/cr2image.cpp:241 src/crwimage.cpp:642 src/tiffimage.cpp:206
 msgid "Header, offset"
 msgstr ""
 
@@ -4345,6 +4345,30 @@ msgstr ""
 #: src/cr2image.cpp:246 src/tiffimage.cpp:211
 msgid "big endian encoded"
 msgstr ""
+
+#: src/crwimage.cpp:659
+#, fuzzy
+msgid "tag"
+msgstr "śred"
+
+#: src/crwimage.cpp:661
+msgid "dir"
+msgstr ""
+
+#: src/crwimage.cpp:663
+#, fuzzy
+msgid "type"
+msgstr "Rodzaj oświetlenia"
+
+#: src/crwimage.cpp:664
+#, fuzzy
+msgid "size"
+msgstr "Pełny"
+
+#: src/crwimage.cpp:665
+#, fuzzy
+msgid "offset"
+msgstr "Mała"
 
 #: src/minoltamn.cpp:56
 msgid "Natural Color"
@@ -6981,9 +7005,6 @@ msgstr "One-touch"
 #~ msgid "Manual white balance"
 #~ msgstr "Ręczny balans bieli"
 
-#~ msgid "avg"
-#~ msgstr "śred"
-
 #~ msgid "Center-Weight"
 #~ msgstr "Centralnie ważony"
 
@@ -7422,9 +7443,6 @@ msgstr "One-touch"
 
 #~ msgid "Flash used"
 #~ msgstr "Użyto flesza"
-
-#~ msgid "Lightype"
-#~ msgstr "Rodzaj oświetlenia"
 
 #~ msgid "Total number of pictures taken"
 #~ msgstr "Całkowita liczba zrobionych zdjęć"

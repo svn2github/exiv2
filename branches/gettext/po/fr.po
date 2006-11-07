@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-07 10:37+0100\n"
+"POT-Creation-Date: 2006-11-07 10:42+0100\n"
 "PO-Revision-Date: 2006-11-06 16:31+0100\n"
 "Last-Translator: Caulier Gilles <caulier dot gilles at kdemail dot net>\n"
 "Language-Team: Français <fr@li.org>\n"
@@ -4163,7 +4163,7 @@ msgstr ""
 msgid "Failed to rename"
 msgstr ""
 
-#: src/cr2image.cpp:241 src/tiffimage.cpp:206
+#: src/cr2image.cpp:241 src/crwimage.cpp:642 src/tiffimage.cpp:206
 msgid "Header, offset"
 msgstr ""
 
@@ -4174,6 +4174,29 @@ msgstr ""
 #: src/cr2image.cpp:246 src/tiffimage.cpp:211
 msgid "big endian encoded"
 msgstr ""
+
+#: src/crwimage.cpp:659
+#, fuzzy
+msgid "tag"
+msgstr "moyenne"
+
+#: src/crwimage.cpp:661
+msgid "dir"
+msgstr ""
+
+#: src/crwimage.cpp:663
+msgid "type"
+msgstr ""
+
+#: src/crwimage.cpp:664
+#, fuzzy
+msgid "size"
+msgstr "Source du fichier"
+
+#: src/crwimage.cpp:665
+#, fuzzy
+msgid "offset"
+msgstr "Doux"
 
 #: src/minoltamn.cpp:56
 msgid "Natural Color"
