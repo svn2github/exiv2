@@ -1,4 +1,5 @@
 # List of source files which contain translatable strings.
+# Note: after to have added a new file in this list, please run 'make update-po'.
 
 # Common Library implementation.
 
