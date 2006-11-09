@@ -188,9 +188,12 @@ namespace Exiv2 {
         TagInfo(0x0010, "DataDump", N_("Data Dump"), 
                 N_("Data dump"), 
                 nikon1IfdId, makerTags, undefined, printValue),
+
+        // TODO: Add Preview decoding implementation.
         TagInfo(0x0011, "Preview", N_("Preview Informations"), 
                 N_("Preview informations"), 
                 minoltaIfdId, makerTags, undefined, printValue),
+
         TagInfo(0x0012, "FlashBias", N_("Flash Bias"), 
                 N_("Flash exposure compensation"), 
                 minoltaIfdId, makerTags, undefined, printValue),
