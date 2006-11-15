@@ -16,6 +16,7 @@ src/tiffvisitor.cpp
 
 # Makernotes parser.
 
+src/canonmn.cpp
 src/fujimn.cpp
 src/minoltamn.cpp
 src/nikonmn.cpp
