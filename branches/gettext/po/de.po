@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exiv2\n"
 "Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
-"POT-Creation-Date: 2006-11-09 20:51+0100\n"
+"POT-Creation-Date: 2006-11-15 16:34+0100\n"
 "PO-Revision-Date: 2005-09-18 19:25+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -138,7 +138,8 @@ msgid "Exif Resolution"
 msgstr "Auflösung in y-Richtung"
 
 #: src/actions.cpp:479 src/minoltamn.cpp:600 src/minoltamn.cpp:873
-#: src/minoltamn.cpp:1106 src/nikonmn.cpp:156 src/sigmamn.cpp:81
+#: src/minoltamn.cpp:1106 src/nikonmn.cpp:178 src/nikonmn.cpp:466
+#: src/nikonmn.cpp:596 src/sigmamn.cpp:81
 msgid "White balance"
 msgstr "Weißabgleich"
 
@@ -147,7 +148,7 @@ msgid "Thumbnail"
 msgstr ""
 
 #: src/actions.cpp:523 src/tags.cpp:603 src/minoltamn.cpp:408
-#: src/minoltamn.cpp:502 src/nikonmn.cpp:116 src/olympusmn.cpp:84
+#: src/minoltamn.cpp:502 src/nikonmn.cpp:138 src/olympusmn.cpp:84
 #: src/olympusmn.cpp:506
 #, fuzzy
 msgid "None"
@@ -1957,7 +1958,7 @@ msgstr ""
 msgid "Thumbnail/Preview image, Multi page file, Transparency mask"
 msgstr ""
 
-#: src/tags.cpp:149
+#: src/tags.cpp:149 src/nikonmn.cpp:1038
 #, fuzzy
 msgid "none"
 msgstr "Keine"
@@ -2811,9 +2812,9 @@ msgstr "Manuell"
 #: src/fujimn.cpp:107 src/fujimn.cpp:115 src/fujimn.cpp:121
 #: src/minoltamn.cpp:304 src/minoltamn.cpp:422 src/minoltamn.cpp:758
 #: src/minoltamn.cpp:781 src/minoltamn.cpp:820 src/minoltamn.cpp:957
-#: src/minoltamn.cpp:979 src/minoltamn.cpp:1005 src/olympusmn.cpp:92
-#: src/olympusmn.cpp:521 src/olympusmn.cpp:527 src/olympusmn.cpp:528
-#: src/panasonicmn.cpp:72 src/panasonicmn.cpp:83
+#: src/minoltamn.cpp:979 src/minoltamn.cpp:1005 src/nikonmn.cpp:439
+#: src/olympusmn.cpp:92 src/olympusmn.cpp:521 src/olympusmn.cpp:527
+#: src/olympusmn.cpp:528 src/panasonicmn.cpp:72 src/panasonicmn.cpp:83
 msgid "Auto"
 msgstr "Automatisch"
 
@@ -2849,20 +2850,24 @@ msgstr "Landschaft"
 
 #: src/tags.cpp:483 src/tags.cpp:495 src/tags.cpp:633 src/tags.cpp:1791
 #: src/tags.cpp:1862 src/fujimn.cpp:220 src/fujimn.cpp:229 src/fujimn.cpp:238
-#: src/nikonmn.cpp:171 src/nikonmn.cpp:424 src/olympusmn.cpp:173
-#: src/olympusmn.cpp:179 src/olympusmn.cpp:182 src/olympusmn.cpp:224
-#: src/olympusmn.cpp:227 src/olympusmn.cpp:254 src/olympusmn.cpp:257
-#: src/olympusmn.cpp:263 src/olympusmn.cpp:272 src/olympusmn.cpp:278
-#: src/olympusmn.cpp:281 src/olympusmn.cpp:284 src/olympusmn.cpp:287
-#: src/olympusmn.cpp:290 src/olympusmn.cpp:293 src/olympusmn.cpp:296
-#: src/olympusmn.cpp:299 src/olympusmn.cpp:305 src/olympusmn.cpp:308
-#: src/olympusmn.cpp:341 src/olympusmn.cpp:344 src/olympusmn.cpp:347
-#: src/olympusmn.cpp:350 src/panasonicmn.cpp:194 src/panasonicmn.cpp:217
-#: src/panasonicmn.cpp:230 src/panasonicmn.cpp:233 src/panasonicmn.cpp:239
-#: src/panasonicmn.cpp:257 src/panasonicmn.cpp:263 src/panasonicmn.cpp:275
-#: src/sonymn.cpp:63 src/sonymn.cpp:66 src/sonymn.cpp:69 src/sonymn.cpp:72
-#: src/sonymn.cpp:75 src/sonymn.cpp:78 src/sonymn.cpp:81 src/sonymn.cpp:84
-#: src/sonymn.cpp:87
+#: src/nikonmn.cpp:190 src/nikonmn.cpp:289 src/nikonmn.cpp:451
+#: src/nikonmn.cpp:472 src/nikonmn.cpp:481 src/nikonmn.cpp:611
+#: src/nikonmn.cpp:647 src/nikonmn.cpp:716 src/nikonmn.cpp:746
+#: src/nikonmn.cpp:749 src/nikonmn.cpp:758 src/nikonmn.cpp:770
+#: src/nikonmn.cpp:949 src/nikonmn.cpp:1277 src/nikonmn.cpp:1278
+#: src/nikonmn.cpp:1279 src/olympusmn.cpp:173 src/olympusmn.cpp:179
+#: src/olympusmn.cpp:182 src/olympusmn.cpp:224 src/olympusmn.cpp:227
+#: src/olympusmn.cpp:254 src/olympusmn.cpp:257 src/olympusmn.cpp:263
+#: src/olympusmn.cpp:272 src/olympusmn.cpp:278 src/olympusmn.cpp:281
+#: src/olympusmn.cpp:284 src/olympusmn.cpp:287 src/olympusmn.cpp:290
+#: src/olympusmn.cpp:293 src/olympusmn.cpp:296 src/olympusmn.cpp:299
+#: src/olympusmn.cpp:305 src/olympusmn.cpp:308 src/olympusmn.cpp:341
+#: src/olympusmn.cpp:344 src/olympusmn.cpp:347 src/olympusmn.cpp:350
+#: src/panasonicmn.cpp:194 src/panasonicmn.cpp:217 src/panasonicmn.cpp:230
+#: src/panasonicmn.cpp:233 src/panasonicmn.cpp:239 src/panasonicmn.cpp:257
+#: src/panasonicmn.cpp:263 src/panasonicmn.cpp:275 src/sonymn.cpp:63
+#: src/sonymn.cpp:66 src/sonymn.cpp:69 src/sonymn.cpp:72 src/sonymn.cpp:75
+#: src/sonymn.cpp:78 src/sonymn.cpp:81 src/sonymn.cpp:84 src/sonymn.cpp:87
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -2899,12 +2904,13 @@ msgid "Other"
 msgstr "Andere"
 
 #: src/tags.cpp:496 src/fujimn.cpp:81 src/minoltamn.cpp:305
-#: src/minoltamn.cpp:782 src/minoltamn.cpp:980 src/panasonicmn.cpp:73
+#: src/minoltamn.cpp:782 src/minoltamn.cpp:980 src/nikonmn.cpp:441
+#: src/panasonicmn.cpp:73
 msgid "Daylight"
 msgstr "Tageslicht"
 
 #: src/tags.cpp:497 src/minoltamn.cpp:309 src/minoltamn.cpp:786
-#: src/minoltamn.cpp:984
+#: src/minoltamn.cpp:984 src/nikonmn.cpp:443
 msgid "Fluorescent"
 msgstr "Leuchstoffröhre"
 
@@ -3098,12 +3104,12 @@ msgstr ""
 msgid "Yes, auto, red-eye reduction, return light detected"
 msgstr "Blitz ausgelöst, Rote Augen Reduktions Modus, Blitzreflektion erkannt."
 
-#: src/tags.cpp:546 src/nikonmn.cpp:90
+#: src/tags.cpp:546 src/nikonmn.cpp:112
 msgid "sRGB"
 msgstr "sRGB"
 
 #: src/tags.cpp:547 src/minoltamn.cpp:456 src/minoltamn.cpp:833
-#: src/nikonmn.cpp:91
+#: src/nikonmn.cpp:113
 msgid "Adobe RGB"
 msgstr "Adobe RGB"
 
@@ -3205,10 +3211,10 @@ msgstr "Hohe Sättigung"
 
 #: src/tags.cpp:612 src/tags.cpp:619 src/tags.cpp:626 src/fujimn.cpp:73
 #: src/fujimn.cpp:92 src/fujimn.cpp:100 src/minoltamn.cpp:402
-#: src/minoltamn.cpp:774 src/minoltamn.cpp:972 src/nikonmn.cpp:126
-#: src/olympusmn.cpp:98 src/olympusmn.cpp:106 src/olympusmn.cpp:479
-#: src/panasonicmn.cpp:65 src/panasonicmn.cpp:105 src/panasonicmn.cpp:147
-#: src/panasonicmn.cpp:178
+#: src/minoltamn.cpp:774 src/minoltamn.cpp:972 src/nikonmn.cpp:148
+#: src/nikonmn.cpp:422 src/olympusmn.cpp:98 src/olympusmn.cpp:106
+#: src/olympusmn.cpp:479 src/panasonicmn.cpp:65 src/panasonicmn.cpp:105
+#: src/panasonicmn.cpp:147 src/panasonicmn.cpp:178
 msgid "Normal"
 msgstr "Normal"
 
@@ -3459,7 +3465,7 @@ msgstr "Messmodus"
 msgid "The metering mode."
 msgstr "Der Messmodus."
 
-#: src/tags.cpp:716 src/nikonmn.cpp:266
+#: src/tags.cpp:716 src/nikonmn.cpp:712
 msgid "Light Source"
 msgstr "Lichtquelle"
 
@@ -3563,7 +3569,7 @@ msgstr "FlashPix Version 1.0"
 msgid "The FlashPix format version supported by a FPXR file."
 msgstr "Die FlashPix Formatversion die von einer FPXR Datei unterstützt wird."
 
-#: src/tags.cpp:751 src/minoltamn.cpp:893 src/nikonmn.cpp:218
+#: src/tags.cpp:751 src/minoltamn.cpp:893 src/nikonmn.cpp:664
 #: src/sigmamn.cpp:92
 msgid "Color Space"
 msgstr "Farbraum"
@@ -3819,8 +3825,9 @@ msgstr ""
 "verschiedenen Belichtungseinstellungen auf."
 
 #: src/tags.cpp:852 src/fujimn.cpp:198 src/minoltamn.cpp:599
-#: src/minoltamn.cpp:872 src/minoltamn.cpp:1105 src/nikonmn.cpp:155
-#: src/olympusmn.cpp:259 src/panasonicmn.cpp:190 src/sigmamn.cpp:80
+#: src/minoltamn.cpp:872 src/minoltamn.cpp:1105 src/nikonmn.cpp:177
+#: src/nikonmn.cpp:465 src/nikonmn.cpp:595 src/olympusmn.cpp:259
+#: src/panasonicmn.cpp:190 src/sigmamn.cpp:80
 msgid "White Balance"
 msgstr "Weißabgleich"
 
@@ -3898,8 +3905,8 @@ msgstr ""
 
 #: src/tags.cpp:878 src/minoltamn.cpp:490 src/minoltamn.cpp:674
 #: src/minoltamn.cpp:675 src/minoltamn.cpp:902 src/minoltamn.cpp:903
-#: src/minoltamn.cpp:1129 src/minoltamn.cpp:1130 src/nikonmn.cpp:272
-#: src/nikonmn.cpp:273 src/nikonmn.cpp:316 src/nikonmn.cpp:317
+#: src/minoltamn.cpp:1129 src/minoltamn.cpp:1130 src/nikonmn.cpp:721
+#: src/nikonmn.cpp:722 src/nikonmn.cpp:775 src/nikonmn.cpp:776
 #: src/sigmamn.cpp:107 src/sigmamn.cpp:108
 msgid "Saturation"
 msgstr "Sättigung"
@@ -4540,7 +4547,7 @@ msgstr ""
 #: src/minoltamn.cpp:91 src/minoltamn.cpp:356 src/minoltamn.cpp:362
 #: src/minoltamn.cpp:395 src/minoltamn.cpp:845 src/minoltamn.cpp:851
 #: src/minoltamn.cpp:857 src/minoltamn.cpp:1025 src/minoltamn.cpp:1031
-#: src/nikonmn.cpp:123 src/olympusmn.cpp:56 src/olympusmn.cpp:70
+#: src/nikonmn.cpp:145 src/olympusmn.cpp:56 src/olympusmn.cpp:70
 #: src/olympusmn.cpp:77 src/panasonicmn.cpp:92 src/panasonicmn.cpp:99
 #: src/panasonicmn.cpp:131 src/panasonicmn.cpp:140 src/panasonicmn.cpp:164
 #: src/panasonicmn.cpp:353
@@ -4575,7 +4582,7 @@ msgid "Hard mode 2"
 msgstr "Makromodus"
 
 #: src/fujimn.cpp:82 src/minoltamn.cpp:306 src/minoltamn.cpp:784
-#: src/minoltamn.cpp:981 src/panasonicmn.cpp:74
+#: src/minoltamn.cpp:981 src/nikonmn.cpp:444 src/panasonicmn.cpp:74
 msgid "Cloudy"
 msgstr "Wolkiges Wetter"
 
@@ -4594,7 +4601,7 @@ msgstr "Leuchstoffröhre"
 msgid "Fluorescent (cool white)"
 msgstr "Fluoreszenz"
 
-#: src/fujimn.cpp:86
+#: src/fujimn.cpp:86 src/nikonmn.cpp:442
 msgid "Incandescent"
 msgstr ""
 
@@ -4753,7 +4760,7 @@ msgstr ""
 msgid "Film simulation mode"
 msgstr ""
 
-#: src/fujimn.cpp:185 src/nikonmn.cpp:143
+#: src/fujimn.cpp:185 src/nikonmn.cpp:165 src/nikonmn.cpp:583
 #, fuzzy
 msgid "Version"
 msgstr "Exif Version"
@@ -4763,8 +4770,8 @@ msgstr "Exif Version"
 msgid "Fujifilm Makernote version"
 msgstr "Exif Version"
 
-#: src/fujimn.cpp:188 src/nikonmn.cpp:215 src/nikonmn.cpp:216
-#: src/nikonmn.cpp:298 src/olympusmn.cpp:184 src/panasonicmn.cpp:225
+#: src/fujimn.cpp:188 src/nikonmn.cpp:661 src/nikonmn.cpp:662
+#: src/nikonmn.cpp:751 src/olympusmn.cpp:184 src/panasonicmn.cpp:225
 #: src/sigmamn.cpp:66
 #, fuzzy
 msgid "Serial Number"
@@ -4776,13 +4783,15 @@ msgid ""
 "same as the number printed on the camera body."
 msgstr ""
 
-#: src/fujimn.cpp:192 src/nikonmn.cpp:152 src/olympusmn.cpp:125
-#: src/panasonicmn.cpp:184 src/sigmamn.cpp:122 src/sigmamn.cpp:123
+#: src/fujimn.cpp:192 src/nikonmn.cpp:174 src/nikonmn.cpp:453
+#: src/nikonmn.cpp:592 src/olympusmn.cpp:125 src/panasonicmn.cpp:184
+#: src/sigmamn.cpp:122 src/sigmamn.cpp:123
 #, fuzzy
 msgid "Quality"
 msgstr "Qualitätsstufe"
 
-#: src/fujimn.cpp:193 src/nikonmn.cpp:153 src/olympusmn.cpp:126
+#: src/fujimn.cpp:193 src/nikonmn.cpp:175 src/nikonmn.cpp:454
+#: src/nikonmn.cpp:593 src/olympusmn.cpp:126
 #, fuzzy
 msgid "Image quality setting"
 msgstr "Bildbreite"
@@ -4797,7 +4806,7 @@ msgstr "Schärfeneinstellung"
 msgid "White balance setting"
 msgstr "Weißabgleicheinstellung"
 
-#: src/fujimn.cpp:201
+#: src/fujimn.cpp:201 src/nikonmn.cpp:416
 #, fuzzy
 msgid "Color"
 msgstr "Farbmodus"
@@ -4817,7 +4826,7 @@ msgid "Contrast setting"
 msgstr "Kontrastkurve"
 
 #: src/fujimn.cpp:207 src/minoltamn.cpp:596 src/minoltamn.cpp:884
-#: src/nikonmn.cpp:242 src/olympusmn.cpp:208
+#: src/nikonmn.cpp:688 src/olympusmn.cpp:208
 msgid "Flash Mode"
 msgstr "Blitzmodus"
 
@@ -4842,7 +4851,8 @@ msgid "Macro mode setting"
 msgstr "Makromodus"
 
 #: src/fujimn.cpp:216 src/minoltamn.cpp:725 src/minoltamn.cpp:875
-#: src/minoltamn.cpp:1144 src/olympusmn.cpp:229 src/panasonicmn.cpp:196
+#: src/minoltamn.cpp:1144 src/nikonmn.cpp:468 src/olympusmn.cpp:229
+#: src/panasonicmn.cpp:196
 msgid "Focus Mode"
 msgstr "Fokusmodus"
 
@@ -4869,7 +4879,7 @@ msgstr "Aufnahme Modus"
 msgid "Picture mode setting"
 msgstr ""
 
-#: src/fujimn.cpp:231 src/minoltamn.cpp:339 src/nikonmn.cpp:105
+#: src/fujimn.cpp:231 src/minoltamn.cpp:339 src/nikonmn.cpp:127
 msgid "Continuous"
 msgstr "Kontinuierlich"
 
@@ -5187,12 +5197,14 @@ msgstr "Bildlänge"
 msgid "Size of the thumbnail"
 msgstr ""
 
-#: src/minoltamn.cpp:247 src/nikonmn.cpp:149 src/panasonicmn.cpp:265
+#: src/minoltamn.cpp:247 src/nikonmn.cpp:171 src/nikonmn.cpp:456
+#: src/nikonmn.cpp:589 src/nikonmn.cpp:706 src/panasonicmn.cpp:265
 #, fuzzy
 msgid "Color Mode"
 msgstr "Farbmodus"
 
-#: src/minoltamn.cpp:248 src/nikonmn.cpp:150 src/panasonicmn.cpp:266
+#: src/minoltamn.cpp:248 src/nikonmn.cpp:172 src/nikonmn.cpp:457
+#: src/nikonmn.cpp:590 src/nikonmn.cpp:707 src/panasonicmn.cpp:266
 #, fuzzy
 msgid "Color mode"
 msgstr "Farbmodus"
@@ -5204,13 +5216,13 @@ msgid "Image Quality"
 msgstr "Qualität"
 
 #: src/minoltamn.cpp:256 src/minoltamn.cpp:936 src/minoltamn.cpp:1171
-#: src/nikonmn.cpp:322
+#: src/nikonmn.cpp:781
 #, fuzzy
 msgid "Image Stabilization"
 msgstr "Orientierung"
 
 #: src/minoltamn.cpp:257 src/minoltamn.cpp:937 src/minoltamn.cpp:1172
-#: src/nikonmn.cpp:323
+#: src/nikonmn.cpp:782
 #, fuzzy
 msgid "Image stabilization"
 msgstr "Orientierung"
@@ -5251,12 +5263,12 @@ msgstr "Kontrasteinstellung"
 msgid "Camera Settings (for Dynax 5D model)"
 msgstr ""
 
-#: src/minoltamn.cpp:271 src/nikonmn.cpp:331 src/olympusmn.cpp:187
+#: src/minoltamn.cpp:271 src/nikonmn.cpp:790 src/olympusmn.cpp:187
 #: src/panasonicmn.cpp:271
 msgid "Print IM"
 msgstr ""
 
-#: src/minoltamn.cpp:272 src/nikonmn.cpp:332 src/olympusmn.cpp:188
+#: src/minoltamn.cpp:272 src/nikonmn.cpp:791 src/olympusmn.cpp:188
 #: src/panasonicmn.cpp:272
 #, fuzzy
 msgid "PrintIM information"
@@ -5406,7 +5418,7 @@ msgid "Top-left"
 msgstr "oben - links"
 
 #: src/minoltamn.cpp:389 src/minoltamn.cpp:461 src/minoltamn.cpp:814
-#: src/minoltamn.cpp:992 src/nikonmn.cpp:96
+#: src/minoltamn.cpp:992 src/nikonmn.cpp:118
 #, fuzzy
 msgid "Did not fire"
 msgstr "Blitz löste nicht aus"
@@ -5529,7 +5541,7 @@ msgid "Manual flash control"
 msgstr ""
 
 #: src/minoltamn.cpp:597 src/minoltamn.cpp:648 src/minoltamn.cpp:885
-#: src/nikonmn.cpp:243 src/olympusmn.cpp:209
+#: src/olympusmn.cpp:209
 msgid "Flash mode"
 msgstr "Blitzmodus"
 
@@ -5572,7 +5584,8 @@ msgstr "Die F Nummer."
 msgid "Macro Mode"
 msgstr "Makromodus"
 
-#: src/minoltamn.cpp:626 src/nikonmn.cpp:239 src/olympusmn.cpp:134
+#: src/minoltamn.cpp:626 src/nikonmn.cpp:207 src/nikonmn.cpp:474
+#: src/nikonmn.cpp:685 src/olympusmn.cpp:134
 #, fuzzy
 msgid "Digital Zoom"
 msgstr "Digitale Zoomrate"
@@ -5620,7 +5633,8 @@ msgstr "Seriennummer"
 msgid "Interval number"
 msgstr "Seriennummer"
 
-#: src/minoltamn.cpp:644 src/nikonmn.cpp:236 src/olympusmn.cpp:232
+#: src/minoltamn.cpp:644 src/nikonmn.cpp:204 src/nikonmn.cpp:682
+#: src/olympusmn.cpp:232
 #, fuzzy
 msgid "Focus Distance"
 msgstr "Manueller Fokusabstand"
@@ -5726,7 +5740,7 @@ msgid "ISO Speed Mode"
 msgstr "ISO Geschwindigkeitsangabe"
 
 #: src/minoltamn.cpp:690 src/minoltamn.cpp:888 src/minoltamn.cpp:1121
-#: src/nikonmn.cpp:147
+#: src/nikonmn.cpp:169 src/nikonmn.cpp:463 src/nikonmn.cpp:587
 #, fuzzy
 msgid "ISO speed setting"
 msgstr "ISO Geschwindigkeitsangabe"
@@ -5819,7 +5833,8 @@ msgid "Wide focus zone"
 msgstr ""
 
 #: src/minoltamn.cpp:726 src/minoltamn.cpp:876 src/minoltamn.cpp:1145
-#: src/nikonmn.cpp:162 src/olympusmn.cpp:230 src/panasonicmn.cpp:197
+#: src/nikonmn.cpp:184 src/nikonmn.cpp:469 src/nikonmn.cpp:602
+#: src/olympusmn.cpp:230 src/panasonicmn.cpp:197
 msgid "Focus mode"
 msgstr "Fokus Modus"
 
@@ -5943,7 +5958,7 @@ msgstr "Benutzter AF Punkt "
 msgid "AF points"
 msgstr "Benutzter AF Punkt "
 
-#: src/minoltamn.cpp:894 src/nikonmn.cpp:219 src/sigmamn.cpp:93
+#: src/minoltamn.cpp:894 src/nikonmn.cpp:665 src/sigmamn.cpp:93
 #, fuzzy
 msgid "Color space"
 msgstr "Farbraum"
@@ -5968,13 +5983,13 @@ msgstr ""
 msgid "Rotation"
 msgstr "SRational"
 
-#: src/minoltamn.cpp:929 src/minoltamn.cpp:1168 src/nikonmn.cpp:275
+#: src/minoltamn.cpp:929 src/minoltamn.cpp:1168 src/nikonmn.cpp:724
 #: src/olympusmn.cpp:367
 #, fuzzy
 msgid "Noise Reduction"
 msgstr "Rauschreduktion"
 
-#: src/minoltamn.cpp:930 src/minoltamn.cpp:1169 src/nikonmn.cpp:276
+#: src/minoltamn.cpp:930 src/minoltamn.cpp:1169 src/nikonmn.cpp:725
 #: src/olympusmn.cpp:368 src/panasonicmn.cpp:251
 #, fuzzy
 msgid "Noise reduction"
@@ -6092,12 +6107,12 @@ msgstr "Blitzmodus"
 msgid "Unknown Minolta Camera Settings 5D tag"
 msgstr ""
 
-#: src/nikonmn.cpp:62
+#: src/nikonmn.cpp:62 src/nikonmn.cpp:1012
 #, fuzzy
 msgid "Single area"
 msgstr "Einzel"
 
-#: src/nikonmn.cpp:63
+#: src/nikonmn.cpp:63 src/nikonmn.cpp:1013
 #, fuzzy
 msgid "Dynamic area"
 msgstr "lineares Format"
@@ -6110,7 +6125,7 @@ msgstr ""
 msgid "Group dynamic"
 msgstr ""
 
-#: src/nikonmn.cpp:66
+#: src/nikonmn.cpp:66 src/nikonmn.cpp:1016
 #, fuzzy
 msgid "Single area (wide)"
 msgstr "einzeln oder mit Timer"
@@ -6150,566 +6165,1508 @@ msgstr "links"
 msgid "Right-most"
 msgstr "Nacht"
 
-#: src/nikonmn.cpp:97
+#: src/nikonmn.cpp:119
 #, fuzzy
 msgid "Fire, manual"
 msgstr "manuell"
 
-#: src/nikonmn.cpp:98
+#: src/nikonmn.cpp:120
 #, fuzzy
 msgid "Fire, external"
 msgstr "Blitz ist extern"
 
-#: src/nikonmn.cpp:99
+#: src/nikonmn.cpp:121
 msgid "Fire, commander mode"
 msgstr ""
 
-#: src/nikonmn.cpp:100
+#: src/nikonmn.cpp:122
 #, fuzzy
 msgid "Fire, TTL mode"
 msgstr "Blitzmodus"
 
-#: src/nikonmn.cpp:106
+#: src/nikonmn.cpp:128
 msgid "Delay"
 msgstr ""
 
-#: src/nikonmn.cpp:107
+#: src/nikonmn.cpp:129
 #, fuzzy
 msgid "PC control"
 msgstr "Farbton"
 
-#: src/nikonmn.cpp:108
+#: src/nikonmn.cpp:130
 #, fuzzy
 msgid "Exposure bracketing"
 msgstr "Belichtungsabweichung"
 
-#: src/nikonmn.cpp:109
+#: src/nikonmn.cpp:131
 msgid "Unused LE-NR slowdown"
 msgstr ""
 
-#: src/nikonmn.cpp:110
+#: src/nikonmn.cpp:132
 #, fuzzy
 msgid "White balance bracketing"
 msgstr "Weißabgleicheinstellung"
 
-#: src/nikonmn.cpp:111
+#: src/nikonmn.cpp:133
 #, fuzzy
 msgid "IR control"
 msgstr "Farbton"
 
-#: src/nikonmn.cpp:117
+#: src/nikonmn.cpp:139
 #, fuzzy
 msgid "Auto release"
 msgstr "Automatischer Erfassung"
 
-#: src/nikonmn.cpp:118
+#: src/nikonmn.cpp:140
 #, fuzzy
 msgid "Manual release"
 msgstr "Manuelle Belichtungszeit"
 
-#: src/nikonmn.cpp:124
+#: src/nikonmn.cpp:146
 msgid "On for ISO 1600/3200"
 msgstr ""
 
-#: src/nikonmn.cpp:125
+#: src/nikonmn.cpp:147
 msgid "Weak"
 msgstr ""
 
-#: src/nikonmn.cpp:127
+#: src/nikonmn.cpp:149
 #, fuzzy
 msgid "Strong"
 msgstr "SLong"
 
-#: src/nikonmn.cpp:144
+#: src/nikonmn.cpp:166 src/nikonmn.cpp:584
 #, fuzzy
 msgid "Nikon Makernote version"
 msgstr "Exif Version"
 
-#: src/nikonmn.cpp:146 src/olympusmn.cpp:199
+#: src/nikonmn.cpp:168 src/nikonmn.cpp:462 src/nikonmn.cpp:586
+#: src/olympusmn.cpp:199
 #, fuzzy
 msgid "ISO Speed"
 msgstr "ISO Geschwindigkeitsangabe"
 
-#: src/nikonmn.cpp:158
+#: src/nikonmn.cpp:180 src/nikonmn.cpp:598
 #, fuzzy
 msgid "Sharpening"
 msgstr "Schärfeneinstellung"
 
-#: src/nikonmn.cpp:159
+#: src/nikonmn.cpp:181 src/nikonmn.cpp:599
 #, fuzzy
 msgid "Image sharpening setting"
 msgstr "Bildbreite"
 
-#: src/nikonmn.cpp:161
+#: src/nikonmn.cpp:183 src/nikonmn.cpp:601
 msgid "Focus"
 msgstr "Fokus"
 
-#: src/nikonmn.cpp:164
+#: src/nikonmn.cpp:186 src/nikonmn.cpp:604
 #, fuzzy
 msgid "Flash Setting"
 msgstr "Blitzeinstellungen"
 
-#: src/nikonmn.cpp:165
+#: src/nikonmn.cpp:187 src/nikonmn.cpp:605
 #, fuzzy
 msgid "Flash setting"
 msgstr "Blitzeinstellungen"
 
-#: src/nikonmn.cpp:167 src/olympusmn.cpp:211
-#, fuzzy
-msgid "Flash Device"
-msgstr "Blitz"
-
-#: src/nikonmn.cpp:168 src/olympusmn.cpp:212
-#, fuzzy
-msgid "Flash device"
-msgstr "Blitzmodus"
-
-#: src/nikonmn.cpp:173
-msgid "WB Fine Tune"
-msgstr ""
-
-#: src/nikonmn.cpp:174
-#, fuzzy
-msgid "White balance fine tune"
-msgstr "Weißabgleicheinstellung"
-
-#: src/nikonmn.cpp:176
-#, fuzzy
-msgid "Color Balance 1"
-msgstr "Farbraum"
-
-#: src/nikonmn.cpp:177
-#, fuzzy
-msgid "Color balance 1"
-msgstr "Farbraum"
-
-#: src/nikonmn.cpp:179
-#, fuzzy
-msgid "Program Shift"
-msgstr "Belichtungsart"
-
-#: src/nikonmn.cpp:180
-#, fuzzy
-msgid "Program shift"
-msgstr "Belichtungsart"
-
-#: src/nikonmn.cpp:182
-#, fuzzy
-msgid "Exposure Difference"
-msgstr "Belichtungsindex"
-
-#: src/nikonmn.cpp:183
-#, fuzzy
-msgid "Exposure difference"
-msgstr "Belichtungsindex"
-
-#: src/nikonmn.cpp:185
+#: src/nikonmn.cpp:192 src/nikonmn.cpp:625
 #, fuzzy
 msgid "ISO Selection"
 msgstr "Rauschreduktion"
 
-#: src/nikonmn.cpp:186
+#: src/nikonmn.cpp:193 src/nikonmn.cpp:626
 #, fuzzy
 msgid "ISO selection"
 msgstr "Rauschreduktion"
 
-#: src/nikonmn.cpp:188 src/panasonicmn.cpp:213
+#: src/nikonmn.cpp:195 src/nikonmn.cpp:628 src/panasonicmn.cpp:213
 #, fuzzy
 msgid "Data Dump"
 msgstr "lineares Format"
 
-#: src/nikonmn.cpp:189 src/panasonicmn.cpp:214
+#: src/nikonmn.cpp:196 src/nikonmn.cpp:629 src/panasonicmn.cpp:214
 #, fuzzy
 msgid "Data dump"
 msgstr "lineares Format"
 
-#: src/nikonmn.cpp:191
-#, fuzzy
-msgid "Preview Informations"
-msgstr "Debug Informationen."
-
-#: src/nikonmn.cpp:192
-#, fuzzy
-msgid "Preview informations"
-msgstr "Debug Informationen."
-
-#: src/nikonmn.cpp:194 src/olympusmn.cpp:301
-#, fuzzy
-msgid "Flash Bias"
-msgstr "Blitzabweichung"
-
-#: src/nikonmn.cpp:195 src/olympusmn.cpp:302
-#, fuzzy
-msgid "Flash exposure compensation"
-msgstr "Blitzkompensation ?"
-
-#: src/nikonmn.cpp:197
-#, fuzzy
-msgid "ISO Settings"
-msgstr "ISO Einstellungen"
-
-#: src/nikonmn.cpp:198
-#, fuzzy
-msgid "ISO setting"
-msgstr "ISO Geschwindigkeitsangabe"
-
-#: src/nikonmn.cpp:200
-#, fuzzy
-msgid "Image Boundary"
-msgstr "Qualität"
-
-#: src/nikonmn.cpp:201
-#, fuzzy
-msgid "Image boundary"
-msgstr "Qualität"
-
-#: src/nikonmn.cpp:203
-#, fuzzy
-msgid "Flash Bias Bracket"
-msgstr "Blitzabweichung"
-
-#: src/nikonmn.cpp:204
-#, fuzzy
-msgid "Flash exposure bracket value"
-msgstr "Blitzkompensation ?"
-
-#: src/nikonmn.cpp:206
-#, fuzzy
-msgid "Exposure Bracket"
-msgstr "Belichtungsabweichung"
-
-#: src/nikonmn.cpp:207
-#, fuzzy
-msgid "Exposure bracket value"
-msgstr "Blitzkompensation ?"
-
-#: src/nikonmn.cpp:209 src/olympusmn.cpp:385
-#, fuzzy
-msgid "Image Processing"
-msgstr "Bild Schärfung"
-
-#: src/nikonmn.cpp:210
-#, fuzzy
-msgid "Image processing"
-msgstr "Bild Schärfung"
-
-#: src/nikonmn.cpp:212
-msgid "Crop High Speed"
-msgstr ""
-
-#: src/nikonmn.cpp:213
-msgid "Crop high speed"
-msgstr ""
-
-#: src/nikonmn.cpp:221
+#: src/nikonmn.cpp:198 src/nikonmn.cpp:459 src/nikonmn.cpp:667
 #, fuzzy
 msgid "Image Adjustment"
 msgstr "Sättigungsanpassung"
 
-#: src/nikonmn.cpp:222
+#: src/nikonmn.cpp:199 src/nikonmn.cpp:460 src/nikonmn.cpp:668
 #, fuzzy
 msgid "Image adjustment setting"
 msgstr "Bildbreite"
 
-#: src/nikonmn.cpp:224
+#: src/nikonmn.cpp:201 src/nikonmn.cpp:477 src/nikonmn.cpp:673
 #, fuzzy
-msgid "Tone Compensation"
-msgstr "Belichtungszeit"
+msgid "Auxiliary Lens"
+msgstr "Trilinearer Sensor"
 
-#: src/nikonmn.cpp:225
-#, fuzzy
-msgid "Tone compensation"
-msgstr "Blitzkompensation ?"
+#: src/nikonmn.cpp:202 src/nikonmn.cpp:478 src/nikonmn.cpp:674
+msgid "Auxiliary lens (adapter)"
+msgstr ""
 
-#: src/nikonmn.cpp:227
-#, fuzzy
-msgid "Lens Adapter"
-msgstr "Adapter"
-
-#: src/nikonmn.cpp:228
-#, fuzzy
-msgid "Lens adapter used"
-msgstr "Farbraum"
-
-#: src/nikonmn.cpp:230
-#, fuzzy
-msgid "Lens Type"
-msgstr "Objektivtyp"
-
-#: src/nikonmn.cpp:231
-#, fuzzy
-msgid "Lens type"
-msgstr "Objektivtyp"
-
-#: src/nikonmn.cpp:233 src/nikonmn.cpp:234
-#, fuzzy
-msgid "Lens"
-msgstr "Objektiv"
-
-#: src/nikonmn.cpp:237 src/olympusmn.cpp:233
+#: src/nikonmn.cpp:205 src/nikonmn.cpp:683 src/olympusmn.cpp:233
 #, fuzzy
 msgid "Manual focus distance"
 msgstr "Manueller Fokusabstand"
 
-#: src/nikonmn.cpp:240
+#: src/nikonmn.cpp:208 src/nikonmn.cpp:475 src/nikonmn.cpp:686
 #, fuzzy
 msgid "Digital zoom setting"
 msgstr "Digitale Zoomrate"
 
-#: src/nikonmn.cpp:245
+#: src/nikonmn.cpp:210 src/nikonmn.cpp:691
 #, fuzzy
 msgid "AF Focus Position"
 msgstr "AF Fokus Position"
 
-#: src/nikonmn.cpp:246
+#: src/nikonmn.cpp:211 src/nikonmn.cpp:692
 #, fuzzy
 msgid "AF focus position information"
 msgstr "Debug Informationen."
 
-#: src/nikonmn.cpp:248 src/panasonicmn.cpp:207
-#, fuzzy
-msgid "Shooting Mode"
-msgstr "Einfacher Aufnahmemodus"
-
-#: src/nikonmn.cpp:249 src/panasonicmn.cpp:208
-#, fuzzy
-msgid "Shooting mode"
-msgstr "Einfacher Aufnahmemodus"
-
-#: src/nikonmn.cpp:251
-#, fuzzy
-msgid "Auto Bracket Release"
-msgstr "Automatischer Erfassung"
-
-#: src/nikonmn.cpp:252
-#, fuzzy
-msgid "Auto bracket release"
-msgstr "Automatischer Erfassung"
-
-#: src/nikonmn.cpp:254 src/nikonmn.cpp:255
-#, fuzzy
-msgid "Lens FStops"
-msgstr "Objektivtyp"
-
-#: src/nikonmn.cpp:257
-msgid "NEF Curve 1"
-msgstr ""
-
-#: src/nikonmn.cpp:258
-msgid "NEF curve 1"
-msgstr ""
-
-#: src/nikonmn.cpp:260
-#, fuzzy
-msgid "Color Hue"
-msgstr "Farbmodus"
-
-#: src/nikonmn.cpp:261
-#, fuzzy
-msgid "Color hue"
-msgstr "Farbmodus"
-
-#: src/nikonmn.cpp:263
-#, fuzzy
-msgid "Scene Mode"
-msgstr "Szenentyp"
-
-#: src/nikonmn.cpp:264
-#, fuzzy
-msgid "Scene mode"
-msgstr "Szenentyp"
-
-#: src/nikonmn.cpp:267
-#, fuzzy
-msgid "Light source"
-msgstr "Lichtquelle"
-
-#: src/nikonmn.cpp:269
-#, fuzzy
-msgid "Hue Adjustment"
-msgstr "Sättigungsanpassung"
-
-#: src/nikonmn.cpp:270
-#, fuzzy
-msgid "Hue adjustment"
-msgstr "Sättigungsanpassung"
-
-#: src/nikonmn.cpp:278
-msgid "NEF Curve 2"
-msgstr ""
-
-#: src/nikonmn.cpp:279
-msgid "NEF curve 2"
-msgstr ""
-
-#: src/nikonmn.cpp:283
-#, fuzzy
-msgid "Color Balance"
-msgstr "Farbraum"
-
-#: src/nikonmn.cpp:284
-#, fuzzy
-msgid "Color balance settings"
-msgstr "Farbraum"
-
-#: src/nikonmn.cpp:288
-#, fuzzy
-msgid "Lens Data"
-msgstr "Objektiv"
-
-#: src/nikonmn.cpp:289
-#, fuzzy
-msgid "Lens data settings"
-msgstr "Kontrastkurve"
-
-#: src/nikonmn.cpp:292
-#, fuzzy
-msgid "Raw Image Center"
-msgstr "Bildlänge"
-
-#: src/nikonmn.cpp:293
-#, fuzzy
-msgid "Raw image center"
-msgstr "Bildlänge"
-
-#: src/nikonmn.cpp:295
-#, fuzzy
-msgid "Sensor Pixel Size"
-msgstr "2 MPixel Fein"
-
-#: src/nikonmn.cpp:296
-msgid "Sensor pixel size"
-msgstr ""
-
-#: src/nikonmn.cpp:299 src/olympusmn.cpp:185
-#, fuzzy
-msgid "Serial number"
-msgstr "Seriennummer"
-
-#: src/nikonmn.cpp:301
-#, fuzzy
-msgid "Image Data Size"
-msgstr "Bildgrõße"
-
-#: src/nikonmn.cpp:302
-#, fuzzy
-msgid "Image data size"
-msgstr "Bildgrõße"
-
-#: src/nikonmn.cpp:304
-#, fuzzy
-msgid "Image Count"
-msgstr "Qualität"
-
-#: src/nikonmn.cpp:305
-#, fuzzy
-msgid "Image count"
-msgstr "Qualität"
-
-#: src/nikonmn.cpp:307
-#, fuzzy
-msgid "Delete Image Count"
-msgstr "Bildlänge"
-
-#: src/nikonmn.cpp:308
-#, fuzzy
-msgid "Delete image count"
-msgstr "Bildlänge"
-
-#: src/nikonmn.cpp:310 src/nikonmn.cpp:311
-#, fuzzy
-msgid "Shutter Count"
-msgstr "Belichtungszeit"
-
-#: src/nikonmn.cpp:313
-#, fuzzy
-msgid "Image Optimization"
-msgstr "Orientierung"
-
-#: src/nikonmn.cpp:314
-#, fuzzy
-msgid "Image optimization"
-msgstr "Orientierung"
-
-#: src/nikonmn.cpp:319
-#, fuzzy
-msgid "Program Variation"
-msgstr "Firmware Version"
-
-#: src/nikonmn.cpp:320
-#, fuzzy
-msgid "Program variation"
-msgstr "Firmware Version"
-
-#: src/nikonmn.cpp:325
-#, fuzzy
-msgid "AF Response"
-msgstr "Benutzter AF Punkt "
-
-#: src/nikonmn.cpp:326
-#, fuzzy
-msgid "AF response"
-msgstr "Benutzter AF Punkt "
-
-#: src/nikonmn.cpp:328 src/nikonmn.cpp:329
-#, fuzzy
-msgid "High ISO Noise Reduction"
-msgstr "Rauschreduktion"
-
-#: src/nikonmn.cpp:336
-#, fuzzy
-msgid "Capture Data"
-msgstr "Daten des Capture Editors"
-
-#: src/nikonmn.cpp:337
-#, fuzzy
-msgid "Capture data"
-msgstr "Daten des Capture Editors"
-
-#: src/nikonmn.cpp:340
-#, fuzzy
-msgid "Capture Version"
-msgstr "Version des Capture Editors"
-
-#: src/nikonmn.cpp:341
-#, fuzzy
-msgid "Capture version"
-msgstr "Version des Capture Editors"
-
-#: src/nikonmn.cpp:345
-#, fuzzy
-msgid "Capture Offsets"
-msgstr "Strip Offsets"
-
-#: src/nikonmn.cpp:346
-#, fuzzy
-msgid "Capture offsets"
-msgstr "Strip Offsets"
-
-#: src/nikonmn.cpp:351
+#: src/nikonmn.cpp:216
 #, fuzzy
 msgid "Unknown Nikon1MakerNote tag"
 msgstr "Unbekannte Exif-Version"
 
-#: src/nikonmn.cpp:401
+#: src/nikonmn.cpp:266 src/nikonmn.cpp:897
 #, fuzzy
 msgid "Continuous autofocus"
 msgstr "Kontinuierlich"
 
-#: src/nikonmn.cpp:402
+#: src/nikonmn.cpp:267 src/nikonmn.cpp:898
 #, fuzzy
 msgid "Single autofocus"
 msgstr "AI Focus"
 
-#: src/nikonmn.cpp:445
+#: src/nikonmn.cpp:310 src/nikonmn.cpp:555 src/nikonmn.cpp:970
 #, fuzzy
 msgid "Not used"
 msgstr "Undefiniert"
 
-#: src/nikonmn.cpp:484
+#: src/nikonmn.cpp:349
 #, fuzzy
 msgid "guess"
 msgstr "Dateiquelle"
+
+#: src/nikonmn.cpp:406
+msgid "VGA Basic"
+msgstr "VGA Basic"
+
+#: src/nikonmn.cpp:407
+msgid "VGA Normal"
+msgstr "VGA Normal"
+
+#: src/nikonmn.cpp:408
+#, fuzzy
+msgid "VGA Fine"
+msgstr "VGA Fein"
+
+#: src/nikonmn.cpp:409
+msgid "SXGA Basic"
+msgstr "SXGA Basic"
+
+#: src/nikonmn.cpp:410
+msgid "SXGA Normal"
+msgstr "SXGA Normal"
+
+#: src/nikonmn.cpp:411
+#, fuzzy
+msgid "SXGA Fine"
+msgstr "SXGA Basic"
+
+#: src/nikonmn.cpp:417
+#, fuzzy
+msgid "Monochrome"
+msgstr "Schwarzweiss"
+
+#: src/nikonmn.cpp:423
+msgid "Bright+"
+msgstr "Helligkeit+"
+
+#: src/nikonmn.cpp:424
+msgid "Bright-"
+msgstr "Helligkeit-"
+
+#: src/nikonmn.cpp:425
+msgid "Contrast+"
+msgstr "Kontrast+"
+
+#: src/nikonmn.cpp:426
+msgid "Contrast-"
+msgstr "Kontrast-"
+
+#: src/nikonmn.cpp:440
+msgid "Preset"
+msgstr "Voreinstellung"
+
+#: src/nikonmn.cpp:445
+msgid "Speedlight"
+msgstr ""
+
+#: src/nikonmn.cpp:485
+#, fuzzy
+msgid "Unknown Nikon2MakerNote tag"
+msgstr "Unbekannte Exif-Version"
+
+#: src/nikonmn.cpp:607 src/olympusmn.cpp:211
+#, fuzzy
+msgid "Flash Device"
+msgstr "Blitz"
+
+#: src/nikonmn.cpp:608 src/olympusmn.cpp:212
+#, fuzzy
+msgid "Flash device"
+msgstr "Blitzmodus"
+
+#: src/nikonmn.cpp:613 src/panasonicmn.cpp:219
+#, fuzzy
+msgid "White Balance Bias"
+msgstr "Weißabgleich"
+
+#: src/nikonmn.cpp:614
+#, fuzzy
+msgid "White balance bias"
+msgstr "Weißabgleich"
+
+#: src/nikonmn.cpp:616
+#, fuzzy
+msgid "Color Balance 1"
+msgstr "Farbraum"
+
+#: src/nikonmn.cpp:617
+#, fuzzy
+msgid "Color balance 1"
+msgstr "Farbraum"
+
+#: src/nikonmn.cpp:619
+#, fuzzy
+msgid "Program Shift"
+msgstr "Belichtungsart"
+
+#: src/nikonmn.cpp:620
+#, fuzzy
+msgid "Program shift"
+msgstr "Belichtungsart"
+
+#: src/nikonmn.cpp:622
+#, fuzzy
+msgid "Exposure Difference"
+msgstr "Belichtungsindex"
+
+#: src/nikonmn.cpp:623
+#, fuzzy
+msgid "Exposure difference"
+msgstr "Belichtungsindex"
+
+#: src/nikonmn.cpp:633
+#, fuzzy
+msgid "Preview Informations"
+msgstr "Debug Informationen."
+
+#: src/nikonmn.cpp:634
+#, fuzzy
+msgid "Preview informations"
+msgstr "Debug Informationen."
+
+#: src/nikonmn.cpp:637
+#, fuzzy
+msgid "Flash Comp"
+msgstr "Blitz an"
+
+#: src/nikonmn.cpp:638
+#, fuzzy
+msgid "Flash compensation setting"
+msgstr "Blitzkompensation ?"
+
+#: src/nikonmn.cpp:640
+#, fuzzy
+msgid "ISO Settings"
+msgstr "ISO Einstellungen"
+
+#: src/nikonmn.cpp:641
+#, fuzzy
+msgid "ISO setting"
+msgstr "ISO Geschwindigkeitsangabe"
+
+#: src/nikonmn.cpp:643
+#, fuzzy
+msgid "Image Boundary"
+msgstr "Qualität"
+
+#: src/nikonmn.cpp:644
+#, fuzzy
+msgid "Image boundary"
+msgstr "Qualität"
+
+#: src/nikonmn.cpp:649
+#, fuzzy
+msgid "Flash Bracket Comp"
+msgstr "Blitzabweichung"
+
+#: src/nikonmn.cpp:650
+#, fuzzy
+msgid "Flash bracket compensation applied"
+msgstr "Blitzkompensation ?"
+
+#: src/nikonmn.cpp:652
+#, fuzzy
+msgid "Exposure Bracket Comp"
+msgstr "Belichtungsabweichung"
+
+#: src/nikonmn.cpp:653
+#, fuzzy
+msgid "AE bracket compensation applied"
+msgstr "Blitzkompensation ?"
+
+#: src/nikonmn.cpp:655 src/olympusmn.cpp:385
+#, fuzzy
+msgid "Image Processing"
+msgstr "Bild Schärfung"
+
+#: src/nikonmn.cpp:656
+#, fuzzy
+msgid "Image processing"
+msgstr "Bild Schärfung"
+
+#: src/nikonmn.cpp:658
+msgid "Crop High Speed"
+msgstr ""
+
+#: src/nikonmn.cpp:659
+msgid "Crop high speed"
+msgstr ""
+
+#: src/nikonmn.cpp:670
+#, fuzzy
+msgid "Tone Compensation"
+msgstr "Belichtungszeit"
+
+#: src/nikonmn.cpp:671
+#, fuzzy
+msgid "Tone compensation"
+msgstr "Blitzkompensation ?"
+
+#: src/nikonmn.cpp:676
+#, fuzzy
+msgid "Lens Type"
+msgstr "Objektivtyp"
+
+#: src/nikonmn.cpp:677
+#, fuzzy
+msgid "Lens type"
+msgstr "Objektivtyp"
+
+#: src/nikonmn.cpp:679 src/nikonmn.cpp:680
+#, fuzzy
+msgid "Lens"
+msgstr "Objektiv"
+
+#: src/nikonmn.cpp:689
+#, fuzzy
+msgid "Mode of flash used"
+msgstr "Blitz löste aus"
+
+#: src/nikonmn.cpp:694 src/panasonicmn.cpp:207
+#, fuzzy
+msgid "Shooting Mode"
+msgstr "Einfacher Aufnahmemodus"
+
+#: src/nikonmn.cpp:695 src/panasonicmn.cpp:208
+#, fuzzy
+msgid "Shooting mode"
+msgstr "Einfacher Aufnahmemodus"
+
+#: src/nikonmn.cpp:697
+#, fuzzy
+msgid "Auto Bracket Release"
+msgstr "Automatischer Erfassung"
+
+#: src/nikonmn.cpp:698
+#, fuzzy
+msgid "Auto bracket release"
+msgstr "Automatischer Erfassung"
+
+#: src/nikonmn.cpp:700 src/nikonmn.cpp:701
+#, fuzzy
+msgid "Lens FStops"
+msgstr "Objektivtyp"
+
+#: src/nikonmn.cpp:703
+msgid "Tone Curve"
+msgstr ""
+
+#: src/nikonmn.cpp:704
+msgid "Tone curve"
+msgstr ""
+
+#: src/nikonmn.cpp:709
+#, fuzzy
+msgid "Scene Mode"
+msgstr "Szenentyp"
+
+#: src/nikonmn.cpp:710
+#, fuzzy
+msgid "Scene mode"
+msgstr "Szenentyp"
+
+#: src/nikonmn.cpp:713
+#, fuzzy
+msgid "Light source"
+msgstr "Lichtquelle"
+
+#: src/nikonmn.cpp:718
+#, fuzzy
+msgid "Hue Adjustment"
+msgstr "Sättigungsanpassung"
+
+#: src/nikonmn.cpp:719
+#, fuzzy
+msgid "Hue adjustment"
+msgstr "Sättigungsanpassung"
+
+#: src/nikonmn.cpp:727
+#, fuzzy
+msgid "Compression Curve"
+msgstr "Kompression"
+
+#: src/nikonmn.cpp:728
+#, fuzzy
+msgid "Compression curve"
+msgstr "Kompression"
+
+#: src/nikonmn.cpp:732
+#, fuzzy
+msgid "Color Balance"
+msgstr "Farbraum"
+
+#: src/nikonmn.cpp:733
+#, fuzzy
+msgid "Color balance settings"
+msgstr "Farbraum"
+
+#: src/nikonmn.cpp:736
+#, fuzzy
+msgid "Lens Data"
+msgstr "Objektiv"
+
+#: src/nikonmn.cpp:737
+#, fuzzy
+msgid "Lens data settings"
+msgstr "Kontrastkurve"
+
+#: src/nikonmn.cpp:739
+#, fuzzy
+msgid "NEF Thumbnail Size"
+msgstr "Strip Offsets"
+
+#: src/nikonmn.cpp:740
+#, fuzzy
+msgid "NEF thumbnail size"
+msgstr "Strip Offsets"
+
+#: src/nikonmn.cpp:742
+#, fuzzy
+msgid "Sensor Pixel Size"
+msgstr "2 MPixel Fein"
+
+#: src/nikonmn.cpp:743
+msgid "Sensor pixel size"
+msgstr ""
+
+#: src/nikonmn.cpp:752 src/sigmamn.cpp:67
+#, fuzzy
+msgid "Camera serial number"
+msgstr "Seriennummer"
+
+#: src/nikonmn.cpp:754
+#, fuzzy
+msgid "Image Data Size"
+msgstr "Bildgrõße"
+
+#: src/nikonmn.cpp:755
+#, fuzzy
+msgid "Image data size"
+msgstr "Bildgrõße"
+
+#: src/nikonmn.cpp:760
+#, fuzzy
+msgid "Image Count"
+msgstr "Qualität"
+
+#: src/nikonmn.cpp:761
+#, fuzzy
+msgid "Image count"
+msgstr "Qualität"
+
+#: src/nikonmn.cpp:763
+#, fuzzy
+msgid "Delete Image Count"
+msgstr "Bildlänge"
+
+#: src/nikonmn.cpp:764
+#, fuzzy
+msgid "Delete image count"
+msgstr "Bildlänge"
+
+#: src/nikonmn.cpp:766
+#, fuzzy
+msgid "Shutter Count"
+msgstr "Belichtungszeit"
+
+#: src/nikonmn.cpp:767
+msgid "Number of shots taken by camera"
+msgstr ""
+
+#: src/nikonmn.cpp:772
+#, fuzzy
+msgid "Image Optimization"
+msgstr "Orientierung"
+
+#: src/nikonmn.cpp:773
+#, fuzzy
+msgid "Image optimization"
+msgstr "Orientierung"
+
+#: src/nikonmn.cpp:778
+#, fuzzy
+msgid "Program Variation"
+msgstr "Firmware Version"
+
+#: src/nikonmn.cpp:779
+#, fuzzy
+msgid "Program variation"
+msgstr "Firmware Version"
+
+#: src/nikonmn.cpp:784
+#, fuzzy
+msgid "AF Response"
+msgstr "Benutzter AF Punkt "
+
+#: src/nikonmn.cpp:785
+#, fuzzy
+msgid "AF response"
+msgstr "Benutzter AF Punkt "
+
+#: src/nikonmn.cpp:787 src/nikonmn.cpp:788
+#, fuzzy
+msgid "High ISO Noise Reduction"
+msgstr "Rauschreduktion"
+
+#: src/nikonmn.cpp:795
+#, fuzzy
+msgid "Capture Data"
+msgstr "Daten des Capture Editors"
+
+#: src/nikonmn.cpp:796
+#, fuzzy
+msgid "Capture data"
+msgstr "Daten des Capture Editors"
+
+#: src/nikonmn.cpp:799
+#, fuzzy
+msgid "Capture Version"
+msgstr "Version des Capture Editors"
+
+#: src/nikonmn.cpp:800
+#, fuzzy
+msgid "Capture version"
+msgstr "Version des Capture Editors"
+
+#: src/nikonmn.cpp:804
+#, fuzzy
+msgid "Capture Offsets"
+msgstr "Strip Offsets"
+
+#: src/nikonmn.cpp:805
+#, fuzzy
+msgid "Capture offsets"
+msgstr "Strip Offsets"
+
+#: src/nikonmn.cpp:810
+#, fuzzy
+msgid "Unknown Nikon3MakerNote tag"
+msgstr "Unbekannte Exif-Version"
+
+#: src/nikonmn.cpp:1014
+msgid "Closest subject"
+msgstr ""
+
+#: src/nikonmn.cpp:1015
+msgid "Group dynamic-AF"
+msgstr ""
+
+#: src/nikonmn.cpp:1017
+#, fuzzy
+msgid "Dynamic area (wide)"
+msgstr "Weißabgleicheinstellung"
+
+#: src/nikonmn.cpp:1048
+#, fuzzy
+msgid "used"
+msgstr "Undefiniert"
+
+#: src/nikonmn.cpp:1087 src/nikonmn.cpp:1088 src/nikonmn.cpp:1089
+#: src/nikonmn.cpp:1090 src/nikonmn.cpp:1091 src/nikonmn.cpp:1092
+#: src/nikonmn.cpp:1093 src/nikonmn.cpp:1094 src/nikonmn.cpp:1095
+#: src/nikonmn.cpp:1096 src/nikonmn.cpp:1097 src/nikonmn.cpp:1098
+#: src/nikonmn.cpp:1099 src/nikonmn.cpp:1100 src/nikonmn.cpp:1101
+#: src/nikonmn.cpp:1102 src/nikonmn.cpp:1103 src/nikonmn.cpp:1104
+#: src/nikonmn.cpp:1105 src/nikonmn.cpp:1106 src/nikonmn.cpp:1107
+#: src/nikonmn.cpp:1108 src/nikonmn.cpp:1109 src/nikonmn.cpp:1110
+#: src/nikonmn.cpp:1111 src/nikonmn.cpp:1112 src/nikonmn.cpp:1113
+#: src/nikonmn.cpp:1114 src/nikonmn.cpp:1115 src/nikonmn.cpp:1116
+#: src/nikonmn.cpp:1117 src/nikonmn.cpp:1118 src/nikonmn.cpp:1119
+#: src/nikonmn.cpp:1120 src/nikonmn.cpp:1121 src/nikonmn.cpp:1122
+#: src/nikonmn.cpp:1123 src/nikonmn.cpp:1124 src/nikonmn.cpp:1125
+#: src/nikonmn.cpp:1126 src/nikonmn.cpp:1127 src/nikonmn.cpp:1128
+#: src/nikonmn.cpp:1129 src/nikonmn.cpp:1130 src/nikonmn.cpp:1131
+#: src/nikonmn.cpp:1132 src/nikonmn.cpp:1133 src/nikonmn.cpp:1134
+#: src/nikonmn.cpp:1135 src/nikonmn.cpp:1136 src/nikonmn.cpp:1137
+#: src/nikonmn.cpp:1138 src/nikonmn.cpp:1139 src/nikonmn.cpp:1140
+#: src/nikonmn.cpp:1141 src/nikonmn.cpp:1142 src/nikonmn.cpp:1143
+#: src/nikonmn.cpp:1144 src/nikonmn.cpp:1145 src/nikonmn.cpp:1146
+#: src/nikonmn.cpp:1147 src/nikonmn.cpp:1148 src/nikonmn.cpp:1149
+#: src/nikonmn.cpp:1150 src/nikonmn.cpp:1151 src/nikonmn.cpp:1152
+#: src/nikonmn.cpp:1153 src/nikonmn.cpp:1154 src/nikonmn.cpp:1155
+#: src/nikonmn.cpp:1156 src/nikonmn.cpp:1157 src/nikonmn.cpp:1158
+#: src/nikonmn.cpp:1159 src/nikonmn.cpp:1160 src/nikonmn.cpp:1161
+#: src/nikonmn.cpp:1162 src/nikonmn.cpp:1163 src/nikonmn.cpp:1164
+#: src/nikonmn.cpp:1165 src/nikonmn.cpp:1166 src/nikonmn.cpp:1167
+#: src/nikonmn.cpp:1168 src/nikonmn.cpp:1169 src/nikonmn.cpp:1170
+#: src/nikonmn.cpp:1171 src/nikonmn.cpp:1172 src/nikonmn.cpp:1173
+#: src/nikonmn.cpp:1174 src/nikonmn.cpp:1175 src/nikonmn.cpp:1176
+#: src/nikonmn.cpp:1177 src/nikonmn.cpp:1178 src/nikonmn.cpp:1179
+#: src/nikonmn.cpp:1180 src/nikonmn.cpp:1181 src/nikonmn.cpp:1182
+#: src/nikonmn.cpp:1183 src/nikonmn.cpp:1184 src/nikonmn.cpp:1185
+#: src/nikonmn.cpp:1186 src/nikonmn.cpp:1187 src/nikonmn.cpp:1188
+#: src/nikonmn.cpp:1189
+#, fuzzy
+msgid "Nikon"
+msgstr "[Keins]"
+
+#: src/nikonmn.cpp:1087
+#, fuzzy
+msgid "AF Nikkor 50mm f/1.8"
+msgstr "Canon EF 50mm f/1.8"
+
+#: src/nikonmn.cpp:1088 src/nikonmn.cpp:1089
+msgid "AF Zoom-Nikkor 35-70mm f/3.3-4.5"
+msgstr ""
+
+#: src/nikonmn.cpp:1090 src/nikonmn.cpp:1100
+msgid "AF Zoom-Nikkor 70-210mm f/4"
+msgstr ""
+
+#: src/nikonmn.cpp:1091
+#, fuzzy
+msgid "AF Nikkor 28mm f/2.8"
+msgstr "Canon EF 28mm f/2.8"
+
+#: src/nikonmn.cpp:1092
+#, fuzzy
+msgid "AF Nikkor 50mm f/1.4"
+msgstr "Canon EF 50mm f/1.4"
+
+#: src/nikonmn.cpp:1093
+msgid "AF Micro-Nikkor 55mm f/2.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1094
+msgid "AF Zoom-Nikkor 28-85mm f/3.5-4.5"
+msgstr ""
+
+#: src/nikonmn.cpp:1095
+msgid "AF Zoom-Nikkor 35-105mm f/3.5-4.5"
+msgstr ""
+
+#: src/nikonmn.cpp:1096
+msgid "AF Nikkor 24mm f/2.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1097
+msgid "AF Nikkor 300mm f/2.8 IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1098
+msgid "AF Nikkor 180mm f/2.8 IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1099
+#, fuzzy
+msgid "AF Zoom-Nikkor 35-135mm f/3.5-4.5"
+msgstr "Tokina AF193-2 19-35mm f/3.5-4.5"
+
+#: src/nikonmn.cpp:1101
+msgid "AF Nikkor 50mm f/1.8 N"
+msgstr ""
+
+#: src/nikonmn.cpp:1102
+msgid "AF Nikkor 300mm f/4 IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1103
+msgid "AF Zoom-Nikkor 35-70mm f/2.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1104
+msgid "AF Nikkor 70-210mm f/4-5.6"
+msgstr ""
+
+#: src/nikonmn.cpp:1105
+msgid "AF Zoom-Nikkor 24-50mm f/3.3-4.5"
+msgstr ""
+
+#: src/nikonmn.cpp:1106
+msgid "AF Zoom-Nikkor 80-200mm f/2.8 ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1107
+msgid "AF Nikkor 85mm f/1.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1108
+msgid "Nikkor 500mm f/4 P"
+msgstr ""
+
+#: src/nikonmn.cpp:1109
+msgid "AF Zoom-Nikkor 35-135mm f/3.5-4.5 N"
+msgstr ""
+
+#: src/nikonmn.cpp:1110
+msgid "AF Nikkor 35mm f/2"
+msgstr ""
+
+#: src/nikonmn.cpp:1111
+#, fuzzy
+msgid "AF Zoom-Nikkor 75-300mm f/4.5-5.6"
+msgstr "Canon EF 75-300mm f/4-5.6"
+
+#: src/nikonmn.cpp:1112
+msgid "AF Nikkor 20mm f/2.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1113
+msgid "AF Zoom-Nikkor 35-70mm f/3.3-4.5 N"
+msgstr ""
+
+#: src/nikonmn.cpp:1114
+msgid "AF Micro-Nikkor 60mm f/2.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1115
+#, fuzzy
+msgid "AF Zoom-Nikkor ED 80-200mm f/2.8"
+msgstr "Canon EF 80-200mm f/2.8L"
+
+#: src/nikonmn.cpp:1116
+msgid "AF DC-Nikkor 135mm f/2"
+msgstr ""
+
+#: src/nikonmn.cpp:1117
+#, fuzzy
+msgid "AF Zoom-Nikkor ED 80-200mm f/2.8D"
+msgstr "Canon EF 80-200mm f/2.8L"
+
+#: src/nikonmn.cpp:1118
+msgid "AF Zoom-Nikkor 35-70mm f/2.8D"
+msgstr ""
+
+#: src/nikonmn.cpp:1119 src/nikonmn.cpp:1135
+msgid "AF Zoom-Nikkor 35-70mm f/2.8D N"
+msgstr ""
+
+#: src/nikonmn.cpp:1120 src/nikonmn.cpp:1121
+msgid "AF-I Nikkor 300mm f/2.8D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1122
+msgid "AF-I Nikkor 600mm f/4D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1123
+msgid "AF Nikkor 28mm f/1.4D"
+msgstr ""
+
+#: src/nikonmn.cpp:1124
+msgid "AF DC-Nikkor 105mm f/2D"
+msgstr ""
+
+#: src/nikonmn.cpp:1125
+msgid "AF Micro-Nikkor 200mm f/4D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1126
+msgid "AF Nikkor 70-210mm f/4-5.6D"
+msgstr ""
+
+#: src/nikonmn.cpp:1127
+msgid "AF Zoom-Nikkor 20-35mm f/2.8(IF)"
+msgstr ""
+
+#: src/nikonmn.cpp:1128
+msgid "AF Micro-Nikkor 60mm f/2.8D"
+msgstr ""
+
+#: src/nikonmn.cpp:1129
+msgid "AF Micro-Nikkor 105mm f/2.8D"
+msgstr ""
+
+#: src/nikonmn.cpp:1130
+msgid "AF Nikkor 18mm f/2.8D"
+msgstr ""
+
+#: src/nikonmn.cpp:1131
+msgid "AF Fisheye Nikkor 16mm f/2.8D"
+msgstr ""
+
+#: src/nikonmn.cpp:1132
+msgid "AF Nikkor 24mm f/2.8D"
+msgstr ""
+
+#: src/nikonmn.cpp:1133
+msgid "AF Nikkor 20mm f/2.8D"
+msgstr ""
+
+#: src/nikonmn.cpp:1134
+msgid "AF Nikkor 85mm f/1.8D"
+msgstr ""
+
+#: src/nikonmn.cpp:1136
+#, fuzzy
+msgid "AF Zoom-Nikkor 35-80mm f/4-5.6D"
+msgstr "Sigma UC Zoom 35-135mm f/4-5.6"
+
+#: src/nikonmn.cpp:1137
+#, fuzzy
+msgid "AF Nikkor 28mm f/2.8D"
+msgstr "Canon EF 28mm f/2.8"
+
+#: src/nikonmn.cpp:1138
+msgid "AF Nikkor 180mm f/2.8D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1139
+msgid "AF Nikkor 35mm f/2D"
+msgstr ""
+
+#: src/nikonmn.cpp:1140
+#, fuzzy
+msgid "AF Nikkor 50mm f/1.4D"
+msgstr "Canon EF 50mm f/1.4"
+
+#: src/nikonmn.cpp:1141
+#, fuzzy
+msgid "AF Zoom-Nikkor 35-80mm f/4-5.6D N"
+msgstr "Sigma UC Zoom 35-135mm f/4-5.6"
+
+#: src/nikonmn.cpp:1142
+msgid "AF Zoom-Nikkor 24-50mm f/3.3-4.5D"
+msgstr ""
+
+#: src/nikonmn.cpp:1143
+msgid "AF-S Nikkor 300mm f/2.8D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1144
+msgid "AF Nikkor 85mm f/1.4D IF"
+msgstr ""
+
+#: src/nikonmn.cpp:1145
+msgid "AF Zoom-Nikkor 24-120mm f/3.5-5.6D IF"
+msgstr ""
+
+#: src/nikonmn.cpp:1146
+msgid "AF Zoom-Nikkor 28-200mm f/3.5-5.6D IF"
+msgstr ""
+
+#: src/nikonmn.cpp:1147
+msgid "AF DC-Nikkor 135mm f/2D"
+msgstr ""
+
+#: src/nikonmn.cpp:1148
+#, fuzzy
+msgid "IX-Nikkor 24-70mm f/3.5-5.6"
+msgstr "Canon EF 28-80mm f/3.5-5.6"
+
+#: src/nikonmn.cpp:1149
+msgid "AF Zoom-Nikkor 80-200mm f/2.8D ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1150
+msgid "AF Zoom-Micro Nikkor 70-180mm f/4.5-5.6D ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1151
+msgid "AF Zoom-Nikkor 70-300mm f/4-5.6D ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1152
+msgid "AF-S Nikkor 400mm f/2.8D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1153
+#, fuzzy
+msgid "IX-Nikkor 30-60mm f/4-5.6"
+msgstr "Canon EF 75-300mm f/4-5.6"
+
+#: src/nikonmn.cpp:1154
+msgid "AF-S Zoom-Nikkor 28-70mm f/2.8D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1155
+msgid "AF-S Zoom-Nikkor 80-200mm f/2.8D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1156
+#, fuzzy
+msgid "AF Zoom-Nikkor 28-105mm f/3.5-4.5D IF"
+msgstr "Canon EF 28-105mm f/3.5-4.5 USM"
+
+#: src/nikonmn.cpp:1157
+msgid "AF Zoom-Nikkor 75-240mm f/4.5-5.6D"
+msgstr ""
+
+#: src/nikonmn.cpp:1158
+msgid "AF-S Nikkor 17-35mm f/2.8D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1159
+msgid "PC Micro-Nikkor 85mm f/2.8D"
+msgstr ""
+
+#: src/nikonmn.cpp:1160
+msgid "AF VR Zoom-Nikkor 80-400mm f/4.5-5.6D ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1161
+msgid "AF Zoom-Nikkor 18-35mm f/3.5-4.5D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1162
+msgid "AF Zoom-Nikkor 24-85mm f/2.8-4D IF"
+msgstr ""
+
+#: src/nikonmn.cpp:1163
+#, fuzzy
+msgid "AF Zoom-Nikkor 28-80mm f/3.3-5.6G"
+msgstr "Canon EF 28-80mm f/3.5-5.6"
+
+#: src/nikonmn.cpp:1164
+msgid "AF Zoom-Nikkor 70-300mm f/4-5.6G"
+msgstr ""
+
+#: src/nikonmn.cpp:1165
+msgid "AF-S Nikkor 300mm f/4D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1166
+#, fuzzy
+msgid "AF Nikkor ED 14mm f/2.8D"
+msgstr "Canon EF 15mm f/2.8"
+
+#: src/nikonmn.cpp:1167
+msgid "AF-S Nikkor 300mm f/2.8D IF-ED II"
+msgstr ""
+
+#: src/nikonmn.cpp:1168
+msgid "AF-S Nikkor 400mm f/2.8D IF-ED II"
+msgstr ""
+
+#: src/nikonmn.cpp:1169
+msgid "AF-S Nikkor 500mm f/4D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1170
+msgid "AF-S Nikkor 600mm f/4D IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1171
+msgid "Nikkor 45mm f/2.8 P"
+msgstr ""
+
+#: src/nikonmn.cpp:1172
+msgid "AF-S Zoom-Nikkor 24-85mm f/3.5-4.5G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1173
+#, fuzzy
+msgid "AF Zoom-Nikkor 28-100mm f/3.5-5.6G"
+msgstr "Canon EF 28-80mm f/3.5-5.6"
+
+#: src/nikonmn.cpp:1174
+#, fuzzy
+msgid "AF Nikkor 50mm f/1.8D"
+msgstr "Canon EF 50mm f/1.8"
+
+#: src/nikonmn.cpp:1175
+msgid "AF-S VR Zoom-Nikkor 70-200mm f/2.8G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1176
+msgid "AF-S VR Zoom-Nikkor 24-120mm f/3.5-5.6G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1177
+msgid "AF Zoom-Nikkor 28-200mm f/3.5-5.6G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1178
+msgid "AF-S DX Zoom-Nikkor 12-24mm f/4G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1179
+msgid "AF-S VR Zoom-Nikkor 200-400mm f/4G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1180
+msgid "AF-S DX Zoom-Nikkor 17-55mm f/2.8G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1181
+msgid "AF-S DX Zoom-Nikkor 18-70mm f/3.5-4.5G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1182
+msgid "AF DX Fisheye-Nikkor 10.5mm f/2.8G ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1183
+msgid "AF-S VR Nikkor 200mm f/2G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1184
+msgid "AF-S VR Nikkor 300mm f/2.8G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1185
+msgid "AF-S DX Zoom-Nikkor 55-200mm f/4-5.6G ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1186
+msgid "AF-S VR Micro-Nikkor 105mm f/2.8G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1187
+msgid "AF-S DX VR Zoom-Nikkor 18-200mm f/3.5-5.6G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1188
+msgid "AF-S DX Zoom-Nikkor 18-55mm f/3.5-5.6G ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1189
+msgid "AF-S DX Zoom-Nikkor 18-135mm f/3.5-5.6G IF-ED"
+msgstr ""
+
+#: src/nikonmn.cpp:1192
+#, fuzzy
+msgid "Cosina"
+msgstr "Kontrast"
+
+#: src/nikonmn.cpp:1192
+#, fuzzy
+msgid "100mm F/3.5 Macro"
+msgstr "Cosina 100mm f/3.5 Macro AF"
+
+#: src/nikonmn.cpp:1194 src/nikonmn.cpp:1195 src/nikonmn.cpp:1196
+#: src/nikonmn.cpp:1197 src/nikonmn.cpp:1198 src/nikonmn.cpp:1199
+#: src/nikonmn.cpp:1200 src/nikonmn.cpp:1201 src/nikonmn.cpp:1202
+#: src/nikonmn.cpp:1203 src/nikonmn.cpp:1204 src/nikonmn.cpp:1205
+#: src/nikonmn.cpp:1206 src/nikonmn.cpp:1207 src/nikonmn.cpp:1208
+#: src/nikonmn.cpp:1209 src/nikonmn.cpp:1210 src/nikonmn.cpp:1211
+#: src/nikonmn.cpp:1212 src/nikonmn.cpp:1213 src/nikonmn.cpp:1214
+#: src/nikonmn.cpp:1215 src/nikonmn.cpp:1216 src/nikonmn.cpp:1217
+#: src/nikonmn.cpp:1218 src/nikonmn.cpp:1219 src/nikonmn.cpp:1220
+#: src/nikonmn.cpp:1221 src/nikonmn.cpp:1222 src/nikonmn.cpp:1223
+#: src/nikonmn.cpp:1224 src/nikonmn.cpp:1225 src/nikonmn.cpp:1226
+#: src/nikonmn.cpp:1227 src/nikonmn.cpp:1228 src/nikonmn.cpp:1229
+#: src/nikonmn.cpp:1230 src/nikonmn.cpp:1231 src/nikonmn.cpp:1232
+#: src/nikonmn.cpp:1233 src/nikonmn.cpp:1234 src/nikonmn.cpp:1235
+#: src/nikonmn.cpp:1236 src/nikonmn.cpp:1237 src/nikonmn.cpp:1238
+#: src/nikonmn.cpp:1239 src/nikonmn.cpp:1240 src/nikonmn.cpp:1241
+#: src/nikonmn.cpp:1242
+#, fuzzy
+msgid "Sigma"
+msgstr "Klein"
+
+#: src/nikonmn.cpp:1194
+msgid "8mm F4 EX Circular Fisheye"
+msgstr ""
+
+#: src/nikonmn.cpp:1195
+msgid "10-20mm F4-5.6 EX DC HSM"
+msgstr ""
+
+#: src/nikonmn.cpp:1196
+#, fuzzy
+msgid "12-24mm F4.5-5.6 EX Aspherical DG HSM"
+msgstr "Sigma 17-35mm f2.8-4 EX Aspherical HSM"
+
+#: src/nikonmn.cpp:1197
+msgid "14mm F3.5"
+msgstr ""
+
+#: src/nikonmn.cpp:1198
+msgid "14mm F2.8 EX ASPHERICAL HSM"
+msgstr ""
+
+#: src/nikonmn.cpp:1199
+msgid "15mm F2.8 EX Diagonal Fish-Eye"
+msgstr ""
+
+#: src/nikonmn.cpp:1200
+#, fuzzy
+msgid "15-30mm F3.5-4.5 EX Aspherical DG DF"
+msgstr "Sigma 15-30mm f/3.5-4.5 EX DG Aspherical"
+
+#: src/nikonmn.cpp:1201
+#, fuzzy
+msgid "17-35mm F2.8-4 EX DG  Aspherical HSM"
+msgstr "Sigma 17-35mm f2.8-4 EX Aspherical HSM"
+
+#: src/nikonmn.cpp:1202
+msgid "17-35mm F2.8-4 EX ASPHERICAL"
+msgstr ""
+
+#: src/nikonmn.cpp:1203
+msgid "18-50mm F2.8 EX DC"
+msgstr ""
+
+#: src/nikonmn.cpp:1204
+msgid "18-50mm F3.5-5.6 DC"
+msgstr ""
+
+#: src/nikonmn.cpp:1205
+#, fuzzy
+msgid "18-125mm F3.5-5.6 DC"
+msgstr "Canon EF 28-135mm f/3.5-5.6 IS"
+
+#: src/nikonmn.cpp:1206
+msgid "18-200mm F3.5-6.3 DC"
+msgstr ""
+
+#: src/nikonmn.cpp:1207
+msgid "20mm F1.8 EX Aspherical DG DF RF"
+msgstr ""
+
+#: src/nikonmn.cpp:1208
+msgid "24mm F1.8 EX Aspherical DG DF MACRO"
+msgstr ""
+
+#: src/nikonmn.cpp:1209
+msgid "24mm F2.8 Macro"
+msgstr ""
+
+#: src/nikonmn.cpp:1210
+msgid "24-60mm F2.8 EX DG"
+msgstr ""
+
+#: src/nikonmn.cpp:1211
+msgid "24-70mm F2.8 EX DG Macro"
+msgstr ""
+
+#: src/nikonmn.cpp:1212
+msgid "24-70mm F3.5-5.6 ASPHERICAL HF"
+msgstr ""
+
+#: src/nikonmn.cpp:1213
+msgid "24-135mm F2.8-4.5"
+msgstr ""
+
+#: src/nikonmn.cpp:1214
+msgid "28-70mm F2.8 EX DG"
+msgstr ""
+
+#: src/nikonmn.cpp:1215
+msgid "28-70mm F2.8-4 HIGH SPEED ZOOM"
+msgstr ""
+
+#: src/nikonmn.cpp:1216
+msgid "28-70mm F2.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1217
+#, fuzzy
+msgid "28-70mm F3.5-4.5 UC"
+msgstr "Canon EF 28-105mm f/3.5-4.5 USM"
+
+#: src/nikonmn.cpp:1218
+msgid "28-80mm F3.5-5.6 Mini Zoom Macro II Aspherical"
+msgstr ""
+
+#: src/nikonmn.cpp:1219
+msgid "28-105mm F3.8-5.6 UC-III ASPHERICAL IF"
+msgstr ""
+
+#: src/nikonmn.cpp:1220 src/nikonmn.cpp:1221
+msgid "28-200mm F3.5-5.6 Compact Aspherical Hyperzoom Macro"
+msgstr ""
+
+#: src/nikonmn.cpp:1222
+msgid "28-300mm F3.5-6.3 DG MACRO"
+msgstr ""
+
+#: src/nikonmn.cpp:1223
+msgid "28-300mm F3.5-6.3 Macro"
+msgstr ""
+
+#: src/nikonmn.cpp:1224
+msgid "30mm F1.4 EX DC HSM"
+msgstr ""
+
+#: src/nikonmn.cpp:1225
+msgid "35-135mm F3.5-4.5 a"
+msgstr ""
+
+#: src/nikonmn.cpp:1226
+msgid "50mm F2.8 EX DG Macro"
+msgstr ""
+
+#: src/nikonmn.cpp:1227
+msgid "50-500mmF4-6.3 EX APO RF HSM"
+msgstr ""
+
+#: src/nikonmn.cpp:1228
+msgid "55-200mm F4-5.6 DC"
+msgstr ""
+
+#: src/nikonmn.cpp:1229
+msgid "70-200mm F2.8 EX APO IF HSM"
+msgstr ""
+
+#: src/nikonmn.cpp:1230
+msgid "70-300mm F4-5.6 DG MACRO"
+msgstr ""
+
+#: src/nikonmn.cpp:1231
+msgid "70-300mm F4-5.6 APO Macro Super II"
+msgstr ""
+
+#: src/nikonmn.cpp:1232
+#, fuzzy
+msgid "75-300mm F4.5-5.6 APO"
+msgstr "Canon EF 75-300mm f/4-5.6 IS"
+
+#: src/nikonmn.cpp:1233
+#, fuzzy
+msgid "90mm F2.8 Macro"
+msgstr "Canon EF 100mm f/2.8 Macro"
+
+#: src/nikonmn.cpp:1234
+#, fuzzy
+msgid "80-400mm f4.5-5.6 EX OS"
+msgstr "Canon EF 100-400mm f/4.5-5.6L IS"
+
+#: src/nikonmn.cpp:1235
+msgid "100-300mm F4 EX IF HSM"
+msgstr ""
+
+#: src/nikonmn.cpp:1236
+#, fuzzy
+msgid "135-400mm F4.5-5.6 APO Aspherical"
+msgstr "Sigma 15-30mm f/3.5-4.5 EX DG Aspherical"
+
+#: src/nikonmn.cpp:1237
+msgid "150mm F2.8 EX DG APO Macro HSM"
+msgstr ""
+
+#: src/nikonmn.cpp:1238
+msgid "APO 170-500mm F5-6.3 ASPHERICAL RF"
+msgstr ""
+
+#: src/nikonmn.cpp:1239
+msgid "APO MACRO 180mm F3.5 EX DG HSM"
+msgstr ""
+
+#: src/nikonmn.cpp:1240
+msgid "APO 300mm F2.8 EX DG HSM"
+msgstr ""
+
+#: src/nikonmn.cpp:1241
+msgid "APO TELE MACRO 300mm F4"
+msgstr ""
+
+#: src/nikonmn.cpp:1242
+msgid "400mm F5.6 APO"
+msgstr ""
+
+#: src/nikonmn.cpp:1244
+#, fuzzy
+msgid "Soligor"
+msgstr "Farbmodus"
+
+#: src/nikonmn.cpp:1244
+msgid "AF C/D ZOOM UMCS 70-210mm 1:4.5"
+msgstr ""
+
+#: src/nikonmn.cpp:1246 src/nikonmn.cpp:1247 src/nikonmn.cpp:1248
+#: src/nikonmn.cpp:1249 src/nikonmn.cpp:1250 src/nikonmn.cpp:1251
+#: src/nikonmn.cpp:1252 src/nikonmn.cpp:1253 src/nikonmn.cpp:1254
+#, fuzzy
+msgid "Tokina"
+msgstr "Keine"
+
+#: src/nikonmn.cpp:1246
+msgid "AT-X 124 AF PRO DX - AF 12-24mm f/4"
+msgstr ""
+
+#: src/nikonmn.cpp:1247
+msgid "AT-X 17 AF PRO - AF 17mm f/3.5"
+msgstr ""
+
+#: src/nikonmn.cpp:1248
+msgid "AT-X287AF PRO SV 28-70mm F2.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1249
+msgid "AT-X280AF PRO 28-80mm F2.8 ASPHERICAL"
+msgstr ""
+
+#: src/nikonmn.cpp:1250
+msgid "AT-X828AF 80-200mm F2.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1251
+msgid "AT-X840AF II 80-400mm F4.5-5.6"
+msgstr ""
+
+#: src/nikonmn.cpp:1252
+msgid "AT-X M100 PRO D - 100mm F2.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1253
+msgid "AT-X340AF II 100-300mm F4"
+msgstr ""
+
+#: src/nikonmn.cpp:1254
+msgid "AT-X300AF PRO 300mm F2.8"
+msgstr ""
+
+#: src/nikonmn.cpp:1256 src/nikonmn.cpp:1257 src/nikonmn.cpp:1258
+#: src/nikonmn.cpp:1259 src/nikonmn.cpp:1260 src/nikonmn.cpp:1261
+#: src/nikonmn.cpp:1262 src/nikonmn.cpp:1263 src/nikonmn.cpp:1264
+#: src/nikonmn.cpp:1265 src/nikonmn.cpp:1266 src/nikonmn.cpp:1267
+#: src/nikonmn.cpp:1268 src/nikonmn.cpp:1269 src/nikonmn.cpp:1270
+#: src/nikonmn.cpp:1271 src/nikonmn.cpp:1272 src/nikonmn.cpp:1273
+#: src/nikonmn.cpp:1274
+#, fuzzy
+msgid "Tamron"
+msgstr "Keine"
+
+#: src/nikonmn.cpp:1256
+msgid "SP AF11-18mm F/4.5-5.6 Di II LD Aspherical (IF)"
+msgstr ""
+
+#: src/nikonmn.cpp:1257
+#, fuzzy
+msgid "SP AF17-35mm F/2.8-4 Di LD Aspherical (IF)"
+msgstr "Sigma 17-35mm f2.8-4 EX Aspherical HSM"
+
+#: src/nikonmn.cpp:1258
+#, fuzzy
+msgid "AF18-200mm f/3.5-6.3 XR Di II LD Aspherical (IF)"
+msgstr "Sigma 15-30mm f/3.5-4.5 EX DG Aspherical"
+
+#: src/nikonmn.cpp:1259
+msgid "AF18-200mm f/3.5-6.3 XR Di II LD Aspherical (IF) MACRO"
+msgstr ""
+
+#: src/nikonmn.cpp:1260
+#, fuzzy
+msgid "AF19-35mm F3.5-4.5"
+msgstr "Tokina AF193-2 19-35mm f/3.5-4.5"
+
+#: src/nikonmn.cpp:1261
+msgid "SP AF24-135mm F3.5-5.6 AD ASPHERICAL(IF)MACRO"
+msgstr ""
+
+#: src/nikonmn.cpp:1262
+msgid "SP AF28-75mm F2.8 XR Di LD ASPHERICAL(IF)MACRO"
+msgstr ""
+
+#: src/nikonmn.cpp:1263
+#, fuzzy
+msgid "AF28-80mm f/3.5-5.6 Aspherical"
+msgstr "Sigma 15-30mm f/3.5-4.5 EX DG Aspherical"
+
+#: src/nikonmn.cpp:1264
+#, fuzzy
+msgid "SP AF28-105mm f/2.8"
+msgstr "Canon EF 15mm f/2.8"
+
+#: src/nikonmn.cpp:1265
+#, fuzzy
+msgid "AF28-200mm f/3.8-5.6D"
+msgstr "Canon EF 28-80mm f/3.5-5.6"
+
+#: src/nikonmn.cpp:1266
+#, fuzzy
+msgid "AF28-200mm f/3.8-5.6"
+msgstr "Canon EF 28-80mm f/3.5-5.6"
+
+#: src/nikonmn.cpp:1267
+#, fuzzy
+msgid "AF28-300mm f/3.5-6.3 XR Di LD Aspherical (IF)"
+msgstr "Sigma 15-30mm f/3.5-4.5 EX DG Aspherical"
+
+#: src/nikonmn.cpp:1268
+#, fuzzy
+msgid "AF28-300mm f/3.5-6.3D"
+msgstr "Canon EF 28-80mm f/3.5-5.6"
+
+#: src/nikonmn.cpp:1269
+msgid "AF70-300mm F4-5.6 LD MACRO 1:2"
+msgstr ""
+
+#: src/nikonmn.cpp:1270
+#, fuzzy
+msgid "SP AF90mm f/2.8 Di 1:1 Macro"
+msgstr "Canon EF 100mm f/2.8 Macro"
+
+#: src/nikonmn.cpp:1271
+msgid "SP AF180mm F3.5 Di Model B01"
+msgstr ""
+
+#: src/nikonmn.cpp:1272
+#, fuzzy
+msgid "AF200-400mm f/5.6 LD IF"
+msgstr "Canon EF 100-400mm f/4.5-5.6L IS"
+
+#: src/nikonmn.cpp:1273
+msgid "SP AF200-500mm f/5-6.3 Di LD (IF)"
+msgstr ""
+
+#: src/nikonmn.cpp:1274
+msgid "SP AF200-500mm F5-6.3 Di"
+msgstr ""
+
+#: src/nikonmn.cpp:1276
+#, fuzzy
+msgid "Manual Lens"
+msgstr "Manuelle Belichtungszeit"
+
+#: src/nikonmn.cpp:1276
+msgid "No CPU"
+msgstr ""
+
+#: src/nikonmn.cpp:1277
+msgid "90mm F/2.5"
+msgstr ""
+
+#: src/nikonmn.cpp:1278
+#, fuzzy
+msgid "20-35mm F/3.5-4.5D"
+msgstr "Canon EF 20-35mm f/3.5-4.5 USM"
+
+#: src/nikonmn.cpp:1279
+msgid "100-290mm F5.6-6.7"
+msgstr ""
 
 #: src/olympusmn.cpp:62
 #, fuzzy
@@ -6846,6 +7803,11 @@ msgstr ""
 #, fuzzy
 msgid "One touch white balance"
 msgstr "Automatischer Weißabgleich"
+
+#: src/olympusmn.cpp:185
+#, fuzzy
+msgid "Serial number"
+msgstr "Seriennummer"
 
 #: src/olympusmn.cpp:190
 #, fuzzy
@@ -7016,6 +7978,16 @@ msgstr "Seriennummer"
 #, fuzzy
 msgid "Serial number 2"
 msgstr "Seriennummer"
+
+#: src/olympusmn.cpp:301
+#, fuzzy
+msgid "Flash Bias"
+msgstr "Blitzabweichung"
+
+#: src/olympusmn.cpp:302
+#, fuzzy
+msgid "Flash exposure compensation"
+msgstr "Blitzkompensation ?"
 
 #: src/olympusmn.cpp:310
 #, fuzzy
@@ -7371,11 +8343,6 @@ msgstr "Orientierung"
 msgid "Audio"
 msgstr "Automatisch"
 
-#: src/panasonicmn.cpp:219
-#, fuzzy
-msgid "White Balance Bias"
-msgstr "Weißabgleich"
-
 #: src/panasonicmn.cpp:220
 #, fuzzy
 msgid "White balance adjustment"
@@ -7438,11 +8405,6 @@ msgstr "Unbekannte Exif-Version"
 #, fuzzy
 msgid " EV"
 msgstr "%.2f EV"
-
-#: src/sigmamn.cpp:67
-#, fuzzy
-msgid "Camera serial number"
-msgstr "Seriennummer"
 
 #: src/sigmamn.cpp:72
 #, fuzzy
@@ -7549,6 +8511,42 @@ msgid "Unknown SonyMakerNote tag"
 msgstr "Unbekannte Exif-Version"
 
 #, fuzzy
+#~ msgid "White balance fine tune"
+#~ msgstr "Weißabgleicheinstellung"
+
+#, fuzzy
+#~ msgid "Flash exposure bracket value"
+#~ msgstr "Blitzkompensation ?"
+
+#, fuzzy
+#~ msgid "Exposure bracket value"
+#~ msgstr "Blitzkompensation ?"
+
+#, fuzzy
+#~ msgid "Lens Adapter"
+#~ msgstr "Adapter"
+
+#, fuzzy
+#~ msgid "Lens adapter used"
+#~ msgstr "Farbraum"
+
+#, fuzzy
+#~ msgid "Color Hue"
+#~ msgstr "Farbmodus"
+
+#, fuzzy
+#~ msgid "Color hue"
+#~ msgstr "Farbmodus"
+
+#, fuzzy
+#~ msgid "Raw Image Center"
+#~ msgstr "Bildlänge"
+
+#, fuzzy
+#~ msgid "Raw image center"
+#~ msgstr "Bildlänge"
+
+#, fuzzy
 #~ msgid "FlashMode"
 #~ msgstr "Blitzmodus"
 
@@ -7636,32 +8634,11 @@ msgstr "Unbekannte Exif-Version"
 #~ msgid "A-DEP"
 #~ msgstr "A-DEP"
 
-#~ msgid "Canon EF 50mm f/1.8"
-#~ msgstr "Canon EF 50mm f/1.8"
-
-#~ msgid "Canon EF 28mm f/2.8"
-#~ msgstr "Canon EF 28mm f/2.8"
-
-#~ msgid "Sigma UC Zoom 35-135mm f/4-5.6"
-#~ msgstr "Sigma UC Zoom 35-135mm f/4-5.6"
-
-#~ msgid "Tokina AF193-2 19-35mm f/3.5-4.5"
-#~ msgstr "Tokina AF193-2 19-35mm f/3.5-4.5"
-
 #~ msgid "Sigma 50mm f/2.8 EX or 28mm f/1.8"
 #~ msgstr "Sigma 50mm f/2.8 EX or 28mm f/1.8"
 
 #~ msgid "Canon EF 35mm f/2"
 #~ msgstr "Canon EF 35mm f/2"
-
-#~ msgid "Canon EF 15mm f/2.8"
-#~ msgstr "Canon EF 15mm f/2.8"
-
-#~ msgid "Canon EF 80-200mm f/2.8L"
-#~ msgstr "Canon EF 80-200mm f/2.8L"
-
-#~ msgid "Cosina 100mm f/3.5 Macro AF"
-#~ msgstr "Cosina 100mm f/3.5 Macro AF"
 
 #~ msgid "Tamron AF Aspherical 28-200mm f/3.8-5.6"
 #~ msgstr "Tamron AF Aspherical 28-200mm f/3.8-5.6"
@@ -7669,20 +8646,11 @@ msgstr "Unbekannte Exif-Version"
 #~ msgid "Canon EF 50mm f/1.8 MkII"
 #~ msgstr "Canon EF 50mm f/1.8 MkII"
 
-#~ msgid "Canon EF 75-300mm f/4-5.6"
-#~ msgstr "Canon EF 75-300mm f/4-5.6"
-
-#~ msgid "Canon EF 28-80mm f/3.5-5.6"
-#~ msgstr "Canon EF 28-80mm f/3.5-5.6"
-
 #~ msgid "Canon MP-E 65mm f/2.8 1-5x Macro Photo"
 #~ msgstr "Canon MP-E 65mm f/2.8 1-5x Macro Photo"
 
 #~ msgid "Canon TS-E 24mm f/3.5L"
 #~ msgstr "Canon TS-E 24mm f/3.5L"
-
-#~ msgid "Sigma 17-35mm f2.8-4 EX Aspherical HSM"
-#~ msgstr "Sigma 17-35mm f2.8-4 EX Aspherical HSM"
 
 #~ msgid "Canon EF 200mm f/1.8L"
 #~ msgstr "Canon EF 200mm f/1.8L"
@@ -7711,12 +8679,6 @@ msgstr "Unbekannte Exif-Version"
 #~ msgid "Canon EF 85mm f/1.8 USM"
 #~ msgstr "Canon EF 85mm f/1.8 USM"
 
-#~ msgid "Canon EF 28-105mm f/3.5-4.5 USM"
-#~ msgstr "Canon EF 28-105mm f/3.5-4.5 USM"
-
-#~ msgid "Canon EF 20-35mm f/3.5-4.5 USM"
-#~ msgstr "Canon EF 20-35mm f/3.5-4.5 USM"
-
 #~ msgid "Canon EF 28-70mm f/2.8L or Sigma 24-70mm EX f/2.8"
 #~ msgstr "Canon EF 28-70mm f/2.8L or Sigma 24-70mm EX f/2.8"
 
@@ -7728,9 +8690,6 @@ msgstr "Unbekannte Exif-Version"
 
 #~ msgid "Canon EF 70-200mm f/2.8 L + x2"
 #~ msgstr "Canon EF 70-200mm f/2.8 L + x2"
-
-#~ msgid "Sigma 15-30mm f/3.5-4.5 EX DG Aspherical"
-#~ msgstr "Sigma 15-30mm f/3.5-4.5 EX DG Aspherical"
 
 #~ msgid "Canon EF 200mm f/2.8L II"
 #~ msgstr "Canon EF 200mm f/2.8L II"
@@ -7747,32 +8706,17 @@ msgstr "Unbekannte Exif-Version"
 #~ msgid "Canon EF 300mm f/4L IS"
 #~ msgstr "Canon EF 300mm f/4L IS"
 
-#~ msgid "Canon EF 28-135mm f/3.5-5.6 IS"
-#~ msgstr "Canon EF 28-135mm f/3.5-5.6 IS"
-
 #~ msgid "Canon EF 35mm f/1.4L"
 #~ msgstr "Canon EF 35mm f/1.4L"
 
 #~ msgid "Canon EF 100-400mm f/4.5-5.6L IS + x2"
 #~ msgstr "Canon EF 100-400mm f/4.5-5.6L IS + x2"
 
-#~ msgid "Canon EF 100-400mm f/4.5-5.6L IS"
-#~ msgstr "Canon EF 100-400mm f/4.5-5.6L IS"
-
 #~ msgid "Canon EF 70-200mm f/4L"
 #~ msgstr "Canon EF 70-200mm f/4L"
 
-#~ msgid "Canon EF 100mm f/2.8 Macro"
-#~ msgstr "Canon EF 100mm f/2.8 Macro"
-
 #~ msgid "Canon EF 400mm f/4 DO IS"
 #~ msgstr "Canon EF 400mm f/4 DO IS"
-
-#~ msgid "Canon EF 75-300mm f/4-5.6 IS"
-#~ msgstr "Canon EF 75-300mm f/4-5.6 IS"
-
-#~ msgid "Canon EF 50mm f/1.4"
-#~ msgstr "Canon EF 50mm f/1.4"
 
 #~ msgid "Canon EF 28-80 f/3.5-5.6 USM IV"
 #~ msgstr "Canon EF 28-80 f/3.5-5.6 USM IV"
@@ -8249,35 +9193,11 @@ msgstr "Unbekannte Exif-Version"
 #~ msgid "Flash is on Camera"
 #~ msgstr "Blitz ist in der Kamera"
 
-#~ msgid "VGA Basic"
-#~ msgstr "VGA Basic"
-
-#~ msgid "VGA Normal"
-#~ msgstr "VGA Normal"
-
-#~ msgid "SXGA Basic"
-#~ msgstr "SXGA Basic"
-
-#~ msgid "SXGA Normal"
-#~ msgstr "SXGA Normal"
-
 #~ msgid "2 MPixel Basic"
 #~ msgstr "2 MPixel Basic"
 
 #~ msgid "2 MPixel Normal"
 #~ msgstr "2 MPixel Normal"
-
-#~ msgid "Bright+"
-#~ msgstr "Helligkeit+"
-
-#~ msgid "Bright-"
-#~ msgstr "Helligkeit-"
-
-#~ msgid "Contrast+"
-#~ msgstr "Kontrast+"
-
-#~ msgid "Contrast-"
-#~ msgstr "Kontrast-"
 
 #~ msgid "ISO80"
 #~ msgstr "ISO80"
@@ -8290,9 +9210,6 @@ msgstr "Unbekannte Exif-Version"
 
 #~ msgid "ISO100"
 #~ msgstr "ISO100"
-
-#~ msgid "Preset"
-#~ msgstr "Voreinstellung"
 
 #~ msgid "No Fisheye"
 #~ msgstr "Kein Fischauge"
@@ -8369,9 +9286,6 @@ msgstr "Unbekannte Exif-Version"
 #~ msgid "Exposurediff ?"
 #~ msgstr "Belichtungsdifferenz ?"
 
-#~ msgid "Flash used"
-#~ msgstr "Blitz löste aus"
-
 #~ msgid "Total number of pictures taken"
 #~ msgstr "Anzahl aller aufgenommenen Bilder"
 
@@ -8392,9 +9306,6 @@ msgstr "Unbekannte Exif-Version"
 
 #~ msgid "Better"
 #~ msgstr "Besser"
-
-#~ msgid "Flash on"
-#~ msgstr "Blitz an"
 
 #~ msgid "Flash off"
 #~ msgstr "Blitz aus"

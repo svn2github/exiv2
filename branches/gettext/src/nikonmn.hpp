@@ -253,8 +253,16 @@ namespace Exiv2 {
         //@{
         //! Print ISO setting
         static std::ostream& print0x0002(std::ostream& os, const Value& value);
+        //! Print autofocus mode
+        static std::ostream& print0x0007(std::ostream& os, const Value& value);
+        //! Print lens type
+        static std::ostream& print0x0083(std::ostream& os, const Value& value);
         //! Print lens information
         static std::ostream& print0x0084(std::ostream& os, const Value& value);
+        //! Print manual focus distance
+        static std::ostream& print0x0085(std::ostream& os, const Value& value);
+        //! Print digital zoom setting
+        static std::ostream& print0x0086(std::ostream& os, const Value& value);
         //! Print AF point
         static std::ostream& print0x0088(std::ostream& os, const Value& value);
         //! Print number of lens stops
