@@ -265,19 +265,40 @@ namespace Exiv2 {
         std::string focus = value.toString();
         if      (focus == "AF-C  ") os << _("Continuous autofocus");
         else if (focus == "AF-S  ") os << _("Single autofocus");
-        else                      os << "(" << value << ")";
+        else                        os << "(" << value << ")";
         return os;
     }
 
     std::ostream& Nikon1MakerNote::print0x0083(std::ostream& os,
                                                const Value& value)
     {
-        unsigned char lensType = (unsigned char)value.toLong();
+        long lensType = value.toLong();
 
-        if (lensType & 0x01) os << "MF ";
-        if (lensType & 0x02) os << "D ";
-        if (lensType & 0x04) os << "G ";
-        if (lensType & 0x08) os << "VR";
+        bool valid=false;
+        if (lensType & 1)
+        {
+            os << "MF ";
+            valid=true;
+        }
+        if (lensType & 2)
+        {
+            os << "D ";
+            valid=true;
+        }
+        if (lensType & 4)
+        {
+            os << "G ";
+            valid=true;
+        }
+        if (lensType & 8)
+        {
+            os << "VR";
+            valid=true;
+        }
+
+        if (!valid)
+            os << "(" << lensType << ")";
+
         return os;
     }
 
@@ -386,7 +407,7 @@ namespace Exiv2 {
             }
         }
         else {
-            os << value;
+            os << "(" << value << ")";
         }
         return os;
     }
