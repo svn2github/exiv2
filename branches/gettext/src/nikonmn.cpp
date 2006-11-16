@@ -203,7 +203,7 @@ namespace Exiv2 {
                 nikon1IfdId, makerTags, asciiString, printValue),
         TagInfo(0x0085, "FocusDistance", N_("Focus Distance"), 
                 N_("Manual focus distance"), 
-                nikon1IfdId, makerTags, unsignedRational, print0x0083),
+                nikon1IfdId, makerTags, unsignedRational, print0x0085),
         TagInfo(0x0086, "DigitalZoom", N_("Digital Zoom"), 
                 N_("Digital zoom setting"), 
                 nikon1IfdId, makerTags, unsignedRational, print0x0086),
@@ -266,39 +266,6 @@ namespace Exiv2 {
         if      (focus == "AF-C  ") os << _("Continuous autofocus");
         else if (focus == "AF-S  ") os << _("Single autofocus");
         else                        os << "(" << value << ")";
-        return os;
-    }
-
-    std::ostream& Nikon1MakerNote::print0x0083(std::ostream& os,
-                                               const Value& value)
-    {
-        long lensType = value.toLong();
-
-        bool valid=false;
-        if (lensType & 1)
-        {
-            os << "MF ";
-            valid=true;
-        }
-        if (lensType & 2)
-        {
-            os << "D ";
-            valid=true;
-        }
-        if (lensType & 4)
-        {
-            os << "G ";
-            valid=true;
-        }
-        if (lensType & 8)
-        {
-            os << "VR";
-            valid=true;
-        }
-
-        if (!valid)
-            os << "(" << lensType << ")";
-
         return os;
     }
 
@@ -924,12 +891,33 @@ namespace Exiv2 {
     std::ostream& Nikon3MakerNote::print0x0083(std::ostream& os,
                                                const Value& value)
     {
-        unsigned char lensType = (unsigned char)value.toLong();
+        long lensType = value.toLong();
 
-        if (lensType & 0x01) os << "MF ";
-        if (lensType & 0x02) os << "D ";
-        if (lensType & 0x04) os << "G ";
-        if (lensType & 0x08) os << "VR";
+        bool valid=false;
+        if (lensType & 1)
+        {
+            os << "MF ";
+            valid=true;
+        }
+        if (lensType & 2)
+        {
+            os << "D ";
+            valid=true;
+        }
+        if (lensType & 4)
+        {
+            os << "G ";
+            valid=true;
+        }
+        if (lensType & 8)
+        {
+            os << "VR";
+            valid=true;
+        }
+
+        if (!valid)
+            os << "(" << lensType << ")";
+
         return os;
     }
 
