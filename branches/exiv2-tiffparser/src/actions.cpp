@@ -1454,6 +1454,7 @@ namespace {
             || timeStr[13] != ':' || timeStr[16] != ':') return 3;
         if (0 == tm) return 4;
         memset(tm, 0x0, sizeof(struct tm));
+        tm->tm_isdst = -1;
 
         long tmp;
         if (!Util::strtol(timeStr.substr(0,4).c_str(), tmp)) return 5;
@@ -1559,10 +1560,15 @@ namespace {
     int renameFile(std::string& newPath, const struct tm* tm)
     {
         std::string path = newPath;
+        std::string format = Params::instance().format_;
+        Util::replace(format, ":basename:",   Util::basename(path, true));
+        Util::replace(format, ":dirname:",    Util::basename(Util::dirname(path)));
+        Util::replace(format, ":parentname:", Util::basename(Util::dirname(Util::dirname(path))));
+
         const size_t max = 1024;
         char basename[max];
         memset(basename, 0x0, max);
-        if (strftime(basename, max, Params::instance().format_.c_str(), tm) == 0) {
+        if (strftime(basename, max, format.c_str(), tm) == 0) {
             std::cerr << "Filename format yields empty filename for the file "
                       << path << "\n";
             return 1;

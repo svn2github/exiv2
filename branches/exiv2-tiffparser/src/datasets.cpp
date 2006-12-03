@@ -130,7 +130,7 @@ namespace Exiv2 {
                 "in ISO 8601 to indicate year, month and day the service sent the material.", 
                 true, false, 8, 8, Exiv2::date, IptcDataSets::envelope, ""),
         DataSet(IptcDataSets::TimeSent, "TimeSent", "TimeSent", 
-                "Uses the format HHMMSSÂ±HHMM where HHMMSS refers to "
+                "Uses the format HHMMSS±HHMM where HHMMSS refers to "
                 "local hour, minute and seconds and HHMM refers to hours and "
                 "minutes ahead (+) or behind (-) Universal Coordinated Time as "
                 "described in ISO 8601. This is the time the service sent the material.", 
@@ -159,6 +159,11 @@ namespace Exiv2 {
         DataSet(0xffff, "(Invalid)", "(Invalid)", 
                 "(Invalid)", false, false, 0, 0, Exiv2::unsignedShort, IptcDataSets::envelope, "")
     };
+
+    const DataSet* IptcDataSets::envelopeRecordList()
+    {
+        return envelopeRecord;
+    }
 
     static const DataSet application2Record[] = {
         DataSet(IptcDataSets::RecordVersion, "RecordVersion", "RecordVersion", 
@@ -409,6 +414,11 @@ namespace Exiv2 {
         DataSet(0xffff, "(Invalid)", "(Invalid)", 
                 "(Invalid)", false, false, 0, 0, Exiv2::unsignedShort, IptcDataSets::application2, "")
     };
+
+    const DataSet* IptcDataSets::application2RecordList()
+    {
+        return application2Record;
+    }
 
     static const DataSet unknownDataSet(0xffff, "Unknown dataset", "Unknown dataset", "Unknown dataset", false, true, 0, 0xffffffff, Exiv2::string, IptcDataSets::invalidRecord, "Unknown dataset");
 

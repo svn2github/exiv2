@@ -25,7 +25,7 @@ Iptc.Application2.Source                     String      2  AP
 Iptc.Application2.Caption                    String    282  Chicago White Sox pitcher John Garland, left, pours champagne on Freddy Garcia in the locker room after their 4-2 win against the Detroit Tigers in Detroit, Thursday, Sept. 29, 2005. With the win the White Sox clinched their first AL Central title since 2000. (AP Photo/Paul Sancya)
 Iptc.Application2.Writer                     String     15  DD PCS DD**NY**
 ------> Bug 443 <-------
-Error: Iop entry 2796 lies outside of the IFD memory buffer.
+Error: Directory Iop with 5233 entries considered invalid; not read.
 Exif.Image.Make                              Ascii      22  EASTMAN KODAK COMPANY
 Exif.Image.Model                             Ascii      28  KODAK DX3600 DIGITAL CAMERA
 Exif.Image.Orientation                       Short       1  top, left
@@ -113,7 +113,7 @@ Exif.Photo.FocalPlaneYResolution             Rational    1  8114.29
 Exif.Photo.FocalPlaneResolutionUnit          Short       1  inch
 Exif.Photo.SensingMethod                     Short       1  One-chip color area
 Exif.Photo.FileSource                        Undefined   1  Digital still camera
-Exif.Photo.CustomRendered                    Short       1  0
+Exif.Photo.CustomRendered                    Short       1  Normal process
 Exif.Photo.ExposureMode                      Short       1  Auto
 Exif.Photo.WhiteBalance                      Short       1  Auto
 Exif.Photo.DigitalZoomRatio                  Rational    1  1.0
@@ -243,3 +243,20 @@ IRB buffer : 144788
 Comparing IPTC and IRB size... ok
 Comparing IPTC and IRB data... ok
 Caught Exiv2 exception 'Size of IPTC JPEG segment is larger than 65535 bytes'
+------> Bug 495 <-------
+Error: Directory Iop with 768 entries considered invalid; not read.
+Warning: IFD1: Pointer to next IFD is out of bounds; ignored.
+Error: Upper boundary of the 1st data entry of IFD1 is out of bounds:
+ Offset = 0x0203fa04, exceeds buffer size by 168813082 Bytes
+Iptc.Application2.Caption                    String     56  Die Insel Stromboli mit dem Vulkan Stromboli, 1000m hoch
+Iptc.Application2.Program                    String      7  digiKam
+Iptc.Application2.ProgramVersion             String     11  0.9.0-beta3
+File 1/1: exiv2-bug498.jpg
+Set Exif.GPSInfo.GPSLatitude "0/1 1/1 2/1" (Rational)
+File 1/1: exiv2-bug498.jpg
+0x8825 Image        GPSTag                      Long        1  26
+0x0002 GPSInfo      GPSLatitude                 Rational    3  0/1 1/1 2/1
+File 1/1: exiv2-bug498.jpg
+Del Exif.GPSInfo.GPSLatitude
+File 1/1: exiv2-bug498.jpg
+exiv2-bug498.jpg: No Exif data found in the file

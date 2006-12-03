@@ -463,6 +463,11 @@ namespace Exiv2 {
                 "Unknown IFD tag", ifdIdNotSet, sectionIdNotSet, invalidTypeId, printValue)
     };
 
+    const TagInfo* ExifTags::ifdTagList()
+    {
+        return ifdTagInfo;
+    }
+
     //! ExposureProgram, tag 0x8822
     extern const TagDetails exifExposureProgram[] = {
         { 0, "Not defined"       },
@@ -900,6 +905,11 @@ namespace Exiv2 {
                 "Unknown Exif tag", ifdIdNotSet, sectionIdNotSet, invalidTypeId, printValue)
     };
 
+    const TagInfo* ExifTags::exifTagList()
+    {
+        return exifTagInfo;
+    }
+
     //! GPS latitude reference, tag 0x0001; also GPSDestLatitudeRef, tag 0x0013
     extern const TagDetails exifGPSLatitudeRef[] = {
         { 78, "North" },
@@ -1074,6 +1084,11 @@ namespace Exiv2 {
                 "Unknown GPSInfo tag", ifdIdNotSet, sectionIdNotSet, invalidTypeId, printValue)
     };
 
+    const TagInfo* ExifTags::gpsTagList()
+    {
+        return gpsTagInfo;
+    }
+
     // Exif Interoperability IFD Tags
     static const TagInfo iopTagInfo[] = {
         TagInfo(0x0001, "InteroperabilityIndex", "InteroperabilityIndex", 
@@ -1099,6 +1114,11 @@ namespace Exiv2 {
         TagInfo(0xffff, "(UnknownIopTag)", "Unknown Exif Interoperability tag", 
                 "Unknown Exif Interoperability tag", ifdIdNotSet, sectionIdNotSet, invalidTypeId, printValue)
     };
+
+    const TagInfo* ExifTags::iopTagList()
+    {
+        return iopTagInfo;
+    }
 
     // Unknown Tag
     static const TagInfo unknownTag(0xffff, "Unknown tag", "Unknown tag", 
@@ -1589,15 +1609,19 @@ namespace Exiv2 {
         if (value.count() == 3) {
             std::ostringstream oss;
             oss.copyfmt(os);
-            static const char unit[4] = "'\"";
+            static const char* unit[] = { "deg", "'", "\"" };
+            static const int prec[] = { 7, 5, 3 };
             int n;
             for (n = 2; n > 0; --n) {
                 if (value.toRational(n).first != 0) break;
             }
-            for (int i = 0; i < n + 1; ++i) {
+            for (int i = 0; i < n + 1; ++i) {                
+                const int32_t z = value.toRational(i).first;
                 const int32_t d = value.toRational(i).second;
-                const int p = d > 1 ? d > 19 ? d > 199 ? d > 1999 ? 4 : 3 : 2 : 1 : 0;
-                os << std::fixed << std::setprecision(p) << value.toFloat(i)
+                // Hack: Need Value::toDouble
+                double b = static_cast<double>(z)/d;
+                const int p = z % d == 0 ? 0 : prec[i];
+                os << std::fixed << std::setprecision(p) << b
                    << unit[i] << " ";
             }
             os.copyfmt(oss);
