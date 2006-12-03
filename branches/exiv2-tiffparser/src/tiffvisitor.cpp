@@ -48,6 +48,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "value.hpp"
 #include "image.hpp"
 #include "jpgimage.hpp"
+#include "i18n.h"             // NLS support.
 
 // + standard includes
 #include <string>
@@ -520,9 +521,9 @@ namespace Exiv2 {
     {
         printTiffEntry(object, prefix());
         if (object->pValue()) {
-            os_ << prefix() << "Data area "
+            os_ << prefix() << _("Data area") << " "
                 << object->pValue()->sizeDataArea()
-                << " bytes.\n";
+                << " " << _("bytes.\n");
         }
     } // TiffPrinter::visitEntry
 
@@ -534,12 +535,12 @@ namespace Exiv2 {
     void TiffPrinter::visitDirectory(TiffDirectory* object)
     {
         assert(object != 0);
-
-        os_ << prefix() << tiffGroupName(object->group()) << " directory with "
-        // cast to make MSVC happy
-           << std::dec << static_cast<unsigned int>(object->components_.size());
-        if (object->components_.size() == 1) os_ << " entry:\n";
-        else os_ << " entries:\n";
+        os_ << prefix() << tiffGroupName(object->group()) 
+            << " " << _("directory with") << " "
+            // cast to make MSVC happy
+            << std::dec << static_cast<unsigned int>(object->components_.size());
+        if (object->components_.size() == 1) os_ << " " << _("entry:\n");
+        else os_ << " " << _("entries:\n");
         incIndent();
 
     } // TiffPrinter::visitDirectory
@@ -548,8 +549,8 @@ namespace Exiv2 {
     {
         decIndent();
         if (object->hasNext()) {
-            if (object->pNext_) os_ << prefix() << "Next directory:\n";
-            else os_ << prefix() << "No next directory\n";
+            if (object->pNext_) os_ << prefix() << _("Next directory:\n");
+            else os_ << prefix() << _("No next directory\n");
         }
     } // TiffPrinter::visitDirectoryNext
 
@@ -560,14 +561,14 @@ namespace Exiv2 {
 
     void TiffPrinter::visitSubIfd(TiffSubIfd* object)
     {
-        os_ << prefix() << "Sub-IFD ";
+        os_ << prefix() << _("Sub-IFD") << " ";
         printTiffEntry(object);
     } // TiffPrinter::visitSubIfd
 
     void TiffPrinter::visitMnEntry(TiffMnEntry* object)
     {
         if (!object->mn_) printTiffEntry(object, prefix());
-        else os_ << prefix() << "Makernote ";
+        else os_ << prefix() << _("Makernote") << " ";
     } // TiffPrinter::visitMnEntry
 
     void TiffPrinter::visitIfdMakernote(TiffIfdMakernote* /*object*/)
@@ -581,13 +582,13 @@ namespace Exiv2 {
         assert(object != 0);
 
         os_ << px << tiffGroupName(object->group())
-            << " tag 0x" << std::setw(4) << std::setfill('0')
+            << " " << _("tag") << " 0x" << std::setw(4) << std::setfill('0')
             << std::hex << std::right << object->tag()
-            << ", type " << TypeInfo::typeName(object->typeId())
-            << ", " << std::dec << object->count() << " component";
+            << ", " << _("type") << " " << TypeInfo::typeName(object->typeId())
+            << ", " << std::dec << object->count() << " "<< _("component");
         if (object->count() > 1) os_ << "s";
-        os_ << " in " << object->size() << " bytes";
-        if (object->size() > 4) os_ << ", offset " << object->offset();
+        os_ << " in " << object->size() << " " << _("bytes");
+        if (object->size() > 4) os_ << ", " << _("offset") << " " << object->offset();
         os_ << "\n";
         const Value* vp = object->pValue();
         if (vp && vp->count() < 100) os_ << prefix() << *vp;
@@ -598,13 +599,13 @@ namespace Exiv2 {
 
     void TiffPrinter::visitArrayEntry(TiffArrayEntry* object)
     {
-        os_ << prefix() << "Array Entry " << tiffGroupName(object->group())
-            << " tag 0x" << std::setw(4) << std::setfill('0')
-            << std::hex << std::right << object->tag() 
-            << " with " << std::dec << object->count() << " element";
-        if (object->count() > 1) os_ << "s";
+        os_ << prefix() << _("Array Entry") << " " << tiffGroupName(object->group())
+            << " " << _("tag") << " 0x" << std::setw(4) << std::setfill('0')
+            << std::hex << std::right << object->tag() << " " << _("with") 
+            << " " << std::dec << object->count() << " ";
+        if (object->count() > 1) os_ << _("elements");
+        else os_ << _("element");
         os_ << "\n";
-
     } // TiffPrinter::visitArrayEntry
 
     void TiffPrinter::visitArrayElement(TiffArrayElement* object)
