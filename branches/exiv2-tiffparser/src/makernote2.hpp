@@ -20,7 +20,7 @@
  */
 /*!
   @file    makernote2.hpp
-  @brief   Makernote TIFF composite class TiffIfdMakernote and classes for 
+  @brief   Makernote TIFF composite class TiffIfdMakernote and classes for
            various makernote headers.
   @version $Rev$
   @author  Andreas Huggel (ahu)
@@ -89,8 +89,8 @@ namespace Exiv2 {
         struct MakeKey;
         /*!
           @brief Compare a TiffMnRegistry structure with a key being the make
-                 string from the image. The two are equal if 
-                 TiffMnRegistry::make_ equals a substring of the key of the 
+                 string from the image. The two are equal if
+                 TiffMnRegistry::make_ equals a substring of the key of the
                  same size. E.g., registry = "OLYMPUS",
                  key = "OLYMPUS OPTICAL CO.,LTD" (found in the image) match.
          */
@@ -175,7 +175,7 @@ namespace Exiv2 {
         virtual ByteOrder byteOrder() const { return invalidByteOrder; }
         /*!
           @brief Return the base offset for the makernote IFD entries relative
-                 to the start of the TIFF header. \em mnOffset is the offset 
+                 to the start of the TIFF header. \em mnOffset is the offset
                  to the makernote from the start of the TIFF header.
          */
         virtual uint32_t baseOffset(uint32_t /*mnOffset*/) const { return 0; }
@@ -535,8 +535,8 @@ namespace Exiv2 {
                                 uint16_t mnGroup);
 
     //! Function to create a Nikon3 makernote
-    TiffComponent* newNikon3Mn2(uint16_t tag, 
-                                uint16_t group, 
+    TiffComponent* newNikon3Mn2(uint16_t tag,
+                                uint16_t group,
                                 uint16_t mnGroup);
 
     //! Function to create a Panasonic makernote

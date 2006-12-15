@@ -53,14 +53,14 @@ namespace Exiv2 {
     public:
         /*!
           @brief Create the TiffComponent for TIFF entry \em extendedTag and
-                 \em group based on the embedded lookup table. If the pointer 
+                 \em group based on the embedded lookup table. If the pointer
                  that is returned is 0, then the TIFF entry should be ignored.
         */
         static std::auto_ptr<TiffComponent> create(uint32_t extendedTag,
                                                    uint16_t group);
-        /*!  
+        /*!
           @brief Get the path, i.e., a list of TiffStructure pointers, from
-                 the root TIFF element to the TIFF entry \em extendedTag and 
+                 the root TIFF element to the TIFF entry \em extendedTag and
                  \em group.
         */
         static void getPath(TiffPath& tiffPath, uint32_t extendedTag, uint16_t group);
@@ -111,7 +111,7 @@ namespace Exiv2 {
     private:
         /*!
           @brief Parse TIFF metadata from a data buffer \em pData of length
-                 \em size into a TIFF composite structure. 
+                 \em size into a TIFF composite structure.
 
           @param pData     Pointer to the data buffer. Must point to data
                            in TIFF format; no checks are performed.
@@ -119,8 +119,8 @@ namespace Exiv2 {
           @return          An auto pointer with the root element of the TIFF
                            composite structure.
          */
-        static std::auto_ptr<TiffComponent> 
-        parse(const byte*              pData, 
+        static std::auto_ptr<TiffComponent>
+        parse(const byte*              pData,
                     uint32_t           size,
                     TiffCompFactoryFct createFct);
 
@@ -129,16 +129,16 @@ namespace Exiv2 {
     /*!
       @brief Table of TIFF decoding and encoding functions and find functions.
              This class is separated from the metadata decoder and encoder
-             visitors so that the parser can be parametrized with a different 
-             table if needed. This is used, eg., for CR2 format, which uses a 
+             visitors so that the parser can be parametrized with a different
+             table if needed. This is used, eg., for CR2 format, which uses a
              different decoder table.
      */
     class TiffMapping {
     public:
         /*!
-          @brief Find the decoder function for a key. 
+          @brief Find the decoder function for a key.
 
-          If the returned pointer is 0, the tag should not be decoded, 
+          If the returned pointer is 0, the tag should not be decoded,
           else the decoder function should be used.
 
           @param make Camera make
@@ -147,13 +147,13 @@ namespace Exiv2 {
 
           @return Pointer to the decoder function
          */
-        static const DecoderFct findDecoder(const std::string& make, 
+        static const DecoderFct findDecoder(const std::string& make,
                                                   uint32_t     extendedTag,
                                                   uint16_t     group);
         /*!
-          @brief Find the encoder function for a key. 
+          @brief Find the encoder function for a key.
 
-          If the returned pointer is 0, the tag should not be encoded, 
+          If the returned pointer is 0, the tag should not be encoded,
           else the encoder function should be used.
 
           @param make Camera make
@@ -162,7 +162,7 @@ namespace Exiv2 {
 
           @return Pointer to the encoder function
          */
-        static const EncoderFct findEncoder(const std::string& make, 
+        static const EncoderFct findEncoder(const std::string& make,
                                                   uint32_t     extendedTag,
                                                   uint16_t     group);
 

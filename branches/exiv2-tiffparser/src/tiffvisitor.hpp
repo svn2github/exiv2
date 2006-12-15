@@ -264,7 +264,7 @@ namespace Exiv2 {
       @brief TIFF composite visitor to encode metadata from an image to the TIFF
              tree (Visitor pattern). Both, image and root element of the tree
              are supplied in the constructor. Used by TiffParser to encode the
-             metadata into a TIFF composite. 
+             metadata into a TIFF composite.
 
       @note  Encoded tags are removed from the \em pImage metadata.
      */
@@ -322,7 +322,7 @@ namespace Exiv2 {
         void encodeBigEndianEntry(TiffEntryBase* object);
 
         /*!
-          @brief Add metadata from image to the TIFF composite. 
+          @brief Add metadata from image to the TIFF composite.
 
           When the encoder is used as a visitor (by passing it to the accept()
           member of a TiffComponent), the composite tree is traversed and a
@@ -365,7 +365,7 @@ namespace Exiv2 {
     public:
         //! @name Creators
         //@{
-        //! Constructor, taking \em tag and \em group of the component to add. 
+        //! Constructor, taking \em tag and \em group of the component to add.
         TiffAdder(uint16_t tag, uint16_t group);
         //! Virtual destructor
         virtual ~TiffAdder() {}
@@ -394,7 +394,7 @@ namespace Exiv2 {
         //@}
 
     private:
-        const uint16_t tag_;      //!< Tag of the new component 
+        const uint16_t tag_;      //!< Tag of the new component
         const uint16_t group_;    //!< Group of the new component
         TiffPath       tiffPath_; //!< Path to the component
 
@@ -524,7 +524,7 @@ namespace Exiv2 {
         //! Return the base offset. See class TiffRwState for details
         uint32_t baseOffset() const;
         //! Create a TIFF component for \em extendedTag and group
-        std::auto_ptr<TiffComponent> create(uint32_t extendedTag, 
+        std::auto_ptr<TiffComponent> create(uint32_t extendedTag,
                                             uint16_t group) const;
         //@}
 

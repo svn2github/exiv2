@@ -72,12 +72,12 @@ namespace Exiv2 {
         { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIrbIptc, 0 }
     };
 
-    const DecoderFct Cr2Mapping::findDecoder(const std::string& make, 
+    const DecoderFct Cr2Mapping::findDecoder(const std::string& make,
                                                    uint32_t     extendedTag,
                                                    uint16_t     group)
     {
         DecoderFct decoderFct = &TiffDecoder::decodeStdTiffEntry;
-        const TiffMappingInfo* td = find(cr2MappingInfo_, 
+        const TiffMappingInfo* td = find(cr2MappingInfo_,
                                          TiffMappingInfo::Key(make, extendedTag, group));
         if (td) {
             // This may set decoderFct to 0, meaning that the tag should not be decoded
@@ -86,12 +86,12 @@ namespace Exiv2 {
         return decoderFct;
     }
 
-    const EncoderFct Cr2Mapping::findEncoder(const std::string& make, 
+    const EncoderFct Cr2Mapping::findEncoder(const std::string& make,
                                                    uint32_t     extendedTag,
                                                    uint16_t     group)
     {
         EncoderFct encoderFct = &TiffEncoder::encodeStdTiffEntry;
-        const TiffMappingInfo* td = find(cr2MappingInfo_, 
+        const TiffMappingInfo* td = find(cr2MappingInfo_,
                                          TiffMappingInfo::Key(make, extendedTag, group));
         if (td) {
             // This may set encoderFct to 0, meaning that the tag should not be encoded

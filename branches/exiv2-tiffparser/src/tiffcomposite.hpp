@@ -110,7 +110,7 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         /*!
-          @brief Add a TIFF entry \em tag to the component. Components on 
+          @brief Add a TIFF entry \em tag to the component. Components on
                  the path to the entry are added if they don't exist yet.
 
           @param tag      The tag of the new entry
@@ -125,8 +125,8 @@ namespace Exiv2 {
           @return Return a pointer to the newly added child element or 0.
          */
         TiffComponent* addChild(AutoPtr tiffComponent);
-        /*! 
-            @brief Add a "next" component to the component. Default is to do 
+        /*!
+            @brief Add a "next" component to the component. Default is to do
                    nothing.
             @param tiffComponent Auto pointer to the component to add.
             @return Return a pointer to the newly added "next" element or 0.
@@ -160,7 +160,7 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         //! Implements addPath(). The default implementation does nothing.
-        virtual TiffComponent* doAddPath(uint16_t  /*tag*/, 
+        virtual TiffComponent* doAddPath(uint16_t  /*tag*/,
                                          TiffPath& /*tiffPath*/) { return this; }
 
         //! Implements addChild(). The default implementation does nothing.
@@ -263,7 +263,7 @@ namespace Exiv2 {
         //! Default constructor
         TiffEntryBase(uint16_t tag, uint16_t group)
             : TiffComponent(tag, group),
-              type_(0), count_(0), offset_(0), size_(0), pData_(0), 
+              type_(0), count_(0), offset_(0), size_(0), pData_(0),
               isMalloced_(false), isDeleted_(false), pValue_(0) {}
         //! Virtual destructor.
         virtual ~TiffEntryBase();
@@ -624,7 +624,7 @@ namespace Exiv2 {
                                             const TiffStructure* ts);
 
     //! Function to create and initialize a new TIFF entry
-    TiffComponent::AutoPtr newTiffEntry(uint16_t tag, 
+    TiffComponent::AutoPtr newTiffEntry(uint16_t tag,
                                         const TiffStructure* ts);
 
     //! Function to create and initialize a new TIFF sub-directory

@@ -28,7 +28,7 @@
 #include "rcsid.hpp"
 EXIV2_RCSID("@(#) $Id$")
 
-// Remove debug 
+// Remove debug
 #define DEBUG
 
 // *****************************************************************************
@@ -244,7 +244,7 @@ namespace Exiv2 {
             groupType_[object->group()] = object->pValue()->toLong();
         }
 
-        const DecoderFct decoderFct = findDecoderFct_(make_, 
+        const DecoderFct decoderFct = findDecoderFct_(make_,
                                                       object->tag(),
                                                       object->group());
         // skip decoding if decoderFct == 0
@@ -288,7 +288,7 @@ namespace Exiv2 {
     }
 
     TiffEncoder::TiffEncoder(const Image*   pImage,
-                             TiffComponent* pRoot, 
+                             TiffComponent* pRoot,
                              ByteOrder      byteOrder,
                              FindEncoderFct findEncoderFct)
         : pImage_(pImage),
@@ -535,7 +535,7 @@ namespace Exiv2 {
     void TiffPrinter::visitDirectory(TiffDirectory* object)
     {
         assert(object != 0);
-        os_ << prefix() << tiffGroupName(object->group()) 
+        os_ << prefix() << tiffGroupName(object->group())
             << " " << _("directory with") << " "
             // cast to make MSVC happy
             << std::dec << static_cast<unsigned int>(object->components_.size());
@@ -601,7 +601,7 @@ namespace Exiv2 {
     {
         os_ << prefix() << _("Array Entry") << " " << tiffGroupName(object->group())
             << " " << _("tag") << " 0x" << std::setw(4) << std::setfill('0')
-            << std::hex << std::right << object->tag() << " " << _("with") 
+            << std::hex << std::right << object->tag() << " " << _("with")
             << " " << std::dec << object->count() << " ";
         if (object->count() > 1) os_ << _("elements");
         else os_ << _("element");
@@ -718,7 +718,7 @@ namespace Exiv2 {
         long offset = pOffset->toLong(0);
         // Todo: Remove limitation of Jpeg writer: strips must be contiguous
         // Until then we check: last offset + last size - first offset == size?
-        if (  pOffset->toLong(pOffset->count()-1) 
+        if (  pOffset->toLong(pOffset->count()-1)
             + pSize->toLong(pSize->count()-1)
             - offset != size) {
 #ifndef SUPPRESS_WARNINGS
@@ -763,8 +763,8 @@ namespace Exiv2 {
         // Sanity check with an "unreasonably" large number
         if (n > 256) {
 #ifndef SUPPRESS_WARNINGS
-            std::cerr << "Error: " 
-                      << "Directory " << tiffGroupName(object->group()) << " with " 
+            std::cerr << "Error: "
+                      << "Directory " << tiffGroupName(object->group()) << " with "
                       << n << " entries considered invalid; not read.\n";
 #endif
             return;
@@ -999,8 +999,8 @@ namespace Exiv2 {
         // Todo: This should be somewhere else, maybe in a Value factory
         // which takes a Key and Type
         TypeId t = TypeId(object->typeId());
-        if (   object->tag()    == 0x9286 
-            && object->group()  == Group::exif 
+        if (   object->tag()    == 0x9286
+            && object->group()  == Group::exif
             && object->typeId() == undefined) {
             t = comment;
         }
@@ -1037,7 +1037,7 @@ namespace Exiv2 {
 
         if (p + 2 > pLast_) {
 #ifndef SUPPRESS_WARNINGS
-            std::cerr << "Error: Array element in group " 
+            std::cerr << "Error: Array element in group "
                       << tiffGroupName(object->group())
                       << "requests access to memory beyond the data buffer. "
                       << "Skipping element.\n";

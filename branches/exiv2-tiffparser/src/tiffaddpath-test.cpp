@@ -14,12 +14,12 @@
 
 using namespace Exiv2;
 
-void addPath(TiffComponent* pRootDir, 
-             uint16_t       tag, 
+void addPath(TiffComponent* pRootDir,
+             uint16_t       tag,
              TiffPath&      tiffPath);
 
 void printPath(TiffPath tiffPath,
-               uint32_t tag, 
+               uint32_t tag,
                uint16_t grp);
 
 struct TiffTagInfo {
@@ -50,7 +50,7 @@ std::string tiffTagName(uint32_t tag)
     }
     else {
         std::ostringstream os;
-        os << "0x"  << std::hex << std::setw(4) 
+        os << "0x"  << std::hex << std::setw(4)
            << std::setfill('0') << std::right << tag;
         name = os.str();
     }
@@ -87,8 +87,8 @@ int main(int argc, char* const argv[])
 }
 
 // -----------------------------------------------------------------------------
-void addPath(TiffComponent* pRootDir, 
-             uint16_t       tag, 
+void addPath(TiffComponent* pRootDir,
+             uint16_t       tag,
              TiffPath&      tiffPath)
 {
     TiffComponent* tc = pRootDir->addPath(tag, tiffPath);
@@ -109,13 +109,13 @@ void addPath(TiffComponent* pRootDir,
 
 // -----------------------------------------------------------------------------
 void printPath(TiffPath tiffPath,
-               uint32_t tag, 
+               uint32_t tag,
                uint16_t grp)
 {
     std::cout << "\nTiff path for tag "
-              << std::setw(6) << std::setfill(' ') << std::left 
+              << std::setw(6) << std::setfill(' ') << std::left
               << tiffTagName(tag)
-              << ", group " << tiffGroupName(grp) 
+              << ", group " << tiffGroupName(grp)
               << " (id = " << std::dec << grp << "):\n\n"
               << "ext. tag group        new group   \n"
               << "-------- ------------ ------------\n";
@@ -124,12 +124,12 @@ void printPath(TiffPath tiffPath,
     {
         const TiffStructure* ts = tiffPath.top();
         tiffPath.pop();
-        std::cout << std::setw(8) << std::setfill(' ') << std::left 
+        std::cout << std::setw(8) << std::setfill(' ') << std::left
                   << tiffTagName(ts->extendedTag_)
-                  << " " << std::setw(12) << std::setfill(' ') << std::left 
+                  << " " << std::setw(12) << std::setfill(' ') << std::left
                   << tiffGroupName(ts->group_)
-                  << " " << std::setw(12) << std::setfill(' ') << std::left 
-                  << tiffGroupName(ts->newGroup_) 
+                  << " " << std::setw(12) << std::setfill(' ') << std::left
+                  << tiffGroupName(ts->newGroup_)
                   << "\n";
     }
     std::cout << std::endl;

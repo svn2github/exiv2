@@ -445,8 +445,8 @@ namespace Exiv2 {
         return new TiffIfdMakernote(tag, group, mnGroup, new Nikon2MnHeader);
     }
 
-    TiffComponent* newNikon3Mn2(uint16_t tag, 
-                                uint16_t group, 
+    TiffComponent* newNikon3Mn2(uint16_t tag,
+                                uint16_t group,
                                 uint16_t mnGroup)
     {
         return new TiffIfdMakernote(tag, group, mnGroup, new Nikon3MnHeader);

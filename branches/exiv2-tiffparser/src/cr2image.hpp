@@ -162,9 +162,9 @@ namespace Exiv2 {
     class Cr2Mapping {
     public:
         /*!
-          @brief Find the decoder function for a key. 
+          @brief Find the decoder function for a key.
 
-          If the returned pointer is 0, the tag should not be decoded, 
+          If the returned pointer is 0, the tag should not be decoded,
           else the decoder function should be used.
 
           @param make Camera make
@@ -173,14 +173,14 @@ namespace Exiv2 {
 
           @return Pointer to the decoder function
          */
-        static const DecoderFct findDecoder(const std::string& make, 
+        static const DecoderFct findDecoder(const std::string& make,
                                                   uint32_t     extendedTag,
                                                   uint16_t     group);
 
         /*!
-          @brief Find the encoder function for a key. 
+          @brief Find the encoder function for a key.
 
-          If the returned pointer is 0, the tag should not be encoded, 
+          If the returned pointer is 0, the tag should not be encoded,
           else the encoder function should be used.
 
           @param make Camera make
@@ -189,7 +189,7 @@ namespace Exiv2 {
 
           @return Pointer to the encoder function
          */
-        static const EncoderFct findEncoder(const std::string& make, 
+        static const EncoderFct findEncoder(const std::string& make,
                                                   uint32_t     extendedTag,
                                                   uint16_t     group);
 

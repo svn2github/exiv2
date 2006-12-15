@@ -94,7 +94,7 @@ namespace Exiv2 {
       and group of the new component are.
      */
     const TiffStructure TiffCreator::tiffStructure_[] = {
-        // ext. tag  group             child group       parent tag parent group      create function       
+        // ext. tag  group             child group       parent tag parent group      create function
         //---------  ----------------- ----------------- ---------- ----------------- -------------------
         // Root directory
         { Tag::root, Group::none,      Group::ifd0,      Tag::root, Group::none,      newTiffDirectory },
@@ -106,16 +106,16 @@ namespace Exiv2 {
         {    0x014a, Group::ifd0,      Group::sub0_0,    Tag::root, Group::none,      newTiffSubIfd },
         { Tag::next, Group::ifd0,      Group::ifd1,      Tag::root, Group::none,      newTiffDirectory },
         {  Tag::all, Group::ifd0,      Group::ifd0,      Tag::root, Group::none,      newTiffEntry },
-                                                                                      
-        // Subdir sub0_0                                                              
+
+        // Subdir sub0_0
         { Tag::next, Group::sub0_0,    Group::ignr,      0x014a,    Group::ifd0,      newTiffDirectory },
         {  Tag::all, Group::sub0_0,    Group::sub0_0,    0x014a,    Group::ifd0,      newTiffEntry },
 
         // Subdir sub0_1
         { Tag::next, Group::sub0_1,    Group::ignr,      0x014a,    Group::ifd0,      newTiffDirectory },
         {  Tag::all, Group::sub0_1,    Group::sub0_1,    0x014a,    Group::ifd0,      newTiffEntry },
-                                                                                      
-        // Subdir sub0_2                                                              
+
+        // Subdir sub0_2
         { Tag::next, Group::sub0_2,    Group::ignr,      0x014a,    Group::ifd0,      newTiffDirectory },
         {  Tag::all, Group::sub0_2,    Group::sub0_2,    0x014a,    Group::ifd0,      newTiffEntry },
 
@@ -124,31 +124,31 @@ namespace Exiv2 {
         {    0x927c, Group::exif,      Group::mn,        0x8769,    Group::ifd0,      newTiffMnEntry },
         { Tag::next, Group::exif,      Group::ignr,      0x8769,    Group::ifd0,      newTiffDirectory },
         {  Tag::all, Group::exif,      Group::exif,      0x8769,    Group::ifd0,      newTiffEntry },
-                                                                                      
-        // GPS subdir                                                                 
+
+        // GPS subdir
         { Tag::next, Group::gps,       Group::ignr,      0x8825,    Group::ifd0,      newTiffDirectory },
         {  Tag::all, Group::gps,       Group::gps,       0x8825,    Group::ifd0,      newTiffEntry },
-                                                                                      
-        // IOP subdir                                                                 
+
+        // IOP subdir
         { Tag::next, Group::iop,       Group::ignr,      0xa005,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::iop,       Group::iop,       0xa005,    Group::exif,      newTiffEntry },
 
         // IFD1
-        {    0x0111, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbData<0x0117, Group::ifd1> }, 
-        {    0x0117, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbSize<0x0111, Group::ifd1> }, 
-        {    0x0201, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbData<0x0202, Group::ifd1> }, 
-        {    0x0202, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbSize<0x0201, Group::ifd1> }, 
+        {    0x0111, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbData<0x0117, Group::ifd1> },
+        {    0x0117, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbSize<0x0111, Group::ifd1> },
+        {    0x0201, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbData<0x0202, Group::ifd1> },
+        {    0x0202, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbSize<0x0201, Group::ifd1> },
         { Tag::next, Group::ifd1,      Group::ignr,      Tag::next, Group::ifd0,      newTiffDirectory },
         {  Tag::all, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffEntry },
 
         // Olympus makernote - some Olympus cameras use Minolta structures
         // Todo: Adding such tags will not work (maybe result in a Minolta makernote), need separate groups
-        {    0x0001, Group::olympmn,   Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedLong> }, 
-        {    0x0003, Group::olympmn,   Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedLong> }, 
+        {    0x0001, Group::olympmn,   Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedLong> },
+        {    0x0003, Group::olympmn,   Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedLong> },
         { Tag::next, Group::olympmn,   Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::olympmn,   Group::olympmn,   0x927c,    Group::exif,      newTiffEntry },
-                                                                                      
-        // Fujifilm makernote                                                         
+
+        // Fujifilm makernote
         { Tag::next, Group::fujimn,    Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::fujimn,    Group::fujimn,    0x927c,    Group::exif,      newTiffEntry },
 
@@ -175,24 +175,24 @@ namespace Exiv2 {
         // Nikon2 makernote
         { Tag::next, Group::nikon2mn,  Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::nikon2mn,  Group::nikon2mn,  0x927c,    Group::exif,      newTiffEntry },
-                                                                                      
-        // Nikon3 makernote                                                           
+
+        // Nikon3 makernote
         { Tag::next, Group::nikon3mn,  Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::nikon3mn,  Group::nikon3mn,  0x927c,    Group::exif,      newTiffEntry },
 
         // Panasonic makernote
         { Tag::next, Group::panamn,    Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::panamn,    Group::panamn,    0x927c,    Group::exif,      newTiffEntry },
-                                                                                      
-        // Sigma/Foveon makernote                                                     
+
+        // Sigma/Foveon makernote
         { Tag::next, Group::sigmamn,   Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::sigmamn,   Group::sigmamn,   0x927c,    Group::exif,      newTiffEntry },
 
         // Sony1 makernote
         { Tag::next, Group::sony1mn,   Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::sony1mn,   Group::sony1mn,   0x927c,    Group::exif,      newTiffEntry },
-                                                                                      
-        // Sony2 makernote                                                            
+
+        // Sony2 makernote
         { Tag::next, Group::sony2mn,   Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::sony2mn,   Group::sony2mn,   0x927c,    Group::exif,      newTiffEntry },
 
@@ -230,12 +230,12 @@ namespace Exiv2 {
         { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry }
     };
 
-    const DecoderFct TiffMapping::findDecoder(const std::string& make, 
+    const DecoderFct TiffMapping::findDecoder(const std::string& make,
                                                     uint32_t     extendedTag,
                                                     uint16_t     group)
     {
         DecoderFct decoderFct = &TiffDecoder::decodeStdTiffEntry;
-        const TiffMappingInfo* td = find(tiffMappingInfo_, 
+        const TiffMappingInfo* td = find(tiffMappingInfo_,
                                          TiffMappingInfo::Key(make, extendedTag, group));
         if (td) {
             // This may set decoderFct to 0, meaning that the tag should not be decoded
@@ -244,12 +244,12 @@ namespace Exiv2 {
         return decoderFct;
     }
 
-    const EncoderFct TiffMapping::findEncoder(const std::string& make, 
+    const EncoderFct TiffMapping::findEncoder(const std::string& make,
                                                     uint32_t     extendedTag,
                                                     uint16_t     group)
     {
         EncoderFct encoderFct = &TiffEncoder::encodeStdTiffEntry;
-        const TiffMappingInfo* td = find(tiffMappingInfo_, 
+        const TiffMappingInfo* td = find(tiffMappingInfo_,
                                          TiffMappingInfo::Key(make, extendedTag, group));
         if (td) {
             // This may set decoderFct to 0, meaning that the tag should not be decoded
@@ -345,15 +345,15 @@ namespace Exiv2 {
             throw Error(3, "TIFF");
         }
 
-        TiffEncoder encoder(pImage, 
-                            rootDir.get(), 
-                            tiffHeader.byteOrder(), 
+        TiffEncoder encoder(pImage,
+                            rootDir.get(),
+                            tiffHeader.byteOrder(),
                             findEncoderFct);
 
         if (0 != rootDir.get()) rootDir->accept(encoder);
 
         // Add remaining entries from metadata to composite
-        // Todo: What if root dir is not set yet? rootDir =  
+        // Todo: What if root dir is not set yet? rootDir =
         encoder.add(rootDir.get(), createFct);
 /*
         if (0 != rootDir.get()) {
@@ -363,7 +363,7 @@ namespace Exiv2 {
 */
     } // TiffParser::encode
 
-    TiffComponent::AutoPtr TiffParser::parse(const byte*        pData, 
+    TiffComponent::AutoPtr TiffParser::parse(const byte*        pData,
                                              uint32_t           size,
                                              TiffCompFactoryFct createFct)
     {

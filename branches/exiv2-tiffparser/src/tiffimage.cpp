@@ -153,9 +153,9 @@ namespace Exiv2 {
         }
 
         Blob blob;
-        TiffParser::encode(blob, 
-                           buf.pData_, 
-                           buf.size_, 
+        TiffParser::encode(blob,
+                           buf.pData_,
+                           buf.size_,
                            this,
                            TiffCreator::create,
                            TiffMapping::findEncoder);

@@ -137,18 +137,18 @@ namespace Exiv2 {
     }
 
     TiffSubIfd::TiffSubIfd(uint16_t tag, uint16_t group, uint16_t newGroup)
-        : TiffEntryBase(tag, group), newGroup_(newGroup) 
+        : TiffEntryBase(tag, group), newGroup_(newGroup)
     {
         this->setTypeId(unsignedLong);
     }
 
-    TiffArrayEntry::TiffArrayEntry(uint16_t tag, 
+    TiffArrayEntry::TiffArrayEntry(uint16_t tag,
                                    uint16_t group,
                                    uint16_t elGroup,
                                    TypeId elTypeId)
         : TiffEntryBase(tag, group),
           elSize_(static_cast<uint16_t>(TypeInfo::typeSize(elTypeId))),
-          elGroup_(elGroup) 
+          elGroup_(elGroup)
     {
         this->setTypeId(elTypeId);
     }
@@ -204,14 +204,14 @@ namespace Exiv2 {
         const TiffStructure* ts = tiffPath.top();
         assert(ts != 0);
         TiffComponent* tc = 0;
-        // To allow duplicate entries, we only check if the new component already 
+        // To allow duplicate entries, we only check if the new component already
         // exists if there is still at least one composite tag on the stack
         if (tiffPath.size() > 1) {
             if (ts->extendedTag_ == Tag::next) {
                 tc = pNext_;
             }
             else {
-                for (Components::iterator i = components_.begin(); 
+                for (Components::iterator i = components_.begin();
                      i != components_.end(); ++i) {
                     if ((*i)->tag() == ts->tag() && (*i)->group() == ts->group_) {
                         tc = *i;
@@ -250,7 +250,7 @@ namespace Exiv2 {
             if ((*i)->group() == ts2->group_) {
                 tc = *i;
                 break;
-            }            
+            }
         }
         if (tc == 0) {
             TiffComponent::AutoPtr atc(new TiffDirectory(dt, ts2->group_));
@@ -286,7 +286,7 @@ namespace Exiv2 {
         const TiffStructure* ts = tiffPath.top();
         assert(ts != 0);
         TiffComponent* tc = 0;
-        // To allow duplicate entries, we only check if the new component already 
+        // To allow duplicate entries, we only check if the new component already
         // exists if there is still at least one composite tag on the stack
         if (tiffPath.size() > 1) {
             for (Components::iterator i = elements_.begin(); i != elements_.end(); ++i) {
@@ -452,7 +452,7 @@ namespace Exiv2 {
         return TiffComponent::AutoPtr(new TiffDirectory(tag, ts->newGroup_));
     }
 
-    TiffComponent::AutoPtr newTiffEntry(uint16_t tag, 
+    TiffComponent::AutoPtr newTiffEntry(uint16_t tag,
                                         const TiffStructure* ts)
     {
         assert(ts);
