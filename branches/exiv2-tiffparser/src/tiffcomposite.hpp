@@ -155,6 +155,54 @@ namespace Exiv2 {
         uint16_t group()                      const { return group_; }
         //! Return a pointer to the start of the binary representation of the component
         byte* start()                         const { return pData_; }
+        //@}
+
+        //! @name Write support (Accessors)
+        //@{
+        /*!
+          @brief Write a TiffComponent to a binary image.
+
+          @param blob       Binary image to append the TiffComponent to.
+          @param byteOrder  Applicable byte order (little or big endian).
+          @param offset     Offset from the start of the image (TIFF header) to 
+                            the component.
+          @return           Number of bytes written to the blob including all
+                            nested components.
+          @throw            Error If the component cannot be written.
+         */
+        uint32_t write(Blob& blob, ByteOrder byteOrder, int32_t offset) const;
+        /*!
+          @brief Write the IFD value of this component to a binary image.
+                 Return the number of bytes written. This is a support function 
+                 for write().
+         */
+        uint32_t writeValue(Blob&     blob, 
+                            ByteOrder byteOrder, 
+                            int32_t   offset, 
+                            uint32_t  valueIdx, 
+                            uint32_t  dataIdx) const;
+        /*!
+          @brief Write the IFD data of this component to a binary image.
+                 Return the number of bytes written. This is a support function 
+                 for write().
+         */
+        uint32_t writeData(Blob&     blob, 
+                           ByteOrder byteOrder, 
+                           int32_t   offset,
+                           uint32_t  dataIdx) const;
+        /*!
+          @brief Return the size of the IFD value of this component when
+                 written to a binary image. This is a support function for
+                 write().
+         */
+        uint32_t sizeValue() const;
+        /*! 
+          @brief Return the size of the IFD data of this component when
+                 written to a binary image.  This is a support function for
+                 write().
+         */
+        uint32_t sizeData() const;
+        //@}
 
     protected:
         //! @name Manipulators
@@ -169,8 +217,35 @@ namespace Exiv2 {
         //! Implements addNext(). The default implementation does nothing.
         virtual TiffComponent* doAddNext(AutoPtr /*tiffComponent*/) { return 0; }
 
-        //! Implements accept()
+        //! Implements accept().
         virtual void doAccept(TiffVisitor& visitor) =0;
+        //@}
+
+        //! @name Write support (Accessors)
+        //@{
+        //! Implements write().
+        virtual uint32_t doWrite(Blob&     blob, 
+                                 ByteOrder byteOrder, 
+                                 int32_t   offset) const =0;
+
+        //! Implements writeValue().
+        virtual uint32_t doWriteValue(Blob&     blob, 
+                                      ByteOrder byteOrder, 
+                                      int32_t   offset, 
+                                      uint32_t  valueIdx, 
+                                      uint32_t  dataIdx) const =0;
+
+        //! Implements writeData().
+        virtual uint32_t doWriteData(Blob&     blob, 
+                                     ByteOrder byteOrder, 
+                                     int32_t   offset,
+                                     uint32_t  dataIdx) const =0;
+
+        //! Implements sizeValue().
+        virtual uint32_t doSizeValue() const =0;
+
+        //! Implements sizeData().
+        virtual uint32_t doSizeData() const =0;
         //@}
 
     private:
@@ -276,8 +351,8 @@ namespace Exiv2 {
         //! Return the number of components in this entry
         uint32_t count()         const { return count_; }
         /*!
-          Return the offset to the data area relative to the base for
-          the component (usually the start of the TIFF header)
+          @brief Return the offset to the data area relative to the base
+                 for the component (usually the start of the TIFF header)
          */
         uint32_t offset()        const { return offset_; }
         //! Return the size of this component in bytes
@@ -292,11 +367,39 @@ namespace Exiv2 {
         //@{
 
         // Todo: Using these invalidates pValue_ and size_
+        // Todo: Do we need the data attributes which are also in value?
+        // Todo: Offset should probably be signed, not unsigned
 
         //! Set the field type
         void setTypeId(TypeId typeId) { type_ = typeId; }
         //! Set the number of components in this entry
         void setCount(uint32_t count) { count_ = count; }
+        //! Set the offset
+        void setOffset(uint32_t offset) { offset_ = offset; }
+        //@}
+
+    protected:
+        //! @name Write support (Accessors)
+        //@{
+        /*!
+          @brief TIFF entries have no write method, instead they have
+                 writeValue() and writeData(). This method must not be called;
+                 it commits suicide.
+         */
+        virtual uint32_t doWrite(Blob&     blob, 
+                                 ByteOrder byteOrder, 
+                                 int32_t   offset) const;
+        virtual uint32_t doWriteValue(Blob&     blob, 
+                                      ByteOrder byteOrder, 
+                                      int32_t   offset, 
+                                      uint32_t  valueIdx, 
+                                      uint32_t  dataIdx) const;
+        virtual uint32_t doWriteData(Blob&     blob, 
+                                     ByteOrder byteOrder, 
+                                     int32_t   offset,
+                                     uint32_t  dataIdx) const;
+        virtual uint32_t doSizeValue() const;
+        virtual uint32_t doSizeData() const;
         //@}
 
     private:
@@ -329,7 +432,7 @@ namespace Exiv2 {
         virtual ~TiffEntry() {}
         //@}
 
-    private:
+    protected:
         //! @name Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
@@ -364,7 +467,7 @@ namespace Exiv2 {
         uint16_t szGroup() const { return szGroup_; }
         //@}
 
-    private:
+    protected:
         //! @name Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
@@ -402,7 +505,7 @@ namespace Exiv2 {
         uint16_t dtGroup() const { return dtGroup_; }
         //@}
 
-    private:
+    protected:
         //! @name Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
@@ -431,19 +534,67 @@ namespace Exiv2 {
         virtual ~TiffDirectory();
         //@}
 
-        //! @name Manipulators
+        //! @name Accessors
         //@{
         //! Return true if the directory has a next pointer
         bool hasNext() const { return hasNext_; }
         //@}
 
-    private:
+    protected:
         //! @name Manipulators
         //@{
         virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual TiffComponent* doAddNext(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
+        //@}
+
+        //! @name Write support (Accessors)
+        //@{
+        virtual uint32_t doWrite(Blob&     blob, 
+                                 ByteOrder byteOrder,
+                                 int32_t  offset) const;
+        /*!
+          @brief This class does not implement writeValue(), instead it
+                 has write(). This method must not be called; it commits
+                 suicide.
+         */
+        virtual uint32_t doWriteValue(Blob&     blob, 
+                                      ByteOrder byteOrder, 
+                                      int32_t   offset, 
+                                      uint32_t  valueIdx, 
+                                      uint32_t  dataIdx) const;
+        /*!
+          @brief This class does not implement writeData(), instead it
+                 has write(). This method must not be called; it commits
+                 suicide.
+         */
+        virtual uint32_t doWriteData(Blob&     blob, 
+                                     ByteOrder byteOrder, 
+                                     int32_t   offset,
+                                     uint32_t  dataIdx) const;
+        /*!
+          @brief This class does not implement sizeValue(). This method 
+                 must not be called; it commits suicide.
+         */
+        virtual uint32_t doSizeValue() const;
+        /*!
+          @brief This class does not implement sizeData(). This method 
+                 must not be called; it commits suicide.
+         */
+        virtual uint32_t doSizeData() const;
+        //@}
+
+    private:
+        //! @name Accessors
+        //@{
+        //! Write a binary directory entry for a TIFF component.
+        uint32_t writeDirEntry(Blob&          blob, 
+                               ByteOrder      byteOrder, 
+                               int32_t        offset,
+                               TiffComponent* pTiffComponent,
+                               uint32_t       valueIdx,
+                               uint32_t       dataIdx) const;
         //@}
 
     private:
@@ -475,7 +626,7 @@ namespace Exiv2 {
         virtual ~TiffSubIfd();
         //@}
 
-    private:
+    protected:
         //! @name Manipulators
         //@{
         virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
@@ -512,7 +663,7 @@ namespace Exiv2 {
         virtual ~TiffMnEntry();
         //@}
 
-    private:
+    protected:
         //! @name Manipulators
         //@{
         virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
@@ -555,7 +706,7 @@ namespace Exiv2 {
         uint16_t  elGroup() const { return elGroup_; }
         //@}
 
-    private:
+    protected:
         //! @name Manipulators
         //@{
         virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
@@ -597,7 +748,7 @@ namespace Exiv2 {
         ByteOrder elByteOrder() const { return elByteOrder_; }
         //@}
 
-    private:
+    protected:
         //! @name Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);

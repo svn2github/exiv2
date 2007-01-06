@@ -80,7 +80,7 @@ namespace Exiv2 {
         ErrMsg( 35, N_("ImageFactory registry full")),
         ErrMsg( 36, N_("Failed to decode %1 metadata")), // %1=type of metadata (Exif, IPTC)
         ErrMsg( 37, N_("Size of %1 JPEG segment is larger than 65535 bytes")), // %1=type of metadata (Exif, IPTC, JPEG comment)
-
+        ErrMsg( 38, N_("TIFF directory %1 has too many entries")), // %1=TIFF directory name
         // Last error message (message is not used)
         ErrMsg( -2, N_("(Unknown Error)"))
     };

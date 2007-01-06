@@ -442,6 +442,226 @@ namespace Exiv2 {
         visitor.visitArrayElement(this);
     } // TiffArrayElement::doAccept
 
+    uint32_t TiffComponent::write(Blob&     blob,
+                                  ByteOrder byteOrder,
+                                  int32_t   offset) const
+    {
+        return doWrite(blob, byteOrder, offset);
+    } // TiffComponent::write
+
+    uint32_t TiffDirectory::doWrite(Blob&     blob,
+                                    ByteOrder byteOrder,
+                                    int32_t   offset) const
+    {
+        // Size of all directory entries, without values and additional data
+        const uint32_t sizeDir = 2 + 12 * components_.size() + (hasNext_ ? 4 : 0);
+
+        // Size of IFD values
+        uint32_t sizeValue = 0;
+        const Components::const_iterator b = components_.begin();
+        const Components::const_iterator e = components_.end();
+        Components::const_iterator i;
+        for (i = b; i != e; ++i) {
+            uint32_t sv = (*i)->sizeValue();
+            if (sv > 4) sizeValue += sv;
+        }
+
+        uint32_t idx = 0;                        // Current IFD index / bytes written
+        uint32_t valueIdx = sizeDir;             // Offset to the current IFD value
+        uint32_t dataIdx  = sizeDir + sizeValue; // Offset to the entry's data area
+
+        // Write the number of directory entries
+        if (components_.size() > 0xffff) {
+            throw Error(38, tiffGroupName(group()));
+        }
+        byte buf[4];
+        us2Data(buf, static_cast<uint16_t>(components_.size()), byteOrder);
+        append(blob, buf, 2);
+        idx += 2;
+
+        // Write directory entries - may contain pointers to the value or data
+        for (i = b; i != e; ++i) {
+            idx += writeDirEntry(blob, byteOrder, offset, *i, valueIdx, dataIdx);
+            uint32_t sv = (*i)->sizeValue();
+            if (sv > 4) valueIdx += sv;
+            dataIdx += (*i)->sizeData();
+        }
+        if (hasNext_) {
+            // Add the offset to the next IFD
+            memset(buf, 0x0, 4);
+            if (pNext_) {
+                l2Data(buf, offset + dataIdx, byteOrder);
+            }
+            append(blob, buf, 4);
+            idx += 4;
+        }
+        assert(idx == sizeDir);
+
+        // Write IFD values - may contain pointers to additional data
+        valueIdx = sizeDir;
+        dataIdx = sizeDir + sizeValue;
+        for (i = b; i != e; ++i) {
+            uint32_t sv = (*i)->sizeValue();
+            if (sv > 4) {
+                idx += (*i)->writeValue(blob, byteOrder, offset, valueIdx, dataIdx);
+                valueIdx += sv;
+            }
+            dataIdx += (*i)->sizeData();
+        }
+
+        assert(idx == sizeDir + sizeValue);
+
+        // Write data - may contain offsets too (eg sub-IFD)
+        dataIdx = sizeDir + sizeValue;
+        for (i = b; i != e; ++i) {
+            idx += (*i)->writeData(blob, byteOrder, offset, dataIdx);
+            dataIdx += (*i)->sizeData();
+        }
+
+        if (pNext_) {
+            idx += pNext_->write(blob, byteOrder, offset + idx);
+        }
+
+        // Todo: Probably another loop over the components to write data that 
+        // goes at the end of everything else...
+
+        return idx;
+    } // TiffDirectory::doWrite
+
+    uint32_t TiffDirectory::writeDirEntry(Blob&          blob, 
+                                          ByteOrder      byteOrder, 
+                                          int32_t        offset,
+                                          TiffComponent* pTiffComponent,
+                                          uint32_t       valueIdx,
+                                          uint32_t       dataIdx) const
+    {
+        assert(pTiffComponent);
+        TiffEntryBase* pTiffEntry = dynamic_cast<TiffEntryBase*>(pTiffComponent);
+        assert(pTiffEntry);
+        byte buf[8];
+        us2Data(buf,     pTiffEntry->tag(),    byteOrder);
+        us2Data(buf + 2, pTiffEntry->typeId(), byteOrder);
+        ul2Data(buf + 4, pTiffEntry->count(),  byteOrder);
+        append(blob, buf, 8);
+        if (pTiffEntry->sizeValue() > 4) {
+            pTiffEntry->setOffset(offset + valueIdx);
+            l2Data(buf, pTiffEntry->offset(), byteOrder);
+            append(blob, buf, 4);
+        }
+        else {
+            const uint32_t len = pTiffEntry->writeValue(blob, 
+                                                        byteOrder, 
+                                                        offset,
+                                                        valueIdx, 
+                                                        dataIdx);
+            if (len < 4) {
+                memset(buf, 0x0, 4);
+                append(blob, buf, 4 - len);
+            }
+        }
+        return 12;
+
+    } // TiffDirectory::writeDirEntry
+
+    uint32_t TiffEntryBase::doWrite(Blob&     /*blob*/,
+                                    ByteOrder /*byteOrder*/,
+                                    int32_t   /*offset*/) const
+    {
+        assert(false);
+        return 0; 
+    } // TiffEntryBase::doWrite
+
+    uint32_t TiffComponent::writeValue(Blob&     blob, 
+                                       ByteOrder byteOrder, 
+                                       int32_t   offset, 
+                                       uint32_t  valueIdx, 
+                                       uint32_t  dataIdx) const
+    {
+        return doWriteValue(blob, byteOrder, offset, valueIdx, dataIdx);
+    } // TiffComponent::writeValue
+
+    uint32_t TiffDirectory::doWriteValue(Blob&     /*blob*/, 
+                                         ByteOrder /*byteOrder*/, 
+                                         int32_t   /*offset*/,
+                                         uint32_t  /*valueIdx*/, 
+                                         uint32_t  /*dataIdx*/) const
+    {
+        assert(false);
+        return 0;
+    } // TiffDirectory::doWriteValue
+
+    uint32_t TiffEntryBase::doWriteValue(Blob&     blob, 
+                                         ByteOrder byteOrder, 
+                                         int32_t   /*offset*/, 
+                                         uint32_t  /*valueIdx*/, 
+                                         uint32_t  /*dataIdx*/) const
+    {
+        if (!pValue_) return 0;
+
+        DataBuf buf(pValue_->size());
+        pValue_->copy(buf.pData_, byteOrder);
+        append(blob, buf.pData_, buf.size_);
+        return buf.size_;
+
+    } // TiffEntryBase::doWriteValue
+
+    uint32_t TiffComponent::writeData(Blob&     blob, 
+                                      ByteOrder byteOrder, 
+                                      int32_t   offset,
+                                      uint32_t  dataIdx) const
+    {
+        return doWriteData(blob, byteOrder, offset, dataIdx);
+    } // TiffComponent::writeData
+
+    uint32_t TiffDirectory::doWriteData(Blob&     /*blob*/,
+                                        ByteOrder /*byteOrder*/,
+                                        int32_t   /*offset*/,
+                                        uint32_t  /*dataIdx*/) const
+    {
+        assert(false);
+        return 0;
+    } // TiffDirectory::doWriteData
+
+    uint32_t TiffEntryBase::doWriteData(Blob&     /*blob*/,
+                                        ByteOrder /*byteOrder*/,
+                                        int32_t   /*offset*/,
+                                        uint32_t  /*dataIdx*/) const
+    {
+        return 0;
+    } // TiffEntryBase::doWriteData
+
+    uint32_t TiffComponent::sizeValue() const
+    {
+        return doSizeValue();
+    } // TiffComponent::sizeValue
+
+    uint32_t TiffDirectory::doSizeValue() const
+    {
+        assert(false); 
+        return 0; 
+    } // TiffDirectory::doSizeValue
+
+    uint32_t TiffEntryBase::doSizeValue() const
+    {
+        return size();
+    } // TiffEntryBase::doSizeValue
+
+    uint32_t TiffComponent::sizeData() const
+    {
+        return doSizeData();
+    } // TiffComponent::sizeData
+
+    uint32_t TiffDirectory::doSizeData() const
+    {
+        assert(false);
+        return 0;
+    } // TiffDirectory::doSizeData
+
+    uint32_t TiffEntryBase::doSizeData() const
+    {
+        return 0;
+    } // TiffEntryBase::doSizeData
+
     // *************************************************************************
     // free functions
 

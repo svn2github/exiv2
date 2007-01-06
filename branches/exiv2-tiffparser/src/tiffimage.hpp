@@ -160,7 +160,10 @@ namespace Exiv2 {
     public:
         //! @name Creators
         //@{
-        //! Default constructor
+        /*!
+          @brief Default constructor. Creates a standard TIFF header with
+                 little-endian (II) byte order and offset and size of 8 bytes.
+         */
         TiffHeade2()
             : byteOrder_ (littleEndian),
               offset_    (0x00000008)
@@ -171,10 +174,12 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Read the TIFF header from a data buffer. Return false if the
-                 data buffer does not contain a TIFF header, else true.
+                 data buffer does not contain a valid TIFF header, else true.
 
           @param pData Pointer to the data buffer.
           @param size  Number of bytes in the data buffer.
+          @return True if the TIFF header was read successfully. False if the
+                 data buffer does not contain a valid TIFF header.
          */
         bool read(const byte* pData, uint32_t size);
         //@}
@@ -186,10 +191,9 @@ namespace Exiv2 {
                  This method appends to the blob.
 
           @param blob Binary image to add to.
-
-          @throw Error If the header cannot be written.
+          @return Number of bytes written.
          */
-        void write(Blob& blob) const;
+        uint32_t write(Blob& blob) const;
         /*!
           @brief Print debug info for the TIFF header to \em os.
 

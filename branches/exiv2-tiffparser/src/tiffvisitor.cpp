@@ -293,6 +293,7 @@ namespace Exiv2 {
                              FindEncoderFct findEncoderFct)
         : pImage_(pImage),
           exifData_(pImage->exifData()),
+          del_(true),
           pRoot_(pRoot),
           byteOrder_(byteOrder),
           origByteOrder_(byteOrder),
@@ -395,7 +396,7 @@ namespace Exiv2 {
         ExifData::iterator pos = exifData_.findKey(key);
         if (pos == exifData_.end()) {
             object->isDeleted_ = true;
-            this->dirty_ = true;
+            dirty_ = true;
 #ifdef DEBUG
             std::cerr << "DELETED     " << key << "\n";
 #endif
@@ -416,7 +417,7 @@ namespace Exiv2 {
                 if (object->isMalloced_) delete[] object->pData_;
                 object->pData_ = new byte[newSize];
                 object->isMalloced_ = true;
-                this->dirty_ = true;
+                dirty_ = true;
 #ifdef DEBUG
                 std::cerr << "ALLOCATED   " << key;
 #endif
@@ -424,7 +425,7 @@ namespace Exiv2 {
             object->type_ = pos->typeId();
             object->count_ = pos->count();
             // offset will be calculated later
-            object->size_ = pos->copy(object->pData_, this->byteOrder());
+            object->size_ = pos->copy(object->pData_, byteOrder());
             assert(object->size_ == newSize);
 #ifdef DEBUG
             if (0 != memcmp(object->pData_, buf.pData_, buf.size_)) {
@@ -433,7 +434,7 @@ namespace Exiv2 {
             std::cerr << "\n";
 #endif
             object->pValue_ = pos->getValue().release();
-            exifData_.erase(pos);
+            if (del_) exifData_.erase(pos);
         }
 
     } // TiffEncoder::encodeStdTiffEntry
@@ -464,13 +465,15 @@ namespace Exiv2 {
                           TiffCompFactoryFct createFct)
     {
         assert(pRootDir != 0);
+        // Ensure that the exifData_ entries are not deleted, to be able to
+        // iterate over all remaining entries.
+        del_ = false;
 
         // Todo: What if an image format has a comment??
         //       i.e., how to take care of non-Exif metadata?
 
-        const ExifData::const_iterator b = exifData_.begin();
-        const ExifData::const_iterator e = exifData_.end();
-        for (ExifData::const_iterator i = b; i != e; ++i) {
+        for (ExifData::const_iterator i = exifData_.begin();
+             i != exifData_.end(); ++i) {
 
             // Assumption is that the corresponding TIFF entry doesn't exist
 
@@ -494,7 +497,9 @@ namespace Exiv2 {
                           << i->tag() << "\n";
             }
 #endif
-            if (object != 0) this->encodeTiffEntry(object);
+            if (object != 0) {
+                encodeTiffEntry(object);
+            }
         }
     } // TiffEncoder::add
 

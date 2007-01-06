@@ -342,12 +342,15 @@ namespace Exiv2 {
                  the Makernote and the rest of the TIFF entries.
          */
         ByteOrder byteOrder() const { return byteOrder_; }
+        //! True if any tag was deleted or allocated
+        bool dirty() const { return dirty_; }
         //@}
 
     private:
         // DATA
         const Image* pImage_;        //!< Pointer to the image with the metadata to encode
         ExifData exifData_;          //!< Copy of the Exif data to encode
+        bool del_;                   //!< Indicates if Exif data entries should be deleted after encoding
         TiffComponent* pRoot_;       //!< Root element of the composite
         ByteOrder byteOrder_;        //!< Byteorder for encoding
         ByteOrder origByteOrder_;    //!< Byteorder as set in the c'tor

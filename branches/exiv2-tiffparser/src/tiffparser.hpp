@@ -117,7 +117,8 @@ namespace Exiv2 {
                            in TIFF format; no checks are performed.
           @param size      Length of the data buffer.
           @return          An auto pointer with the root element of the TIFF
-                           composite structure.
+                           composite structure. If \em pData is 0 or \em size
+                           is 0, the return value is a 0 pointer.
          */
         static std::auto_ptr<TiffComponent>
         parse(const byte*              pData,

@@ -166,6 +166,50 @@ namespace Exiv2 {
         if (visitor.go()) visitor.visitIfdMakernoteEnd(this);
     }
 
+    uint32_t TiffIfdMakernote::doWrite(Blob&     blob,
+                                       ByteOrder byteOrder,
+                                       int32_t   offset) const
+    {
+        // Todo: Implement me!
+        assert(false);
+        return 0; 
+    }
+
+    uint32_t TiffIfdMakernote::doWriteValue(Blob&     blob, 
+                                            ByteOrder byteOrder, 
+                                            int32_t   offset, 
+                                            uint32_t  valueIdx, 
+                                            uint32_t  dataIdx) const
+    {
+        // Todo: Implement me!
+        assert(false);
+        return 0;
+    }
+
+    uint32_t TiffIfdMakernote::doWriteData(Blob&     blob,
+                                           ByteOrder byteOrder,
+                                           int32_t   offset,
+                                           uint32_t  dataIdx) const
+    {
+        // Todo: Implement me!
+        assert(false);
+        return 0;
+    }
+
+    uint32_t TiffIfdMakernote::doSizeValue() const
+    {
+        // Todo: Implement me!
+        assert(false);
+        return 0;
+    }
+
+    uint32_t TiffIfdMakernote::doSizeData() const
+    {
+        // Todo: Implement me!
+        assert(false);
+        return 0;
+    }
+
     const byte OlympusMnHeader::signature_[] = {
         'O', 'L', 'Y', 'M', 'P', 0x00, 0x01, 0x00
     };

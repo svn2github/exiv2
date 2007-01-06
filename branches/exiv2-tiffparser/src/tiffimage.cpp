@@ -151,7 +151,6 @@ namespace Exiv2 {
                 }
             }
         }
-
         Blob blob;
         TiffParser::encode(blob,
                            buf.pData_,
@@ -159,11 +158,17 @@ namespace Exiv2 {
                            this,
                            TiffCreator::create,
                            TiffMapping::findEncoder);
-
-        // Write new buffer to file
+        // Write updated or new buffer to file
         BasicIo::AutoPtr tempIo(io_->temporary()); // may throw
-        assert (tempIo.get() != 0);
-        tempIo->write(&blob[0], static_cast<long>(blob.size()));
+        assert(tempIo.get() != 0);
+        if (blob.size() == 0) {
+            // Buffer may be modified but size is unchanged, write buffer back
+            tempIo->write(buf.pData_, buf.size_);
+        }
+        else {
+            // Size of the buffer changed, write from blob
+            tempIo->write(&blob[0], static_cast<long>(blob.size()));
+        }
         io_->close();
         io_->transfer(*tempIo); // may throw
 
@@ -178,7 +183,7 @@ namespace Exiv2 {
 
     bool TiffHeade2::read(const byte* pData, uint32_t size)
     {
-        if (size < 8) return false;
+        if (!pData || size < 8) return false;
 
         if (pData[0] == 0x49 && pData[1] == 0x49) {
             byteOrder_ = littleEndian;
@@ -194,6 +199,30 @@ namespace Exiv2 {
 
         return true;
     } // TiffHeade2::read
+
+    uint32_t TiffHeade2::write(Blob& blob) const
+    {
+        byte buf[8];
+        switch (byteOrder_) {
+        case littleEndian:
+            buf[0] = 0x49;
+            buf[1] = 0x49;
+            break;
+        case bigEndian:
+            buf[0] = 0x4d;
+            buf[1] = 0x4d;
+            break;
+        case invalidByteOrder:
+            // Bail out (done within case stmt to avoid compiler warning)
+            assert(false);
+            break;
+        }
+        us2Data(buf + 2, tag_, byteOrder_);
+        ul2Data(buf + 4, 0x00000008, byteOrder_);
+        append(blob, buf, 8);
+        return 8;
+
+    }
 
     void TiffHeade2::print(std::ostream& os, const std::string& prefix) const
     {

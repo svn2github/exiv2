@@ -52,6 +52,7 @@ EXIV2_RCSID("@(#) $Id$")
 
    Todo:
 
+   + Support all TIFF data types
    + Review boundary checking, is it better to check the offsets?
    + Define and implement consistent error handling for recursive hierarchy
    + Make TiffImage a template StandardImage, which can be parametrized with
@@ -67,13 +68,17 @@ EXIV2_RCSID("@(#) $Id$")
      And maybe no next pointer either.
    + Filtering of large unknown tags: Should be moved to writing/encoding code
      and done only if really needed (i.e., if writing to a Jpeg segment)
+   + Make Tiff parser completely standalone, depending only on very low level
+     stuff from exiv2
 
    in crwimage.* :
 
    + Fix CiffHeader according to TiffHeade2
    + Combine Error(15) and Error(33), add format argument %1
    + Search crwimage for todos, fix writeMetadata comment
-   + rename all Ciff stuff to Crw for easier reference
+   + Add Ciff components to TIFF component hierarchy
+   + rename all Ciff stuff to Crw for easier reference - not needed when CIFF
+     components are part of the TIFF hierarchy
    + rename loadStack to getPath for consistency
 
    -------------------------------------------------------------------------- */
@@ -311,15 +316,6 @@ namespace Exiv2 {
 
     } // TiffParser::decode
 
-    void TiffParser::encode(Blob&              blob,
-                            const byte*        pData,
-                            uint32_t           size,
-                            const Image*       pImage,
-                            TiffCompFactoryFct createFct,
-                            FindEncoderFct     findEncoderFct)
-    {
-        // Todo: What if there is no target image yet?
-        TiffComponent::AutoPtr rootDir = parse(pData, size, createFct);
 
 /*
   TODO
@@ -337,42 +333,54 @@ namespace Exiv2 {
 
  */
 
+    void TiffParser::encode(Blob&              blob,
+                            const byte*        pData,
+                            uint32_t           size,
+                            const Image*       pImage,
+                            TiffCompFactoryFct createFct,
+                            FindEncoderFct     findEncoderFct)
+    {
+        // Todo: What if there is no target image yet?
         assert(pImage != 0);
 
-        // Todo: Image should have a byteOrder() interface
+        TiffComponent::AutoPtr rootDir = parse(pData, size, createFct);
+        if (0 == rootDir.get()) {
+            rootDir = createFct(Tag::root, Group::none);
+        }
+        assert(rootDir.get());
+        // Todo: Hack: Reads the header again to get byteorder. Image should 
+        // have byteOrder() and possibly setByteOrder() methods
         TiffHeade2 tiffHeader;
-        if (!tiffHeader.read(pData, size)) {
+        if (pData != 0 && !tiffHeader.read(pData, size)) {
             throw Error(3, "TIFF");
         }
-
+        // Update existing TIFF components based on metadata entries
         TiffEncoder encoder(pImage,
                             rootDir.get(),
                             tiffHeader.byteOrder(),
                             findEncoderFct);
-
-        if (0 != rootDir.get()) rootDir->accept(encoder);
-
-        // Add remaining entries from metadata to composite
-        // Todo: What if root dir is not set yet? rootDir =
+        rootDir->accept(encoder);
+        // Add remaining entries from metadata to composite, if any
         encoder.add(rootDir.get(), createFct);
-/*
-        if (0 != rootDir.get()) {
-            TiffWriter writer(blob, rootDir.get());
-            rootDir->accept(writer);
+        if (encoder.dirty()) {
+            //! Re-write binary representation from the composite tree
+            tiffHeader.write(blob);
+            rootDir->write(blob, tiffHeader.byteOrder(), tiffHeader.ifdOffset());
         }
-*/
+
     } // TiffParser::encode
 
     TiffComponent::AutoPtr TiffParser::parse(const byte*        pData,
                                              uint32_t           size,
                                              TiffCompFactoryFct createFct)
     {
-        assert(pData != 0);
+        if (pData == 0 || size == 0) return TiffComponent::AutoPtr(0);
 
         TiffHeade2 tiffHeader;
         if (!tiffHeader.read(pData, size) || tiffHeader.ifdOffset() >= size) {
             throw Error(3, "TIFF");
         }
+
         TiffComponent::AutoPtr rootDir = createFct(Tag::root, Group::none);
         if (0 != rootDir.get()) {
             rootDir->setStart(pData + tiffHeader.ifdOffset());
