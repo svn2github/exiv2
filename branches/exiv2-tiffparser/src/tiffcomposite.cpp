@@ -139,7 +139,7 @@ namespace Exiv2 {
     TiffSubIfd::TiffSubIfd(uint16_t tag, uint16_t group, uint16_t newGroup)
         : TiffEntryBase(tag, group), newGroup_(newGroup)
     {
-        this->setTypeId(unsignedLong);
+        setTypeId(unsignedLong);
     }
 
     TiffArrayEntry::TiffArrayEntry(uint16_t tag,
@@ -150,7 +150,7 @@ namespace Exiv2 {
           elSize_(static_cast<uint16_t>(TypeInfo::typeSize(elTypeId))),
           elGroup_(elGroup)
     {
-        this->setTypeId(elTypeId);
+        setTypeId(elTypeId);
     }
 
     TiffDirectory::~TiffDirectory()
@@ -232,7 +232,6 @@ namespace Exiv2 {
             }
         }
         return tc->addPath(tag, tiffPath);
-
     } // TiffDirectory::doAddPath
 
     TiffComponent* TiffSubIfd::doAddPath(uint16_t tag, TiffPath& tiffPath)
@@ -258,7 +257,6 @@ namespace Exiv2 {
             this->setCount(this->count() + 1);
         }
         return tc->addPath(tag, tiffPath);
-
     } // TiffSubIfd::doAddPath
 
     TiffComponent* TiffMnEntry::doAddPath(uint16_t tag, TiffPath& tiffPath)
@@ -276,7 +274,6 @@ namespace Exiv2 {
             assert(mn_);
         }
         return mn_->addPath(tag, tiffPath);
-
     } // TiffMnEntry::doAddPath
 
     TiffComponent* TiffArrayEntry::doAddPath(uint16_t tag, TiffPath& tiffPath)
@@ -305,7 +302,6 @@ namespace Exiv2 {
             this->setCount(this->count() + 1);
         }
         return tc->addPath(tag, tiffPath);
-
     } // TiffArrayEntry::doAddPath
 
     TiffComponent* TiffComponent::addChild(TiffComponent::AutoPtr tiffComponent)
@@ -318,7 +314,6 @@ namespace Exiv2 {
         TiffComponent* tc = tiffComponent.release();
         components_.push_back(tc);
         return tc;
-
     } // TiffDirectory::doAddChild
 
     TiffComponent* TiffSubIfd::doAddChild(TiffComponent::AutoPtr tiffComponent)
@@ -327,7 +322,6 @@ namespace Exiv2 {
         assert(d);
         ifds_.push_back(d);
         return d;
-
     } // TiffSubIfd::doAddChild
 
     TiffComponent* TiffMnEntry::doAddChild(TiffComponent::AutoPtr tiffComponent)
@@ -337,7 +331,6 @@ namespace Exiv2 {
             tc =  mn_->addChild(tiffComponent);
         }
         return tc;
-
     } // TiffMnEntry::doAddChild
 
     TiffComponent* TiffArrayEntry::doAddChild(TiffComponent::AutoPtr tiffComponent)
@@ -345,7 +338,6 @@ namespace Exiv2 {
         TiffComponent* tc = tiffComponent.release();
         elements_.push_back(tc);
         return tc;
-
     } // TiffArrayEntry::doAddChild
 
     TiffComponent* TiffComponent::addNext(TiffComponent::AutoPtr tiffComponent)
@@ -361,7 +353,6 @@ namespace Exiv2 {
             pNext_ = tc;
         }
         return tc;
-
     } // TiffDirectory::doAddNext
 
     TiffComponent* TiffMnEntry::doAddNext(TiffComponent::AutoPtr tiffComponent)
@@ -371,7 +362,6 @@ namespace Exiv2 {
             tc = mn_->addNext(tiffComponent);
         }
         return tc;
-
     } // TiffMnEntry::doAddNext
 
     void TiffComponent::accept(TiffVisitor& visitor)
@@ -405,7 +395,6 @@ namespace Exiv2 {
         if (visitor.go()) visitor.visitDirectoryNext(this);
         if (pNext_) pNext_->accept(visitor);
         if (visitor.go()) visitor.visitDirectoryEnd(this);
-
     } // TiffDirectory::doAccept
 
     void TiffSubIfd::doAccept(TiffVisitor& visitor)
@@ -442,16 +431,20 @@ namespace Exiv2 {
         visitor.visitArrayElement(this);
     } // TiffArrayElement::doAccept
 
-    uint32_t TiffComponent::write(Blob&     blob,
-                                  ByteOrder byteOrder,
-                                  int32_t   offset) const
+    uint32_t TiffComponent::write(Blob&     blob, 
+                                  ByteOrder byteOrder, 
+                                  int32_t   offset, 
+                                  uint32_t  valueIdx, 
+                                  uint32_t  dataIdx) const
     {
-        return doWrite(blob, byteOrder, offset);
+        return doWrite(blob, byteOrder, offset, valueIdx, dataIdx);
     } // TiffComponent::write
 
     uint32_t TiffDirectory::doWrite(Blob&     blob,
                                     ByteOrder byteOrder,
-                                    int32_t   offset) const
+                                    int32_t   offset,
+				    uint32_t  valueIdx, 
+                                    uint32_t  dataIdx) const
     {
         // Size of all directory entries, without values and additional data
         const uint32_t sizeDir = 2 + 12 * components_.size() + (hasNext_ ? 4 : 0);
@@ -462,13 +455,13 @@ namespace Exiv2 {
         const Components::const_iterator e = components_.end();
         Components::const_iterator i;
         for (i = b; i != e; ++i) {
-            uint32_t sv = (*i)->sizeValue();
+            uint32_t sv = (*i)->size();
             if (sv > 4) sizeValue += sv;
         }
 
-        uint32_t idx = 0;                        // Current IFD index / bytes written
-        uint32_t valueIdx = sizeDir;             // Offset to the current IFD value
-        uint32_t dataIdx  = sizeDir + sizeValue; // Offset to the entry's data area
+        uint32_t idx = 0;                   // Current IFD index / bytes written
+        valueIdx = sizeDir;                 // Offset to the current IFD value
+        dataIdx  = sizeDir + sizeValue;     // Offset to the entry's data area
 
         // Write the number of directory entries
         if (components_.size() > 0xffff) {
@@ -482,7 +475,7 @@ namespace Exiv2 {
         // Write directory entries - may contain pointers to the value or data
         for (i = b; i != e; ++i) {
             idx += writeDirEntry(blob, byteOrder, offset, *i, valueIdx, dataIdx);
-            uint32_t sv = (*i)->sizeValue();
+            uint32_t sv = (*i)->size();
             if (sv > 4) valueIdx += sv;
             dataIdx += (*i)->sizeData();
         }
@@ -501,14 +494,13 @@ namespace Exiv2 {
         valueIdx = sizeDir;
         dataIdx = sizeDir + sizeValue;
         for (i = b; i != e; ++i) {
-            uint32_t sv = (*i)->sizeValue();
+            uint32_t sv = (*i)->size();
             if (sv > 4) {
-                idx += (*i)->writeValue(blob, byteOrder, offset, valueIdx, dataIdx);
+                idx += (*i)->write(blob, byteOrder, offset, valueIdx, dataIdx);
                 valueIdx += sv;
             }
             dataIdx += (*i)->sizeData();
         }
-
         assert(idx == sizeDir + sizeValue);
 
         // Write data - may contain offsets too (eg sub-IFD)
@@ -519,17 +511,17 @@ namespace Exiv2 {
         }
 
         if (pNext_) {
-            idx += pNext_->write(blob, byteOrder, offset + idx);
+            idx += pNext_->write(blob, byteOrder, offset + idx, uint32_t(-1), uint32_t(-1));
         }
 
-        // Todo: Probably another loop over the components to write data that 
-        // goes at the end of everything else...
+        // Todo: Another loop over the components to write data that 
+        // goes at the end of everything else?
 
         return idx;
     } // TiffDirectory::doWrite
 
-    uint32_t TiffDirectory::writeDirEntry(Blob&          blob, 
-                                          ByteOrder      byteOrder, 
+    uint32_t TiffDirectory::writeDirEntry(Blob&          blob,
+                                          ByteOrder      byteOrder,
                                           int32_t        offset,
                                           TiffComponent* pTiffComponent,
                                           uint32_t       valueIdx,
@@ -543,58 +535,30 @@ namespace Exiv2 {
         us2Data(buf + 2, pTiffEntry->typeId(), byteOrder);
         ul2Data(buf + 4, pTiffEntry->count(),  byteOrder);
         append(blob, buf, 8);
-        if (pTiffEntry->sizeValue() > 4) {
+        if (pTiffEntry->size() > 4) {
             pTiffEntry->setOffset(offset + valueIdx);
             l2Data(buf, pTiffEntry->offset(), byteOrder);
             append(blob, buf, 4);
         }
         else {
-            const uint32_t len = pTiffEntry->writeValue(blob, 
-                                                        byteOrder, 
-                                                        offset,
-                                                        valueIdx, 
-                                                        dataIdx);
+            const uint32_t len = pTiffEntry->write(blob, 
+                                                   byteOrder, 
+                                                   offset,
+                                                   valueIdx, 
+                                                   dataIdx);
             if (len < 4) {
                 memset(buf, 0x0, 4);
                 append(blob, buf, 4 - len);
             }
         }
         return 12;
-
     } // TiffDirectory::writeDirEntry
 
-    uint32_t TiffEntryBase::doWrite(Blob&     /*blob*/,
-                                    ByteOrder /*byteOrder*/,
-                                    int32_t   /*offset*/) const
-    {
-        assert(false);
-        return 0; 
-    } // TiffEntryBase::doWrite
-
-    uint32_t TiffComponent::writeValue(Blob&     blob, 
-                                       ByteOrder byteOrder, 
-                                       int32_t   offset, 
-                                       uint32_t  valueIdx, 
-                                       uint32_t  dataIdx) const
-    {
-        return doWriteValue(blob, byteOrder, offset, valueIdx, dataIdx);
-    } // TiffComponent::writeValue
-
-    uint32_t TiffDirectory::doWriteValue(Blob&     /*blob*/, 
-                                         ByteOrder /*byteOrder*/, 
-                                         int32_t   /*offset*/,
-                                         uint32_t  /*valueIdx*/, 
-                                         uint32_t  /*dataIdx*/) const
-    {
-        assert(false);
-        return 0;
-    } // TiffDirectory::doWriteValue
-
-    uint32_t TiffEntryBase::doWriteValue(Blob&     blob, 
-                                         ByteOrder byteOrder, 
-                                         int32_t   /*offset*/, 
-                                         uint32_t  /*valueIdx*/, 
-                                         uint32_t  /*dataIdx*/) const
+    uint32_t TiffEntryBase::doWrite(Blob&     blob, 
+                                    ByteOrder byteOrder, 
+                                    int32_t   /*offset*/, 
+                                    uint32_t  /*valueIdx*/, 
+                                    uint32_t  /*dataIdx*/) const
     {
         if (!pValue_) return 0;
 
@@ -602,8 +566,23 @@ namespace Exiv2 {
         pValue_->copy(buf.pData_, byteOrder);
         append(blob, buf.pData_, buf.size_);
         return buf.size_;
+    } // TiffEntryBase::doWrite
 
-    } // TiffEntryBase::doWriteValue
+    uint32_t TiffSubIfd::doWrite(Blob&     blob,
+			         ByteOrder byteOrder,
+			         int32_t   offset,
+			         uint32_t  /*valueIdx*/,
+			         uint32_t  dataIdx) const
+    {
+	DataBuf buf(ifds_.size() * 4);
+	uint32_t idx = 0;
+        for (Ifds::const_iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
+	    idx += l2Data(buf.pData_ + idx, offset + dataIdx, byteOrder);
+	    dataIdx += (*i)->size();
+        }
+	append(blob, buf.pData_, buf.size_);
+	return buf.size_;
+    } // TiffSubIfd::doWrite
 
     uint32_t TiffComponent::writeData(Blob&     blob, 
                                       ByteOrder byteOrder, 
@@ -618,7 +597,7 @@ namespace Exiv2 {
                                         int32_t   /*offset*/,
                                         uint32_t  /*dataIdx*/) const
     {
-        assert(false);
+        assert(false);		// Overwrite to do something more useful
         return 0;
     } // TiffDirectory::doWriteData
 
@@ -630,21 +609,50 @@ namespace Exiv2 {
         return 0;
     } // TiffEntryBase::doWriteData
 
-    uint32_t TiffComponent::sizeValue() const
+    uint32_t TiffSubIfd::doWriteData(Blob&     blob, 
+				     ByteOrder byteOrder, 
+				     int32_t   offset,
+				     uint32_t  dataIdx) const
     {
-        return doSizeValue();
-    } // TiffComponent::sizeValue
+	uint32_t len = 0;
+        for (Ifds::const_iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
+	    len  += (*i)->write(blob, byteOrder, offset + dataIdx + len, uint32_t(-1), uint32_t(-1));
+        }
+	return len;
+    } // TiffSubIfd::doWriteData
 
-    uint32_t TiffDirectory::doSizeValue() const
+    uint32_t TiffComponent::size() const
     {
-        assert(false); 
-        return 0; 
-    } // TiffDirectory::doSizeValue
+        return doSize();
+    } // TiffComponent::size
 
-    uint32_t TiffEntryBase::doSizeValue() const
+    uint32_t TiffDirectory::doSize() const
     {
-        return size();
-    } // TiffEntryBase::doSizeValue
+        // Size of the directory, without values and additional data
+        uint32_t len = 2 + 12 * components_.size() + (hasNext_ ? 4 : 0);
+        // Size of IFD values and data
+        for (Components::const_iterator i = components_.begin();
+	     i != components_.end(); ++i) {
+            uint32_t sv = (*i)->size();
+            if (sv > 4) len += sv;
+	    len += (*i)->sizeData();
+        }
+	// Size of next-IFD, if any
+        if (pNext_) {
+            len += pNext_->size();
+        }
+	return len;
+    } // TiffDirectory::doSize
+
+    uint32_t TiffEntryBase::doSize() const
+    {
+        return size_;
+    } // TiffEntryBase::doSize
+
+    uint32_t TiffSubIfd::doSize() const
+    {
+	return ifds_.size() * 4;
+    } // TiffSubIfd::doSize
 
     uint32_t TiffComponent::sizeData() const
     {
@@ -661,6 +669,15 @@ namespace Exiv2 {
     {
         return 0;
     } // TiffEntryBase::doSizeData
+
+    uint32_t TiffSubIfd::doSizeData() const
+    {
+	uint32_t len = 0;
+        for (Ifds::const_iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
+	    len += (*i)->size();
+        }
+        return len;
+    } // TiffSubIfd::doSizeData
 
     // *************************************************************************
     // free functions

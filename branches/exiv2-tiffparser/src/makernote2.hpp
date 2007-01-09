@@ -257,35 +257,14 @@ namespace Exiv2 {
         //@{
         virtual uint32_t doWrite(Blob&     blob, 
                                  ByteOrder byteOrder, 
-                                 int32_t   offset) const;
-        /*!
-          @brief This class does not implement writeValue(), instead it
-                 has write(). This method must not be called; it commits
-                 suicide.
-         */
-        virtual uint32_t doWriteValue(Blob&     blob, 
-                                      ByteOrder byteOrder, 
-                                      int32_t   offset, 
-                                      uint32_t  valueIdx, 
-                                      uint32_t  dataIdx) const;
-        /*!
-          @brief This class does not implement writeData(), instead it
-                 has write(). This method must not be called; it commits
-                 suicide.
-         */
+                                 int32_t   offset,
+                                 uint32_t  valueIdx, 
+                                 uint32_t  dataIdx) const;
         virtual uint32_t doWriteData(Blob&     blob, 
                                      ByteOrder byteOrder, 
                                      int32_t   offset,
                                      uint32_t  dataIdx) const;
-        /*!
-          @brief This class does not implement sizeValue(). This method 
-                 must not be called; it commits suicide.
-         */
-        virtual uint32_t doSizeValue() const;
-        /*!
-          @brief This class does not implement sizeData(). This method 
-                 must not be called; it commits suicide.
-         */
+        virtual uint32_t doSize() const;
         virtual uint32_t doSizeData() const;
         //@}
 

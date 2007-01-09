@@ -365,9 +365,8 @@ namespace Exiv2 {
         if (encoder.dirty()) {
             //! Re-write binary representation from the composite tree
             tiffHeader.write(blob);
-            rootDir->write(blob, tiffHeader.byteOrder(), tiffHeader.ifdOffset());
+            rootDir->write(blob, tiffHeader.byteOrder(), tiffHeader.ifdOffset(), uint32_t(-1), uint32_t(-1));
         }
-
     } // TiffParser::encode
 
     TiffComponent::AutoPtr TiffParser::parse(const byte*        pData,
