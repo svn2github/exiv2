@@ -115,6 +115,7 @@ BINSRC = addmoddel.cpp        \
          taglist.cpp          \
          write-test.cpp       \
          write2-test.cpp      \
+         tiff-test.cpp        \
          tiffaddpath-test.cpp \
          tiffgetpath-test.cpp \
          tiffparse.cpp

@@ -167,7 +167,7 @@ namespace Exiv2 {
                  the start of the Makernote (= the start of the header).
          */
         virtual uint32_t ifdOffset() const { return 0; }
- 	/*!
+        /*!
           @brief Return the byte order for the makernote. If the return value is
                  invalidByteOrder, this means that the byte order of the the
                  image should be used for the makernote.
@@ -227,7 +227,7 @@ namespace Exiv2 {
                  the start of the Makernote.
          */
         uint32_t ifdOffset() const;
- 	/*!
+        /*!
           @brief Return the byte order for the makernote. Default (if there is
                  no header) is invalidByteOrder. This means that the byte order
                  of the the image should be used for the makernote.

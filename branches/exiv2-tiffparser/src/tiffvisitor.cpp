@@ -338,6 +338,42 @@ namespace Exiv2 {
         // Nothing to do
     }
 
+    void TiffEncoder::visitDirectoryNext(TiffDirectory* object)
+    {
+        // Update type and count in IFD entries, in case they changed
+        assert(object != 0);
+
+        byte* p = object->start() + 2;
+        for (TiffDirectory::Components::iterator i = object->components_.begin();
+             i != object->components_.end(); ++i) {
+            p += updateDirEntry(p, byteOrder(), *i);
+        }
+    }
+
+    uint32_t TiffEncoder::updateDirEntry(byte* buf,
+                                         ByteOrder byteOrder, 
+                                         TiffComponent* pTiffComponent) const
+    {
+        assert(buf);
+        assert(pTiffComponent);
+        TiffEntryBase* pTiffEntry = dynamic_cast<TiffEntryBase*>(pTiffComponent);
+        assert(pTiffEntry);
+        us2Data(buf + 2, pTiffEntry->typeId(), byteOrder);
+        ul2Data(buf + 4, pTiffEntry->count(),  byteOrder);
+        // Move data to offset field, if it fits and is not yet there.
+        if (pTiffEntry->size() <= 4 && buf + 8 != pTiffEntry->pData()) {
+
+            // Todo: Remove debug output
+            std::cerr << "Copying data for tag " << pTiffEntry->tag()
+                      << " to offset area.\n";
+
+            memset(buf + 8, 0x0, 4);
+            memcpy(buf + 8, pTiffEntry->pData(), pTiffEntry->size());
+            memset(const_cast<byte*>(pTiffEntry->pData()), 0x0, pTiffEntry->size());
+        }
+        return 12;
+    }
+
     void TiffEncoder::visitSubIfd(TiffSubIfd* object)
     {
         encodeTiffEntry(object);
@@ -414,9 +450,7 @@ namespace Exiv2 {
 #endif
             }
             else {
-                if (object->isMalloced_) delete[] object->pData_;
-                object->pData_ = new byte[newSize];
-                object->isMalloced_ = true;
+                object->allocData(newSize);
                 dirty_ = true;
 #ifdef DEBUG
                 std::cerr << "ALLOCATED   " << key;
@@ -691,7 +725,10 @@ namespace Exiv2 {
         pRoot_->accept(finder);
         TiffEntryBase* te = dynamic_cast<TiffEntryBase*>(finder.result());
         if (te && te->pValue()) {
-            setDataArea(object, te->pValue());
+            setDataArea(const_cast<Value*>(object->pValue()), 
+                        te->pValue(), 
+                        object->tag(), 
+                        object->group());
         }
     }
 
@@ -704,17 +741,20 @@ namespace Exiv2 {
         pRoot_->accept(finder);
         TiffEntryBase* te = dynamic_cast<TiffEntryBase*>(finder.result());
         if (te && te->pValue()) {
-            setDataArea(te, object->pValue());
+            setDataArea(const_cast<Value*>(te->pValue()),
+                        object->pValue(), 
+                        te->tag(),
+                        te->group());
         }
     }
 
-    void TiffReader::setDataArea(TiffEntryBase* pOffsetEntry, const Value* pSize)
+    void TiffReader::setDataArea(Value*       pOffset,
+                                 const Value* pSize,
+                                 uint16_t     tag,
+                                 uint16_t     group)
     {
-        assert(pOffsetEntry);
-        assert(pSize);
-
-        Value* pOffset = pOffsetEntry->pValue_;
         assert(pOffset);
+        assert(pSize);
 
         long size = 0;
         for (long i = 0; i < pSize->count(); ++i) {
@@ -728,9 +768,9 @@ namespace Exiv2 {
             - offset != size) {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Warning: "
-                      << "Directory " << tiffGroupName(pOffsetEntry->group())
+                      << "Directory " << tiffGroupName(group)
                       << ", entry 0x" << std::setw(4)
-                      << std::setfill('0') << std::hex << pOffsetEntry->tag()
+                      << std::setfill('0') << std::hex << tag
                       << " Data area is not contiguous, ignoring it.\n";
 #endif
             return;
@@ -738,9 +778,9 @@ namespace Exiv2 {
         if (baseOffset() + offset + size > size_) {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Warning: "
-                      << "Directory " << tiffGroupName(pOffsetEntry->group())
+                      << "Directory " << tiffGroupName(group)
                       << ", entry 0x" << std::setw(4)
-                      << std::setfill('0') << std::hex << pOffsetEntry->tag()
+                      << std::setfill('0') << std::hex << tag
                       << " Data area exceeds data buffer, ignoring it.\n";
 #endif
             return;
@@ -960,11 +1000,11 @@ namespace Exiv2 {
         p += 2;
         object->count_ = getULong(p, byteOrder());
         p += 4;
-        object->size_ = typeSize * object->count();
-        object->offset_ = getULong(p, byteOrder());
+        object->size_ = typeSize * object->count_;
+        object->offset_ = getLong(p, byteOrder());
         object->pData_ = p;
-        if (object->size() > 4) {
-            if (baseOffset() + object->offset() >= size_) {
+        if (object->size_ > 4) {
+            if (baseOffset() + object->offset_ >= size_) {
 #ifndef SUPPRESS_WARNINGS
                 std::cerr << "Error: Offset of "
                           << "directory " << tiffGroupName(object->group())
@@ -972,7 +1012,7 @@ namespace Exiv2 {
                           << std::setfill('0') << std::hex << object->tag()
                           << " is out of bounds:\n"
                           << "Offset = 0x" << std::setw(8)
-                          << std::setfill('0') << std::hex << object->offset()
+                          << std::setfill('0') << std::hex << object->offset_
                           << "; truncating the entry\n";
 #endif
                 object->size_ = 0;
@@ -980,8 +1020,8 @@ namespace Exiv2 {
                 object->offset_ = 0;
                 return;
             }
-            object->pData_ = const_cast<byte*>(pData_) + baseOffset() + object->offset();
-            if (object->size() > static_cast<uint32_t>(pLast_ - object->pData())) {
+            object->pData_ = const_cast<byte*>(pData_) + baseOffset() + object->offset_;
+            if (object->size_ > static_cast<uint32_t>(pLast_ - object->pData_)) {
 #ifndef SUPPRESS_WARNINGS
                 std::cerr << "Warning: Upper boundary of data for "
                           << "directory " << tiffGroupName(object->group())
@@ -989,14 +1029,14 @@ namespace Exiv2 {
                           << std::setfill('0') << std::hex << object->tag()
                           << " is out of bounds:\n"
                           << "Offset = 0x" << std::setw(8)
-                          << std::setfill('0') << std::hex << object->offset()
-                          << ", size = " << std::dec << object->size()
+                          << std::setfill('0') << std::hex << object->offset_
+                          << ", size = " << std::dec << object->size_
                           << ", exceeds buffer size by "
                           // cast to make MSVC happy
-                          << static_cast<uint32_t>(object->pData() + object->size() - pLast_)
+                          << static_cast<uint32_t>(object->pData_ + object->size_ - pLast_)
                           << " Bytes; adjusting the size\n";
 #endif
-                object->size_ = static_cast<uint32_t>(pLast_ - object->pData() + 1);
+                object->size_ = static_cast<uint32_t>(pLast_ - object->pData_ + 1);
                 // todo: adjust count_, make size_ a multiple of typeSize
             }
         }
@@ -1011,7 +1051,7 @@ namespace Exiv2 {
         }
         Value::AutoPtr v = Value::create(t);
         if (v.get()) {
-            v->read(object->pData(), object->size(), byteOrder());
+            v->read(object->pData_, object->size_, byteOrder());
             object->pValue_ = v.release();
         }
 

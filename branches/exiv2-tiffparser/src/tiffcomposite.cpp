@@ -178,6 +178,16 @@ namespace Exiv2 {
         delete pValue_;
     } // TiffEntryBase::~TiffEntryBase
 
+    void TiffEntryBase::allocData(uint32_t len)
+    {
+        if (isMalloced_) {
+            delete[] pData_;
+        }
+        pData_ = new byte[len];
+        size_ = len;
+        isMalloced_ = true;
+    } // TiffEntryBase::allocData
+
     TiffMnEntry::~TiffMnEntry()
     {
         delete mn_;
@@ -443,7 +453,7 @@ namespace Exiv2 {
     uint32_t TiffDirectory::doWrite(Blob&     blob,
                                     ByteOrder byteOrder,
                                     int32_t   offset,
-				    uint32_t  valueIdx, 
+                                    uint32_t  valueIdx, 
                                     uint32_t  dataIdx) const
     {
         // Size of all directory entries, without values and additional data
@@ -536,7 +546,7 @@ namespace Exiv2 {
         ul2Data(buf + 4, pTiffEntry->count(),  byteOrder);
         append(blob, buf, 8);
         if (pTiffEntry->size() > 4) {
-            pTiffEntry->setOffset(offset + valueIdx);
+            pTiffEntry->setOffset(offset + static_cast<int32_t>(valueIdx));
             l2Data(buf, pTiffEntry->offset(), byteOrder);
             append(blob, buf, 4);
         }
@@ -569,19 +579,19 @@ namespace Exiv2 {
     } // TiffEntryBase::doWrite
 
     uint32_t TiffSubIfd::doWrite(Blob&     blob,
-			         ByteOrder byteOrder,
-			         int32_t   offset,
-			         uint32_t  /*valueIdx*/,
-			         uint32_t  dataIdx) const
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  /*valueIdx*/,
+                                 uint32_t  dataIdx) const
     {
-	DataBuf buf(ifds_.size() * 4);
-	uint32_t idx = 0;
+        DataBuf buf(ifds_.size() * 4);
+        uint32_t idx = 0;
         for (Ifds::const_iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
-	    idx += l2Data(buf.pData_ + idx, offset + dataIdx, byteOrder);
-	    dataIdx += (*i)->size();
+            idx += l2Data(buf.pData_ + idx, offset + dataIdx, byteOrder);
+            dataIdx += (*i)->size();
         }
-	append(blob, buf.pData_, buf.size_);
-	return buf.size_;
+        append(blob, buf.pData_, buf.size_);
+        return buf.size_;
     } // TiffSubIfd::doWrite
 
     uint32_t TiffComponent::writeData(Blob&     blob, 
@@ -597,7 +607,7 @@ namespace Exiv2 {
                                         int32_t   /*offset*/,
                                         uint32_t  /*dataIdx*/) const
     {
-        assert(false);		// Overwrite to do something more useful
+        assert(false);          // Overwrite to do something more useful
         return 0;
     } // TiffDirectory::doWriteData
 
@@ -610,15 +620,15 @@ namespace Exiv2 {
     } // TiffEntryBase::doWriteData
 
     uint32_t TiffSubIfd::doWriteData(Blob&     blob, 
-				     ByteOrder byteOrder, 
-				     int32_t   offset,
-				     uint32_t  dataIdx) const
+                                     ByteOrder byteOrder, 
+                                     int32_t   offset,
+                                     uint32_t  dataIdx) const
     {
-	uint32_t len = 0;
+        uint32_t len = 0;
         for (Ifds::const_iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
-	    len  += (*i)->write(blob, byteOrder, offset + dataIdx + len, uint32_t(-1), uint32_t(-1));
+            len  += (*i)->write(blob, byteOrder, offset + dataIdx + len, uint32_t(-1), uint32_t(-1));
         }
-	return len;
+        return len;
     } // TiffSubIfd::doWriteData
 
     uint32_t TiffComponent::size() const
@@ -632,27 +642,22 @@ namespace Exiv2 {
         uint32_t len = 2 + 12 * components_.size() + (hasNext_ ? 4 : 0);
         // Size of IFD values and data
         for (Components::const_iterator i = components_.begin();
-	     i != components_.end(); ++i) {
+             i != components_.end(); ++i) {
             uint32_t sv = (*i)->size();
             if (sv > 4) len += sv;
-	    len += (*i)->sizeData();
+            len += (*i)->sizeData();
         }
-	// Size of next-IFD, if any
+        // Size of next-IFD, if any
         if (pNext_) {
             len += pNext_->size();
         }
-	return len;
+        return len;
     } // TiffDirectory::doSize
 
     uint32_t TiffEntryBase::doSize() const
     {
         return size_;
     } // TiffEntryBase::doSize
-
-    uint32_t TiffSubIfd::doSize() const
-    {
-	return ifds_.size() * 4;
-    } // TiffSubIfd::doSize
 
     uint32_t TiffComponent::sizeData() const
     {
@@ -672,9 +677,9 @@ namespace Exiv2 {
 
     uint32_t TiffSubIfd::doSizeData() const
     {
-	uint32_t len = 0;
+        uint32_t len = 0;
         for (Ifds::const_iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
-	    len += (*i)->size();
+            len += (*i)->size();
         }
         return len;
     } // TiffSubIfd::doSizeData

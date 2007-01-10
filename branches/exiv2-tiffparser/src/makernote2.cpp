@@ -178,9 +178,9 @@ namespace Exiv2 {
     }
 
     uint32_t TiffIfdMakernote::doWriteData(Blob&     /*blob*/,
-					   ByteOrder /*byteOrder*/,
-					   int32_t   /*offset*/,
-					   uint32_t  /*dataIdx*/) const
+                                           ByteOrder /*byteOrder*/,
+                                           int32_t   /*offset*/,
+                                           uint32_t  /*dataIdx*/) const
     {
         // Todo: Implement me!
         assert(false);

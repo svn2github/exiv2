@@ -245,9 +245,13 @@ namespace Exiv2 {
         //@}
 
     private:
+        //! @name Manipulators
+        //@{
         //! Set an Exif tag in the image. Overwrites existing tags
         void setExifTag(const ExifKey& key, const Value* pValue);
+        //@}
 
+    private:
         // DATA
         Image* pImage_;              //!< Pointer to the image to which the metadata is added
         TiffComponent* const pRoot_; //!< Root element of the composite
@@ -295,6 +299,8 @@ namespace Exiv2 {
         virtual void visitSizeEntry(TiffSizeEntry* object);
         //! Encode a TIFF directory
         virtual void visitDirectory(TiffDirectory* object);
+        //! Update directory entries
+        virtual void visitDirectoryNext(TiffDirectory* object);
         //! Encode a TIFF sub-IFD
         virtual void visitSubIfd(TiffSubIfd* object);
         //! Encode a TIFF makernote
@@ -342,8 +348,24 @@ namespace Exiv2 {
                  the Makernote and the rest of the TIFF entries.
          */
         ByteOrder byteOrder() const { return byteOrder_; }
-        //! True if any tag was deleted or allocated
+        /*!
+          @brief True if any tag was deleted or allocated in the process of
+                 visiting a TIFF composite tree.
+         */
         bool dirty() const { return dirty_; }
+        //@}
+
+    private:
+        //! @name Accessors
+        //@{
+        /*!
+          @brief Update a directory entry. This is called after all directory
+                 entries are encoded. It takes care of type and count changes
+                 and size shrinkage for non-intrusive writing.
+        */
+        uint32_t updateDirEntry(byte* buf,
+                                ByteOrder byteOrder, 
+                                TiffComponent* pTiffComponent) const;
         //@}
 
     private:
@@ -534,8 +556,21 @@ namespace Exiv2 {
     private:
         //! @name Manipulators
         //@{
-        //! Helper function to set the thumbnail data area
-        void setDataArea(TiffEntryBase* pOffsetEntry, const Value* pSize);
+        /*!
+          @brief Helper function to set the data area at the value of a 
+                 TiffDataEntry.
+
+          @param pOffset Value with the offsets of the data areas, which
+                         will be set at this value.
+          @param pSize   Value containing the sizes corresponding to the 
+                         data areas pointed to by each offset. 
+          @param tag     Tag of the metadatum containing the offset value.
+          @param group   Group of the metadatum containing the offset value.
+        */
+        void setDataArea(Value*       pOffset, 
+                         const Value* pSize, 
+                         uint16_t     size,
+                         uint16_t     group);
         //@}
 
     private:

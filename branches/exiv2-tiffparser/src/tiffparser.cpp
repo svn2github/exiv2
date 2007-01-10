@@ -363,6 +363,10 @@ namespace Exiv2 {
         // Add remaining entries from metadata to composite, if any
         encoder.add(rootDir.get(), createFct);
         if (encoder.dirty()) {
+
+            // Todo: Remove debug output 
+            std::cerr << "Intrusive writing\n";
+
             //! Re-write binary representation from the composite tree
             tiffHeader.write(blob);
             rootDir->write(blob, tiffHeader.byteOrder(), tiffHeader.ifdOffset(), uint32_t(-1), uint32_t(-1));

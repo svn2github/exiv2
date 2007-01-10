@@ -101,7 +101,7 @@ namespace Exiv2 {
         //@{
         //! Constructor
         TiffComponent(uint16_t tag, uint16_t group)
-            : tag_(tag), group_(group), pData_(0) {}
+            : tag_(tag), group_(group), pStart_(0) {}
 
         //! Virtual destructor.
         virtual ~TiffComponent() {}
@@ -144,7 +144,7 @@ namespace Exiv2 {
                  component in a memory buffer. The buffer must be allocated and
                  freed outside of this class.
          */
-        void setStart(const byte* pData) { pData_ = const_cast<byte*>(pData); }
+        void setStart(const byte* pStart) { pStart_ = const_cast<byte*>(pStart); }
         //@}
 
         //! @name Accessors
@@ -154,7 +154,7 @@ namespace Exiv2 {
         //! Return the group id of this component
         uint16_t group()                      const { return group_; }
         //! Return a pointer to the start of the binary representation of the component
-        byte* start()                         const { return pData_; }
+        byte* start()                         const { return pStart_; }
         //@}
 
         //! @name Write support (Accessors)
@@ -166,36 +166,36 @@ namespace Exiv2 {
           @param byteOrder  Applicable byte order (little or big endian).
           @param offset     Offset from the start of the image (TIFF header) to 
                             the component.
-	  @param valueIdx   Index of the component to be written relative to offset.
+          @param valueIdx   Index of the component to be written relative to offset.
           @param dataIdx    Index of the data area of the component relative to offset.
           @return           Number of bytes written to the blob including all
                             nested components.
           @throw            Error If the component cannot be written.
          */
         uint32_t write(Blob&     blob, 
-		       ByteOrder byteOrder, 
-		       int32_t   offset, 
-		       uint32_t  valueIdx, 
-		       uint32_t  dataIdx) const;
+                       ByteOrder byteOrder, 
+                       int32_t   offset, 
+                       uint32_t  valueIdx, 
+                       uint32_t  dataIdx) const;
         /*!
           @brief Write the IFD data of this component to a binary image.
                  Return the number of bytes written. Components derived from 
-		 TiffEntryBase implement this method if needed.
+                 TiffEntryBase implement this method if needed.
          */
         uint32_t writeData(Blob&     blob, 
                            ByteOrder byteOrder, 
                            int32_t   offset,
                            uint32_t  dataIdx) const;
         /*!
-          @brief Return the size of the IFD value of this component when
-                 written to a binary image.
+          @brief Return the size in bytes of the IFD value of this component
+                 when written to a binary image.
          */
         uint32_t size() const;
         /*! 
-          @brief Return the size of the IFD data of this component when
+          @brief Return the size in bytes of the IFD data of this component when
                  written to a binary image.  This is a support function for
-                 write(). Components derived from TiffEntryBase implement
-		 this method corresponding to their implementation of writeData().
+                 write(). Components derived from TiffEntryBase implement this
+                 method corresponding to their implementation of writeData().
          */
         uint32_t sizeData() const;
         //@}
@@ -225,20 +225,14 @@ namespace Exiv2 {
                                  int32_t   offset, 
                                  uint32_t  valueIdx, 
                                  uint32_t  dataIdx) const =0;
-        /*!
-	  @brief Implements writeData(). The default implementation commits suicide.
-	         Overwrite to do something useful.
-         */
+        //! Implements writeData().
         virtual uint32_t doWriteData(Blob&     blob, 
                                      ByteOrder byteOrder, 
                                      int32_t   offset,
                                      uint32_t  dataIdx) const =0;
         //! Implements size().
         virtual uint32_t doSize() const =0;
-        /*!
-	  @brief Implements sizeData(). The default implementation commits suicide.
-	         Overwrite to do something useful.
-         */
+        //! Implements sizeData().
         virtual uint32_t doSizeData() const =0;
         //@}
 
@@ -249,8 +243,8 @@ namespace Exiv2 {
         /*!
           Pointer to the start of the binary representation of the component in
           a memory buffer. The buffer is allocated and freed outside of this class.
-        */
-        byte*    pData_;
+         */
+        byte*    pStart_;
 
     }; // class TiffComponent
 
@@ -348,8 +342,11 @@ namespace Exiv2 {
           @brief Return the offset to the data area relative to the base
                  for the component (usually the start of the TIFF header)
          */
-        uint32_t offset()        const { return offset_; }
-        //! Return a pointer to the data area of this component
+        int32_t offset()         const { return offset_; }
+        /*!
+          @brief Return a pointer to the binary representation of the 
+                 value of this component.
+         */
         const byte* pData()      const { return pData_; }
         //! Return a pointer to the converted value of this component
         const Value* pValue()    const { return pValue_; }
@@ -360,37 +357,41 @@ namespace Exiv2 {
 
         // Todo: Using these invalidates pValue_ and size_
         // Todo: Do we need the data attributes which are also in value?
-        // Todo: Offset should probably be signed, not unsigned
 
         //! Set the field type
         void setTypeId(TypeId typeId) { type_ = typeId; }
         //! Set the number of components in this entry
         void setCount(uint32_t count) { count_ = count; }
         //! Set the offset
-        void setOffset(uint32_t offset) { offset_ = offset; }
+        void setOffset(int32_t offset) { offset_ = offset; }
+        //! Allocate \em len bytes for the binary representation of the value.
+        void allocData(uint32_t len);
         //@}
 
     protected:
         //! @name Write support (Accessors)
         //@{
-	/*!
-	  @brief Write the value of a standard TIFF entry to the \em blob,
-                 return the number of bytes written. Only the \em blob and 
-                 \em byteOrder arguments are used.
- 	 */
+        /*!
+          @brief Implements write(). Write the value of a standard TIFF entry to
+                 the \em blob, return the number of bytes written. Only the \em
+                 blob and \em byteOrder arguments are used.
+         */
         virtual uint32_t doWrite(Blob&     blob,
-				 ByteOrder byteOrder,
-				 int32_t   offset,
-				 uint32_t  valueIdx,
-				 uint32_t  dataIdx) const;
-	//! Standard TIFF entries have no data: write nothing and return 0.
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
+                                 uint32_t  dataIdx) const;
+        /*!
+          @brief Implements writeData(). Standard TIFF entries have no data: 
+                 write nothing and return 0.
+         */
         virtual uint32_t doWriteData(Blob&     blob, 
                                      ByteOrder byteOrder, 
                                      int32_t   offset,
                                      uint32_t  dataIdx) const;
-	//! Return the size of a standard TIFF entry
+        //! Implements size(). Return the size of a standard TIFF entry
         virtual uint32_t doSize() const;
-	//! Return 0.
+        //! Implements sizeData(). Return 0.
         virtual uint32_t doSizeData() const;
         //@}
 
@@ -398,7 +399,7 @@ namespace Exiv2 {
         // DATA
         uint16_t type_;       //!< Field Type
         uint32_t count_;      //!< The number of values of the indicated Type
-        uint32_t offset_;     //!< Offset to the data area
+        int32_t  offset_;     //!< Offset to the data area
         /*!
           Size of the data buffer holding the value in bytes, there is no
           minimum size.
@@ -515,6 +516,7 @@ namespace Exiv2 {
              component of the TIFF tree.
      */
     class TiffDirectory : public TiffComponent {
+        friend class TiffEncoder;
         friend class TiffPrinter;
     public:
         //! @name Creators
@@ -543,31 +545,32 @@ namespace Exiv2 {
 
         //! @name Write support (Accessors)
         //@{
-	/*!
-	  @brief Write the TIFF directory, values and additional data, including the 
-	         next-IFD, if any, to the blob, return the number of bytes written.
- 	 */
+        /*!
+          @brief Implements write(). Write the TIFF directory, values and
+                 additional data, including the next-IFD, if any, to the blob,
+                 return the number of bytes written.
+         */
         virtual uint32_t doWrite(Blob&     blob, 
-				 ByteOrder byteOrder, 
-				 int32_t   offset, 
-				 uint32_t  valueIdx, 
-				 uint32_t  dataIdx) const;
+                                 ByteOrder byteOrder, 
+                                 int32_t   offset, 
+                                 uint32_t  valueIdx, 
+                                 uint32_t  dataIdx) const;
         /*!
           @brief This class does not implement writeData(), it only has write(). 
-	         This method must not be called; it commits suicide.
+                 This method must not be called; it commits suicide.
          */
         virtual uint32_t doWriteData(Blob&     blob, 
                                      ByteOrder byteOrder, 
                                      int32_t   offset,
                                      uint32_t  dataIdx) const;
-	/*!
-	  @brief Return the size of the TIFF directory, values and additional data,
-	         including the next-IFD, if any.
-	 */
+        /*!
+          @brief Implements size(). Return the size of the TIFF directory,
+                 values and additional data, including the next-IFD, if any.
+         */
         virtual uint32_t doSize() const;
         /*!
           @brief This class does not implement sizeData(), it only has size(). 
-	         This method must not be called; it commits suicide.
+                 This method must not be called; it commits suicide.
          */
         virtual uint32_t doSizeData() const;
         //@}
@@ -623,27 +626,26 @@ namespace Exiv2 {
 
         //! @name Write support (Accessors)
         //@{
-	/*!
-	  @brief Write the sub-IFD pointers to the \em blob, return the number 
-	         of bytes written. The \em dataIdx argument is not used.
-                 Return the number of bytes written.
- 	 */
+        /*!
+          @brief Implements write(). Write the sub-IFD pointers to the \em blob,
+                 return the number of bytes written. The \em dataIdx argument is
+                 not used.  Return the number of bytes written.
+         */
         virtual uint32_t doWrite(Blob&     blob, 
                                  ByteOrder byteOrder, 
                                  int32_t   offset, 
                                  uint32_t  valueIdx, 
                                  uint32_t  dataIdx) const;
-	/*!
-	  @brief Write the sub-IFDs to the blob. Return the number of bytes 
-                 written.
-	 */
+        /*!
+          @brief Implements writeData(). Write the sub-IFDs to the blob. Return
+                 the number of bytes written.
+         */
         virtual uint32_t doWriteData(Blob&     blob,
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx) const;
-	//! Return the size of all sub-IFD pointers.
-        virtual uint32_t doSize() const;
-	//! Return the sum of the sizes of all sub-IFDs.
+        // Using doSize() from base class
+        //! Implements sizeData(). Return the sum of the sizes of all sub-IFDs.
         virtual uint32_t doSizeData() const;
         //@}
 
