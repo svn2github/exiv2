@@ -326,6 +326,32 @@ namespace Exiv2 {
     void TiffEncoder::visitDataEntry(TiffDataEntry* object)
     {
         encodeTiffEntry(object);
+
+        if (!dirty_) {
+            assert(object);
+            assert(object->pValue());
+            if (  object->sizeDataArea_ 
+                < static_cast<uint32_t>(object->pValue()->sizeDataArea())) {
+#ifdef DEBUG
+                ExifKey key(object->tag(), tiffGroupName(object->group()));
+                std::cerr << "DATAAREA GREW     " << key << "\n";
+#endif
+                dirty_ = true;
+            }
+            else {
+                // Write the new dataarea, fill with 0x0
+#ifdef DEBUG
+                ExifKey key(object->tag(), tiffGroupName(object->group()));
+                std::cerr << "Writing data area for " << key << "\n";
+#endif
+                DataBuf buf = object->pValue()->dataArea();
+                memcpy(object->pDataArea_, buf.pData_, buf.size_);
+                if (object->sizeDataArea_ - buf.size_ > 0) {
+                    memset(object->pDataArea_ + buf.size_, 
+                           0x0, object->sizeDataArea_ - buf.size_);
+                }
+            }
+        }
     }
 
     void TiffEncoder::visitSizeEntry(TiffSizeEntry* object)
@@ -430,47 +456,66 @@ namespace Exiv2 {
 
         ExifKey key(object->tag(), tiffGroupName(object->group()));
         ExifData::iterator pos = exifData_.findKey(key);
-        if (pos == exifData_.end()) {
+        if (pos == exifData_.end()) { // metadatum not found
+#ifdef DEBUG
+            std::cerr << "DELETING          " << key << "\n";
+#endif
             object->isDeleted_ = true;
             dirty_ = true;
-#ifdef DEBUG
-            std::cerr << "DELETED     " << key << "\n";
-#endif
         }
-        else {
+        else { // found metadatum corresponding to object
 #ifdef DEBUG
             DataBuf buf(object->size_);
             memcpy(buf.pData_, object->pData_, object->size_);
 #endif
+            bool overwrite = true;
             uint32_t newSize = pos->size();
-            if (newSize <= object->size_) {
-                memset(object->pData_, 0x0, object->size_);
-#ifdef DEBUG
-                std::cerr << "OVERWRITTEN " << key;
-#endif
-            }
-            else {
+            if (newSize > object->size_) {
                 object->allocData(newSize);
                 dirty_ = true;
 #ifdef DEBUG
-                std::cerr << "ALLOCATED   " << key;
+                std::cerr << "ALLOCATING        " << key;
 #endif
             }
-            object->type_ = pos->typeId();
-            object->count_ = pos->count();
-            // offset will be calculated later
-            object->size_ = pos->copy(object->pData_, byteOrder());
-            assert(object->size_ == newSize);
+            else if (pos->sizeDataArea() == 0) {
+                memset(object->pData_, 0x0, object->size_);
 #ifdef DEBUG
-            if (0 != memcmp(object->pData_, buf.pData_, buf.size_)) {
-                std::cerr << "\t\t\t NOT MATCHING";
+                std::cerr << "OVERWRITING       " << key;
+#endif
             }
+	    else {
+                // Hack: Don't change the entry's value if there is a data area.
+                // This ensures that the original offsets are not overwritten
+                // during non-intrusive writing.
+                // On the other hand, it is thus not possible to change the offsets
+                // of an entry with a data area in non-intrusive mode. This can be
+                // considered a bug.
+                // Todo: Fix me!
+	        overwrite = false;
+#ifdef DEBUG
+	        std::cerr << "NOT OVERWRITING   " << key
+                          << " \tdata area size = " 
+                          << std::dec << pos->sizeDataArea();
+#endif
+            }
+	    if (overwrite) {
+                object->type_ = pos->typeId();
+                object->count_ = pos->count();
+                // offset will be calculated later
+                object->size_ = pos->copy(object->pData_, byteOrder());
+                assert(object->size_ == newSize);
+#ifdef DEBUG
+                if (0 != memcmp(object->pData_, buf.pData_, buf.size_)) {
+                    std::cerr << "\t\t\t NOT MATCHING";
+                }
+#endif
+            } // overwrite
+#ifdef DEBUG
             std::cerr << "\n";
 #endif
             object->pValue_ = pos->getValue().release();
             if (del_) exifData_.erase(pos);
         }
-
     } // TiffEncoder::encodeStdTiffEntry
 
     void TiffEncoder::encodeOlympThumb(TiffEntryBase* object)
@@ -725,10 +770,7 @@ namespace Exiv2 {
         pRoot_->accept(finder);
         TiffEntryBase* te = dynamic_cast<TiffEntryBase*>(finder.result());
         if (te && te->pValue()) {
-            setDataArea(const_cast<Value*>(object->pValue()), 
-                        te->pValue(), 
-                        object->tag(), 
-                        object->group());
+            object->setDataArea(te->pValue(), pData_, size_, baseOffset());
         }
     }
 
@@ -739,53 +781,10 @@ namespace Exiv2 {
         readTiffEntry(object);
         TiffFinder finder(object->dtTag(), object->dtGroup());
         pRoot_->accept(finder);
-        TiffEntryBase* te = dynamic_cast<TiffEntryBase*>(finder.result());
+        TiffDataEntry* te = dynamic_cast<TiffDataEntry*>(finder.result());
         if (te && te->pValue()) {
-            setDataArea(const_cast<Value*>(te->pValue()),
-                        object->pValue(), 
-                        te->tag(),
-                        te->group());
+            te->setDataArea(object->pValue(), pData_, size_, baseOffset());
         }
-    }
-
-    void TiffReader::setDataArea(Value*       pOffset,
-                                 const Value* pSize,
-                                 uint16_t     tag,
-                                 uint16_t     group)
-    {
-        assert(pOffset);
-        assert(pSize);
-
-        long size = 0;
-        for (long i = 0; i < pSize->count(); ++i) {
-            size += pSize->toLong(i);
-        }
-        long offset = pOffset->toLong(0);
-        // Todo: Remove limitation of Jpeg writer: strips must be contiguous
-        // Until then we check: last offset + last size - first offset == size?
-        if (  pOffset->toLong(pOffset->count()-1)
-            + pSize->toLong(pSize->count()-1)
-            - offset != size) {
-#ifndef SUPPRESS_WARNINGS
-            std::cerr << "Warning: "
-                      << "Directory " << tiffGroupName(group)
-                      << ", entry 0x" << std::setw(4)
-                      << std::setfill('0') << std::hex << tag
-                      << " Data area is not contiguous, ignoring it.\n";
-#endif
-            return;
-        }
-        if (baseOffset() + offset + size > size_) {
-#ifndef SUPPRESS_WARNINGS
-            std::cerr << "Warning: "
-                      << "Directory " << tiffGroupName(group)
-                      << ", entry 0x" << std::setw(4)
-                      << std::setfill('0') << std::hex << tag
-                      << " Data area exceeds data buffer, ignoring it.\n";
-#endif
-            return;
-        }
-        pOffset->setDataArea(pData_ + baseOffset() + offset, size);
     }
 
     void TiffReader::visitDirectory(TiffDirectory* object)
@@ -874,10 +873,12 @@ namespace Exiv2 {
         assert(object != 0);
 
         readTiffEntry(object);
-        if (object->typeId() == unsignedLong && object->count() >= 1) {
+        if ((object->typeId() == unsignedLong || object->typeId() == signedLong)
+             && object->count() >= 1) {
             for (uint32_t i = 0; i < object->count(); ++i) {
-                uint32_t offset = getULong(object->pData() + 4*i, byteOrder());
-                if (baseOffset() + offset > size_) {
+                int32_t offset = getLong(object->pData() + 4*i, byteOrder());
+                if (   baseOffset() + offset > size_ 
+                    || static_cast<int32_t>(baseOffset()) + offset < 0) {
 #ifndef SUPPRESS_WARNINGS
                     std::cerr << "Error: "
                               << "Directory " << tiffGroupName(object->group())
@@ -901,7 +902,7 @@ namespace Exiv2 {
                       << "Directory " << tiffGroupName(object->group())
                       << ", entry 0x" << std::setw(4)
                       << std::setfill('0') << std::hex << object->tag()
-                      << " doesn't look like a sub-IFD.";
+                      << " doesn't look like a sub-IFD.\n";
         }
 #endif
 

@@ -40,6 +40,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "tiffvisitor.hpp"
 #include "makernote2.hpp"
 #include "value.hpp"
+#include "error.hpp"
 
 // + standard includes
 #include <string>
@@ -178,16 +179,6 @@ namespace Exiv2 {
         delete pValue_;
     } // TiffEntryBase::~TiffEntryBase
 
-    void TiffEntryBase::allocData(uint32_t len)
-    {
-        if (isMalloced_) {
-            delete[] pData_;
-        }
-        pData_ = new byte[len];
-        size_ = len;
-        isMalloced_ = true;
-    } // TiffEntryBase::allocData
-
     TiffMnEntry::~TiffMnEntry()
     {
         delete mn_;
@@ -201,6 +192,58 @@ namespace Exiv2 {
             delete *i;
         }
     } // TiffArrayEntry::~TiffArrayEntry
+
+    void TiffEntryBase::allocData(uint32_t len)
+    {
+        if (isMalloced_) {
+            delete[] pData_;
+        }
+        pData_ = new byte[len];
+        size_ = len;
+        isMalloced_ = true;
+    } // TiffEntryBase::allocData
+
+    void TiffDataEntry::setDataArea(const Value* pSize,
+                                    const byte*  pData,
+                                    uint32_t     sizeData,
+                                    uint32_t     baseOffset)
+    {
+        assert(pSize);
+        assert(pValue());
+
+        long size = 0;
+        for (long i = 0; i < pSize->count(); ++i) {
+            size += pSize->toLong(i);
+        }
+        long offset = pValue()->toLong(0);
+        // Todo: Remove limitation of JPEG writer: strips must be contiguous
+        // Until then we check: last offset + last size - first offset == size?
+        if (  pValue()->toLong(pValue()->count()-1)
+            + pSize->toLong(pSize->count()-1)
+            - offset != size) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Warning: "
+                      << "Directory " << tiffGroupName(group())
+                      << ", entry 0x" << std::setw(4)
+                      << std::setfill('0') << std::hex << tag()
+                      << " Data area is not contiguous, ignoring it.\n";
+#endif
+            return;
+        }
+        if (baseOffset + offset + size > sizeData) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Warning: "
+                      << "Directory " << tiffGroupName(group())
+                      << ", entry 0x" << std::setw(4)
+                      << std::setfill('0') << std::hex << tag()
+                      << " Data area exceeds data buffer, ignoring it.\n";
+#endif
+            return;
+        }
+        pDataArea_ = const_cast<byte*>(pData) + baseOffset + offset;
+        sizeDataArea_ = size;
+        const_cast<Value*>(pValue())->setDataArea(pDataArea_, sizeDataArea_);
+    } // TiffDataEntry::setDataArea
 
     TiffComponent* TiffComponent::addPath(uint16_t tag, TiffPath& tiffPath)
     {
@@ -216,7 +259,8 @@ namespace Exiv2 {
         TiffComponent* tc = 0;
         // To allow duplicate entries, we only check if the new component already
         // exists if there is still at least one composite tag on the stack
-        if (tiffPath.size() > 1) {
+        // Todo: Find a generic way to require subIFDs to be unique tags
+        if (tiffPath.size() > 1 || ts->newTiffCompFct_ == newTiffSubIfd) {
             if (ts->extendedTag_ == Tag::next) {
                 tc = pNext_;
             }
@@ -249,7 +293,10 @@ namespace Exiv2 {
         const TiffStructure* ts1 = tiffPath.top();
         assert(ts1 != 0);
         tiffPath.pop();
-        assert(!tiffPath.empty());
+        if (tiffPath.empty()) {
+            // If the last element in the path is the sub-IFD tag itself we're done
+            return this;
+        }
         const TiffStructure* ts2 = tiffPath.top();
         assert(ts2 != 0);
         tiffPath.push(ts1);
@@ -578,6 +625,52 @@ namespace Exiv2 {
         return buf.size_;
     } // TiffEntryBase::doWrite
 
+    uint32_t TiffEntryBase::writeOffset(byte*     buf,
+                                        int32_t   offset,
+                                        TypeId    type,
+                                        ByteOrder byteOrder)
+    {
+        uint32_t rc = 0;
+        switch(type) {
+        case unsignedShort:
+        case signedShort:
+            if (static_cast<uint32_t>(offset) > 0xffff) throw Error(26);
+            rc = s2Data(buf, static_cast<int16_t>(offset), byteOrder);
+            break;
+        case unsignedLong:
+        case signedLong:
+            rc = l2Data(buf, static_cast<int32_t>(offset), byteOrder);
+            break;
+        default:
+            throw Error(27);
+            break;
+        }
+        return rc;
+    } // TiffEntryBase::writeOffset
+
+    uint32_t TiffDataEntry::doWrite(Blob&     blob,
+                                    ByteOrder byteOrder,
+                                    int32_t   offset,
+                                    uint32_t  /*valueIdx*/,
+                                    uint32_t  dataIdx) const
+    {
+        if (!pValue()) return 0;
+
+        DataBuf buf(pValue()->size());
+        uint32_t idx = 0;
+        const long prevOffset = pValue()->toLong(0);
+        for (uint32_t i = 0; i < count(); ++i) {
+            const long newDataIdx =   pValue()->toLong(i) - prevOffset 
+                                    + static_cast<long>(dataIdx);
+            idx += writeOffset(buf.pData_ + idx,
+                               offset + newDataIdx,
+                               typeId(), 
+                               byteOrder);
+        }
+        append(blob, buf.pData_, buf.size_);
+        return buf.size_;
+    } // TiffDataEntry::doWrite
+
     uint32_t TiffSubIfd::doWrite(Blob&     blob,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
@@ -587,7 +680,7 @@ namespace Exiv2 {
         DataBuf buf(ifds_.size() * 4);
         uint32_t idx = 0;
         for (Ifds::const_iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
-            idx += l2Data(buf.pData_ + idx, offset + dataIdx, byteOrder);
+            idx += writeOffset(buf.pData_ + idx, offset + dataIdx, typeId(), byteOrder);
             dataIdx += (*i)->size();
         }
         append(blob, buf.pData_, buf.size_);
@@ -618,6 +711,18 @@ namespace Exiv2 {
     {
         return 0;
     } // TiffEntryBase::doWriteData
+
+    uint32_t TiffDataEntry::doWriteData(Blob&     blob,
+                                        ByteOrder /*byteOrder*/,
+                                        int32_t   /*offset*/,
+                                        uint32_t  /*dataIdx*/) const
+    {
+        if (!pValue()) return 0;
+
+        DataBuf buf = pValue()->dataArea();
+        append(blob, buf.pData_, buf.size_);
+        return buf.size_;
+    } // TiffDataEntry::doWriteData
 
     uint32_t TiffSubIfd::doWriteData(Blob&     blob, 
                                      ByteOrder byteOrder, 
@@ -674,6 +779,12 @@ namespace Exiv2 {
     {
         return 0;
     } // TiffEntryBase::doSizeData
+
+    uint32_t TiffDataEntry::doSizeData() const
+    {
+        if (!pValue()) return 0;
+        return pValue()->sizeDataArea();
+    } // TiffDataEntry::doSizeData
 
     uint32_t TiffSubIfd::doSizeData() const
     {

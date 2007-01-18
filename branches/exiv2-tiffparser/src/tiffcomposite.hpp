@@ -348,7 +348,7 @@ namespace Exiv2 {
                  value of this component.
          */
         const byte* pData()      const { return pData_; }
-        //! Return a pointer to the converted value of this component
+        //! Return a const pointer to the converted value of this component
         const Value* pValue()    const { return pValue_; }
         //@}
 
@@ -394,6 +394,12 @@ namespace Exiv2 {
         //! Implements sizeData(). Return 0.
         virtual uint32_t doSizeData() const;
         //@}
+
+        //! Helper function to write an \em offset to a preallocated binary buffer
+        static uint32_t writeOffset(byte*     buf,
+                                    int32_t   offset,
+                                    TypeId    type,
+                                    ByteOrder byteOrder);
 
     private:
         // DATA
@@ -442,14 +448,34 @@ namespace Exiv2 {
              provided in \em Exif.Thumbnail.JPEGInterchangeFormatLength.
      */
     class TiffDataEntry : public TiffEntryBase {
+        friend class TiffReader;
+        friend class TiffEncoder;
     public:
         //! @name Creators
         //@{
         //! Constructor
         TiffDataEntry(uint16_t tag, uint16_t group, uint16_t szTag, uint16_t szGroup)
-            : TiffEntryBase(tag, group), szTag_(szTag), szGroup_(szGroup) {}
+            : TiffEntryBase(tag, group), 
+              szTag_(szTag), szGroup_(szGroup), pDataArea_(0), sizeDataArea_(0) {}
         //! Virtual destructor.
         virtual ~TiffDataEntry() {}
+        //@}
+
+        //! @name Manipulators
+        //@{
+        /*!
+          @brief Set the data area.
+
+          @param pSize Pointer to the Value holding the sizes corresponding 
+                       to this data entry. 
+          @param pData Pointer to the data area.
+          @param sizeData Size of the data area.
+          @param baseOffset Base offset into the data area.
+         */
+        void setDataArea(const Value* pSize,
+                         const byte*  pData,
+                         uint32_t     sizeData,
+                         uint32_t     baseOffset);
         //@}
 
         //! @name Accessors
@@ -466,10 +492,43 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
+        //! @name Write support (Accessors)
+        //@{
+        /*!
+          @brief Implements write(). Write pointers into the data area to the
+                 \em blob, relative to the offsets in the value. Return the 
+                 number of bytes written. The \em valueIdx argument is not used.
+
+          The number of components in the value determines how many offsets are
+          written. Set the first value to 0, the second to the size of the first
+          data area, etc. when creating a new data entry. Offsets will be adjusted
+          on write. The type of the value can only be signed or unsigned short or
+          long.
+         */
+        virtual uint32_t doWrite(Blob&     blob, 
+                                 ByteOrder byteOrder, 
+                                 int32_t   offset, 
+                                 uint32_t  valueIdx, 
+                                 uint32_t  dataIdx) const;
+        /*!
+          @brief Implements writeData(). Write the data area to the blob. Return
+                 the number of bytes written.
+         */
+        virtual uint32_t doWriteData(Blob&     blob,
+                                     ByteOrder byteOrder,
+                                     int32_t   offset,
+                                     uint32_t  dataIdx) const;
+        // Using doSize() from base class
+        //! Implements sizeData(). Return the size of the data area.
+        virtual uint32_t doSizeData() const;
+        //@}
+
     private:
         // DATA
         const uint16_t szTag_;               //!< Tag of the entry with the size
         const uint16_t szGroup_;             //!< Group of the entry with the size
+        byte*          pDataArea_;           //!< Pointer to the data area (never alloc'd)
+        uint32_t       sizeDataArea_;        //!< Size of the data area
 
     }; // class TiffDataEntry
 
@@ -628,8 +687,8 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Implements write(). Write the sub-IFD pointers to the \em blob,
-                 return the number of bytes written. The \em dataIdx argument is
-                 not used.  Return the number of bytes written.
+                 return the number of bytes written. The \em valueIdx argument is
+                 not used.
          */
         virtual uint32_t doWrite(Blob&     blob, 
                                  ByteOrder byteOrder, 

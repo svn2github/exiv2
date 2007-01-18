@@ -9,6 +9,21 @@
 #include <iostream>
 #include <iomanip>
 
+/*
+  Tests:
+  + All types of components
+    + Makernotes
+    + Data entries, thumbnails
+  + Special use-cases
+    + IFD1
+    + Multiple sub-IFDs
+    + Comment
+    + Other/unknown TIFF types
+
+
+
+ */
+
 using namespace Exiv2;
 
 void print(const ExifData& exifData);
@@ -24,6 +39,11 @@ int main()
     exifData["Exif.Image.Make"] = "FujiFilm";
     exifData["Exif.Photo.0x0001"] = "Just for fun";
     exifData["Exif.Iop.RelatedImageFileFormat"] = "TIFF";
+    exifData["Exif.Photo.InteroperabilityTag"] = uint32_t(132); // for non-intrusive writing
+    exifData["Exif.Image.ExifTag"] = uint32_t(89); // for non-intrusive writingti
+    exifData.setJpegThumbnail("exiv2-empty.jpg");
+    // The setJpegThumbnail method sets this to 0.
+    //exifData["Exif.Thumbnail.JPEGInterchangeFormat"] = uint32_t(197);
     print(exifData);
     tiffImage.writeMetadata();
     return 0;

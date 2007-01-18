@@ -554,26 +554,6 @@ namespace Exiv2 {
         //@}
 
     private:
-        //! @name Manipulators
-        //@{
-        /*!
-          @brief Helper function to set the data area at the value of a 
-                 TiffDataEntry.
-
-          @param pOffset Value with the offsets of the data areas, which
-                         will be set at this value.
-          @param pSize   Value containing the sizes corresponding to the 
-                         data areas pointed to by each offset. 
-          @param tag     Tag of the metadatum containing the offset value.
-          @param group   Group of the metadatum containing the offset value.
-        */
-        void setDataArea(Value*       pOffset, 
-                         const Value* pSize, 
-                         uint16_t     size,
-                         uint16_t     group);
-        //@}
-
-    private:
         // DATA
         const byte*          pData_;      //!< Pointer to the memory buffer
         const uint32_t       size_;       //!< Size of the buffer
