@@ -138,20 +138,23 @@ namespace Exiv2 {
     }
 
     TiffSubIfd::TiffSubIfd(uint16_t tag, uint16_t group, uint16_t newGroup)
-        : TiffEntryBase(tag, group), newGroup_(newGroup)
+        : TiffEntryBase(tag, group, unsignedLong), newGroup_(newGroup)
     {
-        setTypeId(unsignedLong);
+    }
+
+    TiffMnEntry::TiffMnEntry(uint16_t tag, uint16_t group, uint16_t mnGroup)
+        : TiffEntryBase(tag, group, undefined), mnGroup_(mnGroup), mn_(0)
+    {
     }
 
     TiffArrayEntry::TiffArrayEntry(uint16_t tag,
                                    uint16_t group,
                                    uint16_t elGroup,
                                    TypeId elTypeId)
-        : TiffEntryBase(tag, group),
+        : TiffEntryBase(tag, group, elTypeId),
           elSize_(static_cast<uint16_t>(TypeInfo::typeSize(elTypeId))),
           elGroup_(elGroup)
     {
-        setTypeId(elTypeId);
     }
 
     TiffDirectory::~TiffDirectory()
@@ -488,6 +491,22 @@ namespace Exiv2 {
         visitor.visitArrayElement(this);
     } // TiffArrayElement::doAccept
 
+    uint32_t TiffEntryBase::count() const 
+    {
+        return doCount(); 
+    }
+
+    uint32_t TiffEntryBase::doCount() const
+    {
+        return count_;
+    }
+
+    uint32_t TiffMnEntry::doCount() const
+    {
+        assert(typeId() == undefined);
+        return size();
+    }
+
     uint32_t TiffComponent::write(Blob&     blob, 
                                   ByteOrder byteOrder, 
                                   int32_t   offset, 
@@ -687,6 +706,16 @@ namespace Exiv2 {
         return buf.size_;
     } // TiffSubIfd::doWrite
 
+    uint32_t TiffMnEntry::doWrite(Blob&     blob, 
+                                  ByteOrder byteOrder, 
+                                  int32_t   offset, 
+                                  uint32_t  valueIdx, 
+                                  uint32_t  /*dataIdx*/) const
+    {
+        if (!mn_) return 0;
+        return mn_->write(blob, byteOrder, offset + valueIdx, uint32_t(-1), uint32_t(-1));
+    } // TiffMnEntry::doWrite
+
     uint32_t TiffComponent::writeData(Blob&     blob, 
                                       ByteOrder byteOrder, 
                                       int32_t   offset,
@@ -763,6 +792,17 @@ namespace Exiv2 {
     {
         return size_;
     } // TiffEntryBase::doSize
+
+    uint32_t TiffSubIfd::doSize() const
+    {
+        return ifds_.size() * 4;
+    } // TiffSubIfd::doSize
+
+    uint32_t TiffMnEntry::doSize() const
+    {
+        if (!mn_) return 0;
+        return mn_->size();
+    } // TiffMnEntry::doSize
 
     uint32_t TiffComponent::sizeData() const
     {

@@ -474,7 +474,7 @@ namespace Exiv2 {
                 object->allocData(newSize);
                 dirty_ = true;
 #ifdef DEBUG
-                std::cerr << "ALLOCATING        " << key;
+                std::cerr << "ALLOCATING        " << key << " newSize = " << newSize << " ";
 #endif
             }
             else if (pos->sizeDataArea() == 0) {
@@ -831,15 +831,15 @@ namespace Exiv2 {
             p += 12;
         }
 
-        if (p + 4 > pLast_) {
+        if (object->hasNext()) {
+            if (p + 4 > pLast_) {
 #ifndef SUPPRESS_WARNINGS
                 std::cerr << "Error: "
                           << "Directory " << tiffGroupName(object->group())
                           << ": IFD exceeds data buffer, cannot read next pointer.\n";
 #endif
                 return;
-        }
-        if (object->hasNext()) {
+            }
             TiffComponent::AutoPtr tc(0);
             uint32_t next = getLong(p, byteOrder());
             if (next) {
@@ -924,8 +924,8 @@ namespace Exiv2 {
             object->mn_ = TiffMnCreator::create(object->tag(),
                                                 object->mnGroup_,
                                                 make,
-                                                object->pData(),
-                                                object->size(),
+                                                object->pData_,
+                                                object->size_,
                                                 byteOrder());
         }
         if (object->mn_) object->mn_->setStart(object->pData());

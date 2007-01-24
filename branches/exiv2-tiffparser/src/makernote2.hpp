@@ -162,6 +162,9 @@ namespace Exiv2 {
         //@{
         //! Return the size of the header (in bytes).
         virtual uint32_t size() const =0;
+        //! Write the header to a data buffer, return the number of bytes written.
+        virtual uint32_t write(Blob&     blob,
+                               ByteOrder byteOrder) const =0;
         /*!
           @brief Return the offset to the start of the Makernote IFD from
                  the start of the Makernote (= the start of the header).
@@ -190,7 +193,7 @@ namespace Exiv2 {
              Contains a makernote header (which can be 0) and an IFD and
              implements child mgmt functions to deal with the IFD entries. The
              various makernote weirdnesses are taken care of in the makernote
-             header.
+             header (and possibly in special purpose IFD entries).
      */
     class TiffIfdMakernote : public TiffComponent {
         friend class TiffReader;
@@ -222,6 +225,11 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
+        //! Return the size of the header in bytes.
+        uint32_t sizeHeader() const;
+        //! Write the header to a data buffer, return the number of bytes written.
+        uint32_t writeHeader(Blob& blob, ByteOrder byteOrder) const;
+        //@}
         /*!
           @brief Return the offset to the start of the Makernote IFD from
                  the start of the Makernote.
@@ -255,16 +263,33 @@ namespace Exiv2 {
 
         //! @name Write support (Accessors)
         //@{
+        /*!
+          @brief Implements write(). Write the Makernote header, TIFF directory,
+                 values and additional data to the blob, return the number of
+                 bytes written.
+         */
         virtual uint32_t doWrite(Blob&     blob, 
                                  ByteOrder byteOrder, 
                                  int32_t   offset,
                                  uint32_t  valueIdx, 
                                  uint32_t  dataIdx) const;
+        /*!
+          @brief This class does not implement writeData(), it only has write(). 
+                 This method must not be called; it commits suicide.
+         */
         virtual uint32_t doWriteData(Blob&     blob, 
                                      ByteOrder byteOrder, 
                                      int32_t   offset,
                                      uint32_t  dataIdx) const;
+        /*!
+          @brief Implements size(). Return the size of the Makernote header,
+                 TIFF directory, values and additional data.
+         */
         virtual uint32_t doSize() const;
+        /*!
+          @brief This class does not implement sizeData(), it only has size(). 
+                 This method must not be called; it commits suicide.
+         */
         virtual uint32_t doSizeData() const;
         //@}
 
@@ -294,6 +319,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size()      const { return header_.size_; }
+        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const { return size_; }
         //@}
 
@@ -323,9 +349,10 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t  size()      const { return header_.size_; }
+        virtual uint32_t  write(Blob& blob, ByteOrder byteOrder) const;
         virtual uint32_t  ifdOffset() const { return start_; }
         virtual ByteOrder byteOrder() const { return byteOrder_; }
-        virtual uint32_t baseOffset(uint32_t mnOffset) const { return mnOffset; }
+        virtual uint32_t  baseOffset(uint32_t mnOffset) const { return mnOffset; }
         //@}
 
     private:
@@ -356,6 +383,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size()      const { return size_; }
+        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const { return start_; }
         //@}
 
@@ -386,6 +414,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t  size()      const { return size_; }
+        virtual uint32_t  write(Blob& blob, ByteOrder byteOrder) const;
         virtual uint32_t  ifdOffset() const { return start_; }
         virtual ByteOrder byteOrder() const { return byteOrder_; }
         virtual uint32_t  baseOffset(uint32_t mnOffset) const { return mnOffset + 10; }
@@ -419,6 +448,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size()      const { return size_; }
+        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const { return start_; }
         //@}
 
@@ -449,6 +479,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size()      const { return size_; }
+        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const { return start_; }
         //@}
 
@@ -480,6 +511,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size()      const { return size_; }
+        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const { return start_; }
         //@}
 

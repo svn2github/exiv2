@@ -144,6 +144,18 @@ namespace Exiv2 {
         return pHeader_->read(pData, size, byteOrder);
     }
 
+    uint32_t TiffIfdMakernote::sizeHeader() const
+    {
+        if (!pHeader_) return 0;
+        return pHeader_->size();
+    }
+
+    uint32_t TiffIfdMakernote::writeHeader(Blob& blob, ByteOrder byteOrder) const
+    {
+        if (!pHeader_) return 0;
+        return pHeader_->write(blob, byteOrder);
+    }
+
     TiffComponent* TiffIfdMakernote::doAddPath(uint16_t tag, TiffPath& tiffPath)
     {
         return ifd_.addPath(tag, tiffPath);
@@ -169,30 +181,32 @@ namespace Exiv2 {
     uint32_t TiffIfdMakernote::doWrite(Blob&     blob,
                                        ByteOrder byteOrder,
                                        int32_t   offset, 
-                                       uint32_t  valueIdx, 
-                                       uint32_t  dataIdx) const
+                                       uint32_t  /*valueIdx*/, 
+                                       uint32_t  /*dataIdx*/) const
     {
-        // Todo: Implement me!
-        assert(false);
-        return 0;
-    }
+        if (this->byteOrder() != invalidByteOrder) {
+            byteOrder = this->byteOrder();
+        }
+        uint32_t len = writeHeader(blob, byteOrder);
+        len += ifd_.write(blob, byteOrder,
+                          offset - baseOffset(offset) + len,
+                          uint32_t(-1), uint32_t(-1));
+        return len;
+    } // TiffIfdMakernote::doWrite
 
     uint32_t TiffIfdMakernote::doWriteData(Blob&     /*blob*/,
                                            ByteOrder /*byteOrder*/,
                                            int32_t   /*offset*/,
                                            uint32_t  /*dataIdx*/) const
     {
-        // Todo: Implement me!
         assert(false);
         return 0;
     } // TiffIfdMakernote::doWriteData
 
     uint32_t TiffIfdMakernote::doSize() const
     {
-        // Todo: Implement me!
-        assert(false);
-        return 0;
-    }
+        return sizeHeader() + ifd_.size();
+    } // TiffIfdMakernote::doSize
 
     uint32_t TiffIfdMakernote::doSizeData() const
     {
@@ -227,6 +241,13 @@ namespace Exiv2 {
         return true;
     } // OlympusMnHeader::read
 
+    uint32_t OlympusMnHeader::write(Blob&     blob,
+                                    ByteOrder /*byteOrder*/) const
+    {
+        append(blob, signature_, size_);
+        return size_;
+    } // OlympusMnHeader::write
+
     const byte FujiMnHeader::signature_[] = {
         'F', 'U', 'J', 'I', 'F', 'I', 'L', 'M', 0x0c, 0x00, 0x00, 0x00
     };
@@ -260,9 +281,15 @@ namespace Exiv2 {
         return true;
     } // FujiMnHeader::read
 
+    uint32_t FujiMnHeader::write(Blob&     blob,
+                                 ByteOrder /*byteOrder*/) const
+    {
+        append(blob, signature_, size_);
+        return size_;
+    } // FujiMnHeader::write
 
     const byte Nikon2MnHeader::signature_[] = {
-        'N', 'i', 'k', 'o', 'n', '\0', 0x00, 0x01
+        'N', 'i', 'k', 'o', 'n', '\0', 0x01, 0x00
     };
     const uint32_t Nikon2MnHeader::size_ = 8;
 
@@ -285,6 +312,13 @@ namespace Exiv2 {
         return true;
 
     } // Nikon2MnHeader::read
+
+    uint32_t Nikon2MnHeader::write(Blob&     blob,
+                                   ByteOrder /*byteOrder*/) const
+    {
+        append(blob, signature_, size_);
+        return size_;
+    } // Nikon2MnHeader::write
 
     const byte Nikon3MnHeader::signature_[] = {
         'N', 'i', 'k', 'o', 'n', '\0',
@@ -315,6 +349,13 @@ namespace Exiv2 {
 
     } // Nikon3MnHeader::read
 
+    uint32_t Nikon3MnHeader::write(Blob&     blob,
+                                   ByteOrder /*byteOrder*/) const
+    {
+        append(blob, signature_, size_);
+        return size_;
+    } // Nikon3MnHeader::write
+
     const byte PanasonicMnHeader::signature_[] = {
         'P', 'a', 'n', 'a', 's', 'o', 'n', 'i', 'c', 0x00, 0x00, 0x00
     };
@@ -339,6 +380,13 @@ namespace Exiv2 {
         return true;
 
     } // PanasonicMnHeader::read
+
+    uint32_t PanasonicMnHeader::write(Blob&     blob,
+                                      ByteOrder /*byteOrder*/) const
+    {
+        append(blob, signature_, size_);
+        return size_;
+    } // PanasonicMnHeader::write
 
     const byte SigmaMnHeader::signature1_[] = {
         'S', 'I', 'G', 'M', 'A', '\0', '\0', '\0', 0x01, 0x00
@@ -369,6 +417,13 @@ namespace Exiv2 {
 
     } // SigmaMnHeader::read
 
+    uint32_t SigmaMnHeader::write(Blob&     blob,
+                                  ByteOrder /*byteOrder*/) const
+    {
+        append(blob, signature1_, size_);
+        return size_;
+    } // SigmaMnHeader::write
+
     const byte SonyMnHeader::signature_[] = {
         'S', 'O', 'N', 'Y', ' ', 'D', 'S', 'C', ' ', '\0', '\0', '\0'
     };
@@ -393,6 +448,13 @@ namespace Exiv2 {
         return true;
 
     } // SonyMnHeader::read
+
+    uint32_t SonyMnHeader::write(Blob&     blob,
+                                 ByteOrder /*byteOrder*/) const
+    {
+        append(blob, signature_, size_);
+        return size_;
+    } // SonyMnHeader::write
 
     // *************************************************************************
     // free functions

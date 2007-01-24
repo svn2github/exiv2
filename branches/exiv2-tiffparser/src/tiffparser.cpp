@@ -367,7 +367,7 @@ namespace Exiv2 {
             // Todo: Remove debug output 
             std::cerr << "Intrusive writing\n";
 
-            //! Re-write binary representation from the composite tree
+            // Re-write binary representation from the composite tree
             tiffHeader.write(blob);
             rootDir->write(blob, tiffHeader.byteOrder(), tiffHeader.ifdOffset(), uint32_t(-1), uint32_t(-1));
         }

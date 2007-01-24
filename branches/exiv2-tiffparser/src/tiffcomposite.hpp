@@ -324,9 +324,9 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Default constructor
-        TiffEntryBase(uint16_t tag, uint16_t group)
+        TiffEntryBase(uint16_t tag, uint16_t group, TypeId typeId =invalidTypeId)
             : TiffComponent(tag, group),
-              type_(0), count_(0), offset_(0), size_(0), pData_(0),
+              type_(typeId), count_(0), offset_(0), size_(0), pData_(0),
               isMalloced_(false), isDeleted_(false), pValue_(0) {}
         //! Virtual destructor.
         virtual ~TiffEntryBase();
@@ -337,7 +337,7 @@ namespace Exiv2 {
         //! Return the Exiv2 type which corresponds to the field type
         TypeId   typeId()        const { return TypeId(type_); }
         //! Return the number of components in this entry
-        uint32_t count()         const { return count_; }
+        uint32_t count()         const;
         /*!
           @brief Return the offset to the data area relative to the base
                  for the component (usually the start of the TIFF header)
@@ -357,9 +357,10 @@ namespace Exiv2 {
 
         // Todo: Using these invalidates pValue_ and size_
         // Todo: Do we need the data attributes which are also in value?
+        // Todo: Can I remove these setters?
 
         //! Set the field type
-        void setTypeId(TypeId typeId) { type_ = typeId; }
+     // void setTypeId(TypeId typeId) { type_ = typeId; }
         //! Set the number of components in this entry
         void setCount(uint32_t count) { count_ = count; }
         //! Set the offset
@@ -369,6 +370,11 @@ namespace Exiv2 {
         //@}
 
     protected:
+        //! @name Accessors
+        //@{
+        //! Implements count().
+        virtual uint32_t doCount() const;
+        //@}
         //! @name Write support (Accessors)
         //@{
         /*!
@@ -703,7 +709,8 @@ namespace Exiv2 {
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx) const;
-        // Using doSize() from base class
+        //! Implements size(). Return the size of the sub-Ifd pointers.
+        uint32_t doSize() const;
         //! Implements sizeData(). Return the sum of the sizes of all sub-IFDs.
         virtual uint32_t doSizeData() const;
         //@}
@@ -731,8 +738,7 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Default constructor
-        TiffMnEntry(uint16_t tag, uint16_t group, uint16_t mnGroup)
-            : TiffEntryBase(tag, group), mnGroup_(mnGroup), mn_(0) {}
+        TiffMnEntry(uint16_t tag, uint16_t group, uint16_t mnGroup);
         //! Virtual destructor
         virtual ~TiffMnEntry();
         //@}
@@ -744,6 +750,32 @@ namespace Exiv2 {
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual TiffComponent* doAddNext(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
+        //@}
+
+        //! @name Accessors
+        //@{
+        //! Implements count(). Return number of components in the entry.
+        virtual uint32_t doCount() const;
+        //@}
+
+        //! @name Write support (Accessors)
+        //@{
+        /*!
+          @brief Implements write() by forwarding the call to the actual 
+                 concrete Makernote, if there is one.
+         */
+        virtual uint32_t doWrite(Blob&     blob, 
+                                 ByteOrder byteOrder, 
+                                 int32_t   offset, 
+                                 uint32_t  valueIdx, 
+                                 uint32_t  dataIdx) const;
+        // Using doWriteData from base class
+        /*!
+          @brief Implements size() by forwarding the call to the actual 
+                 concrete Makernote, if there is one.
+         */
+        virtual uint32_t doSize() const;
+        // Using doSizeData from base class
         //@}
 
     private:
