@@ -20,11 +20,14 @@ void nikon2mn(const std::string& path);
 void nikon3mn(const std::string& path);
 void olympusmn(const std::string& path);
 void panasonicmn(const std::string& path);
+void sigmamn(const std::string& path);
+void sony1mn(const std::string& path);
+void sony2mn(const std::string& path);
 
 void print(const ExifData& exifData);
 
 int main()
-{
+try {
     canonmn("exiv2-canonmn.tif");
     fujimn("exiv2-fujimn.tif");
     minoltamn("exiv2-minoltamn.tif");
@@ -33,8 +36,14 @@ int main()
     nikon3mn("exiv2-nikon3mn.tif");
     olympusmn("exiv2-olympusmn.tif");
     panasonicmn("exiv2-panasonicmn.tif");
+    sigmamn("exiv2-sigmamn.tif");
+    sony1mn("exiv2-sony1mn.tif");
+    sony2mn("exiv2-sony2mn.tif");
 
     return 0;
+}
+catch (const Error& e) {
+    std::cout << e << "\n";
 }
 
 void canonmn(const std::string& path)
@@ -136,6 +145,45 @@ void panasonicmn(const std::string& path)
     exifData["Exif.Image.Make"] = "Panasonic";
     exifData["Exif.Photo.DateTimeOriginal"] = "Yesterday at noon";
     exifData["Exif.Panasonic.Quality"] = uint16_t(42);
+
+    print(exifData);
+    tiffImage.writeMetadata();
+}
+
+void sigmamn(const std::string& path)
+{
+    TiffImage tiffImage(BasicIo::AutoPtr(new FileIo(path)), false);
+    ExifData& exifData = tiffImage.exifData();
+
+    exifData["Exif.Image.Make"] = "SIGMA";
+    exifData["Exif.Photo.DateTimeOriginal"] = "Yesterday at noon";
+    exifData["Exif.Sigma.Quality"] = "Sigma quality";
+
+    print(exifData);
+    tiffImage.writeMetadata();
+}
+
+void sony1mn(const std::string& path)
+{
+    TiffImage tiffImage(BasicIo::AutoPtr(new FileIo(path)), false);
+    ExifData& exifData = tiffImage.exifData();
+
+    exifData["Exif.Image.Make"] = "SONY";
+    exifData["Exif.Photo.DateTimeOriginal"] = "Yesterday at noon";
+    exifData["Exif.Sony.0x2000"] = uint16_t(42);
+
+    print(exifData);
+    tiffImage.writeMetadata();
+}
+
+void sony2mn(const std::string& path)
+{
+    TiffImage tiffImage(BasicIo::AutoPtr(new FileIo(path)), false);
+    ExifData& exifData = tiffImage.exifData();
+
+    exifData["Exif.Image.Make"] = "SONY";
+    exifData["Exif.Photo.DateTimeOriginal"] = "Yesterday at noon";
+    exifData["Exif.Sony.0x2001"] = uint16_t(43);
 
     print(exifData);
     tiffImage.writeMetadata();
