@@ -164,7 +164,7 @@ namespace Exiv2 {
 
           @param blob       Binary image to append the TiffComponent to.
           @param byteOrder  Applicable byte order (little or big endian).
-          @param offset     Offset from the start of the image (TIFF header) to 
+          @param offset     Offset from the start of the image (TIFF header) to
                             the component.
           @param valueIdx   Index of the component to be written relative to offset.
           @param dataIdx    Index of the data area of the component relative to offset.
@@ -172,18 +172,18 @@ namespace Exiv2 {
                             nested components.
           @throw            Error If the component cannot be written.
          */
-        uint32_t write(Blob&     blob, 
-                       ByteOrder byteOrder, 
-                       int32_t   offset, 
-                       uint32_t  valueIdx, 
+        uint32_t write(Blob&     blob,
+                       ByteOrder byteOrder,
+                       int32_t   offset,
+                       uint32_t  valueIdx,
                        uint32_t  dataIdx) const;
         /*!
           @brief Write the IFD data of this component to a binary image.
-                 Return the number of bytes written. Components derived from 
+                 Return the number of bytes written. Components derived from
                  TiffEntryBase implement this method if needed.
          */
-        uint32_t writeData(Blob&     blob, 
-                           ByteOrder byteOrder, 
+        uint32_t writeData(Blob&     blob,
+                           ByteOrder byteOrder,
                            int32_t   offset,
                            uint32_t  dataIdx) const;
         /*!
@@ -191,7 +191,7 @@ namespace Exiv2 {
                  when written to a binary image.
          */
         uint32_t size() const;
-        /*! 
+        /*!
           @brief Return the size in bytes of the IFD data of this component when
                  written to a binary image.  This is a support function for
                  write(). Components derived from TiffEntryBase implement this
@@ -220,14 +220,14 @@ namespace Exiv2 {
         //! @name Write support (Accessors)
         //@{
         //! Implements write().
-        virtual uint32_t doWrite(Blob&     blob, 
-                                 ByteOrder byteOrder, 
-                                 int32_t   offset, 
-                                 uint32_t  valueIdx, 
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
                                  uint32_t  dataIdx) const =0;
         //! Implements writeData().
-        virtual uint32_t doWriteData(Blob&     blob, 
-                                     ByteOrder byteOrder, 
+        virtual uint32_t doWriteData(Blob&     blob,
+                                     ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx) const =0;
         //! Implements size().
@@ -344,7 +344,7 @@ namespace Exiv2 {
          */
         int32_t offset()         const { return offset_; }
         /*!
-          @brief Return a pointer to the binary representation of the 
+          @brief Return a pointer to the binary representation of the
                  value of this component.
          */
         const byte* pData()      const { return pData_; }
@@ -388,11 +388,11 @@ namespace Exiv2 {
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx) const;
         /*!
-          @brief Implements writeData(). Standard TIFF entries have no data: 
+          @brief Implements writeData(). Standard TIFF entries have no data:
                  write nothing and return 0.
          */
-        virtual uint32_t doWriteData(Blob&     blob, 
-                                     ByteOrder byteOrder, 
+        virtual uint32_t doWriteData(Blob&     blob,
+                                     ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx) const;
         //! Implements size(). Return the size of a standard TIFF entry
@@ -461,7 +461,7 @@ namespace Exiv2 {
         //@{
         //! Constructor
         TiffDataEntry(uint16_t tag, uint16_t group, uint16_t szTag, uint16_t szGroup)
-            : TiffEntryBase(tag, group), 
+            : TiffEntryBase(tag, group),
               szTag_(szTag), szGroup_(szGroup), pDataArea_(0), sizeDataArea_(0) {}
         //! Virtual destructor.
         virtual ~TiffDataEntry() {}
@@ -472,8 +472,8 @@ namespace Exiv2 {
         /*!
           @brief Set the data area.
 
-          @param pSize Pointer to the Value holding the sizes corresponding 
-                       to this data entry. 
+          @param pSize Pointer to the Value holding the sizes corresponding
+                       to this data entry.
           @param pData Pointer to the data area.
           @param sizeData Size of the data area.
           @param baseOffset Base offset into the data area.
@@ -502,7 +502,7 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Implements write(). Write pointers into the data area to the
-                 \em blob, relative to the offsets in the value. Return the 
+                 \em blob, relative to the offsets in the value. Return the
                  number of bytes written. The \em valueIdx argument is not used.
 
           The number of components in the value determines how many offsets are
@@ -511,10 +511,10 @@ namespace Exiv2 {
           on write. The type of the value can only be signed or unsigned short or
           long.
          */
-        virtual uint32_t doWrite(Blob&     blob, 
-                                 ByteOrder byteOrder, 
-                                 int32_t   offset, 
-                                 uint32_t  valueIdx, 
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
                                  uint32_t  dataIdx) const;
         /*!
           @brief Implements writeData(). Write the data area to the blob. Return
@@ -615,17 +615,17 @@ namespace Exiv2 {
                  additional data, including the next-IFD, if any, to the blob,
                  return the number of bytes written.
          */
-        virtual uint32_t doWrite(Blob&     blob, 
-                                 ByteOrder byteOrder, 
-                                 int32_t   offset, 
-                                 uint32_t  valueIdx, 
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
                                  uint32_t  dataIdx) const;
         /*!
-          @brief This class does not implement writeData(), it only has write(). 
+          @brief This class does not implement writeData(), it only has write().
                  This method must not be called; it commits suicide.
          */
-        virtual uint32_t doWriteData(Blob&     blob, 
-                                     ByteOrder byteOrder, 
+        virtual uint32_t doWriteData(Blob&     blob,
+                                     ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx) const;
         /*!
@@ -634,7 +634,7 @@ namespace Exiv2 {
          */
         virtual uint32_t doSize() const;
         /*!
-          @brief This class does not implement sizeData(), it only has size(). 
+          @brief This class does not implement sizeData(), it only has size().
                  This method must not be called; it commits suicide.
          */
         virtual uint32_t doSizeData() const;
@@ -644,8 +644,8 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         //! Write a binary directory entry for a TIFF component.
-        uint32_t writeDirEntry(Blob&          blob, 
-                               ByteOrder      byteOrder, 
+        uint32_t writeDirEntry(Blob&          blob,
+                               ByteOrder      byteOrder,
                                int32_t        offset,
                                TiffComponent* pTiffComponent,
                                uint32_t       valueIdx,
@@ -696,10 +696,10 @@ namespace Exiv2 {
                  return the number of bytes written. The \em valueIdx argument is
                  not used.
          */
-        virtual uint32_t doWrite(Blob&     blob, 
-                                 ByteOrder byteOrder, 
-                                 int32_t   offset, 
-                                 uint32_t  valueIdx, 
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
                                  uint32_t  dataIdx) const;
         /*!
           @brief Implements writeData(). Write the sub-IFDs to the blob. Return
@@ -761,17 +761,17 @@ namespace Exiv2 {
         //! @name Write support (Accessors)
         //@{
         /*!
-          @brief Implements write() by forwarding the call to the actual 
+          @brief Implements write() by forwarding the call to the actual
                  concrete Makernote, if there is one.
          */
-        virtual uint32_t doWrite(Blob&     blob, 
-                                 ByteOrder byteOrder, 
-                                 int32_t   offset, 
-                                 uint32_t  valueIdx, 
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
                                  uint32_t  dataIdx) const;
         // Using doWriteData from base class
         /*!
-          @brief Implements size() by forwarding the call to the actual 
+          @brief Implements size() by forwarding the call to the actual
                  concrete Makernote, if there is one.
          */
         virtual uint32_t doSize() const;

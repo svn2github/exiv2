@@ -180,8 +180,8 @@ namespace Exiv2 {
 
     uint32_t TiffIfdMakernote::doWrite(Blob&     blob,
                                        ByteOrder byteOrder,
-                                       int32_t   offset, 
-                                       uint32_t  /*valueIdx*/, 
+                                       int32_t   offset,
+                                       uint32_t  /*valueIdx*/,
                                        uint32_t  /*dataIdx*/) const
     {
         if (this->byteOrder() != invalidByteOrder) {

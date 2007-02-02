@@ -349,7 +349,7 @@ namespace Exiv2 {
             rootDir = createFct(Tag::root, Group::none);
         }
         assert(rootDir.get());
-        // Todo: Hack: Reads the header again to get byteorder. Image should 
+        // Todo: Hack: Reads the header again to get byteorder. Image should
         // have byteOrder() and possibly setByteOrder() methods
         TiffHeade2 tiffHeader;
         if (pData != 0 && !tiffHeader.read(pData, size)) {
@@ -365,7 +365,7 @@ namespace Exiv2 {
         encoder.add(rootDir.get(), createFct);
         if (encoder.dirty()) {
 
-            // Todo: Remove debug output 
+            // Todo: Remove debug output
             std::cerr << "Intrusive writing\n";
 
             // Re-write binary representation from the composite tree

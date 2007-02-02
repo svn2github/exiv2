@@ -377,7 +377,7 @@ namespace Exiv2 {
         if (!dirty_) {
             assert(object);
             assert(object->pValue());
-            if (  object->sizeDataArea_ 
+            if (  object->sizeDataArea_
                 < static_cast<uint32_t>(object->pValue()->sizeDataArea())) {
 #ifdef DEBUG
                 ExifKey key(object->tag(), tiffGroupName(object->group()));
@@ -394,7 +394,7 @@ namespace Exiv2 {
                 DataBuf buf = object->pValue()->dataArea();
                 memcpy(object->pDataArea_, buf.pData_, buf.size_);
                 if (object->sizeDataArea_ - buf.size_ > 0) {
-                    memset(object->pDataArea_ + buf.size_, 
+                    memset(object->pDataArea_ + buf.size_,
                            0x0, object->sizeDataArea_ - buf.size_);
                 }
             }
@@ -424,7 +424,7 @@ namespace Exiv2 {
     }
 
     uint32_t TiffEncoder::updateDirEntry(byte* buf,
-                                         ByteOrder byteOrder, 
+                                         ByteOrder byteOrder,
                                          TiffComponent* pTiffComponent) const
     {
         assert(buf);
@@ -541,7 +541,7 @@ namespace Exiv2 {
 	        overwrite = false;
 #ifdef DEBUG
 	        std::cerr << "NOT OVERWRITING   " << key
-                          << " \tdata area size = " 
+                          << " \tdata area size = "
                           << std::dec << pos->sizeDataArea();
 #endif
             }
@@ -924,7 +924,7 @@ namespace Exiv2 {
              && object->count() >= 1) {
             for (uint32_t i = 0; i < object->count(); ++i) {
                 int32_t offset = getLong(object->pData() + 4*i, byteOrder());
-                if (   baseOffset() + offset > size_ 
+                if (   baseOffset() + offset > size_
                     || static_cast<int32_t>(baseOffset()) + offset < 0) {
 #ifndef SUPPRESS_WARNINGS
                     std::cerr << "Error: "

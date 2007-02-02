@@ -268,17 +268,17 @@ namespace Exiv2 {
                  values and additional data to the blob, return the number of
                  bytes written.
          */
-        virtual uint32_t doWrite(Blob&     blob, 
-                                 ByteOrder byteOrder, 
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
                                  int32_t   offset,
-                                 uint32_t  valueIdx, 
+                                 uint32_t  valueIdx,
                                  uint32_t  dataIdx) const;
         /*!
-          @brief This class does not implement writeData(), it only has write(). 
+          @brief This class does not implement writeData(), it only has write().
                  This method must not be called; it commits suicide.
          */
-        virtual uint32_t doWriteData(Blob&     blob, 
-                                     ByteOrder byteOrder, 
+        virtual uint32_t doWriteData(Blob&     blob,
+                                     ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx) const;
         /*!
@@ -287,7 +287,7 @@ namespace Exiv2 {
          */
         virtual uint32_t doSize() const;
         /*!
-          @brief This class does not implement sizeData(), it only has size(). 
+          @brief This class does not implement sizeData(), it only has size().
                  This method must not be called; it commits suicide.
          */
         virtual uint32_t doSizeData() const;

@@ -378,7 +378,7 @@ namespace Exiv2 {
                  and size shrinkage for non-intrusive writing.
         */
         uint32_t updateDirEntry(byte* buf,
-                                ByteOrder byteOrder, 
+                                ByteOrder byteOrder,
                                 TiffComponent* pTiffComponent) const;
         //@}
 

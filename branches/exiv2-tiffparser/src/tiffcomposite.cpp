@@ -491,9 +491,9 @@ namespace Exiv2 {
         visitor.visitArrayElement(this);
     } // TiffArrayElement::doAccept
 
-    uint32_t TiffEntryBase::count() const 
+    uint32_t TiffEntryBase::count() const
     {
-        return doCount(); 
+        return doCount();
     }
 
     uint32_t TiffEntryBase::doCount() const
@@ -507,10 +507,10 @@ namespace Exiv2 {
         return size();
     }
 
-    uint32_t TiffComponent::write(Blob&     blob, 
-                                  ByteOrder byteOrder, 
-                                  int32_t   offset, 
-                                  uint32_t  valueIdx, 
+    uint32_t TiffComponent::write(Blob&     blob,
+                                  ByteOrder byteOrder,
+                                  int32_t   offset,
+                                  uint32_t  valueIdx,
                                   uint32_t  dataIdx) const
     {
         return doWrite(blob, byteOrder, offset, valueIdx, dataIdx);
@@ -519,7 +519,7 @@ namespace Exiv2 {
     uint32_t TiffDirectory::doWrite(Blob&     blob,
                                     ByteOrder byteOrder,
                                     int32_t   offset,
-                                    uint32_t  valueIdx, 
+                                    uint32_t  valueIdx,
                                     uint32_t  dataIdx) const
     {
         // Size of all directory entries, without values and additional data
@@ -590,7 +590,7 @@ namespace Exiv2 {
             idx += pNext_->write(blob, byteOrder, offset + idx, uint32_t(-1), uint32_t(-1));
         }
 
-        // Todo: Another loop over the components to write data that 
+        // Todo: Another loop over the components to write data that
         // goes at the end of everything else?
 
         return idx;
@@ -617,10 +617,10 @@ namespace Exiv2 {
             append(blob, buf, 4);
         }
         else {
-            const uint32_t len = pTiffEntry->write(blob, 
-                                                   byteOrder, 
+            const uint32_t len = pTiffEntry->write(blob,
+                                                   byteOrder,
                                                    offset,
-                                                   valueIdx, 
+                                                   valueIdx,
                                                    dataIdx);
             if (len < 4) {
                 memset(buf, 0x0, 4);
@@ -630,10 +630,10 @@ namespace Exiv2 {
         return 12;
     } // TiffDirectory::writeDirEntry
 
-    uint32_t TiffEntryBase::doWrite(Blob&     blob, 
-                                    ByteOrder byteOrder, 
-                                    int32_t   /*offset*/, 
-                                    uint32_t  /*valueIdx*/, 
+    uint32_t TiffEntryBase::doWrite(Blob&     blob,
+                                    ByteOrder byteOrder,
+                                    int32_t   /*offset*/,
+                                    uint32_t  /*valueIdx*/,
                                     uint32_t  /*dataIdx*/) const
     {
         if (!pValue_) return 0;
@@ -679,11 +679,11 @@ namespace Exiv2 {
         uint32_t idx = 0;
         const long prevOffset = pValue()->toLong(0);
         for (uint32_t i = 0; i < count(); ++i) {
-            const long newDataIdx =   pValue()->toLong(i) - prevOffset 
+            const long newDataIdx =   pValue()->toLong(i) - prevOffset
                                     + static_cast<long>(dataIdx);
             idx += writeOffset(buf.pData_ + idx,
                                offset + newDataIdx,
-                               typeId(), 
+                               typeId(),
                                byteOrder);
         }
         append(blob, buf.pData_, buf.size_);
@@ -706,18 +706,18 @@ namespace Exiv2 {
         return buf.size_;
     } // TiffSubIfd::doWrite
 
-    uint32_t TiffMnEntry::doWrite(Blob&     blob, 
-                                  ByteOrder byteOrder, 
-                                  int32_t   offset, 
-                                  uint32_t  valueIdx, 
+    uint32_t TiffMnEntry::doWrite(Blob&     blob,
+                                  ByteOrder byteOrder,
+                                  int32_t   offset,
+                                  uint32_t  valueIdx,
                                   uint32_t  /*dataIdx*/) const
     {
         if (!mn_) return 0;
         return mn_->write(blob, byteOrder, offset + valueIdx, uint32_t(-1), uint32_t(-1));
     } // TiffMnEntry::doWrite
 
-    uint32_t TiffComponent::writeData(Blob&     blob, 
-                                      ByteOrder byteOrder, 
+    uint32_t TiffComponent::writeData(Blob&     blob,
+                                      ByteOrder byteOrder,
                                       int32_t   offset,
                                       uint32_t  dataIdx) const
     {
@@ -753,8 +753,8 @@ namespace Exiv2 {
         return buf.size_;
     } // TiffDataEntry::doWriteData
 
-    uint32_t TiffSubIfd::doWriteData(Blob&     blob, 
-                                     ByteOrder byteOrder, 
+    uint32_t TiffSubIfd::doWriteData(Blob&     blob,
+                                     ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx) const
     {
