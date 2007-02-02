@@ -227,7 +227,8 @@ namespace Exiv2 {
         { "*",         0x014a, Group::ifd0,    0, 0 }, // Todo: Controversial, causes problems with Exiftool
         { "*",       Tag::all, Group::sub0_0,  &TiffDecoder::decodeSubIfd, &TiffEncoder::encodeSubIfd },
         { "*",       Tag::all, Group::sub0_1,  &TiffDecoder::decodeSubIfd, &TiffEncoder::encodeSubIfd },
-        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIrbIptc, &TiffEncoder::encodeIrbIptc },
+        { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   },
+        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   },
         // Minolta makernote entries which need to be encoded in big endian byte order
         { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
         { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },

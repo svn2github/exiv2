@@ -69,7 +69,8 @@ namespace Exiv2 {
         { "*",         0x011a, Group::ifd0,    0, 0 },
         { "*",         0x011b, Group::ifd0,    0, 0 },
         { "*",         0x0128, Group::ifd0,    0, 0 },
-        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIrbIptc, 0 }
+        { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   },
+        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   }
     };
 
     const DecoderFct Cr2Mapping::findDecoder(const std::string& make,
@@ -116,16 +117,21 @@ namespace Exiv2 {
         return isThisType(*io_, false);
     }
 
+    AccessMode Cr2Image::checkMode(MetadataId metadataId) const
+    {
+        return ImageFactory::checkMode(ImageType::cr2, metadataId);
+    }
+
     void Cr2Image::clearMetadata()
     {
         clearExifData();
-        clearComment();
+        clearIptcData();
     }
 
     void Cr2Image::setMetadata(const Image& image)
     {
         setExifData(image.exifData());
-        setComment(image.comment());
+        setIptcData(image.iptcData());
     }
 
     void Cr2Image::clearExifData()
@@ -150,12 +156,13 @@ namespace Exiv2 {
 
     void Cr2Image::clearComment()
     {
-        comment_.erase();
+        // not supported, do nothing
     }
 
-    void Cr2Image::setComment(const std::string& comment)
+    void Cr2Image::setComment(const std::string& /*comment*/)
     {
-        comment_ = comment;
+        // not supported
+        throw(Error(32, "Image comment", "CR2"));
     }
 
     void Cr2Image::readMetadata()
@@ -180,44 +187,10 @@ namespace Exiv2 {
 
     void Cr2Image::writeMetadata()
     {
-/*
-
-       Todo: implement me!
-
-#ifdef DEBUG
-        std::cerr << "Writing CR2 file " << io_->path() << "\n";
-#endif
-        // Read existing image
-        DataBuf buf;
-        if (io_->open() == 0) {
-            IoCloser closer(*io_);
-            // Ensure that this is the correct image type
-            if (isThisType(*io_, false)) {
-                // Read the image into a memory buffer
-                buf.alloc(io_->size());
-                io_->read(buf.pData_, buf.size_);
-                if (io_->error() || io_->eof()) {
-                    buf.reset();
-                }
-            }
-        }
-
-        // Parse image, starting with a CR2 header component
-        Cr2Header::AutoPtr head(new Cr2Header);
-        if (buf.size_ != 0) {
-            head->read(buf.pData_, buf.size_);
-        }
-
-        Blob blob;
-        Cr2Parser::encode(blob, head.get(), this);
-
-        // Write new buffer to file
-        BasicIo::AutoPtr tempIo(io_->temporary()); // may throw
-        assert (tempIo.get() != 0);
-        tempIo->write(&blob[0], static_cast<long>(blob.size()));
-        io_->close();
-        io_->transfer(*tempIo); // may throw
-*/
+        /*
+          Todo: implement me!
+         */
+        throw(Error(31, "metadata", "CR2"));
     } // Cr2Image::writeMetadata
 
     bool Cr2Image::isThisType(BasicIo& iIo, bool advance) const

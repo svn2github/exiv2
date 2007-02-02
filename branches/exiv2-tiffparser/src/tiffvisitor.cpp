@@ -125,7 +125,8 @@ namespace Exiv2 {
                              FindDecoderFct findDecoderFct)
         : pImage_(pImage),
           pRoot_(pRoot),
-          findDecoderFct_(findDecoderFct)
+          findDecoderFct_(findDecoderFct),
+          decodedIptc_(false)
     {
         assert(pImage_ != 0);
         assert(pRoot != 0);
@@ -189,32 +190,78 @@ namespace Exiv2 {
         }
     }
 
-    void TiffDecoder::decodeIrbIptc(const TiffEntryBase* object)
+    void TiffDecoder::getObjData(byte const*& pData,
+                                 long& size,
+                                 uint16_t tag,
+                                 uint16_t group,
+                                 const TiffEntryBase* object)
     {
-        assert(object != 0);
-        assert(pImage_ != 0);
-        if (!object->pData()) return;
-        byte const* record = 0;
-        uint32_t sizeHdr = 0;
-        uint32_t sizeData = 0;
-        if (0 != Photoshop::locateIptcIrb(object->pData(), object->size(),
-                                          &record, &sizeHdr, &sizeData)) {
+        if (object && object->tag() == tag && object->group() == group) {
+            pData = object->pData();
+            size = object->size();
             return;
         }
-        if (0 != pImage_->iptcData().load(record + sizeHdr, sizeData)) {
-#ifndef SUPPRESS_WARNINGS
-            std::cerr << "Warning: Failed to decode IPTC block found in "
-                      << "Directory " << tiffGroupName(object->group())
-                      << ", entry 0x" << std::setw(4)
-                      << std::setfill('0') << std::hex << object->tag()
-                      << "\n";
-#endif
-            // Todo: ExifKey should have an appropriate c'tor, it should not be
-            //       necessary to use groupName here
-            ExifKey key(object->tag(), tiffGroupName(object->group()));
-            setExifTag(key, object->pValue());
+        TiffFinder finder(tag, group);
+        pRoot_->accept(finder);
+        TiffEntryBase const* te = dynamic_cast<TiffEntryBase*>(finder.result());
+        if (te) {
+            pData = te->pData();
+            size = te->size();
+            return;
         }
-    } // TiffDecoder::decodeIrbIptc
+    }
+
+    void TiffDecoder::decodeIptc(const TiffEntryBase* object)
+    {
+        // add Exif tag anyway
+        decodeStdTiffEntry(object);
+
+        // All tags are read at this point, so the first time we come here,
+        // find the relevant IPTC tag and decode IPTC if found
+        if (decodedIptc_) {
+            return;
+        }
+        decodedIptc_ = true;
+        // 1st choice: IPTCNAA
+        byte const* pData = 0;
+        long size = 0;
+        getObjData(pData, size, 0x83bb, Group::ifd0, object);
+        if (pData) {
+            if (0 == pImage_->iptcData().load(pData, size)) {
+                return;
+            }
+#ifndef SUPPRESS_WARNINGS
+            else {
+                std::cerr << "Warning: Failed to decode IPTC block found in "
+                          << "Directory Image, entry 0x83bb\n";
+            }
+#endif
+        }
+
+        // 2nd choice if no IPTCNAA record found or failed to decode it:
+        // ImageResources
+        pData = 0;
+        size = 0;
+        getObjData(pData, size, 0x8649, Group::ifd0, object);
+        if (pData) {
+            byte const* record = 0;
+            uint32_t sizeHdr = 0;
+            uint32_t sizeData = 0;
+            if (0 != Photoshop::locateIptcIrb(pData, size, 
+                                              &record, &sizeHdr, &sizeData)) {
+                return;
+            }
+            if (0 == pImage_->iptcData().load(record + sizeHdr, sizeData)) {
+                return;
+            }
+#ifndef SUPPRESS_WARNINGS
+            else {
+                std::cerr << "Warning: Failed to decode IPTC block found in "
+                          << "Directory Image, entry 0x8649\n";
+            }
+#endif
+        }
+    } // TiffMetadataDecoder::decodeIptc
 
     void TiffDecoder::decodeSubIfd(const TiffEntryBase* object)
     {
@@ -275,7 +322,7 @@ namespace Exiv2 {
         if (pos != pImage_->exifData().end()) pImage_->exifData().erase(pos);
         pImage_->exifData().add(key, pValue);
 
-    } // TiffDecoder::addExifTag
+    } // TiffDecoder::setExifTag
 
     void TiffDecoder::visitArrayEntry(TiffArrayEntry* /*object*/)
     {
@@ -528,7 +575,7 @@ namespace Exiv2 {
         // Todo
     }
 
-    void TiffEncoder::encodeIrbIptc(TiffEntryBase* object)
+    void TiffEncoder::encodeIptc(TiffEntryBase* object)
     {
         // Todo
     }

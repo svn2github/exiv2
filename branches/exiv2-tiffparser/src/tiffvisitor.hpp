@@ -240,8 +240,8 @@ namespace Exiv2 {
         void decodeOlympThumb(const TiffEntryBase* object);
         //! Decode SubIFD contents to Image group if it contains primary image data
         void decodeSubIfd(const TiffEntryBase* object);
-        //! Decode IPTC data from a Photoshop IRB tag
-        void decodeIrbIptc(const TiffEntryBase* object);
+        //! Decode IPTC data from an IPTCNAA tag or Photoshop ImageResources
+        void decodeIptc(const TiffEntryBase* object);
         //@}
 
     private:
@@ -249,6 +249,19 @@ namespace Exiv2 {
         //@{
         //! Set an Exif tag in the image. Overwrites existing tags
         void setExifTag(const ExifKey& key, const Value* pValue);
+        /*!
+          @brief Get the data for a \em tag and \em group, either from the 
+                 \em object provided, if it matches or from the matching element 
+                 in the hierarchy.
+
+          Populates \em pData and \em size with the result. If no matching 
+          element is found the function leaves both of these parameters unchanged.
+        */
+        void getObjData(byte const*&         pData,
+                        long&                size,
+                        uint16_t             tag,
+                        uint16_t             group,
+                        const TiffEntryBase* object);
         //@}
 
     private:
@@ -262,6 +275,7 @@ namespace Exiv2 {
         typedef std::map<uint16_t, uint32_t> GroupType;
         GroupType groupType_;        //!< NewSubfileType for each group
 
+        bool decodedIptc_;           //!< Indicates if IPTC has been decoded yet
     }; // class TiffDecoder
 
     /*!
@@ -322,8 +336,8 @@ namespace Exiv2 {
         void encodeOlympThumb(TiffEntryBase* object);
         //! Encode SubIFD contents to Image group if it contains primary image data
         void encodeSubIfd(TiffEntryBase* object);
-        //! Encode IPTC data from a Photoshop IRB tag
-        void encodeIrbIptc(TiffEntryBase* object);
+        //! Encode IPTC data to an IPTCNAA or Photoshop ImageResources tag
+        void encodeIptc(TiffEntryBase* object);
         //! Encode an entry using big endian byte order and the standard encoding function
         void encodeBigEndianEntry(TiffEntryBase* object);
 

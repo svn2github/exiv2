@@ -70,16 +70,21 @@ namespace Exiv2 {
         return isThisType(*io_, false);
     }
 
+    AccessMode TiffImage::checkMode(MetadataId metadataId) const
+    {
+        return ImageFactory::checkMode(ImageType::tiff, metadataId);
+    }
+
     void TiffImage::clearMetadata()
     {
         clearExifData();
-        clearComment();
+        clearIptcData();
     }
 
     void TiffImage::setMetadata(const Image& image)
     {
         setExifData(image.exifData());
-        setComment(image.comment());
+        setIptcData(image.iptcData());
     }
 
     void TiffImage::clearExifData()
@@ -104,12 +109,13 @@ namespace Exiv2 {
 
     void TiffImage::clearComment()
     {
-        comment_.erase();
+        // not supported, do nothing
     }
 
-    void TiffImage::setComment(const std::string& comment)
+    void TiffImage::setComment(const std::string& /*comment*/)
     {
-        comment_ = comment;
+        // not supported
+        throw(Error(32, "Image comment", "TIFF"));
     }
 
     void TiffImage::readMetadata()
