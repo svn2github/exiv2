@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004, 2005, 2006 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -586,8 +586,8 @@ namespace Exiv2 {
         //! End of the metadata
         iterator end() { return exifMetadata_.end(); }
         /*!
-          @brief Find the first Exifdatum with the given \em key, return an 
-                 iterator to it.  
+          @brief Find the first Exifdatum with the given \em key, return an
+                 iterator to it.
          */
         iterator findKey(const ExifKey& key);
         /*!

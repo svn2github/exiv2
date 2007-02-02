@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004, 2005, 2006 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -237,7 +237,7 @@ namespace Exiv2 {
          */
         virtual BasicIo& io() const =0;
         /*!
-          @brief Returns the access mode, i.e., the metadata functions, which 
+          @brief Returns the access mode, i.e., the metadata functions, which
              this image supports for the metadata type \em metadataId.
           @param metadataId The metadata identifier.
           @return Access mode for the requested image type and metadata identifier.
@@ -382,7 +382,7 @@ namespace Exiv2 {
          */
         static int getType(BasicIo& io);
         /*!
-          @brief Returns the access mode or supported metadata functions for an 
+          @brief Returns the access mode or supported metadata functions for an
               image type and a metadata type.
           @param imageType  The image type.
           @param metadataId The metadata identifier.

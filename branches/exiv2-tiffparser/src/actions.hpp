@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004, 2005, 2006 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -317,13 +317,13 @@ namespace Action {
         Modify(const Modify& /*src*/) : Task() {}
 
         //! Add a metadatum to \em pImage according to \em modifyCmd
-        static void addMetadatum(Exiv2::Image* pImage, 
+        static void addMetadatum(Exiv2::Image* pImage,
                                  const ModifyCmd& modifyCmd);
         //! Set a metadatum in \em pImage according to \em modifyCmd
-        static void setMetadatum(Exiv2::Image* pImage, 
+        static void setMetadatum(Exiv2::Image* pImage,
                                  const ModifyCmd& modifyCmd);
         //! Delete a metadatum from \em pImage according to \em modifyCmd
-        static void delMetadatum(Exiv2::Image* pImage, 
+        static void delMetadatum(Exiv2::Image* pImage,
                                  const ModifyCmd& modifyCmd);
 
     }; // class Modify
