@@ -57,70 +57,27 @@ EXIV2_RCSID("@(#) $Id: pngimage.cpp 823 2006-06-12 07:35:00Z cgilles $")
 // class member definitions
 namespace Exiv2 {
 
-    PngImage::PngImage(BasicIo::AutoPtr io, bool create)
-        : Image(mdExif | mdIptc), io_(io)
+    PngImage::PngImage(BasicIo::AutoPtr io, bool /*create*/)
+        : Image(ImageType::png, mdExif | mdIptc, io)
     {
-        if (create)
-        {
-            IoCloser closer(*io_);
-            io_->open();
-        }
     } // PngImage::PngImage
 
-    bool PngImage::good() const
+    void PngImage::setExifData(const ExifData& /*exifData*/)
     {
-        if (io_->open() != 0) return false;
-        IoCloser closer(*io_);
-        return isThisType(*io_, false);
+        // Todo: implement me!
+        throw(Error(32, "Exif metadata", "PNG"));
     }
 
-    AccessMode PngImage::checkMode(MetadataId metadataId) const
+    void PngImage::setIptcData(const IptcData& /*iptcData*/)
     {
-        return ImageFactory::checkMode(ImageType::png, metadataId);
-    }
-
-    void PngImage::clearMetadata()
-    {
-        clearExifData();
-        clearIptcData();
-    }
-
-    void PngImage::setMetadata(const Image& image)
-    {
-        setExifData(image.exifData());
-        setIptcData(image.iptcData());
-    }
-
-    void PngImage::clearExifData()
-    {
-        exifData_.clear();
-    }
-
-    void PngImage::setExifData(const ExifData& exifData)
-    {
-        exifData_ = exifData;
-    }
-
-    void PngImage::clearIptcData()
-    {
-        iptcData_.clear();
-    }
-
-    void PngImage::setIptcData(const IptcData& iptcData)
-    {
-        iptcData_ = iptcData;
-    }
-
-    void PngImage::clearComment()
-    {
-        // not yet supported, do nothing
-        // TODO : Add 'iTXt' chunk 'Description' tag support here
+        // Todo: implement me!
+        throw(Error(32, "IPTC metadata", "PNG"));
     }
 
     void PngImage::setComment(const std::string& /*comment*/)
     {
-        // not yet supported
-        // TODO : Add 'iTXt' chunk 'Description' tag support here
+        // Todo: implement me!
+        // Add 'iTXt' chunk 'Description' tag support here
         throw(Error(32, "Image comment", "PNG"));
     }
 
@@ -135,7 +92,7 @@ namespace Exiv2 {
         }
         IoCloser closer(*io_);
         // Ensure that this is the correct image type
-        if (!isThisType(*io_, false))
+        if (!isPngType(*io_, false))
         {
             if (io_->error() || io_->eof()) throw Error(14);
             throw Error(3, "PNG");
@@ -159,20 +116,12 @@ namespace Exiv2 {
 
     void PngImage::writeMetadata()
     {
-        /*
-          Todo: implement me!
-         */
-        throw(Error(31, "metadata", "PNG"));
+        //! Todo: implement me!
+        throw(Error(31, "PNG"));
     } // PngImage::writeMetadata
-
-    bool PngImage::isThisType(BasicIo& iIo, bool advance) const
-    {
-        return isPngType(iIo, advance);
-    }
 
     // *************************************************************************
     // free functions
-
     Image::AutoPtr newPngInstance(BasicIo::AutoPtr io, bool create)
     {
         Image::AutoPtr image(new PngImage(io, create));
@@ -186,14 +135,14 @@ namespace Exiv2 {
     bool isPngType(BasicIo& iIo, bool advance)
     {
         const int32_t len = 8;
-        const unsigned char pngID[8] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+        const unsigned char pngId[8] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
         byte buf[len];
         iIo.read(buf, len);
         if (iIo.error() || iIo.eof())
         {
             return false;
         }
-        int rc = memcmp(buf, pngID, 8);
+        int rc = memcmp(buf, pngId, 8);
         if (!advance || rc != 0)
         {
             iIo.seek(-len, BasicIo::cur);

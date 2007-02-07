@@ -101,62 +101,21 @@ namespace Exiv2 {
         return encoderFct;
     }
 
-    Cr2Image::Cr2Image(BasicIo::AutoPtr io, bool create)
-        : Image(mdExif | mdIptc), io_(io)
+    Cr2Image::Cr2Image(BasicIo::AutoPtr io, bool /*create*/)
+        : Image(ImageType::cr2, mdExif | mdIptc, io)
     {
-        if (create) {
-            IoCloser closer(*io_);
-            io_->open();
-        }
     } // Cr2Image::Cr2Image
 
-    bool Cr2Image::good() const
+    void Cr2Image::setExifData(const ExifData& /*exifData*/)
     {
-        if (io_->open() != 0) return false;
-        IoCloser closer(*io_);
-        return isThisType(*io_, false);
+        // Todo: implement me!
+        throw(Error(32, "Exif metadata", "CR2"));
     }
 
-    AccessMode Cr2Image::checkMode(MetadataId metadataId) const
+    void Cr2Image::setIptcData(const IptcData& /*iptcData*/)
     {
-        return ImageFactory::checkMode(ImageType::cr2, metadataId);
-    }
-
-    void Cr2Image::clearMetadata()
-    {
-        clearExifData();
-        clearIptcData();
-    }
-
-    void Cr2Image::setMetadata(const Image& image)
-    {
-        setExifData(image.exifData());
-        setIptcData(image.iptcData());
-    }
-
-    void Cr2Image::clearExifData()
-    {
-        exifData_.clear();
-    }
-
-    void Cr2Image::setExifData(const ExifData& exifData)
-    {
-        exifData_ = exifData;
-    }
-
-    void Cr2Image::clearIptcData()
-    {
-        iptcData_.clear();
-    }
-
-    void Cr2Image::setIptcData(const IptcData& iptcData)
-    {
-        iptcData_ = iptcData;
-    }
-
-    void Cr2Image::clearComment()
-    {
-        // not supported, do nothing
+        // Todo: implement me!
+        throw(Error(32, "IPTC metadata", "CR2"));
     }
 
     void Cr2Image::setComment(const std::string& /*comment*/)
@@ -175,7 +134,7 @@ namespace Exiv2 {
         }
         IoCloser closer(*io_);
         // Ensure that this is the correct image type
-        if (!isThisType(*io_, false)) {
+        if (!isCr2Type(*io_, false)) {
             if (io_->error() || io_->eof()) throw Error(14);
             throw Error(3, "CR2");
         }
@@ -187,16 +146,9 @@ namespace Exiv2 {
 
     void Cr2Image::writeMetadata()
     {
-        /*
-          Todo: implement me!
-         */
-        throw(Error(31, "metadata", "CR2"));
+        //! Todo: implement me!
+        throw(Error(31, "CR2"));
     } // Cr2Image::writeMetadata
-
-    bool Cr2Image::isThisType(BasicIo& iIo, bool advance) const
-    {
-        return isCr2Type(iIo, advance);
-    }
 
     const uint16_t Cr2Header::tag_ = 42;
     const char* Cr2Header::cr2sig_ = "CR\2\0";
@@ -239,7 +191,6 @@ namespace Exiv2 {
 
     // *************************************************************************
     // free functions
-
     Image::AutoPtr newCr2Instance(BasicIo::AutoPtr io, bool create)
     {
         Image::AutoPtr image(new Cr2Image(io, create));
