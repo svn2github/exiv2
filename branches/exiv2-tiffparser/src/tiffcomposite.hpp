@@ -786,16 +786,15 @@ namespace Exiv2 {
     }; // class TiffMnEntry
 
     /*!
-      @brief Composite to model an array of tags, each consisting of one
-             unsigned short value. Canon and Minolta makernotes use such tags.
-             The elements of this component are usually of type
-             TiffArrayElement.
+      @brief Composite to model an array of tags, each consisting of one value
+             of a given type. Canon and Minolta makernotes use such tags.  The
+             elements of this component are of type TiffArrayElement.
      */
     class TiffArrayEntry : public TiffEntryBase {
     public:
         //! @name Creators
         //@{
-        //! Default constructor
+        //! Constructor
         TiffArrayEntry(uint16_t tag,
                        uint16_t group,
                        uint16_t elGroup,
@@ -820,6 +819,32 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
+        //! @name Accessors
+        //@{
+        //! Implements count(). Return number of components in the entry.
+        virtual uint32_t doCount() const;
+        //@}
+
+        //! @name Write support (Accessors)
+        //@{
+        /*!
+          @brief Implements write(). Write each component, fill gaps with 0s.
+                 Check for duplicate tags and throw Error(39) if any are
+                 detected.
+         */
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
+                                 uint32_t  dataIdx) const;
+        // Using doWriteData from base class
+        /*!
+          @brief Implements size().
+         */
+        virtual uint32_t doSize() const;
+        // Using doSizeData from base class
+        //@}
+
     private:
         // DATA
         uint16_t   elSize_;      //!< Size of the array elements (in bytes)
@@ -828,9 +853,9 @@ namespace Exiv2 {
     }; // class TiffArrayEntry
 
     /*!
-      @brief Element of a TiffArrayEntry. The value is exactly one unsigned
-             short component. Canon and Minolta makernotes use arrays of
-             such elements.
+      @brief Element of a TiffArrayEntry. The value is exactly one component of
+             a given type and all elements of a TiffArrayEntry have the same
+             type. Canon and Minolta makernotes use such arrays.
      */
     class TiffArrayElement : public TiffEntryBase {
     public:
@@ -860,6 +885,23 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
+        //! @name Write support (Accessors)
+        //@{
+        /*!
+          @brief Implements write(). Write the value using the element specific
+                 byte order, if any. Make sure the value has only one component
+                 and that it is of the correct type, else throw Error(40).
+         */
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
+                                 uint32_t  dataIdx) const;
+        // Using doWriteData from base class
+        // Using doSize from base class
+        // Using doSizeData from base class
+        //@}
+
     private:
         // DATA
         TypeId    elTypeId_;      //!< Type of the element
@@ -869,6 +911,12 @@ namespace Exiv2 {
 
 // *****************************************************************************
 // template, inline and free functions
+
+    /*!
+      @brief Compare two TIFF component pointers by tag. Return true if the tag
+             of component lhs is less than that of rhs.
+     */
+    bool cmpTagLt(TiffComponent* const lhs, TiffComponent* const rhs);
 
     //! Return the group name for a group
     const char* tiffGroupName(uint16_t group);

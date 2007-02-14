@@ -29,7 +29,7 @@ using namespace Exiv2;
 void print(const ExifData& exifData);
 
 int main()
-{
+try {
     BasicIo::AutoPtr io(new FileIo("image.tif"));
     TiffImage tiffImage(io, false);
     ExifData& exifData = tiffImage.exifData();
@@ -47,6 +47,10 @@ int main()
     print(exifData);
     tiffImage.writeMetadata();
     return 0;
+}
+catch (const Error& e) {
+    std::cerr << e << "\n";
+    return 1;
 }
 
 void print(const ExifData& exifData)

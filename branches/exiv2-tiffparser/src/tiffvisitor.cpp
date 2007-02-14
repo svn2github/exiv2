@@ -1110,7 +1110,8 @@ namespace Exiv2 {
         assert(object != 0);
 
         readTiffEntry(object);
-        uint16_t s = static_cast<uint16_t>(object->size() / object->elSize());
+        // Todo: size here is that of the data area
+        uint16_t s = static_cast<uint16_t>(object->size_ / object->elSize());
         for (uint16_t i = 0; i < s; ++i) {
             uint16_t tag = i;
             TiffComponent::AutoPtr tc = create(tag, object->elGroup());

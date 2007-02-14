@@ -46,6 +46,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 
 // *****************************************************************************
 // class member definitions
@@ -159,9 +160,7 @@ namespace Exiv2 {
 
     TiffDirectory::~TiffDirectory()
     {
-        Components::iterator b = components_.begin();
-        Components::iterator e = components_.end();
-        for (Components::iterator i = b; i != e; ++i) {
+        for (Components::iterator i = components_.begin(); i != components_.end(); ++i) {
             delete *i;
         }
         delete pNext_;
@@ -189,9 +188,7 @@ namespace Exiv2 {
 
     TiffArrayEntry::~TiffArrayEntry()
     {
-        Components::iterator b = elements_.begin();
-        Components::iterator e = elements_.end();
-        for (Components::iterator i = b; i != e; ++i) {
+        for (Components::iterator i = elements_.begin(); i != elements_.end(); ++i) {
             delete *i;
         }
     } // TiffArrayEntry::~TiffArrayEntry
@@ -268,8 +265,7 @@ namespace Exiv2 {
                 tc = pNext_;
             }
             else {
-                for (Components::iterator i = components_.begin();
-                     i != components_.end(); ++i) {
+                for (Components::iterator i = components_.begin(); i != components_.end(); ++i) {
                     if ((*i)->tag() == ts->tag() && (*i)->group() == ts->group_) {
                         tc = *i;
                         break;
@@ -447,9 +443,8 @@ namespace Exiv2 {
     void TiffDirectory::doAccept(TiffVisitor& visitor)
     {
         visitor.visitDirectory(this);
-        Components::const_iterator b = components_.begin();
-        Components::const_iterator e = components_.end();
-        for (Components::const_iterator i = b; visitor.go() && i != e; ++i) {
+        for (Components::const_iterator i = components_.begin();
+             visitor.go() && i != components_.end(); ++i) {
             (*i)->accept(visitor);
         }
         if (visitor.go()) visitor.visitDirectoryNext(this);
@@ -479,9 +474,8 @@ namespace Exiv2 {
     void TiffArrayEntry::doAccept(TiffVisitor& visitor)
     {
         visitor.visitArrayEntry(this);
-        Components::const_iterator b = elements_.begin();
-        Components::const_iterator e = elements_.end();
-        for (Components::const_iterator i = b; visitor.go() && i != e; ++i) {
+        for (Components::const_iterator i = elements_.begin();
+             visitor.go() && i != elements_.end(); ++i) {
             (*i)->accept(visitor);
         }
     } // TiffArrayEntry::doAccept
@@ -507,6 +501,17 @@ namespace Exiv2 {
         return size();
     }
 
+    uint32_t TiffArrayEntry::doCount() const
+    {
+        if (elements_.empty()) return 0;
+
+        uint16_t maxTag = 0;
+        for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
+            if ((*i)->tag() > maxTag) maxTag = (*i)->tag();
+        }
+        return maxTag + 1;
+    }
+
     uint32_t TiffComponent::write(Blob&     blob,
                                   ByteOrder byteOrder,
                                   int32_t   offset,
@@ -522,15 +527,15 @@ namespace Exiv2 {
                                     uint32_t  valueIdx,
                                     uint32_t  dataIdx) const
     {
+        // TIFF standard requires IFD entries to be sorted in ascending order by tag
+// todo       std::sort(components_.begin(), components_.end(), cmpTagLt);
+
         // Size of all directory entries, without values and additional data
         const uint32_t sizeDir = 2 + 12 * components_.size() + (hasNext_ ? 4 : 0);
 
         // Size of IFD values
         uint32_t sizeValue = 0;
-        const Components::const_iterator b = components_.begin();
-        const Components::const_iterator e = components_.end();
-        Components::const_iterator i;
-        for (i = b; i != e; ++i) {
+        for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
             uint32_t sv = (*i)->size();
             if (sv > 4) sizeValue += sv;
         }
@@ -549,7 +554,7 @@ namespace Exiv2 {
         idx += 2;
 
         // Write directory entries - may contain pointers to the value or data
-        for (i = b; i != e; ++i) {
+        for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
             idx += writeDirEntry(blob, byteOrder, offset, *i, valueIdx, dataIdx);
             uint32_t sv = (*i)->size();
             if (sv > 4) valueIdx += sv;
@@ -569,7 +574,7 @@ namespace Exiv2 {
         // Write IFD values - may contain pointers to additional data
         valueIdx = sizeDir;
         dataIdx = sizeDir + sizeValue;
-        for (i = b; i != e; ++i) {
+        for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
             uint32_t sv = (*i)->size();
             if (sv > 4) {
                 idx += (*i)->write(blob, byteOrder, offset, valueIdx, dataIdx);
@@ -581,7 +586,7 @@ namespace Exiv2 {
 
         // Write data - may contain offsets too (eg sub-IFD)
         dataIdx = sizeDir + sizeValue;
-        for (i = b; i != e; ++i) {
+        for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
             idx += (*i)->writeData(blob, byteOrder, offset, dataIdx);
             dataIdx += (*i)->sizeData();
         }
@@ -622,6 +627,7 @@ namespace Exiv2 {
                                                    offset,
                                                    valueIdx,
                                                    dataIdx);
+            assert(len <= 4);
             if (len < 4) {
                 memset(buf, 0x0, 4);
                 append(blob, buf, 4 - len);
@@ -716,6 +722,69 @@ namespace Exiv2 {
         return mn_->write(blob, byteOrder, offset + valueIdx, uint32_t(-1), uint32_t(-1));
     } // TiffMnEntry::doWrite
 
+    uint32_t TiffArrayEntry::doWrite(Blob&     blob,
+                                     ByteOrder byteOrder,
+                                     int32_t   offset,
+                                     uint32_t  valueIdx,
+                                     uint32_t  dataIdx) const
+    {
+// todo        std::sort(elements_.begin(), elements_.end(), cmpTagLt);
+
+        uint32_t idx = 0;
+        int32_t nextTag = 0;
+
+        // Hack: Add size. Todo: Make this applicable only when needed (Canon)
+        if (!elements_.empty()) {
+            byte buf[4];
+            switch (elSize_) {
+            case 2:
+                idx += us2Data(buf, size(), byteOrder);
+                break;
+            case 4:
+                idx += ul2Data(buf, size(), byteOrder);
+                break;
+            }
+            append(blob, buf, elSize_);
+            nextTag = 1;
+        }
+
+        // Tags must be sorted in ascending order
+        for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
+
+            // Todo: see Hack above
+            if ((*i)->tag() == 0x0000) continue;
+
+            // Fill gaps. Repeated tags will cause an exception
+            int32_t gap = ((*i)->tag() - nextTag) * elSize_;
+            if (gap < 0) throw Error(39, (*i)->tag());
+            if (gap > 0) {
+                blob.insert(blob.end(), gap, 0);
+                idx += gap;
+            }
+            idx += (*i)->write(blob, byteOrder, offset + idx, valueIdx, dataIdx);
+            nextTag = (*i)->tag() + 1;
+        }
+        return idx;
+    } // TiffArrayEntry::doWrite
+
+    uint32_t TiffArrayElement::doWrite(Blob&     blob,
+                                       ByteOrder byteOrder,
+                                       int32_t   /*offset*/,
+                                       uint32_t  /*valueIdx*/,
+                                       uint32_t  /*dataIdx*/) const
+    {
+        Value const* pv = pValue();
+        if (!pv || pv->count() == 0) return 0;
+        if (!(pv->count() == 1 && pv->typeId() == elTypeId_)) {
+            throw Error(40, tag());
+        }
+        DataBuf buf(pv->size());
+        if (elByteOrder_ != invalidByteOrder) byteOrder = elByteOrder_;
+        pv->copy(buf.pData_, byteOrder);
+        append(blob, buf.pData_, buf.size_);
+        return buf.size_;
+    } // TiffArrayElement::doWrite
+
     uint32_t TiffComponent::writeData(Blob&     blob,
                                       ByteOrder byteOrder,
                                       int32_t   offset,
@@ -775,8 +844,7 @@ namespace Exiv2 {
         // Size of the directory, without values and additional data
         uint32_t len = 2 + 12 * components_.size() + (hasNext_ ? 4 : 0);
         // Size of IFD values and data
-        for (Components::const_iterator i = components_.begin();
-             i != components_.end(); ++i) {
+        for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
             uint32_t sv = (*i)->size();
             if (sv > 4) len += sv;
             len += (*i)->sizeData();
@@ -803,6 +871,11 @@ namespace Exiv2 {
         if (!mn_) return 0;
         return mn_->size();
     } // TiffMnEntry::doSize
+
+    uint32_t TiffArrayEntry::doSize() const
+    {
+        return count() * elSize_;
+    } // TiffArrayEntry::doSize
 
     uint32_t TiffComponent::sizeData() const
     {
@@ -837,6 +910,13 @@ namespace Exiv2 {
 
     // *************************************************************************
     // free functions
+
+    bool cmpTagLt(TiffComponent* const lhs, TiffComponent* const rhs)
+    {
+        assert(lhs != 0);
+        assert(rhs != 0);
+        return lhs->tag() < rhs->tag();
+    }
 
     TiffComponent::AutoPtr newTiffDirectory(uint16_t tag,
                                             const TiffStructure* ts)

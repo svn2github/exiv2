@@ -81,6 +81,8 @@ namespace Exiv2 {
         ErrMsg( 36, N_("Failed to decode %1 metadata")), // %1=type of metadata (Exif, IPTC)
         ErrMsg( 37, N_("Size of %1 JPEG segment is larger than 65535 bytes")), // %1=type of metadata (Exif, IPTC, JPEG comment)
         ErrMsg( 38, N_("TIFF directory %1 has too many entries")), // %1=TIFF directory name
+        ErrMsg( 39, N_("Multiple TIFF array element tags %1 in one directory")), // %1=tag number
+        ErrMsg( 40, N_("TIFF array element tag %1 has wrong type or more than one component")), // %1=tag number
         // Last error message (message is not used)
         ErrMsg( -2, N_("(Unknown Error)"))
     };
