@@ -157,7 +157,7 @@ namespace Exiv2 {
         byte* start()                         const { return pStart_; }
         //@}
 
-        //! @name Write support (Accessors)
+        //! @name Write support (Manipulators)
         //@{
         /*!
           @brief Write a TiffComponent to a binary image.
@@ -176,7 +176,10 @@ namespace Exiv2 {
                        ByteOrder byteOrder,
                        int32_t   offset,
                        uint32_t  valueIdx,
-                       uint32_t  dataIdx) const;
+                       uint32_t  dataIdx);
+        //@}
+        //! @name Write support (Accessors)
+        //@{
         /*!
           @brief Write the IFD data of this component to a binary image.
                  Return the number of bytes written. Components derived from
@@ -217,14 +220,17 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor) =0;
         //@}
 
-        //! @name Write support (Accessors)
+        //! @name Write support (Manipulators)
         //@{
         //! Implements write().
         virtual uint32_t doWrite(Blob&     blob,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
-                                 uint32_t  dataIdx) const =0;
+                                 uint32_t  dataIdx) =0;
+        //@}
+        //! @name Write support (Accessors)
+        //@{
         //! Implements writeData().
         virtual uint32_t doWriteData(Blob&     blob,
                                      ByteOrder byteOrder,
@@ -375,7 +381,7 @@ namespace Exiv2 {
         //! Implements count().
         virtual uint32_t doCount() const;
         //@}
-        //! @name Write support (Accessors)
+        //! @name Write support (Manipulators)
         //@{
         /*!
           @brief Implements write(). Write the value of a standard TIFF entry to
@@ -386,7 +392,10 @@ namespace Exiv2 {
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
-                                 uint32_t  dataIdx) const;
+                                 uint32_t  dataIdx);
+        //@}
+        //! @name Write support (Accessors)
+        //@{
         /*!
           @brief Implements writeData(). Standard TIFF entries have no data:
                  write nothing and return 0.
@@ -498,7 +507,7 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
-        //! @name Write support (Accessors)
+        //! @name Write support (Manipulators)
         //@{
         /*!
           @brief Implements write(). Write pointers into the data area to the
@@ -515,7 +524,10 @@ namespace Exiv2 {
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
-                                 uint32_t  dataIdx) const;
+                                 uint32_t  dataIdx);
+        //@}
+        //! @name Write support (Accessors)
+        //@{
         /*!
           @brief Implements writeData(). Write the data area to the blob. Return
                  the number of bytes written.
@@ -608,7 +620,7 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
-        //! @name Write support (Accessors)
+        //! @name Write support (Manipulators)
         //@{
         /*!
           @brief Implements write(). Write the TIFF directory, values and
@@ -619,7 +631,10 @@ namespace Exiv2 {
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
-                                 uint32_t  dataIdx) const;
+                                 uint32_t  dataIdx);
+        //@}
+        //! @name Write support (Accessors)
+        //@{
         /*!
           @brief This class does not implement writeData(), it only has write().
                  This method must not be called; it commits suicide.
@@ -689,7 +704,7 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
-        //! @name Write support (Accessors)
+        //! @name Write support (Manipulators)
         //@{
         /*!
           @brief Implements write(). Write the sub-IFD pointers to the \em blob,
@@ -700,7 +715,10 @@ namespace Exiv2 {
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
-                                 uint32_t  dataIdx) const;
+                                 uint32_t  dataIdx);
+        //@}
+        //! @name Write support (Accessors)
+        //@{
         /*!
           @brief Implements writeData(). Write the sub-IFDs to the blob. Return
                  the number of bytes written.
@@ -758,7 +776,7 @@ namespace Exiv2 {
         virtual uint32_t doCount() const;
         //@}
 
-        //! @name Write support (Accessors)
+        //! @name Write support (Manipulators)
         //@{
         /*!
           @brief Implements write() by forwarding the call to the actual
@@ -768,7 +786,10 @@ namespace Exiv2 {
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
-                                 uint32_t  dataIdx) const;
+                                 uint32_t  dataIdx);
+        //@}
+        //! @name Write support (Accessors)
+        //@{
         // Using doWriteData from base class
         /*!
           @brief Implements size() by forwarding the call to the actual
@@ -798,7 +819,8 @@ namespace Exiv2 {
         TiffArrayEntry(uint16_t tag,
                        uint16_t group,
                        uint16_t elGroup,
-                       TypeId   elTypeId);
+                       TypeId   elTypeId,
+                       bool     addSizeElement);
         //! Virtual destructor
         virtual ~TiffArrayEntry();
         //@}
@@ -825,7 +847,7 @@ namespace Exiv2 {
         virtual uint32_t doCount() const;
         //@}
 
-        //! @name Write support (Accessors)
+        //! @name Write support (Manipulators)
         //@{
         /*!
           @brief Implements write(). Write each component, fill gaps with 0s.
@@ -836,7 +858,10 @@ namespace Exiv2 {
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
-                                 uint32_t  dataIdx) const;
+                                 uint32_t  dataIdx);
+        //@}
+        //! @name Write support (Accessors)
+        //@{
         // Using doWriteData from base class
         /*!
           @brief Implements size().
@@ -847,9 +872,10 @@ namespace Exiv2 {
 
     private:
         // DATA
-        uint16_t   elSize_;      //!< Size of the array elements (in bytes)
-        uint16_t   elGroup_;     //!< Group for the elements
-        Components elements_;    //!< List of elements in this composite
+        uint16_t   elSize_;         //!< Size of the array elements (in bytes)
+        uint16_t   elGroup_;        //!< Group for the elements
+        bool       addSizeElement_; //!< Indicates size needs to be provided in the first element
+        Components elements_;       //!< List of elements in this composite
     }; // class TiffArrayEntry
 
     /*!
@@ -885,7 +911,7 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
-        //! @name Write support (Accessors)
+        //! @name Write support (Manipulators)
         //@{
         /*!
           @brief Implements write(). Write the value using the element specific
@@ -896,11 +922,11 @@ namespace Exiv2 {
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
-                                 uint32_t  dataIdx) const;
+                                 uint32_t  dataIdx);
+        //@}
         // Using doWriteData from base class
         // Using doSize from base class
         // Using doSizeData from base class
-        //@}
 
     private:
         // DATA
@@ -916,7 +942,7 @@ namespace Exiv2 {
       @brief Compare two TIFF component pointers by tag. Return true if the tag
              of component lhs is less than that of rhs.
      */
-    bool cmpTagLt(TiffComponent* const lhs, TiffComponent* const rhs);
+    bool cmpTagLt(TiffComponent const* lhs, TiffComponent const* rhs);
 
     //! Return the group name for a group
     const char* tiffGroupName(uint16_t group);
@@ -941,13 +967,13 @@ namespace Exiv2 {
                                           const TiffStructure* ts);
 
     //! Function to create and initialize a new array entry
-    template<TypeId typeId>
+    template<TypeId typeId, bool addSizeElement>
     TiffComponent::AutoPtr newTiffArrayEntry(uint16_t tag,
                                              const TiffStructure* ts)
     {
         assert(ts);
         return TiffComponent::AutoPtr(
-            new TiffArrayEntry(tag, ts->group_, ts->newGroup_, typeId));
+            new TiffArrayEntry(tag, ts->group_, ts->newGroup_, typeId, addSizeElement));
     }
 
     //! Function to create and initialize a new array element

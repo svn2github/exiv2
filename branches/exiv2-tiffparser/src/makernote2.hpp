@@ -261,7 +261,7 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
-        //! @name Write support (Accessors)
+        //! @name Write support (Manipulators)
         //@{
         /*!
           @brief Implements write(). Write the Makernote header, TIFF directory,
@@ -272,7 +272,10 @@ namespace Exiv2 {
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
-                                 uint32_t  dataIdx) const;
+                                 uint32_t  dataIdx);
+        //@}
+        //! @name Write support (Accessors)
+        //@{
         /*!
           @brief This class does not implement writeData(), it only has write().
                  This method must not be called; it commits suicide.

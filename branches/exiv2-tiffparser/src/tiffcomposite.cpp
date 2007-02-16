@@ -151,10 +151,12 @@ namespace Exiv2 {
     TiffArrayEntry::TiffArrayEntry(uint16_t tag,
                                    uint16_t group,
                                    uint16_t elGroup,
-                                   TypeId elTypeId)
+                                   TypeId   elTypeId,
+                                   bool     addSizeElement)
         : TiffEntryBase(tag, group, elTypeId),
           elSize_(static_cast<uint16_t>(TypeInfo::typeSize(elTypeId))),
-          elGroup_(elGroup)
+          elGroup_(elGroup),
+          addSizeElement_(addSizeElement)
     {
     }
 
@@ -516,7 +518,7 @@ namespace Exiv2 {
                                   ByteOrder byteOrder,
                                   int32_t   offset,
                                   uint32_t  valueIdx,
-                                  uint32_t  dataIdx) const
+                                  uint32_t  dataIdx)
     {
         return doWrite(blob, byteOrder, offset, valueIdx, dataIdx);
     } // TiffComponent::write
@@ -525,10 +527,10 @@ namespace Exiv2 {
                                     ByteOrder byteOrder,
                                     int32_t   offset,
                                     uint32_t  valueIdx,
-                                    uint32_t  dataIdx) const
+                                    uint32_t  dataIdx)
     {
         // TIFF standard requires IFD entries to be sorted in ascending order by tag
-// todo       std::sort(components_.begin(), components_.end(), cmpTagLt);
+        std::sort(components_.begin(), components_.end(), cmpTagLt);
 
         // Size of all directory entries, without values and additional data
         const uint32_t sizeDir = 2 + 12 * components_.size() + (hasNext_ ? 4 : 0);
@@ -640,7 +642,7 @@ namespace Exiv2 {
                                     ByteOrder byteOrder,
                                     int32_t   /*offset*/,
                                     uint32_t  /*valueIdx*/,
-                                    uint32_t  /*dataIdx*/) const
+                                    uint32_t  /*dataIdx*/)
     {
         if (!pValue_) return 0;
 
@@ -677,7 +679,7 @@ namespace Exiv2 {
                                     ByteOrder byteOrder,
                                     int32_t   offset,
                                     uint32_t  /*valueIdx*/,
-                                    uint32_t  dataIdx) const
+                                    uint32_t  dataIdx)
     {
         if (!pValue()) return 0;
 
@@ -700,7 +702,7 @@ namespace Exiv2 {
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  /*valueIdx*/,
-                                 uint32_t  dataIdx) const
+                                 uint32_t  dataIdx)
     {
         DataBuf buf(ifds_.size() * 4);
         uint32_t idx = 0;
@@ -716,7 +718,7 @@ namespace Exiv2 {
                                   ByteOrder byteOrder,
                                   int32_t   offset,
                                   uint32_t  valueIdx,
-                                  uint32_t  /*dataIdx*/) const
+                                  uint32_t  /*dataIdx*/)
     {
         if (!mn_) return 0;
         return mn_->write(blob, byteOrder, offset + valueIdx, uint32_t(-1), uint32_t(-1));
@@ -726,15 +728,15 @@ namespace Exiv2 {
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  valueIdx,
-                                     uint32_t  dataIdx) const
+                                     uint32_t  dataIdx)
     {
-// todo        std::sort(elements_.begin(), elements_.end(), cmpTagLt);
+        std::sort(elements_.begin(), elements_.end(), cmpTagLt);
 
         uint32_t idx = 0;
         int32_t nextTag = 0;
 
-        // Hack: Add size. Todo: Make this applicable only when needed (Canon)
-        if (!elements_.empty()) {
+        // Some array entries need to have the size in the first element
+        if (addSizeElement_ && !elements_.empty()) {
             byte buf[4];
             switch (elSize_) {
             case 2:
@@ -750,10 +752,8 @@ namespace Exiv2 {
 
         // Tags must be sorted in ascending order
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
-
-            // Todo: see Hack above
-            if ((*i)->tag() == 0x0000) continue;
-
+            // Skip the manufactured tag, if it exists
+            if (addSizeElement_ && (*i)->tag() == 0x0000) continue;
             // Fill gaps. Repeated tags will cause an exception
             int32_t gap = ((*i)->tag() - nextTag) * elSize_;
             if (gap < 0) throw Error(39, (*i)->tag());
@@ -771,7 +771,7 @@ namespace Exiv2 {
                                        ByteOrder byteOrder,
                                        int32_t   /*offset*/,
                                        uint32_t  /*valueIdx*/,
-                                       uint32_t  /*dataIdx*/) const
+                                       uint32_t  /*dataIdx*/)
     {
         Value const* pv = pValue();
         if (!pv || pv->count() == 0) return 0;
@@ -911,7 +911,7 @@ namespace Exiv2 {
     // *************************************************************************
     // free functions
 
-    bool cmpTagLt(TiffComponent* const lhs, TiffComponent* const rhs)
+    bool cmpTagLt(TiffComponent const* lhs, TiffComponent const* rhs)
     {
         assert(lhs != 0);
         assert(rhs != 0);

@@ -182,7 +182,7 @@ namespace Exiv2 {
                                        ByteOrder byteOrder,
                                        int32_t   offset,
                                        uint32_t  /*valueIdx*/,
-                                       uint32_t  /*dataIdx*/) const
+                                       uint32_t  /*dataIdx*/)
     {
         if (this->byteOrder() != invalidByteOrder) {
             byteOrder = this->byteOrder();
