@@ -2,11 +2,13 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(Exiv2, 0.12, ahuggel@gmx.net)
+AC_INIT(exiv2, 0.14, ahuggel@gmx.net)
+EXIV2_LTVERSION=0:0:0
 PACKAGE=$PACKAGE_NAME
 VERSION=$PACKAGE_VERSION
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
+AC_SUBST(EXIV2_LTVERSION)
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 AC_CONFIG_SRCDIR([src/exif.cpp])
@@ -16,8 +18,12 @@ AC_CONFIG_AUX_DIR([./config])
 # ---------------------------------------------------------------------------
 # Checks for programs.
 # ---------------------------------------------------------------------------
+# Don't use -g to compile C++ code
+ac_cv_prog_cxx_g=no
 AC_PROG_CXX
 AC_PROG_CXXCPP
+# Don't use -g to compile C code
+ac_cv_prog_cc_g=no
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
@@ -64,36 +70,72 @@ AC_STRUCT_TM
 #AC_TYPE_UINT32_T
 #AC_TYPE_INT16_T
 #AC_TYPE_INT32_T
+AC_SUBST(GXX,$GXX)
+AC_SUBST(GCC,$GCC)
 
 # ---------------------------------------------------------------------------
 # Checks for library functions.
 # ---------------------------------------------------------------------------
-AC_FUNC_ALLOCA
-AC_FUNC_MALLOC
-AC_FUNC_MEMCMP
 AC_FUNC_MKTIME
 AC_FUNC_MMAP
-AC_FUNC_REALLOC
-AC_FUNC_STAT
 AC_FUNC_STRERROR_R
-AC_FUNC_STRFTIME
-AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([gmtime_r memset strchr strerror strtol mmap munmap])
 AC_CHECK_FUNCS([timegm], HAVE_TIMEGM=1)
 AC_SUBST(HAVE_TIMEGM,$HAVE_TIMEGM)
 
-AC_SUBST(GXX,$GXX)
-AC_SUBST(GCC,$GCC)
-
+# ---------------------------------------------------------------------------
+# Miscellaneous
+# ---------------------------------------------------------------------------
+AC_MSG_CHECKING([whether to enable dependency tracking])
 AC_ARG_ENABLE(dependency-tracking,
-[  --disable-dependency-tracking  speeds up one-time build
+    [  --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors],
-[if test $enableval = yes; then DEP_TRACKING=1; fi],DEP_TRACKING=1)
-
+    USE_TRACKING=$enableval, USE_TRACKING=yes)
+AC_MSG_RESULT($USE_TRACKING)
+DEP_TRACKING=
+if test "$USE_TRACKING" = "yes"; then
+    DEP_TRACKING=1
+fi
 AC_SUBST(DEP_TRACKING,$DEP_TRACKING)
 
+AC_MSG_CHECKING([whether to use the lens database for Exif.Nikon3.LensData])
+AC_ARG_ENABLE(lensdata,
+    [  --disable-lensdata      do not use the lens database for Exif.Nikon3.LensData ],
+    USE_LENSDATA=$enableval, USE_LENSDATA=yes)
+AC_MSG_RESULT($USE_LENSDATA)
+if test "$USE_LENSDATA" = "yes"; then
+    AC_DEFINE(HAVE_LENSDATA,1)
+fi
+
+AC_MSG_CHECKING([whether to convert UCS2 encoded Windows tags with iconv ])
+AC_ARG_ENABLE(printucs2,
+    [  --disable-printucs2     do not convert UCS2 encoded Windows tag to UTF-8 ],
+    USE_PRINTUCS2=$enableval, USE_PRINTUCS2=yes)
+AC_MSG_RESULT($USE_PRINTUCS2)
+if test "$USE_PRINTUCS2" = "yes"; then
+    AC_DEFINE(HAVE_PRINTUCS2,1)
+else
+# if NLS is also disabled, don't link with iconv
+# (since in some cases, AM_GNU_GETTEXT and/or AM_ICONV configure for this anyway)
+    if test "$USE_NLS" = "no"; then
+        unset LIBICONV
+        unset LTLIBICONV
+    fi
+fi
+
+# Udi's hack to add libiconv to the Libs section in exiv2.pc
+if test "$enable_shared" = "no"; then
+    EXV_LIB_STATIC=$LTLIBICONV
+else
+    EXV_LIB_STATIC=
+fi
+AC_SUBST(EXV_LIB_STATIC)
+
+# ---------------------------------------------------------------------------
+# Create output files.
+# ---------------------------------------------------------------------------
 AC_CONFIG_FILES([./config/config.mk])
-AC_CONFIG_FILES([./config/exiv2-config], [chmod +x ./config/exiv2-config])
 AC_CONFIG_FILES([./config/exiv2.pc])
 AC_CONFIG_FILES([./po/Makefile.in])
+AC_CONFIG_FILES([./src/doxygen.hpp])
 AC_OUTPUT

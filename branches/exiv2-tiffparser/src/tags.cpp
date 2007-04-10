@@ -225,6 +225,10 @@ namespace Exiv2 {
 
     //! Base IFD Tags (IFD0 and IFD1)
     static const TagInfo ifdTagInfo[] = {
+        TagInfo(0x000b, "ProcessingSoftware", N_("Processing Software"),
+                N_("The name and version of the software used to post-process "
+                   "the picture."), // ACD Systems Digital Imaging tag
+                ifd0Id, otherTags, asciiString, printValue),
         TagInfo(0x00fe, "NewSubfileType", N_("New Subfile Type"),
                 N_("A general indication of the kind of data contained in this subfile."),
                 ifd0Id, imgStruct, unsignedLong, EXV_PRINT_TAG(exifNewSubfileType)), // TIFF tag
@@ -416,6 +420,12 @@ namespace Exiv2 {
         TagInfo(0x02bc, "XMLPacket", N_("XML Packet"),
                 N_("XMP Metadata (Adobe technote 9-14-02)"),
                 ifd0Id, otherTags, unsignedByte, printValue),
+        TagInfo(0x4746, "Rating", N_("Windows Rating"),
+                N_("Rating tag used by Windows"),
+                ifd0Id, otherTags, unsignedShort, printValue), // Windows Tag
+        TagInfo(0x4749, "RatingPercent", N_("Windows Rating Percent"),
+                N_("Rating tag used by Windows, value in percent"),
+                ifd0Id, otherTags, unsignedShort, printValue), // Windows Tag
         TagInfo(0x828d, "CFARepeatPatternDim", N_("CFA Repeat Pattern Dimension"),
                 N_("Contains two values representing the minimum rows and columns "
                 "to define the repeating patterns of the color filter array"),
@@ -1667,7 +1677,7 @@ namespace Exiv2 {
 
     std::ostream& printUcs2(std::ostream& os, const Value& value)
     {
-#ifdef EXV_HAVE_ICONV
+#if defined EXV_HAVE_ICONV && defined EXV_HAVE_PRINTUCS2
         bool go = true;
         iconv_t cd = (iconv_t)(-1);
         if (value.typeId() != unsignedByte) {
@@ -1716,9 +1726,9 @@ namespace Exiv2 {
         if (!go) {
             os << value;
         }
-#else // !EXV_HAVE_ICONV
+#else // !(EXV_HAVE_ICONV && EXV_HAVE_PRINTUCS2)
         os << value;
-#endif // EXV_HAVE_ICONV
+#endif // EXV_HAVE_ICONV && EXV_HAVE_PRINTUCS2
         return os;
 
     } // printUcs2

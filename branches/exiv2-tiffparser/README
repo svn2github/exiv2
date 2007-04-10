@@ -6,10 +6,10 @@ write Exif and IPTC image metadata. The homepage of Exiv2 is:
 
     http://www.exiv2.org/
 
-Point your browser to doc/index.html for the complete Exiv2 API
-documentation and metadata tag reference.
-
 See doc/ChangeLog for a description of recent changes to Exiv2.
+
+If you have the doc package, you can point your browser to doc/index.html 
+for the complete Exiv2 API documentation and metadata tag reference.
 
 
 Building and Installing
@@ -28,10 +28,6 @@ If you downloaded the source code from the subversion repository, you
 won't have a configure script. Run 'make config' to generate it and see 
 the section "Hacking" below.
 
-zlib (http://www.zlib.net/) is required for PNG support, so you'll need 
-to have the zlib library and header files installed or run configure with
-the --without-zlib flag.
-
 The default install locations are /usr/local/lib for the library,
 /usr/local/bin for the exiv2 utility and /usr/local/include/exiv2 for the
 header files. Use the --prefix=directory option of the configure script to
@@ -42,6 +38,29 @@ To build Exiv2 with MSVC 7.1 or 8.0, use the solution file msvc/exiv2.sln.
 To uninstall Exiv2 from a UNIX-like system, run:
 
     $ make uninstall
+
+
+Dependencies
+============
+
+The following features are enabled by default and may *) require external
+libraries. They can be controlled through configure options. See also
+'./configure --help'.
+
+Feature                     Package   Configure options
+--------------------------  --------  ----------------------------
+PNG image support           zlib      --without-zlib
+                                      --with-zlib=DIR
+National language support   gettext   --disable-nls
+Converting Windows XP tags  libiconv  --disable-printucs2
+                                      --with-libiconv-prefix[=DIR]
+
+zlib         http://www.zlib.net/
+gettext  *)  http://www.gnu.org/software/gettext/
+libiconv *)  http://www.gnu.org/software/libiconv/
+
+*) Some systems have gettext and iconv in libc. The configure script 
+should detect this.
 
 
 Troubleshooting
@@ -69,8 +88,7 @@ Hacking
 
 A pkg-config .pc file is installed together with the library.
 Application developers can use pkg-config(1) to obtain correct compile
-and link time flags for the Exiv2 library. (The exiv2-config script is
-still included in the distribution but should be considered deprecated.)
+and link time flags for the Exiv2 library.
 
 If you downloaded Exiv2 directly from the subversion repository, and
 you want to build it using the GNU configure script, then you need to

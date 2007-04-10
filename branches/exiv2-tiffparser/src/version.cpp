@@ -1,6 +1,6 @@
-/* **************************************************************** -*- C -*- */
+// ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2007 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -19,36 +19,34 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*
-  File:      i18n.h
-  Brief:     i18n definitions. Do not use. This is an Exiv2 internal header.
+  File:      version.cpp
   Version:   $Rev$
-  Author(s): Gilles Caulier (gc) <caulier.gilles@kdemail.net>
-  History:   01-Nov-06, gc: created
- */
-#ifndef I18N_H_
-#define I18N_H_
+  Author(s): Andreas Huggel (ahu) <ahuggel@gmx.net>
+  History:   06-Mar-07, ahu: created
 
+ */
+// *****************************************************************************
+#include "rcsid.hpp"
+EXIV2_RCSID("@(#) $Id$")
+
+// *****************************************************************************
+// included header files
 #ifdef _MSC_VER
 # include "exv_msvc.h"
 #else
 # include "exv_conf.h"
 #endif
 
-/* NLS can be disabled through the configure --disable-nls option. */
-#ifdef EXV_ENABLE_NLS
-# include <libintl.h>
+#include "version.hpp"
 
-// Definition is in types.cpp
-const char* _exvGettext(const char* str);
+namespace Exiv2 {
+    int versionNumber()
+    {
+        return EXIV2_MAKE_VERSION(EXIV2_MAJOR_VERSION, EXIV2_MINOR_VERSION, EXIV2_PATCH_VERSION);
+    }
 
-# define _(String) _exvGettext(String)
-# define N_(String) String
-
-#else /* NLS is disabled */
-
-# define _(String) (String)
-# define N_(String) String
-
-#endif /* EXV_ENABLE_NLS */
-
-#endif /* I18N_H_ */
+    const char* version()
+    {
+        return EXV_PACKAGE_VERSION;
+    }
+}                                       // namespace Exiv2

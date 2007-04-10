@@ -47,12 +47,12 @@ include $(top_srcdir)/config/config.mk
 # Source files
 
 # Add standalone C++ header files to this list
-CCHDR =  exiv2_version.h      \
-         exv_conf.h           \
+CCHDR =  exv_conf.h           \
          exv_msvc.h           \
          mn.hpp               \
          rcsid.hpp            \
-         tifffwd.hpp
+         tifffwd.hpp          \
+         version.hpp
 
 # Add library C++ source files to this list
 CCSRC =  basicio.cpp          \
@@ -89,11 +89,12 @@ CCSRC += rafimage.cpp         \
 	 tiffparser.cpp       \
 	 tiffvisitor.cpp      \
 	 types.cpp            \
-	 value.cpp
+	 value.cpp            \
+	 version.cpp
 
 # Add library C source files to this list
 ifndef HAVE_TIMEGM
-CSRC = localtime.c
+CSRC =   localtime.c
 endif
 
 # Add source files of simple applications to this list
@@ -245,7 +246,7 @@ $(LIBTOOL): $(LIBTOOL_DEPS)
 bin: lib $(BINARY) $(EXIV2BIN) $(MCBIN) path-test
 
 lib: $(OBJ)
-	$(LIBTOOL) --mode=link $(CXX) $(LDFLAGS) $(LOBJ) -o $(LIBRARY) -rpath $(libdir) -release $(EXIV2_VERSION) $(LIBS)
+	$(LIBTOOL) --mode=link $(CXX) $(LDFLAGS) $(LOBJ) -o $(LIBRARY) -rpath $(libdir) -version-info $(EXIV2_LTVERSION) $(LIBS)
 	@touch lib
 
 path-test: path-test.o utils.o
@@ -273,7 +274,6 @@ install-lib: lib install-header
 	$(INSTALL_DIRS) $(DESTDIR)$(libdir)
 	@$(LIBTOOL) --mode=install $(INSTALL_DATA) $(LIBRARY) $(DESTDIR)$(libdir)/$(LIBRARY)
 	$(INSTALL_DIRS) $(DESTDIR)$(bindir)
-	$(INSTALL_PROGRAM) $(top_srcdir)/config/exiv2-config $(DESTDIR)$(bindir)/exiv2-config
 	$(INSTALL_DIRS) $(DESTDIR)$(libdir)/pkgconfig
 	$(INSTALL_DATA) $(top_srcdir)/config/exiv2.pc $(DESTDIR)$(libdir)/pkgconfig/exiv2.pc
 
@@ -294,8 +294,6 @@ uninstall-header:
 uninstall-lib: uninstall-header
 	$(RM) $(DESTDIR)$(libdir)/pkgconfig/exiv2.pc
 	-rmdir $(DESTDIR)$(libdir)/pkgconfig
-	$(RM) $(DESTDIR)$(bindir)/exiv2-config
-	-rmdir $(DESTDIR)$(bindir)
 	@$(LIBTOOL) --mode=uninstall $(RM) $(DESTDIR)$(libdir)/$(LIBRARY)
 	-rmdir $(DESTDIR)$(libdir)
 
@@ -330,7 +328,7 @@ clean: mostlyclean
 # Run `make distclean' from the top source directory to also remove
 # files created by configuring the program.
 distclean: clean
-	$(RM) exv_conf.h
+	$(RM) exv_conf.h doxygen.hpp
 ifdef DEP_TRACKING
 	$(RM) $(DEP)
 	-rmdir $(DEPDIR)
