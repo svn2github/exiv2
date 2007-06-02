@@ -125,9 +125,9 @@ namespace Exiv2 {
         //! @name Print functions for Panasonic %MakerNote tags
         //@{
         //! Print SpotMode
-        static std::ostream& print0x000f(std::ostream& os, const Value& value);
+        static std::ostream& print0x000f(std::ostream& os, const Value& value, const ExifData*);
         //! Print WhiteBalanceBias
-        static std::ostream& print0x0023(std::ostream& os, const Value& value);
+        static std::ostream& print0x0023(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
         //! @cond IGNORE

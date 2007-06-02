@@ -954,7 +954,8 @@ namespace Exiv2 {
     }
 
     std::ostream& CanonMakerNote::print0x0008(std::ostream& os,
-                                              const Value& value)
+                                              const Value& value,
+                                              const ExifData*)
     {
         std::string n = value.toString();
         if (n.length() < 4) return os << "(" << n << ")";
@@ -963,7 +964,8 @@ namespace Exiv2 {
     }
 
     std::ostream& CanonMakerNote::print0x000c(std::ostream& os,
-                                              const Value& value)
+                                              const Value& value,
+                                              const ExifData*)
     {
         std::istringstream is(value.toString());
         uint32_t l;
@@ -975,7 +977,8 @@ namespace Exiv2 {
     }
 
     std::ostream& CanonMakerNote::printCs0x0002(std::ostream& os,
-                                                 const Value& value)
+                                                const Value& value,
+                                                const ExifData*)
     {
         if (value.typeId() != unsignedShort) return os << value;
         long l = value.toLong();
@@ -989,7 +992,8 @@ namespace Exiv2 {
     }
 
     std::ostream& CanonMakerNote::printCsLens(std::ostream& os,
-                                                const Value& value)
+                                              const Value& value,
+                                              const ExifData*)
     {
         if (value.typeId() != unsignedShort) return os << value;
         if (value.count() < 3) return os << value;
@@ -1011,14 +1015,16 @@ namespace Exiv2 {
     }
 
     std::ostream& CanonMakerNote::printSi0x0002(std::ostream& os,
-                                                 const Value& value)
+                                                const Value& value,
+                                                const ExifData*)
     {
         // Ported from Exiftool by Will Stokes
         return os << exp(canonEv(value.toLong()) * log(2.0)) * 100.0 / 32.0;
     }
 
     std::ostream& CanonMakerNote::printSi0x0009(std::ostream& os,
-                                                 const Value& value)
+                                                const Value& value,
+                                                const ExifData*)
     {
         if (value.typeId() != unsignedShort) return os << value;
         long l = value.toLong();
@@ -1028,7 +1034,8 @@ namespace Exiv2 {
     }
 
     std::ostream& CanonMakerNote::printSi0x000e(std::ostream& os,
-                                                 const Value& value)
+                                                const Value& value,
+                                                const ExifData* pExifData)
     {
         if (value.typeId() != unsignedShort) return os << value;
         long l = value.toLong();
@@ -1039,14 +1046,15 @@ namespace Exiv2 {
             os << "none";
         }
         else {
-            EXV_PRINT_TAG_BITMASK(canonSiAFPointUsed)(os, value);
+            EXV_PRINT_TAG_BITMASK(canonSiAFPointUsed)(os, value, pExifData);
         }
         os << " used";
         return os;
     }
 
     std::ostream& CanonMakerNote::printSi0x0013(std::ostream& os,
-                                                 const Value& value)
+                                                const Value& value,
+                                                const ExifData*)
     {
         if (value.typeId() != unsignedShort) return os << value;
         long l = value.toLong();
@@ -1060,7 +1068,8 @@ namespace Exiv2 {
     }
 
     std::ostream& CanonMakerNote::printSi0x0015(std::ostream& os,
-                                                 const Value& value)
+                                                const Value& value,
+                                                const ExifData*)
     {
         if (value.typeId() != unsignedShort) return os << value;
 
@@ -1074,7 +1083,8 @@ namespace Exiv2 {
     }
 
     std::ostream& CanonMakerNote::printSi0x0016(std::ostream& os,
-                                                 const Value& value)
+                                                const Value& value,
+                                                const ExifData*)
     {
         if (value.typeId() != unsignedShort) return os << value;
 

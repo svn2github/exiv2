@@ -122,11 +122,11 @@ namespace Exiv2 {
         //! @name Print functions for Sigma (Foveon) %MakerNote tags
         //@{
         //! Strip the label from the value and print the remainder
-        static std::ostream& printStripLabel(std::ostream& os, const Value& value);
+        static std::ostream& printStripLabel(std::ostream& os, const Value& value, const ExifData*);
         //! Print exposure mode
-        static std::ostream& print0x0008(std::ostream& os, const Value& value);
+        static std::ostream& print0x0008(std::ostream& os, const Value& value, const ExifData*);
         //! Print metering mode
-        static std::ostream& print0x0009(std::ostream& os, const Value& value);
+        static std::ostream& print0x0009(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
         //! @cond IGNORE

@@ -48,6 +48,7 @@ namespace Exiv2 {
 
 // *****************************************************************************
 // class declarations
+    class ExifData;
     class Value;
     class Entry;
 
@@ -55,7 +56,7 @@ namespace Exiv2 {
 // type definitions
 
     //! Type for a function pointer for functions interpreting the tag value
-    typedef std::ostream& (*PrintFct)(std::ostream&, const Value&);
+    typedef std::ostream& (*PrintFct)(std::ostream&, const Value&, const ExifData* pExifData);
 
     /*!
       @brief Section identifiers to logically group tags. A section consists
@@ -138,7 +139,7 @@ namespace Exiv2 {
              by looking up a reference table.
      */
     template <int N, const TagDetails (&array)[N]>
-    std::ostream& printTag(std::ostream& os, const Value& value)
+    std::ostream& printTag(std::ostream& os, const Value& value, const ExifData*)
     {
         const TagDetails* td = find(array, value.toLong());
         if (td) {
@@ -158,7 +159,7 @@ namespace Exiv2 {
              by looking up bitmasks in a reference table.
      */
     template <int N, const TagDetailsBitmask (&array)[N]>
-    std::ostream& printTagBitmask(std::ostream& os, const Value& value)
+    std::ostream& printTagBitmask(std::ostream& os, const Value& value, const ExifData*)
     {
         const uint32_t val = static_cast<uint32_t>(value.toLong());
         bool sep = false;
@@ -271,7 +272,8 @@ namespace Exiv2 {
         static std::ostream& printTag(std::ostream& os,
                                       uint16_t tag,
                                       IfdId ifdId,
-                                      const Value& value);
+                                      const Value& value,
+                                      const ExifData* pExifData =0);
         //! Return read-only list of built-in IFD0/1 tags
         static const TagInfo* ifdTagList();
         //! Return read-only list of built-in Exif IFD tags
@@ -435,46 +437,46 @@ namespace Exiv2 {
     //! @name Functions printing interpreted tag values
     //@{
     //! Default print function, using the Value output operator
-    std::ostream& printValue(std::ostream& os, const Value& value);
+    std::ostream& printValue(std::ostream& os, const Value& value, const ExifData*);
     //! Print the value converted to a long
-    std::ostream& printLong(std::ostream& os, const Value& value);
+    std::ostream& printLong(std::ostream& os, const Value& value, const ExifData*);
     //! Print a Rational or URational value in floating point format
-    std::ostream& printFloat(std::ostream& os, const Value& value);
+    std::ostream& printFloat(std::ostream& os, const Value& value, const ExifData*);
     //! Print a longitude or latitude value
-    std::ostream& printDegrees(std::ostream& os, const Value& value);
+    std::ostream& printDegrees(std::ostream& os, const Value& value, const ExifData*);
     //! Print function converting from UCS-2LE to UTF-8
-    std::ostream& printUcs2(std::ostream& os, const Value& value);
+    std::ostream& printUcs2(std::ostream& os, const Value& value, const ExifData*);
 
     //! Print GPS altitude
-    std::ostream& print0x0006(std::ostream& os, const Value& value);
+    std::ostream& print0x0006(std::ostream& os, const Value& value, const ExifData*);
     //! Print GPS timestamp
-    std::ostream& print0x0007(std::ostream& os, const Value& value);
+    std::ostream& print0x0007(std::ostream& os, const Value& value, const ExifData*);
     //! Print the copyright
-    std::ostream& print0x8298(std::ostream& os, const Value& value);
+    std::ostream& print0x8298(std::ostream& os, const Value& value, const ExifData*);
     //! Print the exposure time
-    std::ostream& print0x829a(std::ostream& os, const Value& value);
+    std::ostream& print0x829a(std::ostream& os, const Value& value, const ExifData*);
     //! Print the f-number
-    std::ostream& print0x829d(std::ostream& os, const Value& value);
+    std::ostream& print0x829d(std::ostream& os, const Value& value, const ExifData*);
     //! Print ISO speed ratings
-    std::ostream& print0x8827(std::ostream& os, const Value& value);
+    std::ostream& print0x8827(std::ostream& os, const Value& value, const ExifData*);
     //! Print components configuration specific to compressed data
-    std::ostream& print0x9101(std::ostream& os, const Value& value);
+    std::ostream& print0x9101(std::ostream& os, const Value& value, const ExifData*);
     //! Print exposure time converted from APEX shutter speed value
-    std::ostream& print0x9201(std::ostream& os, const Value& value);
+    std::ostream& print0x9201(std::ostream& os, const Value& value, const ExifData*);
     //! Print f-number converted from APEX aperture value
-    std::ostream& print0x9202(std::ostream& os, const Value& value);
+    std::ostream& print0x9202(std::ostream& os, const Value& value, const ExifData*);
     //! Print the exposure bias value
-    std::ostream& print0x9204(std::ostream& os, const Value& value);
+    std::ostream& print0x9204(std::ostream& os, const Value& value, const ExifData*);
     //! Print the subject distance
-    std::ostream& print0x9206(std::ostream& os, const Value& value);
+    std::ostream& print0x9206(std::ostream& os, const Value& value, const ExifData*);
     //! Print the actual focal length of the lens
-    std::ostream& print0x920a(std::ostream& os, const Value& value);
+    std::ostream& print0x920a(std::ostream& os, const Value& value, const ExifData*);
     //! Print the user comment
-    std::ostream& print0x9286(std::ostream& os, const Value& value);
+    std::ostream& print0x9286(std::ostream& os, const Value& value, const ExifData*);
     //! Print digital zoom ratio
-    std::ostream& print0xa404(std::ostream& os, const Value& value);
+    std::ostream& print0xa404(std::ostream& os, const Value& value, const ExifData*);
     //! Print 35mm equivalent focal length
-    std::ostream& print0xa405(std::ostream& os, const Value& value);
+    std::ostream& print0xa405(std::ostream& os, const Value& value, const ExifData*);
     //@}
 
     //! Calculate F number from an APEX aperture value

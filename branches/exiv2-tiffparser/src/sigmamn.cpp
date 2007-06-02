@@ -210,7 +210,8 @@ namespace Exiv2 {
     }
 
     std::ostream& SigmaMakerNote::printStripLabel(std::ostream& os,
-                                                  const Value& value)
+                                                  const Value& value,
+                                                  const ExifData*)
     {
         std::string v = value.toString();
         std::string::size_type pos = v.find(':');
@@ -222,7 +223,8 @@ namespace Exiv2 {
     }
 
     std::ostream& SigmaMakerNote::print0x0008(std::ostream& os,
-                                              const Value& value)
+                                              const Value& value,
+                                              const ExifData*)
     {
         switch (value.toString()[0]) {
         case 'P': os << _("Program"); break;
@@ -235,7 +237,8 @@ namespace Exiv2 {
     }
 
     std::ostream& SigmaMakerNote::print0x0009(std::ostream& os,
-                                              const Value& value)
+                                              const Value& value,
+                                              const ExifData*)
     {
         switch (value.toString()[0]) {
         case 'A': os << _("Average"); break;

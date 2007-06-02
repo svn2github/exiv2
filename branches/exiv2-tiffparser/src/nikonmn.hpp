@@ -123,15 +123,15 @@ namespace Exiv2 {
         //! @name Print functions for Nikon1 %MakerNote tags
         //@{
         //! Print ISO setting
-        static std::ostream& print0x0002(std::ostream& os, const Value& value);
+        static std::ostream& print0x0002(std::ostream& os, const Value& value, const ExifData*);
         //! Print autofocus mode
-        static std::ostream& print0x0007(std::ostream& os, const Value& value);
+        static std::ostream& print0x0007(std::ostream& os, const Value& value, const ExifData*);
         //! Print manual focus distance
-        static std::ostream& print0x0085(std::ostream& os, const Value& value);
+        static std::ostream& print0x0085(std::ostream& os, const Value& value, const ExifData*);
         //! Print digital zoom setting
-        static std::ostream& print0x0086(std::ostream& os, const Value& value);
+        static std::ostream& print0x0086(std::ostream& os, const Value& value, const ExifData*);
         //! Print AF focus position
-        static std::ostream& print0x0088(std::ostream& os, const Value& value);
+        static std::ostream& print0x0088(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
         //! @cond IGNORE
@@ -195,7 +195,7 @@ namespace Exiv2 {
         //! @name Print functions for Nikon2 %MakerNote tags
         //@{
         //! Print digital zoom setting
-        static std::ostream& print0x000a(std::ostream& os, const Value& value);
+        static std::ostream& print0x000a(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
         //! @cond IGNORE
@@ -256,23 +256,23 @@ namespace Exiv2 {
         //! @name Print functions for Nikon3 %MakerNote tags
         //@{
         //! Print ISO setting
-        static std::ostream& print0x0002(std::ostream& os, const Value& value);
+        static std::ostream& print0x0002(std::ostream& os, const Value& value, const ExifData*);
         //! Print autofocus mode
-        static std::ostream& print0x0007(std::ostream& os, const Value& value);
+        static std::ostream& print0x0007(std::ostream& os, const Value& value, const ExifData*);
         //! Print lens type
-        static std::ostream& print0x0083(std::ostream& os, const Value& value);
+        static std::ostream& print0x0083(std::ostream& os, const Value& value, const ExifData*);
         //! Print lens information
-        static std::ostream& print0x0084(std::ostream& os, const Value& value);
+        static std::ostream& print0x0084(std::ostream& os, const Value& value, const ExifData*);
         //! Print manual focus distance
-        static std::ostream& print0x0085(std::ostream& os, const Value& value);
+        static std::ostream& print0x0085(std::ostream& os, const Value& value, const ExifData*);
         //! Print digital zoom setting
-        static std::ostream& print0x0086(std::ostream& os, const Value& value);
+        static std::ostream& print0x0086(std::ostream& os, const Value& value, const ExifData*);
         //! Print AF point
-        static std::ostream& print0x0088(std::ostream& os, const Value& value);
+        static std::ostream& print0x0088(std::ostream& os, const Value& value, const ExifData*);
         //! Print number of lens stops
-        static std::ostream& print0x008b(std::ostream& os, const Value& value);
+        static std::ostream& print0x008b(std::ostream& os, const Value& value, const ExifData*);
         //! Print number of lens data
-        static std::ostream& print0x0098(std::ostream& os, const Value& value);
+        static std::ostream& print0x0098(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
         //! @cond IGNORE

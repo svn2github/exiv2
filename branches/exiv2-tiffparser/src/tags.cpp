@@ -1399,7 +1399,8 @@ namespace Exiv2 {
     std::ostream& ExifTags::printTag(std::ostream& os,
                                      uint16_t tag,
                                      IfdId ifdId,
-                                     const Value& value)
+                                     const Value& value,
+                                     const ExifData* pExifData)
     {
         if (value.count() == 0) return os;
         PrintFct fct = printValue;
@@ -1413,7 +1414,7 @@ namespace Exiv2 {
             const TagInfo* tagInfo = makerTagInfo(tag, ifdId);
             if (tagInfo != 0) fct = tagInfo->printFct_;
         }
-        return fct(os, value);
+        return fct(os, value, pExifData);
     } // ExifTags::printTag
 
     void ExifTags::taglist(std::ostream& os)
@@ -1627,26 +1628,26 @@ namespace Exiv2 {
         return is;
     }
 
-    std::ostream& printValue(std::ostream& os, const Value& value)
+    std::ostream& printValue(std::ostream& os, const Value& value, const ExifData*)
     {
         return os << value;
     }
 
-    std::ostream& printLong(std::ostream& os, const Value& value)
+    std::ostream& printLong(std::ostream& os, const Value& value, const ExifData*)
     {
         Rational r = value.toRational();
         if (r.second != 0) return os << static_cast<long>(r.first) / r.second;
         return os << "(" << value << ")";
     } // printLong
 
-    std::ostream& printFloat(std::ostream& os, const Value& value)
+    std::ostream& printFloat(std::ostream& os, const Value& value, const ExifData*)
     {
         Rational r = value.toRational();
         if (r.second != 0) return os << static_cast<float>(r.first) / r.second;
         return os << "(" << value << ")";
     } // printFloat
 
-    std::ostream& printDegrees(std::ostream& os, const Value& value)
+    std::ostream& printDegrees(std::ostream& os, const Value& value, const ExifData*)
     {
         if (value.count() == 3) {
             std::ostringstream oss;
@@ -1675,7 +1676,7 @@ namespace Exiv2 {
         return os;
     } // printDegrees
 
-    std::ostream& printUcs2(std::ostream& os, const Value& value)
+    std::ostream& printUcs2(std::ostream& os, const Value& value, const ExifData*)
     {
 #if defined EXV_HAVE_ICONV && defined EXV_HAVE_PRINTUCS2
         bool go = true;
@@ -1733,7 +1734,7 @@ namespace Exiv2 {
 
     } // printUcs2
 
-    std::ostream& print0x0006(std::ostream& os, const Value& value)
+    std::ostream& print0x0006(std::ostream& os, const Value& value, const ExifData*)
     {
         std::ostringstream oss;
         oss.copyfmt(os);
@@ -1745,7 +1746,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0x0007(std::ostream& os, const Value& value)
+    std::ostream& print0x0007(std::ostream& os, const Value& value, const ExifData*)
     {
         if (value.count() == 3) {
             std::ostringstream oss;
@@ -1774,7 +1775,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0x8298(std::ostream& os, const Value& value)
+    std::ostream& print0x8298(std::ostream& os, const Value& value, const ExifData*)
     {
         // Print the copyright information in the format Photographer, Editor
         std::string val = value.toString();
@@ -1794,7 +1795,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0x829a(std::ostream& os, const Value& value)
+    std::ostream& print0x829a(std::ostream& os, const Value& value, const ExifData*)
     {
         Rational t = value.toRational();
         if (t.first > 1 && t.second > 1 && t.second >= t.first) {
@@ -1816,7 +1817,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0x829d(std::ostream& os, const Value& value)
+    std::ostream& print0x829d(std::ostream& os, const Value& value, const ExifData*)
     {
         Rational fnumber = value.toRational();
         if (fnumber.second != 0) {
@@ -1832,12 +1833,12 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0x8827(std::ostream& os, const Value& value)
+    std::ostream& print0x8827(std::ostream& os, const Value& value, const ExifData*)
     {
         return os << value.toLong();
     }
 
-    std::ostream& print0x9101(std::ostream& os, const Value& value)
+    std::ostream& print0x9101(std::ostream& os, const Value& value, const ExifData*)
     {
         for (long i = 0; i < value.count(); ++i) {
             long l = value.toLong(i);
@@ -1855,7 +1856,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0x9201(std::ostream& os, const Value& value)
+    std::ostream& print0x9201(std::ostream& os, const Value& value, const ExifData*)
     {
         URational ur = exposureTime(value.toFloat());
         os << ur.first;
@@ -1865,7 +1866,7 @@ namespace Exiv2 {
         return os << " s";
     }
 
-    std::ostream& print0x9202(std::ostream& os, const Value& value)
+    std::ostream& print0x9202(std::ostream& os, const Value& value, const ExifData*)
     {
         std::ostringstream oss;
         oss.copyfmt(os);
@@ -1875,7 +1876,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0x9204(std::ostream& os, const Value& value)
+    std::ostream& print0x9204(std::ostream& os, const Value& value, const ExifData*)
     {
         Rational bias = value.toRational();
         if (bias.second <= 0) {
@@ -1896,7 +1897,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0x9206(std::ostream& os, const Value& value)
+    std::ostream& print0x9206(std::ostream& os, const Value& value, const ExifData*)
     {
         Rational distance = value.toRational();
         if (distance.first == 0) {
@@ -1919,7 +1920,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0x920a(std::ostream& os, const Value& value)
+    std::ostream& print0x920a(std::ostream& os, const Value& value, const ExifData*)
     {
         Rational length = value.toRational();
         if (length.second != 0) {
@@ -1937,7 +1938,7 @@ namespace Exiv2 {
     }
 
     // Todo: Implement this properly
-    std::ostream& print0x9286(std::ostream& os, const Value& value)
+    std::ostream& print0x9286(std::ostream& os, const Value& value, const ExifData*)
     {
         if (value.size() > 8) {
             DataBuf buf(value.size());
@@ -1951,7 +1952,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0xa404(std::ostream& os, const Value& value)
+    std::ostream& print0xa404(std::ostream& os, const Value& value, const ExifData*)
     {
         Rational zoom = value.toRational();
         if (zoom.second == 0) {
@@ -1967,7 +1968,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& print0xa405(std::ostream& os, const Value& value)
+    std::ostream& print0xa405(std::ostream& os, const Value& value, const ExifData*)
     {
         long length = value.toLong();
         if (length == 0) {

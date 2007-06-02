@@ -144,25 +144,25 @@ namespace Exiv2 {
         //! @name Print functions for Canon %MakerNote tags
         //@{
         //! Print the image number
-        static std::ostream& print0x0008(std::ostream& os, const Value& value);
+        static std::ostream& print0x0008(std::ostream& os, const Value& value, const ExifData*);
         //! Print the serial number of the camera
-        static std::ostream& print0x000c(std::ostream& os, const Value& value);
+        static std::ostream& print0x000c(std::ostream& os, const Value& value, const ExifData*);
         //! Self timer
-        static std::ostream& printCs0x0002(std::ostream& os, const Value& value);
+        static std::ostream& printCs0x0002(std::ostream& os, const Value& value, const ExifData*);
         //! Camera lens information
-        static std::ostream& printCsLens(std::ostream& os, const Value& value);
+        static std::ostream& printCsLens(std::ostream& os, const Value& value, const ExifData*);
         //! ISO speed used
-        static std::ostream& printSi0x0002(std::ostream& os, const Value& value);
+        static std::ostream& printSi0x0002(std::ostream& os, const Value& value, const ExifData*);
         //! Sequence number
-        static std::ostream& printSi0x0009(std::ostream& os, const Value& value);
+        static std::ostream& printSi0x0009(std::ostream& os, const Value& value, const ExifData*);
         //! AF point used
-        static std::ostream& printSi0x000e(std::ostream& os, const Value& value);
+        static std::ostream& printSi0x000e(std::ostream& os, const Value& value, const ExifData* pExifData);
         //! Subject distance
-        static std::ostream& printSi0x0013(std::ostream& os, const Value& value);
+        static std::ostream& printSi0x0013(std::ostream& os, const Value& value, const ExifData*);
         //! Aperture
-        static std::ostream& printSi0x0015(std::ostream& os, const Value& value);
+        static std::ostream& printSi0x0015(std::ostream& os, const Value& value, const ExifData*);
         //! Shutter speed
-        static std::ostream& printSi0x0016(std::ostream& os, const Value& value);
+        static std::ostream& printSi0x0016(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
         //! @cond IGNORE

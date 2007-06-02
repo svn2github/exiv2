@@ -474,7 +474,7 @@ namespace Exiv2 {
         return new OlympusMakerNote(*this);
     }
 
-    std::ostream& OlympusMakerNote::print0x0200(std::ostream& os, const Value& value)
+    std::ostream& OlympusMakerNote::print0x0200(std::ostream& os, const Value& value, const ExifData*)
     {
         if (value.count() != 3 || value.typeId() != unsignedLong) {
             return os << value;
@@ -505,7 +505,7 @@ namespace Exiv2 {
         return os;
     } // OlympusMakerNote::print0x0200
 
-    std::ostream& OlympusMakerNote::print0x0204(std::ostream& os, const Value& value)
+    std::ostream& OlympusMakerNote::print0x0204(std::ostream& os, const Value& value, const ExifData*)
     {
         float f = value.toFloat();
         if (f == 0.0 || f == 1.0) return os << _("None");
@@ -516,7 +516,7 @@ namespace Exiv2 {
         return os;
     } // OlympusMakerNote::print0x0204
 
-    std::ostream& OlympusMakerNote::print0x1015(std::ostream& os, const Value& value)
+    std::ostream& OlympusMakerNote::print0x1015(std::ostream& os, const Value& value, const ExifData*)
     {
         if (value.count() != 2 || value.typeId() != unsignedShort) {
             return os << value;

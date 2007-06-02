@@ -518,42 +518,42 @@ namespace Exiv2 {
         { 2, N_("Manual flash control")                }
     };
 
-    std::ostream& MinoltaMakerNote::printMinoltaExposureSpeedStd(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaExposureSpeedStd(std::ostream& os, const Value& value, const ExifData*)
     {
         // From the PHP JPEG Metadata Toolkit
         os << (value.toLong()/8)-1;
         return os;
     }
 
-    std::ostream& MinoltaMakerNote::printMinoltaExposureTimeStd(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaExposureTimeStd(std::ostream& os, const Value& value, const ExifData*)
     {
         // From the PHP JPEG Metadata Toolkit
         os << (value.toLong()/8)-6;
         return os;
     }
 
-    std::ostream& MinoltaMakerNote::printMinoltaFNumberStd(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaFNumberStd(std::ostream& os, const Value& value, const ExifData*)
     {
         // From the PHP JPEG Metadata Toolkit
         os << (value.toLong()/8)-1;
         return os;
     }
 
-    std::ostream& MinoltaMakerNote::printMinoltaExposureCompensationStd(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaExposureCompensationStd(std::ostream& os, const Value& value, const ExifData*)
     {
         // From the PHP JPEG Metadata Toolkit
         os << value.toLong()/256;
         return os;
     }
 
-    std::ostream& MinoltaMakerNote::printMinoltaFocalLengthStd(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaFocalLengthStd(std::ostream& os, const Value& value, const ExifData*)
     {
         // From the PHP JPEG Metadata Toolkit
         os << (value.toLong()/3)-2;
         return os;
     }
 
-    std::ostream& MinoltaMakerNote::printMinoltaDateStd(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaDateStd(std::ostream& os, const Value& value, const ExifData*)
     {
         // From the PHP JPEG Metadata Toolkit
         os << value.toLong() / 65536 << ":" << std::right << std::setw(2) << std::setfill('0')
@@ -562,7 +562,7 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& MinoltaMakerNote::printMinoltaTimeStd(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaTimeStd(std::ostream& os, const Value& value, const ExifData*)
     {
         // From the PHP JPEG Metadata Toolkit
         os << std::right << std::setw(2) << std::setfill('0') << value.toLong() / 65536
@@ -572,21 +572,21 @@ namespace Exiv2 {
         return os;
     }
 
-    std::ostream& MinoltaMakerNote::printMinoltaFlashExposureCompStd(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaFlashExposureCompStd(std::ostream& os, const Value& value, const ExifData*)
     {
         // From the PHP JPEG Metadata Toolkit
         os << (value.toLong()-6)/3;
         return os;
     }
 
-    std::ostream& MinoltaMakerNote::printMinoltaWhiteBalanceStd(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaWhiteBalanceStd(std::ostream& os, const Value& value, const ExifData*)
     {
         // From the PHP JPEG Metadata Toolkit
         os << value.toLong()/256;
         return os;
     }
 
-    std::ostream& MinoltaMakerNote::printMinoltaBrightnessStd(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaBrightnessStd(std::ostream& os, const Value& value, const ExifData*)
     {
         // From the PHP JPEG Metadata Toolkit
         os << (value.toLong()/8)-6;
@@ -1083,7 +1083,7 @@ namespace Exiv2 {
     };
 
     //! Method to convert Minolta Dynax 5D exposure manual bias values.
-    std::ostream& MinoltaMakerNote::printMinoltaExposureManualBias5D(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaExposureManualBias5D(std::ostream& os, const Value& value, const ExifData*)
     {
         // From Xavier Raynaud: the value is converted from 0:256 to -5.33:5.33
 
@@ -1096,7 +1096,7 @@ namespace Exiv2 {
     }
 
     //! Method to convert Minolta Dynax 5D exposure compensation values.
-    std::ostream& MinoltaMakerNote::printMinoltaExposureCompensation5D(std::ostream& os, const Value& value)
+    std::ostream& MinoltaMakerNote::printMinoltaExposureCompensation5D(std::ostream& os, const Value& value, const ExifData*)
     {
         std::ostringstream oss;
         oss.copyfmt(os);

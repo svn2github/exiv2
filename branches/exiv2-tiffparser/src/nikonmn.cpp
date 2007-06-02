@@ -251,7 +251,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon1MakerNote::print0x0002(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         if (value.count() > 1) {
             os << value.toLong(1);
@@ -263,7 +264,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon1MakerNote::print0x0007(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         std::string focus = value.toString();
         if      (focus == "AF-C  ") os << _("Continuous autofocus");
@@ -273,7 +275,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon1MakerNote::print0x0085(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         Rational distance = value.toRational();
         if (distance.first == 0) {
@@ -294,7 +297,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon1MakerNote::print0x0086(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         Rational zoom = value.toRational();
         if (zoom.first == 0) {
@@ -315,7 +319,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon1MakerNote::print0x0088(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         if (value.count() >= 1) {
             unsigned long focusArea = value.toLong(0);
@@ -544,7 +549,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon2MakerNote::print0x000a(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         Rational zoom = value.toRational();
         if (zoom.first == 0) {
@@ -874,7 +880,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon3MakerNote::print0x0002(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         if (value.count() > 1) {
             os << value.toLong(1);
@@ -886,7 +893,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon3MakerNote::print0x0007(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         std::string focus = value.toString();
         if      (focus == "AF-C  ") os << _("Continuous autofocus");
@@ -896,7 +904,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon3MakerNote::print0x0083(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         long lensType = value.toLong();
 
@@ -929,7 +938,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon3MakerNote::print0x0084(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         if (value.count() == 4) {
             long len1 = value.toLong(0);
@@ -958,7 +968,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon3MakerNote::print0x0085(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         Rational distance = value.toRational();
         if (distance.first == 0) {
@@ -979,7 +990,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon3MakerNote::print0x0086(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         Rational zoom = value.toRational();
         if (zoom.first == 0) {
@@ -1000,7 +1012,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon3MakerNote::print0x0088(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         if (value.size() != 4) { // Size is 4 even for those who map this way...
             os << "(" << value << ")";
@@ -1068,7 +1081,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon3MakerNote::print0x008b(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
         // Decoded by Robert Rottmerhusen <email@rottmerhusen.com>
         if (value.size() != 4) return os << "(" << value << ")";
@@ -1080,7 +1094,8 @@ namespace Exiv2 {
     }
 
     std::ostream& Nikon3MakerNote::print0x0098(std::ostream& os,
-                                               const Value& value)
+                                               const Value& value,
+                                               const ExifData*)
     {
 #ifdef EXV_HAVE_LENSDATA
         //#-----------------------------------------
@@ -1331,9 +1346,9 @@ namespace Exiv2 {
             idx = 11;
         }
         else if (0 == memcmp(lens.pData_, "0201", 4)) {
-            // Here we should decrypt(lens.pData_ + 4, lens.size_ - 4);
-            // however, the decrypt algorithm requires access to serial number
-            // and shutter count tags but print functions are static...
+            // Todo: decrypt(lens.pData_ + 4, lens.size_ - 4);
+            // The decrypt algorithm requires access to serial number
+            // and shutter count tags
             idx = 11;
         }
         if (idx == 0 || lens.size_ < idx + 7) {

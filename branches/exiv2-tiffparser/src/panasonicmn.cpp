@@ -348,7 +348,8 @@ namespace Exiv2 {
     }
 
     std::ostream& PanasonicMakerNote::print0x000f(std::ostream& os,
-                                                  const Value& value)
+                                                  const Value& value,
+                                                  const ExifData*)
     {
         if (value.count() < 2 || value.typeId() != unsignedByte) {
             return os << value;
@@ -361,7 +362,8 @@ namespace Exiv2 {
     } // PanasonicMakerNote::print0x000f
 
     std::ostream& PanasonicMakerNote::print0x0023(std::ostream& os,
-                                                  const Value& value)
+                                                  const Value& value,
+                                                  const ExifData*)
     {
         std::ostringstream oss;
         oss.copyfmt(os);
