@@ -119,7 +119,7 @@ namespace Exiv2 {
      */
     struct TagDetails {
         long val_;                              //!< Tag value
-        char* label_;                           //!< Translation of the tag value
+        const char* label_;                     //!< Translation of the tag value
 
         //! Comparison operator for use with the find template
         bool operator==(long key) const { return val_ == key; }
@@ -131,7 +131,7 @@ namespace Exiv2 {
      */
     struct TagDetailsBitmask {
         uint32_t mask_;                         //!< Bitmask value
-        char* label_;                           //!< Description of the tag value
+        const char* label_;                     //!< Description of the tag value
     }; // struct TagDetailsBitmask
 
     /*!
