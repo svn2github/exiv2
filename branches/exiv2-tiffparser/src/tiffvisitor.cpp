@@ -1047,6 +1047,19 @@ namespace Exiv2 {
         }
         p += 2;
         object->count_ = getULong(p, byteOrder());
+        if (object->count_ >= 0x10000000 && typeSize != 0) {
+            if (object->count_ >= 0x80000000 / typeSize) {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "Error: Directory " << tiffGroupName(object->group())
+                          << ", entry 0x" << std::setw(4)
+                          << std::setfill('0') << std::hex << object->tag()
+                          << " has invalid size "
+                          << std::dec << object->count_ << "*" << typeSize 
+                          << "; skipping entry.\n";
+#endif
+                return;
+            }
+        }
         p += 4;
         object->size_ = typeSize * object->count_;
         object->offset_ = getLong(p, byteOrder());
