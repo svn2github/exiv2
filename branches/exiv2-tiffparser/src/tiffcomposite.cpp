@@ -424,7 +424,7 @@ namespace Exiv2 {
 
     void TiffComponent::accept(TiffVisitor& visitor)
     {
-        if (visitor.go()) doAccept(visitor);    // one for NVI :)
+        if (visitor.go(TiffVisitor::geTraverse)) doAccept(visitor); // one for NVI :)
     } // TiffComponent::accept
 
     void TiffEntry::doAccept(TiffVisitor& visitor)
@@ -446,18 +446,19 @@ namespace Exiv2 {
     {
         visitor.visitDirectory(this);
         for (Components::const_iterator i = components_.begin();
-             visitor.go() && i != components_.end(); ++i) {
+             visitor.go(TiffVisitor::geTraverse) && i != components_.end(); ++i) {
             (*i)->accept(visitor);
         }
-        if (visitor.go()) visitor.visitDirectoryNext(this);
+        if (visitor.go(TiffVisitor::geTraverse)) visitor.visitDirectoryNext(this);
         if (pNext_) pNext_->accept(visitor);
-        if (visitor.go()) visitor.visitDirectoryEnd(this);
+        if (visitor.go(TiffVisitor::geTraverse)) visitor.visitDirectoryEnd(this);
     } // TiffDirectory::doAccept
 
     void TiffSubIfd::doAccept(TiffVisitor& visitor)
     {
         visitor.visitSubIfd(this);
-        for (Ifds::iterator i = ifds_.begin(); visitor.go() && i != ifds_.end(); ++i) {
+        for (Ifds::iterator i = ifds_.begin();
+             visitor.go(TiffVisitor::geTraverse) && i != ifds_.end(); ++i) {
             (*i)->accept(visitor);
         }
     } // TiffSubIfd::doAccept
@@ -466,18 +467,18 @@ namespace Exiv2 {
     {
         visitor.visitMnEntry(this);
         if (mn_) mn_->accept(visitor);
-        if (!visitor.go()) {
+        if (!visitor.go(TiffVisitor::geKnownMakernote)) {
             delete mn_;
             mn_ = 0;
-            visitor.setGo(true);
         }
+
     } // TiffMnEntry::doAccept
 
     void TiffArrayEntry::doAccept(TiffVisitor& visitor)
     {
         visitor.visitArrayEntry(this);
         for (Components::const_iterator i = elements_.begin();
-             visitor.go() && i != elements_.end(); ++i) {
+             visitor.go(TiffVisitor::geTraverse) && i != elements_.end(); ++i) {
             (*i)->accept(visitor);
         }
     } // TiffArrayEntry::doAccept

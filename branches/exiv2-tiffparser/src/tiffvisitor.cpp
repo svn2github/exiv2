@@ -60,6 +60,25 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
+    TiffVisitor::TiffVisitor()
+    {
+        for (int i = 0; i < events_; ++i) {
+            go_[i] = true;
+        }
+    }
+
+    void TiffVisitor::setGo(GoEvent event, bool go)
+    {
+        assert(event >= 0 && event < events_);
+        go_[event] = go;
+    }
+
+    bool TiffVisitor::go(GoEvent event) const
+    {
+        assert(event >= 0 && event < events_);
+        return go_[event]; 
+    }
+
     void TiffFinder::init(uint16_t tag, uint16_t group)
     {
         tag_ = tag;
@@ -71,7 +90,7 @@ namespace Exiv2 {
     {
         if (object->tag() == tag_ && object->group() == group_) {
             tiffComponent_ = object;
-            setGo(false);
+            setGo(geTraverse, false);
         }
     }
 
@@ -996,7 +1015,7 @@ namespace Exiv2 {
             }
 #endif // DEBUG
 #endif // SUPPRESS_WARNINGS
-            setGo(false);
+            setGo(geKnownMakernote, false);
             return;
         }
         // Modify reader for Makernote peculiarities, byte order and offset

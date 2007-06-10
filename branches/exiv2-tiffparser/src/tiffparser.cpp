@@ -205,6 +205,8 @@ namespace Exiv2 {
         {    0x0001, Group::minoltamn, Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedLong, false>  },
         {    0x0003, Group::minoltamn, Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedLong, false>  },
         {    0x0004, Group::minoltamn, Group::minocs7,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedShort, false> },
+        {    0x0088, Group::minoltamn, Group::minoltamn, 0x927c,    Group::exif,      newTiffThumbData<0x0089, Group::minoltamn> },
+        {    0x0089, Group::minoltamn, Group::minoltamn, 0x927c,    Group::exif,      newTiffThumbSize<0x0088, Group::minoltamn> },
         {    0x0114, Group::minoltamn, Group::minocs5,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedShort, false> },
         { Tag::next, Group::minoltamn, Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::minoltamn, Group::minoltamn, 0x927c,    Group::exif,      newTiffEntry },

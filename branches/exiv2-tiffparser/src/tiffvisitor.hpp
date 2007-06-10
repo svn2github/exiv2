@@ -66,10 +66,24 @@ namespace Exiv2 {
      */
     class TiffVisitor {
     public:
+        //! Events for the stop/go flag. See setGo(). 
+        enum GoEvent {
+            //! Signal to control traversing of the composite tree.
+            geTraverse       = 0,
+            //! Signal used by TiffReader to signal an unknown makernote.
+            geKnownMakernote = 1
+            // Note: If you add more events here, adjust the events_ constant too!
+        };
+
+    private:
+        static const int events_ = 2;  //!< The number of stop/go flags.
+        bool go_[events_];             //!< Array of stop/go flags. See setGo().
+
+    public:
         //! @name Creators
         //@{
-        //! Default constructor
-        TiffVisitor() : go_(true) {}
+        //! Default constructor. Initialises all stop/go flags to true.
+        TiffVisitor();
         //! Virtual destructor
         virtual ~TiffVisitor() {}
         //@}
@@ -79,15 +93,15 @@ namespace Exiv2 {
         /*!
           @brief Set the stop/go flag: true for go, false for stop.
 
-          This mechanism can be used by concrete visitors to signal certain
-          events. For example, TiffFinder sets the stop flag as soon as it finds
-          the correct component to signal to that the search should be
-          stopped. TiffReader uses it to signal problems reading a makernote.
-          As the flag doesn't carry any information on the type of event which
-          triggered it, it is for each visitor to establish and adhere to
-          conventions about its meaning.
+          This mechanism is used by visitors and components to signal special
+          events. Specifically, TiffFinder sets the geTraverse flag as soon as
+          it finds the correct component to signal to components that the search
+          should be aborted. TiffReader uses geKnownMakernote to signal problems
+          reading a makernote to the TiffMnEntry component. There is an array
+          of flags, one for each defined \em event, so different signals can be
+          used independent of each other.
          */
-        void setGo(bool go) { go_ = go; }
+        void setGo(GoEvent event, bool go);
         //! Operation to perform for a TIFF entry
         virtual void visitEntry(TiffEntry* object) =0;
         //! Operation to perform for a TIFF data entry
@@ -122,12 +136,9 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
-        //! Check if stop flag is clear, return true if it's clear.
-        bool go() { return go_; }
+        //! Check if stop flag for \em event is clear, return true if it's clear.
+        bool go(GoEvent event) const;
         //@}
-
-    private:
-        bool go_;    //!< Set this to false to abort the iteration
 
     }; // class TiffVisitor
 
