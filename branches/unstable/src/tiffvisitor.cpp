@@ -230,6 +230,20 @@ namespace Exiv2 {
         }
     }
 
+    void TiffDecoder::decodeXmp(const TiffEntryBase* object)
+    {
+        // add Exif tag anyway
+        decodeStdTiffEntry(object);
+
+        byte const* pData = 0;
+        long size = 0;
+        getObjData(pData, size, 0x02bc, Group::ifd0, object);
+        if (pData) {
+            pImage_->xmpPacket().assign(
+                std::string(reinterpret_cast<const char*>(pData), size));
+        }
+    } // TiffMetadataDecoder::decodeXmp
+
     void TiffDecoder::decodeIptc(const TiffEntryBase* object)
     {
         // add Exif tag anyway
@@ -595,6 +609,11 @@ namespace Exiv2 {
     }
 
     void TiffEncoder::encodeIptc(TiffEntryBase* object)
+    {
+        // Todo
+    }
+
+    void TiffEncoder::encodeXmp(TiffEntryBase* object)
     {
         // Todo
     }

@@ -190,6 +190,10 @@ namespace Exiv2 {
           @return modifiable IptcData instance containing IPTC values
          */
         virtual IptcData& iptcData() { return iptcData_; }
+        /*!
+          @brief Return a modifiable reference to the raw XMP packet.
+         */
+        virtual std::string& xmpPacket() { return xmpPacket_; }
         //@}
 
         //! @name Accessors
@@ -242,7 +246,7 @@ namespace Exiv2 {
         /*!
           @brief Return the raw XMP packet as a string.
          */
-        virtual std::string xmpPacket() const { return xmpPacket_; }
+        virtual const std::string& xmpPacket() const { return xmpPacket_; }
         /*!
           @brief Return a reference to the BasicIo instance being used for Io.
 

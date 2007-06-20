@@ -253,6 +253,8 @@ namespace Exiv2 {
         void decodeSubIfd(const TiffEntryBase* object);
         //! Decode IPTC data from an IPTCNAA tag or Photoshop ImageResources
         void decodeIptc(const TiffEntryBase* object);
+        //! Decode XMP packet from an XMLPacket tag
+        void decodeXmp(const TiffEntryBase* object);
         //@}
 
     private:
@@ -349,6 +351,8 @@ namespace Exiv2 {
         void encodeSubIfd(TiffEntryBase* object);
         //! Encode IPTC data to an IPTCNAA or Photoshop ImageResources tag
         void encodeIptc(TiffEntryBase* object);
+        //! Encode XMP packet to an XMLPacket tag
+        void encodeXmp(TiffEntryBase* object);
         //! Encode an entry using big endian byte order and the standard encoding function
         void encodeBigEndianEntry(TiffEntryBase* object);
 
