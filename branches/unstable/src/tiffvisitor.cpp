@@ -235,12 +235,11 @@ namespace Exiv2 {
         // add Exif tag anyway
         decodeStdTiffEntry(object);
 
-        byte const* pData = 0;
-        long size = 0;
-        getObjData(pData, size, 0x02bc, Group::ifd0, object);
-        if (pData) {
+        if (object->pData()) {
+            // Todo: decode rather than just dump the contents
             pImage_->xmpPacket().assign(
-                std::string(reinterpret_cast<const char*>(pData), size));
+                std::string(reinterpret_cast<const char*>(
+                                object->pData()), object->size()));
         }
     } // TiffMetadataDecoder::decodeXmp
 
