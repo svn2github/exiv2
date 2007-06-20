@@ -120,7 +120,8 @@ BINSRC = addmoddel.cpp        \
          tiff-test.cpp        \
          tiffmn-test.cpp      \
          tiffaddpath-test.cpp \
-         tiffparse.cpp
+         tiffparse.cpp        \
+         xmpdump.cpp
 
 # Main source file of the Exiv2 application
 EXIV2MAIN = exiv2.cpp
