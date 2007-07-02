@@ -215,6 +215,8 @@ namespace Exiv2 {
 
     void JpegBase::readMetadata()
     {
+        int rc = 0; // Todo: this should be the return value
+
         if (io_->open() != 0) throw Error(9, io_->path(), strError());
         IoCloser closer(*io_);
         // Ensure that this is the correct image type
@@ -241,7 +243,10 @@ namespace Exiv2 {
             uint16_t size = getUShort(buf.pData_, bigEndian);
 
             if (marker == app1_ && memcmp(buf.pData_ + 2, exifId_, 6) == 0) {
-                if (bufRead < 8 || size < 8) throw Error(15);
+                if (bufRead < 8 || size < 8) {
+                    rc = 1;
+                    break;
+                }
                 // Seek to beginning and read the Exif data
                 io_->seek(8 - bufRead, BasicIo::cur);
                 DataBuf rawExif(size - 8);
@@ -265,8 +270,12 @@ namespace Exiv2 {
                 xmpPacket_.assign(reinterpret_cast<char*>(xmpPacket.pData_), xmpPacket.size_);
                 --search;
             }
-            else if (marker == app13_ && memcmp(buf.pData_ + 2, Photoshop::ps3Id_, 14) == 0) {
-                if (bufRead < 16 || size < 16) throw Error(15);
+            else if (   marker == app13_
+                     && memcmp(buf.pData_ + 2, Photoshop::ps3Id_, 14) == 0) {
+                if (bufRead < 16 || size < 16) {
+                    rc = 2;
+                    break;
+                }
                 // Read the rest of the APP13 segment
                 io_->seek(16 - bufRead, BasicIo::cur);
                 DataBuf psData(size - 16);
@@ -291,7 +300,10 @@ namespace Exiv2 {
             }
             else if (marker == com_ && comment_.empty())
             {
-                if (size < 2) throw Error(15);
+                if (size < 2) {
+                    rc = 3;
+                    break;
+                }
                 // JPEGs can have multiple comments, but for now only read
                 // the first one (most jpegs only have one anyway). Comments
                 // are simple single byte ISO-8859-1 strings.
@@ -307,18 +319,24 @@ namespace Exiv2 {
                 --search;
             }
             else {
-                if (size < 2) throw Error(15);
+                if (size < 2) {
+                    rc = 4;
+                    break;
+                }
                 // Skip the remainder of the unknown segment
-                if (io_->seek(size - bufRead, BasicIo::cur)) throw Error(15);
+                if (io_->seek(size - bufRead, BasicIo::cur)) throw Error(14);
             }
             // Read the beginning of the next segment
             marker = advanceToMarker();
             if (marker < 0) {
-#ifndef SUPPRESS_WARNINGS
-                std::cerr << "Warning: JPEG format error.\n";
-#endif
+                rc = 5;
                 break;
             }
+        } // while there are segments to process
+        if (rc != 0) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Warning: JPEG format error, rc = " << rc << "\n";
+#endif
         }
     } // JpegBase::readMetadata
 
