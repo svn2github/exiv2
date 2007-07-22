@@ -281,7 +281,10 @@ namespace Exiv2 {
                 --search;
             }
             else if (marker == app1_ && memcmp(buf.pData_ + 2, xmpId_, 29) == 0) {
-                if (bufRead < 31 || size < 31) throw Error(15);
+                if (size < 31) {
+                    rc = 6;
+                    break;
+                }
                 // Seek to beginning and read the XMP packet
                 io_->seek(31 - bufRead, BasicIo::cur);
                 DataBuf xmpPacket(size - 31);
