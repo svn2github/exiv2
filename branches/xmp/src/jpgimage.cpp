@@ -59,6 +59,7 @@ namespace Exiv2 {
     const byte     JpegBase::com_      = 0xfe;
     const char     JpegBase::exifId_[] = "Exif\0\0";
     const char     JpegBase::jfifId_[] = "JFIF\0";
+    const char     JpegBase::xmpId_[]  = "http://ns.adobe.com/xap/1.0/\0";
 
     const char     Photoshop::ps3Id_[] = "Photoshop 3.0\0";
     const char     Photoshop::bimId_[] = "8BIM";
@@ -244,8 +245,8 @@ namespace Exiv2 {
             throw Error(15);
         }
         clearMetadata();
-        int search = 3;
-        const long bufMinSize = 16;
+        int search = 4;
+        const long bufMinSize = 36;
         long bufRead = 0;
         DataBuf buf(bufMinSize);
 
@@ -255,8 +256,10 @@ namespace Exiv2 {
 
         while (marker != sos_ && marker != eoi_ && search > 0) {
             // Read size and signature (ok if this hits EOF)
+            memset(buf.pData_, 0x0, buf.size_);
             bufRead = io_->read(buf.pData_, bufMinSize);
             if (io_->error()) throw Error(14);
+            if (bufRead < 2) throw Error(15);
             uint16_t size = getUShort(buf.pData_, bigEndian);
 
             if (marker == app1_ && memcmp(buf.pData_ + 2, exifId_, 6) == 0) {
@@ -265,17 +268,26 @@ namespace Exiv2 {
                     break;
                 }
                 // Seek to beginning and read the Exif data
-                io_->seek(8-bufRead, BasicIo::cur);
-                long sizeExifData = size - 8;
-                DataBuf rawExif(sizeExifData);
-                io_->read(rawExif.pData_, sizeExifData);
+                io_->seek(8 - bufRead, BasicIo::cur);
+                DataBuf rawExif(size - 8);
+                io_->read(rawExif.pData_, rawExif.size_);
                 if (io_->error() || io_->eof()) throw Error(14);
-                if (exifData_.load(rawExif.pData_, sizeExifData)) {
+                if (exifData_.load(rawExif.pData_, rawExif.size_)) {
 #ifndef SUPPRESS_WARNINGS
                     std::cerr << "Warning: Failed to decode Exif metadata.\n";
 #endif
                     exifData_.clear();
                 }
+                --search;
+            }
+            else if (marker == app1_ && memcmp(buf.pData_ + 2, xmpId_, 29) == 0) {
+                if (bufRead < 31 || size < 31) throw Error(15);
+                // Seek to beginning and read the XMP packet
+                io_->seek(31 - bufRead, BasicIo::cur);
+                DataBuf xmpPacket(size - 31);
+                io_->read(xmpPacket.pData_, xmpPacket.size_);
+                if (io_->error() || io_->eof()) throw Error(14);
+                xmpPacket_.assign(reinterpret_cast<char*>(xmpPacket.pData_), xmpPacket.size_);
                 --search;
             }
             else if (   marker == app13_
@@ -285,14 +297,14 @@ namespace Exiv2 {
                     break;
                 }
                 // Read the rest of the APP13 segment
-                // needed if bufMinSize!=16: io_->seek(16-bufRead, BasicIo::cur);
+                io_->seek(16 - bufRead, BasicIo::cur);
                 DataBuf psData(size - 16);
                 io_->read(psData.pData_, psData.size_);
                 if (io_->error() || io_->eof()) throw Error(14);
                 const byte *record = 0;
                 uint32_t sizeIptc = 0;
                 uint32_t sizeHdr = 0;
-                // Find actual Iptc data within the APP13 segment
+                // Find actual IPTC data within the APP13 segment
                 if (!Photoshop::locateIptcIrb(psData.pData_, psData.size_,
                                               &record, &sizeHdr, &sizeIptc)) {
                     if (sizeIptc) {
@@ -312,14 +324,14 @@ namespace Exiv2 {
                     rc = 3;
                     break;
                 }
-                // Jpegs can have multiple comments, but for now only read
+                // JPEGs can have multiple comments, but for now only read
                 // the first one (most jpegs only have one anyway). Comments
                 // are simple single byte ISO-8859-1 strings.
-                io_->seek(2-bufRead, BasicIo::cur);
-                buf.alloc(size-2);
-                io_->read(buf.pData_, size-2);
+                io_->seek(2 - bufRead, BasicIo::cur);
+                DataBuf comment(size - 2);
+                io_->read(comment.pData_, comment.size_);
                 if (io_->error() || io_->eof()) throw Error(14);
-                comment_.assign(reinterpret_cast<char*>(buf.pData_), size-2);
+                comment_.assign(reinterpret_cast<char*>(comment.pData_), comment.size_);
                 while (   comment_.length()
                        && comment_.at(comment_.length()-1) == '\0') {
                     comment_.erase(comment_.length()-1);
