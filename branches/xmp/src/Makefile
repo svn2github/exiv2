@@ -91,6 +91,10 @@ CCSRC += rafimage.cpp         \
 	 types.cpp            \
 	 value.cpp            \
 	 version.cpp
+ifdef ENABLE_XMP
+CCSRC += properties.cpp       \
+	 xmp.cpp
+endif
 
 # Add library C source files to this list
 ifndef HAVE_TIMEGM

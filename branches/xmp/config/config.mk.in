@@ -76,6 +76,12 @@ ifeq ($(GCC),yes)
 endif
 
 # **********************************************************************
+# XMP support
+ENABLE_XMP = 1
+CPPFLAGS += -DUNIX_ENV -I$(top_srcdir)/XMP-SDK/public/include
+LDFLAGS += -L$(top_srcdir)/XMP-SDK/public/libraries/i80386linux/debug -lXMPCoreStaticDebug
+
+# **********************************************************************
 # Libraries and Functions
 HAVE_LIBZ = @HAVE_LIBZ@
 HAVE_TIMEGM = @HAVE_TIMEGM@
