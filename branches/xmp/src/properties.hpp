@@ -70,12 +70,16 @@ namespace Exiv2 {
     struct XmpNsInfo {
         //! For comparison with prefix
         struct Prefix {
+            //! Constructor. 
             Prefix(const std::string& prefix);
+            //! The prefix string.
             std::string prefix_;
         };
         //! For comparison with namespace
         struct Ns {
+            //! Constructor. 
             Ns(const std::string& ns);
+            //! The namespace string
             std::string ns_;
         };
         //! Comparison operator for namespace
