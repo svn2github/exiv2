@@ -66,52 +66,88 @@ namespace {
 // class member definitions
 namespace Exiv2 {
 
-    Xmpdatum::Xmpdatum(const XmpKey& key,
-                       const Value* pValue)
+    struct Xmpdatum::Impl {
+        Impl(const XmpKey& key, const Value* pValue);  //! Constructor
+        Impl(const Impl& rhs);                         //! Copy constructor
+        Impl& operator=(const Impl& rhs);              //! Assignment
+
+        XmpKey::AutoPtr key_;                          //!< Key
+        Value::AutoPtr  value_;                        //!< Value
+    };
+
+    Xmpdatum::Impl::Impl(const XmpKey& key, const Value* pValue)
         : key_(key.clone())
     {
         if (pValue) value_ = pValue->clone();
     }
 
-    Xmpdatum::Xmpdatum(const Xmpdatum& rhs)
-        : Metadatum(rhs)
+    Xmpdatum::Impl::Impl(const Impl& rhs)
     {
         if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
         if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
     }
 
+    Xmpdatum::Impl::Impl& Xmpdatum::Impl::operator=(const Impl& rhs)
+    {
+        if (this == &rhs) return *this;
+        key_.reset();
+        if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
+        value_.reset();
+        if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
+        return *this;
+    }
+
+    Xmpdatum::Xmpdatum(const XmpKey& key, const Value* pValue)
+        : p_(new Impl(key, pValue))
+    {
+    }
+
+    Xmpdatum::Xmpdatum(const Xmpdatum& rhs)
+        : Metadatum(rhs), p_(new Impl(*rhs.p_))
+    {
+    }
+
+    Xmpdatum& Xmpdatum::operator=(const Xmpdatum& rhs)
+    {
+        if (this == &rhs) return *this;
+        Metadatum::operator=(rhs);
+        *p_ = *rhs.p_;
+        return *this;
+    }
+
     Xmpdatum::~Xmpdatum()
     {
+        delete p_;
     }
 
     std::string Xmpdatum::key() const
     {
-        return key_.get() == 0 ? "" : key_->key(); 
+        return p_->key_.get() == 0 ? "" : p_->key_->key(); 
     }
 
     std::string Xmpdatum::groupName() const
     {
-        return key_.get() == 0 ? "" : key_->groupName();
+        return p_->key_.get() == 0 ? "" : p_->key_->groupName();
     }
 
     std::string Xmpdatum::tagName() const
     {
-        return key_.get() == 0 ? "" : key_->tagName();
+        return p_->key_.get() == 0 ? "" : p_->key_->tagName();
     }
 
     std::string Xmpdatum::tagLabel() const
     {
-        return key_.get() == 0 ? "" : key_->tagLabel();
+        return p_->key_.get() == 0 ? "" : p_->key_->tagLabel();
     }
 
     uint16_t Xmpdatum::tag() const
     {
-        return key_.get() == 0 ? 0 : key_->tag();
+        return p_->key_.get() == 0 ? 0 : p_->key_->tag();
     }
 
     TypeId Xmpdatum::typeId() const
     {
-        return value_.get() == 0 ? invalidTypeId : value_->typeId();
+        return p_->value_.get() == 0 ? invalidTypeId : p_->value_->typeId();
     }
 
     const char* Xmpdatum::typeName() const
@@ -121,43 +157,43 @@ namespace Exiv2 {
 
     long Xmpdatum::count() const
     {
-        return value_.get() == 0 ? 0 : value_->count();
+        return p_->value_.get() == 0 ? 0 : p_->value_->count();
     }
 
     long Xmpdatum::size() const
     {
-        return value_.get() == 0 ? 0 : value_->size();
+        return p_->value_.get() == 0 ? 0 : p_->value_->size();
     }
 
     std::string Xmpdatum::toString() const
     {
-        return value_.get() == 0 ? "" : value_->toString();
+        return p_->value_.get() == 0 ? "" : p_->value_->toString();
     }
 
     long Xmpdatum::toLong(long n) const
     {
-        return value_.get() == 0 ? -1 : value_->toLong(n);
+        return p_->value_.get() == 0 ? -1 : p_->value_->toLong(n);
     }
 
     float Xmpdatum::toFloat(long n) const
     {
-        return value_.get() == 0 ? -1 : value_->toFloat(n); 
+        return p_->value_.get() == 0 ? -1 : p_->value_->toFloat(n); 
     }
 
     Rational Xmpdatum::toRational(long n) const
     {
-        return value_.get() == 0 ? Rational(-1, 1) : value_->toRational(n);
+        return p_->value_.get() == 0 ? Rational(-1, 1) : p_->value_->toRational(n);
     }
 
     Value::AutoPtr Xmpdatum::getValue() const
     {
-        return value_.get() == 0 ? Value::AutoPtr(0) : value_->clone(); 
+        return p_->value_.get() == 0 ? Value::AutoPtr(0) : p_->value_->clone(); 
     }
 
     const Value& Xmpdatum::value() const
     {
-        if (value_.get() == 0) throw Error(8);
-        return *value_;
+        if (p_->value_.get() == 0) throw Error(8);
+        return *p_->value_;
     }
 
     long Xmpdatum::copy(byte* /*buf*/, ByteOrder /*byteOrder*/) const
@@ -166,25 +202,11 @@ namespace Exiv2 {
         return 0;
     }
 
-    Xmpdatum& Xmpdatum::operator=(const Xmpdatum& rhs)
-    {
-        if (this == &rhs) return *this;
-        Metadatum::operator=(rhs);
-
-        key_.reset();
-        if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
-
-        value_.reset();
-        if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
-
-        return *this;
-    } // Xmpdatum::operator=
-
     Xmpdatum& Xmpdatum::operator=(const uint16_t& value)
     {
         UShortValue::AutoPtr v(new UShortValue);
         v->value_.push_back(value);
-        value_ = v;
+        p_->value_ = v;
         return *this;
     }
 
@@ -202,19 +224,19 @@ namespace Exiv2 {
 
     void Xmpdatum::setValue(const Value* pValue)
     {
-        value_.reset();
-        if (pValue) value_ = pValue->clone();
+        p_->value_.reset();
+        if (pValue) p_->value_ = pValue->clone();
     }
 
     void Xmpdatum::setValue(const std::string& value)
     {
         // Todo: What's the correct default? Adjust doc
-        if (value_.get() == 0) {
-            assert(0 != key_.get());
-            TypeId type = XmpProperties::propertyType(*key_.get());
-            value_ = Value::create(type);
+        if (p_->value_.get() == 0) {
+            assert(0 != p_->key_.get());
+            TypeId type = XmpProperties::propertyType(*p_->key_.get());
+            p_->value_ = Value::create(type);
         }
-        value_->read(value);
+        p_->value_->read(value);
     }
 
     Xmpdatum& XmpData::operator[](const std::string& key)

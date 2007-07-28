@@ -132,9 +132,9 @@ namespace Exiv2 {
         //@}
 
     private:
-        // DATA
-        XmpKey::AutoPtr key_;                  //!< Key
-        Value::AutoPtr  value_;                //!< Value
+        // Pimpl idiom
+        struct Impl;
+        Impl* p_;
 
     }; // class Xmpdatum
 
