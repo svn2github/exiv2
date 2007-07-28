@@ -1,5 +1,13 @@
 XMP support
 ===========
+Exiv2 uses the Adobe XMP toolkit (XMP SDK) to parse
+and serialize XMP packets (only the XMPCore component).
+
+XMP support can be enabled with the ENABLE_XMP directive 
+in config/config.mk.in. Todo: This will become a configure
+option.
+
+
 Todo: 
 + What are the plans, design
 + What is already supported, what is not.
