@@ -40,6 +40,14 @@ EXIV2_RCSID("@(#) $Id$")
 #include <iostream>
 #include <algorithm>
 #include <cassert>
+#include <string>
+
+// Adobe XMP Toolkit
+#ifdef EXV_HAVE_XMP_TOOLKIT
+# define TXMP_STRING_TYPE std::string
+# include <XMP.hpp>
+# include <XMP.incl_cpp>
+#endif // EXV_HAVE_XMP_TOOLKIT
 
 // *****************************************************************************
 namespace {
@@ -60,20 +68,34 @@ namespace {
         std::string key_;
 
     }; // class FindXmpdatum
+
+    //! Make an XMP key from a schema namespace and property path
+    Exiv2::XmpKey::AutoPtr makeXmpKey(const std::string& schemaNs,
+                                      const std::string& propPath);
+
+    // Todo: This should be part of the API
+    //! Quote a string with double-quotes, escape quotes in the string
+    void quoteText(std::string& text);
+
 }
 
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
 
-    struct Xmpdatum::Impl {
-        Impl(const XmpKey& key, const Value* pValue);  //! Constructor
-        Impl(const Impl& rhs);                         //! Copy constructor
-        Impl& operator=(const Impl& rhs);              //! Assignment
+    //! @cond IGNORE
 
+    //! Internal Pimpl structure with private members and data of class Xmpdatum.
+    struct Xmpdatum::Impl {
+        Impl(const XmpKey& key, const Value* pValue);  //!< Constructor
+        Impl(const Impl& rhs);                         //!< Copy constructor
+        Impl& operator=(const Impl& rhs);              //!< Assignment
+
+        // DATA
         XmpKey::AutoPtr key_;                          //!< Key
         Value::AutoPtr  value_;                        //!< Value
     };
+    //! @endcond
 
     Xmpdatum::Impl::Impl(const XmpKey& key, const Value* pValue)
         : key_(key.clone())
@@ -250,15 +272,75 @@ namespace Exiv2 {
         return *pos;
     }
 
+#ifdef EXV_HAVE_XMP_TOOLKIT
     int XmpData::load(const byte* buf, long len)
     {
         xmpMetadata_.clear();
 
-        // Todo: Implement me!
+        SXMPMeta meta(reinterpret_cast<const char*>(buf), len);
+        SXMPIterator iter(meta);
+        std::string schemaNs, propPath, propValue;
+        XMP_OptionBits opt;
+        while (iter.Next(&schemaNs, &propPath, &propValue, &opt)) {
+            if (XMP_NodeIsSchema(opt)) continue;
+
+            XmpKey::AutoPtr key = makeXmpKey(schemaNs, propPath);
+            if (key.get() == 0) continue;
+
+            // Create an Exiv2 value and read the property value
+            Value::AutoPtr val = Value::create(XmpProperties::propertyType(*key.get()));
+            if (XMP_PropIsSimple(opt)) {
+                if (val->typeId() != xmpText) {
+                    int ret = val->read(propValue);
+                    // Todo: Exiv2 ValueType<T>::read should check the string 
+                    //       and not just return 0
+                    if (ret != 0) val = Value::create(xmpText);
+                }
+                if (val->typeId() == xmpText) {
+                    std::string pv = propValue;
+                    quoteText(pv);
+                    val->read(pv);
+                }
+            }
+            else if (XMP_PropIsArray(opt)) {
+                XMP_Index itemIdx = 1;
+                std::string itemValue, arrayValue;
+                XMP_OptionBits itemOpt;
+                while (meta.GetArrayItem(schemaNs.c_str(), propPath.c_str(),
+                                         itemIdx, &itemValue, &itemOpt)) {
+                    if (val->typeId() == xmpText) quoteText(itemValue);
+                    if (itemIdx > 1) arrayValue += " ";
+                    arrayValue += itemValue;
+                    ++itemIdx;
+                }
+                iter.Skip(kXMP_IterSkipSubtree);
+                val->read(arrayValue);
+            }
+            else {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "Warning: XMP property " << key->key()
+                          << " has unsupported property type; skipping property.\n";
+#endif
+                iter.Skip(kXMP_IterSkipSubtree);
+                continue;
+            }
+
+            add(*key.get(), val.get());
+        }
 
         return 0;
     } // XmpData::load
+#else
+    int XmpData::load(const byte* /*buf*/, long /*len*/)
+    {
+#ifndef SUPPRESS_WARNINGS
+        std::cerr << "Warning: XMP toolkit support not compiled in.\n";
+#endif
+        return 1;
+    } // XmpData::load
+#endif // !EXV_HAVE_XMP_TOOLKIT
 
+#ifdef EXV_HAVE_XMP_TOOLKIT
     DataBuf XmpData::copy() const
     {
         DataBuf buf;
@@ -267,6 +349,15 @@ namespace Exiv2 {
 
         return buf;
     } // XmpData::copy
+#else
+    DataBuf XmpData::copy() const
+    {
+#ifndef SUPPRESS_WARNINGS
+        std::cerr << "Warning: XMP toolkit support not compiled in.\n";
+#endif
+        return DataBuf();
+    } // XmpData::copy
+#endif // !EXV_HAVE_XMP_TOOLKIT
 
     int XmpData::add(const XmpKey& key, Value* value)
     {
@@ -344,3 +435,62 @@ namespace Exiv2 {
     }
 
 }                                       // namespace Exiv2
+
+// *****************************************************************************
+// local definitions
+namespace {
+    Exiv2::XmpKey::AutoPtr makeXmpKey(const std::string& schemaNs,
+                                      const std::string& propPath)
+    {
+        std::string property;
+        std::string::size_type idx = propPath.find(':');
+        if (idx != std::string::npos) {
+            // Don't worry about out_of_range, XMP parser takes care of this
+            property = propPath.substr(idx + 1);
+        }
+        else {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Warning: Failed to determine property name from path "
+                      << propPath << ", namespace " << schemaNs 
+                      << "; skipping property.\n";
+#endif
+            return Exiv2::XmpKey::AutoPtr();
+        }
+        const char* prefix = Exiv2::XmpProperties::ns(schemaNs);
+        if (prefix == 0) {
+#ifndef SUPPRESS_WARNINGS
+            // Todo: Print warning only for the first property in each ns
+            std::cerr << "Warning: Unknown schema namespace " 
+                      << schemaNs << "; skipping property "
+                      << property << ".\n";
+#endif
+            return Exiv2::XmpKey::AutoPtr();
+        }
+        Exiv2::XmpKey::AutoPtr key;
+        // Todo: Avoid the try/catch block
+        try {
+            key = Exiv2::XmpKey::AutoPtr(new Exiv2::XmpKey(prefix, property));
+        }
+        catch (const Exiv2::AnyError& e) {
+            // This should only happen for unknown property names
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Warning: " << e << "; skipping property.\n";
+#endif
+        }
+        return key;
+    } // makeXmpKey
+
+    void quoteText(std::string& text) 
+    {
+        const char quote = '\"';
+        for (std::string::size_type pos = text.find(quote);
+             pos != std::string::npos;
+             pos = text.find(quote, pos + 2)) {
+
+            text.insert(pos, "\\");
+
+        }
+        text = quote + text + quote;
+    } // quoteText
+
+}

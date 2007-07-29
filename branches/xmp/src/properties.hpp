@@ -107,15 +107,22 @@ namespace Exiv2 {
           @brief Return the title (label) of the property.
           @param key The property key
           @return The title (label) of the property
+          @throw Error if the key is invalid.
          */
         static const char* propertyTitle(const XmpKey& key);
         /*!
           @brief Return the description of the property.
           @param key The property key
           @return The description of the property
+          @throw Error if the key is invalid.
          */
         static const char* propertyDesc(const XmpKey& key);
-        //! Return the type for property \em key
+        /*!
+          @brief Return the type for property \em key
+          @param key The property key
+          @return The type of the property
+          @throw Error if the key is invalid.
+         */
         static TypeId propertyType(const XmpKey& key);
         /*!
           @brief Return information for the property for key.
@@ -130,19 +137,15 @@ namespace Exiv2 {
                   with \em prefix.
            @param prefix Prefix
            @return the namespace name
+           @throw Error if no namespace is registered with \em prefix.
          */
         static const char* ns(const std::string& prefix);
-        /*!
-           @brief Return the (preferred) prefix for schema namespace \em ns
-           @param ns Schema namespace
-           @return the prefix
-         */
-        static const char* prefix(const std::string& ns);
         /*!
            @brief Return the namespace description for the schema associated
                   with \em prefix.
            @param prefix Prefix
            @return the namespace description
+           @throw Error if no namespace is registered with \em prefix.
          */
         static const char* nsDesc(const std::string& prefix);
         /*!
@@ -161,6 +164,12 @@ namespace Exiv2 {
           @throw Error if no namespace is registered with \em prefix.
          */
         static const XmpNsInfo* nsInfo(const std::string& prefix);
+        /*!
+           @brief Return the (preferred) prefix for schema namespace \em ns
+           @param ns Schema namespace
+           @return the prefix or 0 if namespace \em ns is not registered.
+         */
+        static const char* prefix(const std::string& ns);
         //! Print a list of properties of a schema namespace to output stream \em os.
         static void printProperties(std::ostream& os, const std::string& prefix);
 
@@ -196,6 +205,16 @@ namespace Exiv2 {
                  known.
         */
         XmpKey(const std::string& prefix, const std::string& property);
+        //! Copy constructor.
+        XmpKey(const XmpKey& rhs);
+        //! Virtual destructor.
+        virtual ~XmpKey();
+        //@}
+
+        //! @name Manipulators
+        //@{
+        //! Assignment operator.
+        XmpKey& operator=(const XmpKey& rhs);
         //@}
 
         //! @name Accessors
@@ -220,27 +239,13 @@ namespace Exiv2 {
         //@}
 
     private:
-        //! @name Manipulators
-        //@{
-        /*!
-          @brief Parse and convert the \em key string into property and prefix.
-                 Updates data members if the string can be decomposed, or throws
-                 \em Error.
-
-          @throw Error if the key cannot be decomposed.
-        */
-        void decomposeKey(const std::string& key);
-        //@}
-
         //! Internal virtual copy constructor.
         virtual XmpKey* clone_() const;
 
     private:
-        // DATA
-        static const char* familyName_;
-
-        std::string prefix_;           //!< Prefix
-        std::string property_;         //!< Property name
+        // Pimpl idiom
+        struct Impl;
+        Impl* p_;
 
     }; // class XmpKey
 

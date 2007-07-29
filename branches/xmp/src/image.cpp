@@ -73,20 +73,20 @@ EXIV2_RCSID("@(#) $Id$")
 namespace Exiv2 {
 
     const ImageFactory::Registry ImageFactory::registry_[] = {
-        //image type       creation fct     type check  Exif mode    IPTC mode    Comment mode
-        //---------------  ---------------  ----------  -----------  -----------  ------------
-        { ImageType::jpeg, newJpegInstance, isJpegType, amReadWrite, amReadWrite, amReadWrite },
-        { ImageType::exv,  newExvInstance,  isExvType,  amReadWrite, amReadWrite, amReadWrite },
-        { ImageType::cr2,  newCr2Instance,  isCr2Type,  amRead,      amRead,      amNone      },
-        { ImageType::crw,  newCrwInstance,  isCrwType,  amReadWrite, amNone,      amReadWrite },
-        { ImageType::mrw,  newMrwInstance,  isMrwType,  amRead,      amRead,      amNone      },
-        { ImageType::tiff, newTiffInstance, isTiffType, amRead,      amRead,      amNone      },
-#ifdef EXV_HAVE_LIBZ
-        { ImageType::png,  newPngInstance,  isPngType,  amRead,      amRead,      amNone      },
-#endif // EXV_HAVE_LIBZ
-        { ImageType::raf,  newRafInstance,  isRafType,  amRead,      amRead,      amNone      },
-        // End of list marker
-        { ImageType::none, 0,               0,          amNone,      amNone,      amNone      }
+        //image type       creation fct     type check  Exif mode    IPTC mode    XMP mode     Comment mode
+        //---------------  ---------------  ----------  -----------  -----------  -----------  ------------
+        { ImageType::jpeg, newJpegInstance, isJpegType, amReadWrite, amReadWrite, amReadWrite, amReadWrite },
+        { ImageType::exv,  newExvInstance,  isExvType,  amReadWrite, amReadWrite, amReadWrite, amReadWrite },
+        { ImageType::cr2,  newCr2Instance,  isCr2Type,  amRead,      amRead,      amRead,      amNone      },
+        { ImageType::crw,  newCrwInstance,  isCrwType,  amReadWrite, amNone,      amNone,      amReadWrite },
+        { ImageType::mrw,  newMrwInstance,  isMrwType,  amRead,      amRead,      amRead,      amNone      },
+        { ImageType::tiff, newTiffInstance, isTiffType, amRead,      amRead,      amRead,      amNone      },
+#ifdef EXV_HAVE_LIBZ                                                                           
+        { ImageType::png,  newPngInstance,  isPngType,  amRead,      amRead,      amNone,      amNone      },
+#endif // EXV_HAVE_LIBZ                                                                        
+        { ImageType::raf,  newRafInstance,  isRafType,  amRead,      amRead,      amRead,      amNone      },
+        // End of list marker                                                                  
+        { ImageType::none, 0,               0,          amNone,      amNone,      amNone,      amNone      }
     };
 
     bool ImageFactory::Registry::operator==(const int& imageType) const
@@ -107,6 +107,7 @@ namespace Exiv2 {
     {
         clearExifData();
         clearIptcData();
+        clearXmpData();
         clearComment();
     }
 
@@ -114,6 +115,7 @@ namespace Exiv2 {
     {
         setExifData(image.exifData());
         setIptcData(image.iptcData());
+        setXmpData(image.xmpData());
         setComment(image.comment());
     }
 
@@ -135,6 +137,16 @@ namespace Exiv2 {
     void Image::setIptcData(const IptcData& iptcData)
     {
         iptcData_ = iptcData;
+    }
+
+    void Image::clearXmpData()
+    {
+        xmpData_.clear();
+    }
+
+    void Image::setXmpData(const XmpData& xmpData)
+    {
+        xmpData_ = xmpData;
     }
 
     void Image::clearComment()
@@ -175,6 +187,9 @@ namespace Exiv2 {
             break;
         case mdIptc:
             am = r->iptcSupport_;
+            break;
+        case mdXmp:
+            am = r->xmpSupport_;
             break;
         case mdComment:
             am = r->commentSupport_;

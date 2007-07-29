@@ -193,8 +193,7 @@ namespace Exiv2 {
     const char* XmpProperties::prefix(const std::string& ns)
     {
         const XmpNsInfo* xn = find(xmpNsInfo, XmpNsInfo::Ns(ns));
-        if (!xn) throw Error(6, ns); // Todo: Error number
-        return xn->prefix_;
+        return xn ? xn->prefix_ : 0;
     }
 
     void XmpProperties::printProperties(std::ostream& os, const std::string& prefix)
@@ -209,18 +208,69 @@ namespace Exiv2 {
 
     } // XmpProperties::printProperties
 
-    const char* XmpKey::familyName_ = "Xmp";
+    //! @cond IGNORE
+
+    //! Internal Pimpl structure with private members and data of class XmpKey.
+    struct XmpKey::Impl {
+        Impl();                         //!< Default constructor
+        Impl(const std::string& prefix, const std::string& property); //!< Constructor
+
+        /*!
+          @brief Parse and convert the \em key string into property and prefix.
+                 Updates data members if the string can be decomposed, or throws
+                 \em Error.
+
+          @throw Error if the key cannot be decomposed.
+        */
+        void decomposeKey(const XmpKey* self, const std::string& key);
+
+        // DATA
+        static const char* familyName_; //!< "Xmp"
+
+        std::string prefix_;            //!< Prefix
+        std::string property_;          //!< Property name
+    };
+    //! @endcond
+
+    XmpKey::Impl::Impl()
+    {
+    }
+
+    XmpKey::Impl::Impl(const std::string& prefix, const std::string& property)
+        : prefix_(prefix), property_(property)
+    {
+    }
+
+    const char* XmpKey::Impl::familyName_ = "Xmp";
 
     XmpKey::XmpKey(const std::string& key)
+        : p_(new Impl)
     {
-        decomposeKey(key);
+        p_->decomposeKey(this, key);
     }
 
     XmpKey::XmpKey(const std::string& prefix, const std::string& property)
-        : prefix_(prefix), property_(property)
+        : p_(new Impl(prefix, property))
     {
         // Validate prefix and property, throws
         XmpProperties::propertyInfo(*this);
+    }
+
+    XmpKey::~XmpKey()
+    {
+        delete p_;
+    }
+
+    XmpKey::XmpKey(const XmpKey& rhs)
+        : Key(rhs), p_(new Impl(*rhs.p_))
+    {
+    }
+
+    XmpKey& XmpKey::operator=(const XmpKey& rhs)
+    {
+        if (this == &rhs) return *this;
+        *p_ = *rhs.p_;
+        return *this;
     }
 
     XmpKey::AutoPtr XmpKey::clone() const
@@ -235,22 +285,22 @@ namespace Exiv2 {
 
     std::string XmpKey::key() const
     {
-        return std::string(familyName_) + "." + prefix_ + "." + property_;
+        return std::string(p_->familyName_) + "." + p_->prefix_ + "." + p_->property_;
     }
 
     const char* XmpKey::familyName() const
     {
-        return familyName_;
+        return p_->familyName_;
     }
 
     std::string XmpKey::groupName() const
     {
-        return prefix_;
+        return p_->prefix_;
     }
 
     std::string XmpKey::tagName() const
     { 
-        return property_;
+        return p_->property_;
     }
 
     std::string XmpKey::tagLabel() const
@@ -260,10 +310,10 @@ namespace Exiv2 {
 
     const char* XmpKey::ns() const
     {
-        return XmpProperties::ns(prefix_);
+        return XmpProperties::ns(p_->prefix_);
     }
 
-    void XmpKey::decomposeKey(const std::string& key)
+    void XmpKey::Impl::decomposeKey(const XmpKey* self, const std::string& key)
     {
         // Get the family name, prefix and property name parts of the key
         std::string::size_type pos1 = key.find('.');
@@ -284,9 +334,9 @@ namespace Exiv2 {
         prefix_ = prefix;
 
         // Validate prefix and property
-        XmpProperties::propertyInfo(*this);
+        XmpProperties::propertyInfo(*self);
 
-    } // XmpKey::decomposeKey
+    } // XmpKey::Impl::decomposeKey
 
     // *************************************************************************
     // free functions
