@@ -105,24 +105,39 @@ namespace Exiv2 {
         throw(Error(31, "ORF"));
     } // OrfImage::writeMetadata
 
+    OrfHeader::OrfHeader()
+        : TiffHeaderBase('O'<< 8 | 'R', 8, littleEndian, 0x00000008)
+    {
+    }
 
-    const uint16_t OrfHeader::tag_ = 'O'<< 8 | 'R';
+    OrfHeader::~OrfHeader()
+    {
+    }
 
     bool OrfHeader::read(const byte* pData, uint32_t size)
     {
         if (size < 8) return false;
 
         if (pData[0] == 0x49 && pData[1] == 0x49) {
-            byteOrder_ = littleEndian;
+            setByteOrder(littleEndian);
+        }
+        else if (pData[0] == 0x4d && pData[1] == 0x4d) {
+            setByteOrder(bigEndian);
         }
         else {
             return false;
         }
-        if (tag_ != getUShort(pData + 2, byteOrder_)) return false;
-        offset_ = getULong(pData + 4, byteOrder_);
+        if (tag() != getUShort(pData + 2, byteOrder())) return false;
+        setOffset(getULong(pData + 4, byteOrder()));
+        if (offset() != 0x00000008) return false;
 
         return true;
     } // OrfHeader::read
+
+    void OrfHeader::write(Blob& blob) const
+    {
+        // Todo: Implement me!
+    }
 
     // *************************************************************************
     // free functions
@@ -137,17 +152,18 @@ namespace Exiv2 {
 
     bool isOrfType(BasicIo& iIo, bool advance)
     {
-        const int32_t len = 4;
+        const int32_t len = 8;
         byte buf[len];
         iIo.read(buf, len);
         if (iIo.error() || iIo.eof()) {
             return false;
         }
-        int rc = memcmp(buf, "IIRO", 4);
-        if (!advance || rc != 0) {
+        OrfHeader orfHeader;
+        bool rc = orfHeader.read(buf, len);
+        if (!advance || !rc) {
             iIo.seek(-len, BasicIo::cur);
         }
-        return rc == 0;
+        return rc;
     }
 
 }                                       // namespace Exiv2

@@ -92,7 +92,7 @@ namespace Exiv2 {
                                  uint32_t           size,
                                  TiffCompFactoryFct createFct,
                                  FindDecoderFct     findDecoderFct,
-				 TiffHeade2&        header);
+				 TiffHeaderBase&    header);
     }; // class TiffParser
 
     /*!

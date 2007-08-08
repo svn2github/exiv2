@@ -117,46 +117,28 @@ namespace Exiv2 {
 
     }; // class OrfImage
 
-  class OrfHeader : public TiffHeade2 {
+    /*!
+      @brief Olympus ORF header structure.
+     */
+    class OrfHeader : public TiffHeaderBase {
     public:
         //! @name Creators
         //@{
         //! Default constructor
-        OrfHeader()
-            : TiffHeade2 ()
-            {}
+        OrfHeader();
+        //! Destructor.
+        ~OrfHeader();
         //@}
 
         //! @name Manipulators
         //@{
-        /*!
-          @brief Read the TIFF header from a data buffer. Return false if the
-                 data buffer does not contain a TIFF header, else true.
-
-          @param pData Pointer to the data buffer.
-          @param size  Number of bytes in the data buffer.
-         */
-        virtual bool read(const byte* pData, uint32_t size);
+        bool read(const byte* pData, uint32_t size);
         //@}
 
         //! @name Accessors
         //@{
-        /*!
-          @brief Write the TIFF header to the binary image \em blob.
-                 This method appends to the blob.
-
-          @param blob Binary image to add to.
-
-          @throw Error If the header cannot be written.
-         */
         void write(Blob& blob) const;
-        //! Return the tag value (magic number) which identifies the buffer as ORF data
-        uint16_t tag() const { return tag_; }
         //@}
-
-    private:
-        static const uint16_t tag_;       //!< 'OR', identifies the buffer as ORFF data
-
     }; // class OrfHeader
 
 

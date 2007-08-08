@@ -181,17 +181,17 @@ namespace Exiv2 {
                             uint32_t           size,
                             TiffCompFactoryFct createFct,
                             FindDecoderFct     findDecoderFct,
-			    TiffHeade2&        header)
+			    TiffHeaderBase&    header)
     {
         assert(pImage != 0);
         assert(pData != 0);
 
-        if (!header.read(pData, size) || header.ifdOffset() >= size) {
+        if (!header.read(pData, size) || header.offset() >= size) {
             throw Error(3, "TIFF");
         }
         TiffComponent::AutoPtr rootDir = createFct(Tag::root, Group::none);
         if (0 == rootDir.get()) return;
-        rootDir->setStart(pData + header.ifdOffset());
+        rootDir->setStart(pData + header.offset());
 
         TiffRwState::AutoPtr state(
             new TiffRwState(header.byteOrder(), 0, createFct));

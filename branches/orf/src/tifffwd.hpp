@@ -62,7 +62,7 @@ namespace Exiv2 {
     class TiffMetadataDecoder;
     class TiffReader;
     class TiffPrinter;
-    class TiffHeade2;
+    class TiffHeaderBase;
 
     class TiffRwState;
     struct TiffDecoderInfo;

@@ -35,6 +35,7 @@
 #include "basicio.hpp"
 #include "tifffwd.hpp"
 #include "types.hpp"
+#include "tiffimage.hpp"
 
 // + standard includes
 #include <string>
@@ -146,63 +147,31 @@ namespace Exiv2 {
     }; // class Cr2Decoder
 
     /*!
-      @brief This class models a Canon CR2 header structure.
+      @brief Canon CR2 header structure.
      */
-    class Cr2Header {
+    class Cr2Header : public TiffHeaderBase {
     public:
         //! @name Creators
         //@{
         //! Default constructor
-        Cr2Header()
-            : byteOrder_ (littleEndian),
-              offset_    (0x00000010),
-              offset2_   (0x00000000)
-            {}
+        Cr2Header();
+        //! Destructor.
+        ~Cr2Header();
         //@}
 
         //! @name Manipulators
         //@{
-        /*!
-          @brief Read the CR2 header from a data buffer. Return false if the
-                 data buffer does not contain a CR2 header, else true.
-
-          @param pData Pointer to the data buffer.
-          @param size  Number of bytes in the data buffer.
-         */
         bool read(const byte* pData, uint32_t size);
         //@}
 
         //! @name Accessors
         //@{
-        /*!
-          @brief Write the CR2 header to the binary image \em blob.
-                 This method appends to the blob.
-
-          @param blob Binary image to add to.
-
-          @throw Error If the header cannot be written.
-         */
         void write(Blob& blob) const;
-        /*!
-          @brief Print debug info for the CR2 header to \em os.
-
-          @param os Output stream to write to.
-          @param prefix Prefix to be written before each line of output.
-         */
-        void print(std::ostream& os, const std::string& prefix ="") const;
-        //! Return the byte order (little or big endian).
-        ByteOrder byteOrder() const { return byteOrder_; }
-        //! Return the offset to the start of the root directory
-        uint32_t offset() const { return offset_; }
         //@}
 
     private:
         // DATA
-        ByteOrder             byteOrder_; //!< Applicable byte order
-        uint32_t              offset_;    //!< Offset to the start of the root dir
         uint32_t              offset2_;   //!< Bytes 12-15 from the header
-
-        static const uint16_t tag_;       //!< 42, identifies the buffer as TIFF data
         static const char*    cr2sig_;    //!< Signature for CR2 type TIFF
     }; // class Cr2Header
 
