@@ -90,8 +90,10 @@ namespace Exiv2 {
             throw Error(3, "TIFF");
         }
         clearMetadata();
+        TiffHeade2 tiffHeader;
         TiffParser::decode(this, io_->mmap(), io_->size(),
-                           TiffCreator::create, TiffDecoder::findDecoder);
+                           TiffCreator::create, TiffDecoder::findDecoder,
+			   tiffHeader);
     } // TiffImage::readMetadata
 
     void TiffImage::writeMetadata()

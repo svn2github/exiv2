@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*
-  File:      rafimage.cpp
+  File:      orfimage.cpp
   Version:   $Rev$
   Author(s): Andreas Huggel (ahu) <ahuggel@gmx.net>
-  History:   05-Feb-07, ahu: created
+  History:   13-May-06, ahu: created
   Credits:   See header file
  */
 // *****************************************************************************
@@ -37,10 +37,9 @@ EXIV2_RCSID("@(#) $Id$")
 # include "exv_conf.h"
 #endif
 
-#include "rafimage.hpp"
+#include "orfimage.hpp"
 #include "tiffparser.hpp"
 #include "image.hpp"
-#include "tiffimage.hpp"
 #include "basicio.hpp"
 #include "error.hpp"
 #include "futils.hpp"
@@ -55,79 +54,96 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
-    RafImage::RafImage(BasicIo::AutoPtr io, bool /*create*/)
-        : Image(ImageType::raf, mdExif | mdIptc, io)
+    OrfImage::OrfImage(BasicIo::AutoPtr io, bool /*create*/)
+        : Image(ImageType::orf, mdExif | mdIptc, io)
     {
-    } // RafImage::RafImage
+    } // OrfImage::OrfImage
 
-    void RafImage::setExifData(const ExifData& /*exifData*/)
-    {
-        // Todo: implement me!
-        throw(Error(32, "Exif metadata", "RAF"));
-    }
-
-    void RafImage::setIptcData(const IptcData& /*iptcData*/)
+    void OrfImage::setExifData(const ExifData& /*exifData*/)
     {
         // Todo: implement me!
-        throw(Error(32, "IPTC metadata", "RAF"));
+        throw(Error(32, "Exif metadata", "ORF"));
     }
 
-    void RafImage::setComment(const std::string& /*comment*/)
+    void OrfImage::setIptcData(const IptcData& /*iptcData*/)
+    {
+        // Todo: implement me!
+        throw(Error(32, "IPTC metadata", "ORF"));
+    }
+
+    void OrfImage::setComment(const std::string& /*comment*/)
     {
         // not supported
-        throw(Error(32, "Image comment", "RAF"));
+        throw(Error(32, "Image comment", "ORF"));
     }
 
-    void RafImage::readMetadata()
+    void OrfImage::readMetadata()
     {
 #ifdef DEBUG
-        std::cerr << "Reading RAF file " << io_->path() << "\n";
+        std::cerr << "Reading ORF file " << io_->path() << "\n";
 #endif
-        if (io_->open() != 0) throw Error(9, io_->path(), strError());
+        if (io_->open() != 0) {
+            throw Error(9, io_->path(), strError());
+        }
         IoCloser closer(*io_);
         // Ensure that this is the correct image type
-        if (!isRafType(*io_, false)) {
+        if (!isOrfType(*io_, false)) {
             if (io_->error() || io_->eof()) throw Error(14);
-            throw Error(3, "RAF");
+            throw Error(3, "ORF");
         }
-        byte const* pData = io_->mmap();
-        long size = io_->size();
-        if (size < 84 + 4) throw Error(14); // includes the test for -1
-        uint32_t const start = getULong(pData + 84, bigEndian) + 12;
-        if (static_cast<uint32_t>(size) < start) throw Error(14);
         clearMetadata();
-	TiffHeade2 tiffHeader;
-        TiffParser::decode(this, pData + start, size - start,
-                           TiffCreator::create, TiffDecoder::findDecoder,
-			   tiffHeader);
-    } // RafImage::readMetadata
 
-    void RafImage::writeMetadata()
+	OrfHeader orfHeader;
+        TiffParser::decode(this, io_->mmap(), io_->size(),
+                           TiffCreator::create, TiffDecoder::findDecoder,
+			   orfHeader);
+    } // OrfImage::readMetadata
+
+    void OrfImage::writeMetadata()
     {
-        //! Todo: implement me!
-        throw(Error(31, "RAF"));
-    } // RafImage::writeMetadata
+        // Todo: implement me!
+        throw(Error(31, "ORF"));
+    } // OrfImage::writeMetadata
+
+
+    const uint16_t OrfHeader::tag_ = 'O'<< 8 | 'R';
+
+    bool OrfHeader::read(const byte* pData, uint32_t size)
+    {
+        if (size < 8) return false;
+
+        if (pData[0] == 0x49 && pData[1] == 0x49) {
+            byteOrder_ = littleEndian;
+        }
+        else {
+            return false;
+        }
+        if (tag_ != getUShort(pData + 2, byteOrder_)) return false;
+        offset_ = getULong(pData + 4, byteOrder_);
+
+        return true;
+    } // OrfHeader::read
 
     // *************************************************************************
     // free functions
-    Image::AutoPtr newRafInstance(BasicIo::AutoPtr io, bool create)
+    Image::AutoPtr newOrfInstance(BasicIo::AutoPtr io, bool create)
     {
-        Image::AutoPtr image(new RafImage(io, create));
+        Image::AutoPtr image(new OrfImage(io, create));
         if (!image->good()) {
             image.reset();
         }
         return image;
     }
 
-    bool isRafType(BasicIo& iIo, bool advance)
+    bool isOrfType(BasicIo& iIo, bool advance)
     {
-        const int32_t len = 8;
+        const int32_t len = 4;
         byte buf[len];
         iIo.read(buf, len);
         if (iIo.error() || iIo.eof()) {
             return false;
         }
-        int rc = memcmp(buf, "FUJIFILM", 8);
+        int rc = memcmp(buf, "IIRO", 4);
         if (!advance || rc != 0) {
             iIo.seek(-len, BasicIo::cur);
         }

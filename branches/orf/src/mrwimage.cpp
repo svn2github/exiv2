@@ -40,6 +40,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "mrwimage.hpp"
 #include "tiffparser.hpp"
 #include "image.hpp"
+#include "tiffimage.hpp"
 #include "basicio.hpp"
 #include "error.hpp"
 #include "futils.hpp"
@@ -122,8 +123,10 @@ namespace Exiv2 {
         io_->read(buf.pData_, buf.size_);
         if (io_->error() || io_->eof()) throw Error(14);
 
+	TiffHeade2 tiffHeader;
         TiffParser::decode(this, buf.pData_, buf.size_,
-                           TiffCreator::create, TiffDecoder::findDecoder);
+                           TiffCreator::create, TiffDecoder::findDecoder,
+			   tiffHeader);
     } // MrwImage::readMetadata
 
     void MrwImage::writeMetadata()

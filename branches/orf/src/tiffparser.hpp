@@ -91,7 +91,8 @@ namespace Exiv2 {
                            const byte*              pData,
                                  uint32_t           size,
                                  TiffCompFactoryFct createFct,
-                                 FindDecoderFct     findDecoderFct);
+                                 FindDecoderFct     findDecoderFct,
+				 TiffHeade2&        header);
     }; // class TiffParser
 
     /*!

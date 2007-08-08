@@ -19,20 +19,21 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*!
-  @file    tiffimage.hpp
-  @brief   Class TiffImage
+  @file    orfimage.hpp
+  @brief   Olympus RAW image
   @version $Rev$
-  @author  Andreas Huggel (ahu)
-           <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
-  @date    15-Mar-06, ahu: created
+  @author  Jeff Costlow
+           <a href="mailto:costlow@gmail.com">costlow@gmail.com</a>
+  @date    31-Jul-07, costlow: created
  */
-#ifndef TIFFIMAGE_HPP_
-#define TIFFIMAGE_HPP_
+#ifndef ORFIMAGE_HPP_
+#define ORFIMAGE_HPP_
 
 // *****************************************************************************
 // included header files
 #include "image.hpp"
 #include "basicio.hpp"
+#include "tiffimage.hpp"
 
 // + standard includes
 #include <string>
@@ -44,21 +45,21 @@ namespace Exiv2 {
 // *****************************************************************************
 // class definitions
 
-    // Add TIFF to the supported image formats
+    // Add ORF to the supported image formats
     namespace ImageType {
-        const int tiff = 4;          //!< TIFF image type (see class TiffImage)
+        const int orf = 9;          //!< ORF image type (see class OrfImage)
     }
 
     /*!
-      @brief Class to access TIFF images. Exif metadata is
-          supported directly, IPTC is read from the Exif data, if present.
+      @brief Class to access raw Olympus ORF images. Exif metadata is supported
+             directly, IPTC is read from the Exif data, if present.
      */
-    class TiffImage : public Image {
+    class OrfImage : public Image {
     public:
         //! @name Creators
         //@{
         /*!
-          @brief Constructor that can either open an existing TIFF image or create
+          @brief Constructor that can either open an existing ORF image or create
               a new image from scratch. If a new image is to be created, any
               existing data is overwritten. Since the constructor can not return
               a result, callers should check the good() method after object
@@ -72,7 +73,7 @@ namespace Exiv2 {
           @param create Specifies if an existing image should be read (false)
               or if a new file should be created (true).
          */
-        TiffImage(BasicIo::AutoPtr io, bool create);
+        OrfImage(BasicIo::AutoPtr io, bool create);
         //@}
 
         //! @name Manipulators
@@ -94,7 +95,7 @@ namespace Exiv2 {
          */
         void setIptcData(const IptcData& iptcData);
         /*!
-          @brief Not supported. TIFF format does not contain a comment.
+          @brief Not supported. MRW format does not contain a comment.
               Calling this function will throw an Error(32).
          */
         void setComment(const std::string& comment);
@@ -102,31 +103,27 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
-        std::string mimeType() const { return "image/tiff"; }
+        std::string mimeType() const { return "image/x-minolta-mrw"; }
         //@}
 
     private:
         //! @name NOT Implemented
         //@{
         //! Copy constructor
-        TiffImage(const TiffImage& rhs);
+        OrfImage(const OrfImage& rhs);
         //! Assignment operator
-        TiffImage& operator=(const TiffImage& rhs);
+        OrfImage& operator=(const OrfImage& rhs);
         //@}
 
-    }; // class TiffImage
+    }; // class OrfImage
 
-    /*!
-      @brief This class models a TIFF header structure.
-     */
-    class TiffHeade2 {
+  class OrfHeader : public TiffHeade2 {
     public:
         //! @name Creators
         //@{
         //! Default constructor
-        TiffHeade2()
-            : byteOrder_ (littleEndian),
-              offset_    (0x00000008)
+        OrfHeader()
+            : TiffHeade2 ()
             {}
         //@}
 
@@ -153,31 +150,16 @@ namespace Exiv2 {
           @throw Error If the header cannot be written.
          */
         void write(Blob& blob) const;
-        /*!
-          @brief Print debug info for the TIFF header to \em os.
-
-          @param os Output stream to write to.
-          @param prefix Prefix to be written before each line of output.
-         */
-        void print(std::ostream& os, const std::string& prefix ="") const;
-        //! Return the byte order (little or big endian).
-        ByteOrder byteOrder() const { return byteOrder_; }
-        //! Return the offset to the start of the root directory
-        uint32_t ifdOffset() const { return offset_; }
-        //! Return the size (in bytes) of the TIFF header
-        uint32_t size() const { return 8; }
-        //! Return the tag value (magic number) which identifies the buffer as TIFF data
+        //! Return the tag value (magic number) which identifies the buffer as ORF data
         uint16_t tag() const { return tag_; }
         //@}
 
-    protected:
-        // DATA
-        ByteOrder             byteOrder_; //!< Applicable byte order
-        uint32_t              offset_;    //!< Offset to the start of the root dir
+    private:
+        static const uint16_t tag_;       //!< 'OR', identifies the buffer as ORFF data
 
-        static const uint16_t tag_;       //!< 42, identifies the buffer as TIFF data
+    }; // class OrfHeader
 
-    }; // class TiffHeade2
+
 
 // *****************************************************************************
 // template, inline and free functions
@@ -185,15 +167,15 @@ namespace Exiv2 {
     // These could be static private functions on Image subclasses but then
     // ImageFactory needs to be made a friend.
     /*!
-      @brief Create a new TiffImage instance and return an auto-pointer to it.
+      @brief Create a new MrwImage instance and return an auto-pointer to it.
              Caller owns the returned object and the auto-pointer ensures that
              it will be deleted.
      */
-    Image::AutoPtr newTiffInstance(BasicIo::AutoPtr io, bool create);
+    Image::AutoPtr newOrfInstance(BasicIo::AutoPtr io, bool create);
 
-    //! Check if the file iIo is a TIFF image.
-    bool isTiffType(BasicIo& iIo, bool advance);
+    //! Check if the file iIo is a MRW image.
+    bool isOrfType(BasicIo& iIo, bool advance);
 
 }                                       // namespace Exiv2
 
-#endif                                  // #ifndef TIFFIMAGE_HPP_
+#endif                                  // #ifndef ORFIMAGE_HPP_

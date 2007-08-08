@@ -180,21 +180,21 @@ namespace Exiv2 {
                             const byte*        pData,
                             uint32_t           size,
                             TiffCompFactoryFct createFct,
-                            FindDecoderFct     findDecoderFct)
+                            FindDecoderFct     findDecoderFct,
+			    TiffHeade2&        header)
     {
         assert(pImage != 0);
         assert(pData != 0);
 
-        TiffHeade2 tiffHeader;
-        if (!tiffHeader.read(pData, size) || tiffHeader.ifdOffset() >= size) {
+        if (!header.read(pData, size) || header.ifdOffset() >= size) {
             throw Error(3, "TIFF");
         }
         TiffComponent::AutoPtr rootDir = createFct(Tag::root, Group::none);
         if (0 == rootDir.get()) return;
-        rootDir->setStart(pData + tiffHeader.ifdOffset());
+        rootDir->setStart(pData + header.ifdOffset());
 
         TiffRwState::AutoPtr state(
-            new TiffRwState(tiffHeader.byteOrder(), 0, createFct));
+            new TiffRwState(header.byteOrder(), 0, createFct));
         TiffReader reader(pData, size, rootDir.get(), state);
         rootDir->accept(reader);
 

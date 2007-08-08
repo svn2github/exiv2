@@ -41,6 +41,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "tiffcomposite.hpp"
 #include "tiffparser.hpp"
 #include "tiffvisitor.hpp"
+#include "tiffimage.hpp"
 #include "image.hpp"
 #include "error.hpp"
 #include "futils.hpp"
@@ -125,8 +126,10 @@ namespace Exiv2 {
             throw Error(3, "CR2");
         }
         clearMetadata();
+	TiffHeade2 tiffHeader;
         TiffParser::decode(this, io_->mmap(), io_->size(),
-                           TiffCreator::create, Cr2Decoder::findDecoder);
+                           TiffCreator::create, Cr2Decoder::findDecoder,
+			   tiffHeader);
 
     } // Cr2Image::readMetadata
 
