@@ -80,8 +80,6 @@ namespace Exiv2 {
     };
 
     extern const XmpPropertyInfo xmpTiffInfo[] = {
-        { "XResolution",      "XResolution",      "Rational",    unsignedRational, xmpInternal, "TIFF tag 282, 0x11A. Horizontal resolution in pixels per unit." },
-        { "YResolution",      "YResolution",      "Rational",    unsignedRational, xmpInternal, "TIFF tag 283, 0x11B. Vertical resolution in pixels per unit." },
         { "ImageWidth",       "ImageWidth",       "Integer",     unsignedLong,     xmpInternal, "TIFF tag 256, 0x100. Image width in pixels." },
         { "ImageLength",      "ImageLength",      "Integer",     unsignedLong,     xmpInternal, "TIFF tag 257, 0x101. Image height in pixels." },
         { "BitsPerSample",    "BitsPerSample",    "seq Integer", unsignedShort,    xmpInternal, "TIFF tag 258, 0x102. Number of bits per component in each channel." },
@@ -98,6 +96,19 @@ namespace Exiv2 {
                                                                                                 "8 = 0th row at left, 0th column at bottom" },
         { "SamplesPerPixel",  "SamplesPerPixel",  "Integer",     unsignedShort,    xmpInternal, "TIFF tag 277, 0x115. Number of components per pixel." },
         { "PlanarConfiguration", "PlanarConfiguration", "Closed Choice of Integer", unsignedShort, xmpInternal, "TIFF tag 284, 0x11C. Data layout:1 = chunky; 2 = planar." },
+        { "YCbCrSubSampling", "YCbCrSubSampling", "Closed Choice of seq Integer", unsignedShort, xmpInternal, "TIFF tag 530, 0x212. Sampling ratio of chrominance "
+                                                                                                "components: [2, 1] = YCbCr4:2:2; [2, 2] = YCbCr4:2:0" },
+        { "YCbCrPositioning", "YCbCrPositioning", "Closed Choice of Integer", unsignedShort, xmpInternal, "TIFF tag 531, 0x213. Position of chrominance vs. "
+                                                                                                "luminance components: 1 = centered; 2 = co-sited." },
+        { "XResolution",      "XResolution",      "Rational",    unsignedRational, xmpInternal, "TIFF tag 282, 0x11A. Horizontal resolution in pixels per unit." },
+        { "YResolution",      "YResolution",      "Rational",    unsignedRational, xmpInternal, "TIFF tag 283, 0x11B. Vertical resolution in pixels per unit." },
+        { "ResolutionUnit",   "ResolutionUnit",   "Closed Choice of Integer", unsignedShort, xmpInternal, "TIFF tag 296, 0x128. Unit used for XResolution and "
+                                                                                                "YResolution. Value is one of: 2 = inches; 3 = centimeters." },
+        { "TransferFunction", "TransferFunction", "seq Integer", unsignedShort,    xmpInternal, "TIFF tag 301, 0x12D. Transfer function for image "
+                                                                                                "described in tabular style with 3 * 256 entries." },
+        { "WhitePoint",       "WhitePoint",       "seq Rational", unsignedRational, xmpInternal, "TIFF tag 318, 0x13E. Chromaticity of white point." },
+        { "PrimaryChromaticities", "PrimaryChromaticities", "seq Rational", unsignedRational, xmpInternal, "TIFF tag 319, 0x13F. Chromaticity of the three primary colors." },
+        { "YCbCrCoefficients", "YCbCrCoefficients", "seq Rational", unsignedRational, xmpInternal, "TIFF tag 529, 0x211. Matrix coefficients for RGB to YCbCr transformation." },
         { "ReferenceBlackWhite", "ReferenceBlackWhite", "seq Rational", unsignedRational, xmpInternal, "TIFF tag 532, 0x214. Reference black and white point values." },
         { "DateTime",         "DateTime",         "Date",        date,             xmpInternal, "TIFF tag 306, 0x132 (primary) and EXIF tag 37520, "
                                                                                                 "0x9290 (subseconds). Date and time of image creation "
@@ -105,9 +116,15 @@ namespace Exiv2 {
                                                                                                 "the original EXIF format. This property includes the "
                                                                                                 "value for the EXIF SubSecTime attribute. "
                                                                                                 "NOTE: This property is stored in XMP as xmp:ModifyDate." },
-        { "ImageDescription", "ImageDescription", "Lang Alt",    asciiString,      xmpExternal, "TIFF tag 270, 0x10E. Description of the image. N O T E : This property is stored in XMP as dc:description." },
+        { "ImageDescription", "ImageDescription", "Lang Alt",    asciiString,      xmpExternal, "TIFF tag 270, 0x10E. Description of the image. Note: This property is stored in XMP as dc:description." },
         { "Make",             "Make",             "ProperName",  asciiString,      xmpInternal, "TIFF tag 271, 0x10F. Manufacturer of recording equipment." },
-        { "Model",            "Model",            "ProperName",  asciiString,      xmpInternal, "TIFF tag 272, 0x110. Model name or number of equipment." }
+        { "Model",            "Model",            "ProperName",  asciiString,      xmpInternal, "TIFF tag 272, 0x110. Model name or number of equipment." },
+        { "Software",         "Software",         "AgentName",   asciiString,      xmpInternal, "TIFF tag 305, 0x131. Software or firmware used to generate image. "
+                                                                                                "Note: This property is stored in XMP as xmp:CreatorTool. " },
+        { "Artist",           "Artist",           "ProperName",  asciiString,      xmpExternal, "TIFF tag 315, 0x13B. Camera owner, photographer or image creator. "
+                                                                                                "Note: This property is stored in XMP as the first item in the dc:creator array." },
+        { "Copyright",        "Copyright",        "Lang Alt",    asciiString,      xmpExternal, "TIFF tag 33432, 0x8298. Copyright information. "
+                                                                                                "Note: This property is stored in XMP as dc:rights." }
     };
 
     extern const XmpPropertyInfo xmpExifInfo[] = {
