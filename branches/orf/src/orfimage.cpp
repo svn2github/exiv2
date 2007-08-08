@@ -92,11 +92,10 @@ namespace Exiv2 {
             throw Error(3, "ORF");
         }
         clearMetadata();
-
-	OrfHeader orfHeader;
+        OrfHeader orfHeader;
         TiffParser::decode(this, io_->mmap(), io_->size(),
                            TiffCreator::create, TiffDecoder::findDecoder,
-			   orfHeader);
+                           &orfHeader);
     } // OrfImage::readMetadata
 
     void OrfImage::writeMetadata()
