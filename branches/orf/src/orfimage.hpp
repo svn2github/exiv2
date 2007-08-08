@@ -103,7 +103,7 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
-        std::string mimeType() const { return "image/x-minolta-mrw"; }
+        std::string mimeType() const { return "image/x-olympus-orf"; }
         //@}
 
     private:
