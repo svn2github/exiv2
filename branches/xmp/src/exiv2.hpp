@@ -123,7 +123,7 @@ public:
     void cleanup();
 
     //! Enumerates print modes
-    enum PrintMode { pmSummary, pmList, pmIptc, pmComment };
+    enum PrintMode { pmSummary, pmList, pmIptc, pmXmp, pmComment };
 
     //! Individual items to print
     enum PrintItem {

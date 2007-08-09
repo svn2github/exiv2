@@ -49,6 +49,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "exif.hpp"
 #include "canonmn.hpp"
 #include "iptc.hpp"
+#include "xmp.hpp"
 #include "futils.hpp"
 #include "i18n.h"                // NLS support.
 
@@ -201,6 +202,7 @@ namespace Action {
         case Params::pmSummary:     rc = printSummary(); break;
         case Params::pmList:        rc = printList(); break;
         case Params::pmIptc:        rc = printIptc(); break;
+        case Params::pmXmp:         rc = printXmp(); break;
         case Params::pmComment:     rc = printComment(); break;
         }
         return rc;
@@ -724,6 +726,44 @@ namespace Action {
 
         return 0;
     } // Print::printIptc
+
+    int Print::printXmp()
+    {
+        if (!Exiv2::fileExists(path_, true)) {
+            std::cerr << path_
+                      << ": " << _("Failed to open the file\n");
+            return -1;
+        }
+        Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(path_);
+        assert(image.get() != 0);
+        image->readMetadata();
+        Exiv2::XmpData& xmpData = image->xmpData();
+        if (xmpData.empty()) {
+            std::cerr << path_
+                      << ": " << _("No XMP data found in the file\n");
+            return -3;
+        }
+        Exiv2::XmpData::const_iterator end = xmpData.end();
+        Exiv2::XmpData::const_iterator md;
+        bool manyFiles = Params::instance().files_.size() > 1;
+        for (md = xmpData.begin(); md != end; ++md) {
+            std::cout << std::setfill(' ') << std::left;
+            if (manyFiles) {
+                std::cout << std::setw(20) << path_ << " ";
+            }
+            std::cout << std::setw(44)
+                      << md->key() << " "
+                      << std::setw(9) << std::setfill(' ') << std::left
+                      << md->typeName() << " "
+                      << std::dec << std::setw(3)
+                      << std::setfill(' ') << std::right
+                      << md->count() << "  "
+                      << std::dec << md->value()
+                      << std::endl;
+        }
+
+        return 0;
+    } // Print::printXmp
 
     int Print::printComment()
     {

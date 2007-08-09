@@ -12,6 +12,24 @@ Todo:
 + What are the plans, design
 + What is already supported, what is not.
 
+Supported XMP Types
+-------------------
+Simple types : supported
+Structures   : not supported
+Arrays       : unordered and ordered arrays are supported
+               alternative arrays are not supported
+
+Property Qualifiers : not supported
+Language Alternatives : not supported
+
+XMP properties are accessed through keys of the form
+"Xmp.<Prefix>.<Property>", where <Prefix> is the preferred
+(or rather, registered) prefix for a schema namespace and
+<Property> is the name of a property in that namespace.
+
+Note: Unlike Exif and IPTC tags, XMP properties do not have
+a tag number.
+
 XMP toolkit installation
 ========================
 This is what worked for me on a Debian GNU/Linux (testing) 

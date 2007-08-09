@@ -172,7 +172,8 @@ namespace Exiv2 {
           @param buf Pointer to the data buffer to read from
           @param len Number of bytes in the data buffer
           @return 0 if successful;<BR>
-                 5 if XMP data is invalid or corrupt;<BR>
+                  1 if XMP support has not been compiled-in;<BR>
+                  2 if the XMP toolkit failed to initialize<BR>
          */
         int load(const byte* buf, long len);
         /*!
@@ -246,6 +247,7 @@ namespace Exiv2 {
         // DATA
         XmpMetadata xmpMetadata_;
 
+        static bool initialized_; //! Indicates if the XMP Toolkit has been initialized
     }; // class XmpData
 
 }                                       // namespace Exiv2

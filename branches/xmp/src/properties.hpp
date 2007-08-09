@@ -154,7 +154,7 @@ namespace Exiv2 {
           @brief Return read-only list of built-in properties for \em prefix.
           @param prefix Prefix
           @return Pointer to the built-in properties for prefix, may be 0 if 
-                  none is condifgured in the namespace info.
+                  none is configured in the namespace info.
           @throw Error if no namespace is registered with \em prefix.
          */
         static const XmpPropertyInfo* propertyList(const std::string& prefix);

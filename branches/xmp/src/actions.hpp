@@ -164,6 +164,8 @@ namespace Action {
         int printComment();
         //! Print uninterpreted Iptc information
         int printIptc();
+        //! print uninterpreted XMP information
+        int printXmp();
         //! Print Exif summary information
         int printSummary();
         //! Print the list of Exif data in user defined format

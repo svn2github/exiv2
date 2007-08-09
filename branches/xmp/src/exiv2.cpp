@@ -243,6 +243,7 @@ void Params::help(std::ostream& os) const
        << _("             v : plain Exif data values (shortcut for -Pxgnycv)\n")
        << _("             h : hexdump of the Exif data (shortcut for -Pxgnycsh)\n")
        << _("             i : Iptc data values\n")
+       << _("             x : XMP properties\n")
        << _("             c : Jpeg comment\n")
        << _("   -P cols Print columns for the Exif taglist ('print' action). Valid are:\n")
        << _("             x : print a column with the tag value\n")
@@ -401,6 +402,7 @@ int Params::evalPrint(const std::string& optarg)
         case 'v': rc = evalPrintCols("xgnycv"); break;
         case 'h': rc = evalPrintCols("xgnycsh"); break;
         case 'i': printMode_ = pmIptc; break;
+        case 'x': printMode_ = pmXmp; break;
         case 'c': printMode_ = pmComment; break;
         default:
             std::cerr << progname() << ": " << _("Unrecognized print mode") << " `"

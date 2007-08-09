@@ -261,6 +261,8 @@ namespace Exiv2 {
         p_->value_->read(value);
     }
 
+    bool XmpData::initialized_ = false;
+
     Xmpdatum& XmpData::operator[](const std::string& key)
     {
         XmpKey xmpKey(key);
@@ -277,6 +279,15 @@ namespace Exiv2 {
     {
         xmpMetadata_.clear();
 
+        if (!initialized_) {
+            initialized_ = true;
+            if (!SXMPMeta::Initialize()) {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "XMP Toolkit initialization failed.\n";
+#endif
+                return 2;
+            }
+        }
         SXMPMeta meta(reinterpret_cast<const char*>(buf), len);
         SXMPIterator iter(meta);
         std::string schemaNs, propPath, propValue;
@@ -456,7 +467,7 @@ namespace {
 #endif
             return Exiv2::XmpKey::AutoPtr();
         }
-        const char* prefix = Exiv2::XmpProperties::ns(schemaNs);
+        const char* prefix = Exiv2::XmpProperties::prefix(schemaNs);
         if (prefix == 0) {
 #ifndef SUPPRESS_WARNINGS
             // Todo: Print warning only for the first property in each ns
