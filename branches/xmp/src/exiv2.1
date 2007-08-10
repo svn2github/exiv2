@@ -3,7 +3,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH EXIV2 1 "June 3rd, 2007"
+.TH EXIV2 1 "August 10th, 2007"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -42,15 +42,15 @@ Print image metadata. This is the default action, i.e., the command
 \fIexiv2 image.jpg\fP will print a summary of the image Exif metadata.
 .TP
 .B ex | extract
-Extract metadata to *.exv and thumbnail image files. Modification
-commands can be applied on-the-fly.
+Extract metadata to *.exv, *.xmp and thumbnail image files. 
+Modification commands can be applied on-the-fly.
 .TP
 .B in | insert
-Insert metadata from corresponding *.exv files.  Use option \fB\-S\fP
-\fI.suf\fP to change the suffix of the input files. Since files of any
-supported format can be used as input files, this command can be used
-to copy the metadata between files of different formats. Modification
-commands can be applied on-the-fly.
+Insert metadata from corresponding *.exv, *.xmp and thumbnail files.
+Use option \fB\-S\fP \fI.suf\fP to change the suffix of the input
+files. Since files of any supported format can be used as input files,
+this command can be used to copy the metadata between files of
+different formats. Modification commands can be applied on-the-fly.
 .TP
 .B rm | delete
 Delete image metadata from the files.
@@ -172,6 +172,8 @@ e : Exif section
 t : Exif thumbnail only
 .br
 i : IPTC data
+.br
+x : XMP packet
 .br
 c : JPEG comment
 .TP

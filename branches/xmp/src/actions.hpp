@@ -270,6 +270,8 @@ namespace Action {
                  on the format of the Exif thumbnail image.
          */
         int writeThumbnail() const;
+        //! Write the XMP packet to a file.
+        int writeXmp() const;
 
     private:
         virtual Extract* clone_() const;

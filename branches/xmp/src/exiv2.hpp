@@ -141,7 +141,7 @@ public:
     };
 
     //! Enumerates common targets, bitmap
-    enum CommonTarget { ctExif = 1, ctIptc = 2, ctComment = 4, ctThumb = 8 };
+    enum CommonTarget { ctExif = 1, ctIptc = 2, ctComment = 4, ctThumb = 8, ctXmp = 16 };
     //! Enumerates the policies to handle existing files in rename action
     enum FileExistsPolicy { overwritePolicy, renamePolicy, askPolicy };
 
@@ -193,7 +193,7 @@ private:
                printMode_(pmSummary),
                printItems_(0),
                action_(0),
-               target_(ctExif|ctIptc|ctComment),
+               target_(ctExif|ctIptc|ctComment|ctXmp),
                adjustment_(0),
                format_("%Y%m%d_%H%M%S"),
                formatSet_(false),

@@ -121,7 +121,7 @@ BINSRC = addmoddel.cpp        \
          write-test.cpp       \
          write2-test.cpp      \
          tiffparse.cpp        \
-         xmpdump.cpp
+         xmpparse.cpp
 
 # Main source file of the Exiv2 application
 EXIV2MAIN = exiv2.cpp

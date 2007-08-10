@@ -129,6 +129,23 @@ namespace {
       @return 0 if successful, -1 if the file was skipped, 1 on error.
     */
     int renameFile(std::string& path, const struct tm* tm);
+
+    /*!
+      @brief Make a file path from the current file path, destination
+             directory (if any) and the filename extension passed in.
+      @param path Path of the existing file
+      @param ext New filename extension (incl. the dot '.' if required)
+      @return 0 if successful, 1 if the new file exists and the user
+             chose not to overwrite it.
+     */
+    std::string newFilePath(const std::string& path, const std::string& ext);
+
+    /*!
+      @brief Check if file \em path exists and whether it should be
+             overwritten. Ask user if necessary. Return 1 if the file 
+             exists and shouldn't be overwritten, else 0.
+     */
+    int dontOverwrite(const std::string& path);
 }
 
 // *****************************************************************************
@@ -907,6 +924,12 @@ namespace Action {
         if (0 == rc && Params::instance().target_ & Params::ctComment) {
             rc = eraseComment(image.get());
         }
+        if (0 == rc && Params::instance().target_ & Params::ctXmp) {
+            // Todo: Implement me!
+            if (!image->xmpData().empty()) {
+                std::cerr << "Deletion of XMP packet not implemented yet.\n";
+            }
+        }
         if (0 == rc) {
             image->writeMetadata();
         }
@@ -982,18 +1005,12 @@ namespace Action {
         if (Params::instance().target_ & Params::ctThumb) {
             rc = writeThumbnail();
         }
-        if (Params::instance().target_ & ~Params::ctThumb) {
-            std::string directory = Params::instance().directory_;
-            if (directory.empty()) directory = Util::dirname(path_);
-            std::string exvPath =   directory + EXV_SEPERATOR_STR
-                                  + Util::basename(path_, true) + ".exv";
-            if (!Params::instance().force_ && Exiv2::fileExists(exvPath)) {
-                std::cout << Params::instance().progname()
-                          << ": " << _("Overwrite") << " `" << exvPath << "'? ";
-                std::string s;
-                std::cin >> s;
-                if (s[0] != 'y' && s[0] != 'Y') return 0;
-            }
+        if (Params::instance().target_ & Params::ctXmp) {
+            rc = writeXmp();
+        }
+        if (Params::instance().target_ & ~Params::ctThumb & ~Params::ctXmp) {
+            std::string exvPath = newFilePath(path_, ".exv");
+            if (dontOverwrite(exvPath)) return 0;
             rc = metacopy(path_, exvPath, false);
         }
         return rc;
@@ -1004,6 +1021,39 @@ namespace Action {
                   << ":\n" << e << "\n";
         return 1;
     } // Extract::run
+
+    int Extract::writeXmp() const
+    {
+        if (!Exiv2::fileExists(path_, true)) {
+            std::cerr << path_
+                      << ": " << _("Failed to open the file\n");
+            return -1;
+        }
+        Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(path_);
+        assert(image.get() != 0);
+        image->readMetadata();
+        const std::string& xmpPacket = image->xmpPacket();
+        if (xmpPacket.empty()) {
+            std::cerr << path_
+                      << ": " << _("No XMP packet found in the file\n");
+            return -3;
+        }
+        std::string xmpPath = newFilePath(path_, ".xmp");
+        if (dontOverwrite(xmpPath)) return 0;
+        if (Params::instance().verbose_) {
+            std::cout << _("Writing XMP packet from") << " " << path_
+                      << " " << _("to") << " " << xmpPath << std::endl;
+        }
+        std::ofstream file(xmpPath.c_str());
+        if (!file) {
+            std::cerr << Params::instance().progname() << ": " 
+                      << _("Failed to open file ") << " " << xmpPath << ": "
+                      << Exiv2::strError() << "\n";
+            return 1;
+        }
+        file << xmpPacket;
+        return 0;
+    } // Extract::writeXmp
 
     int Extract::writeThumbnail() const
     {
@@ -1021,34 +1071,25 @@ namespace Action {
                       << ": " << _("No Exif data found in the file\n");
             return -3;
         }
-
-        std::string directory = Params::instance().directory_;
-        if (directory.empty()) directory = Util::dirname(path_);
-        std::string thumb =   directory + EXV_SEPERATOR_STR
-                            + Util::basename(path_, true) + "-thumb";
-        std::string thumbExt = exifData.thumbnailExtension();
         int rc = 0;
+        std::string thumbExt = exifData.thumbnailExtension();
         if (thumbExt.empty()) {
             std::cerr << path_ << ": " << _("Image does not contain an Exif thumbnail\n");
         }
         else {
+            std::string thumb = newFilePath(path_, "-thumb");
+            std::string thumbPath = thumb + thumbExt;
+            if (dontOverwrite(thumbPath)) return 0;
             if (Params::instance().verbose_) {
                 Exiv2::DataBuf buf = exifData.copyThumbnail();
                 std::cout << _("Writing") << " "
                           << exifData.thumbnailFormat() << " " << _("thumbnail") << " ("
                           << buf.size_ << " " << _("Bytes") << ") " << _("to file") << " "
-                          << thumb << thumbExt << std::endl;
-            }
-            if (!Params::instance().force_ && Exiv2::fileExists(thumb + thumbExt)) {
-                std::cout << Params::instance().progname()
-                          << ": " << _("Overwrite") << " `" << thumb + thumbExt << "'? ";
-                std::string s;
-                std::cin >> s;
-                if (s[0] != 'y' && s[0] != 'Y') return 0;
+                          << thumbPath << std::endl;
             }
             rc = exifData.writeThumbnail(thumb);
             if (rc) {
-                std::cerr << thumb << ": " << _("Exif data doesn't contain a thumbnail\n");
+                std::cerr << path_ << ": " << _("Exif data doesn't contain a thumbnail\n");
             }
         }
         return rc;
@@ -1083,13 +1124,14 @@ namespace Action {
             && Params::instance().target_ & Params::ctExif
             || Params::instance().target_ & Params::ctIptc
             || Params::instance().target_ & Params::ctComment) {
-            std::string directory = Params::instance().directory_;
-            if (directory.empty()) directory = Util::dirname(path);
             std::string suffix = Params::instance().suffix_;
             if (suffix.empty()) suffix = ".exv";
-            std::string exvPath =   directory + EXV_SEPERATOR_STR
-                                  + Util::basename(path, true) + suffix;
+            std::string exvPath = newFilePath(path, suffix);
             rc = metacopy(exvPath, path, true);
+        }
+        if (0 == rc && Params::instance().target_ & Params::ctXmp) {
+            // Todo: Implement me!
+            std::cerr << "Insertion of XMP packet not implemented yet.\n";
         }
         if (Params::instance().preserve_) {
             ts.touch(path);
@@ -1105,10 +1147,7 @@ namespace Action {
 
     int Insert::insertThumbnail(const std::string& path) const
     {
-        std::string directory = Params::instance().directory_;
-        if (directory.empty()) directory = Util::dirname(path);
-        std::string thumbPath =   directory + EXV_SEPERATOR_STR
-                                + Util::basename(path, true) + "-thumb.jpg";
+        std::string thumbPath = newFilePath(path, "-thumb.jpg");
         if (!Exiv2::fileExists(thumbPath, true)) {
             std::cerr << thumbPath
                       << ": " << _("Failed to open the file\n");
@@ -1595,6 +1634,14 @@ namespace {
             }
             targetImage->setIptcData(sourceImage->iptcData());
         }
+        if (   Params::instance().target_ & Params::ctXmp
+            && !sourceImage->xmpData().empty()) {
+            if (Params::instance().verbose_) {
+                std::cout << _("Writing XMP data from") << " " << source
+                          << " " << _("to") << " " << target << std::endl;
+            }
+            targetImage->setXmpData(sourceImage->xmpData());
+        }
         if (   Params::instance().target_ & Params::ctComment
             && !sourceImage->comment().empty()) {
             if (Params::instance().verbose_) {
@@ -1707,5 +1754,26 @@ namespace {
 
         return 0;
     } // renameFile
+
+    std::string newFilePath(const std::string& path, const std::string& ext) 
+    {
+        std::string directory = Params::instance().directory_;
+        if (directory.empty()) directory = Util::dirname(path);
+        std::string newPath =   directory + EXV_SEPERATOR_STR 
+                              + Util::basename(path, true) + ext;
+        return newPath;
+    }
+
+    int dontOverwrite(const std::string& path)
+    {
+        if (!Params::instance().force_ && Exiv2::fileExists(path)) {
+            std::cout << Params::instance().progname()
+                      << ": " << _("Overwrite") << " `" << path << "'? ";
+            std::string s;
+            std::cin >> s;
+            if (s[0] != 'y' && s[0] != 'Y') return 1;
+        }
+        return 0;
+    }
 
 }

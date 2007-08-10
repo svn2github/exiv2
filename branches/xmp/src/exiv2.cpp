@@ -214,7 +214,7 @@ void Params::help(std::ostream& os) const
        << _("  rm | delete   Delete image metadata from the files.\n")
        << _("  in | insert   Insert metadata from corresponding *.exv files.\n"
             "                Use option -S to change the suffix of the input files.\n")
-       << _("  ex | extract  Extract metadata to *.exv and thumbnail image files.\n")
+       << _("  ex | extract  Extract metadata to *.exv, *.xmp and thumbnail image files.\n")
        << _("  mv | rename   Rename files and/or set file timestamps according to the\n"
             "                Exif create timestamp. The filename format can be set with\n"
             "                -r format, timestamp options are controlled with -t and -T.\n")
@@ -262,6 +262,7 @@ void Params::help(std::ostream& os) const
        << _("             e : Exif section\n")
        << _("             t : Exif thumbnail only\n")
        << _("             i : Iptc data\n")
+       << _("             x : XMP packet\n")
        << _("             c : Jpeg comment\n")
        << _("   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
             "           the same as those for the -d option. Only Jpeg thumbnails can\n"
@@ -782,11 +783,13 @@ namespace {
             switch (optarg[i]) {
             case 'e': target |= Params::ctExif; break;
             case 'i': target |= Params::ctIptc; break;
+            case 'x': target |= Params::ctXmp; break;
             case 'c': target |= Params::ctComment; break;
             case 't': target |= Params::ctThumb; break;
             case 'a': target |=   Params::ctExif
                                 | Params::ctIptc
-                                | Params::ctComment; break;
+                                | Params::ctComment
+                                | Params::ctXmp; break;
             default:
                 std::cerr << Params::instance().progname() << ": " << _("Unrecognized ")
                           << action << " " << _("target") << " `"  << optarg[i] << "'\n";
