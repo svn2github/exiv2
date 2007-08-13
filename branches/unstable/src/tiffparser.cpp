@@ -47,6 +47,7 @@ EXIV2_RCSID("@(#) $Id$")
 
 // + standard includes
 #include <cassert>
+#include <memory>
 
 /* --------------------------------------------------------------------------
 
@@ -310,9 +311,16 @@ namespace Exiv2 {
                             const byte*        pData,
                             uint32_t           size,
                             TiffCompFactoryFct createFct,
-                            FindDecoderFct     findDecoderFct)
+                            FindDecoderFct     findDecoderFct,
+                            TiffHeaderBase*    pHeader)
     {
-        TiffComponent::AutoPtr rootDir = parse(pData, size, createFct);
+        // Create standard TIFF header if necessary
+        std::auto_ptr<TiffHeaderBase> ph;
+        if (!pHeader) {
+            ph = std::auto_ptr<TiffHeaderBase>(new TiffHeade2);
+            pHeader = ph.get();
+        }
+        TiffComponent::AutoPtr rootDir = parse(pData, size, createFct, pHeader);
         if (0 != rootDir.get()) {
             TiffDecoder decoder(pImage, rootDir.get(), findDecoderFct);
             rootDir->accept(decoder);
@@ -342,26 +350,26 @@ namespace Exiv2 {
                             uint32_t           size,
                             const Image*       pImage,
                             TiffCompFactoryFct createFct,
-                            FindEncoderFct     findEncoderFct)
+                            FindEncoderFct     findEncoderFct,
+                            TiffHeaderBase*    pHeader)
     {
         // Todo: What if there is no target image yet?
         assert(pImage != 0);
-
-        TiffComponent::AutoPtr rootDir = parse(pData, size, createFct);
+        // Create standard TIFF header if necessary
+        std::auto_ptr<TiffHeaderBase> ph;
+        if (!pHeader) {
+            ph = std::auto_ptr<TiffHeaderBase>(new TiffHeade2);
+            pHeader = ph.get();
+        }
+        TiffComponent::AutoPtr rootDir = parse(pData, size, createFct, pHeader);
         if (0 == rootDir.get()) {
             rootDir = createFct(Tag::root, Group::none);
         }
         assert(rootDir.get());
-        // Todo: Hack: Reads the header again to get byteorder. Image should
-        // have byteOrder() and possibly setByteOrder() methods
-        TiffHeade2 tiffHeader;
-        if (pData != 0 && !tiffHeader.read(pData, size)) {
-            throw Error(3, "TIFF");
-        }
         // Update existing TIFF components based on metadata entries
         TiffEncoder encoder(pImage,
                             rootDir.get(),
-                            tiffHeader.byteOrder(),
+                            pHeader->byteOrder(),
                             findEncoderFct);
         rootDir->accept(encoder);
         // Add remaining entries from metadata to composite, if any
@@ -372,28 +380,25 @@ namespace Exiv2 {
             std::cerr << "Intrusive writing\n";
 
             // Re-write binary representation from the composite tree
-            tiffHeader.write(blob);
-            rootDir->write(blob, tiffHeader.byteOrder(), tiffHeader.ifdOffset(), uint32_t(-1), uint32_t(-1));
+            pHeader->write(blob);
+            rootDir->write(blob, pHeader->byteOrder(), pHeader->offset(), uint32_t(-1), uint32_t(-1));
         }
     } // TiffParser::encode
 
     TiffComponent::AutoPtr TiffParser::parse(const byte*        pData,
                                              uint32_t           size,
-                                             TiffCompFactoryFct createFct)
+                                             TiffCompFactoryFct createFct,
+                                             TiffHeaderBase*    pHeader)
     {
         if (pData == 0 || size == 0) return TiffComponent::AutoPtr(0);
-
-        TiffHeade2 tiffHeader;
-        if (!tiffHeader.read(pData, size) || tiffHeader.ifdOffset() >= size) {
+        if (!pHeader->read(pData, size) || pHeader->offset() >= size) {
             throw Error(3, "TIFF");
         }
-
         TiffComponent::AutoPtr rootDir = createFct(Tag::root, Group::none);
         if (0 != rootDir.get()) {
-            rootDir->setStart(pData + tiffHeader.ifdOffset());
-
+            rootDir->setStart(pData + pHeader->offset());
             TiffRwState::AutoPtr state(
-                new TiffRwState(tiffHeader.byteOrder(), 0, createFct));
+                new TiffRwState(pHeader->byteOrder(), 0, createFct));
             TiffReader reader(pData, size, rootDir.get(), state);
             rootDir->accept(reader);
         }
