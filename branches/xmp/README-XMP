@@ -3,16 +3,17 @@ XMP support
 Exiv2 uses the Adobe XMP toolkit (XMP SDK) to parse
 and serialize XMP packets (only the XMPCore component).
 
-XMP support can be enabled with the ENABLE_XMP directive 
-in config/config.mk.in. Todo: This will become a configure
-option.
+Todo: XMP support is controlled with the ENABLE_XMP directive 
+in config/config.mk.in. This will be a configure option
+eventually.
 
+Top-level classes to access XMP metadata are XmpData,
+XmpDatum and XmpKey. They work similar to the corresponding 
+Exif and IPTC classes. The property-repository is XmpProperties.
+In addition to the expected new members, class Image also
+has a new interface to access the raw XMP packet.
 
-Todo: 
-+ What are the plans, design
-+ What is already supported, what is not.
-
-Supported XMP Types
+Supported XMP types
 -------------------
 Simple types : supported
 Structures   : not supported

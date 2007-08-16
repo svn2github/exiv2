@@ -46,13 +46,15 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
+    extern const XmpPropertyInfo xmpDcInfo[];
+    extern const XmpPropertyInfo xmpXmpInfo[];
     extern const XmpPropertyInfo xmpTiffInfo[];
     extern const XmpPropertyInfo xmpExifInfo[];
 
     extern const XmpNsInfo xmpNsInfo[] = {
         // Schemas
-        { "http://purl.org/dc/elements/1.1/",             "dc",           0, "Dublin Core schema" },
-        { "http://ns.adobe.com/xap/1.0/",                 "xmp",          0, "XMP Basic schema" },
+        { "http://purl.org/dc/elements/1.1/",             "dc",           xmpDcInfo,   "Dublin Core schema" },
+        { "http://ns.adobe.com/xap/1.0/",                 "xmp",          xmpXmpInfo,  "XMP Basic schema" },
         { "http://ns.adobe.com/xap/1.0/rights/",          "xmpRights",    0, "XMP Rights Management schema" },
         { "http://ns.adobe.com/xap/1.0/mm/",              "xmpMM",        0, "XMP Media Management schema" },
         { "http://ns.adobe.com/xap/1.0/bj/",              "xmpBJ",        0, "XMP Basic Job Ticket schema" },
@@ -78,6 +80,65 @@ namespace Exiv2 {
 
         // Qualifiers
         { "http://ns.adobe.com/xmp/Identifier/qual/1.0/", "xmpidq", 0, "Qualifier for xmp:Identifier" }
+    };
+
+    extern const XmpPropertyInfo xmpDcInfo[] = {
+        { "contributor",      "contributor",      "bag ProperName", xmpText,       xmpExternal, "Contributors to the resource (other than the authors)." },
+        { "coverage",         "coverage",         "Text",        xmpText,          xmpExternal, "The extent or scope of the resource." },
+        { "creator",          "creator",          "seq ProperName", xmpText,       xmpExternal, "The authors of the resource (listed in order of precedence, if significant)." },
+        { "date",             "date",             "seq Date",    xmpText,          xmpExternal, "Date(s) that something interesting happened to the resource." },
+        { "description",      "description",      "Lang Alt",    xmpText,          xmpExternal, "A textual description of the content of the resource. Multiple values may be "
+                                                                                                "present for different languages." },
+        { "format",           "format",           "MIMEType",    xmpText,          xmpInternal, "The file format used when saving the resource. Tools and applications should set "
+                                                                                                "this property to the save format of the data. It may include appropriate qualifiers." },
+        { "identifier",       "identifier",       "Text",        xmpText,          xmpExternal, "Unique identifier of the resource." },
+        { "language",         "language",         "bag Locale",  xmpText,          xmpInternal, "An unordered array specifying the languages used in the resource." },
+        { "publisher",        "publisher",        "bag ProperName", xmpText,       xmpExternal, "Publishers." },
+        { "relation",         "relation",         "bag Text",    xmpText,          xmpInternal, "Relationships to other documents." },
+        { "rights",           "rights",           "Lang Alt",    xmpText,          xmpExternal, "Informal rights statement, selected by language." },
+        { "source",           "source",           "Text",        xmpText,          xmpExternal, "Unique identifier of the work from which this resource was derived." },
+        { "subject",          "subject",          "bag Text",    xmpText,          xmpExternal, "An unordered array of descriptive phrases or keywords that specify the topic of the "
+                                                                                                "content of the resource." },
+        { "title",            "title",            "Lang Alt",    xmpText,          xmpExternal, "The title of the document, or the name given to the resource. Typically, it will be "
+                                                                                                "a name by which the resource is formally known." },
+        { "type",             "type",             "bag open Choice", xmpText,      xmpExternal, "A document type; for example, novel, poem, or working paper." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpXmpInfo[] = {
+        { "Advisory",         "Advisory",         "bag XPath",   xmpText,          xmpExternal, "An unordered array specifying properties that were edited outside the authoring "
+                                                                                                "application. Each item should contain a single namespace and XPath separated by "
+                                                                                                "one ASCII space (U+0020)." },
+        { "BaseURL",          "BaseURL",          "URL",         xmpText,          xmpInternal, "The base URL for relative URLs in the document content. If this document contains "
+                                                                                                "Internet links, and those links are relative, they are relative to this base URL. "
+                                                                                                "This property provides a standard way for embedded relative URLs to be interpreted "
+                                                                                                "by tools. Web authoring tools should set the value based on their notion of where "
+                                                                                                "URLs will be interpreted." },
+        { "CreateDate",       "CreateDate",       "Date",        xmpText,          xmpInternal, "The date and time the resource was originally created." },
+        { "CreatorTool",      "CreatorTool",      "AgentName",   xmpText,          xmpInternal, "The name of the first known tool used to create the resource. If history is "
+                                                                                                "present in the metadata, this value should be equivalent to that of "
+                                                                                                "xmpMM:History's softwareAgent property." },
+        { "Identifier",       "Identifier",       "bag Text",    xmpText,          xmpExternal, "An unordered array of text strings that unambiguously identify the resource within "
+                                                                                                "a given context. An array item may be qualified with xmpidq:Scheme to denote the "
+                                                                                                "formal identification system to which that identifier conforms. Note: The "
+                                                                                                "dc:identifier property is not used because it lacks a defined scheme qualifier and "
+                                                                                                "has been defined in the XMP Specification as a simple (single-valued) property." },
+        { "Label",            "Label",            "Text",        xmpText,          xmpExternal, "A word or short phrase that identifies a document as a member of a user-defined "
+                                                                                                "collection. Used to organize documents in a file browser." },
+        { "MetadataDate",     "MetadataDate",     "Date",        xmpText,          xmpInternal, "The date and time that any metadata for this resource was last changed. It should "
+                                                                                                "be the same as or more recent than xmp:ModifyDate." },
+        { "ModifyDate",       "ModifyDate",       "Date",        xmpText,          xmpInternal, "The date and time the resource was last modified. Note: The value of this property "
+                                                                                                "is not necessarily the same as the file's system modification date because it is "
+                                                                                                "set before the file is saved." },
+        { "Nickname",         "Nickname",         "Text",        xmpText,          xmpExternal, "A short informal name for the resource." },
+        { "Rating",           "Rating",           "Closed Choice of Integer", signedLong, xmpExternal, "A number that indicates a document's status relative to other documents, "
+                                                                                                "used to organize documents in a file browser. Values are user-defined within an "
+                                                                                                "application-defined range." },
+        { "Thumbnails",       "Thumbnails",       "alt Thumbnail", undefined,      xmpInternal, "An alternative array of thumbnail images for a file, which can differ in "
+                                                                                                "characteristics such as size or image encoding." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
 
     extern const XmpPropertyInfo xmpTiffInfo[] = {
