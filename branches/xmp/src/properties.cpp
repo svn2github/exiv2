@@ -117,14 +117,14 @@ namespace Exiv2 {
                                                                                                 "the original EXIF format. This property includes the "
                                                                                                 "value for the EXIF SubSecTime attribute. "
                                                                                                 "NOTE: This property is stored in XMP as xmp:ModifyDate." },
-        { "ImageDescription", "ImageDescription", "Lang Alt",    asciiString,      xmpExternal, "TIFF tag 270, 0x10E. Description of the image. Note: This property is stored in XMP as dc:description." },
-        { "Make",             "Make",             "ProperName",  asciiString,      xmpInternal, "TIFF tag 271, 0x10F. Manufacturer of recording equipment." },
-        { "Model",            "Model",            "ProperName",  asciiString,      xmpInternal, "TIFF tag 272, 0x110. Model name or number of equipment." },
-        { "Software",         "Software",         "AgentName",   asciiString,      xmpInternal, "TIFF tag 305, 0x131. Software or firmware used to generate image. "
+        { "ImageDescription", "ImageDescription", "Lang Alt",    xmpText,          xmpExternal, "TIFF tag 270, 0x10E. Description of the image. Note: This property is stored in XMP as dc:description." },
+        { "Make",             "Make",             "ProperName",  xmpText,          xmpInternal, "TIFF tag 271, 0x10F. Manufacturer of recording equipment." },
+        { "Model",            "Model",            "ProperName",  xmpText,          xmpInternal, "TIFF tag 272, 0x110. Model name or number of equipment." },
+        { "Software",         "Software",         "AgentName",   xmpText,          xmpInternal, "TIFF tag 305, 0x131. Software or firmware used to generate image. "
                                                                                                 "Note: This property is stored in XMP as xmp:CreatorTool. " },
-        { "Artist",           "Artist",           "ProperName",  asciiString,      xmpExternal, "TIFF tag 315, 0x13B. Camera owner, photographer or image creator. "
+        { "Artist",           "Artist",           "ProperName",  xmpText,          xmpExternal, "TIFF tag 315, 0x13B. Camera owner, photographer or image creator. "
                                                                                                 "Note: This property is stored in XMP as the first item in the dc:creator array." },
-        { "Copyright",        "Copyright",        "Lang Alt",    asciiString,      xmpExternal, "TIFF tag 33432, 0x8298. Copyright information. "
+        { "Copyright",        "Copyright",        "Lang Alt",    xmpText,          xmpExternal, "TIFF tag 33432, 0x8298. Copyright information. "
                                                                                                 "Note: This property is stored in XMP as dc:rights." },
         // End of list marker
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
@@ -327,25 +327,25 @@ namespace Exiv2 {
     };
 
     extern const XmpPropertyInfo xmpExifInfo[] = {
-        { "ExifVersion",      "ExifVersion",      "Closed Choice of Text", asciiString, xmpInternal, "EXIF tag 36864, 0x9000. EXIF version number." },
-        { "FlashpixVersion",  "FlashpixVersion",  "Closed Choice of Text", asciiString, xmpInternal, "EXIF tag 40960, 0xA000. Version of FlashPix." },
+        { "ExifVersion",      "ExifVersion",      "Closed Choice of Text", xmpText, xmpInternal, "EXIF tag 36864, 0x9000. EXIF version number." },
+        { "FlashpixVersion",  "FlashpixVersion",  "Closed Choice of Text", xmpText, xmpInternal, "EXIF tag 40960, 0xA000. Version of FlashPix." },
         { "ColorSpace",       "ColorSpace",       "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 40961, 0xA001. Color space information" },
         { "ComponentsConfiguration", "ComponentsConfiguration", "Closed Choice of seq Integer", unsignedShort, xmpInternal, "EXIF tag 37121, 0x9101. Configuration of components in data: 4 5 6 0 (if RGB compressed data), 1 2 3 0 (other cases)." },
         { "CompressedBitsPerPixel", "CompressedBitsPerPixel", "Rational", unsignedRational, xmpInternal, "EXIF tag 37122, 0x9102. Compression mode used for a compressed image is indicated in unit bits per pixel." },
         { "PixelXDimension",  "PixelXDimension",  "Integer",     unsignedLong,     xmpInternal, "EXIF tag 40962, 0xA002. Valid image width, in pixels." },
         { "PixelYDimension",  "PixelYDimension",  "Integer",     unsignedLong,     xmpInternal, "EXIF tag 40963, 0xA003. Valid image height, in pixels." },
-        { "UserComment",      "UserComment",      "Lang Alt",    asciiString,      xmpExternal, "EXIF tag 37510, 0x9286. Comments from user." },
-        { "RelatedSoundFile", "RelatedSoundFile", "Text",        asciiString,      xmpInternal, "EXIF tag 40964, 0xA004. An \"8.3\" file name for the related sound file." },
-        { "DateTimeOriginal", "DateTimeOriginal", "Date",        asciiString,      xmpInternal, "EXIF tags 36867, 0x9003 (primary) and 37521, 0x9291 (subseconds). Date and time when original image was generated, in ISO 8601 format. Includes the EXIF SubSecTimeOriginal data." },
-        { "DateTimeDigitized", "DateTimeDigitized", "Date",      asciiString,      xmpInternal, "EXIF tag 36868, 0x9004 (primary) and 37522, 0x9292 (subseconds). Date and time when "
+        { "UserComment",      "UserComment",      "Lang Alt",    xmpText,          xmpExternal, "EXIF tag 37510, 0x9286. Comments from user." },
+        { "RelatedSoundFile", "RelatedSoundFile", "Text",        xmpText,          xmpInternal, "EXIF tag 40964, 0xA004. An \"8.3\" file name for the related sound file." },
+        { "DateTimeOriginal", "DateTimeOriginal", "Date",        xmpText,          xmpInternal, "EXIF tags 36867, 0x9003 (primary) and 37521, 0x9291 (subseconds). Date and time when original image was generated, in ISO 8601 format. Includes the EXIF SubSecTimeOriginal data." },
+        { "DateTimeDigitized", "DateTimeDigitized", "Date",      xmpText,          xmpInternal, "EXIF tag 36868, 0x9004 (primary) and 37522, 0x9292 (subseconds). Date and time when "
                                                                                                 "image was stored as digital data, can be the same as DateTimeOriginal if originally "
                                                                                                 "stored in digital form. Stored in ISO 8601 format. Includes the EXIF SubSecTimeDigitized data." },
         { "ExposureTime",     "ExposureTime",     "Rational",    unsignedRational, xmpInternal, "EXIF tag 33434, 0x829A. Exposure time in seconds." },
         { "FNumber",          "FNumber",          "Rational",    unsignedRational, xmpInternal, "EXIF tag 33437, 0x829D. F number." },
         { "ExposureProgram",  "ExposureProgram",  "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 34850, 0x8822. Class of program used for exposure." },
-        { "SpectralSensitivity", "SpectralSensitivity", "Text",  asciiString,      xmpInternal, "EXIF tag 34852, 0x8824. Spectral sensitivity of each channel." },
+        { "SpectralSensitivity", "SpectralSensitivity", "Text",  xmpText,          xmpInternal, "EXIF tag 34852, 0x8824. Spectral sensitivity of each channel." },
         { "ISOSpeedRatings",  "ISOSpeedRatings",  "seq Integer", unsignedShort,    xmpInternal, "EXIF tag 34855, 0x8827. ISO Speed and ISO Latitude of the input device as specified in ISO 12232." },
-        { "OECF",             "OECF",             "OECF/SFR",    asciiString,      xmpInternal, "EXIF tag 34856, 0x8828. Opto-Electoric Conversion Function as specified in ISO 14524." },
+        { "OECF",             "OECF",             "OECF/SFR",    xmpText,          xmpInternal, "EXIF tag 34856, 0x8828. Opto-Electoric Conversion Function as specified in ISO 14524." },
         { "ShutterSpeedValue", "ShutterSpeedValue", "Rational",  signedRational,   xmpInternal, "EXIF tag 37377, 0x9201. Shutter speed, unit is APEX. See Annex C of the EXIF specification." },
         { "ApertureValue",    "ApertureValue",    "Rational",    unsignedRational, xmpInternal, "EXIF tag 37378, 0x9202. Lens aperture, unit is APEX." },
         { "BrightnessValue",  "BrightnessValue",  "Rational",    signedRational,   xmpInternal, "EXIF tag 37379, 0x9203. Brightness, unit is APEX." },
@@ -354,11 +354,11 @@ namespace Exiv2 {
         { "SubjectDistance",  "SubjectDistance",  "Rational",    unsignedRational, xmpInternal, "EXIF tag 37382, 0x9206. Distance to subject, in meters." },
         { "MeteringMode",     "MeteringMode",     "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 37383, 0x9207. Metering mode." },
         { "LightSource",      "LightSource",      "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 37384, 0x9208. Light source." },
-        { "Flash",            "Flash",            "Flash",       asciiString,      xmpInternal, "EXIF tag 37385, 0x9209. Strobe light (flash) source data." },
+        { "Flash",            "Flash",            "Flash",       xmpText,          xmpInternal, "EXIF tag 37385, 0x9209. Strobe light (flash) source data." },
         { "FocalLength",      "FocalLength",      "Rational",    unsignedRational, xmpInternal, "EXIF tag 37386, 0x920A. Focal length of the lens, in millimeters." },
         { "SubjectArea",      "SubjectArea",      "seq Integer", unsignedShort,    xmpInternal, "EXIF tag 37396, 0x9214. The location and area of the main subject in the overall scene." },
         { "FlashEnergy",      "FlashEnergy",      "Rational",    unsignedRational, xmpInternal, "EXIF tag 41483, 0xA20B. Strobe energy during image capture." },
-        { "SpatialFrequencyResponse", "SpatialFrequencyResponse", "OECF/SFR", asciiString, xmpInternal, "EXIF tag 41484, 0xA20C. Input device spatial frequency table and SFR values as specified in ISO 12233." },
+        { "SpatialFrequencyResponse", "SpatialFrequencyResponse", "OECF/SFR", xmpText, xmpInternal, "EXIF tag 41484, 0xA20C. Input device spatial frequency table and SFR values as specified in ISO 12233." },
         { "FocalPlaneXResolution", "FocalPlaneXResolution", "Rational", unsignedRational, xmpInternal, "EXIF tag 41486, 0xA20E. Horizontal focal resolution, measured pixels per unit." },
         { "FocalPlaneYResolution", "FocalPlaneYResolution", "Rational", unsignedRational, xmpInternal, "EXIF tag 41487, 0xA20F. Vertical focal resolution, measured in pixels per unit." },
         { "FocalPlaneResolutionUnit", "FocalPlaneResolutionUnit", "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41488, 0xA210. Unit used for FocalPlaneXResolution and FocalPlaneYResolution." },
@@ -368,7 +368,7 @@ namespace Exiv2 {
         { "SensingMethod",    "SensingMethod",    "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41495, 0xA217. Image sensor type on input device." },
         { "FileSource",       "FileSource",       "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41728, 0xA300. Indicates image source." },
         { "SceneType",        "SceneType",        "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41729, 0xA301. Indicates the type of scene." },
-        { "CFAPattern",       "CFAPattern",       "CFAPattern",  asciiString,      xmpInternal, "EXIF tag 41730, 0xA302. Color filter array geometric pattern of the image sense." },
+        { "CFAPattern",       "CFAPattern",       "CFAPattern",  xmpText,          xmpInternal, "EXIF tag 41730, 0xA302. Color filter array geometric pattern of the image sense." },
         { "CustomRendered",   "CustomRendered",   "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41985, 0xA401. Indicates the use of special processing on image data." },
         { "ExposureMode",     "ExposureMode",     "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41986, 0xA402. Indicates the exposure mode set when the image was shot." },
         { "WhiteBalance",     "WhiteBalance",     "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41987, 0xA403. Indicates the white balance mode set when the image was shot." },
@@ -380,38 +380,38 @@ namespace Exiv2 {
         { "Contrast",         "Contrast", "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41992, 0xA408. Indicates the direction of contrast processing applied by the camera." },
         { "Saturation",       "Saturation", "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41993, 0xA409. Indicates the direction of saturation processing applied by the camera." },
         { "Sharpness",        "Sharpness", "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41994, 0xA40A. Indicates the direction of sharpness processing applied by the camera." },
-        { "DeviceSettingDescription", "DeviceSettingDescription", "DeviceSettings", asciiString, xmpInternal, "EXIF tag 41995, 0xA40B. Indicates information on the picture-taking conditions of a particular camera model." },
+        { "DeviceSettingDescription", "DeviceSettingDescription", "DeviceSettings", xmpText, xmpInternal, "EXIF tag 41995, 0xA40B. Indicates information on the picture-taking conditions of a particular camera model." },
         { "SubjectDistanceRange", "SubjectDistanceRange", "Closed Choice of Integer", unsignedShort, xmpInternal, "EXIF tag 41996, 0xA40C. Indicates the distance to the subject." },
-        { "ImageUniqueID",    "ImageUniqueID",    "Text",        asciiString,      xmpInternal, "EXIF tag 42016, 0xA420. An identifier assigned uniquely to each image. It is recorded as a 32 "
+        { "ImageUniqueID",    "ImageUniqueID",    "Text",        xmpText,          xmpInternal, "EXIF tag 42016, 0xA420. An identifier assigned uniquely to each image. It is recorded as a 32 "
                                                                                                 "character ASCII string, equivalent to hexadecimal notation and 128-bit fixed length." },
-        { "GPSVersionID",     "GPSVersionID",     "Text",        asciiString,      xmpInternal, "GPS tag 0, 0x00. A decimal encoding of each of the four EXIF bytes with period separators. The current value is \"2.0.0.0\"." },
-        { "GPSLatitude",      "GPSLatitude",      "GPSCoordinate", asciiString,    xmpInternal, "GPS tag 2, 0x02 (position) and 1, 0x01 (North/South). Indicates latitude." },
-        { "GPSLongitude",     "GPSLongitude",     "GPSCoordinate", asciiString,    xmpInternal, "GPS tag 4, 0x04 (position) and 3, 0x03 (East/West). Indicates longitude." },
+        { "GPSVersionID",     "GPSVersionID",     "Text",        xmpText,          xmpInternal, "GPS tag 0, 0x00. A decimal encoding of each of the four EXIF bytes with period separators. The current value is \"2.0.0.0\"." },
+        { "GPSLatitude",      "GPSLatitude",      "GPSCoordinate", xmpText,        xmpInternal, "GPS tag 2, 0x02 (position) and 1, 0x01 (North/South). Indicates latitude." },
+        { "GPSLongitude",     "GPSLongitude",     "GPSCoordinate", xmpText,        xmpInternal, "GPS tag 4, 0x04 (position) and 3, 0x03 (East/West). Indicates longitude." },
         { "GPSAltitudeRef",   "GPSAltitudeRef",   "Closed Choice of Integer", unsignedByte, xmpInternal, "GPS tag 5, 0x5. Indicates whether the altitude is above or below sea level." },
         { "GPSAltitude",      "GPSAltitude",      "Rational",    unsignedRational, xmpInternal, "GPS tag 6, 0x06. Indicates altitude in meters." },
-        { "GPSTimeStamp",     "GPSTimeStamp",     "Date",        asciiString,      xmpInternal, "GPS tag 29 (date), 0x1D, and, and GPS tag 7 (time), 0x07. Time stamp of GPS data, in Coordinated Universal Time. "
+        { "GPSTimeStamp",     "GPSTimeStamp",     "Date",        xmpText,      xmpInternal, "GPS tag 29 (date), 0x1D, and, and GPS tag 7 (time), 0x07. Time stamp of GPS data, in Coordinated Universal Time. "
                                                                                                 "Note: The GPSDateStamp tag is new in EXIF 2.2. The GPS timestamp in EXIF 2.1 does not include a date. If not present, "
                                                                                                 "the date component for the XMP should be taken from exif:DateTimeOriginal, or if that is "
                                                                                                 "also lacking from exif:DateTimeDigitized. If no date is available, do not write exif:GPSTimeStamp to XMP." },
-        { "GPSSatellites",    "GPSSatellites",    "Text",        asciiString,      xmpInternal, "GPS tag 8, 0x08. Satellite information, format is unspecified." },
-        { "GPSStatus",        "GPSStatus",        "Closed Choice of Text", asciiString, xmpInternal, "GPS tag 9, 0x09. Status of GPS receiver at image creation time." },
-        { "GPSMeasureMode",   "GPSMeasureMode",   "Text",        asciiString,      xmpInternal, "GPS tag 10, 0x0A. GPS measurement mode, Text type." },
+        { "GPSSatellites",    "GPSSatellites",    "Text",        xmpText,          xmpInternal, "GPS tag 8, 0x08. Satellite information, format is unspecified." },
+        { "GPSStatus",        "GPSStatus",        "Closed Choice of Text", xmpText, xmpInternal, "GPS tag 9, 0x09. Status of GPS receiver at image creation time." },
+        { "GPSMeasureMode",   "GPSMeasureMode",   "Text",        xmpText,          xmpInternal, "GPS tag 10, 0x0A. GPS measurement mode, Text type." },
         { "GPSDOP",           "GPSDOP",           "Rational",    unsignedRational, xmpInternal, "GPS tag 11, 0x0B. Degree of precision for GPS data." },
-        { "GPSSpeedRef",      "GPSSpeedRef",      "Closed Choice of Text", asciiString, xmpInternal, "GPS tag 12, 0x0C. Units used to speed measurement." },
+        { "GPSSpeedRef",      "GPSSpeedRef",      "Closed Choice of Text", xmpText, xmpInternal, "GPS tag 12, 0x0C. Units used to speed measurement." },
         { "GPSSpeed",         "GPSSpeed",         "Rational",    unsignedRational, xmpInternal, "GPS tag 13, 0x0D. Speed of GPS receiver movement." },
-        { "GPSTrackRef",      "GPSTrackRef",      "Closed Choice of Text", asciiString, xmpInternal, "GPS tag 14, 0x0E. Reference for movement direction." },
+        { "GPSTrackRef",      "GPSTrackRef",      "Closed Choice of Text", xmpText, xmpInternal, "GPS tag 14, 0x0E. Reference for movement direction." },
         { "GPSTrack",         "GPSTrack",         "Rational",    unsignedRational, xmpInternal, "GPS tag 15, 0x0F. Direction of GPS movement, values range from 0 to 359.99." },
-        { "GPSImgDirectionRef", "GPSImgDirectionRef", "Closed Choice of Text", asciiString, xmpInternal, "GPS tag 16, 0x10. Reference for movement direction." },
+        { "GPSImgDirectionRef", "GPSImgDirectionRef", "Closed Choice of Text", xmpText, xmpInternal, "GPS tag 16, 0x10. Reference for movement direction." },
         { "GPSImgDirection",  "GPSImgDirection",  "Rational",    unsignedRational, xmpInternal, "GPS tag 17, 0x11. Direction of image when captured, values range from 0 to 359.99." },
-        { "GPSMapDatum",      "GPSMapDatum",      "Text",        asciiString,      xmpInternal, "GPS tag 18, 0x12. Geodetic survey data." },
-        { "GPSDestLatitude",  "GPSDestLatitude",  "GPSCoordinate", asciiString,    xmpInternal, "GPS tag 20, 0x14 (position) and 19, 0x13 (North/South). Indicates destination latitude." },
-        { "GPSDestLongitude", "GPSDestLongitude", "GPSCoordinate", asciiString,    xmpInternal, "GPS tag 22, 0x16 (position) and 21, 0x15 (East/West). Indicates destination longitude." },
-        { "GPSDestBearingRef", "GPSDestBearingRef", "Closed Choice of Text", asciiString, xmpInternal, "GPS tag 23, 0x17. Reference for movement direction." },
+        { "GPSMapDatum",      "GPSMapDatum",      "Text",        xmpText,          xmpInternal, "GPS tag 18, 0x12. Geodetic survey data." },
+        { "GPSDestLatitude",  "GPSDestLatitude",  "GPSCoordinate", xmpText,        xmpInternal, "GPS tag 20, 0x14 (position) and 19, 0x13 (North/South). Indicates destination latitude." },
+        { "GPSDestLongitude", "GPSDestLongitude", "GPSCoordinate", xmpText,        xmpInternal, "GPS tag 22, 0x16 (position) and 21, 0x15 (East/West). Indicates destination longitude." },
+        { "GPSDestBearingRef", "GPSDestBearingRef", "Closed Choice of Text", xmpText, xmpInternal, "GPS tag 23, 0x17. Reference for movement direction." },
         { "GPSDestBearing",   "GPSDestBearing",   "Rational",    unsignedRational, xmpInternal, "GPS tag 24, 0x18. Destination bearing, values from 0 to 359.99." },
-        { "GPSDestDistanceRef", "GPSDestDistanceRef", "Closed Choice  of Text", asciiString, xmpInternal, "GPS tag 25, 0x19. Units used for speed measurement." },
+        { "GPSDestDistanceRef", "GPSDestDistanceRef", "Closed Choice  of Text", xmpText, xmpInternal, "GPS tag 25, 0x19. Units used for speed measurement." },
         { "GPSDestDistance",  "GPSDestDistance",  "Rational",    unsignedRational, xmpInternal, "GPS tag 26, 0x1A. Distance to destination." },
-        { "GPSProcessingMethod", "GPSProcessingMethod", "Text",  asciiString,      xmpInternal, "GPS tag 27, 0x1B. A character string recording the name of the method used for location finding." },
-        { "GPSAreaInformation", "GPSAreaInformation", "Text",    asciiString,      xmpInternal, "GPS tag 28, 0x1C. A character string recording the name of the GPS area." },
+        { "GPSProcessingMethod", "GPSProcessingMethod", "Text",  xmpText,          xmpInternal, "GPS tag 27, 0x1B. A character string recording the name of the method used for location finding." },
+        { "GPSAreaInformation", "GPSAreaInformation", "Text",    xmpText,          xmpInternal, "GPS tag 28, 0x1C. A character string recording the name of the GPS area." },
         { "GPSDifferential",  "GPSDifferential",  "Closed Choice of Integer", unsignedShort, xmpInternal, "GPS tag 30, 0x1E. Indicates whether differential correction is applied to the GPS receiver." },
         // End of list marker
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }

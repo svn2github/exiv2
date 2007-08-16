@@ -212,6 +212,7 @@ namespace Exiv2 {
           <TR><TD class="indexkey">date</TD><TD class="indexvalue">%DateValue</TD></TR>
           <TR><TD class="indexkey">time</TD><TD class="indexvalue">%TimeValue</TD></TR>
           <TR><TD class="indexkey">comment</TD><TD class="indexvalue">%CommentValue</TD></TR>
+          <TR><TD class="indexkey">xmpText</TD><TD class="indexvalue">%XmpTextValue</TD></TR>
           <TR><TD class="indexkey"><EM>default:</EM></TD><TD class="indexvalue">%DataValue(typeId)</TD></TR>
           </TABLE>
 
@@ -603,6 +604,98 @@ namespace Exiv2 {
     }; // class CommentValue
 
     /*!
+      @brief %Value type suitable for XMP Text properties and arrays thereof.
+
+      Uses a vector of std::string to store the text(s).
+     */
+    class XmpTextValue : public Value {
+    public:
+        //! Shortcut for a %XmpTextValue auto pointer.
+        typedef std::auto_ptr<XmpTextValue> AutoPtr;
+
+        //! @name Creators
+        //@{
+        //! Constructor for subclasses
+        XmpTextValue()
+            : Value(xmpText) {}
+        //! Constructor for subclasses
+        XmpTextValue(const std::string& buf)
+            : Value(xmpText) { read(buf); }
+        //! Copy constructor
+        XmpTextValue(const XmpTextValue& rhs)
+            : Value(rhs), value_(rhs.value_) {}
+
+        //! Virtual destructor.
+        virtual ~XmpTextValue() {}
+        //@}
+
+        //! @name Manipulators
+        //@{
+        //! Assignment operator.
+        XmpTextValue& operator=(const XmpTextValue& rhs);
+        /*!
+          @brief Read a text property value or array items from \em buf.
+
+          Expects a list of quoted strings, one for each array item. The 
+          quoted strings may be separated by whitespace. Double quotes in 
+          the strings must be escaped with a backslash character: \\".
+          Examples: ""\\"foo\\", he said"" or ""foo" "bar"".
+         */
+        virtual int read(const std::string& buf);
+        /*!
+          @brief Read the value from a character buffer.
+
+          Uses read(const std::string& buf)
+
+          @note The byte order is required by the interface but not used by this
+                method, so just use the default.
+
+          @param buf Pointer to the data buffer to read from
+          @param len Number of bytes in the data buffer
+          @param byteOrder Byte order. Not needed.
+
+          @return 0 if successful.
+         */
+        virtual int read(const byte* buf,
+                         long len,
+                         ByteOrder byteOrder =invalidByteOrder);
+        //@}
+
+        //! @name Accessors
+        //@{
+        AutoPtr clone() const { return AutoPtr(clone_()); }
+        /*!
+          @brief Write value to a character data buffer.
+
+          The user must ensure that the buffer has enough memory. Otherwise
+          the call results in undefined behaviour.
+
+          @note The byte order is required by the interface but not used by this
+                method, so just use the default.
+
+          @param buf Data buffer to write to.
+          @param byteOrder Byte order. Not used.
+          @return Number of characters written.
+        */
+        virtual long copy(byte* buf, ByteOrder byteOrder =invalidByteOrder) const;
+        virtual long count() const { return size(); }
+        virtual long size() const;
+        virtual long toLong(long n =0) const { return value_[n][0]; }
+        virtual float toFloat(long n =0) const { return value_[n][0]; }
+        virtual Rational toRational(long n =0) const
+            { return Rational(value_[n][0], 1); }
+        virtual std::ostream& write(std::ostream& os) const;
+        //@}
+
+    protected:
+        //! Internal virtual copy constructor.
+        virtual XmpTextValue* clone_() const;
+        // DATA
+        std::vector<std::string> value_;        //!< Stores the string values.
+
+    }; // class XmpTextValue
+
+    /*!
       @brief %Value for simple ISO 8601 dates
 
       This class is limited to parsing simple date strings in the ISO 8601
@@ -963,8 +1056,21 @@ namespace Exiv2 {
     typedef ValueType<Rational> RationalValue;
 
 // *****************************************************************************
-// template and inline definitions
+// free functions, template and inline definitions
 
+    //! Double-quote character
+    extern const char quoteChar[];
+    //! Escape character
+    extern const char escapeChar[];
+    /*!
+      @brief Quote a string with double-quotes, escape quotes and escape 
+             characters in the string.
+     */
+    void quoteText(std::string& text);
+    /*!
+      @brief Remove escape characters from an unquoted string.
+     */
+    void unescapeText(std::string& text);
     /*!
       @brief Read a value of type T from the data buffer.
 

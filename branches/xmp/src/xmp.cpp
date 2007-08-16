@@ -72,11 +72,6 @@ namespace {
     //! Make an XMP key from a schema namespace and property path
     Exiv2::XmpKey::AutoPtr makeXmpKey(const std::string& schemaNs,
                                       const std::string& propPath);
-
-    // Todo: This should be part of the API
-    //! Quote a string with double-quotes, escape quotes in the string
-    void quoteText(std::string& text);
-
 }
 
 // *****************************************************************************
@@ -490,18 +485,5 @@ namespace {
         }
         return key;
     } // makeXmpKey
-
-    void quoteText(std::string& text) 
-    {
-        const char quote = '\"';
-        for (std::string::size_type pos = text.find(quote);
-             pos != std::string::npos;
-             pos = text.find(quote, pos + 2)) {
-
-            text.insert(pos, "\\");
-
-        }
-        text = quote + text + quote;
-    } // quoteText
 
 }
