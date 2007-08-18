@@ -48,16 +48,19 @@ namespace Exiv2 {
 
     extern const XmpPropertyInfo xmpDcInfo[];
     extern const XmpPropertyInfo xmpXmpInfo[];
+    extern const XmpPropertyInfo xmpXmpRightsInfo[];
+    extern const XmpPropertyInfo xmpXmpMMInfo[];
+    extern const XmpPropertyInfo xmpXmpBJInfo[];
     extern const XmpPropertyInfo xmpTiffInfo[];
     extern const XmpPropertyInfo xmpExifInfo[];
 
     extern const XmpNsInfo xmpNsInfo[] = {
         // Schemas
-        { "http://purl.org/dc/elements/1.1/",             "dc",           xmpDcInfo,   "Dublin Core schema" },
-        { "http://ns.adobe.com/xap/1.0/",                 "xmp",          xmpXmpInfo,  "XMP Basic schema" },
-        { "http://ns.adobe.com/xap/1.0/rights/",          "xmpRights",    0, "XMP Rights Management schema" },
-        { "http://ns.adobe.com/xap/1.0/mm/",              "xmpMM",        0, "XMP Media Management schema" },
-        { "http://ns.adobe.com/xap/1.0/bj/",              "xmpBJ",        0, "XMP Basic Job Ticket schema" },
+        { "http://purl.org/dc/elements/1.1/",             "dc",           xmpDcInfo,        "Dublin Core schema" },
+        { "http://ns.adobe.com/xap/1.0/",                 "xmp",          xmpXmpInfo,       "XMP Basic schema" },
+        { "http://ns.adobe.com/xap/1.0/rights/",          "xmpRights",    xmpXmpRightsInfo, "XMP Rights Management schema" },
+        { "http://ns.adobe.com/xap/1.0/mm/",              "xmpMM",        xmpXmpMMInfo,     "XMP Media Management schema" },
+        { "http://ns.adobe.com/xap/1.0/bj/",              "xmpBJ",        xmpXmpBJInfo,     "XMP Basic Job Ticket schema" },
         { "http://ns.adobe.com/xap/1.0/t/pg/",            "xmpTPg",       0, "XMP Paged-Text schema" },
         { "http://ns.adobe.com/xmp/1.0/DynamicMedia/",    "xmpDM",        0, "XMP Dynamic Media schema" },
         { "http://ns.adobe.com/pdf/1.3/",                 "pdf",          0, "Adobe PDF schema" },
@@ -137,6 +140,74 @@ namespace Exiv2 {
                                                                                                 "application-defined range." },
         { "Thumbnails",       "Thumbnails",       "alt Thumbnail", undefined,      xmpInternal, "An alternative array of thumbnail images for a file, which can differ in "
                                                                                                 "characteristics such as size or image encoding." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpXmpRightsInfo[] = {
+        { "Certificate",      "Certificate",      "URL",         xmpText,          xmpExternal, "Online rights management certificate." },
+        { "Marked",           "Marked",           "Boolean",     xmpText,          xmpExternal, "Indicates that this is a rights-managed resource." },
+        { "Owner",            "Owner",            "bag ProperName", xmpText,       xmpExternal, "An unordered array specifying the legal owner(s) of a resource." },
+        { "UsageTerms",       "UsageTerms",       "Lang Alt",    xmpText,          xmpExternal, "Text instructions on how a resource can be legally used." },
+        { "WebStatement",     "WebStatement",     "URL",         xmpText,          xmpExternal, "The location of a web page describing the owner and/or rights statement for this resource." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpXmpMMInfo[] = {
+        { "DerivedFrom",      "DerivedFrom",      "ResourceRef", xmpText,          xmpInternal, "A reference to the original document from which this one is derived. It is a "
+                                                                                                "minimal reference; missing components can be assumed to be unchanged. For example, "
+                                                                                                "a new version might only need to specify the instance ID and version number of the "
+                                                                                                "previous version, or a rendition might only need to specify the instance ID and "
+                                                                                                "rendition class of the original." },
+        { "DocumentID",       "DocumentID",       "URI",         xmpText,          xmpInternal, "The common identifier for all versions and renditions of a document. It should be "
+                                                                                                "based on a UUID; see Document and Instance IDs below." },
+        { "History",          "History",          "seq ResourceEvent", xmpText,    xmpInternal, "An ordered array of high-level user actions that resulted in this resource. It is "
+                                                                                                "intended to give human readers a general indication of the steps taken to make the "
+                                                                                                "changes from the previous version to this one. The list should be at an abstract "
+                                                                                                "level; it is not intended to be an exhaustive keystroke or other detailed history." },
+        { "InstanceID",       "InstanceID",       "URI",         xmpText,          xmpInternal, "An identifier for a specific incarnation of a document, updated each time a file "
+                                                                                                "is saved. It should be based on a UUID; see Document and Instance IDs below." },
+        { "ManagedFrom",      "ManagedFrom",      "ResourceRef", xmpText,          xmpInternal, "A reference to the document as it was prior to becoming managed. It is set when a "
+                                                                                                "managed document is introduced to an asset management system that does not "
+                                                                                                "currently own it. It may or may not include references to different management systems." },
+        { "Manager",          "Manager",          "AgentName",   xmpText,          xmpInternal, "The name of the asset management system that manages this resource. Along with "
+                                                                                                "xmpMM: ManagerVariant, it tells applications which asset management system to "
+                                                                                                "contact concerning this document." },
+        { "ManageTo",         "ManageTo",         "URI",         xmpText,          xmpInternal, "A URI identifying the managed resource to the asset management system; the presence "
+                                                                                                "of this property is the formal indication that this resource is managed. The form "
+                                                                                                "and content of this URI is private to the asset management system." },
+        { "ManageUI",         "ManageUI",         "URI",         xmpText,          xmpInternal, "A URI that can be used to access information about the managed resource through a "
+                                                                                                "web browser. It might require a custom browser plug- in." },
+        { "ManagerVariant",   "ManagerVariant",   "Text",        xmpText,          xmpInternal, "Specifies a particular variant of the asset management system. The format of this "
+                                                                                                "property is private to the specific asset management system." },
+        { "RenditionClass",   "RenditionClass",   "RenditionClass", xmpText,       xmpInternal, "The rendition class name for this resource. This property should be absent or set "
+                                                                                                "to default for a document version that is not a derived rendition." },
+        { "RenditionParams",  "RenditionParams",  "Text",        xmpText,          xmpInternal, "Can be used to provide additional rendition parameters that are too complex or "
+                                                                                                "verbose to encode in xmpMM: RenditionClass." },
+        { "VersionID",        "VersionID",        "Text",        xmpText,          xmpInternal, "The document version identifier for this resource. Each version of a document gets "
+                                                                                                "a new identifier, usually simply by incrementing integers 1, 2, 3 . . . and so on. "
+                                                                                                "Media management systems can have other conventions or support branching which "
+                                                                                                "requires a more complex scheme." },
+        { "Versions",         "Versions",         "seq Version", xmpText,          xmpInternal, "The version history associated with this resource. Entry [1] is the oldest known "
+                                                                                                "version for this document, entry [last()] is the most recent version. Typically, a "
+                                                                                                "media management system would fill in the version information in the metadata on "
+                                                                                                "check-in. It is not guaranteed that a complete history  versions from the first to "
+                                                                                                "this one will be present in the xmpMM:Versions property. Interior version information "
+                                                                                                "can be compressed or eliminated and the version history can be truncated at some point." },
+        { "LastURL",          "LastURL",          "URL",         xmpText,          xmpInternal, "Deprecated for privacy protection." },
+        { "RenditionOf",      "RenditionOf",      "ResourceRef", xmpText,          xmpInternal, "Deprecated in favor of xmpMM:DerivedFrom. A reference to the document of which this is "
+                                                                                                "a rendition." },
+        { "SaveID",           "SaveID",           "Integer",     signedLong,       xmpInternal, "Deprecated. Previously used only to support the xmpMM:LastURL property." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpXmpBJInfo[] = {
+        { "JobRef",           "JobRef",           "bag Job",     xmpText,          xmpExternal, "References an external job management file for a job process in which the document is being used. Use of job "
+                                                                                                "names is under user control. Typical use would be to identify all documents that are part of a particular job or contract. "
+                                                                                                "There are multiple values because there can be more than one job using a particular document at any time, and it can "
+                                                                                                "also be useful to keep historical information about what jobs a document was part of previously." },
         // End of list marker
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
