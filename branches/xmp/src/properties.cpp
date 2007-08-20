@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2007 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -51,6 +51,9 @@ namespace Exiv2 {
     extern const XmpPropertyInfo xmpXmpRightsInfo[];
     extern const XmpPropertyInfo xmpXmpMMInfo[];
     extern const XmpPropertyInfo xmpXmpBJInfo[];
+    extern const XmpPropertyInfo xmpXmpTPgInfo[];
+    extern const XmpPropertyInfo xmpPhotoshopInfo[];
+
     extern const XmpPropertyInfo xmpTiffInfo[];
     extern const XmpPropertyInfo xmpExifInfo[];
 
@@ -61,13 +64,13 @@ namespace Exiv2 {
         { "http://ns.adobe.com/xap/1.0/rights/",          "xmpRights",    xmpXmpRightsInfo, "XMP Rights Management schema" },
         { "http://ns.adobe.com/xap/1.0/mm/",              "xmpMM",        xmpXmpMMInfo,     "XMP Media Management schema" },
         { "http://ns.adobe.com/xap/1.0/bj/",              "xmpBJ",        xmpXmpBJInfo,     "XMP Basic Job Ticket schema" },
-        { "http://ns.adobe.com/xap/1.0/t/pg/",            "xmpTPg",       0, "XMP Paged-Text schema" },
+        { "http://ns.adobe.com/xap/1.0/t/pg/",            "xmpTPg",       xmpXmpTPgInfo,    "XMP Paged-Text schema" },
         { "http://ns.adobe.com/xmp/1.0/DynamicMedia/",    "xmpDM",        0, "XMP Dynamic Media schema" },
         { "http://ns.adobe.com/pdf/1.3/",                 "pdf",          0, "Adobe PDF schema" },
-        { "http://ns.adobe.com/photoshop/1.0/",           "photoshop",    0, "Adobe Photoshop schema" },
+        { "http://ns.adobe.com/photoshop/1.0/",           "photoshop",    xmpPhotoshopInfo, "Adobe photoshop schema" },
         { "http://ns.adobe.com/camera-raw-settings/1.0/", "crs",          0, "Camera Raw schema" },
-        { "http://ns.adobe.com/tiff/1.0/",                "tiff",         xmpTiffInfo, "Exif Schema for TIFF Properties" },
-        { "http://ns.adobe.com/exif/1.0/",                "exif",         xmpExifInfo, "Exif schema for Exif-specific Properties" },
+        { "http://ns.adobe.com/tiff/1.0/",                "tiff",         xmpTiffInfo,      "Exif Schema for TIFF Properties" },
+        { "http://ns.adobe.com/exif/1.0/",                "exif",         xmpExifInfo,      "Exif schema for Exif-specific Properties" },
         { "http://ns.adobe.com/exif/1.0/aux/",            "aux",          0, "Exif schema for Additional Exif Properties" },
         { "http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/",  "iptc" /*Iptc4xmpCore*/, 0, "IPTC Core schema" },
 
@@ -208,6 +211,38 @@ namespace Exiv2 {
                                                                                                 "names is under user control. Typical use would be to identify all documents that are part of a particular job or contract. "
                                                                                                 "There are multiple values because there can be more than one job using a particular document at any time, and it can "
                                                                                                 "also be useful to keep historical information about what jobs a document was part of previously." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpXmpTPgInfo[] = {
+        { "MaxPageSize",      "MaxPageSize",      "Dimensions",  xmpText,          xmpInternal, "The size of the largest page in the document (including any in contained documents)." },
+        { "NPages",           "NPages",           "Integer",     unsignedLong,     xmpInternal, "The number of pages in the document (including any in contained documents)." },
+        { "Fonts",            "Fonts",            "bag Font",    xmpText,          xmpInternal, "An unordered array of fonts that are used in the document (including any in contained documents)." },
+        { "Colorants",        "Colorants",        "seq Colorant", xmpText,         xmpInternal, "An ordered array of colorants (swatches) that are used in the document (including any in contained documents)." },
+        { "PlateNames",       "PlateNames",       "seq Text",    xmpText,          xmpInternal, "An ordered array of plate names that are needed to print the document (including any in contained documents)." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpPhotoshopInfo[] = {
+        { "AuthorsPosition",  "AuthorsPosition",  "Text",        xmpText,          xmpExternal, "By-line title." },
+        { "CaptionWriter",    "CaptionWriter",    "ProperName",  xmpText,          xmpExternal, "Writer/editor." },
+        { "Category",         "Category",         "Text",        xmpText,          xmpExternal, "Category. Limited to 3 7-bit ASCII characters." },
+        { "City",             "City",             "Text",        xmpText,          xmpExternal, "City." },
+        { "Country",          "Country",          "Text",        xmpText,          xmpExternal, "Country/primary location." },
+        { "Credit",           "Credit",           "Text",        xmpText,          xmpExternal, "Credit." },
+        { "DateCreated",      "DateCreated",      "Date",        xmpText,          xmpExternal, "The date the intellectual content of the document was created (rather than the creation "
+                                                                                                "date of the physical representation), following IIM conventions. For example, a photo "
+                                                                                                "taken during the American Civil War would have a creation date during that epoch "
+                                                                                                "(1861-1865) rather than the date the photo was digitized for archiving." },
+        { "Headline",         "Headline",         "Text",        xmpText,          xmpExternal, "Headline." },
+        { "Instructions",     "Instructions",     "Text",        xmpText,          xmpExternal, "Special instructions." },
+        { "Source",           "Source",           "Text",        xmpText,          xmpExternal, "Source." },
+        { "State",            "State",            "Text",        xmpText,          xmpExternal, "Province/state." },
+        { "SupplementalCategories", "SupplementalCategories", "bag Text", xmpText, xmpExternal, "Supplemental category." },
+        { "TransmissionReference", "TransmissionReference", "Text", xmpText,       xmpExternal, "Original transmission reference." },
+        { "Urgency",          "Urgency",          "Integer",     xmpText,          xmpExternal, "Urgency. Valid range is 1-8." },
         // End of list marker
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
