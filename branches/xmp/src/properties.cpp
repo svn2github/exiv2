@@ -64,7 +64,7 @@ namespace Exiv2 {
         { "http://ns.adobe.com/xap/1.0/t/pg/",            "xmpTPg",       0, "XMP Paged-Text schema" },
         { "http://ns.adobe.com/xmp/1.0/DynamicMedia/",    "xmpDM",        0, "XMP Dynamic Media schema" },
         { "http://ns.adobe.com/pdf/1.3/",                 "pdf",          0, "Adobe PDF schema" },
-        { "http://ns.adobe.com/photoshop/1.0/",           "photoshop",    0, "Photoshop schema" },
+        { "http://ns.adobe.com/photoshop/1.0/",           "photoshop",    0, "Adobe Photoshop schema" },
         { "http://ns.adobe.com/camera-raw-settings/1.0/", "crs",          0, "Camera Raw schema" },
         { "http://ns.adobe.com/tiff/1.0/",                "tiff",         xmpTiffInfo, "Exif Schema for TIFF Properties" },
         { "http://ns.adobe.com/exif/1.0/",                "exif",         xmpExifInfo, "Exif schema for Exif-specific Properties" },
