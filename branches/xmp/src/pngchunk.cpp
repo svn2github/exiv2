@@ -263,27 +263,21 @@ namespace Exiv2 {
 
                     if (length > 0)
                     {
-                        std::string    xmpPacket;
-                        Exiv2::XmpData xmpData;
+                        std::string& xmpPacket = pImage->xmpPacket();
                         xmpPacket.assign(reinterpret_cast<char*>(xmpBuf.pData_), length);
-                        if (Exiv2::XmpParser::decode(pImage->xmpData(), xmpPacket) != 0)
-                        {
+                        std::string::size_type idx = xmpPacket.find_first_of('<');
+                        if (idx != std::string::npos) {
+#ifndef SUPPRESS_WARNINGS
+                            std::cerr << "Warning: Removing '"
+                                      << xmpPacket.substr(0, idx)
+                                      << "' from the beginning of the XMP packet\n";
+#endif
+                            xmpPacket = xmpPacket.substr(idx);
+                        }
+                        if (XmpParser::decode(pImage->xmpData(), xmpPacket)) {
 #ifndef SUPPRESS_WARNINGS
                             std::cerr << "Warning: Failed to decode XMP metadata.\n";
 #endif
-                        }
-                        else 
-                        {
-                            if (xmpData.empty()) 
-                            {
-#ifndef SUPPRESS_WARNINGS
-                                std::cerr << "Warning: No XMP properties found in the XMP packet.\n";
-#endif
-                            }
-                            else
-                            {
-                                pImage->xmpData() = xmpData;
-                            }
                         }
                     }
                 }

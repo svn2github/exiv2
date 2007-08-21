@@ -340,7 +340,7 @@ namespace Exiv2 {
 #ifdef EXV_HAVE_XMP_TOOLKIT
     int XmpParser::decode(      XmpData&     xmpData,
                           const std::string& xmpPacket)
-    {
+    { try {
         xmpData.clear();
 
         if (!initialized_) {
@@ -404,7 +404,14 @@ namespace Exiv2 {
         }
 
         return 0;
-    } // XmpParser::decode
+    }
+    catch (const XMP_Error& e) {
+#ifndef SUPPRESS_WARNINGS
+        std::cerr << Error(39, e.GetID(), e.GetErrMsg()) << "\n";
+#endif
+        xmpData.clear();
+        return 3;
+    }} // XmpParser::decode
 #else
     int XmpParser::decode(      XmpData&     /*xmpData*/,
                           const std::string& xmpPacket)

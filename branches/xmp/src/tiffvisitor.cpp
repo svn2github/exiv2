@@ -216,15 +216,22 @@ namespace Exiv2 {
         long size = 0;
         getObjData(pData, size, 0x02bc, Group::ifd0, object);
         if (pData) {
-            pImage_->xmpPacket().assign(
-                std::string(reinterpret_cast<const char*>(pData), size));
-            if (XmpParser::decode(pImage_->xmpData(), pImage_->xmpPacket())) {
+            std::string& xmpPacket = pImage_->xmpPacket();
+            xmpPacket.assign(reinterpret_cast<const char*>(pData), size);
+            std::string::size_type idx = xmpPacket.find_first_of('<');
+            if (idx != std::string::npos) {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "Warning: Removing '"
+                          << xmpPacket.substr(0, idx)
+                          << "' from the beginning of the XMP packet\n";
+#endif
+                xmpPacket = xmpPacket.substr(idx);
+            }
+            if (XmpParser::decode(pImage_->xmpData(), xmpPacket)) {
 #ifndef SUPPRESS_WARNINGS
                 std::cerr << "Warning: Failed to decode XMP metadata.\n";
 #endif
-                pImage_->xmpData().clear();
             }
-
         }
     } // TiffMetadataDecoder::decodeXmp
 

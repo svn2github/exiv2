@@ -241,13 +241,15 @@ namespace Exiv2 {
         /*!
           @brief Decode XMP metadata from an XMP packet \em xmpPacket into
                  \em xmpData. The format of the XMP packet must follow the
-                 XMP specification.
+                 XMP specification. This method clears any previous contents
+                 of \em xmpData.
 
           @param xmpData   Container for the decoded XMP properties
           @param xmpPacket The raw XMP packet to decode
           @return 0 if successful;<BR>
                   1 if XMP support has not been compiled-in;<BR>
                   2 if the XMP toolkit failed to initialize<BR>
+                  3 if the XMP toolkit failed and raised an XMP_Error
         */
         static int decode(      XmpData&     xmpData,
                           const std::string& xmpPacket);
