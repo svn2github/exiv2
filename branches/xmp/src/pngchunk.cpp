@@ -254,6 +254,40 @@ namespace Exiv2 {
                         pImage->iptcData().load(iptcData.pData_, length);
                 }
 
+                // We look if a XMP raw profile exist.
+
+                if ( memcmp("Raw profile type xmp", key, 20) == 0 )
+                {
+                    DataBuf xmpBuf = readRawProfile(arr);
+                    long length = xmpBuf.size_;
+
+                    if (length > 0)
+                    {
+                        std::string    xmpPacket;
+                        Exiv2::XmpData xmpData;
+                        xmpPacket.assign(reinterpret_cast<char*>(xmpBuf.pData_), length);
+                        if (Exiv2::XmpParser::decode(pImage->xmpData(), xmpPacket) != 0)
+                        {
+#ifndef SUPPRESS_WARNINGS
+                            std::cerr << "Warning: Failed to decode XMP metadata.\n";
+#endif
+                        }
+                        else 
+                        {
+                            if (xmpData.empty()) 
+                            {
+#ifndef SUPPRESS_WARNINGS
+                                std::cerr << "Warning: No XMP properties found in the XMP packet.\n";
+#endif
+                            }
+                            else
+                            {
+                                pImage->xmpData() = xmpData;
+                            }
+                        }
+                    }
+                }
+
                 index += getLong(&pData[index], bigEndian) + PNG_CHUNK_HEADER_SIZE;
             }
         }
