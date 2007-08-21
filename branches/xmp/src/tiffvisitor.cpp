@@ -218,6 +218,13 @@ namespace Exiv2 {
         if (pData) {
             pImage_->xmpPacket().assign(
                 std::string(reinterpret_cast<const char*>(pData), size));
+            if (XmpParser::decode(pImage_->xmpData(), pImage_->xmpPacket())) {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "Warning: Failed to decode XMP metadata.\n";
+#endif
+                pImage_->xmpData().clear();
+            }
+
         }
     } // TiffMetadataDecoder::decodeXmp
 

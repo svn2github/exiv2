@@ -17,8 +17,10 @@ try {
         return 1;
     }
     Exiv2::DataBuf buf = Exiv2::readFile(argv[1]);
+    std::string xmpPacket;
+    xmpPacket.assign(reinterpret_cast<char*>(buf.pData_), buf.size_);
     Exiv2::XmpData xmpData;
-    if (0 != xmpData.load(buf.pData_, buf.size_)) {
+    if (0 != Exiv2::XmpParser::decode(xmpData, xmpPacket)) {
         std::string error(argv[1]);
         error += ": Failed to parse file contents (XMP packet)";
         throw Exiv2::Error(1, error);

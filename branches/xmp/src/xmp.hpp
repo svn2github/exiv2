@@ -167,16 +167,6 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         /*!
-          @brief Load the XMP data from a byte buffer. The format must follow 
-                 the XMP specification.
-          @param buf Pointer to the data buffer to read from
-          @param len Number of bytes in the data buffer
-          @return 0 if successful;<BR>
-                  1 if XMP support has not been compiled-in;<BR>
-                  2 if the XMP toolkit failed to initialize<BR>
-         */
-        int load(const byte* buf, long len);
-        /*!
           @brief Returns a reference to the %Xmpdatum that is associated with a
                  particular \em key. If %XmpData does not already contain such
                  an %Xmpdatum, operator[] adds object \em Xmpdatum(key).
@@ -226,13 +216,6 @@ namespace Exiv2 {
         //! End of the metadata
         const_iterator end() const;
         /*!
-          @brief Serialize the XMP data to a data buffer and return the data
-                 buffer. Caller owns this buffer. The copied data follows the
-                 XMP specification.  
-          @return Data buffer containing the XMP data.
-         */
-        DataBuf copy() const;
-        /*!
           @brief Find the first Xmpdatum with the given key, return a const
                  iterator to it.
          */
@@ -246,9 +229,39 @@ namespace Exiv2 {
     private:
         // DATA
         XmpMetadata xmpMetadata_;
-
-        static bool initialized_; //! Indicates if the XMP Toolkit has been initialized
     }; // class XmpData
+
+    /*!
+      @brief Stateless parser class for XMP packets. Images use this
+             class to parse and serialize XMP packets. The parser uses
+             the XMP toolkit to do the job.
+     */
+    class XmpParser {
+    public:
+        /*!
+          @brief Decode XMP metadata from an XMP packet \em xmpPacket into
+                 \em xmpData. The format of the XMP packet must follow the
+                 XMP specification.
+
+          @param xmpData   Container for the decoded XMP properties
+          @param xmpPacket The raw XMP packet to decode
+          @return 0 if successful;<BR>
+                  1 if XMP support has not been compiled-in;<BR>
+                  2 if the XMP toolkit failed to initialize<BR>
+        */
+        static int decode(      XmpData&     xmpData,
+                          const std::string& xmpPacket);
+        /*!
+          @brief Encode (serialize) XMP metadata from \em xmpData into a
+                 string xmpPacket. The XMP packet returned in the string
+                 follows the XMP specification.
+        */
+        static void encode(      std::string& xmpPacket,
+                           const XmpData&     xmpData);
+    private:
+        static bool initialized_; //! Indicates if the XMP Toolkit has been initialized
+
+    }; // class XmpParser
 
 }                                       // namespace Exiv2
 

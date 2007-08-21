@@ -256,8 +256,6 @@ namespace Exiv2 {
         p_->value_->read(value);
     }
 
-    bool XmpData::initialized_ = false;
-
     Xmpdatum& XmpData::operator[](const std::string& key)
     {
         XmpKey xmpKey(key);
@@ -268,102 +266,6 @@ namespace Exiv2 {
         }
         return *pos;
     }
-
-#ifdef EXV_HAVE_XMP_TOOLKIT
-    int XmpData::load(const byte* buf, long len)
-    {
-        xmpMetadata_.clear();
-
-        if (!initialized_) {
-            initialized_ = true;
-            if (!SXMPMeta::Initialize()) {
-#ifndef SUPPRESS_WARNINGS
-                std::cerr << "XMP Toolkit initialization failed.\n";
-#endif
-                return 2;
-            }
-        }
-        SXMPMeta meta(reinterpret_cast<const char*>(buf), len);
-        SXMPIterator iter(meta);
-        std::string schemaNs, propPath, propValue;
-        XMP_OptionBits opt;
-        while (iter.Next(&schemaNs, &propPath, &propValue, &opt)) {
-            if (XMP_NodeIsSchema(opt)) continue;
-
-            XmpKey::AutoPtr key = makeXmpKey(schemaNs, propPath);
-            if (key.get() == 0) continue;
-
-            // Create an Exiv2 value and read the property value
-            Value::AutoPtr val = Value::create(XmpProperties::propertyType(*key.get()));
-            if (XMP_PropIsSimple(opt)) {
-                if (val->typeId() != xmpText) {
-                    int ret = val->read(propValue);
-                    // Todo: Exiv2 ValueType<T>::read should check the string 
-                    //       and not just return 0
-                    if (ret != 0) val = Value::create(xmpText);
-                }
-                if (val->typeId() == xmpText) {
-                    std::string pv = propValue;
-                    quoteText(pv);
-                    val->read(pv);
-                }
-            }
-            else if (XMP_PropIsArray(opt)) {
-                XMP_Index itemIdx = 1;
-                std::string itemValue, arrayValue;
-                XMP_OptionBits itemOpt;
-                while (meta.GetArrayItem(schemaNs.c_str(), propPath.c_str(),
-                                         itemIdx, &itemValue, &itemOpt)) {
-                    if (val->typeId() == xmpText) quoteText(itemValue);
-                    if (itemIdx > 1) arrayValue += " ";
-                    arrayValue += itemValue;
-                    ++itemIdx;
-                }
-                iter.Skip(kXMP_IterSkipSubtree);
-                val->read(arrayValue);
-            }
-            else {
-#ifndef SUPPRESS_WARNINGS
-                std::cerr << "Warning: XMP property " << key->key()
-                          << " has unsupported property type; skipping property.\n";
-#endif
-                iter.Skip(kXMP_IterSkipSubtree);
-                continue;
-            }
-
-            add(*key.get(), val.get());
-        }
-
-        return 0;
-    } // XmpData::load
-#else
-    int XmpData::load(const byte* /*buf*/, long /*len*/)
-    {
-#ifndef SUPPRESS_WARNINGS
-        std::cerr << "Warning: XMP toolkit support not compiled in.\n";
-#endif
-        return 1;
-    } // XmpData::load
-#endif // !EXV_HAVE_XMP_TOOLKIT
-
-#ifdef EXV_HAVE_XMP_TOOLKIT
-    DataBuf XmpData::copy() const
-    {
-        DataBuf buf;
-
-        // Todo: Implement me!
-
-        return buf;
-    } // XmpData::copy
-#else
-    DataBuf XmpData::copy() const
-    {
-#ifndef SUPPRESS_WARNINGS
-        std::cerr << "Warning: XMP toolkit support not compiled in.\n";
-#endif
-        return DataBuf();
-    } // XmpData::copy
-#endif // !EXV_HAVE_XMP_TOOLKIT
 
     int XmpData::add(const XmpKey& key, Value* value)
     {
@@ -432,6 +334,108 @@ namespace Exiv2 {
     {
         return xmpMetadata_.erase(pos);
     }
+
+    bool XmpParser::initialized_ = false;
+
+#ifdef EXV_HAVE_XMP_TOOLKIT
+    int XmpParser::decode(      XmpData&     xmpData,
+                          const std::string& xmpPacket)
+    {
+        xmpData.clear();
+
+        if (!initialized_) {
+            initialized_ = true;
+            if (!SXMPMeta::Initialize()) {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "XMP Toolkit initialization failed.\n";
+#endif
+                return 2;
+            }
+        }
+        SXMPMeta meta(xmpPacket.data(), xmpPacket.size());
+        SXMPIterator iter(meta);
+        std::string schemaNs, propPath, propValue;
+        XMP_OptionBits opt;
+        while (iter.Next(&schemaNs, &propPath, &propValue, &opt)) {
+            if (XMP_NodeIsSchema(opt)) continue;
+
+            XmpKey::AutoPtr key = makeXmpKey(schemaNs, propPath);
+            if (key.get() == 0) continue;
+
+            // Create an Exiv2 value and read the property value
+            Value::AutoPtr val = Value::create(XmpProperties::propertyType(*key.get()));
+            if (XMP_PropIsSimple(opt)) {
+                if (val->typeId() != xmpText) {
+                    int ret = val->read(propValue);
+                    // Todo: Exiv2 ValueType<T>::read should check the string 
+                    //       and not just return 0
+                    if (ret != 0) val = Value::create(xmpText);
+                }
+                if (val->typeId() == xmpText) {
+                    std::string pv = propValue;
+                    quoteText(pv);
+                    val->read(pv);
+                }
+            }
+            else if (XMP_PropIsArray(opt)) {
+                XMP_Index itemIdx = 1;
+                std::string itemValue, arrayValue;
+                XMP_OptionBits itemOpt;
+                while (meta.GetArrayItem(schemaNs.c_str(), propPath.c_str(),
+                                         itemIdx, &itemValue, &itemOpt)) {
+                    if (val->typeId() == xmpText) quoteText(itemValue);
+                    if (itemIdx > 1) arrayValue += " ";
+                    arrayValue += itemValue;
+                    ++itemIdx;
+                }
+                iter.Skip(kXMP_IterSkipSubtree);
+                val->read(arrayValue);
+            }
+            else {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "Warning: XMP property " << key->key()
+                          << " has unsupported property type; skipping property.\n";
+#endif
+                iter.Skip(kXMP_IterSkipSubtree);
+                continue;
+            }
+
+            xmpData.add(*key.get(), val.get());
+        }
+
+        return 0;
+    } // XmpParser::decode
+#else
+    int XmpParser::decode(      XmpData&     /*xmpData*/,
+                          const std::string& xmpPacket)
+    {
+        if (!xmpPacket.empty()) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Warning: XMP toolkit support not compiled in.\n";
+#endif
+        }
+        return 1;
+    } // XmpParser::decode
+#endif // !EXV_HAVE_XMP_TOOLKIT
+
+#ifdef EXV_HAVE_XMP_TOOLKIT
+    void XmpParser::encode(      std::string& xmpPacket,
+                           const XmpData&     xmpData)
+    {
+        // Todo: Implement me!
+
+    } // XmpParser::encode
+#else
+    void XmpParser::encode(      std::string& /*xmpPacket*/,
+                           const XmpData&     xmpData)
+    {
+        if (!xmpData.empty()) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Warning: XMP toolkit support not compiled in.\n";
+#endif
+        }
+    } // XmpParser::encode
+#endif // !EXV_HAVE_XMP_TOOLKIT
 
     // *************************************************************************
     // free functions

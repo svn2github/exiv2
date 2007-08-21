@@ -291,7 +291,7 @@ namespace Exiv2 {
                 io_->read(xmpPacket.pData_, xmpPacket.size_);
                 if (io_->error() || io_->eof()) throw Error(14);
                 xmpPacket_.assign(reinterpret_cast<char*>(xmpPacket.pData_), xmpPacket.size_);
-                if (xmpData_.load(xmpPacket.pData_, xmpPacket.size_)) {
+                if (XmpParser::decode(xmpData_, xmpPacket_)) {
 #ifndef SUPPRESS_WARNINGS
                     std::cerr << "Warning: Failed to decode XMP metadata.\n";
 #endif
