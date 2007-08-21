@@ -53,7 +53,8 @@ namespace Exiv2 {
     extern const XmpPropertyInfo xmpXmpBJInfo[];
     extern const XmpPropertyInfo xmpXmpTPgInfo[];
     extern const XmpPropertyInfo xmpPhotoshopInfo[];
-
+    extern const XmpPropertyInfo xmpXmpDMInfo[];
+    extern const XmpPropertyInfo xmpPdfInfo[];
     extern const XmpPropertyInfo xmpTiffInfo[];
     extern const XmpPropertyInfo xmpExifInfo[];
 
@@ -65,8 +66,8 @@ namespace Exiv2 {
         { "http://ns.adobe.com/xap/1.0/mm/",              "xmpMM",        xmpXmpMMInfo,     "XMP Media Management schema" },
         { "http://ns.adobe.com/xap/1.0/bj/",              "xmpBJ",        xmpXmpBJInfo,     "XMP Basic Job Ticket schema" },
         { "http://ns.adobe.com/xap/1.0/t/pg/",            "xmpTPg",       xmpXmpTPgInfo,    "XMP Paged-Text schema" },
-        { "http://ns.adobe.com/xmp/1.0/DynamicMedia/",    "xmpDM",        0, "XMP Dynamic Media schema" },
-        { "http://ns.adobe.com/pdf/1.3/",                 "pdf",          0, "Adobe PDF schema" },
+        { "http://ns.adobe.com/xmp/1.0/DynamicMedia/",    "xmpDM",        xmpXmpDMInfo,     "XMP Dynamic Media schema" },
+        { "http://ns.adobe.com/pdf/1.3/",                 "pdf",          xmpPdfInfo,       "Adobe PDF schema" },
         { "http://ns.adobe.com/photoshop/1.0/",           "photoshop",    xmpPhotoshopInfo, "Adobe photoshop schema" },
         { "http://ns.adobe.com/camera-raw-settings/1.0/", "crs",          0, "Camera Raw schema" },
         { "http://ns.adobe.com/tiff/1.0/",                "tiff",         xmpTiffInfo,      "Exif Schema for TIFF Properties" },
@@ -221,6 +222,84 @@ namespace Exiv2 {
         { "Fonts",            "Fonts",            "bag Font",    xmpText,          xmpInternal, "An unordered array of fonts that are used in the document (including any in contained documents)." },
         { "Colorants",        "Colorants",        "seq Colorant", xmpText,         xmpInternal, "An ordered array of colorants (swatches) that are used in the document (including any in contained documents)." },
         { "PlateNames",       "PlateNames",       "seq Text",    xmpText,          xmpInternal, "An ordered array of plate names that are needed to print the document (including any in contained documents)." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpXmpDMInfo[] = {
+        { "projectRef",       "projectRef",       "ProjectLink", xmpText,          xmpInternal, "A reference to the project that created this file." },
+        { "videoFrameRate",   "videoFrameRate",   "open Choice of Text", xmpText,  xmpInternal, "The video frame rate. One of: 24, NTSC, PAL." },
+        { "videoFrameSize",   "videoFrameSize",   "Dimensions",  xmpText,          xmpInternal, "The frame size. For example: w:720, h: 480, unit:pixels" },
+        { "videoPixelAspectRatio", "videoPixelAspectRatio", "Rational", unsignedRational, xmpInternal, "The aspect ratio, expressed as ht/wd. For example: \"648/720\" = 0.9" },
+        { "videoPixelDepth",  "videoPixelDepth",  "closed Choice of Text", xmpText, xmpInternal, "The size in bits of each color component of a pixel. Standard Windows 32-bit "
+                                                                                                "pixels have 8 bits per component. One of: 8Int, 16Int, 32Int, 32Float." },
+        { "videoColorSpace",  "videoColorSpace",  "closed Choice of Text", xmpText, xmpInternal, "The color space. One of: sRGB (used by Photoshop), CCIR-601 (used for NTSC), "
+                                                                                                "CCIR-709 (used for HD)." },
+        { "videoAlphaMode",   "videoAlphaMode",   "closed Choice of Text", xmpText, xmpExternal, "The alpha mode. One of: straight, pre-multiplied." },
+        { "videoAlphaPremultipleColor", "videoAlphaPremultipleColor", "Colorant", xmpText, xmpExternal, "A color in CMYK or RGB to be used as the pre-multiple color when "
+                                                                                                "alpha mode is pre-multiplied." },
+        { "videoAlphaUnityIsTransparent", "videoAlphaUnityIsTransparent", "Boolean", xmpText, xmpInternal, "When true, unity is clear, when false, it is opaque." },
+        { "videoCompressor",  "videoCompressor",  "Text",        xmpText,          xmpInternal, "Video compression used. For example, jpeg." },
+        { "videoFieldOrder",  "videoFieldOrder",  "closed Choice of Text", xmpText, xmpInternal, "The field order for video. One of: Upper, Lower, Progressive." },
+        { "pullDown",         "pullDown",         "closed Choice of Text", xmpText, xmpInternal, "The sampling phase of film to be converted to video (pull-down). One of: "
+                                                                                                "WSSWW, SSWWW, SWWWS, WWWSS, WWSSW, WSSWW_24p, SSWWW_24p, SWWWS_24p, WWWSS_24p, WWSSW_24p." },
+        { "audioSampleRate",  "audioSampleRate",  "Integer",     unsignedLong,     xmpInternal, "The audio sample rate. Can be any value, but commonly 32000, 41100, or 48000." },
+        { "audioSampleType",  "audioSampleType",  "closed Choice of Text", xmpText, xmpInternal, "The audio sample type. One of: 8Int, 16Int, 32Int, 32Float." },
+        { "audioChannelType", "audioChannelType", "closed Choice of Text", xmpText, xmpInternal, "The audio channel type. One of: Mono, Stereo, 5.1, 7.1." },
+        { "audioCompressor",  "audioCompressor",  "Text",        xmpText,          xmpInternal, "The audio compression used. For example, MP3." },
+        { "speakerPlacement", "speakerPlacement", "Text",        xmpText,          xmpExternal, "A description of the speaker angles from center front in degrees. For example: "
+                                                                                                "\"Left = -30, Right = 30, Center = 0, LFE = 45, Left Surround = -110, Right Surround = 110\"" },
+        { "fileDataRate",     "fileDataRate",     "Rational",    unsignedRational, xmpInternal, "The file data rate in megabytes per second. For example: \"36/10\" = 3.6 MB/sec" },
+        { "tapeName",         "tapeName",         "Text",        xmpText,          xmpExternal, "The name of the tape from which the clip was captured, as set during the capture process." },
+        { "altTapeName",      "altTapeName",      "Text",        xmpText,          xmpExternal, "An alternative tape name, set via the project window or timecode dialog in Premiere. "
+                                                                                                "If an alternative name has been set and has not been reverted, that name is displayed." },
+        { "startTimecode",    "startTimecode",    "Timecode",    xmpText,          xmpInternal, "The timecode of the first frame of video in the file, as obtained from the device control." },
+        { "altTimecode",      "altTimecode",      "Timecode",    xmpText,          xmpExternal, "A timecode set by the user. When specified, it is used instead of the startTimecode." },
+        { "duration",         "duration",         "Time",        xmpText,          xmpInternal, "The duration of the media file." },
+        { "scene",            "scene",            "Text",        xmpText,          xmpExternal, "The name of the scene." },
+        { "shotName",         "shotName",         "Text",        xmpText,          xmpExternal, "The name of the shot or take." },
+        { "shotDate",         "shotDate",         "Date",        xmpText,          xmpExternal, "The date and time when the video was shot." },
+        { "shotLocation",     "shotLocation",     "Text",        xmpText,          xmpExternal, "The name of the location where the video was shot. For example: \"Oktoberfest, Munich Germany\" "
+                                                                                                "For more accurate positioning, use the EXIF GPS values." },
+        { "logComment",       "logComment",       "Text",        xmpText,          xmpExternal, "User's log comments." },
+        { "markers",          "markers",          "seq Marker",  xmpText,          xmpInternal, "An ordered list of markers" },
+        { "contributedMedia", "contributedMedia", "bag Media",   xmpText,          xmpInternal, "An unordered list of all media used to create this media." },
+        { "absPeakAudioFilePath", "absPeakAudioFilePath", "URI", xmpText,          xmpInternal, "The absolute path to the file's peak audio file. If empty, no peak file exists." },
+        { "relativePeakAudioFilePath", "relativePeakAudioFilePath", "URI", xmpText, xmpInternal, "The relative path to the file's peak audio file. If empty, no peak file exists." },
+        { "videoModDate",     "videoModDate",     "Date",        xmpText,          xmpInternal, "The date and time when the video was last modified." },
+        { "audioModDate",     "audioModDate",     "Date",        xmpText,          xmpInternal, "The date and time when the audio was last modified." },
+        { "metadataModDate",  "metadataModDate",  "Date",        xmpText,          xmpInternal, "The date and time when the metadata was last modified." },
+        { "artist",           "artist",           "Text",        xmpText,          xmpExternal, "The name of the artist or artists." },
+        { "album",            "album",            "Text",        xmpText,          xmpExternal, "The name of the album." },
+        { "trackNumber",      "trackNumber",      "Integer",     unsignedShort,    xmpExternal, "A numeric value indicating the order of the audio file within its original recording." },
+        { "genre",            "genre",            "Text",        xmpText,          xmpExternal, "The name of the genre." },
+        { "copyright",        "copyright",        "Text",        xmpText,          xmpExternal, "The copyright information." },
+        { "releaseDate",      "releaseDate",      "Date",        xmpText,          xmpExternal, "The date the title was released." },
+        { "composer",         "composer",         "Text",        xmpText,          xmpExternal, "The composer's name." },
+        { "engineer",         "engineer",         "Text",        xmpText,          xmpExternal, "The engineer's name." },
+        { "tempo",            "tempo",            "Real",        xmpText,          xmpInternal, "The audio's tempo." },
+        { "instrument",       "instrument",       "Text",        xmpText,          xmpExternal, "The musical instrument." },
+        { "introTime",        "introTime",        "Time",        xmpText,          xmpInternal, "The duration of lead time for queuing music." },
+        { "outCue",           "outCue",           "Time",        xmpText,          xmpInternal, "The time at which to fade out." },
+        { "relativeTimestamp", "relativeTimestamp", "Time",      xmpText,          xmpInternal, "The start time of the media inside the audio project." },
+        { "loop",             "loop",             "Boolean",     xmpText,          xmpInternal, "When true, the clip can be looped seemlessly." },
+        { "numberOfBeats",    "numberOfBeats",    "Real",        xmpText,          xmpInternal, "The number of beats." },
+        { "key",              "key",              "closed Choice of Text", xmpText, xmpInternal, "The audio's musical key. One of: C, C#, D, D#, E, F, F#, G, G#, A, A#, B." },
+        { "stretchMode",      "stretchMode",      "closed Choice of Text", xmpText, xmpInternal, "The audio stretch mode. One of: Fixed length, Time-Scale, Resample, Beat Splice, Hybrid." },
+        { "timeScaleParams",  "timeScaleParams",  "timeScaleStretch", xmpText,     xmpInternal, "Additional parameters for Time-Scale stretch mode." },
+        { "resampleParams",   "resampleParams",   "resampleStretch", xmpText,      xmpInternal, "Additional parameters for Resample stretch mode." },
+        { "beatSpliceParams", "beatSpliceParams", "beatSpliceStretch", xmpText,    xmpInternal, "Additional parameters for Beat Splice stretch mode." },
+        { "timeSignature",    "timeSignature",    "closed Choice of Text", xmpText, xmpInternal, "The time signature of the music. One of: 2/4, 3/4, 4/4, 5/4, 7/4, 6/8, 9/8, 12/8, other." },
+        { "scaleType",        "scaleType",        "closed Choice of Text", xmpText, xmpInternal, "The musical scale used in the music. One of: Major, Minor, Both, Neither. "
+                                                                                                "Neither is most often used for instruments with no associated scale, such as drums." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpPdfInfo[] = {
+        { "Keywords",         "Keywords",         "Text",        xmpText,          xmpExternal, "Keywords." },
+        { "PDFVersion",       "PDFVersion",       "Text",        xmpText,          xmpInternal, "The PDF file version (for example: 1.0, 1.3, and so on)." },
+        { "Producer",         "Producer",         "AgentName",   xmpText,          xmpInternal, "The name of the tool that created the PDF document." },
         // End of list marker
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
