@@ -36,7 +36,7 @@ EXIV2_RCSID("@(#) $Id: pngchunk.cpp 823 2006-06-23 07:35:00Z cgilles $")
 # include "exv_conf.h"
 #endif
 
-//#define DEBUG 1
+#define DEBUG 1
 
 // some defines to make it easier
 #define PNG_CHUNK_TYPE(data, index)  &data[index+4]
@@ -78,7 +78,7 @@ namespace Exiv2 {
         {
             while (index < size-PNG_CHUNK_HEADER_SIZE &&
                    strncmp((char*)PNG_CHUNK_TYPE(pData, index), "tEXt", 4) &&
-                   strncmp((char*)PNG_CHUNK_TYPE(pData, index), "zTXt", 4))
+                   strncmp((char*)PNG_CHUNK_TYPE(pData, index), "zTXt", 4) &&                   strncmp((char*)PNG_CHUNK_TYPE(pData, index), "iTXt", 4))
             {
                 if (!strncmp((char*)PNG_CHUNK_TYPE(pData, index), "IEND", 4))
                     throw Error(14);
@@ -88,7 +88,7 @@ namespace Exiv2 {
 
             if (index < size-PNG_CHUNK_HEADER_SIZE)
             {
-                // we found a tEXt or zTXt field
+                // we found a tEXt, zTXt, or iTXt field
 
                 // get the key, it's a null terminated string at the chunk start
                 const byte *key = &PNG_CHUNK_DATA(pData, index, 0);
@@ -116,7 +116,7 @@ namespace Exiv2 {
                     {
                         // then it isn't zlib compressed and we are sunk
 #ifdef DEBUG
-                        std::cerr << "Exiv2::PngChunk::decode: Non-standard compression method.\n";
+                        std::cerr << "Exiv2::PngChunk::decode: Non-standard zTXt compression method.\n";
 #endif
                         throw Error(14);
                     }
@@ -190,10 +190,109 @@ namespace Exiv2 {
                     arr.alloc(textsize);
                     arr = DataBuf(text, textsize);
                 }
+                else if(!strncmp((char*)PNG_CHUNK_TYPE(pData, index), "iTXt", 4))
+                {
+                    // Extract a deflate compressed or uncompressed UTF-8 text chunk
+
+                    // we get the compression flag after the key
+                    const byte* compressionFlag = &PNG_CHUNK_DATA(pData, index, keysize+1);
+                    // we get the compression method after the compression flag
+                    const byte* compressionMethod = &PNG_CHUNK_DATA(pData, index, keysize+1);
+                    // language description string after the compression technique spec
+                    const byte* languageText = &PNG_CHUNK_DATA(pData, index, keysize+1);
+                    unsigned int languageTextSize = getLong(&pData[index], bigEndian)-keysize-1;
+                    // translated keyword string after the language description
+                    const byte* translatedKeyText = &PNG_CHUNK_DATA(pData, index, keysize+1);
+                    unsigned int translatedKeyTextSize = getLong(&pData[index], bigEndian)-keysize-1;
+
+                    if ( *compressionFlag == 0x00 )
+                    {
+                        // then it is a not compressed iTXt chunk
+#ifdef DEBUG
+                        std::cerr << "Exiv2::PngChunk::decode: We found an uncompressed iTXt field\n";
+#endif
+
+                        // the text comes after the translated keyword, but isn't null terminated
+                        const byte* text = &PNG_CHUNK_DATA(pData, index, keysize+1);
+                        long textsize    = getLong(&pData[index], bigEndian)-keysize-1;
+    
+                        // security check, also considering overflow wraparound from the addition --
+                        // we may endup with a /smaller/ index if we wrap all the way around
+                        long firstIndex       = (long)(text - pData);
+                        long onePastLastIndex = firstIndex + textsize;
+    
+                        if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
+                            throw Error(14);
+    
+                        arr.alloc(textsize);
+                        arr = DataBuf(text, textsize);
+                    }
+                    else if ( *compressionMethod == 0x00 )
+                    {
+                        // then it is a zlib compressed iTXt chunk
+#ifdef DEBUG
+                        std::cerr << "Exiv2::PngChunk::decode: We found a zlib compressed iTXt field\n";
+#endif
+
+                        // the compressed text comes after the translated keyword, but isn't null terminated
+                        const byte* compressedText = &PNG_CHUNK_DATA(pData, index, keysize+1);
+                        long compressedTextSize    = getLong(&pData[index], bigEndian)-keysize-1;
+    
+                        // security check, also considering overflow wraparound from the addition --
+                        // we may endup with a /smaller/ index if we wrap all the way around
+                        long firstIndex       = (long)(compressedText - pData);
+                        long onePastLastIndex = firstIndex + compressedTextSize;
+                        if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
+                            throw Error(14);
+    
+                        uLongf uncompressedLen = compressedTextSize * 2; // just a starting point
+                        int zlibResult;
+    
+                        do
+                        {
+                            arr.alloc(uncompressedLen);
+                            zlibResult = uncompress((Bytef*)arr.pData_, &uncompressedLen,
+                                                    compressedText, compressedTextSize);
+    
+                            if (Z_OK == zlibResult)
+                            {
+                                // then it is all OK
+                                arr.alloc(uncompressedLen);
+                            }
+                            else if (Z_BUF_ERROR == zlibResult)
+                            {
+                                // the uncompressedArray needs to be larger
+    #ifdef DEBUG
+                                std::cerr << "Exiv2::PngChunk::decode: doubling size for decompression.\n";
+    #endif
+                                uncompressedLen *= 2;
+    
+                                // DoS protection. can't be bigger than 64k
+                                if ( uncompressedLen > 131072 )
+                                    break;
+                            }
+                            else
+                            {
+                                // something bad happened
+                                throw Error(14);
+                            }
+                        }
+                        while (Z_BUF_ERROR == zlibResult);
+    
+                        if (zlibResult != Z_OK)
+                            throw Error(14);
+                    }
+                    else
+                    {
+                        // then it isn't zlib compressed and we are sunk
+#ifdef DEBUG
+                        std::cerr << "Exiv2::PngChunk::decode: Non-standard iTXt compression method.\n";
+#endif
+                        throw Error(14);
+                    }
+                }
                 else
                 {
-                    // TODO : Add 'iTXt' chunk 'Description' tag support here
-
 #ifdef DEBUG
                     std::cerr << "Exiv2::PngChunk::decode: We found a field, not expected though\n";
 #endif
@@ -205,13 +304,14 @@ namespace Exiv2 {
                           << std::string((const char*)arr.pData_, 64) << "\n";
 #endif
 
-                // We look if an EXIF raw profile exist.
+                // We look if an ImageMagick EXIF raw profile exist.
 
-                if ( memcmp("Raw profile type exif", key, 21) == 0 ||
-                     memcmp("Raw profile type APP1", key, 21) == 0 )
+                if ( (memcmp("Raw profile type exif", key, 21) == 0 ||
+                      memcmp("Raw profile type APP1", key, 21) == 0) &&
+                     pImage->exifData().empty())
                 {
                     DataBuf exifData = readRawProfile(arr);
-                    long length = exifData.size_;
+                    long length      = exifData.size_;
 
                     if (length > 0)
                     {
@@ -243,30 +343,33 @@ namespace Exiv2 {
                     }
                 }
 
-                // We look if an IPTC raw profile exist.
+                // We look if an ImageMagick IPTC raw profile exist.
 
-                if ( memcmp("Raw profile type iptc", key, 21) == 0 )
+                if ( memcmp("Raw profile type iptc", key, 21) == 0 &&
+                     pImage->iptcData().empty())
                 {
                     DataBuf iptcData = readRawProfile(arr);
-                    long length = iptcData.size_;
+                    long length      = iptcData.size_;
 
                     if (length > 0)
                         pImage->iptcData().load(iptcData.pData_, length);
                 }
 
-                // We look if a XMP raw profile exist.
+                // We look if an ImageMagick XMP raw profile exist.
 
-                if ( memcmp("Raw profile type xmp", key, 20) == 0 )
+                if ( memcmp("Raw profile type xmp", key, 20) == 0 &&
+                     pImage->xmpData().empty())
                 {
                     DataBuf xmpBuf = readRawProfile(arr);
-                    long length = xmpBuf.size_;
+                    long length    = xmpBuf.size_;
 
                     if (length > 0)
                     {
                         std::string& xmpPacket = pImage->xmpPacket();
                         xmpPacket.assign(reinterpret_cast<char*>(xmpBuf.pData_), length);
                         std::string::size_type idx = xmpPacket.find_first_of('<');
-                        if (idx != std::string::npos) {
+                        if (idx != std::string::npos) 
+                        {
 #ifndef SUPPRESS_WARNINGS
                             std::cerr << "Warning: Removing '"
                                       << xmpPacket.substr(0, idx)
@@ -274,12 +377,53 @@ namespace Exiv2 {
 #endif
                             xmpPacket = xmpPacket.substr(idx);
                         }
-                        if (XmpParser::decode(pImage->xmpData(), xmpPacket)) {
+                        if (XmpParser::decode(pImage->xmpData(), xmpPacket)) 
+                        {
 #ifndef SUPPRESS_WARNINGS
                             std::cerr << "Warning: Failed to decode XMP metadata.\n";
 #endif
                         }
                     }
+                }
+
+                // We look if an Adobe XMP string exist.
+
+                if ( memcmp("XML:com.adobe.xmp", key, 17) == 0 &&
+                     pImage->xmpData().empty())
+                {
+                    DataBuf xmpBuf = arr;
+                    long length    = xmpBuf.size_;
+
+                    if (length > 0)
+                    {
+                        std::string& xmpPacket = pImage->xmpPacket();
+                        xmpPacket.assign(reinterpret_cast<char*>(xmpBuf.pData_), length);
+                        std::string::size_type idx = xmpPacket.find_first_of('<');
+                        if (idx != std::string::npos) 
+                        {
+#ifndef SUPPRESS_WARNINGS
+                            std::cerr << "Warning: Removing '"
+                                      << xmpPacket.substr(0, idx)
+                                      << "' from the beginning of the XMP packet\n";
+#endif
+                            xmpPacket = xmpPacket.substr(idx);
+                        }
+                        if (XmpParser::decode(pImage->xmpData(), xmpPacket)) 
+                        {
+#ifndef SUPPRESS_WARNINGS
+                            std::cerr << "Warning: Failed to decode XMP metadata.\n";
+#endif
+                        }
+                    }
+                }
+
+                // We look if a comments string exist. Note than we use only 'Description' keyword wich
+                // is dedicaced to store long comments. 'Comment' keyword is ignored.
+
+                if ( memcmp("Description", key, 11) == 0 &&
+                     pImage->comment().empty())
+                {
+                    pImage->comment().assign(reinterpret_cast<char*>(arr.pData_), arr.size_);
                 }
 
                 index += getLong(&pData[index], bigEndian) + PNG_CHUNK_HEADER_SIZE;
