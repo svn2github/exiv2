@@ -63,9 +63,9 @@ EXIV2_RCSID("@(#) $Id: pngchunk.cpp 823 2006-06-23 07:35:00Z cgilles $")
 // class member definitions
 namespace Exiv2 {
 
-    void PngChunk::decode(Image*  pImage,
-                          const   byte* pData,
-                          long    size)
+    void PngChunk::decode(Image* pImage,
+                          const  byte* pData,
+                          long   size)
     {
         assert(pImage != 0);
         assert(pData != 0);
@@ -101,207 +101,12 @@ namespace Exiv2 {
                         throw Error(14);
                 }
 
-                DataBuf arr;
-
-                if(!strncmp((char*)PNG_CHUNK_TYPE(pData, index), "zTXt", 4))
-                {
-                    // Extract a deflate compressed Latin-1 text chunk
+                DataBuf arr = parsePngChunk(pData, size, index, keysize);
 
 #ifdef DEBUG
-                    std::cerr << "Exiv2::PngChunk::decode: We found a zTXt field\n";
-#endif
-                    // we get the compression method after the key
-                    const byte* compressionMethod = &PNG_CHUNK_DATA(pData, index, keysize+1);
-                    if ( *compressionMethod != 0x00 )
-                    {
-                        // then it isn't zlib compressed and we are sunk
-#ifdef DEBUG
-                        std::cerr << "Exiv2::PngChunk::decode: Non-standard zTXt compression method.\n";
-#endif
-                        throw Error(14);
-                    }
-
-                    // compressed string after the compression technique spec
-                    const byte* compressedText = &PNG_CHUNK_DATA(pData, index, keysize+2);
-                    unsigned int compressedTextSize = getLong(&pData[index], bigEndian)-keysize-2;
-
-                    // security check, also considering overflow wraparound from the addition --
-                    // we may endup with a /smaller/ index if we wrap all the way around
-                    long firstIndex       = (long)(compressedText - pData);
-                    long onePastLastIndex = firstIndex + compressedTextSize;
-                    if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
-                        throw Error(14);
-
-                    uLongf uncompressedLen = compressedTextSize * 2; // just a starting point
-                    int zlibResult;
-
-                    do
-                    {
-                        arr.alloc(uncompressedLen);
-                        zlibResult = uncompress((Bytef*)arr.pData_, &uncompressedLen,
-                                                compressedText, compressedTextSize);
-
-                        if (Z_OK == zlibResult)
-                        {
-                            // then it is all OK
-                            arr.alloc(uncompressedLen);
-                        }
-                        else if (Z_BUF_ERROR == zlibResult)
-                        {
-                            // the uncompressedArray needs to be larger
-#ifdef DEBUG
-                            std::cerr << "Exiv2::PngChunk::decode: doubling size for decompression.\n";
-#endif
-                            uncompressedLen *= 2;
-
-                            // DoS protection. can't be bigger than 64k
-                            if ( uncompressedLen > 131072 )
-                                break;
-                        }
-                        else
-                        {
-                            // something bad happened
-                            throw Error(14);
-                        }
-                    }
-                    while (Z_BUF_ERROR == zlibResult);
-
-                    if (zlibResult != Z_OK)
-                        throw Error(14);
-                }
-                else if (!strncmp((char*)PNG_CHUNK_TYPE(pData, index), "tEXt", 4))
-                {
-                    // Extract a non-compressed Latin-1 text chunk
-#ifdef DEBUG
-                    std::cerr << "Exiv2::PngChunk::decode: We found a tEXt field\n";
-#endif
-                    // the text comes after the key, but isn't null terminated
-                    const byte* text = &PNG_CHUNK_DATA(pData, index, keysize+1);
-                    long textsize    = getLong(&pData[index], bigEndian)-keysize-1;
-
-                    // security check, also considering overflow wraparound from the addition --
-                    // we may endup with a /smaller/ index if we wrap all the way around
-                    long firstIndex       = (long)(text - pData);
-                    long onePastLastIndex = firstIndex + textsize;
-
-                    if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
-                        throw Error(14);
-
-                    arr.alloc(textsize);
-                    arr = DataBuf(text, textsize);
-                }
-                else if(!strncmp((char*)PNG_CHUNK_TYPE(pData, index), "iTXt", 4))
-                {
-                    // Extract a deflate compressed or uncompressed UTF-8 text chunk
-
-                    // we get the compression flag after the key
-                    const byte* compressionFlag = &PNG_CHUNK_DATA(pData, index, keysize+1);
-                    // we get the compression method after the compression flag
-                    const byte* compressionMethod = &PNG_CHUNK_DATA(pData, index, keysize+1);
-                    // language description string after the compression technique spec
-                    const byte* languageText = &PNG_CHUNK_DATA(pData, index, keysize+1);
-                    unsigned int languageTextSize = getLong(&pData[index], bigEndian)-keysize-1;
-                    // translated keyword string after the language description
-                    const byte* translatedKeyText = &PNG_CHUNK_DATA(pData, index, keysize+1);
-                    unsigned int translatedKeyTextSize = getLong(&pData[index], bigEndian)-keysize-1;
-
-                    if ( *compressionFlag == 0x00 )
-                    {
-                        // then it is a not compressed iTXt chunk
-#ifdef DEBUG
-                        std::cerr << "Exiv2::PngChunk::decode: We found an uncompressed iTXt field\n";
-#endif
-
-                        // the text comes after the translated keyword, but isn't null terminated
-                        const byte* text = &PNG_CHUNK_DATA(pData, index, keysize+1);
-                        long textsize    = getLong(&pData[index], bigEndian)-keysize-1;
-    
-                        // security check, also considering overflow wraparound from the addition --
-                        // we may endup with a /smaller/ index if we wrap all the way around
-                        long firstIndex       = (long)(text - pData);
-                        long onePastLastIndex = firstIndex + textsize;
-    
-                        if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
-                            throw Error(14);
-    
-                        arr.alloc(textsize);
-                        arr = DataBuf(text, textsize);
-                    }
-                    else if ( *compressionMethod == 0x00 )
-                    {
-                        // then it is a zlib compressed iTXt chunk
-#ifdef DEBUG
-                        std::cerr << "Exiv2::PngChunk::decode: We found a zlib compressed iTXt field\n";
-#endif
-
-                        // the compressed text comes after the translated keyword, but isn't null terminated
-                        const byte* compressedText = &PNG_CHUNK_DATA(pData, index, keysize+1);
-                        long compressedTextSize    = getLong(&pData[index], bigEndian)-keysize-1;
-    
-                        // security check, also considering overflow wraparound from the addition --
-                        // we may endup with a /smaller/ index if we wrap all the way around
-                        long firstIndex       = (long)(compressedText - pData);
-                        long onePastLastIndex = firstIndex + compressedTextSize;
-                        if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
-                            throw Error(14);
-    
-                        uLongf uncompressedLen = compressedTextSize * 2; // just a starting point
-                        int zlibResult;
-    
-                        do
-                        {
-                            arr.alloc(uncompressedLen);
-                            zlibResult = uncompress((Bytef*)arr.pData_, &uncompressedLen,
-                                                    compressedText, compressedTextSize);
-    
-                            if (Z_OK == zlibResult)
-                            {
-                                // then it is all OK
-                                arr.alloc(uncompressedLen);
-                            }
-                            else if (Z_BUF_ERROR == zlibResult)
-                            {
-                                // the uncompressedArray needs to be larger
-    #ifdef DEBUG
-                                std::cerr << "Exiv2::PngChunk::decode: doubling size for decompression.\n";
-    #endif
-                                uncompressedLen *= 2;
-    
-                                // DoS protection. can't be bigger than 64k
-                                if ( uncompressedLen > 131072 )
-                                    break;
-                            }
-                            else
-                            {
-                                // something bad happened
-                                throw Error(14);
-                            }
-                        }
-                        while (Z_BUF_ERROR == zlibResult);
-    
-                        if (zlibResult != Z_OK)
-                            throw Error(14);
-                    }
-                    else
-                    {
-                        // then it isn't zlib compressed and we are sunk
-#ifdef DEBUG
-                        std::cerr << "Exiv2::PngChunk::decode: Non-standard iTXt compression method.\n";
-#endif
-                        throw Error(14);
-                    }
-                }
-                else
-                {
-#ifdef DEBUG
-                    std::cerr << "Exiv2::PngChunk::decode: We found a field, not expected though\n";
-#endif
-                    throw Error(14);
-                }
-
-#ifdef DEBUG
-                std::cerr << "Exiv2::PngChunk::decode: Found PNG entry " << std::string((const char*)key) << " / "
-                          << std::string((const char*)arr.pData_, 64) << "\n";
+                std::cerr << "Exiv2::PngChunk::decode: Found PNG chunk: " 
+                          << std::string((const char*)key) << " :: "
+                          << std::string((const char*)arr.pData_, 32) << "\n";
 #endif
 
                 // We look if an ImageMagick EXIF raw profile exist.
@@ -417,7 +222,7 @@ namespace Exiv2 {
                     }
                 }
 
-                // We look if a comments string exist. Note than we use only 'Description' keyword wich
+                // We look if a comments string exist. Note than we use only 'Description' keyword which
                 // is dedicaced to store long comments. 'Comment' keyword is ignored.
 
                 if ( memcmp("Description", key, 11) == 0 &&
@@ -431,6 +236,214 @@ namespace Exiv2 {
         }
 
     } // PngChunk::decode
+
+    DataBuf PngChunk::parsePngChunk(const byte* pData, long size, long& index, int keysize)
+    {
+        DataBuf arr;
+
+        if(!strncmp((char*)PNG_CHUNK_TYPE(pData, index), "zTXt", 4))
+        {
+            // Extract a deflate compressed Latin-1 text chunk
+
+#ifdef DEBUG
+            std::cerr << "Exiv2::PngChunk::parsePngChunk: We found a zTXt field\n";
+#endif
+            // we get the compression method after the key
+            const byte* compressionMethod = &PNG_CHUNK_DATA(pData, index, keysize+1);
+            if ( *compressionMethod != 0x00 )
+            {
+                // then it isn't zlib compressed and we are sunk
+#ifdef DEBUG
+                std::cerr << "Exiv2::PngChunk::parsePngChunk: Non-standard zTXt compression method.\n";
+#endif
+                throw Error(14);
+            }
+
+            // compressed string after the compression technique spec
+            const byte* compressedText      = &PNG_CHUNK_DATA(pData, index, keysize+2);
+            unsigned int compressedTextSize = getLong(&pData[index], bigEndian)-keysize-2;
+
+            // security check, also considering overflow wraparound from the addition --
+            // we may endup with a /smaller/ index if we wrap all the way around
+            long firstIndex       = (long)(compressedText - pData);
+            long onePastLastIndex = firstIndex + compressedTextSize;
+            if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
+                throw Error(14);
+
+            uLongf uncompressedLen = compressedTextSize * 2; // just a starting point
+            int zlibResult;
+
+            do
+            {
+                arr.alloc(uncompressedLen);
+                zlibResult = uncompress((Bytef*)arr.pData_, &uncompressedLen,
+                                        compressedText, compressedTextSize);
+
+                if (Z_OK == zlibResult)
+                {
+                    // then it is all OK
+                    arr.alloc(uncompressedLen);
+                }
+                else if (Z_BUF_ERROR == zlibResult)
+                {
+                    // the uncompressedArray needs to be larger
+#ifdef DEBUG
+                    std::cerr << "Exiv2::PngChunk::parsePngChunk: doubling size for decompression.\n";
+#endif
+                    uncompressedLen *= 2;
+
+                    // DoS protection. can't be bigger than 64k
+                    if ( uncompressedLen > 131072 )
+                        break;
+                }
+                else
+                {
+                    // something bad happened
+                    throw Error(14);
+                }
+            }
+            while (Z_BUF_ERROR == zlibResult);
+
+            if (zlibResult != Z_OK)
+                throw Error(14);
+        }
+        else if (!strncmp((char*)PNG_CHUNK_TYPE(pData, index), "tEXt", 4))
+        {
+            // Extract a non-compressed Latin-1 text chunk
+#ifdef DEBUG
+            std::cerr << "Exiv2::PngChunk::parsePngChunk: We found a tEXt field\n";
+#endif
+            // the text comes after the key, but isn't null terminated
+            const byte* text = &PNG_CHUNK_DATA(pData, index, keysize+1);
+            long textsize    = getLong(&pData[index], bigEndian)-keysize-1;
+
+            // security check, also considering overflow wraparound from the addition --
+            // we may endup with a /smaller/ index if we wrap all the way around
+            long firstIndex       = (long)(text - pData);
+            long onePastLastIndex = firstIndex + textsize;
+
+            if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
+                throw Error(14);
+
+            arr.alloc(textsize);
+            arr = DataBuf(text, textsize);
+        }
+        else if(!strncmp((char*)PNG_CHUNK_TYPE(pData, index), "iTXt", 4))
+        {
+            // Extract a deflate compressed or uncompressed UTF-8 text chunk
+
+            // we get the compression flag after the key
+            const byte* compressionFlag = &PNG_CHUNK_DATA(pData, index, keysize+1);
+            // we get the compression method after the compression flag
+            const byte* compressionMethod = &PNG_CHUNK_DATA(pData, index, keysize+1);
+            // language description string after the compression technique spec
+            const byte* languageText = &PNG_CHUNK_DATA(pData, index, keysize+1);
+            unsigned int languageTextSize = getLong(&pData[index], bigEndian)-keysize-1;
+            // translated keyword string after the language description
+            const byte* translatedKeyText = &PNG_CHUNK_DATA(pData, index, keysize+1);
+            unsigned int translatedKeyTextSize = getLong(&pData[index], bigEndian)-keysize-1;
+
+            if ( *compressionFlag == 0x00 )
+            {
+                // then it is a not compressed iTXt chunk
+#ifdef DEBUG
+                std::cerr << "Exiv2::PngChunk::parsePngChunk: We found an uncompressed iTXt field\n";
+#endif
+
+                // the text comes after the translated keyword, but isn't null terminated
+                const byte* text = &PNG_CHUNK_DATA(pData, index, keysize+1);
+                long textsize    = getLong(&pData[index], bigEndian)-keysize-1;
+
+                // security check, also considering overflow wraparound from the addition --
+                // we may endup with a /smaller/ index if we wrap all the way around
+                long firstIndex       = (long)(text - pData);
+                long onePastLastIndex = firstIndex + textsize;
+
+                if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
+                    throw Error(14);
+
+                arr.alloc(textsize);
+                arr = DataBuf(text, textsize);
+            }
+            else if ( *compressionMethod == 0x00 )
+            {
+                // then it is a zlib compressed iTXt chunk
+#ifdef DEBUG
+                std::cerr << "Exiv2::PngChunk::parsePngChunk: We found a zlib compressed iTXt field\n";
+#endif
+
+                // the compressed text comes after the translated keyword, but isn't null terminated
+                const byte* compressedText = &PNG_CHUNK_DATA(pData, index, keysize+1);
+                long compressedTextSize    = getLong(&pData[index], bigEndian)-keysize-1;
+
+                // security check, also considering overflow wraparound from the addition --
+                // we may endup with a /smaller/ index if we wrap all the way around
+                long firstIndex       = (long)(compressedText - pData);
+                long onePastLastIndex = firstIndex + compressedTextSize;
+                if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
+                    throw Error(14);
+
+                uLongf uncompressedLen = compressedTextSize * 2; // just a starting point
+                int zlibResult;
+
+                do
+                {
+                    arr.alloc(uncompressedLen);
+                    zlibResult = uncompress((Bytef*)arr.pData_, &uncompressedLen,
+                                            compressedText, compressedTextSize);
+
+                    if (Z_OK == zlibResult)
+                    {
+                        // then it is all OK
+                        arr.alloc(uncompressedLen);
+                    }
+                    else if (Z_BUF_ERROR == zlibResult)
+                    {
+                        // the uncompressedArray needs to be larger
+    #ifdef DEBUG
+                        std::cerr << "Exiv2::PngChunk::parsePngChunk: doubling size for decompression.\n";
+    #endif
+                        uncompressedLen *= 2;
+
+                        // DoS protection. can't be bigger than 64k
+                        if ( uncompressedLen > 131072 )
+                            break;
+                    }
+                    else
+                    {
+                        // something bad happened
+                        throw Error(14);
+                    }
+                }
+                while (Z_BUF_ERROR == zlibResult);
+
+                if (zlibResult != Z_OK)
+                    throw Error(14);
+            }
+            else
+            {
+                // then it isn't zlib compressed and we are sunk
+#ifdef DEBUG
+                std::cerr << "Exiv2::PngChunk::parsePngChunk: Non-standard iTXt compression method.\n";
+#endif
+                throw Error(14);
+            }
+        }
+        else
+        {
+#ifdef DEBUG
+            std::cerr << "Exiv2::PngChunk::parsePngChunk: We found a field, not expected though\n";
+#endif
+            throw Error(14);
+        }
+
+    return arr;
+
+    } // PngChunk::parsePngChunk
+
+    DataBuf PngChunk::parseChunkContent(const byte* pData, long size, long& index, int keysize)
+    {
+    }
 
     DataBuf PngChunk::readRawProfile(const DataBuf& text)
     {
@@ -511,5 +524,6 @@ namespace Exiv2 {
         }
 
         return info;
+
     } // PngChunk::readRawProfile
 }                                       // namespace Exiv2
