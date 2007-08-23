@@ -109,127 +109,7 @@ namespace Exiv2 {
                           << std::string((const char*)arr.pData_, 32) << "\n";
 #endif
 
-                // We look if an ImageMagick EXIF raw profile exist.
-
-                if ( (memcmp("Raw profile type exif", key, 21) == 0 ||
-                      memcmp("Raw profile type APP1", key, 21) == 0) &&
-                     pImage->exifData().empty())
-                {
-                    DataBuf exifData = readRawProfile(arr);
-                    long length      = exifData.size_;
-
-                    if (length > 0)
-                    {
-                        // Find the position of Exif header in bytes array.
-
-                        const byte exifHeader[] = { 0x45, 0x78, 0x69, 0x66, 0x00, 0x00 };
-                        long pos = -1;
-
-                        for (long i=0 ; i < length-(long)sizeof(exifHeader) ; i++)
-                        {
-                            if (memcmp(exifHeader, &exifData.pData_[i], sizeof(exifHeader)) == 0)
-                            {
-                                pos = i;
-                                break;
-                            }
-                        }
-
-                        // If found it, store only these data at from this place.
-
-                        if (pos !=-1)
-                        {
-#ifdef DEBUG
-                            std::cerr << "Exiv2::PngChunk::decode: Exif header found at position " << pos << "\n";
-#endif
-                            pos = pos + sizeof(exifHeader);
-                            TiffParser::decode(pImage, exifData.pData_ + pos, length - pos,
-                                               TiffCreator::create, TiffDecoder::findDecoder);
-                        }
-                    }
-                }
-
-                // We look if an ImageMagick IPTC raw profile exist.
-
-                if ( memcmp("Raw profile type iptc", key, 21) == 0 &&
-                     pImage->iptcData().empty())
-                {
-                    DataBuf iptcData = readRawProfile(arr);
-                    long length      = iptcData.size_;
-
-                    if (length > 0)
-                        pImage->iptcData().load(iptcData.pData_, length);
-                }
-
-                // We look if an ImageMagick XMP raw profile exist.
-
-                if ( memcmp("Raw profile type xmp", key, 20) == 0 &&
-                     pImage->xmpData().empty())
-                {
-                    DataBuf xmpBuf = readRawProfile(arr);
-                    long length    = xmpBuf.size_;
-
-                    if (length > 0)
-                    {
-                        std::string& xmpPacket = pImage->xmpPacket();
-                        xmpPacket.assign(reinterpret_cast<char*>(xmpBuf.pData_), length);
-                        std::string::size_type idx = xmpPacket.find_first_of('<');
-                        if (idx != std::string::npos) 
-                        {
-#ifndef SUPPRESS_WARNINGS
-                            std::cerr << "Warning: Removing '"
-                                      << xmpPacket.substr(0, idx)
-                                      << "' from the beginning of the XMP packet\n";
-#endif
-                            xmpPacket = xmpPacket.substr(idx);
-                        }
-                        if (XmpParser::decode(pImage->xmpData(), xmpPacket)) 
-                        {
-#ifndef SUPPRESS_WARNINGS
-                            std::cerr << "Warning: Failed to decode XMP metadata.\n";
-#endif
-                        }
-                    }
-                }
-
-                // We look if an Adobe XMP string exist.
-
-                if ( memcmp("XML:com.adobe.xmp", key, 17) == 0 &&
-                     pImage->xmpData().empty())
-                {
-                    DataBuf xmpBuf = arr;
-                    long length    = xmpBuf.size_;
-
-                    if (length > 0)
-                    {
-                        std::string& xmpPacket = pImage->xmpPacket();
-                        xmpPacket.assign(reinterpret_cast<char*>(xmpBuf.pData_), length);
-                        std::string::size_type idx = xmpPacket.find_first_of('<');
-                        if (idx != std::string::npos) 
-                        {
-#ifndef SUPPRESS_WARNINGS
-                            std::cerr << "Warning: Removing '"
-                                      << xmpPacket.substr(0, idx)
-                                      << "' from the beginning of the XMP packet\n";
-#endif
-                            xmpPacket = xmpPacket.substr(idx);
-                        }
-                        if (XmpParser::decode(pImage->xmpData(), xmpPacket)) 
-                        {
-#ifndef SUPPRESS_WARNINGS
-                            std::cerr << "Warning: Failed to decode XMP metadata.\n";
-#endif
-                        }
-                    }
-                }
-
-                // We look if a comments string exist. Note than we use only 'Description' keyword which
-                // is dedicaced to store long comments. 'Comment' keyword is ignored.
-
-                if ( memcmp("Description", key, 11) == 0 &&
-                     pImage->comment().empty())
-                {
-                    pImage->comment().assign(reinterpret_cast<char*>(arr.pData_), arr.size_);
-                }
+                parseChunkContent(pImage, key, arr);
 
                 index += getLong(&pData[index], bigEndian) + PNG_CHUNK_HEADER_SIZE;
             }
@@ -441,9 +321,128 @@ namespace Exiv2 {
 
     } // PngChunk::parsePngChunk
 
-    DataBuf PngChunk::parseChunkContent(const byte* pData, long size, long& index, int keysize)
+    void PngChunk::parseChunkContent(Image* pImage, const byte *key, const DataBuf arr)
     {
-    }
+        // We look if an ImageMagick EXIF raw profile exist.
+
+        if ( (memcmp("Raw profile type exif", key, 21) == 0 ||
+              memcmp("Raw profile type APP1", key, 21) == 0) &&
+             pImage->exifData().empty())
+        {
+            DataBuf exifData = readRawProfile(arr);
+            long length      = exifData.size_;
+
+            if (length > 0)
+            {
+                // Find the position of Exif header in bytes array.
+
+                const byte exifHeader[] = { 0x45, 0x78, 0x69, 0x66, 0x00, 0x00 };
+                long pos = -1;
+
+                for (long i=0 ; i < length-(long)sizeof(exifHeader) ; i++)
+                {
+                    if (memcmp(exifHeader, &exifData.pData_[i], sizeof(exifHeader)) == 0)
+                    {
+                        pos = i;
+                        break;
+                    }
+                }
+
+                // If found it, store only these data at from this place.
+
+                if (pos !=-1)
+                {
+#ifdef DEBUG
+                    std::cerr << "Exiv2::PngChunk::decode: Exif header found at position " << pos << "\n";
+#endif
+                    pos = pos + sizeof(exifHeader);
+                    TiffParser::decode(pImage, exifData.pData_ + pos, length - pos,
+                                        TiffCreator::create, TiffDecoder::findDecoder);
+                }
+            }
+        }
+
+        // We look if an ImageMagick IPTC raw profile exist.
+
+        if ( memcmp("Raw profile type iptc", key, 21) == 0 &&
+             pImage->iptcData().empty())
+        {
+            DataBuf iptcData = readRawProfile(arr);
+            long length      = iptcData.size_;
+
+            if (length > 0)
+                pImage->iptcData().load(iptcData.pData_, length);
+        }
+
+        // We look if an ImageMagick XMP raw profile exist.
+
+        if ( memcmp("Raw profile type xmp", key, 20) == 0 &&
+             pImage->xmpData().empty())
+        {
+            DataBuf xmpBuf = readRawProfile(arr);
+            long length    = xmpBuf.size_;
+
+            if (length > 0)
+            {
+                std::string& xmpPacket = pImage->xmpPacket();
+                xmpPacket.assign(reinterpret_cast<char*>(xmpBuf.pData_), length);
+                std::string::size_type idx = xmpPacket.find_first_of('<');
+                if (idx != std::string::npos) 
+                {
+#ifndef SUPPRESS_WARNINGS
+                    std::cerr << "Warning: Removing '"
+                                << xmpPacket.substr(0, idx)
+                                << "' from the beginning of the XMP packet\n";
+#endif
+                    xmpPacket = xmpPacket.substr(idx);
+                }
+                if (XmpParser::decode(pImage->xmpData(), xmpPacket)) 
+                {
+#ifndef SUPPRESS_WARNINGS
+                    std::cerr << "Warning: Failed to decode XMP metadata.\n";
+#endif
+                }
+            }
+        }
+
+        // We look if an Adobe XMP string exist.
+
+        if ( memcmp("XML:com.adobe.xmp", key, 17) == 0 &&
+             pImage->xmpData().empty())
+        {
+            if (arr.size_ > 0)
+            {
+                std::string& xmpPacket = pImage->xmpPacket();
+                xmpPacket.assign(reinterpret_cast<char*>(arr.pData_), arr.size_);
+                std::string::size_type idx = xmpPacket.find_first_of('<');
+                if (idx != std::string::npos) 
+                {
+#ifndef SUPPRESS_WARNINGS
+                    std::cerr << "Warning: Removing '"
+                              << xmpPacket.substr(0, idx)
+                              << "' from the beginning of the XMP packet\n";
+#endif
+                    xmpPacket = xmpPacket.substr(idx);
+                }
+                if (XmpParser::decode(pImage->xmpData(), xmpPacket)) 
+                {
+#ifndef SUPPRESS_WARNINGS
+                    std::cerr << "Warning: Failed to decode XMP metadata.\n";
+#endif
+                }
+            }
+        }
+
+        // We look if a comments string exist. Note than we use only 'Description' keyword which
+        // is dedicaced to store long comments. 'Comment' keyword is ignored.
+
+        if ( memcmp("Description", key, 11) == 0 &&
+             pImage->comment().empty())
+        {
+            pImage->comment().assign(reinterpret_cast<char*>(arr.pData_), arr.size_);
+        }
+
+    } // PngChunk::parseChunkContent
 
     DataBuf PngChunk::readRawProfile(const DataBuf& text)
     {
