@@ -96,6 +96,11 @@ namespace Exiv2 {
          */
         static DataBuf readRawProfile(const DataBuf& text);
 
+        /*!
+          @brief Wrapper around zlib to uncompress a PNG chunk content.
+         */
+        static void zlibUncompress(const byte* compressedText, unsigned int compressedTextSize, DataBuf& arr);
+
         //@}
 
     }; // class PngChunk

@@ -78,7 +78,8 @@ namespace Exiv2 {
         {
             while (index < size-PNG_CHUNK_HEADER_SIZE &&
                    strncmp((char*)PNG_CHUNK_TYPE(pData, index), "tEXt", 4) &&
-                   strncmp((char*)PNG_CHUNK_TYPE(pData, index), "zTXt", 4) &&                   strncmp((char*)PNG_CHUNK_TYPE(pData, index), "iTXt", 4))
+                   strncmp((char*)PNG_CHUNK_TYPE(pData, index), "zTXt", 4) &&
+                   strncmp((char*)PNG_CHUNK_TYPE(pData, index), "iTXt", 4))
             {
                 if (!strncmp((char*)PNG_CHUNK_TYPE(pData, index), "IEND", 4))
                     throw Error(14);
@@ -150,42 +151,7 @@ namespace Exiv2 {
             if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
                 throw Error(14);
 
-            uLongf uncompressedLen = compressedTextSize * 2; // just a starting point
-            int zlibResult;
-
-            do
-            {
-                arr.alloc(uncompressedLen);
-                zlibResult = uncompress((Bytef*)arr.pData_, &uncompressedLen,
-                                        compressedText, compressedTextSize);
-
-                if (Z_OK == zlibResult)
-                {
-                    // then it is all OK
-                    arr.alloc(uncompressedLen);
-                }
-                else if (Z_BUF_ERROR == zlibResult)
-                {
-                    // the uncompressedArray needs to be larger
-#ifdef DEBUG
-                    std::cerr << "Exiv2::PngChunk::parsePngChunk: doubling size for decompression.\n";
-#endif
-                    uncompressedLen *= 2;
-
-                    // DoS protection. can't be bigger than 64k
-                    if ( uncompressedLen > 131072 )
-                        break;
-                }
-                else
-                {
-                    // something bad happened
-                    throw Error(14);
-                }
-            }
-            while (Z_BUF_ERROR == zlibResult);
-
-            if (zlibResult != Z_OK)
-                throw Error(14);
+            zlibUncompress(compressedText, compressedTextSize, arr);
         }
         else if (!strncmp((char*)PNG_CHUNK_TYPE(pData, index), "tEXt", 4))
         {
@@ -217,15 +183,15 @@ namespace Exiv2 {
             // we get the compression method after the compression flag
             const byte* compressionMethod = &PNG_CHUNK_DATA(pData, index, keysize+1);
             // language description string after the compression technique spec
-            const byte* languageText = &PNG_CHUNK_DATA(pData, index, keysize+1);
+            const byte* languageText      = &PNG_CHUNK_DATA(pData, index, keysize+1);
             unsigned int languageTextSize = getLong(&pData[index], bigEndian)-keysize-1;
             // translated keyword string after the language description
-            const byte* translatedKeyText = &PNG_CHUNK_DATA(pData, index, keysize+1);
+            const byte* translatedKeyText      = &PNG_CHUNK_DATA(pData, index, keysize+1);
             unsigned int translatedKeyTextSize = getLong(&pData[index], bigEndian)-keysize-1;
 
             if ( *compressionFlag == 0x00 )
             {
-                // then it is a not compressed iTXt chunk
+                // then it's an uncompressed iTXt chunk
 #ifdef DEBUG
                 std::cerr << "Exiv2::PngChunk::parsePngChunk: We found an uncompressed iTXt field\n";
 #endif
@@ -247,7 +213,7 @@ namespace Exiv2 {
             }
             else if ( *compressionMethod == 0x00 )
             {
-                // then it is a zlib compressed iTXt chunk
+                // then it's a zlib compressed iTXt chunk
 #ifdef DEBUG
                 std::cerr << "Exiv2::PngChunk::parsePngChunk: We found a zlib compressed iTXt field\n";
 #endif
@@ -263,42 +229,7 @@ namespace Exiv2 {
                 if ( onePastLastIndex > size || onePastLastIndex <= firstIndex)
                     throw Error(14);
 
-                uLongf uncompressedLen = compressedTextSize * 2; // just a starting point
-                int zlibResult;
-
-                do
-                {
-                    arr.alloc(uncompressedLen);
-                    zlibResult = uncompress((Bytef*)arr.pData_, &uncompressedLen,
-                                            compressedText, compressedTextSize);
-
-                    if (Z_OK == zlibResult)
-                    {
-                        // then it is all OK
-                        arr.alloc(uncompressedLen);
-                    }
-                    else if (Z_BUF_ERROR == zlibResult)
-                    {
-                        // the uncompressedArray needs to be larger
-    #ifdef DEBUG
-                        std::cerr << "Exiv2::PngChunk::parsePngChunk: doubling size for decompression.\n";
-    #endif
-                        uncompressedLen *= 2;
-
-                        // DoS protection. can't be bigger than 64k
-                        if ( uncompressedLen > 131072 )
-                            break;
-                    }
-                    else
-                    {
-                        // something bad happened
-                        throw Error(14);
-                    }
-                }
-                while (Z_BUF_ERROR == zlibResult);
-
-                if (zlibResult != Z_OK)
-                    throw Error(14);
+                zlibUncompress(compressedText, compressedTextSize, arr);
             }
             else
             {
@@ -525,4 +456,46 @@ namespace Exiv2 {
         return info;
 
     } // PngChunk::readRawProfile
+
+    void PngChunk::zlibUncompress(const byte* compressedText, unsigned int compressedTextSize, DataBuf& arr)
+    {
+        uLongf uncompressedLen = compressedTextSize * 2; // just a starting point
+        int zlibResult;
+
+        do
+        {
+            arr.alloc(uncompressedLen);
+            zlibResult = uncompress((Bytef*)arr.pData_, &uncompressedLen,
+                                    compressedText, compressedTextSize);
+
+            if (zlibResult == Z_OK)
+            {
+                // then it is all OK
+                arr.alloc(uncompressedLen);
+            }
+            else if (zlibResult == Z_BUF_ERROR)
+            {
+                // the uncompressedArray needs to be larger
+#ifdef DEBUG
+                std::cerr << "Exiv2::PngChunk::parsePngChunk: doubling size for decompression.\n";
+#endif
+                uncompressedLen *= 2;
+
+                // DoS protection. can't be bigger than 64k
+                if ( uncompressedLen > 131072 )
+                    break;
+            }
+            else
+            {
+                // something bad happened
+                throw Error(14);
+            }
+        }
+        while (zlibResult == Z_BUF_ERROR);
+
+        if (zlibResult != Z_OK)
+            throw Error(14);
+
+    } // PngChunk::zlibUncompress
+    
 }                                       // namespace Exiv2
