@@ -318,12 +318,11 @@ namespace Exiv2 {
                 std::string& xmpPacket = pImage->xmpPacket();
                 xmpPacket.assign(reinterpret_cast<char*>(xmpBuf.pData_), length);
                 std::string::size_type idx = xmpPacket.find_first_of('<');
-                if (idx != std::string::npos) 
+                if (idx != std::string::npos && idx > 0)
                 {
 #ifndef SUPPRESS_WARNINGS
-                    std::cerr << "Warning: Removing '"
-                                << xmpPacket.substr(0, idx)
-                                << "' from the beginning of the XMP packet\n";
+                    std::cerr << "Warning: Removing " << idx << " characters "
+                              << "from the beginning of the XMP packet\n";
 #endif
                     xmpPacket = xmpPacket.substr(idx);
                 }
@@ -346,12 +345,11 @@ namespace Exiv2 {
                 std::string& xmpPacket = pImage->xmpPacket();
                 xmpPacket.assign(reinterpret_cast<char*>(arr.pData_), arr.size_);
                 std::string::size_type idx = xmpPacket.find_first_of('<');
-                if (idx != std::string::npos) 
+                if (idx != std::string::npos && idx > 0)
                 {
 #ifndef SUPPRESS_WARNINGS
-                    std::cerr << "Warning: Removing '"
-                              << xmpPacket.substr(0, idx)
-                              << "' from the beginning of the XMP packet\n";
+                    std::cerr << "Warning: Removing " << idx << " characters "
+                              << "from the beginning of the XMP packet\n";
 #endif
                     xmpPacket = xmpPacket.substr(idx);
                 }

@@ -389,6 +389,16 @@ namespace Exiv2 {
         return os.str();
     }
 
+    //! Utility function to convert a string to a value of type T.
+    template<typename T>
+    T stringTo(const std::string& s, bool& ok)
+    {
+        std::istringstream is(s);
+        T tmp;
+        ok = is >> tmp ? true : false;
+        return tmp;
+    }
+
     /*!
       @brief Return the greatest common denominator of n and m.
              (implementation from Boost rational.hpp)

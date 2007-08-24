@@ -95,6 +95,12 @@ namespace Exiv2 {
          */
         Xmpdatum& operator=(const Value& value);
         void setValue(const Value* pValue);
+        /*!
+          @brief Set the value to the string \em value. Uses Value::read(const
+                 std::string&).  If the %Xmpdatum does not have a Value yet,
+                 then a %Value of the correct type for this %Xmpdatum is
+                 created.
+         */
         void setValue(const std::string& value);
         //@}
 
@@ -105,8 +111,8 @@ namespace Exiv2 {
         /*!
           @brief Return the key of the Xmpdatum. The key is of the form
                  '<b>Xmp</b>.prefix.property'. Note however that the
-                 key is not necessarily unique, i.e., an XmpData may contain
-                 multiple metadata with the same key.
+                 key is not necessarily unique, i.e., an XmpData object may
+                 contain multiple metadata with the same key.
          */
         std::string key() const;
         //! Return the (preferred) schema namespace prefix.
@@ -124,6 +130,7 @@ namespace Exiv2 {
         long count() const;
         long size() const;
         std::string toString() const;
+        std::string toString(long n) const;
         long toLong(long n =0) const;
         float toFloat(long n =0) const;
         Rational toRational(long n =0) const;
@@ -248,7 +255,7 @@ namespace Exiv2 {
           @param xmpPacket The raw XMP packet to decode
           @return 0 if successful;<BR>
                   1 if XMP support has not been compiled-in;<BR>
-                  2 if the XMP toolkit failed to initialize<BR>
+                  2 if the XMP toolkit failed to initialize;<BR>
                   3 if the XMP toolkit failed and raised an XMP_Error
         */
         static int decode(      XmpData&     xmpData,
@@ -256,10 +263,19 @@ namespace Exiv2 {
         /*!
           @brief Encode (serialize) XMP metadata from \em xmpData into a
                  string xmpPacket. The XMP packet returned in the string
-                 follows the XMP specification.
+                 follows the XMP specification. This method clears any 
+                 previous contents of \em xmpPacket.
+
+          @param xmpPacket Reference to a string to hold the encoded XMP
+                           packet.
+          @param xmpData   XMP properties to encode.
+          @return 0 if successful;<BR>
+                  1 if XMP support has not been compiled-in;<BR>
+                  2 if the XMP toolkit failed to initialize;<BR>
+                  3 if the XMP toolkit failed and raised an XMP_Error
         */
-        static void encode(      std::string& xmpPacket,
-                           const XmpData&     xmpData);
+        static int encode(      std::string& xmpPacket,
+                          const XmpData&     xmpData);
     private:
         static bool initialized_; //! Indicates if the XMP Toolkit has been initialized
 

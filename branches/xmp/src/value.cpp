@@ -128,6 +128,11 @@ namespace Exiv2 {
         return os.str();
     }
 
+    std::string Value::toString(long /*n*/) const
+    {
+        return toString();
+    }
+
     DataValue& DataValue::operator=(const DataValue& rhs)
     {
         if (this == &rhs) return *this;
@@ -151,7 +156,7 @@ namespace Exiv2 {
         while (is >> tmp) {
             value_.push_back(static_cast<byte>(tmp));
         }
-        return 0;
+        return is.fail() ? 1 : 0;
     }
 
     long DataValue::copy(byte* buf, ByteOrder /*byteOrder*/) const
@@ -179,6 +184,13 @@ namespace Exiv2 {
             os << static_cast<int>(value_[i]) << " ";
         }
         return os;
+    }
+
+    std::string DataValue::toString(long n) const
+    {
+        std::ostringstream os;
+        os << static_cast<int>(value_[n]);
+        return os.str();
     }
 
     StringValueBase& StringValueBase::operator=(const StringValueBase& rhs)
@@ -452,6 +464,29 @@ namespace Exiv2 {
             os << s;
         }
         return os;
+    }
+
+    std::string XmpTextValue::toString(long n) const 
+    {
+        return value_[n]; 
+    }
+
+    long XmpTextValue::toLong(long n) const
+    {
+        bool ok;
+        return stringTo<long>(value_[n], ok);
+    }
+
+    float XmpTextValue::toFloat(long n) const
+    {
+        bool ok;
+        return stringTo<float>(value_[n], ok);
+    }
+
+    Rational XmpTextValue::toRational(long n) const
+    {
+        bool ok;
+        return stringTo<Rational>(value_[n], ok);
     }
 
     XmpTextValue* XmpTextValue::clone_() const

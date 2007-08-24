@@ -118,11 +118,6 @@ namespace Exiv2 {
         //! Return the type identifier (Exif data format type).
         TypeId typeId() const { return type_; }
         /*!
-          @brief Return the value as a string. Implemented in terms of
-                 write(std::ostream& os) const of the concrete class.
-         */
-        std::string toString() const;
-        /*!
           @brief Return an auto-pointer to a copy of itself (deep copy).
                  The caller owns this copy and the auto-pointer ensures that
                  it will be deleted.
@@ -151,25 +146,37 @@ namespace Exiv2 {
         */
         virtual std::ostream& write(std::ostream& os) const =0;
         /*!
-          @brief Convert the n-th component of the value to a long. The
-                 behaviour of this method may be undefined if there is no
-                 n-th component.
+          @brief Return the value as a string. Implemented in terms of
+                 write(std::ostream& os) const of the concrete class.
+         */
+        std::string toString() const;
+        /*!
+          @brief Return the <EM>n</EM>-th component of the value as a string.
+                 The default implementation returns toString(). The behaviour
+                 of this method may be undefined if there is no <EM>n</EM>-th
+                 component.
+         */
+        virtual std::string toString(long n) const;
+        /*!
+          @brief Convert the <EM>n</EM>-th component of the value to a long.
+                 The behaviour of this method may be undefined if there is no
+                 <EM>n</EM>-th component.
 
           @return The converted value.
          */
         virtual long toLong(long n =0) const =0;
         /*!
-          @brief Convert the n-th component of the value to a float. The
-                 behaviour of this method may be undefined if there is no
-                 n-th component.
+          @brief Convert the <EM>n</EM>-th component of the value to a float.
+                 The behaviour of this method may be undefined if there is no
+                 <EM>n</EM>-th component.
 
           @return The converted value.
          */
         virtual float toFloat(long n =0) const =0;
         /*!
-          @brief Convert the n-th component of the value to a Rational. The
-                 behaviour of this method may be undefined if there is no
-                 n-th component.
+          @brief Convert the <EM>n</EM>-th component of the value to a Rational.
+                 The behaviour of this method may be undefined if there is no
+                 <EM>n</EM>-th component.
 
           @return The converted value.
          */
@@ -305,6 +312,12 @@ namespace Exiv2 {
         virtual long count() const { return size(); }
         virtual long size() const;
         virtual std::ostream& write(std::ostream& os) const;
+        /*!
+          @brief Return the <EM>n</EM>-th component of the value as a string.
+                 The behaviour of this method may be undefined if there is no
+                 <EM>n</EM>-th component.
+         */
+        virtual std::string toString(long n) const;
         virtual long toLong(long n =0) const { return value_[n]; }
         virtual float toFloat(long n =0) const { return value_[n]; }
         virtual Rational toRational(long n =0) const
@@ -678,12 +691,17 @@ namespace Exiv2 {
           @return Number of characters written.
         */
         virtual long copy(byte* buf, ByteOrder byteOrder =invalidByteOrder) const;
-        virtual long count() const { return size(); }
+        virtual long count() const { return static_cast<long>(value_.size()); }
         virtual long size() const;
-        virtual long toLong(long n =0) const { return value_[n][0]; }
-        virtual float toFloat(long n =0) const { return value_[n][0]; }
-        virtual Rational toRational(long n =0) const
-            { return Rational(value_[n][0], 1); }
+        /*!
+          @brief Return the <EM>n</EM>-th component of the value as a string.
+                 The behaviour of this method may be undefined if there is no
+                 <EM>n</EM>-th component.
+         */
+        virtual std::string toString(long n) const;
+        virtual long toLong(long n =0) const;
+        virtual float toFloat(long n =0) const;
+        virtual Rational toRational(long n =0) const;
         virtual std::ostream& write(std::ostream& os) const;
         //@}
 
@@ -778,13 +796,13 @@ namespace Exiv2 {
         virtual const Date& getDate() const { return date_; }
         virtual long count() const { return size(); }
         virtual long size() const;
-        /*!
-          @brief Write the value to an output stream. .
-        */
         virtual std::ostream& write(std::ostream& os) const;
+        //! Return the value as a UNIX calender time converted to long.
         virtual long toLong(long n =0) const;
+        //! Return the value as a UNIX calender time converted to float.
         virtual float toFloat(long n =0) const
             { return static_cast<float>(toLong(n)); }
+        //! Return the value as a UNIX calender time  converted to Rational.
         virtual Rational toRational(long n =0) const
             { return Rational(toLong(n), 1); }
         //@}
@@ -888,11 +906,13 @@ namespace Exiv2 {
         virtual const Time& getTime() const { return time_; }
         virtual long count() const { return size(); }
         virtual long size() const;
-        //! Write the value to an output stream. .
         virtual std::ostream& write(std::ostream& os) const;
+        //! Returns number of seconds in the day in UTC.
         virtual long toLong(long n =0) const;
+        //! Returns number of seconds in the day in UTC converted to float.
         virtual float toFloat(long n =0) const
             { return static_cast<float>(toLong(n)); }
+        //! Returns number of seconds in the day in UTC converted to Rational.
         virtual Rational toRational(long n =0) const
             { return Rational(toLong(n), 1); }
         //@}
@@ -934,6 +954,7 @@ namespace Exiv2 {
         Time time_;
 
     }; // class TimeValue
+
     //! Template to determine the TypeId for a type T
     template<typename T> TypeId getType();
 
@@ -951,7 +972,7 @@ namespace Exiv2 {
     template<> inline TypeId getType<Rational>() { return signedRational; }
 
     // No default implementation: let the compiler/linker complain
-//    template<typename T> inline TypeId getType() { return invalid; }
+    // template<typename T> inline TypeId getType() { return invalid; }
 
     /*!
       @brief Template for a %Value of a basic type. This is used for unsigned
@@ -1003,6 +1024,13 @@ namespace Exiv2 {
         virtual long count() const { return static_cast<long>(value_.size()); }
         virtual long size() const;
         virtual std::ostream& write(std::ostream& os) const;
+        /*!
+          @brief Return the <EM>n</EM>-th component of the value as a string.
+                 The behaviour of this method may be undefined if there is no
+                 <EM>n</EM>-th
+                 component.
+         */
+        virtual std::string toString(long n) const;
         virtual long toLong(long n =0) const;
         virtual float toFloat(long n =0) const;
         virtual Rational toRational(long n =0) const;
@@ -1259,7 +1287,7 @@ namespace Exiv2 {
         while (is >> tmp) {
             value_.push_back(tmp);
         }
-        return 0;
+        return is.fail() ? 1 : 0;
     }
 
     template<typename T>
@@ -1296,6 +1324,13 @@ namespace Exiv2 {
         }
         return os;
     }
+
+    template<typename T>
+    inline std::string ValueType<T>::toString(long n) const
+    {
+        return Exiv2::toString(value_[n]);
+    }
+
     // Default implementation
     template<typename T>
     inline long ValueType<T>::toLong(long n) const
@@ -1370,7 +1405,6 @@ namespace Exiv2 {
         sizeDataArea_ = len;
         return 0;
     }
-
 }                                       // namespace Exiv2
 
 #endif                                  // #ifndef VALUE_HPP_

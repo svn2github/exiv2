@@ -187,6 +187,11 @@ namespace Exiv2 {
         return p_->value_.get() == 0 ? "" : p_->value_->toString();
     }
 
+    std::string Xmpdatum::toString(long n) const
+    {
+        return p_->value_.get() == 0 ? "" : p_->value_->toString(n);
+    }
+
     long Xmpdatum::toLong(long n) const
     {
         return p_->value_.get() == 0 ? -1 : p_->value_->toLong(n);
@@ -367,12 +372,11 @@ namespace Exiv2 {
             if (XMP_PropIsSimple(opt)) {
                 if (val->typeId() != xmpText) {
                     int ret = val->read(propValue);
-                    // Todo: Exiv2 ValueType<T>::read should check the string 
-                    //       and not just return 0
                     if (ret != 0) val = Value::create(xmpText);
                 }
                 if (val->typeId() == xmpText) {
                     std::string pv = propValue;
+                    // Todo: Do not use read() for XmpTextValues
                     quoteText(pv);
                     val->read(pv);
                 }
@@ -389,6 +393,7 @@ namespace Exiv2 {
                     ++itemIdx;
                 }
                 iter.Skip(kXMP_IterSkipSubtree);
+                // Todo: Do not use read() for XmpTextValues
                 val->read(arrayValue);
             }
             else {
@@ -426,12 +431,64 @@ namespace Exiv2 {
 #endif // !EXV_HAVE_XMP_TOOLKIT
 
 #ifdef EXV_HAVE_XMP_TOOLKIT
-    void XmpParser::encode(      std::string& xmpPacket,
+    int XmpParser::encode(      std::string& xmpPacket,
                            const XmpData&     xmpData)
-    {
-        // Todo: Implement me!
+    { try {
+        xmpPacket.clear();
 
-    } // XmpParser::encode
+        if (!initialized_) {
+            initialized_ = true;
+            if (!SXMPMeta::Initialize()) {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "XMP Toolkit initialization failed.\n";
+#endif
+                return 2;
+            }
+        }
+
+        SXMPMeta meta;
+
+        for (XmpData::const_iterator i = xmpData.begin(); i != xmpData.end(); ++i) {
+
+            const char* ns = XmpProperties::ns(i->groupName());
+
+            // Todo: Make sure the namespace is registered with XMP-SDK
+
+            // Todo: Requires a separate indicator for array
+            //       (or value type in general => reuse typeId?)
+
+            if (i->count() == 1) {
+                // simple property
+//-ahu
+std::cerr << i->key() << "\n";
+            meta.SetProperty(ns, i->tagName().c_str(), i->toString(0).c_str());
+
+            }
+            if (i->count() > 1) {
+                // array or sequence
+                for (int k = 0; k < i->count(); ++k) {
+
+                    // Todo: Need indicator if array is ordered
+
+//-ahu
+std::cerr << i->key() << " count = " << i->count() << "\n";
+
+                    meta.AppendArrayItem(ns, i->tagName().c_str(), 
+                                         kXMP_PropArrayIsOrdered, 
+                                         i->toString(k).c_str());
+                }
+            }
+        }
+        meta.SerializeToBuffer(&xmpPacket, kXMP_UseCompactFormat);
+        return 0;
+    }
+    catch (const XMP_Error& e) {
+#ifndef SUPPRESS_WARNINGS
+        std::cerr << Error(39, e.GetID(), e.GetErrMsg()) << "\n";
+#endif
+        xmpPacket.clear();
+        return 3;
+    }} // XmpParser::decode
 #else
     void XmpParser::encode(      std::string& /*xmpPacket*/,
                            const XmpData&     xmpData)
@@ -440,6 +497,7 @@ namespace Exiv2 {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Warning: XMP toolkit support not compiled in.\n";
 #endif
+        return 1;
         }
     } // XmpParser::encode
 #endif // !EXV_HAVE_XMP_TOOLKIT
