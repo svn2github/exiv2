@@ -1317,6 +1317,13 @@ namespace Action {
                 }
             }
         }
+        else {
+            std::cerr << _("Warning") << ": " << modifyCmd.key_ << ": "
+                      << _("Failed to read") << " "
+                      << Exiv2::TypeInfo::typeName(value->typeId()) 
+                      << " " << _("value")
+                      << " \"" << modifyCmd.value_ << "\"\n";
+        }
     }
 
     void Modify::delMetadatum(Exiv2::Image* pImage, const ModifyCmd& modifyCmd)

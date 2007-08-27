@@ -153,10 +153,12 @@ namespace Exiv2 {
         std::istringstream is(buf);
         int tmp;
         value_.clear();
-        while (is >> tmp) {
+        while (!(is.eof())) {
+            is >> tmp;
+            if (is.fail()) return 1;
             value_.push_back(static_cast<byte>(tmp));
         }
-        return is.fail() ? 1 : 0;
+        return 0;
     }
 
     long DataValue::copy(byte* buf, ByteOrder /*byteOrder*/) const

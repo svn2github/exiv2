@@ -1284,10 +1284,12 @@ namespace Exiv2 {
         std::istringstream is(buf);
         T tmp;
         value_.clear();
-        while (is >> tmp) {
+        while (!(is.eof())) {
+            is >> tmp;
+            if (is.fail()) return 1;
             value_.push_back(tmp);
         }
-        return is.fail() ? 1 : 0;
+        return 0;
     }
 
     template<typename T>
