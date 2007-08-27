@@ -719,7 +719,7 @@ namespace Action {
         Exiv2::IptcData& iptcData = image->iptcData();
         if (iptcData.empty()) {
             std::cerr << path_
-                      << ": " << _("No Iptc data found in the file\n");
+                      << ": " << _("No IPTC data found in the file\n");
             return -3;
         }
         Exiv2::IptcData::const_iterator end = iptcData.end();
@@ -793,7 +793,7 @@ namespace Action {
         assert(image.get() != 0);
         image->readMetadata();
         if (Params::instance().verbose_) {
-            std::cout << _("Jpeg comment") << ": ";
+            std::cout << _("JPEG comment") << ": ";
         }
         std::cout << image->comment() << std::endl;
         return 0;
@@ -927,7 +927,7 @@ namespace Action {
         if (0 == rc && Params::instance().target_ & Params::ctXmp) {
             // Todo: Implement me!
             if (!image->xmpData().empty()) {
-                std::cerr << "Deletion of XMP packet not implemented yet.\n";
+                std::cerr << "Deletion of XMP data not implemented yet.\n";
             }
         }
         if (0 == rc) {
@@ -973,7 +973,7 @@ namespace Action {
     int Erase::eraseIptcData(Exiv2::Image* image) const
     {
         if (Params::instance().verbose_ && image->iptcData().count() > 0) {
-            std::cout << _("Erasing Iptc data from the file") << std::endl;
+            std::cout << _("Erasing IPTC data from the file") << std::endl;
         }
         image->clearIptcData();
         return 0;
@@ -982,7 +982,7 @@ namespace Action {
     int Erase::eraseComment(Exiv2::Image* image) const
     {
         if (Params::instance().verbose_ && image->comment().size() > 0) {
-            std::cout << _("Erasing Jpeg comment from the file") << std::endl;
+            std::cout << _("Erasing JPEG comment from the file") << std::endl;
         }
         image->clearComment();
         return 0;
@@ -1005,10 +1005,10 @@ namespace Action {
         if (Params::instance().target_ & Params::ctThumb) {
             rc = writeThumbnail();
         }
-        if (Params::instance().target_ & Params::ctXmp) {
+        if (Params::instance().target_ & Params::ctXmpPacket) {
             rc = writeXmp();
         }
-        if (Params::instance().target_ & ~Params::ctThumb & ~Params::ctXmp) {
+        if (Params::instance().target_ & ~Params::ctThumb & ~Params::ctXmpPacket) {
             std::string exvPath = newFilePath(path_, ".exv");
             if (dontOverwrite(exvPath)) return 0;
             rc = metacopy(path_, exvPath, false);
@@ -1034,8 +1034,6 @@ namespace Action {
         image->readMetadata();
         const std::string& xmpPacket = image->xmpPacket();
         if (xmpPacket.empty()) {
-            std::cerr << path_
-                      << ": " << _("No XMP packet found in the file\n");
             return -3;
         }
         std::string xmpPath = newFilePath(path_, ".xmp");
@@ -1123,15 +1121,16 @@ namespace Action {
         if (   rc == 0
             && Params::instance().target_ & Params::ctExif
             || Params::instance().target_ & Params::ctIptc
-            || Params::instance().target_ & Params::ctComment) {
+            || Params::instance().target_ & Params::ctComment
+            || Params::instance().target_ & Params::ctXmp) {
             std::string suffix = Params::instance().suffix_;
             if (suffix.empty()) suffix = ".exv";
             std::string exvPath = newFilePath(path, suffix);
             rc = metacopy(exvPath, path, true);
         }
-        if (0 == rc && Params::instance().target_ & Params::ctXmp) {
+        if (0 == rc && Params::instance().target_ & Params::ctXmpPacket) {
             // Todo: Implement me!
-            std::cerr << "Insertion of XMP packet not implemented yet.\n";
+            std::cerr << "Insertion of XMP packet from *.xmp file not implemented yet.\n";
         }
         if (Params::instance().preserve_) {
             ts.touch(path);
@@ -1216,7 +1215,7 @@ namespace Action {
     {
         if (!Params::instance().jpegComment_.empty()) {
             if (Params::instance().verbose_) {
-                std::cout << _("Setting Jpeg comment") << " '"
+                std::cout << _("Setting JPEG comment") << " '"
                           << Params::instance().jpegComment_
                           << "'"
                           << std::endl;
@@ -1636,7 +1635,7 @@ namespace {
         if (   Params::instance().target_ & Params::ctIptc
             && !sourceImage->iptcData().empty()) {
             if (Params::instance().verbose_) {
-                std::cout << _("Writing Iptc data from") << " " << source
+                std::cout << _("Writing IPTC data from") << " " << source
                           << " " << _("to") << " " << target << std::endl;
             }
             targetImage->setIptcData(sourceImage->iptcData());
@@ -1647,12 +1646,13 @@ namespace {
                 std::cout << _("Writing XMP data from") << " " << source
                           << " " << _("to") << " " << target << std::endl;
             }
+            // Todo: Should use XMP packet if there are no XMP modification commands
             targetImage->setXmpData(sourceImage->xmpData());
         }
         if (   Params::instance().target_ & Params::ctComment
             && !sourceImage->comment().empty()) {
             if (Params::instance().verbose_) {
-                std::cout << _("Writing Jpeg comment from") << " " << source
+                std::cout << _("Writing JPEG comment from") << " " << source
                           << " " << _("to") << " " << target << std::endl;
             }
             targetImage->setComment(sourceImage->comment());
