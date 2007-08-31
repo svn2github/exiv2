@@ -156,6 +156,14 @@ namespace Exiv2 {
          */
         virtual void clearXmpData();
         /*!
+          @brief Set the raw XMP packet to \em xmpPacket.
+         */
+        virtual void setXmpPacket(const std::string& xmpPacket);
+        /*!
+          @brief Set the raw XMP packet to \em xmpPacket.
+         */
+        virtual void clearXmpPacket();
+        /*!
           @brief Set the image comment. The new comment is not written
               to the image until the writeMetadata() method is called.
           @param comment String containing comment.

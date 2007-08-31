@@ -108,6 +108,7 @@ namespace Exiv2 {
         clearExifData();
         clearIptcData();
         clearXmpData();
+        clearXmpPacket();
         clearComment();
     }
 
@@ -147,6 +148,16 @@ namespace Exiv2 {
     void Image::setXmpData(const XmpData& xmpData)
     {
         xmpData_ = xmpData;
+    }
+
+    void Image::clearXmpPacket()
+    {
+        xmpPacket_.clear();
+    }
+
+    void Image::setXmpPacket(const std::string& xmpPacket)
+    {
+        xmpPacket_ = xmpPacket;
     }
 
     void Image::clearComment()

@@ -291,11 +291,10 @@ namespace Exiv2 {
                 io_->read(xmpPacket.pData_, xmpPacket.size_);
                 if (io_->error() || io_->eof()) throw Error(14);
                 xmpPacket_.assign(reinterpret_cast<char*>(xmpPacket.pData_), xmpPacket.size_);
-                if (XmpParser::decode(xmpData_, xmpPacket_)) {
+                if (xmpPacket_.size() > 0 && XmpParser::decode(xmpData_, xmpPacket_)) {
 #ifndef SUPPRESS_WARNINGS
                     std::cerr << "Warning: Failed to decode XMP metadata.\n";
 #endif
-                    xmpData_.clear();
                 }
                 --search;
             }
@@ -402,6 +401,7 @@ namespace Exiv2 {
         int search = 0;
         int insertPos = 0;
         int skipApp1Exif = -1;
+        int skipApp1Xmp = -1;
         int skipApp13Ps3 = -1;
         int skipCom = -1;
         DataBuf psData;
@@ -416,7 +416,7 @@ namespace Exiv2 {
         // First find segments of interest. Normally app0 is first and we want
         // to insert after it. But if app0 comes after com, app1 and app13 then
         // don't bother.
-        while (marker != sos_ && marker != eoi_ && search < 3) {
+        while (marker != sos_ && marker != eoi_ && search < 4) {
             // Read size and signature (ok if this hits EOF)
             bufRead = io_->read(buf.pData_, bufMinSize);
             if (io_->error()) throw Error(20);
@@ -430,6 +430,12 @@ namespace Exiv2 {
             else if (marker == app1_ && memcmp(buf.pData_ + 2, exifId_, 6) == 0) {
                 if (size < 8) throw Error(22);
                 skipApp1Exif = count;
+                ++search;
+                if (io_->seek(size-bufRead, BasicIo::cur)) throw Error(22);
+            }
+            else if (marker == app1_ && memcmp(buf.pData_ + 2, xmpId_, 29) == 0) {
+                if (size < 31) throw Error(22);
+                skipApp1Xmp = count;
                 ++search;
                 if (io_->seek(size-bufRead, BasicIo::cur)) throw Error(22);
             }
@@ -461,6 +467,7 @@ namespace Exiv2 {
         }
 
         if (exifData_.count() > 0) ++search;
+        if (xmpData_.count() > 0) ++search;
         if (iptcData_.count() > 0) ++search;
         if (!comment_.empty()) ++search;
 
@@ -482,7 +489,7 @@ namespace Exiv2 {
             uint16_t size = getUShort(buf.pData_, bigEndian);
 
             if (insertPos == count) {
-                byte tmpBuf[18];
+                byte tmpBuf[64];
                 if (!comment_.empty()) {
                     // Write COM marker, size of comment, and string
                     tmpBuf[0] = 0xff;
@@ -512,7 +519,30 @@ namespace Exiv2 {
 
                         // Write new Exif data buffer
                         if (   outIo.write(rawExif.pData_, rawExif.size_)
-                               != rawExif.size_) throw Error(21);
+                            != rawExif.size_) throw Error(21);
+                        if (outIo.error()) throw Error(21);
+                        --search;
+                    }
+                }
+                if (xmpData_.count() > 0) {
+                    if (XmpParser::encode(xmpPacket_, xmpData_)) {
+#ifndef SUPPRESS_WARNINGS
+                        std::cerr << "Warning: Failed to encode XMP metadata.\n";
+#endif
+                    }
+                    if (xmpPacket_.size() > 0) {
+                        // Write APP1 marker, size of APP1 field, XMP id and XMP packet
+                        tmpBuf[0] = 0xff;
+                        tmpBuf[1] = app1_;
+
+                        if (xmpPacket_.size() + 31 > 0xffff) throw Error(37, "XMP");
+                        us2Data(tmpBuf + 2, static_cast<uint16_t>(xmpPacket_.size() + 31), bigEndian);
+                        memcpy(tmpBuf + 4, xmpId_, 29);
+                        if (outIo.write(tmpBuf, 33) != 33) throw Error(21);
+
+                        // Write new XMP packet
+                        if (   outIo.write(reinterpret_cast<const byte*>(xmpPacket_.data()), xmpPacket_.size())
+                            != static_cast<long>(xmpPacket_.size())) throw Error(21);
                         if (outIo.error()) throw Error(21);
                         --search;
                     }
@@ -547,7 +577,10 @@ namespace Exiv2 {
             if (marker == eoi_) {
                 break;
             }
-            else if (skipApp1Exif==count || skipApp13Ps3==count || skipCom==count) {
+            else if (   skipApp1Exif == count
+                     || skipApp1Xmp  == count
+                     || skipApp13Ps3 == count
+                     || skipCom      == count) {
                 --search;
                 io_->seek(size-bufRead, BasicIo::cur);
             }
