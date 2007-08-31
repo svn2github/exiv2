@@ -393,7 +393,7 @@ namespace Exiv2 {
             throw Error(22);
         }
 
-        const long bufMinSize = 16;
+        const long bufMinSize = 36;
         long bufRead = 0;
         DataBuf buf(bufMinSize);
         const long seek = io_->tell();
@@ -443,7 +443,7 @@ namespace Exiv2 {
                 if (size < 16) throw Error(22);
                 skipApp13Ps3 = count;
                 ++search;
-                // needed if bufMinSize!=16: io_->seek(16-bufRead, BasicIo::cur);
+                io_->seek(16 - bufRead, BasicIo::cur);
                 psData.alloc(size - 16);
                 // Load PS data now to allow reinsertion at any point
                 io_->read(psData.pData_, psData.size_);
