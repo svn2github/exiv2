@@ -52,11 +52,13 @@ namespace Exiv2 {
     extern const XmpPropertyInfo xmpXmpMMInfo[];
     extern const XmpPropertyInfo xmpXmpBJInfo[];
     extern const XmpPropertyInfo xmpXmpTPgInfo[];
-    extern const XmpPropertyInfo xmpPhotoshopInfo[];
     extern const XmpPropertyInfo xmpXmpDMInfo[];
     extern const XmpPropertyInfo xmpPdfInfo[];
+    extern const XmpPropertyInfo xmpPhotoshopInfo[];
+    extern const XmpPropertyInfo xmpCrsInfo[];
     extern const XmpPropertyInfo xmpTiffInfo[];
     extern const XmpPropertyInfo xmpExifInfo[];
+    extern const XmpPropertyInfo xmpAuxInfo[];
 
     extern const XmpNsInfo xmpNsInfo[] = {
         // Schemas
@@ -69,10 +71,10 @@ namespace Exiv2 {
         { "http://ns.adobe.com/xmp/1.0/DynamicMedia/",    "xmpDM",        xmpXmpDMInfo,     "XMP Dynamic Media schema" },
         { "http://ns.adobe.com/pdf/1.3/",                 "pdf",          xmpPdfInfo,       "Adobe PDF schema" },
         { "http://ns.adobe.com/photoshop/1.0/",           "photoshop",    xmpPhotoshopInfo, "Adobe photoshop schema" },
-        { "http://ns.adobe.com/camera-raw-settings/1.0/", "crs",          0, "Camera Raw schema" },
+        { "http://ns.adobe.com/camera-raw-settings/1.0/", "crs",          xmpCrsInfo,       "Camera Raw schema" },
         { "http://ns.adobe.com/tiff/1.0/",                "tiff",         xmpTiffInfo,      "Exif Schema for TIFF Properties" },
         { "http://ns.adobe.com/exif/1.0/",                "exif",         xmpExifInfo,      "Exif schema for Exif-specific Properties" },
-        { "http://ns.adobe.com/exif/1.0/aux/",            "aux",          0, "Exif schema for Additional Exif Properties" },
+        { "http://ns.adobe.com/exif/1.0/aux/",            "aux",          xmpAuxInfo,       "Exif schema for Additional Exif Properties" },
         { "http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/",  "iptc" /*Iptc4xmpCore*/, 0, "IPTC Core schema" },
 
         // Structures
@@ -322,6 +324,61 @@ namespace Exiv2 {
         { "SupplementalCategories", "SupplementalCategories", "bag Text", xmpText, xmpExternal, "Supplemental category." },
         { "TransmissionReference", "TransmissionReference", "Text", xmpText,       xmpExternal, "Original transmission reference." },
         { "Urgency",          "Urgency",          "Integer",     xmpText,          xmpExternal, "Urgency. Valid range is 1-8." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    //! crs:CropUnits
+    extern const TagDetails xmpCrsCropUnits[] = {
+        { 0, "pixels" },
+        { 1, "inches" },
+        { 2, "cm"     }
+    };
+
+    extern const XmpPropertyInfo xmpCrsInfo[] = {
+        { "AutoBrightness",   "AutoBrightness",   "Boolean",     xmpText,          xmpExternal, "When true, \"Brightness\" is automatically adjusted." },
+        { "AutoContrast",     "AutoContrast",     "Boolean",     xmpText,          xmpExternal, "When true, \"Contrast\" is automatically adjusted." },
+        { "AutoExposure",     "AutoExposure",     "Boolean",     xmpText,          xmpExternal, "When true, \"Exposure\" is automatically adjusted." },
+        { "AutoShadows",      "AutoShadows",      "Boolean",     xmpText,          xmpExternal, "When true,\"Shadows\" is automatically adjusted." },
+        { "BlueHue",          "BlueHue",          "Integer",     signedShort,      xmpExternal, "\"Blue Hue\" setting. Range -100 to 100." },
+        { "BlueSaturation",   "BlueSaturation",   "Integer",     signedShort,      xmpExternal, "\"Blue Saturation\" setting. Range -100 to +100." },
+        { "Brightness",       "Brightness",       "Integer",     unsignedShort,    xmpExternal, "\"Brightness\" setting. Range 0 to +150." },
+        { "CameraProfile",    "CameraProfile",    "Text",        xmpText,          xmpExternal, "\"Camera Profile\" setting." },
+        { "ChromaticAberrationB", "ChromaticAberrationB", "Integer", signedShort,  xmpExternal, "\"Chomatic Aberration, Fix Blue/Yellow Fringe\" setting. Range -100 to +100." },
+        { "ChromaticAberrationR", "ChromaticAberrationR", "Integer", signedShort,  xmpExternal, "\"Chomatic Aberration, Fix Red/Cyan Fringe\" setting. Range -100 to +100." },
+        { "ColorNoiseReduction", "ColorNoiseReduction", "Integer", unsignedShort,  xmpExternal, "\"Color Noise Reducton\" setting. Range 0 to +100." },
+        { "Contrast",         "Contrast",         "Integer",     signedShort,      xmpExternal, "\"Contrast\" setting. Range -50 to +100." },
+        { "CropTop",          "CropTop",          "Real",        xmpText,          xmpExternal, "When HasCrop is true, top of crop rectangle" },
+        { "CropLeft",         "CropLeft",         "Real",        xmpText,          xmpExternal, "When HasCrop is true, left of crop rectangle." },
+        { "CropBottom",       "CropBottom",       "Real",        xmpText,          xmpExternal, "When HasCrop is true, bottom of crop rectangle." },
+        { "CropRight",        "CropRight",        "Real",        xmpText,          xmpExternal, "When HasCrop is true, right of crop rectangle." },
+        { "CropAngle",        "CropAngle",        "Real",        xmpText,          xmpExternal, "When HasCrop is true, angle of crop rectangle." },
+        { "CropWidth",        "CropWidth",        "Real",        xmpText,          xmpExternal, "Width of resulting cropped image in CropUnits units." },
+        { "CropHeight",       "CropHeight",       "Real",        xmpText,          xmpExternal, "Height of resulting cropped image in CropUnits units." },
+        { "CropUnits",        "CropUnits",        "Integer",     unsignedShort,    xmpExternal, "Units for CropWidth and CropHeight. 0=pixels, 1=inches, 2=cm" },
+        { "Exposure",         "Exposure",         "Real",        xmpText,          xmpExternal, "\"Exposure\" setting. Range -4.0 to +4.0." },
+        { "GreenHue",         "GreenHue",         "Integer",     signedShort,      xmpExternal, "\"Green Hue\" setting. Range -100 to +100." },
+        { "GreenSaturation",  "GreenSaturation",  "Integer",     signedShort,      xmpExternal, "\"Green Saturation\" setting. Range -100 to +100." },
+        { "HasCrop",          "HasCrop",          "Boolean",     xmpText,          xmpExternal, "When true, image has a cropping rectangle." },
+        { "HasSettings",      "HasSettings",      "Boolean",     xmpText,          xmpExternal, "When true, non-default camera raw settings." },
+        { "LuminanceSmoothing", "LuminanceSmoothing", "Integer", unsignedShort,    xmpExternal, "\"Luminance Smoothing\" setting. Range 0 to +100." },
+        { "RawFileName",      "RawFileName",      "Text",        xmpText,          xmpInternal, "File name fo raw file (not a complete path)." },
+        { "RedHue",           "RedHue",           "Integer",     signedShort,      xmpExternal, "\"Red Hue\" setting. Range -100 to +100." },
+        { "RedSaturation",    "RedSaturation",    "Integer",     signedShort,      xmpExternal, "\"Red Saturation\" setting. Range -100 to +100." },
+        { "Saturation",       "Saturation",       "Integer",     signedShort,      xmpExternal, "\"Saturation\" setting. Range -100 to +100." },
+        { "Shadows",          "Shadows",          "Integer",     unsignedShort,    xmpExternal, "\"Shadows\" setting. Range 0 to +100." },
+        { "ShadowTint",       "ShadowTint",       "Integer",     signedShort,      xmpExternal, "\"Shadow Tint\" setting. Range -100 to +100." },
+        { "Sharpness",        "Sharpness",        "Integer",     unsignedShort,    xmpExternal, "\"Sharpness\" setting. Range 0 to +100." },
+        { "Temperature",      "Temperature",      "Integer",     unsignedShort,    xmpExternal, "\"Temperature\" setting. Range 2000 to 50000." },
+        { "Tint",             "Tint",             "Integer",     signedShort,      xmpExternal, "\"Tint\" setting. Range -150 to +150." },
+        { "ToneCurve",        "ToneCurve",        "Seq of points (Integer, Integer)", xmpText, xmpExternal, "Array of points (Integer, Integer) defining a \"Tone Curve\"." },
+        { "ToneCurveName",    "ToneCurveName",    "Choice Text", xmpText,          xmpInternal, "The name of the Tone Curve described by ToneCurve. One of: Linear, Medium Contrast, "
+                                                                                                "Strong Contrast, Custom or a user-defined preset name." },
+        { "Version",          "Version",          "Text",        xmpText,          xmpInternal, "Version of Camera Raw plugin." },
+        { "VignetteAmount",   "VignetteAmount",   "Integer",     signedShort,      xmpExternal, "\"Vignetting Amount\" setting. Range -100 to +100." },
+        { "VignetteMidpoint", "VignetteMidpoint", "Integer",     unsignedShort,    xmpExternal, "\"Vignetting Midpoint\" setting. Range 0 to +100." },
+        { "WhiteBalance",     "WhiteBalance",     "Closed Choice Text", xmpText,   xmpExternal, "\"White Balance\" setting. One of: As Shot, Auto, Daylight, Cloudy, Shade, Tungsten, "
+                                                                                                "Fluorescent, Flash, Custom" },
         // End of list marker
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
@@ -659,6 +716,13 @@ namespace Exiv2 {
         { "GPSProcessingMethod", "GPSProcessingMethod", "Text",  xmpText,          xmpInternal, "GPS tag 27, 0x1B. A character string recording the name of the method used for location finding." },
         { "GPSAreaInformation", "GPSAreaInformation", "Text",    xmpText,          xmpInternal, "GPS tag 28, 0x1C. A character string recording the name of the GPS area." },
         { "GPSDifferential",  "GPSDifferential",  "Closed Choice of Integer", unsignedShort, xmpInternal, "GPS tag 30, 0x1E. Indicates whether differential correction is applied to the GPS receiver." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpAuxInfo[] = {
+        { "Lens",             "Lens",             "Text",        xmpText,          xmpInternal, "A description of the lens used to take the photograph. For example, \"70-200 mm f/2.8-4.0\"." },
+        { "SerialNumber",     "SerialNumber",     "Text",        xmpText,          xmpInternal, "The serial number of the camera or camera body used to take the photograph." },
         // End of list marker
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
