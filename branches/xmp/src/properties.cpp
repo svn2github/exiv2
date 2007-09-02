@@ -59,6 +59,7 @@ namespace Exiv2 {
     extern const XmpPropertyInfo xmpTiffInfo[];
     extern const XmpPropertyInfo xmpExifInfo[];
     extern const XmpPropertyInfo xmpAuxInfo[];
+    extern const XmpPropertyInfo xmpIptcInfo[];
 
     extern const XmpNsInfo xmpNsInfo[] = {
         // Schemas
@@ -75,7 +76,7 @@ namespace Exiv2 {
         { "http://ns.adobe.com/tiff/1.0/",                "tiff",         xmpTiffInfo,      "Exif Schema for TIFF Properties" },
         { "http://ns.adobe.com/exif/1.0/",                "exif",         xmpExifInfo,      "Exif schema for Exif-specific Properties" },
         { "http://ns.adobe.com/exif/1.0/aux/",            "aux",          xmpAuxInfo,       "Exif schema for Additional Exif Properties" },
-        { "http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/",  "iptc" /*Iptc4xmpCore*/, 0, "IPTC Core schema" },
+        { "http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/",  "iptc",         xmpIptcInfo,      "IPTC Core schema" }, // 'Iptc4xmpCore' is just too long
 
         // Structures
         { "http://ns.adobe.com/xap/1.0/g/",                   "xapG",    0, "Colorant structure" },
@@ -727,6 +728,37 @@ namespace Exiv2 {
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
 
+    extern const XmpPropertyInfo xmpIptcInfo[] = {
+        { "CiAdrCity",        "Contact Info-City", "Text",       xmpText,          xmpExternal, "The contact information city part." },
+        { "CiAdrCtry",        "Contact Info-Country", "Text",    xmpText,          xmpExternal, "The contact information country part." },
+        { "CiAdrExtadr",      "Contact Info-Address", "Text",    xmpText,          xmpExternal, "The contact information address part. Comprises an optional company name and all required "
+                                                                                                "information to locate the building or postbox to which mail should be sent." },
+        { "CiAdrPcode",       "Contact Info-Postal Code", "Text", xmpText,         xmpExternal, "The contact information part denoting the local postal code." },
+        { "CiAdrRegion",      "Contact Info-State/Province", "Text", xmpText,      xmpExternal, "The contact information part denoting regional information like state or province." },
+        { "CiEmailWork",      "Contact Info-Email", "Text",      xmpText,          xmpExternal, "The contact information email address part." },
+        { "CiTelWork",        "Contact Info-Phone", "Text",      xmpText,          xmpExternal, "The contact information phone number part." },
+        { "CiUrlWork",        "Contact Info-Web URL", "Text",    xmpText,          xmpExternal, "The contact information web address part." },
+        { "CountryCode",      "Country Code",     "closed Choice of Text", xmpText, xmpExternal, "Code of the country the content is focussing on -- either the country shown in visual "
+                                                                                                "media or referenced in text or audio media. This element is at the top/first level of "
+                                                                                                "a top-down geographical hierarchy. The code should be taken from ISO 3166 two or three "
+                                                                                                "letter code. The full name of a country should go to the \"Country\" element." },
+        { "CreatorContactInfo", "Creator's Contact Info", "ContactInfo", xmpText,  xmpExternal, "The creator's contact information provides all necessary information to get in contact "
+                                                                                                "with the creator of this news object and comprises a set of sub-properties for proper addressing." },
+        { "IntellectualGenre", "Intellectual Genre", "Text",     xmpText,          xmpExternal, "Describes the nature, intellectual or journalistic characteristic of a news object, not "
+                                                                                                "specifically its content." },
+        { "Location",         "Location",         "Text",        xmpText,          xmpExternal, "Name of a location the content is focussing on -- either the location shown in visual "
+                                                                                                "media or referenced by text or audio media. This location name could either be the name "
+                                                                                                "of a sublocation to a city or the name of a well known location or (natural) monument "
+                                                                                                "outside a city. In the sense of a sublocation to a city this element is at the fourth "
+                                                                                                "level of a top-down geographical hierarchy." },
+        { "Scene",            "IPTC Scene",       "bag closed Choice of Text", xmpText, xmpExternal, "Describes the scene of a photo content. Specifies one or more terms from the IPTC "
+                                                                                                "\"Scene-NewsCodes\". Each Scene is represented as a string of 6 digits in an unordered list." },
+        { "SubjectCode",      "IPTC Subject Code", "bag closed Choice of Text", xmpText, xmpExternal, "Specifies one or more Subjects from the IPTC \"Subject-NewsCodes\" taxonomy to "
+                                                                                                "categorize the content. Each Subject is represented as a string of 8 digits in an unordered list." },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
     XmpNsInfo::Ns::Ns(const std::string& ns)
         : ns_(ns)
     {
@@ -839,7 +871,7 @@ namespace Exiv2 {
 
           @throw Error if the key cannot be decomposed.
         */
-        void decomposeKey(const XmpKey* self, const std::string& key);
+        void decomposeKey(const std::string& key);
 
         // DATA
         static const char* familyName_; //!< "Xmp"
@@ -854,8 +886,12 @@ namespace Exiv2 {
     }
 
     XmpKey::Impl::Impl(const std::string& prefix, const std::string& property)
-        : prefix_(prefix), property_(property)
     {
+        // Validate prefix, throws
+        XmpProperties::nsInfo(prefix);
+
+        property_ = property;
+        prefix_ = prefix;
     }
 
     const char* XmpKey::Impl::familyName_ = "Xmp";
@@ -863,14 +899,12 @@ namespace Exiv2 {
     XmpKey::XmpKey(const std::string& key)
         : p_(new Impl)
     {
-        p_->decomposeKey(this, key);
+        p_->decomposeKey(key);
     }
 
     XmpKey::XmpKey(const std::string& prefix, const std::string& property)
         : p_(new Impl(prefix, property))
     {
-        // Validate prefix and property, throws
-        XmpProperties::propertyInfo(*this);
     }
 
     XmpKey::~XmpKey()
@@ -930,7 +964,7 @@ namespace Exiv2 {
         return XmpProperties::ns(p_->prefix_);
     }
 
-    void XmpKey::Impl::decomposeKey(const XmpKey* self, const std::string& key)
+    void XmpKey::Impl::decomposeKey(const std::string& key)
     {
         // Get the family name, prefix and property name parts of the key
         std::string::size_type pos1 = key.find('.');
@@ -947,12 +981,11 @@ namespace Exiv2 {
         std::string property = key.substr(pos1 + 1);
         if (property == "") throw Error(6, key);
 
+        // Validate prefix
+        XmpProperties::nsInfo(prefix);
+
         property_ = property;
         prefix_ = prefix;
-
-        // Validate prefix and property
-        XmpProperties::propertyInfo(*self);
-
     } // XmpKey::Impl::decomposeKey
 
     // *************************************************************************

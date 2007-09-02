@@ -24,12 +24,11 @@ Property Qualifiers : not supported
 Language Alternatives : not supported
 
 XMP properties are accessed through keys of the form
-"Xmp.<Prefix>.<Property>", where <Prefix> is the preferred
-(or rather, registered) prefix for a schema namespace and
-<Property> is the name of a property in that namespace. Only 
-known properties in known namespaces are supported at the
-moment. Functions to register namespaces and properterties
-are not provided yet.
+"Xmp.<Prefix>.<Property>", where <Prefix> is the preferred 
+(or rather, registered) prefix for a schema namespace and 
+<Property> is the name of a property in that namespace. Any 
+properties in known namespaces are supported. Functions to
+register namespaces are not provided yet.
 
 Note: Unlike Exif and IPTC tags, XMP properties do not have
 a tag number.

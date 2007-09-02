@@ -368,7 +368,17 @@ namespace Exiv2 {
             if (key.get() == 0) continue;
 
             // Create an Exiv2 value and read the property value
-            Value::AutoPtr val = Value::create(XmpProperties::propertyType(*key.get()));
+            // Todo: avoid try/catch block
+            TypeId typeId;
+            Value::AutoPtr val;
+            try {
+                typeId = XmpProperties::propertyType(*key.get());
+                val = Value::create(typeId);
+            }
+            catch (const AnyError&) {
+                // Todo: How to deal with the type of unknown properties
+                val = Value::create(xmpText);
+            }
             if (XMP_PropIsSimple(opt)) {
                 if (val->typeId() != xmpText) {
                     int ret = val->read(propValue);
@@ -541,18 +551,7 @@ namespace {
 #endif
             return Exiv2::XmpKey::AutoPtr();
         }
-        Exiv2::XmpKey::AutoPtr key;
-        // Todo: Avoid the try/catch block
-        try {
-            key = Exiv2::XmpKey::AutoPtr(new Exiv2::XmpKey(prefix, property));
-        }
-        catch (const Exiv2::AnyError& e) {
-            // This should only happen for unknown property names
-#ifndef SUPPRESS_WARNINGS
-            std::cerr << "Warning: " << e << "; skipping property.\n";
-#endif
-        }
-        return key;
+        return Exiv2::XmpKey::AutoPtr(new Exiv2::XmpKey(prefix, property));
     } // makeXmpKey
 
 }

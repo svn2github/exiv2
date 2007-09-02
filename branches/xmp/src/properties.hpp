@@ -192,8 +192,8 @@ namespace Exiv2 {
 
           @param key The key string.
           @throw Error if the first part of the key is not '<b>Xmp</b>' or
-                 the remaining parts of the key cannot be parsed and
-                 converted to a known schema prefix and property name.
+                 the second part of the key cannot be parsed and converted
+                 to a known schema prefix.
         */
         explicit XmpKey(const std::string& key);
         /*!
@@ -203,8 +203,7 @@ namespace Exiv2 {
           @param prefix   Schema prefix name
           @param property Property name
 
-          @throw Error if the schema prefix or the property name are not
-                 known.
+          @throw Error if the schema prefix is not known.
         */
         XmpKey(const std::string& prefix, const std::string& property);
         //! Copy constructor.
