@@ -50,11 +50,34 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
+    Value::Value(TypeId typeId)
+        : type_(typeId),
+          xmpArrayType_(xaNone) 
+    {
+    }
+
+    Value::Value(const Value& rhs)
+        : type_(rhs.type_),
+          xmpArrayType_(rhs.xmpArrayType_)
+    {
+    }
+
     Value& Value::operator=(const Value& rhs)
     {
         if (this == &rhs) return *this;
         type_ = rhs.type_;
+        xmpArrayType_ = rhs.xmpArrayType_;
         return *this;
+    }
+
+    void Value::setXmpArrayType(XmpArrayType xmpArrayType)
+    {
+        xmpArrayType_ = xmpArrayType;
+    }
+
+    Value::XmpArrayType Value::xmpArrayType() const
+    {
+        return xmpArrayType_;
     }
 
     Value::AutoPtr Value::create(TypeId typeId)

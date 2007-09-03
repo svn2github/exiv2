@@ -63,14 +63,15 @@ namespace Exiv2 {
         //! Shortcut for a %Value auto pointer.
         typedef std::auto_ptr<Value> AutoPtr;
 
+        //! Types of array for values used to for XMP arrays.
+        enum XmpArrayType { xaNone, xaAlt, xaBag, xaSeq };
+
         //! @name Creators
         //@{
         //! Constructor, taking a type id to initialize the base class with
-        explicit Value(TypeId typeId)
-            : type_(typeId) {}
+        explicit Value(TypeId typeId);
         //! Copy constructor
-        Value(const Value& rhs)
-            : type_(rhs.type_) {}
+        Value(const Value& rhs);
         //! Virtual destructor.
         virtual ~Value() {}
         //@}
@@ -111,6 +112,8 @@ namespace Exiv2 {
           @return Return -1 if the value has no data area, else 0.
          */
         virtual int setDataArea(const byte* buf, long len);
+        //! Set the XMP array type to indicate that an XMP value is an array.
+        void setXmpArrayType(XmpArrayType xmpArrayType);
         //@}
 
         //! @name Accessors
@@ -196,6 +199,8 @@ namespace Exiv2 {
                   DataBuf if the value does not have a data area assigned.
          */
         virtual DataBuf dataArea() const { return DataBuf(0, 0); };
+        //! Return XMP array type, indicates if an XMP value is and array.
+        XmpArrayType xmpArrayType() const;
         //@}
 
         /*!
@@ -241,6 +246,7 @@ namespace Exiv2 {
         virtual Value* clone_() const =0;
         // DATA
         TypeId type_;                           //!< Type of the data
+        XmpArrayType xmpArrayType_;             //!< Type of XMP array
 
     }; // class Value
 

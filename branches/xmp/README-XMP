@@ -15,12 +15,11 @@ has a new interface to access the raw XMP packet.
 
 Supported XMP types
 -------------------
-Simple types : supported
-Structures   : not supported
-Arrays       : unordered and ordered arrays are supported
-               alternative arrays are not supported
+Simple types          : supported
+Structures            : not supported
+Arrays                : supported
 
-Property Qualifiers : not supported
+Property Qualifiers   : not supported
 Language Alternatives : not supported
 
 XMP properties are accessed through keys of the form

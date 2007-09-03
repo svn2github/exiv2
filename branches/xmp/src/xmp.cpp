@@ -69,6 +69,16 @@ namespace {
 
     }; // class FindXmpdatum
 
+#ifdef EXV_HAVE_XMP_TOOLKIT
+    //! Convert XMP Toolkit array option bits to Value::XmpArrayType
+    Exiv2::Value::XmpArrayType xmpArrayType(const XMP_OptionBits& opt);
+#endif // !EXV_HAVE_XMP_TOOLKIT
+
+#ifdef EXV_HAVE_XMP_TOOLKIT
+    //! Convert Value::XmpArrayType to XMP Toolkit array option bits
+    XMP_OptionBits xmpOptionBits(Exiv2::Value::XmpArrayType xat);
+#endif // !EXV_HAVE_XMP_TOOLKIT
+
     //! Make an XMP key from a schema namespace and property path
     Exiv2::XmpKey::AutoPtr makeXmpKey(const std::string& schemaNs,
                                       const std::string& propPath);
@@ -392,6 +402,7 @@ namespace Exiv2 {
                 }
             }
             else if (XMP_PropIsArray(opt)) {
+                val->setXmpArrayType(xmpArrayType(opt));
                 XMP_Index itemIdx = 1;
                 std::string itemValue, arrayValue;
                 XMP_OptionBits itemOpt;
@@ -464,27 +475,24 @@ namespace Exiv2 {
 
             // Todo: Make sure the namespace is registered with XMP-SDK
 
-            // Todo: Requires a separate indicator for array
-            //       (or value type in general => reuse typeId?)
-
-            if (i->count() == 1) {
-                // simple property
+            Value::XmpArrayType xat = i->value().xmpArrayType();
+            if (xat == Value::xaNone) {
+                // not an array: simple property for now
 //-ahu
 std::cerr << i->key() << "\n";
-            meta.SetProperty(ns, i->tagName().c_str(), i->toString(0).c_str());
+                meta.SetProperty(ns, i->tagName().c_str(), i->toString(0).c_str());
 
             }
-            if (i->count() > 1) {
-                // array or sequence
+            if (xat != Value::xaNone) {
+                // XMP array
                 for (int k = 0; k < i->count(); ++k) {
-
-                    // Todo: Need indicator if array is ordered
 
 //-ahu
 std::cerr << i->key() << " count = " << i->count() << "\n";
 
+                    XMP_OptionBits arrayOptions = xmpOptionBits(xat);
                     meta.AppendArrayItem(ns, i->tagName().c_str(), 
-                                         kXMP_PropArrayIsOrdered, 
+                                         arrayOptions,
                                          i->toString(k).c_str());
                 }
             }
@@ -524,6 +532,43 @@ std::cerr << i->key() << " count = " << i->count() << "\n";
 // *****************************************************************************
 // local definitions
 namespace {
+
+#ifdef EXV_HAVE_XMP_TOOLKIT
+    Exiv2::Value::XmpArrayType xmpArrayType(const XMP_OptionBits& opt)
+    {
+        Exiv2::Value::XmpArrayType var(Exiv2::Value::xaNone);
+        if (XMP_PropIsArray(opt)) {
+            if (XMP_ArrayIsAlternate(opt))      var = Exiv2::Value::xaAlt;
+            else if (XMP_ArrayIsOrdered(opt))   var = Exiv2::Value::xaSeq;
+            else if (XMP_ArrayIsUnordered(opt)) var = Exiv2::Value::xaBag;
+        }
+        return var;
+    }
+#endif // !EXV_HAVE_XMP_TOOLKIT
+
+#ifdef EXV_HAVE_XMP_TOOLKIT
+    XMP_OptionBits xmpOptionBits(Exiv2::Value::XmpArrayType xat)
+    {
+        XMP_OptionBits var(0);
+        switch (xat) {
+        case Exiv2::Value::xaNone:
+            break;
+        case Exiv2::Value::xaAlt:
+            XMP_SetOption(var, kXMP_PropValueIsArray);
+            XMP_SetOption(var, kXMP_PropArrayIsAlternate);
+            break;
+        case Exiv2::Value::xaSeq:
+            XMP_SetOption(var, kXMP_PropValueIsArray);
+            XMP_SetOption(var, kXMP_PropArrayIsOrdered);
+            break;
+        case Exiv2::Value::xaBag:
+            XMP_SetOption(var, kXMP_PropValueIsArray);
+            break;
+        }
+        return var;
+    }
+#endif // !EXV_HAVE_XMP_TOOLKIT
+
     Exiv2::XmpKey::AutoPtr makeXmpKey(const std::string& schemaNs,
                                       const std::string& propPath)
     {
