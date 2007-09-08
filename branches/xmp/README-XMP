@@ -7,30 +7,33 @@ Todo: XMP support is controlled with the ENABLE_XMP directive
 in config/config.mk.in. This will be a configure option
 eventually.
 
-Top-level classes to access XMP metadata are XmpData,
-XmpDatum and XmpKey. They work similar to the corresponding 
+Top-level Exiv2 classes to access XMP metadata are XmpData,
+Xmpdatum and XmpKey. They work similar to the corresponding 
 Exif and IPTC classes. The property-repository is XmpProperties.
 In addition to the expected new members, class Image also
 has a new interface to access the raw XMP packet.
 
-Supported XMP types
--------------------
-Simple types          : supported
-Structures            : not supported
-Arrays                : supported
-
-Property Qualifiers   : not supported
-Language Alternatives : not supported
+Supported XMP value types
+-------------------------
+All XMP value types are supported: Simple types, structures,
+arrays, property qualifiers and language alternatives.
 
 XMP properties are accessed through keys of the form
-"Xmp.<Prefix>.<Property>", where <Prefix> is the preferred 
+"Xmp.<Prefix>.<PropertyPath>", where <Prefix> is the preferred 
 (or rather, registered) prefix for a schema namespace and 
-<Property> is the name of a property in that namespace. Any 
-properties in known namespaces are supported. Functions to
-register namespaces are not provided yet.
+<PropertyPath> is the path of the XMP node. In its most basic
+form, to address simple properties, <PropertyPath> is the name
+of the property. In general, <PropertyPath> can be used to 
+address any XMP node, including array items, structure fields
+qualifiers and deeply nested properties.
+
+Any properties in known namespaces are supported. 
+Todo: Functions to register namespaces are not provided yet.
 
 Note: Unlike Exif and IPTC tags, XMP properties do not have
 a tag number.
+
+Todo: Conversion between XMP and Exif/IPTC metadata.
 
 XMP toolkit installation
 ========================

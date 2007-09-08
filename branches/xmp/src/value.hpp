@@ -50,6 +50,45 @@ namespace Exiv2 {
 // class definitions
 
     /*!
+      @brief Mixin-class providing functionality required for Exiv2 values
+             used to store XMP property values.
+     */
+    class XmpValueTraits {
+    public:
+        //! XMP array types.
+        enum XmpArrayType { xaNone, xaAlt, xaBag, xaSeq };
+        //! XMP structure indicator.
+        enum XmpStruct { xsNone, xsStruct };
+
+        //! @name Creators
+        //@{
+        XmpValueTraits();
+        //@}
+
+        //! @name Accessors
+        //@{
+        //! Return XMP array type, indicates if an XMP value is an array.
+        XmpArrayType xmpArrayType() const;
+        //! Return XMP struct, indicates if an XMP value is a structure.
+        XmpStruct xmpStruct() const;
+        //@}
+
+        //! @name Manipulators
+        //@{
+        //! Set the XMP array type to indicate that an XMP value is an array.
+        void setXmpArrayType(XmpArrayType xmpArrayType);
+        //! Set the XMP struct type to indicate that an XMP value is a structure.
+        void setXmpStruct(XmpStruct xmpStruct);
+        //@}
+
+    private:
+        // DATA
+        XmpArrayType xmpArrayType_;             //!< Type of XMP array
+        XmpStruct    xmpStruct_;                //!< XMP structure indicator
+
+    }; // class XmpValueTraits
+
+    /*!
       @brief Common interface for all types of values used with metadata.
 
       The interface provides a uniform way to access values independent from
@@ -57,14 +96,15 @@ namespace Exiv2 {
       string or data buffer.  For other tasks, like modifying values you may
       need to downcast it to the actual subclass of %Value so that you can
       access the subclass specific interface.
+
+      Class Value derives from XmpValueTraits, a mixin-class providing
+      functionality only required for values which are used to store XMP 
+      property values.
      */
-    class Value {
+    class Value : public XmpValueTraits {
     public:
         //! Shortcut for a %Value auto pointer.
         typedef std::auto_ptr<Value> AutoPtr;
-
-        //! Types of array for values used to for XMP arrays.
-        enum XmpArrayType { xaNone, xaAlt, xaBag, xaSeq };
 
         //! @name Creators
         //@{
@@ -112,8 +152,6 @@ namespace Exiv2 {
           @return Return -1 if the value has no data area, else 0.
          */
         virtual int setDataArea(const byte* buf, long len);
-        //! Set the XMP array type to indicate that an XMP value is an array.
-        void setXmpArrayType(XmpArrayType xmpArrayType);
         //@}
 
         //! @name Accessors
@@ -199,8 +237,6 @@ namespace Exiv2 {
                   DataBuf if the value does not have a data area assigned.
          */
         virtual DataBuf dataArea() const { return DataBuf(0, 0); };
-        //! Return XMP array type, indicates if an XMP value is and array.
-        XmpArrayType xmpArrayType() const;
         //@}
 
         /*!
@@ -246,7 +282,6 @@ namespace Exiv2 {
         virtual Value* clone_() const =0;
         // DATA
         TypeId type_;                           //!< Type of the data
-        XmpArrayType xmpArrayType_;             //!< Type of XMP array
 
     }; // class Value
 

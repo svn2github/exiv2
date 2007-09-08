@@ -50,34 +50,51 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
+    XmpValueTraits::XmpValueTraits()
+        : xmpArrayType_(xaNone),
+          xmpStruct_(xsNone)
+    {
+    }
+
+    void XmpValueTraits::setXmpArrayType(XmpArrayType xmpArrayType)
+    {
+        xmpArrayType_ = xmpArrayType;
+    }
+
+    void XmpValueTraits::setXmpStruct(XmpStruct xmpStruct)
+    {
+        xmpStruct_ = xmpStruct;
+    }
+
+    XmpValueTraits::XmpArrayType XmpValueTraits::xmpArrayType() const
+    {
+        return xmpArrayType_;
+    }
+
+    XmpValueTraits::XmpStruct XmpValueTraits::xmpStruct() const
+    {
+        return xmpStruct_;
+    }
+
     Value::Value(TypeId typeId)
-        : type_(typeId),
-          xmpArrayType_(xaNone) 
+        : XmpValueTraits(), type_(typeId)
     {
     }
 
     Value::Value(const Value& rhs)
-        : type_(rhs.type_),
-          xmpArrayType_(rhs.xmpArrayType_)
+        : XmpValueTraits(), type_(rhs.type_)
     {
+        setXmpArrayType(rhs.xmpArrayType());
+        setXmpStruct(rhs.xmpStruct());
     }
 
     Value& Value::operator=(const Value& rhs)
     {
         if (this == &rhs) return *this;
         type_ = rhs.type_;
-        xmpArrayType_ = rhs.xmpArrayType_;
+        setXmpArrayType(rhs.xmpArrayType());
+        setXmpStruct(rhs.xmpStruct());
         return *this;
-    }
-
-    void Value::setXmpArrayType(XmpArrayType xmpArrayType)
-    {
-        xmpArrayType_ = xmpArrayType;
-    }
-
-    Value::XmpArrayType Value::xmpArrayType() const
-    {
-        return xmpArrayType_;
     }
 
     Value::AutoPtr Value::create(TypeId typeId)
