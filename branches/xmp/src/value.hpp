@@ -38,6 +38,7 @@
 // + standard includes
 #include <string>
 #include <vector>
+#include <map>
 #include <iostream>
 #include <sstream>
 #include <memory>
@@ -50,58 +51,14 @@ namespace Exiv2 {
 // class definitions
 
     /*!
-      @brief Mixin-class providing functionality required for Exiv2 values
-             used to store XMP property values.
-     */
-    class XmpValueTraits {
-    public:
-        //! XMP array types.
-        enum XmpArrayType { xaNone, xaAlt, xaBag, xaSeq };
-        //! XMP structure indicator.
-        enum XmpStruct { xsNone, xsStruct };
-
-        //! @name Creators
-        //@{
-        XmpValueTraits();
-        //@}
-
-        //! @name Accessors
-        //@{
-        //! Return XMP array type, indicates if an XMP value is an array.
-        XmpArrayType xmpArrayType() const;
-        //! Return XMP struct, indicates if an XMP value is a structure.
-        XmpStruct xmpStruct() const;
-        //@}
-
-        //! @name Manipulators
-        //@{
-        //! Set the XMP array type to indicate that an XMP value is an array.
-        void setXmpArrayType(XmpArrayType xmpArrayType);
-        //! Set the XMP struct type to indicate that an XMP value is a structure.
-        void setXmpStruct(XmpStruct xmpStruct);
-        //@}
-
-    private:
-        // DATA
-        XmpArrayType xmpArrayType_;             //!< Type of XMP array
-        XmpStruct    xmpStruct_;                //!< XMP structure indicator
-
-    }; // class XmpValueTraits
-
-    /*!
       @brief Common interface for all types of values used with metadata.
 
-      The interface provides a uniform way to access values independent from
+      The interface provides a uniform way to access values independent of
       their actual C++ type for simple tasks like reading the values from a
       string or data buffer.  For other tasks, like modifying values you may
-      need to downcast it to the actual subclass of %Value so that you can
-      access the subclass specific interface.
-
-      Class Value derives from XmpValueTraits, a mixin-class providing
-      functionality only required for values which are used to store XMP 
-      property values.
+      need to downcast it to a specific subclass to access its interface.
      */
-    class Value : public XmpValueTraits {
+    class Value {
     public:
         //! Shortcut for a %Value auto pointer.
         typedef std::auto_ptr<Value> AutoPtr;
@@ -658,44 +615,52 @@ namespace Exiv2 {
     }; // class CommentValue
 
     /*!
-      @brief %Value type suitable for XMP Text properties and arrays thereof.
-
-      Uses a vector of std::string to store the text(s).
+      @brief Base class for all Exiv2 values used to store XMP property values.
      */
-    class XmpTextValue : public Value {
+    class XmpValue : public Value {
     public:
-        //! Shortcut for a %XmpTextValue auto pointer.
-        typedef std::auto_ptr<XmpTextValue> AutoPtr;
+        //! Shortcut for a %XmpValue auto pointer.
+        typedef std::auto_ptr<XmpValue> AutoPtr;
+
+        //! XMP array types.
+        enum XmpArrayType { xaNone, xaAlt, xaBag, xaSeq };
+        //! XMP structure indicator.
+        enum XmpStruct { xsNone, xsStruct };
 
         //! @name Creators
         //@{
-        //! Constructor for subclasses
-        XmpTextValue()
-            : Value(xmpText) {}
-        //! Constructor for subclasses
-        XmpTextValue(const std::string& buf)
-            : Value(xmpText) { read(buf); }
-        //! Copy constructor
-        XmpTextValue(const XmpTextValue& rhs)
-            : Value(rhs), value_(rhs.value_) {}
+        XmpValue(TypeId typeId);
+        //@}
 
-        //! Virtual destructor.
-        virtual ~XmpTextValue() {}
+        //! @name Accessors
+        //@{
+        //! Return XMP array type, indicates if an XMP value is an array.
+        XmpArrayType xmpArrayType() const;
+        //! Return XMP struct, indicates if an XMP value is a structure.
+        XmpStruct xmpStruct() const;
+        virtual long size() const;
+        /*!
+          @brief Write value to a character data buffer.
+
+          The user must ensure that the buffer has enough memory. Otherwise
+          the call results in undefined behaviour.
+
+          @note The byte order is required by the interface but not used by this
+                method, so just use the default.
+
+          @param buf Data buffer to write to.
+          @param byteOrder Byte order. Not used.
+          @return Number of characters written.
+        */
+        virtual long copy(byte* buf, ByteOrder byteOrder =invalidByteOrder) const;
         //@}
 
         //! @name Manipulators
         //@{
-        //! Assignment operator.
-        XmpTextValue& operator=(const XmpTextValue& rhs);
-        /*!
-          @brief Read a text property value or array items from \em buf.
-
-          Expects a list of quoted strings, one for each array item. The 
-          quoted strings may be separated by whitespace. Double quotes in 
-          the strings must be escaped with a backslash character: \\".
-          Examples: ""\\"foo\\", he said"" or ""foo" "bar"".
-         */
-        virtual int read(const std::string& buf);
+        //! Set the XMP array type to indicate that an XMP value is an array.
+        void setXmpArrayType(XmpArrayType xmpArrayType);
+        //! Set the XMP struct type to indicate that an XMP value is a structure.
+        void setXmpStruct(XmpStruct xmpStruct);
         /*!
           @brief Read the value from a character buffer.
 
@@ -713,27 +678,58 @@ namespace Exiv2 {
         virtual int read(const byte* buf,
                          long len,
                          ByteOrder byteOrder =invalidByteOrder);
+        virtual int read(const std::string& buf) =0;
+        //@}
+
+    protected:
+        /*!
+          @brief Assignment operator. Protected so that it can only be used
+                 by subclasses but not directly.
+         */
+        XmpValue& operator=(const XmpValue& rhs);
+
+    private:
+        // DATA
+        XmpArrayType xmpArrayType_;             //!< Type of XMP array
+        XmpStruct    xmpStruct_;                //!< XMP structure indicator
+
+    }; // class XmpValue
+
+    /*!
+      @brief %Value type suitable for simple XMP properties and arrays of
+             simple values.
+
+      Uses a vector of std::string to store the value(s).
+     */
+    class XmpTextValue : public XmpValue {
+    public:
+        //! Shortcut for a %XmpTextValue auto pointer.
+        typedef std::auto_ptr<XmpTextValue> AutoPtr;
+
+        //! @name Creators
+        //@{
+        //! Constructor.
+        XmpTextValue();
+        //! Constructor, reads the value from a string.
+        XmpTextValue(const std::string& buf);
+        //@}
+
+        //! @name Manipulators
+        //@{
+        /*!
+          @brief Read a text property value from \em buf.
+
+          Clears the value and copies \em buf into the first element.
+          There is no way to populate subsequent array elements with this 
+          method.
+         */
+        virtual int read(const std::string& buf);
         //@}
 
         //! @name Accessors
         //@{
-        AutoPtr clone() const { return AutoPtr(clone_()); }
-        /*!
-          @brief Write value to a character data buffer.
-
-          The user must ensure that the buffer has enough memory. Otherwise
-          the call results in undefined behaviour.
-
-          @note The byte order is required by the interface but not used by this
-                method, so just use the default.
-
-          @param buf Data buffer to write to.
-          @param byteOrder Byte order. Not used.
-          @return Number of characters written.
-        */
-        virtual long copy(byte* buf, ByteOrder byteOrder =invalidByteOrder) const;
-        virtual long count() const { return static_cast<long>(value_.size()); }
-        virtual long size() const;
+        AutoPtr clone() const;
+        virtual long count() const;
         /*!
           @brief Return the <EM>n</EM>-th component of the value as a string.
                  The behaviour of this method may be undefined if there is no
@@ -743,16 +739,87 @@ namespace Exiv2 {
         virtual long toLong(long n =0) const;
         virtual float toFloat(long n =0) const;
         virtual Rational toRational(long n =0) const;
+        /*!
+          @brief Write all elements of the value to \em os, separated by commas.
+
+          @note Unlike everywhere else, this is not symmetric to the read() method.
+         */
         virtual std::ostream& write(std::ostream& os) const;
         //@}
 
-    protected:
+    private:
         //! Internal virtual copy constructor.
         virtual XmpTextValue* clone_() const;
+
+    public:
         // DATA
         std::vector<std::string> value_;        //!< Stores the string values.
 
     }; // class XmpTextValue
+
+    /*!
+      @brief %Value type for XMP language alternative properties. 
+
+      A language alternative is an array consisting of simple text values,
+      each of which has a language qualifier.
+     */
+    class LangAltValue : public XmpValue {
+    public:
+        //! Shortcut for a %LangAltValue auto pointer.
+        typedef std::auto_ptr<LangAltValue> AutoPtr;
+
+        //! @name Creators
+        //@{
+        //! Constructor.
+        LangAltValue();
+        //! Constructor, reads the value from a string.
+        LangAltValue(const std::string& buf);
+        //@}
+
+        //! @name Manipulators
+        //@{
+        /*!
+          @brief Todo
+         */
+        virtual int read(const std::string& buf);
+        //@}
+
+        //! @name Accessors
+        //@{
+        AutoPtr clone() const;
+        virtual long count() const;
+        /*!
+          @brief Return the <EM>n</EM>-th component of the value as a string.
+                 The behaviour of this method may be undefined if there is no
+                 <EM>n</EM>-th component.
+         */
+        virtual std::string toString(long n) const;
+        virtual long toLong(long n =0) const;
+        virtual float toFloat(long n =0) const;
+        virtual Rational toRational(long n =0) const;
+        /*!
+          @brief Write all elements of the value to \em os, separated by commas.
+
+          @note Unlike everywhere else, this is not symmetric to the read() method.
+         */
+        virtual std::ostream& write(std::ostream& os) const;
+        //@}
+
+    private:
+        //! Internal virtual copy constructor.
+        virtual LangAltValue* clone_() const;
+
+    public:
+        //! Type used to store language alternative arrays.
+        typedef std::map<std::string, std::string> LangAltArray;
+        // DATA
+        /*!
+          @brief Map to store the language alternative values. The language
+                 qualifier is used as the key for the map entries.
+         */
+        LangAltArray value_; 
+
+    }; // class LangAltValue
 
     /*!
       @brief %Value for simple ISO 8601 dates

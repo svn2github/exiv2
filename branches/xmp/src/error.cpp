@@ -83,6 +83,9 @@ namespace Exiv2 {
         ErrMsg( 38, N_("Unknown XMP property `%1:%2'")), // %1=prefix, %2=property name
         ErrMsg( 39, N_("Unhandled XMP node %1 with opt=%2")), // %1=key, %2=XMP Toolkit option flags
         ErrMsg( 40, N_("XMP Toolkit error %1: %2")), // %1=XMP_Error::GetID(), %2=XMP_Error::GetErrMsg()
+        ErrMsg( 41, N_("Failed to decode Lang Alt property %1 with opt=%2")), // %1=property path, %3=XMP Toolkit option flags
+        ErrMsg( 42, N_("Failed to decode Lang Alt qualifier %1 with opt=%2")), // %1=qualifier path, %3=XMP Toolkit option flags
+        ErrMsg( 43, N_("Failed to encode Lang Alt property %1")), // %1=key
         // Last error message (message is not used)
         ErrMsg( -2, N_("(Unknown Error)"))
     };

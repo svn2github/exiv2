@@ -50,50 +50,20 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
-    XmpValueTraits::XmpValueTraits()
-        : xmpArrayType_(xaNone),
-          xmpStruct_(xsNone)
-    {
-    }
-
-    void XmpValueTraits::setXmpArrayType(XmpArrayType xmpArrayType)
-    {
-        xmpArrayType_ = xmpArrayType;
-    }
-
-    void XmpValueTraits::setXmpStruct(XmpStruct xmpStruct)
-    {
-        xmpStruct_ = xmpStruct;
-    }
-
-    XmpValueTraits::XmpArrayType XmpValueTraits::xmpArrayType() const
-    {
-        return xmpArrayType_;
-    }
-
-    XmpValueTraits::XmpStruct XmpValueTraits::xmpStruct() const
-    {
-        return xmpStruct_;
-    }
-
     Value::Value(TypeId typeId)
-        : XmpValueTraits(), type_(typeId)
+        : type_(typeId)
     {
     }
 
     Value::Value(const Value& rhs)
-        : XmpValueTraits(), type_(rhs.type_)
+        : type_(rhs.type_)
     {
-        setXmpArrayType(rhs.xmpArrayType());
-        setXmpStruct(rhs.xmpStruct());
     }
 
     Value& Value::operator=(const Value& rhs)
     {
         if (this == &rhs) return *this;
         type_ = rhs.type_;
-        setXmpArrayType(rhs.xmpArrayType());
-        setXmpStruct(rhs.xmpStruct());
         return *this;
     }
 
@@ -148,6 +118,9 @@ namespace Exiv2 {
             break;
         case xmpText:
             value = AutoPtr(new XmpTextValue);
+            break;
+        case langAlt:
+            value = AutoPtr(new LangAltValue);
             break;
         default:
             value = AutoPtr(new DataValue(typeId));
@@ -427,60 +400,43 @@ namespace Exiv2 {
         return new CommentValue(*this);
     }
 
-    XmpTextValue& XmpTextValue::operator=(const XmpTextValue& rhs)
+    XmpValue::XmpValue(TypeId typeId)
+        : Value(typeId),
+          xmpArrayType_(xaNone),
+          xmpStruct_(xsNone)
+    {
+    }
+
+    XmpValue& XmpValue::operator=(const XmpValue& rhs)
     {
         if (this == &rhs) return *this;
-        Value::operator=(rhs);
-        value_ = rhs.value_;
+        xmpArrayType_ = rhs.xmpArrayType_;
+        xmpStruct_ = rhs.xmpStruct_;
         return *this;
     }
 
-    int XmpTextValue::read(const std::string& buf)
+    void XmpValue::setXmpArrayType(XmpArrayType xmpArrayType)
     {
-        std::string::size_type start = 0;
-        bool escaped = false;
-
-        for (std::string::size_type i = 0; i < buf.size(); ++i) {
-            if (start == 0) {
-                // skip whitespace leading to the quote
-                if (isspace(buf[i])) continue;
-                // first character after that must be a quote
-                if (buf[i] == quoteChar[0]) {
-                    start = i + 1;
-                    continue;
-                }
-                return 1;
-            }
-            // look for the first unescaped quote
-            if (buf[i] == escapeChar[0] && !escaped) {
-                escaped = true;
-                continue;
-            }
-            if (buf[i] == quoteChar[0] && !escaped) {
-                value_.push_back(buf.substr(start, i - start));
-                // remove escape characters
-                unescapeText(value_.back());
-                start = 0;
-                continue;
-            }
-            escaped = false;
-        }
-        // check for premature end of string
-        if (escaped || start != 0) return 2;
-
-        return 0;
+        xmpArrayType_ = xmpArrayType;
     }
 
-    int XmpTextValue::read(const byte* buf,
-                           long len,
-                           ByteOrder /*byteOrder*/)
+    void XmpValue::setXmpStruct(XmpStruct xmpStruct)
     {
-        std::string s(reinterpret_cast<const char*>(buf), len);
-        return read(s);
+        xmpStruct_ = xmpStruct;
     }
 
-    long XmpTextValue::copy(byte* buf,
-                            ByteOrder /*byteOrder*/) const
+    XmpValue::XmpArrayType XmpValue::xmpArrayType() const
+    {
+        return xmpArrayType_;
+    }
+
+    XmpValue::XmpStruct XmpValue::xmpStruct() const
+    {
+        return xmpStruct_;
+    }
+
+    long XmpValue::copy(byte* buf,
+                        ByteOrder /*byteOrder*/) const
     {
         std::ostringstream os;
         write(os);
@@ -489,21 +445,54 @@ namespace Exiv2 {
         return s.size();
     }
 
-    long XmpTextValue::size() const
+    int XmpValue::read(const byte* buf,
+                       long len,
+                       ByteOrder /*byteOrder*/)
+    {
+        std::string s(reinterpret_cast<const char*>(buf), len);
+        return read(s);
+    }
+
+    long XmpValue::size() const
     {
         std::ostringstream os;
         write(os);
         return os.str().size();
     }
 
+    XmpTextValue::XmpTextValue()
+        : XmpValue(xmpText)
+    {
+    }
+
+    XmpTextValue::XmpTextValue(const std::string& buf)
+        : XmpValue(xmpText)
+    {
+        read(buf);
+    }
+
+    int XmpTextValue::read(const std::string& buf)
+    {
+        value_.push_back(buf);
+        return 0;
+    }
+
+    XmpTextValue::AutoPtr XmpTextValue::clone() const
+    {
+        return AutoPtr(clone_());
+    }
+
+    long XmpTextValue::count() const
+    {
+        return static_cast<long>(value_.size());
+    }
+
     std::ostream& XmpTextValue::write(std::ostream& os) const
     {
         for (std::vector<std::string>::const_iterator i = value_.begin();
              i != value_.end(); ++i) {
-            if (i != value_.begin()) os << " ";
-            std::string s(*i);
-            quoteText(s);
-            os << s;
+            if (i != value_.begin()) os << ", ";
+            os << *i;
         }
         return os;
     }
@@ -534,6 +523,91 @@ namespace Exiv2 {
     XmpTextValue* XmpTextValue::clone_() const
     {
         return new XmpTextValue(*this);
+    }
+
+    LangAltValue::LangAltValue()
+        : XmpValue(langAlt)
+    {
+    }
+
+    LangAltValue::LangAltValue(const std::string& buf)
+        : XmpValue(langAlt)
+    {
+        read(buf);
+    }
+
+    int LangAltValue::read(const std::string& buf)
+    {
+        std::string b = buf;
+        std::string lang = "x-default";
+        if (buf.length() > 5 && buf.substr(0, 5) == "lang=") {
+            std::string::size_type pos = buf.find_first_of(' ');
+            lang = buf.substr(5, pos-5);
+            // Strip quotes (so you can also specify the language without quotes)
+            if (lang[0] == '"') lang = lang.substr(1);
+            if (lang[lang.length()-1] == '"') lang = lang.substr(0, lang.length()-1);
+            b.clear();
+            if (pos != std::string::npos) b = buf.substr(pos+1);
+        }
+        value_[lang] = b;
+        return 0;
+    }
+
+    LangAltValue::AutoPtr LangAltValue::clone() const
+    {
+        return AutoPtr(clone_());
+    }
+
+    long LangAltValue::count() const
+    {
+        return static_cast<long>(value_.size());
+    }
+
+    std::ostream& LangAltValue::write(std::ostream& os) const
+    {
+        for (LangAltArray::const_iterator i = value_.begin();
+             i != value_.end(); ++i) {
+            if (i != value_.begin()) os << ", ";
+            os << "lang=\"" << i->first << "\" "
+               << i->second;
+        }
+        return os;
+    }
+
+    std::string LangAltValue::toString(long n) const 
+    {
+        // Todo: Implement me!
+        return "dummy";
+        //return value_[n]; 
+    }
+
+    long LangAltValue::toLong(long n) const
+    {
+        bool ok;
+        // Todo: Implement me!
+        return 0;
+        //return stringTo<long>(value_[n], ok);
+    }
+
+    float LangAltValue::toFloat(long n) const
+    {
+        bool ok;
+        // Todo: Implement me!
+        return 0.0;
+        //return stringTo<float>(value_[n], ok);
+    }
+
+    Rational LangAltValue::toRational(long n) const
+    {
+        bool ok;
+        // Todo: Implement me!
+        return Rational(0, 0);
+        //return stringTo<Rational>(value_[n], ok);
+    }
+
+    LangAltValue* LangAltValue::clone_() const
+    {
+        return new LangAltValue(*this);
     }
 
     DateValue::DateValue(int year, int month, int day)
