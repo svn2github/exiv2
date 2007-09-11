@@ -86,6 +86,11 @@ namespace Exiv2 {
         ErrMsg( 41, N_("Failed to decode Lang Alt property %1 with opt=%2")), // %1=property path, %3=XMP Toolkit option flags
         ErrMsg( 42, N_("Failed to decode Lang Alt qualifier %1 with opt=%2")), // %1=qualifier path, %3=XMP Toolkit option flags
         ErrMsg( 43, N_("Failed to encode Lang Alt property %1")), // %1=key
+        ErrMsg( 44, N_("Failed to determine property name from path %1, namespace %2")), // %1=property path, %2=namespace
+
+        // temporary
+        ErrMsg( 55, N_("Unknown schema namespace %2 for property %1")), // %1=key
+
         // Last error message (message is not used)
         ErrMsg( -2, N_("(Unknown Error)"))
     };

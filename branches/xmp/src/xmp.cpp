@@ -682,27 +682,15 @@ namespace {
     {
         std::string property;
         std::string::size_type idx = propPath.find(':');
-        if (idx != std::string::npos) {
-            // Don't worry about out_of_range, XMP parser takes care of this
-            property = propPath.substr(idx + 1);
+        if (idx == std::string::npos) {
+            throw Exiv2::Error(44, propPath, schemaNs);
         }
-        else {
-#ifndef SUPPRESS_WARNINGS
-            std::cerr << "Warning: Failed to determine property name from path "
-                      << propPath << ", namespace " << schemaNs 
-                      << "; skipping property.\n";
-#endif
-            return Exiv2::XmpKey::AutoPtr();
-        }
+        // Don't worry about out_of_range, XMP parser takes care of this
+        property = propPath.substr(idx + 1);
         const char* prefix = Exiv2::XmpProperties::prefix(schemaNs);
         if (prefix == 0) {
-#ifndef SUPPRESS_WARNINGS
-            // Todo: Print warning only for the first property in each ns
-            std::cerr << "Warning: Unknown schema namespace " 
-                      << schemaNs << "; skipping property "
-                      << property << ".\n";
-#endif
-            return Exiv2::XmpKey::AutoPtr();
+            // Todo: register namespace
+            throw Exiv2::Error(55, propPath, schemaNs);
         }
         return Exiv2::XmpKey::AutoPtr(new Exiv2::XmpKey(prefix, property));
     } // makeXmpKey
