@@ -861,7 +861,7 @@ namespace Exiv2 {
 
     //! Internal Pimpl structure with private members and data of class XmpKey.
     struct XmpKey::Impl {
-        Impl();                         //!< Default constructor
+        Impl() {}                       //!< Default constructor
         Impl(const std::string& prefix, const std::string& property); //!< Constructor
 
         /*!
@@ -880,10 +880,6 @@ namespace Exiv2 {
         std::string property_;          //!< Property name
     };
     //! @endcond
-
-    XmpKey::Impl::Impl()
-    {
-    }
 
     XmpKey::Impl::Impl(const std::string& prefix, const std::string& property)
     {
