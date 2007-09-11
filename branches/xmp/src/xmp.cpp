@@ -407,7 +407,15 @@ namespace Exiv2 {
                 continue;
             }
             if (XMP_NodeIsSchema(opt)) {
-                // Todo: Register schema namespace if necessary
+                // Register unknown namespaces with Exiv2 
+                // (Namespaces are automatically registered with the XMP Toolkit)
+                if (XmpProperties::prefix(schemaNs).empty()) {
+                    std::string prefix;
+                    bool ret = meta.GetNamespacePrefix(schemaNs.c_str(), &prefix);
+                    if (!ret) throw Exiv2::Error(45, schemaNs);
+                    prefix = prefix.substr(0, prefix.size() - 1);
+                    XmpProperties::registerNs(schemaNs, prefix);
+                }
                 continue;
             }
             XmpKey::AutoPtr key = makeXmpKey(schemaNs, propPath);
@@ -501,7 +509,7 @@ namespace Exiv2 {
 
         for (XmpData::const_iterator i = xmpData.begin(); i != xmpData.end(); ++i) {
 
-            const char* ns = XmpProperties::ns(i->groupName());
+            std::string ns = XmpProperties::ns(i->groupName());
 
             // Todo: Make sure the namespace is registered with XMP-SDK
 
@@ -523,9 +531,9 @@ namespace Exiv2 {
                 int idx = 1;
                 for (LangAltValue::LangAltArray::const_iterator k = la->value_.begin();
                      k != la->value_.end(); ++k) {
-                    meta.AppendArrayItem(ns, i->tagName().c_str(), kXMP_PropArrayIsAltText, k->second.c_str());
+                    meta.AppendArrayItem(ns.c_str(), i->tagName().c_str(), kXMP_PropArrayIsAltText, k->second.c_str());
                     const std::string item = i->tagName() + "[" + toString(idx++) + "]";
-                    meta.SetQualifier(ns, item.c_str(), kXMP_NS_XML, "lang", k->first.c_str());
+                    meta.SetQualifier(ns.c_str(), item.c_str(), kXMP_NS_XML, "lang", k->first.c_str());
                 }
                 continue;
             }
@@ -542,12 +550,12 @@ namespace Exiv2 {
             if (i->count() > 0) {
                 //-ahu Todo: remove debug output
                 std::cerr << " = " << i->toString(0) << "\n";
-                meta.SetProperty(ns, i->tagName().c_str(), i->toString(0).c_str(), options);
+                meta.SetProperty(ns.c_str(), i->tagName().c_str(), i->toString(0).c_str(), options);
             }
             else {
                 //-ahu Todo: remove debug output
                 std::cerr << " (empty value)\n";
-                meta.SetProperty(ns, i->tagName().c_str(), 0, options);
+                meta.SetProperty(ns.c_str(), i->tagName().c_str(), 0, options);
             }
         }
         meta.SerializeToBuffer(&xmpPacket, kXMP_UseCompactFormat);
@@ -667,7 +675,7 @@ namespace {
 
         std::cout << opts << " ";
         if (opts[sche] == 'X') {
-            std::cout << schemaNs;
+            std::cout << "ns=" << schemaNs;
         }
         else {
             std::cout << propPath << " = " << propValue;
@@ -687,10 +695,9 @@ namespace {
         }
         // Don't worry about out_of_range, XMP parser takes care of this
         property = propPath.substr(idx + 1);
-        const char* prefix = Exiv2::XmpProperties::prefix(schemaNs);
-        if (prefix == 0) {
-            // Todo: register namespace
-            throw Exiv2::Error(55, propPath, schemaNs);
+        std::string prefix = Exiv2::XmpProperties::prefix(schemaNs);
+        if (prefix.empty()) {
+            throw Exiv2::Error(47, propPath, schemaNs);
         }
         return Exiv2::XmpKey::AutoPtr(new Exiv2::XmpKey(prefix, property));
     } // makeXmpKey

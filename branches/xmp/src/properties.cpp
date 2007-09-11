@@ -787,6 +787,44 @@ namespace Exiv2 {
         return n == name;
     }
 
+    XmpProperties::NsRegistry XmpProperties::nsRegistry_;
+
+    void XmpProperties::registerNs(const std::string& ns,
+                                   const std::string& prefix)
+    {
+        std::string ns2 = ns;
+        if (ns2.substr(ns2.size() - 1, 1) != "/") ns2 += "/";
+        nsRegistry_[ns2] = prefix;
+    }
+
+    std::string XmpProperties::prefix(const std::string& ns)
+    {
+        std::string ns2 = ns;
+        if (ns2.substr(ns2.size() - 1, 1) != "/") ns2 += "/";
+        NsRegistry::const_iterator i = nsRegistry_.find(ns2);
+        std::string p;
+        if (i != nsRegistry_.end()) {
+            p = i->second;
+        }
+        else {
+            const XmpNsInfo* xn = find(xmpNsInfo, XmpNsInfo::Ns(ns2));
+            if (xn) p = std::string(xn->prefix_);
+        }
+        return p;
+    }
+
+    std::string XmpProperties::ns(const std::string& prefix)
+    {
+        std::string n;
+        for (NsRegistry::const_iterator i = nsRegistry_.begin();
+             i != nsRegistry_.end(); ++i) {
+            if (i->second == prefix) {
+                return i->first;
+            }
+        }
+        return nsInfo(prefix)->ns_;
+    }
+
     const char* XmpProperties::propertyTitle(const XmpKey& key)
     {
         return propertyInfo(key)->title_;
@@ -817,11 +855,6 @@ namespace Exiv2 {
         return pi;
     }
 
-    const char* XmpProperties::ns(const std::string& prefix)
-    {
-        return nsInfo(prefix)->ns_;
-    }
-
     const char* XmpProperties::nsDesc(const std::string& prefix)
     {
         return nsInfo(prefix)->desc_;
@@ -837,12 +870,6 @@ namespace Exiv2 {
         const XmpNsInfo* xn = find(xmpNsInfo, XmpNsInfo::Prefix(prefix));
         if (!xn) throw Error(35, prefix);
         return xn;
-    }
-
-    const char* XmpProperties::prefix(const std::string& ns)
-    {
-        const XmpNsInfo* xn = find(xmpNsInfo, XmpNsInfo::Ns(ns));
-        return xn ? xn->prefix_ : 0;
     }
 
     void XmpProperties::printProperties(std::ostream& os, const std::string& prefix)
@@ -883,8 +910,8 @@ namespace Exiv2 {
 
     XmpKey::Impl::Impl(const std::string& prefix, const std::string& property)
     {
-        // Validate prefix, throws
-        XmpProperties::nsInfo(prefix);
+        // Validate prefix
+        if (XmpProperties::ns(prefix).empty()) throw Error(46, prefix);
 
         property_ = property;
         prefix_ = prefix;
@@ -955,7 +982,7 @@ namespace Exiv2 {
         return XmpProperties::propertyTitle(*this);
     }
 
-    const char* XmpKey::ns() const
+    std::string XmpKey::ns() const
     {
         return XmpProperties::ns(p_->prefix_);
     }
@@ -978,7 +1005,7 @@ namespace Exiv2 {
         if (property == "") throw Error(6, key);
 
         // Validate prefix
-        XmpProperties::nsInfo(prefix);
+        if (XmpProperties::ns(prefix).empty()) throw Error(46, prefix);
 
         property_ = property;
         prefix_ = prefix;
