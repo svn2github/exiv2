@@ -365,20 +365,33 @@ namespace Exiv2 {
 
     bool XmpParser::initialized_ = false;
 
+    bool XmpParser::initialize()
+    {
+        if (!initialized_) {
+            initialized_ = SXMPMeta::Initialize();
+        }
+        return initialized_;
+    }
+
+    void XmpParser::terminate()
+    {
+        if (initialized_) {
+            SXMPMeta::Terminate();
+            initialized_ = false;
+        }
+    }
+
 #ifdef EXV_HAVE_XMP_TOOLKIT
     int XmpParser::decode(      XmpData&     xmpData,
                           const std::string& xmpPacket)
     { try {
         xmpData.clear();
 
-        if (!initialized_) {
-            initialized_ = true;
-            if (!SXMPMeta::Initialize()) {
+        if (!initialize()) {
 #ifndef SUPPRESS_WARNINGS
-                std::cerr << "XMP Toolkit initialization failed.\n";
+            std::cerr << "XMP Toolkit initialization failed.\n";
 #endif
-                return 2;
-            }
+            return 2;
         }
 
         SXMPMeta meta(xmpPacket.data(), xmpPacket.size());
@@ -477,14 +490,11 @@ namespace Exiv2 {
     { try {
         xmpPacket.clear();
 
-        if (!initialized_) {
-            initialized_ = true;
-            if (!SXMPMeta::Initialize()) {
+        if (!initialize()) {
 #ifndef SUPPRESS_WARNINGS
-                std::cerr << "XMP Toolkit initialization failed.\n";
+            std::cerr << "XMP Toolkit initialization failed.\n";
 #endif
-                return 2;
-            }
+            return 2;
         }
 
         SXMPMeta meta;
