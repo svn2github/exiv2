@@ -55,15 +55,11 @@ namespace Exiv2 {
     {
     }
 
-    Value::Value(const Value& rhs)
-        : ok_(true), type_(rhs.type_)
-    {
-    }
-
     Value& Value::operator=(const Value& rhs)
     {
         if (this == &rhs) return *this;
         type_ = rhs.type_;
+        ok_ = rhs.ok_;
         return *this;
     }
 
@@ -145,14 +141,6 @@ namespace Exiv2 {
     std::string Value::toString(long /*n*/) const
     {
         return toString();
-    }
-
-    DataValue& DataValue::operator=(const DataValue& rhs)
-    {
-        if (this == &rhs) return *this;
-        Value::operator=(rhs);
-        value_ = rhs.value_;
-        return *this;
     }
 
     int DataValue::read(const byte* buf, long len, ByteOrder /*byteOrder*/)
@@ -286,23 +274,9 @@ namespace Exiv2 {
         return Rational(value_[n], 1);
     }
 
-    StringValue& StringValue::operator=(const StringValue& rhs)
-    {
-        if (this == &rhs) return *this;
-        StringValueBase::operator=(rhs);
-        return *this;
-    }
-
     StringValue* StringValue::clone_() const
     {
         return new StringValue(*this);
-    }
-
-    AsciiValue& AsciiValue::operator=(const AsciiValue& rhs)
-    {
-        if (this == &rhs) return *this;
-        StringValueBase::operator=(rhs);
-        return *this;
     }
 
     int AsciiValue::read(const std::string& buf)
@@ -375,13 +349,6 @@ namespace Exiv2 {
         : StringValueBase(Exiv2::undefined)
     {
         read(comment);
-    }
-
-    CommentValue& CommentValue::operator=(const CommentValue& rhs)
-    {
-        if (this == &rhs) return *this;
-        StringValueBase::operator=(rhs);
-        return *this;
     }
 
     int CommentValue::read(const std::string& comment)
@@ -698,16 +665,6 @@ namespace Exiv2 {
         date_.day = day;
     }
 
-    DateValue& DateValue::operator=(const DateValue& rhs)
-    {
-        if (this == &rhs) return *this;
-        Value::operator=(rhs);
-        date_.year = rhs.date_.year;
-        date_.month = rhs.date_.month;
-        date_.day = rhs.date_.day;
-        return *this;
-    }
-
     int DateValue::read(const byte* buf, long len, ByteOrder /*byteOrder*/)
     {
         // Hard coded to read Iptc style dates
@@ -806,19 +763,11 @@ namespace Exiv2 {
                          int tzMinute)
         : Value(date)
     {
-        time_.hour=hour;
-        time_.minute=minute;
-        time_.second=second;
-        time_.tzHour=tzHour;
-        time_.tzMinute=tzMinute;
-    }
-
-    TimeValue& TimeValue::operator=(const TimeValue& rhs)
-    {
-        if (this == &rhs) return *this;
-        Value::operator=(rhs);
-        memcpy(&time_, &rhs.time_, sizeof(time_));
-        return *this;
+        time_.hour = hour;
+        time_.minute = minute;
+        time_.second = second;
+        time_.tzHour = tzHour;
+        time_.tzMinute = tzMinute;
     }
 
     int TimeValue::read(const byte* buf, long len, ByteOrder /*byteOrder*/)
@@ -959,32 +908,5 @@ namespace Exiv2 {
         ok_ = true;
         return result;
     }
-
-// *****************************************************************************
-// free functions
-
-    const char quoteChar[] = "\"";
-    const char escapeChar[] = "\\";
-    
-    void quoteText(std::string& text)
-    {
-        for (std::string::iterator i = text.begin(); i != text.end(); ++i) {
-            if (*i == escapeChar[0] || *i == quoteChar[0]) {
-                i = text.insert(i, escapeChar[0]);
-                if (++i == text.end()) break;
-            }
-        }
-        text = quoteChar + text + quoteChar;
-    } // quoteText
-
-    void unescapeText(std::string& text)
-    {
-        for (std::string::iterator i = text.begin(); i != text.end(); ++i) {
-            if (*i == escapeChar[0]) {
-                i = text.erase(i); // returns next pos, i.e., skips the escaped char
-                if (i == text.end()) break;
-            }
-        }
-    } // unescapeText
 
 }                                       // namespace Exiv2

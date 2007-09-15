@@ -67,12 +67,9 @@ namespace Exiv2 {
         //@{
         //! Constructor, taking a type id to initialize the base class with
         explicit Value(TypeId typeId);
-        //! Copy constructor
-        Value(const Value& rhs);
         //! Virtual destructor.
         virtual ~Value() {}
         //@}
-
         //! @name Manipulators
         //@{
         /*!
@@ -266,7 +263,7 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Default constructor.
-        DataValue(TypeId typeId =undefined) : Value(typeId) {}
+        explicit DataValue(TypeId typeId =undefined) : Value(typeId) {}
         //! Constructor
         DataValue(const byte* buf,
                   long len, ByteOrder byteOrder =invalidByteOrder,
@@ -278,8 +275,6 @@ namespace Exiv2 {
 
         //! @name Manipulators
         //@{
-        //! Assignment operator.
-        DataValue& operator=(const DataValue& rhs);
         /*!
           @brief Read the value from a character buffer.
 
@@ -356,7 +351,7 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Constructor for subclasses
-        StringValueBase(TypeId typeId)
+        explicit StringValueBase(TypeId typeId)
             : Value(typeId) {}
         //! Constructor for subclasses
         StringValueBase(TypeId typeId, const std::string& buf)
@@ -371,8 +366,6 @@ namespace Exiv2 {
 
         //! @name Manipulators
         //@{
-        //! Assignment operator.
-        StringValueBase& operator=(const StringValueBase& rhs);
         //! Read the value from buf. This default implementation uses buf as it is.
         virtual int read(const std::string& buf);
         /*!
@@ -388,8 +381,8 @@ namespace Exiv2 {
           @return 0 if successful.
          */
         virtual int read(const byte* buf,
-                          long len,
-                          ByteOrder byteOrder =invalidByteOrder);
+                         long len,
+                         ByteOrder byteOrder =invalidByteOrder);
         //@}
 
         //! @name Accessors
@@ -418,6 +411,8 @@ namespace Exiv2 {
         //@}
 
     protected:
+        //! Assignment operator.
+        StringValueBase& operator=(const StringValueBase& rhs);
         //! Internal virtual copy constructor.
         virtual StringValueBase* clone_() const =0;
 
@@ -445,18 +440,10 @@ namespace Exiv2 {
         StringValue()
             : StringValueBase(string) {}
         //! Constructor
-        StringValue(const std::string& buf)
+        explicit StringValue(const std::string& buf)
             : StringValueBase(string, buf) {}
-        //! Copy constructor
-        StringValue(const StringValue& rhs)
-            : StringValueBase(rhs) {}
         //! Virtual destructor.
         virtual ~StringValue() {}
-        //@}
-
-        //! @name Manipulators
-        //@{
-        StringValue& operator=(const StringValue& rhs);
         //@}
 
         //! @name Accessors
@@ -487,19 +474,14 @@ namespace Exiv2 {
         AsciiValue()
             : StringValueBase(asciiString) {}
         //! Constructor
-        AsciiValue(const std::string &buf)
+        explicit AsciiValue(const std::string& buf)
             : StringValueBase(asciiString, buf) {}
-        //! Copy constructor
-        AsciiValue(const AsciiValue& rhs)
-            : StringValueBase(rhs) {}
         //! Virtual destructor.
         virtual ~AsciiValue() {}
         //@}
 
         //! @name Manipulators
         //@{
-        //! Assignment operator
-        AsciiValue& operator=(const AsciiValue& rhs);
         /*!
           @brief Set the value to that of the string buf. Overrides base class
                  to append a terminating '\\0' character if buf doesn't end
@@ -580,18 +562,13 @@ namespace Exiv2 {
         CommentValue()
             : StringValueBase(Exiv2::undefined) {}
         //! Constructor, uses read(const std::string& comment)
-        CommentValue(const std::string& comment);
-        //! Copy constructor
-        CommentValue(const CommentValue& rhs)
-            : StringValueBase(rhs) {}
+        explicit CommentValue(const std::string& comment);
         //! Virtual destructor.
         virtual ~CommentValue() {}
         //@}
 
         //! @name Manipulators
         //@{
-        //! Assignment operator.
-        CommentValue& operator=(const CommentValue& rhs);
         /*!
           @brief Read the value from a comment
 
@@ -642,7 +619,7 @@ namespace Exiv2 {
 
         //! @name Creators
         //@{
-        XmpValue(TypeId typeId);
+        explicit XmpValue(TypeId typeId);
         //@}
 
         //! @name Accessors
@@ -725,7 +702,7 @@ namespace Exiv2 {
         //! Constructor.
         XmpTextValue();
         //! Constructor, reads the value from a string.
-        XmpTextValue(const std::string& buf);
+        explicit XmpTextValue(const std::string& buf);
         //@}
 
         //! @name Manipulators
@@ -857,7 +834,7 @@ namespace Exiv2 {
         //! Constructor.
         LangAltValue();
         //! Constructor, reads the value from a string.
-        LangAltValue(const std::string& buf);
+        explicit LangAltValue(const std::string& buf);
         //@}
 
         //! @name Manipulators
@@ -951,8 +928,6 @@ namespace Exiv2 {
 
         //! @name Manipulators
         //@{
-        //! Assignment operator.
-        DateValue& operator=(const DateValue& rhs);
         /*!
           @brief Read the value from a character buffer.
 
@@ -1062,8 +1037,6 @@ namespace Exiv2 {
 
         //! @name Manipulators
         //@{
-        //! Assignment operator.
-        TimeValue& operator=(const TimeValue& rhs);
         /*!
           @brief Read the value from a character buffer.
 
@@ -1199,7 +1172,7 @@ namespace Exiv2 {
         //! Constructor
         ValueType(const byte* buf, long len, ByteOrder byteOrder);
         //! Constructor
-        ValueType(const T& val, ByteOrder byteOrder =littleEndian);
+        explicit ValueType(const T& val, ByteOrder byteOrder =littleEndian);
         //! Copy constructor
         ValueType(const ValueType<T>& rhs);
         //! Virtual destructor.
@@ -1294,19 +1267,6 @@ namespace Exiv2 {
 // *****************************************************************************
 // free functions, template and inline definitions
 
-    //! Double-quote character
-    extern const char quoteChar[];
-    //! Escape character
-    extern const char escapeChar[];
-    /*!
-      @brief Quote a string with double-quotes, escape quotes and escape 
-             characters in the string.
-     */
-    void quoteText(std::string& text);
-    /*!
-      @brief Remove escape characters from an unquoted string.
-     */
-    void unescapeText(std::string& text);
     /*!
       @brief Read a value of type T from the data buffer.
 
