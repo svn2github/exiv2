@@ -194,6 +194,11 @@ namespace Exiv2 {
                   DataBuf if the value does not have a data area assigned.
          */
         virtual DataBuf dataArea() const { return DataBuf(0, 0); };
+        /*!
+          @brief Check the \em ok status indicator. After a to<Type> conversion,
+                 this indicator shows whether the conversion was successful.
+         */
+        bool ok() const { return ok_; }
         //@}
 
         /*!
@@ -235,12 +240,14 @@ namespace Exiv2 {
                  by subclasses but not directly.
          */
         Value& operator=(const Value& rhs);
+        // DATA
+        mutable bool ok_;                //!< Indicates the status of the previous to<Type> conversion
 
     private:
         //! Internal virtual copy constructor.
         virtual Value* clone_() const =0;
         // DATA
-        TypeId type_;                           //!< Type of the data
+        TypeId type_;                    //!< Type of the data
 
     }; // class Value
 
@@ -318,17 +325,20 @@ namespace Exiv2 {
                  <EM>n</EM>-th component.
          */
         virtual std::string toString(long n) const;
-        virtual long toLong(long n =0) const { return value_[n]; }
-        virtual float toFloat(long n =0) const { return value_[n]; }
-        virtual Rational toRational(long n =0) const
-            { return Rational(value_[n], 1); }
+        virtual long toLong(long n =0) const;
+        virtual float toFloat(long n =0) const;
+        virtual Rational toRational(long n =0) const;
         //@}
 
     private:
         //! Internal virtual copy constructor.
         virtual DataValue* clone_() const;
+
+    public:
+        //! Type used to store the data.
+        typedef std::vector<byte> ValueType;
         // DATA
-        std::vector<byte> value_;
+        ValueType value_;
 
     }; // class DataValue
 
@@ -401,16 +411,17 @@ namespace Exiv2 {
         virtual long copy(byte* buf, ByteOrder byteOrder =invalidByteOrder) const;
         virtual long count() const { return size(); }
         virtual long size() const;
-        virtual long toLong(long n =0) const { return value_[n]; }
-        virtual float toFloat(long n =0) const { return value_[n]; }
-        virtual Rational toRational(long n =0) const
-            { return Rational(value_[n], 1); }
+        virtual long toLong(long n =0) const;
+        virtual float toFloat(long n =0) const;
+        virtual Rational toRational(long n =0) const;
         virtual std::ostream& write(std::ostream& os) const;
         //@}
 
     protected:
         //! Internal virtual copy constructor.
         virtual StringValueBase* clone_() const =0;
+
+    public:
         // DATA
         std::string value_;                     //!< Stores the string value.
 
@@ -1006,6 +1017,7 @@ namespace Exiv2 {
     private:
         //! Internal virtual copy constructor.
         virtual DateValue* clone_() const;
+
         // DATA
         Date date_;
 
@@ -1526,6 +1538,7 @@ namespace Exiv2 {
     template<typename T>
     inline std::string ValueType<T>::toString(long n) const
     {
+        ok_ = true;
         return Exiv2::toString(value_[n]);
     }
 
@@ -1533,54 +1546,63 @@ namespace Exiv2 {
     template<typename T>
     inline long ValueType<T>::toLong(long n) const
     {
+        ok_ = true;
         return value_[n];
     }
     // Specialization for rational
     template<>
     inline long ValueType<Rational>::toLong(long n) const
     {
+        ok_ = (value_[n].second != 0);
         return value_[n].first / value_[n].second;
     }
     // Specialization for unsigned rational
     template<>
     inline long ValueType<URational>::toLong(long n) const
     {
+        ok_ = (value_[n].second != 0);
         return value_[n].first / value_[n].second;
     }
     // Default implementation
     template<typename T>
     inline float ValueType<T>::toFloat(long n) const
     {
+        ok_ = true;
         return static_cast<float>(value_[n]);
     }
     // Specialization for rational
     template<>
     inline float ValueType<Rational>::toFloat(long n) const
     {
+        ok_ = (value_[n].second != 0);
         return static_cast<float>(value_[n].first) / value_[n].second;
     }
     // Specialization for unsigned rational
     template<>
     inline float ValueType<URational>::toFloat(long n) const
     {
+        ok_ = (value_[n].second != 0);
         return static_cast<float>(value_[n].first) / value_[n].second;
     }
     // Default implementation
     template<typename T>
     inline Rational ValueType<T>::toRational(long n) const
     {
+        ok_ = true;
         return Rational(value_[n], 1);
     }
     // Specialization for rational
     template<>
     inline Rational ValueType<Rational>::toRational(long n) const
     {
+        ok_ = true;
         return Rational(value_[n].first, value_[n].second);
     }
     // Specialization for unsigned rational
     template<>
     inline Rational ValueType<URational>::toRational(long n) const
     {
+        ok_ = true;
         return Rational(value_[n].first, value_[n].second);
     }
 

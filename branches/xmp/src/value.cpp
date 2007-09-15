@@ -51,12 +51,12 @@ EXIV2_RCSID("@(#) $Id$")
 namespace Exiv2 {
 
     Value::Value(TypeId typeId)
-        : type_(typeId)
+        : ok_(true), type_(typeId)
     {
     }
 
     Value::Value(const Value& rhs)
-        : type_(rhs.type_)
+        : ok_(true), type_(rhs.type_)
     {
     }
 
@@ -138,6 +138,7 @@ namespace Exiv2 {
     {
         std::ostringstream os;
         write(os);
+        ok_ = !os.fail();
         return os.str();
     }
 
@@ -205,7 +206,26 @@ namespace Exiv2 {
     {
         std::ostringstream os;
         os << static_cast<int>(value_[n]);
+        ok_ = !os.fail();
         return os.str();
+    }
+
+    long DataValue::toLong(long n) const
+    {
+        ok_ = true;
+        return value_[n];
+    }
+
+    float DataValue::toFloat(long n) const
+    {
+        ok_ = true;
+        return value_[n];
+    }
+
+    Rational DataValue::toRational(long n) const
+    {
+        ok_ = true;
+        return Rational(value_[n], 1);
     }
 
     StringValueBase& StringValueBase::operator=(const StringValueBase& rhs)
@@ -246,6 +266,24 @@ namespace Exiv2 {
     std::ostream& StringValueBase::write(std::ostream& os) const
     {
         return os << value_;
+    }
+
+    long StringValueBase::toLong(long n) const
+    {
+        ok_ = true;
+        return value_[n];
+    }
+
+    float StringValueBase::toFloat(long n) const
+    {
+        ok_ = true;
+        return value_[n];
+    }
+
+    Rational StringValueBase::toRational(long n) const
+    {
+        ok_ = true;
+        return Rational(value_[n], 1);
     }
 
     StringValue& StringValue::operator=(const StringValue& rhs)
@@ -499,20 +537,17 @@ namespace Exiv2 {
 
     long XmpTextValue::toLong(long /*n*/) const
     {
-        bool ok;
-        return stringTo<long>(value_, ok);
+        return stringTo<long>(value_, ok_);
     }
 
     float XmpTextValue::toFloat(long /*n*/) const
     {
-        bool ok;
-        return stringTo<float>(value_, ok);
+        return stringTo<float>(value_, ok_);
     }
 
     Rational XmpTextValue::toRational(long /*n*/) const
     {
-        bool ok;
-        return stringTo<Rational>(value_, ok);
+        return stringTo<Rational>(value_, ok_);
     }
 
     XmpTextValue* XmpTextValue::clone_() const
@@ -553,25 +588,23 @@ namespace Exiv2 {
 
     std::string XmpArrayValue::toString(long n) const 
     {
+        ok_ = true;
         return value_[n]; 
     }
 
     long XmpArrayValue::toLong(long n) const
     {
-        bool ok;
-        return stringTo<long>(value_[n], ok);
+        return stringTo<long>(value_[n], ok_);
     }
 
     float XmpArrayValue::toFloat(long n) const
     {
-        bool ok;
-        return stringTo<float>(value_[n], ok);
+        return stringTo<float>(value_[n], ok_);
     }
 
     Rational XmpArrayValue::toRational(long n) const
     {
-        bool ok;
-        return stringTo<Rational>(value_[n], ok);
+        return stringTo<Rational>(value_[n], ok_);
     }
 
     XmpArrayValue* XmpArrayValue::clone_() const
@@ -628,35 +661,28 @@ namespace Exiv2 {
         return os;
     }
 
-    std::string LangAltValue::toString(long n) const 
+    std::string LangAltValue::toString(long /*n*/) const 
     {
-        // Todo: Implement me!
-        return "dummy";
-        //return value_[n]; 
+        ok_ = false;
+        return "";
     }
 
-    long LangAltValue::toLong(long n) const
+    long LangAltValue::toLong(long /*n*/) const
     {
-        bool ok;
-        // Todo: Implement me!
+        ok_ = false;
         return 0;
-        //return stringTo<long>(value_[n], ok);
     }
 
-    float LangAltValue::toFloat(long n) const
+    float LangAltValue::toFloat(long /*n*/) const
     {
-        bool ok;
-        // Todo: Implement me!
+        ok_ = false;
         return 0.0;
-        //return stringTo<float>(value_[n], ok);
     }
 
-    Rational LangAltValue::toRational(long n) const
+    Rational LangAltValue::toRational(long /*n*/) const
     {
-        bool ok;
-        // Todo: Implement me!
+        ok_ = false;
         return Rational(0, 0);
-        //return stringTo<Rational>(value_[n], ok);
     }
 
     LangAltValue* LangAltValue::clone_() const
@@ -770,7 +796,9 @@ namespace Exiv2 {
         tms.tm_mday = date_.day;
         tms.tm_mon = date_.month - 1;
         tms.tm_year = date_.year - 1900;
-        return static_cast<long>(std::mktime(&tms));
+        long l = static_cast<long>(std::mktime(&tms));
+        ok_ = (l != -1);
+        return l;
     }
 
     TimeValue::TimeValue(int hour, int minute,
@@ -928,6 +956,7 @@ namespace Exiv2 {
         if (result < 0) {
             result += 86400;
         }
+        ok_ = true;
         return result;
     }
 
