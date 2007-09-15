@@ -30,6 +30,9 @@ qualifiers and deeply nested properties.
 Any properties in known namespaces are supported and additional
 namespaces can be registered.
 
+The specialized Exiv2 values XmpArrayValue and LangAltValue are
+provided to simplify the use of XMP properties.
+
 Note: Unlike Exif and IPTC tags, XMP properties do not have
 a tag number.
 

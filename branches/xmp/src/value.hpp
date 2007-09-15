@@ -218,6 +218,8 @@ namespace Exiv2 {
           <TR><TD class="indexkey">time</TD><TD class="indexvalue">%TimeValue</TD></TR>
           <TR><TD class="indexkey">comment</TD><TD class="indexvalue">%CommentValue</TD></TR>
           <TR><TD class="indexkey">xmpText</TD><TD class="indexvalue">%XmpTextValue</TD></TR>
+          <TR><TD class="indexkey">xmpArray</TD><TD class="indexvalue">%XmpArrayValue</TD></TR>
+          <TR><TD class="indexkey">langAlt</TD><TD class="indexvalue">%LangAltValue</TD></TR>
           <TR><TD class="indexkey"><EM>default:</EM></TD><TD class="indexvalue">%DataValue(typeId)</TD></TR>
           </TABLE>
 
@@ -696,10 +698,11 @@ namespace Exiv2 {
     }; // class XmpValue
 
     /*!
-      @brief %Value type suitable for simple XMP properties and arrays of
-             simple values.
+      @brief %Value type suitable for simple XMP properties and 
+             XMP nodes of complex types which are not parsed into
+             specific values.
 
-      Uses a vector of std::string to store the value(s).
+      Uses a std::string to store the value.
      */
     class XmpTextValue : public XmpValue {
     public:
@@ -716,12 +719,79 @@ namespace Exiv2 {
 
         //! @name Manipulators
         //@{
-        /*!
-          @brief Read a text property value from \em buf.
+        virtual int read(const std::string& buf);
+        //@}
 
-          Clears the value and copies \em buf into the first element.
-          There is no way to populate subsequent array elements with this 
-          method.
+        //! @name Accessors
+        //@{
+        AutoPtr clone() const;
+        long size() const;
+        virtual long count() const;
+        /*!
+          @brief Convert the value to a long.
+                 The optional parameter \em n is not used and is ignored.
+
+          @return The converted value.
+         */
+        virtual long toLong(long n =0) const;
+        /*!
+          @brief Convert the value to a float.
+                 The optional parameter \em n is not used and is ignored.
+
+          @return The converted value.
+         */
+        virtual float toFloat(long n =0) const;
+        /*!
+          @brief Convert the value to a Rational.
+                 The optional parameter \em n is not used and is ignored.
+
+          @return The converted value.
+         */
+        virtual Rational toRational(long n =0) const;
+        virtual std::ostream& write(std::ostream& os) const;
+        //@}
+
+    private:
+        //! Internal virtual copy constructor.
+        virtual XmpTextValue* clone_() const;
+
+    public:
+        // DATA
+        std::string value_;                     //!< Stores the string values.
+
+    }; // class XmpTextValue
+
+    /*!
+      @brief %Value type for simple arrays. Each item in the array is a simple
+             value, without qualifiers. The array may be an ordered (\em seq), 
+             unordered (\em bag) or alternative array (\em alt). The array 
+             items must not contain qualifiers. For language alternatives use
+             LangAltValue.
+
+      Uses a vector of std::string to store the value(s).
+     */
+    class XmpArrayValue : public XmpValue {
+    public:
+        //! Shortcut for a %XmpArrayValue auto pointer.
+        typedef std::auto_ptr<XmpArrayValue> AutoPtr;
+
+        //! @name Creators
+        //@{
+        //! Constructor.
+        XmpArrayValue();
+        //@}
+
+        //! @name Manipulators
+        //@{
+        /*!
+          @brief Read a simple property value from \em buf and append it 
+                 to the value.
+
+          Appends \em buf to the value after the last existing array element.
+          Subsequent calls will therefore populate multiple array elements in 
+          the order they are read.
+
+          @return 0 if successful.
          */
         virtual int read(const std::string& buf);
         //@}
@@ -742,20 +812,23 @@ namespace Exiv2 {
         /*!
           @brief Write all elements of the value to \em os, separated by commas.
 
-          @note Unlike everywhere else, this is not symmetric to the read() method.
+          @note The output of this method cannot directly be used as the parameter
+                for read().
          */
         virtual std::ostream& write(std::ostream& os) const;
         //@}
 
     private:
         //! Internal virtual copy constructor.
-        virtual XmpTextValue* clone_() const;
+        virtual XmpArrayValue* clone_() const;
 
     public:
+        //! Type used to store XMP array elements.
+        typedef std::vector<std::string> ValueType;
         // DATA
         std::vector<std::string> value_;        //!< Stores the string values.
 
-    }; // class XmpTextValue
+    }; // class XmpArrayValue
 
     /*!
       @brief %Value type for XMP language alternative properties. 
@@ -779,7 +852,21 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         /*!
-          @brief Todo
+          @brief Read a simple property value from \em buf and append it 
+                 to the value.
+
+          Appends \em buf to the value after the last existing array element.
+          Subsequent calls will therefore populate multiple array elements in 
+          the order they are read.
+
+          The format of \em buf is:
+          <BR>
+          <CODE>[lang=["]language code["] ]text</CODE>
+          <BR>
+          The XMP default language code <CODE>x-default</CODE> is used if 
+          \em buf doesn't start with the keyword <CODE>lang</CODE>.
+
+          @return 0 if successful.
          */
         virtual int read(const std::string& buf);
         //@}
@@ -800,7 +887,8 @@ namespace Exiv2 {
         /*!
           @brief Write all elements of the value to \em os, separated by commas.
 
-          @note Unlike everywhere else, this is not symmetric to the read() method.
+          @note The output of this method cannot directly be used as the parameter
+                for read().
          */
         virtual std::ostream& write(std::ostream& os) const;
         //@}
@@ -811,13 +899,13 @@ namespace Exiv2 {
 
     public:
         //! Type used to store language alternative arrays.
-        typedef std::map<std::string, std::string> LangAltArray;
+        typedef std::map<std::string, std::string> ValueType;
         // DATA
         /*!
           @brief Map to store the language alternative values. The language
                  qualifier is used as the key for the map entries.
          */
-        LangAltArray value_; 
+        ValueType value_; 
 
     }; // class LangAltValue
 

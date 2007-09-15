@@ -473,7 +473,7 @@ namespace Exiv2 {
 
     int XmpTextValue::read(const std::string& buf)
     {
-        value_.push_back(buf);
+        value_ = buf;
         return 0;
     }
 
@@ -482,12 +482,66 @@ namespace Exiv2 {
         return AutoPtr(clone_());
     }
 
-    long XmpTextValue::count() const
+    long XmpTextValue::size() const
     {
         return static_cast<long>(value_.size());
     }
 
+    long XmpTextValue::count() const
+    {
+        return size();
+    }
+
     std::ostream& XmpTextValue::write(std::ostream& os) const
+    {
+        return os << value_;
+    }
+
+    long XmpTextValue::toLong(long /*n*/) const
+    {
+        bool ok;
+        return stringTo<long>(value_, ok);
+    }
+
+    float XmpTextValue::toFloat(long /*n*/) const
+    {
+        bool ok;
+        return stringTo<float>(value_, ok);
+    }
+
+    Rational XmpTextValue::toRational(long /*n*/) const
+    {
+        bool ok;
+        return stringTo<Rational>(value_, ok);
+    }
+
+    XmpTextValue* XmpTextValue::clone_() const
+    {
+        return new XmpTextValue(*this);
+    }
+
+    XmpArrayValue::XmpArrayValue()
+        : XmpValue(xmpArray)
+    {
+    }
+
+    int XmpArrayValue::read(const std::string& buf)
+    {
+        value_.push_back(buf);
+        return 0;
+    }
+
+    XmpArrayValue::AutoPtr XmpArrayValue::clone() const
+    {
+        return AutoPtr(clone_());
+    }
+
+    long XmpArrayValue::count() const
+    {
+        return static_cast<long>(value_.size());
+    }
+
+    std::ostream& XmpArrayValue::write(std::ostream& os) const
     {
         for (std::vector<std::string>::const_iterator i = value_.begin();
              i != value_.end(); ++i) {
@@ -497,32 +551,32 @@ namespace Exiv2 {
         return os;
     }
 
-    std::string XmpTextValue::toString(long n) const 
+    std::string XmpArrayValue::toString(long n) const 
     {
         return value_[n]; 
     }
 
-    long XmpTextValue::toLong(long n) const
+    long XmpArrayValue::toLong(long n) const
     {
         bool ok;
         return stringTo<long>(value_[n], ok);
     }
 
-    float XmpTextValue::toFloat(long n) const
+    float XmpArrayValue::toFloat(long n) const
     {
         bool ok;
         return stringTo<float>(value_[n], ok);
     }
 
-    Rational XmpTextValue::toRational(long n) const
+    Rational XmpArrayValue::toRational(long n) const
     {
         bool ok;
         return stringTo<Rational>(value_[n], ok);
     }
 
-    XmpTextValue* XmpTextValue::clone_() const
+    XmpArrayValue* XmpArrayValue::clone_() const
     {
-        return new XmpTextValue(*this);
+        return new XmpArrayValue(*this);
     }
 
     LangAltValue::LangAltValue()
@@ -565,7 +619,7 @@ namespace Exiv2 {
 
     std::ostream& LangAltValue::write(std::ostream& os) const
     {
-        for (LangAltArray::const_iterator i = value_.begin();
+        for (ValueType::const_iterator i = value_.begin();
              i != value_.end(); ++i) {
             if (i != value_.begin()) os << ", ";
             os << "lang=\"" << i->first << "\" "

@@ -451,6 +451,44 @@ namespace Exiv2 {
                 xmpData.add(*key.get(), val.get());
                 continue;
             }
+            if (    XMP_PropIsArray(opt)
+                && !XMP_PropHasQualifiers(opt)
+                && !XMP_ArrayIsAltText(opt)) {
+                // Check if all elements are simple
+                bool simpleArray = true;
+                SXMPIterator aIter(meta, schemaNs.c_str(), propPath.c_str());
+                std::string aSchemaNs, aPropPath, aPropValue;
+                XMP_OptionBits aOpt;
+                while (aIter.Next(&aSchemaNs, &aPropPath, &aPropValue, &aOpt)) {
+                    if (propPath == aPropPath) continue;
+                    if (   !XMP_PropIsSimple(aOpt)
+                        ||  XMP_PropHasQualifiers(aOpt)
+                        ||  XMP_PropIsQualifier(aOpt)
+                        ||  XMP_NodeIsSchema(aOpt)
+                        ||  XMP_PropIsAlias(aOpt)) {
+                        simpleArray = false;
+
+                        std::cerr << "NOT SO SIMPLE ==> " << propPath << ", " << aPropPath << "\n";
+
+                        break;
+                    }
+                }
+                if (simpleArray) {
+                    // Read the array into an XmpArrayValue
+                    XmpArrayValue::AutoPtr val(new XmpArrayValue);
+                    XMP_Index count = meta.CountArrayItems(schemaNs.c_str(), propPath.c_str());
+                    val->setXmpArrayType(xmpArrayType(opt));
+                    while (count-- > 0) {
+                        iter.Next(&schemaNs, &propPath, &propValue, &opt);
+#ifdef DEBUG
+                        printNode(schemaNs, propPath, propValue, opt);
+#endif
+                        val->read(propValue);
+                    }
+                    xmpData.add(*key.get(), val.get());
+                    continue;
+                }
+            }
             XmpTextValue::AutoPtr val(new XmpTextValue);
             if (   XMP_PropIsStruct(opt)
                 || XMP_PropIsArray(opt)) {
@@ -515,21 +553,14 @@ namespace Exiv2 {
 
             // Todo: What about structure namespaces?
 
-            //-ahu Todo: remove debug output
-            std::cerr << i->tagName();
-
             XMP_OptionBits options = 0;
 
             if (i->typeId() == langAlt) {
                 // Encode Lang Alt property
                 const LangAltValue* la = dynamic_cast<const LangAltValue*>(&i->value());
                 if (la == 0) throw Error(43, i->key());
-
-                //-ahu Todo: remove debug output
-                std::cerr << " = " << i->toString(0) << "\n";
-
                 int idx = 1;
-                for (LangAltValue::LangAltArray::const_iterator k = la->value_.begin();
+                for (LangAltValue::ValueType::const_iterator k = la->value_.begin();
                      k != la->value_.end(); ++k) {
                     meta.AppendArrayItem(ns.c_str(), i->tagName().c_str(), kXMP_PropArrayIsAltText, k->second.c_str());
                     const std::string item = i->tagName() + "[" + toString(idx++) + "]";
@@ -537,25 +568,29 @@ namespace Exiv2 {
                 }
                 continue;
             }
-
-            // Hack: Xmpdatum has a Value, not an XmpValue
+            // Todo: Xmpdatum should have an XmpValue, not a Value
             const XmpValue* val = dynamic_cast<const XmpValue*>(&i->value());
-            if (val != 0) {
-                options =   xmpOptionBits(val->xmpArrayType())
-                          | xmpOptionBits(val->xmpStruct());
-            }
-            else {
-                std::cerr << "Warning: The value of " << i->key() << " is not an XMP value.\n";
-            }
-            if (i->count() > 0) {
-                //-ahu Todo: remove debug output
-                std::cerr << " = " << i->toString(0) << "\n";
-                meta.SetProperty(ns.c_str(), i->tagName().c_str(), i->toString(0).c_str(), options);
-            }
-            else {
-                //-ahu Todo: remove debug output
-                std::cerr << " (empty value)\n";
+            assert(val);
+            options =   xmpOptionBits(val->xmpArrayType())
+                      | xmpOptionBits(val->xmpStruct());
+            if (i->typeId() == xmpArray) {
                 meta.SetProperty(ns.c_str(), i->tagName().c_str(), 0, options);
+                for (int idx = 0; idx < i->count(); ++idx) {
+                    const std::string item = i->tagName() + "[" + toString(idx + 1) + "]";
+
+                    //-ahu
+                    std::cerr << "Element " << item << " = " << i->toString(idx) << "\n";
+
+                    meta.SetProperty(ns.c_str(), item.c_str(), i->toString(idx).c_str());
+                }
+            }
+            if (i->typeId() == xmpText) {
+                if (i->count() == 0) {
+                    meta.SetProperty(ns.c_str(), i->tagName().c_str(), 0, options);
+                }
+                else {
+                    meta.SetProperty(ns.c_str(), i->tagName().c_str(), i->toString(0).c_str(), options);
+                }
             }
         }
         meta.SerializeToBuffer(&xmpPacket, kXMP_UseCompactFormat);
