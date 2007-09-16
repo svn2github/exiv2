@@ -1,17 +1,17 @@
 XMP support
 ===========
-Exiv2 uses the Adobe XMP toolkit (XMP SDK) to parse
-and serialize XMP packets (only the XMPCore component).
-
-Todo: XMP support is controlled with the ENABLE_XMP directive 
-in config/config.mk.in. This will be a configure option
-eventually.
-
 Top-level Exiv2 classes to access XMP metadata are XmpData,
 Xmpdatum and XmpKey. They work similar to the corresponding 
 Exif and IPTC classes. The property-repository is XmpProperties.
 In addition to the expected new members, class Image also
 has a new interface to access the raw XMP packet.
+
+Todo: XMP support is controlled with the ENABLE_XMP directive 
+in config/config.mk.in. This will be a configure option
+eventually.
+
+Exiv2 uses the Adobe XMP toolkit (XMP SDK) to parse
+and serialize XMP packets (only the XMPCore component).
 
 Supported XMP value types
 -------------------------
@@ -56,8 +56,8 @@ this via configure options.
 
 External packages (non-Debian)
 -----------------
-xmp_v411_sdk.zip    - from adobe.com:       http://www.adobe.com/devnet/xmp/sdk/eula.html
-expat-2.0.1.tar.gz  - from sourceforge.net: http://sourceforge.net/project/showfiles.php?group_id=10127
+xmp_v411_sdk.zip    - http://www.adobe.com/devnet/xmp/sdk/eula.html
+expat-2.0.1.tar.gz  - http://sourceforge.net/project/showfiles.php?group_id=10127
 exiv2               - from SVN
 
 Installation steps
