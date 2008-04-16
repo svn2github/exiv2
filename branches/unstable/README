@@ -2,14 +2,16 @@ Exiv2
 *****
 
 Welcome to Exiv2, a C++ library and a command line utility to read and
-write Exif and IPTC image metadata. The homepage of Exiv2 is:
+write Exif, IPTC and XMP image metadata. The homepage of Exiv2 is:
 
     http://www.exiv2.org/
 
-See doc/ChangeLog for a description of recent changes to Exiv2.
+See doc/ChangeLog for a list of recent changes to Exiv2.
 
-If you have the doc package, you can point your browser to doc/index.html 
-for the complete Exiv2 API documentation and metadata tag reference.
+The complete Exiv2 documentation is online at http://www.exiv2.org/doc
+or you can download or build it and point your browser to doc/index.html
+
+For more information on XMP support in Exiv2, see doc/README-XMP.
 
 
 Building and Installing
@@ -33,11 +35,19 @@ The default install locations are /usr/local/lib for the library,
 header files. Use the --prefix=directory option of the configure script to
 change the default. Run './configure --help' to see a list of all options.
 
-To build Exiv2 with MSVC 7.1 or 8.0, use the solution file msvc/exiv2.sln.
-
 To uninstall Exiv2 from a UNIX-like system, run:
 
     $ make uninstall
+
+To build Exiv2 with MSVC 7.1 or later on Windows, use the solution file
+msvc/exiv2.sln.  XMP support is enabled in this solution, so Expat needs
+to be available (see section "Dependencies" below): Get and compile Expat,
+look for the file libexpat.lib and copy it to the directory msvc/lib in
+the Exiv2 source tree.
+MSVC 8 or 9 will convert the project files automatically. After that, you
+will need to manually change the property "Link Library Dependencies" of 
+the exiv2lib project to "Yes" before compiling (exiv2lib project -> 
+Properties -> Librarian).
 
 To build a commercial version of the Exiv2 library, see also section 
 "Commercial version" at the end of this file.
@@ -46,24 +56,39 @@ To build a commercial version of the Exiv2 library, see also section
 Dependencies
 ============
 
-The following features are enabled by default and may *) require external
-libraries. They can be controlled through configure options. See also
-'./configure --help'.
+The following libexiv2 features are enabled by default and may*)
+require external libraries. They can be controlled through configure
+options. See also './configure --help'.
 
 Feature                     Package   Configure options
 --------------------------  --------  ----------------------------
 PNG image support           zlib      --without-zlib
                                       --with-zlib=DIR
-National language support   gettext   --disable-nls
+Native language support     gettext   --disable-nls
 Converting Windows XP tags  libiconv  --disable-printucs2
                                       --with-libiconv-prefix[=DIR]
+XMP support                 expat     --disable-xmp
+                                      --with-expat=DIR
 
 zlib         http://www.zlib.net/
 gettext  *)  http://www.gnu.org/software/gettext/
 libiconv *)  http://www.gnu.org/software/libiconv/
+expat        http://expat.sourceforge.net/
 
 *) Some systems have gettext and iconv in libc. The configure script 
 should detect this.
+
+To build the sample programs in the samples/ directory ('make samples'),
+you also need to have the pkg-config program.
+
+To generate the documentation ('make doc'), you will further need
+doxygen, graphviz, python and xsltproc.
+
+pkg-config   http://pkg-config.freedesktop.org/wiki/
+doxygen      http://www.doxygen.org/
+graphviz     http://www.graphviz.org/
+python       http://www.python.org/
+xsltproc     http://xmlsoft.org/XSLT/
 
 
 Troubleshooting
@@ -91,7 +116,8 @@ Hacking
 
 A pkg-config .pc file is installed together with the library.
 Application developers can use pkg-config(1) to obtain correct compile
-and link time flags for the Exiv2 library.
+and link time flags for the Exiv2 library. See samples/Makefile for an
+example.
 
 If you downloaded Exiv2 directly from the subversion repository, and
 you want to build it using the GNU configure script, then you need to
@@ -101,9 +127,6 @@ script as the first step:
     $ make config
 
 Then run the usual './configure; make; make install' commands.
-
-To generate the documentation (run 'make doc'), you will further need
-doxygen, graphviz, python and xsltproc.
 
 Exiv2 uses GNU Libtool in order to build shared libraries on a variety
 of systems. While this is very nice for making usable binaries, it can
@@ -115,7 +138,7 @@ of shared libraries can be turned off by specifying the
 License
 =======
 
-Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
 
 Exiv2 is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free
@@ -147,6 +170,6 @@ version of the Exiv2 library.
 
 To do this on Windows, compile the library with the preprocessor
 symbol EXV_COMMERCIAL_VERSION defined. See the file src/exv_msvc.h
-for details. 
+for details.
 On UNIX-like systems, run the configure script with the options
 --enable-commercial --disable-nls --disable-printucs2 --disable-lensdata

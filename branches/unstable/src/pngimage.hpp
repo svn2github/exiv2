@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -26,8 +26,8 @@
   @version $Rev: 823 $
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
-  @author  Gilles Caulier (gc)
-           <a href="mailto:caulier dot gilles at kdemail dot net">caulier dot gilles at kdemail dot net</a>
+  @author  Gilles Caulier (cgilles)
+           <a href="mailto:caulier dot gilles at gmail dot com">caulier dot gilles at gmail dot com</a>
   @date    12-Jun-06, gc: submitted
  */
 #ifndef PNGIMAGE_HPP_

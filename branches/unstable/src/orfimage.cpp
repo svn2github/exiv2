@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -58,6 +58,26 @@ namespace Exiv2 {
         : Image(ImageType::orf, mdExif | mdIptc, io)
     {
     } // OrfImage::OrfImage
+
+    int OrfImage::pixelWidth() const
+    {
+        ExifData::const_iterator imageWidth;
+        if ((imageWidth = exifData_.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth"))) != exifData_.end())
+        {
+            return imageWidth->toLong();
+        }
+        return 0;
+    }
+
+    int OrfImage::pixelHeight() const
+    {
+        ExifData::const_iterator imageHeight;
+        if ((imageHeight = exifData_.findKey(Exiv2::ExifKey("Exif.Image.ImageLength"))) != exifData_.end())
+        {
+            return imageHeight->toLong();
+        }
+        return 0;
+    }
 
     void OrfImage::setExifData(const ExifData& /*exifData*/)
     {

@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -676,6 +676,16 @@ namespace Exiv2 {
         // METHODS
         void reserve(long wcount);
     }; // class MemIo
+
+// *****************************************************************************
+// template, inline and free functions
+
+    //! Read file \em path into a DataBuf, which is returned.
+    DataBuf readFile(const std::string& path);
+
+    //! Write DataBuf \em buf to file \em path. Return the number of bytes written.
+    long writeFile(const DataBuf& buf, const std::string& path);
+
 }                                       // namespace Exiv2
 
 #endif                                  // #ifndef BASICIO_HPP_

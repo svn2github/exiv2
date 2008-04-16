@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2005-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -45,6 +45,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include <sstream>
 #include <iomanip>
 #include <cassert>
+#include <cstring>
 
 // *****************************************************************************
 // class member definitions
@@ -433,7 +434,7 @@ namespace Exiv2 {
 
         // Copy the header
         header_.alloc(8);
-        memcpy(header_.pData_, buf, header_.size_);
+        std::memcpy(header_.pData_, buf, header_.size_);
         // Adjust the offset of the IFD for the prefix
         start_ = 8;
         return 0;

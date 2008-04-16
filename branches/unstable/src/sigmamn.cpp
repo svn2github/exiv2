@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -44,6 +44,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include <sstream>
 #include <iomanip>
 #include <cassert>
+#include <cstring>
 
 // *****************************************************************************
 // class member definitions
@@ -166,7 +167,7 @@ namespace Exiv2 {
         // extra bytes (0x01, 0x00) between the ID string and the start of the
         // Makernote IFD. So we copy 10 bytes into the header.
         header_.alloc(10);
-        memcpy(header_.pData_, buf, header_.size_);
+        std::memcpy(header_.pData_, buf, header_.size_);
         // Adjust the offset of the IFD for the prefix
         start_ = 10;
         return 0;
@@ -177,10 +178,10 @@ namespace Exiv2 {
         int rc = 0;
         // Check the SIGMA or FOVEON prefix
         if (   header_.size_ < 10
-            || std::string(reinterpret_cast<char*>(header_.pData_), 8)
+            || (   std::string(reinterpret_cast<char*>(header_.pData_), 8)
                         != std::string("SIGMA\0\0\0", 8)
-            && std::string(reinterpret_cast<char*>(header_.pData_), 8)
-                        != std::string("FOVEON\0\0", 8)) {
+                && std::string(reinterpret_cast<char*>(header_.pData_), 8)
+                        != std::string("FOVEON\0\0", 8))) {
             rc = 2;
         }
         return rc;

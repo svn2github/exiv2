@@ -23,13 +23,13 @@
 #define EXV_PACKAGE_NAME "exiv2"
 
 /* Define to the full name and version of this package. */
-#define EXV_PACKAGE_STRING "exiv2 0.15"
+#define EXV_PACKAGE_STRING "exiv2 0.16"
 
 /* Define to the one symbol short name of this package. */
 #define EXV_PACKAGE_TARNAME "exiv2"
 
 /* Define to the version of this package. */
-#define EXV_PACKAGE_VERSION "0.15"
+#define EXV_PACKAGE_VERSION "0.16"
 
 /* Define to `int' if <sys/types.h> does not define pid_t. */
 #define pid_t int
@@ -50,6 +50,12 @@
 # undef EXV_HAVE_PRINTUCS2
 
 #endif /* !EXV_COMMERCIAL_VERSION */
+
+/* Define to 1 if you have the `zlib' library. */
+#undef HAVE_LIBZ
+
+/* Define to 1 if you have the Adobe XMP Toolkit. */
+#define EXV_HAVE_XMP_TOOLKIT 1
 
 /* File path seperator */
 #define EXV_SEPERATOR_STR "\\"

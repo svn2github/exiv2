@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -66,6 +66,7 @@ namespace Exiv2 {
         const uint16_t minocs7   = 276; //!< Minolta camera settings (D7)
         const uint16_t canonpi   = 277; //!< Canon picture info
         const uint16_t canonpa   = 278; //!< Canon panorama
+        const uint16_t pentaxmn  = 279; //!< Pentax makernote
     }
 
 // *****************************************************************************
@@ -463,6 +464,36 @@ namespace Exiv2 {
 
     }; // class PanasonicMnHeader
 
+    //! Header of an Pentax Makernote
+    class PentaxMnHeader : public MnHeader {
+    public:
+        //! @name Creators
+        //@{
+        //! Default constructor
+        PentaxMnHeader();
+        //! Virtual destructor.
+        virtual ~PentaxMnHeader() {}
+        //@}
+        //! @name Manipulators
+        //@{
+        virtual bool read(const byte* pData,
+                          uint32_t    size,
+                          ByteOrder   byteOrder);
+        //@}
+        //! @name Accessors
+        //@{
+        virtual uint32_t size()      const { return header_.size_; }
+        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
+        virtual uint32_t ifdOffset() const { return size_; }
+        //@}
+
+    private:
+        DataBuf header_;                //!< Data buffer for the makernote header
+        static const byte signature_[]; //!< Pentax makernote header signature
+        static const uint32_t size_;    //!< Size of the signature
+
+    }; // class PentaxMnHeader
+
     //! Header of a Sigma Makernote
     class SigmaMnHeader : public MnHeader {
     public:
@@ -601,6 +632,19 @@ namespace Exiv2 {
     TiffComponent* newPanasonicMn2(uint16_t tag,
                                    uint16_t group,
                                    uint16_t mnGroup);
+
+    //! Function to create an Pentax makernote
+    TiffComponent* newPentaxMn(uint16_t    tag,
+                               uint16_t    group,
+                               uint16_t    mnGroup,
+                               const byte* pData,
+                               uint32_t    size,
+                               ByteOrder   byteOrder);
+
+    //! Function to create an Pentax makernote
+    TiffComponent* newPentaxMn2(uint16_t tag,
+                                uint16_t group,
+                                uint16_t mnGroup);
 
     //! Function to create a Sigma makernote
     TiffComponent* newSigmaMn(uint16_t    tag,

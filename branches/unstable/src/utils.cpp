@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -49,6 +49,7 @@ EXIV2_RCSID("@(#) $Id$")
 # include <unistd.h>                     // for getopt(), stat()
 #endif
 
+#include <climits>
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
@@ -136,7 +137,7 @@ namespace Util {
     {
         if (!nptr || *nptr == '\0') return false;
         char* endptr = 0;
-        long tmp = ::strtol(nptr, &endptr, 10);
+        long tmp = std::strtol(nptr, &endptr, 10);
         if (*endptr != '\0') return false;
         if (tmp == LONG_MAX || tmp == LONG_MIN) return false;
         n = tmp;

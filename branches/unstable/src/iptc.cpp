@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -61,6 +61,11 @@ namespace Exiv2 {
 
     Iptcdatum::~Iptcdatum()
     {
+    }
+
+    std::ostream& Iptcdatum::write(std::ostream& os) const
+    {
+        return os << value();
     }
 
     const Value& Iptcdatum::value() const
@@ -133,6 +138,9 @@ namespace Exiv2 {
 
     int IptcData::load(const byte* buf, long len)
     {
+#ifdef DEBUG
+        std::cerr << "IptcData::load, len = " << len << "\n";
+#endif
         const byte* pRead = buf;
         iptcMetadata_.clear();
 
@@ -166,7 +174,15 @@ namespace Exiv2 {
                 pRead += 2;
             }
             if (pRead + sizeData <= buf + len) {
-                readData(dataSet, record, pRead, sizeData);
+                int rc = 0;
+                if ((rc = readData(dataSet, record, pRead, sizeData)) != 0) {
+#ifndef SUPPRESS_WARNINGS
+                    std::cerr << "Warning: "
+                              << "Failed to read IPTC dataset "
+                              << IptcKey(dataSet, record)
+                              << " (rc = " << rc << "); skipped.\n";
+#endif
+                }
             }
 #ifndef SUPPRESS_WARNINGS
             else {
@@ -195,7 +211,7 @@ namespace Exiv2 {
         else if (1 == rc) {
             // If the first attempt failed, try with a string value
             value = Value::create(string);
-            int rc = value->read(data, sizeData, bigEndian);
+            rc = value->read(data, sizeData, bigEndian);
             if (0 == rc) {
                 IptcKey key(dataSet, record);
                 add(key, value.get());
@@ -310,13 +326,6 @@ namespace Exiv2 {
     IptcData::iterator IptcData::erase(IptcData::iterator pos)
     {
         return iptcMetadata_.erase(pos);
-    }
-
-    // *************************************************************************
-    // free functions
-    std::ostream& operator<<(std::ostream& os, const Iptcdatum& md)
-    {
-        return os << md.value();
     }
 
 }                                       // namespace Exiv2

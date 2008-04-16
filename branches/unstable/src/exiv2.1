@@ -3,7 +3,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH EXIV2 1 "June 3rd, 2007"
+.TH EXIV2 1 "December 23rd, 2007"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -17,7 +17,7 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-exiv2 \- Exif/IPTC metadata manipulation tool
+exiv2 \- Image metadata manipulation tool
 .SH SYNOPSIS
 .B exiv2
 [\fIoptions\fP] [\fIaction\fP] \fIfile\fP ...
@@ -28,11 +28,12 @@ exiv2 \- Exif/IPTC metadata manipulation tool
 .\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
 .\" respectively.
 .B exiv2
-is a program to read and write Exif and IPTC image metadata and image
-comments. Supported image formats are JPEG, Canon CRW and Canon THM.
-Read-only support is currently available for PNG and TIFF format and
-includes TIFF-based RAW formats such as Adobe DNG, Canon CR2, Fujifilm
-RAF, Minolta MRW, Nikon NEF, Pentax PEF, Sony ARW and Sony SR2.
+is a program to read and write Exif, IPTC and XMP image metadata and
+image comments. Supported image formats are JPEG, Canon CRW and Canon
+THM.  Read-only support is currently available for PNG and TIFF format
+and includes TIFF-based RAW formats: Adobe DNG, Canon CR2, Fujifilm
+RAF, Minolta MRW, Nikon NEF, Olympus ORF, Pentax PEF, Sony ARW and
+Sony SR2.
 .SH ACTIONS
 The \fIaction\fP argument is only required if it is not clear from the
 \fIoptions\fP which action is implied.
@@ -42,26 +43,28 @@ Print image metadata. This is the default action, i.e., the command
 \fIexiv2 image.jpg\fP will print a summary of the image Exif metadata.
 .TP
 .B ex | extract
-Extract metadata to *.exv and thumbnail image files. Modification
-commands can be applied on-the-fly.
+Extract metadata to *.exv, *.xmp and thumbnail image files. 
+Modification commands can be applied on-the-fly.
 .TP
 .B in | insert
-Insert metadata from corresponding *.exv files.  Use option \fB\-S\fP
-\fI.suf\fP to change the suffix of the input files. Since files of any
-supported format can be used as input files, this command can be used
-to copy the metadata between files of different formats. Modification
-commands can be applied on-the-fly.
+Insert metadata from corresponding *.exv, *.xmp and thumbnail files.
+Use option \fB\-S\fP \fI.suf\fP to change the suffix of the input
+files. Since files of any supported format can be used as input files,
+this command can be used to copy the metadata between files of
+different formats. Modification commands can be applied on-the-fly.
 .TP
 .B rm | delete
 Delete image metadata from the files.
 .TP
 .B ad | adjust
-Adjust Exif timestamps by the given time. Requires option \fB\-a\fP
-\fItime\fP.
+Adjust Exif timestamps by the given time. Requires at least one of the
+options \fB\-a\fP \fItime\fP, \fB\-Y\fP \fIyrs\fP, \fB\-O\fP
+\fImon\fP or \fB\-D\fP \fIday\fP.
 .TP
 .B mo | modify
-Apply commands to modify (add, set, delete) the Exif/IPTC metadata of image
-files. Requires option \fB\-c\fP, \fB\-m\fP or \fB\-M\fP.
+Apply commands to modify (add, set, delete) the Exif, IPTC and XMP
+metadata of image files. Requires option \fB\-c\fP, \fB\-m\fP or
+\fB\-M\fP.
 .TP
 .B mv | rename
 Rename files and/or set file timestamps according to the Exif create
@@ -71,9 +74,10 @@ filename format can be set with \fB\-r\fP \fIfmt\fP, timestamp options
 are \fB\-t\fP and \fB\-T\fP.
 .TP
 .B fi | fixiso
-Copy the ISO setting from any of the proprietary Nikon makernote ISO
-tags to the regular Exif ISO tag, Exif.Photo.ISOSpeedRatings. Overwrites 
-an existing Exif ISO tag.
+Copy the ISO setting from one of the proprietary Nikon or Canon
+makernote ISO tags to the regular Exif ISO tag,
+Exif.Photo.ISOSpeedRatings. Does not overwrite an existing standard
+Exif ISO tag.
 .SH OPTIONS
 .TP
 .B \-h
@@ -119,6 +123,18 @@ Time adjustment in the format [\-]HH[:MM[:SS]]. This option is only
 used with the 'adjust' action. Examples: 1 adds one hour, 1:01 
 adds one hour and one minute, \-0:00:30 subtracts 30 seconds.
 .TP
+.B \-Y \fIyrs\fP
+Time adjustment by a positive or negative number of years, for
+the 'adjust' action.
+.TP
+.B \-O \fImon\fP
+Time adjustment by a positive or negative number of months, for
+the 'adjust' action.
+.TP
+.B \-D \fIday\fP
+Time adjustment by a positive or negative number of days, for
+the 'adjust' action.
+.TP
 .B \-p \fImode\fP
 Print mode for the 'print' action. Possible modes are:
 .br
@@ -131,6 +147,8 @@ v : plain Exif data values (shortcut for -Pxgnycv)
 h : hexdump of the Exif data (shortcut for -Pxgnycsh)
 .br
 i : IPTC data values
+.br
+x : XMP properties
 .br
 c : JPEG comment
 .TP
@@ -171,17 +189,24 @@ t : Exif thumbnail only
 .br
 i : IPTC data
 .br
+x : XMP packet
+.br
 c : JPEG comment
 .TP
 .B \-i \fItgt\fP
 Insert target(s) for the 'insert' action. Possible targets are the
-same as those for the \fB\-d\fP option. Only JPEG thumbnails can be
-inserted (not TIFF thumbnails), they need to be named
-\fIfile\fP\-thumb.jpg.
+same as those for the \fB\-d\fP option, plus:
+.br
+X : Insert XMP packet from <file>.xmp
+.br
+Only JPEG thumbnails can be inserted (not TIFF thumbnails), they need to 
+be named \fIfile\fP\-thumb.jpg.
 .TP
 .B \-e \fItgt\fP
 Extract target(s) for the 'extract' action. Possible targets are the same 
-as those for the \fB\-d\fP option.
+as those for the \fB\-d\fP option, plus:
+.br
+X : Extract XMP packet to <file>.xmp
 .TP
 .B \-r \fIfmt\fP
 Filename format for the 'rename' action. The format string follows
@@ -230,7 +255,7 @@ or given on the command line, as in
 .sp 1
 Note the quotes. Multiple \fB\-m\fP and \fB\-M\fP options can be combined.
 .sp 1
-When writing Exif/IPTC metadata, 
+When writing Exif, IPTC and XMP metadata, 
 .B exiv2 
 enforces only a correct
 metadata structure. It is possible to write tags with types and values
@@ -263,10 +288,13 @@ Exiv2 Exif or IPTC key.
 .TP
 .I type
 .B Byte | Ascii | Short | Long | Rational | Undefined | SShort | SLong | SRational | Comment
-for Exif keys, and
+for Exif keys,
 .br
 .B String | Date | Time | Short | Undefined
-for IPTC keys.
+for IPTC keys, and
+.br
+.B XmpText | XmpAlt | XmpBag | XmpSeq | LangAlt
+for XMP keys.
 .sp 1
 A default \fItype\fP is used if none is explicitely given. The default
 is determined based on \fIkey\fP.
@@ -289,6 +317,20 @@ that for IPTC \fBTime\fP values is HH:MM:SS+|\-HH:MM, where HH:MM:SS
 refers to local hour, minute and seconds and +|\-HH:MM refers to hours
 and minutes ahead or behind Universal Coordinated Time (+|\- means
 either a + or a \- sign is required).
+.sp 1
+The format of XMP \fBLangAlt\fP values includes an optional language
+qualifier:
+.sp 1
+.B   [lang=\fIlanguage-code\fP ]\fItext\fP
+.sp 1
+.B x-default
+is used by default if the value doesn't start with a language qualifier.
+.TP
+An additional command is available to register XMP namespaces:
+.TP
+.nf
+\fBreg\fP \fIprefix\fP \fInamespace\fP
+.fi
 .SS Command file format
 Empty lines and lines starting with \fB#\fP in a command file are
 ignored (comments). Remaining lines are commands as described above.
@@ -343,13 +385,13 @@ make sense in the target image.
 .SH SEE ALSO
 .TP
 .I http://www.exiv2.org/sample.html#modify
-Sample command file.
+Sample command files.
 .TP
 .I http://www.exiv2.org/metadata.html
 Taglists with \fIkey\fP and default \fItype\fP values.
 .SH AUTHORS
 .B exiv2 
-was written by Andreas HUGGEL <ahuggel@gmx.net>.
+was written by Andreas Huggel <ahuggel@gmx.net>.
 .PP
 This manual page was originally written by KELEMEN Peter <fuji@debian.org>,
 for the Debian project.

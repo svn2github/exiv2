@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -851,7 +851,7 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Implements write(). Write each component, fill gaps with 0s.
-                 Check for duplicate tags and throw Error(39) if any are
+                 Check for duplicate tags and throw Error(50) if any are
                  detected.
          */
         virtual uint32_t doWrite(Blob&     blob,
@@ -916,7 +916,7 @@ namespace Exiv2 {
         /*!
           @brief Implements write(). Write the value using the element specific
                  byte order, if any. Make sure the value has only one component
-                 and that it is of the correct type, else throw Error(40).
+                 and that it is of the correct type, else throw Error(51).
          */
         virtual uint32_t doWrite(Blob&     blob,
                                  ByteOrder byteOrder,

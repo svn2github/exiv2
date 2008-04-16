@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -235,13 +235,27 @@ namespace Exiv2 {
         // add Exif tag anyway
         decodeStdTiffEntry(object);
 
-        if (object->pData()) {
-            // Todo: decode rather than just dump the contents
-            pImage_->xmpPacket().assign(
-                std::string(reinterpret_cast<const char*>(
-                                object->pData()), object->size()));
+        byte const* pData = 0;
+        long size = 0;
+        getObjData(pData, size, 0x02bc, Group::ifd0, object);
+        if (pData) {
+            std::string& xmpPacket = pImage_->xmpPacket();
+            xmpPacket.assign(reinterpret_cast<const char*>(pData), size);
+            std::string::size_type idx = xmpPacket.find_first_of('<');
+            if (idx != std::string::npos && idx > 0) {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "Warning: Removing " << static_cast<unsigned long>(idx)
+						  << " characters from the beginning of the XMP packet\n";
+#endif
+                xmpPacket = xmpPacket.substr(idx);
+            }
+            if (XmpParser::decode(pImage_->xmpData(), xmpPacket)) {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "Warning: Failed to decode XMP metadata.\n";
+#endif
+            }
         }
-    } // TiffMetadataDecoder::decodeXmp
+    } // TiffDecoder::decodeXmp
 
     void TiffDecoder::decodeIptc(const TiffEntryBase* object)
     {

@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -42,6 +42,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "actions.hpp"
 #include "utils.hpp"
 #include "i18n.h"      // NLS support.
+#include "xmp.hpp"
 
 #include <string>
 #include <iostream>
@@ -59,6 +60,7 @@ namespace {
         { add, "add" },
         { set, "set" },
         { del, "del" },
+        { reg, "reg" },
         { invalidCmdId, "invalidCmd" }          // End of list marker
     };
 
@@ -145,7 +147,7 @@ int main(int argc, char* const argv[])
     for (Params::Files::const_iterator i = params.files_.begin(); 
          i != params.files_.end(); ++i) {
         if (params.verbose_) {
-            std::cout << _("File") << " " << std::setw(w) << n++ << "/" << s << ": "
+            std::cout << _("File") << " " << std::setw(w) << std::right << n++ << "/" << s << ": "
                       << *i << std::endl;
         }
         int ret = task->run(*i);
@@ -154,6 +156,7 @@ int main(int argc, char* const argv[])
 
     taskFactory.cleanup();
     params.cleanup();
+    Exiv2::XmpParser::terminate();
 
     return rc;
 } // main
@@ -161,6 +164,12 @@ int main(int argc, char* const argv[])
 // *****************************************************************************
 // class Params
 Params* Params::instance_ = 0;
+
+const Params::YodAdjust Params::emptyYodAdjust_[] = {
+    { false, "-Y", 0 },
+    { false, "-O", 0 },
+    { false, "-D", 0 },            
+};
 
 Params& Params::instance()
 {
@@ -179,7 +188,7 @@ void Params::cleanup()
 void Params::version(std::ostream& os) const
 {
     os << EXV_PACKAGE_STRING << "\n"
-       << _("Copyright (C) 2004-2007 Andreas Huggel.\n")
+       << _("Copyright (C) 2004-2008 Andreas Huggel.\n")
        << "\n"
        << _("This program is free software; you can redistribute it and/or\n"
             "modify it under the terms of the GNU General Public License\n"
@@ -208,18 +217,18 @@ void Params::help(std::ostream& os) const
 {
     usage(os);
     os << _("\nActions:\n")
-       << _("  ad | adjust   Adjust Exif timestamps by the given time. This\n"
-            "                action requires the option -a time.\n")
+       << _("  ad | adjust   Adjust Exif timestamps by the given time. This action\n"
+            "                requires at least one of the -a, -Y, -O or -D options.\n")
        << _("  pr | print    Print image metadata.\n")
        << _("  rm | delete   Delete image metadata from the files.\n")
        << _("  in | insert   Insert metadata from corresponding *.exv files.\n"
             "                Use option -S to change the suffix of the input files.\n")
-       << _("  ex | extract  Extract metadata to *.exv and thumbnail image files.\n")
+       << _("  ex | extract  Extract metadata to *.exv, *.xmp and thumbnail image files.\n")
        << _("  mv | rename   Rename files and/or set file timestamps according to the\n"
             "                Exif create timestamp. The filename format can be set with\n"
             "                -r format, timestamp options are controlled with -t and -T.\n")
        << _("  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n"
-            "                Iptc metadata of image files or set the Jpeg comment.\n"
+            "                IPTC metadata of image files or set the JPEG comment.\n"
             "                Requires option -c, -m or -M.\n")
        << _("  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n"
             "                Exif tag.\n")
@@ -237,13 +246,17 @@ void Params::help(std::ostream& os) const
        << _("   -F      Do not prompt before renaming files (Force).\n")
        << _("   -a time Time adjustment in the format [-]HH[:MM[:SS]]. This option\n"
             "           is only used with the 'adjust' action.\n")
+       << _("   -Y yrs  Year adjustment with the 'adjust' action.\n")
+       << _("   -O mon  Month adjustment with the 'adjust' action.\n")
+       << _("   -D day  Day adjustment with the 'adjust' action.\n")
        << _("   -p mode Print mode for the 'print' action. Possible modes are:\n")
        << _("             s : print a summary of the Exif metadata (the default)\n")
        << _("             t : interpreted (translated) Exif data (shortcut for -Pkyct)\n")
        << _("             v : plain Exif data values (shortcut for -Pxgnycv)\n")
        << _("             h : hexdump of the Exif data (shortcut for -Pxgnycsh)\n")
-       << _("             i : Iptc data values\n")
-       << _("             c : Jpeg comment\n")
+       << _("             i : IPTC data values\n")
+       << _("             x : XMP properties\n")
+       << _("             c : JPEG comment\n")
        << _("   -P cols Print columns for the Exif taglist ('print' action). Valid are:\n")
        << _("             x : print a column with the tag value\n")
        << _("             g : group name\n")
@@ -260,13 +273,17 @@ void Params::help(std::ostream& os) const
        << _("             a : all supported metadata (the default)\n")
        << _("             e : Exif section\n")
        << _("             t : Exif thumbnail only\n")
-       << _("             i : Iptc data\n")
-       << _("             c : Jpeg comment\n")
+       << _("             i : IPTC data\n")
+       << _("             x : XMP packet\n")
+       << _("             c : JPEG comment\n")
        << _("   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
-            "           the same as those for the -d option. Only Jpeg thumbnails can\n"
-            "           be inserted, they need to be named <file>-thumb.jpg\n")
+            "           the same as those for the -d option, plus:\n"
+            "             X : Insert XMP packet from <file>.xmp\n"
+            "           Only JPEG thumbnails can be inserted, they need to be named\n"
+            "           <file>-thumb.jpg\n")
        << _("   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
-            "           are the same as those for the -d option.\n")
+            "           are the same as those for the -i option, plus:\n"
+            "             X : Extract XMP packet to <file>.xmp\n")
        << _("   -r fmt  Filename format for the 'rename' action. The format string\n"
             "           follows strftime(3). The following keywords are supported:\n")
        << _("             :basename:   - original filename without extension\n")
@@ -274,7 +291,7 @@ void Params::help(std::ostream& os) const
        << _("             :parentname: - name of parent directory\n")
        << _("           Default filename format is ")
        <<               format_ << ".\n"
-       << _("   -c txt  Jpeg comment string to set in the image.\n")
+       << _("   -c txt  JPEG comment string to set in the image.\n")
        << _("   -m file Command file for the modify action. The format for commands is\n"
             "           set|add|del <key> [[<type>] <value>].\n")
        << _("   -M cmd  Command line for the modify action. The format for the\n"
@@ -299,6 +316,9 @@ int Params::option(int opt, const std::string& optarg, int optopt)
     case 't': rc = evalRename(opt, optarg); break;
     case 'T': rc = evalRename(opt, optarg); break;
     case 'a': rc = evalAdjust(optarg); break;
+    case 'Y': rc = evalYodAdjust(yodYear, optarg); break;
+    case 'O': rc = evalYodAdjust(yodMonth, optarg); break;
+    case 'D': rc = evalYodAdjust(yodDay, optarg); break;
     case 'p': rc = evalPrint(optarg); break;
     case 'P': rc = evalPrintCols(optarg); break;
     case 'd': rc = evalDelete(optarg); break;
@@ -369,6 +389,12 @@ int Params::evalAdjust(const std::string& optarg)
     int rc = 0;
     switch (action_) {
     case Action::none:
+    case Action::adjust:
+        if (adjust_) {
+            std::cerr << progname()
+                      << ": " << _("Ignoring surplus option -a")  << " " << optarg << "\n";
+            break;
+        }
         action_ = Action::adjust;
         adjust_ = parseTime(optarg, adjustment_);
         if (!adjust_) {
@@ -376,10 +402,6 @@ int Params::evalAdjust(const std::string& optarg)
                       << optarg << "'\n";
             rc = 1;
         }
-        break;
-    case Action::adjust:
-        std::cerr << progname()
-                  << ": " << _("Ignoring surplus option -a")  << " " << optarg << "\n";
         break;
     default:
         std::cerr << progname()
@@ -389,6 +411,38 @@ int Params::evalAdjust(const std::string& optarg)
     }
     return rc;
 } // Params::evalAdjust
+
+int Params::evalYodAdjust(const Yod& yod, const std::string& optarg)
+{
+    int rc = 0;
+    switch (action_) {
+    case Action::none: // fall-through
+    case Action::adjust:
+        if (yodAdjust_[yod].flag_) {
+            std::cerr << progname()
+                      << ": " << _("Ignoring surplus option") << " "
+                      << yodAdjust_[yod].option_ << " " << optarg << "\n";
+            break;
+        }
+        action_ = Action::adjust;
+        yodAdjust_[yod].flag_ = true;
+        if (!Util::strtol(optarg.c_str(), yodAdjust_[yod].adjustment_)) {
+            std::cerr << progname() << ": " << _("Error parsing") << " "
+                      << yodAdjust_[yod].option_ << " "
+                      << _("option argument") << " `" << optarg << "'\n";
+            rc = 1;
+        }
+        break;
+    default:
+        std::cerr << progname()
+                  << ": " << _("Option") << " "
+                  << yodAdjust_[yod].option_ << " "
+                  << _("is not compatible with a previous option\n");
+        rc = 1;
+        break;
+    }
+    return rc;
+} // Params::evalYodAdjust
 
 int Params::evalPrint(const std::string& optarg)
 {
@@ -401,6 +455,7 @@ int Params::evalPrint(const std::string& optarg)
         case 'v': rc = evalPrintCols("xgnycv"); break;
         case 'h': rc = evalPrintCols("xgnycsh"); break;
         case 'i': printMode_ = pmIptc; break;
+        case 'x': printMode_ = pmXmp; break;
         case 'c': printMode_ = pmComment; break;
         default:
             std::cerr << progname() << ": " << _("Unrecognized print mode") << " `"
@@ -674,9 +729,13 @@ int Params::getopt(int argc, char* const argv[])
         std::cerr << progname() << ": " << _("An action must be specified\n");
         rc = 1;
     }
-    if (action_ == Action::adjust && !adjust_) {
+    if (   action_ == Action::adjust
+        && !adjust_
+        && !yodAdjust_[yodYear].flag_
+        && !yodAdjust_[yodMonth].flag_
+        && !yodAdjust_[yodDay].flag_) {
         std::cerr << progname() << ": "
-                  << _("Adjust action requires option -a time\n");
+                  << _("Adjust action requires at least one -a, -Y, -O or -D option\n");
         rc = 1;
     }
     if (   action_ == Action::modify
@@ -780,11 +839,14 @@ namespace {
             switch (optarg[i]) {
             case 'e': target |= Params::ctExif; break;
             case 'i': target |= Params::ctIptc; break;
+            case 'x': target |= Params::ctXmp; break;
+            case 'X': target |= Params::ctXmpPacket; break;
             case 'c': target |= Params::ctComment; break;
             case 't': target |= Params::ctThumb; break;
             case 'a': target |=   Params::ctExif
                                 | Params::ctIptc
-                                | Params::ctComment; break;
+                                | Params::ctComment
+                                | Params::ctXmp; break;
             default:
                 std::cerr << Params::instance().progname() << ": " << _("Unrecognized ")
                           << action << " " << _("target") << " `"  << optarg[i] << "'\n";
@@ -875,27 +937,36 @@ namespace {
         Exiv2::TypeId defaultType = Exiv2::invalidTypeId;
         std::string key(line.substr(keyStart, keyEnd-keyStart));
         MetadataId metadataId = invalidMetadataId;
-        try {
-            Exiv2::IptcKey iptcKey(key);
-            metadataId = iptc;
-            defaultType = Exiv2::IptcDataSets::dataSetType(iptcKey.tag(),
-                                                           iptcKey.record());
-        }
-        catch (const Exiv2::AnyError&) {}
-        if (metadataId == invalidMetadataId) {
+        if (cmdId != reg) {
             try {
-                Exiv2::ExifKey exifKey(key);
-                metadataId = exif;
-                defaultType = Exiv2::ExifTags::tagType(exifKey.tag(),
-                                                       exifKey.ifdId());
+                Exiv2::IptcKey iptcKey(key);
+                metadataId = iptc;
+                defaultType = Exiv2::IptcDataSets::dataSetType(iptcKey.tag(),
+                                                               iptcKey.record());
             }
             catch (const Exiv2::AnyError&) {}
+            if (metadataId == invalidMetadataId) {
+                try {
+                    Exiv2::ExifKey exifKey(key);
+                    metadataId = exif;
+                    defaultType = Exiv2::ExifTags::tagType(exifKey.tag(),
+                                                           exifKey.ifdId());
+                }
+                catch (const Exiv2::AnyError&) {}
+            }
+            if (metadataId == invalidMetadataId) {
+                try {
+                    Exiv2::XmpKey xmpKey(key);
+                    metadataId = xmp;
+                    defaultType = Exiv2::XmpProperties::propertyType(xmpKey);
+                }
+                catch (const Exiv2::AnyError&) {}
+            }
+            if (metadataId == invalidMetadataId) {
+                throw Exiv2::Error(1, Exiv2::toString(num)
+                                   + ": " + _("Invalid key") + " `" + key + "'");
+            }
         }
-        if (metadataId == invalidMetadataId) {
-            throw Exiv2::Error(1, Exiv2::toString(num)
-                               + ": " + _("Invalid key") + " `" + key + "'");
-        }
-
         std::string value;
         Exiv2::TypeId type = defaultType;
         bool explicitType = false;
@@ -915,7 +986,7 @@ namespace {
                                    + ": " + _("Invalid command line") + " " );
             }
 
-            if (typeEnd != std::string::npos) {
+            if (cmdId != reg && typeEnd != std::string::npos) {
                 std::string typeStr(line.substr(typeStart, typeEnd-typeStart));
                 Exiv2::TypeId tmpType = Exiv2::TypeInfo::typeId(typeStr);
                 if (tmpType != Exiv2::invalidTypeId) {
@@ -943,6 +1014,12 @@ namespace {
         modifyCmd.typeId_ = type;
         modifyCmd.explicitType_ = explicitType;
         modifyCmd.value_ = value;
+
+        if (cmdId == reg) {
+            // Registration needs to be done immediately as the new namespaces are
+            // looked up during parsing of subsequent lines (to validate XMP keys).
+            Exiv2::XmpProperties::registerNs(modifyCmd.value_, modifyCmd.key_);
+        }
 
         return true;
     } // parseLine

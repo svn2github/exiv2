@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -55,6 +55,13 @@ EXIV2_RCSID("@(#) $Id$")
 #endif
 
 // *****************************************************************************
+// local declarations
+namespace {
+    // Print version string from an intermediate string
+    std::ostream& printVersion(std::ostream& os, const std::string& str);
+}
+
+// *****************************************************************************
 // class member definitions
 namespace Exiv2 {
 
@@ -89,6 +96,7 @@ namespace Exiv2 {
         IfdInfo(nikon3IfdId, "Makernote", "Nikon3"),
         IfdInfo(olympusIfdId, "Makernote", "Olympus"),
         IfdInfo(panasonicIfdId, "Makernote", "Panasonic"),
+        IfdInfo(pentaxIfdId, "Makernote", "Pentax"),
         IfdInfo(sigmaIfdId, "Makernote", "Sigma"),
         IfdInfo(sonyIfdId, "Makernote", "Sony"),
         IfdInfo(lastIfdId, "(Last IFD info)", "(Last IFD item)")
@@ -169,6 +177,7 @@ namespace Exiv2 {
         {     9, N_("JBIG B&W")                 },
         {    10, N_("JBIG Color")               },
         { 32766, N_("Next 2-bits RLE")          },
+        { 32769, N_("Epson ERF Compressed")     },
         { 32771, N_("CCITT RLE 1-word")         },
         { 32773, N_("PackBits (Macintosh RLE)") },
         { 32809, N_("Thunderscan RLE")          },
@@ -184,7 +193,9 @@ namespace Exiv2 {
         { 34676, N_("SGI Log Luminance RLE")    },
         { 34677, N_("SGI Log 24-bits packed")   },
         { 34712, N_("Leadtools JPEG 2000")      },
-        { 34713, N_("Nikon NEF Compressed")     }
+        { 34713, N_("Nikon NEF Compressed")     },
+        { 65000, N_("Kodak DCR Compressed")     },
+        { 65535, N_("Pentax PEF Compressed")    }
     };
 
     //! PhotometricInterpretation, tag 0x0106
@@ -291,7 +302,7 @@ namespace Exiv2 {
                 ifd0Id, recOffset, unsignedLong, printValue),
         TagInfo(0x0112, "Orientation", N_("Orientation"),
                 N_("The image orientation viewed in terms of rows and columns."),
-                ifd0Id, imgStruct, unsignedShort, EXV_PRINT_TAG(exifOrientation)),
+                ifd0Id, imgStruct, unsignedShort, print0x0112),
         TagInfo(0x0115, "SamplesPerPixel", N_("Samples per Pixel"),
                 N_("The number of components per pixel. Since this standard applies "
                 "to RGB and YCbCr images, the value set for this tag is 3. "
@@ -325,7 +336,7 @@ namespace Exiv2 {
                 N_("The unit for measuring <XResolution> and <YResolution>. The same "
                 "unit is used for both <XResolution> and <YResolution>. If "
                 "the image resolution is unknown, 2 (inches) is designated."),
-                ifd0Id, imgStruct, unsignedShort, EXV_PRINT_TAG(exifUnit)),
+                ifd0Id, imgStruct, unsignedShort, printExifUnit),
         TagInfo(0x012d, "TransferFunction", N_("Transfer Function"),
                 N_("A transfer function for the image, described in tabular style. "
                 "Normally this tag is not necessary, since color space is "
@@ -341,6 +352,10 @@ namespace Exiv2 {
         TagInfo(0x0132, "DateTime", N_("Date and Time"),
                 N_("The date and time of image creation. In Exif standard, "
                 "it is the date and time the file was changed."),
+                ifd0Id, otherTags, asciiString, printValue),
+        TagInfo(0x013c, "HostComputer", N_("Host computer"),
+                N_("This tag records information about the host computer used "
+                "to generate the image."),
                 ifd0Id, otherTags, asciiString, printValue),
         TagInfo(0x013b, "Artist", N_("Artist"),
                 N_("This tag records the name of the camera owner, photographer or "
@@ -409,7 +424,7 @@ namespace Exiv2 {
                 "<YCbCrPositioning>, it shall follow the TIFF default regardless "
                 "of the value in this field. It is preferable that readers "
                 "be able to support both centered and co-sited positioning."),
-                ifd0Id, imgStruct, unsignedShort, EXV_PRINT_TAG(exifYCbCrPositioning)),
+                ifd0Id, imgStruct, unsignedShort, print0x0213),
         TagInfo(0x0214, "ReferenceBlackWhite", N_("Reference Black/White"),
                 N_("The reference black point value and reference white point "
                 "value. No defaults are given in TIFF, but the values "
@@ -568,21 +583,26 @@ namespace Exiv2 {
         { 0x01, N_("Fired")                                                         },
         { 0x05, N_("Fired, strobe return light not detected")                       },
         { 0x07, N_("Fired, strobe return light detected")                           },
+        { 0x08, N_("Yes, did not fire")                                             },
         { 0x09, N_("Yes, compulsory")                                               },
         { 0x0d, N_("Yes, compulsory, return light not detected")                    },
         { 0x0f, N_("Yes, compulsory, return light detected")                        },
         { 0x10, N_("No, compulsory")                                                },
+        { 0x14, N_("No, did not fire, return not detected")                         },
         { 0x18, N_("No, auto")                                                      },
         { 0x19, N_("Yes, auto")                                                     },
         { 0x1d, N_("Yes, auto, return light not detected")                          },
         { 0x1f, N_("Yes, auto, return light detected")                              },
         { 0x20, N_("No flash function")                                             },
+        { 0x20, N_("No, no flash function")                                         },
         { 0x41, N_("Yes, red-eye reduction")                                        },
         { 0x45, N_("Yes, red-eye reduction, return light not detected")             },
         { 0x47, N_("Yes, red-eye reduction, return light detected")                 },
         { 0x49, N_("Yes, compulsory, red-eye reduction")                            },
         { 0x4d, N_("Yes, compulsory, red-eye reduction, return light not detected") },
         { 0x4f, N_("Yes, compulsory, red-eye reduction, return light detected")     },
+        { 0x50, N_("No, red-eye reduction")                                         },
+        { 0x58, N_("No, auto, red-eye reduction")                                   },
         { 0x59, N_("Yes, auto, red-eye reduction")                                  },
         { 0x5d, N_("Yes, auto, red-eye reduction, return light not detected")       },
         { 0x5f, N_("Yes, auto, red-eye reduction, return light detected")           }
@@ -618,7 +638,7 @@ namespace Exiv2 {
         { 1, N_("Directly photographed") }
     };
 
-    //! exifCustomRendered, tag 0xa401
+    //! CustomRendered, tag 0xa401
     extern const TagDetails exifCustomRendered[] = {
         { 0, N_("Normal process") },
         { 1, N_("Custom process") }
@@ -654,8 +674,8 @@ namespace Exiv2 {
         { 4, N_("High gain down") }
     };
 
-    //! Contrast, tag 0xa408
-    extern const TagDetails exifContrast[] = {
+    //! Contrast, tag 0xa408 and Sharpness, tag 0xa40a
+    extern const TagDetails exifNormalSoftHard[] = {
         { 0, N_("Normal") },
         { 1, N_("Soft")   },
         { 2, N_("Hard")   }
@@ -666,13 +686,6 @@ namespace Exiv2 {
         { 0, N_("Normal") },
         { 1, N_("Low")    },
         { 2, N_("High")   }
-    };
-
-    //! Sharpness, tag 0xa40a
-    extern const TagDetails exifSharpness[] = {
-        { 0, N_("Normal") },
-        { 1, N_("Soft")   },
-        { 2, N_("Hard")   }
     };
 
     //! SubjectDistanceRange, tag 0xa40c
@@ -694,7 +707,7 @@ namespace Exiv2 {
         TagInfo(0x8822, "ExposureProgram", N_("Exposure Program"),
                 N_("The class of the program used by the camera to set exposure "
                 "when the picture is taken."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifExposureProgram)),
+                exifIfdId, captureCond, unsignedShort, print0x8822),
         TagInfo(0x8824, "SpectralSensitivity", N_("Spectral Sensitivity"),
                 N_("Indicates the spectral sensitivity of each channel of the "
                 "camera used. The tag value is an ASCII string compatible "
@@ -712,7 +725,7 @@ namespace Exiv2 {
         TagInfo(0x9000, "ExifVersion", N_("Exif Version"),
                 N_("The version of this standard supported. Nonexistence of this "
                 "field is taken to mean nonconformance to the standard."),
-                exifIfdId, exifVersion, undefined, printValue),
+                exifIfdId, exifVersion, undefined, printExifVersion),
         TagInfo(0x9003, "DateTimeOriginal", N_("Date and Time (original)"),
                 N_("The date and time when the original image data was generated. "
                 "For a digital still camera the date and time the picture was taken are recorded."),
@@ -759,10 +772,10 @@ namespace Exiv2 {
                 exifIfdId, captureCond, unsignedRational, print0x9206),
         TagInfo(0x9207, "MeteringMode", N_("Metering Mode"),
                 N_("The metering mode."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifMeteringMode)),
+                exifIfdId, captureCond, unsignedShort, print0x9207),
         TagInfo(0x9208, "LightSource", N_("Light Source"),
                 N_("The kind of light source."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifLightSource)),
+                exifIfdId, captureCond, unsignedShort, print0x9208),
         TagInfo(0x9209, "Flash", N_("Flash"),
                 N_("This tag is recorded when an image is taken using a strobe light (flash)."),
                 exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifFlash)),
@@ -794,7 +807,7 @@ namespace Exiv2 {
                 exifIfdId, dateTime, asciiString, printValue),
         TagInfo(0xa000, "FlashpixVersion", N_("FlashPix Version"),
                 N_("The FlashPix format version supported by a FPXR file."),
-                exifIfdId, exifVersion, undefined, printValue),
+                exifIfdId, exifVersion, undefined, printExifVersion),
         TagInfo(0xa001, "ColorSpace", N_("Color Space"),
                 N_("The color space information tag is always "
                 "recorded as the color space specifier. Normally sRGB "
@@ -803,7 +816,7 @@ namespace Exiv2 {
                 "sRGB is used, Uncalibrated is set. Image data "
                 "recorded as Uncalibrated can be treated as sRGB when it is "
                 "converted to FlashPix."),
-                exifIfdId, imgCharacter, unsignedShort, EXV_PRINT_TAG(exifColorSpace)),
+                exifIfdId, imgCharacter, unsignedShort, print0xa001),
         TagInfo(0xa002, "PixelXDimension", N_("Pixel X Dimension"),
                 N_("Information specific to compressed data. When a "
                 "compressed file is recorded, the valid width of the "
@@ -855,7 +868,7 @@ namespace Exiv2 {
         TagInfo(0xa210, "FocalPlaneResolutionUnit", N_("Focal Plane Resolution Unit"),
                 N_("Indicates the unit for measuring <FocalPlaneXResolution> and "
                 "<FocalPlaneYResolution>. This value is the same as the <ResolutionUnit>."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifUnit)),
+                exifIfdId, captureCond, unsignedShort, printExifUnit),
         TagInfo(0xa214, "SubjectLocation", N_("Subject Location"),
                 N_("Indicates the location of the main subject in the scene. The "
                 "value of this tag represents the pixel at the center of the "
@@ -869,17 +882,17 @@ namespace Exiv2 {
                 exifIfdId, captureCond, unsignedRational, printValue),
         TagInfo(0xa217, "SensingMethod", N_("Sensing Method"),
                 N_("Indicates the image sensor type on the camera or input device."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifSensingMethod)),
+                exifIfdId, captureCond, unsignedShort, print0xa217),
         TagInfo(0xa300, "FileSource", N_("File Source"),
                 N_("Indicates the image source. If a DSC recorded the image, "
                 "this tag value of this tag always be set to 3, indicating "
                 "that the image was recorded on a DSC."),
-                exifIfdId, captureCond, undefined, EXV_PRINT_TAG(exifFileSource)),
+                exifIfdId, captureCond, undefined, print0xa300),
         TagInfo(0xa301, "SceneType", N_("Scene Type"),
                 N_("Indicates the type of scene. If a DSC recorded the image, "
                 "this tag value must always be set to 1, indicating that the "
                 "image was directly photographed."),
-                exifIfdId, captureCond, undefined, EXV_PRINT_TAG(exifSceneType)),
+                exifIfdId, captureCond, undefined, print0xa301),
         TagInfo(0xa302, "CFAPattern", N_("Color Filter Array Pattern"),
                 N_("Indicates the color filter array (CFA) geometric pattern of the "
                 "image sensor when a one-chip color area sensor is used. "
@@ -890,15 +903,15 @@ namespace Exiv2 {
                 "data, such as rendering geared to output. When special "
                 "processing is performed, the reader is expected to disable "
                 "or minimize any further processing."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifCustomRendered)),
+                exifIfdId, captureCond, unsignedShort, print0xa401),
         TagInfo(0xa402, "ExposureMode", N_("Exposure Mode"),
                 N_("This tag indicates the exposure mode set when the image was "
                 "shot. In auto-bracketing mode, the camera shoots a series of "
                 "frames of the same scene at different exposure settings."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifExposureMode)),
+                exifIfdId, captureCond, unsignedShort, print0xa402),
         TagInfo(0xa403, "WhiteBalance", N_("White Balance"),
                 N_("This tag indicates the white balance mode set when the image was shot."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifWhiteBalance)),
+                exifIfdId, captureCond, unsignedShort, print0xa403),
         TagInfo(0xa404, "DigitalZoomRatio", N_("Digital Zoom Ratio"),
                 N_("This tag indicates the digital zoom ratio when the image was "
                 "shot. If the numerator of the recorded value is 0, this "
@@ -914,22 +927,22 @@ namespace Exiv2 {
                 N_("This tag indicates the type of scene that was shot. It can "
                 "also be used to record the mode in which the image was "
                 "shot. Note that this differs from the <SceneType> tag."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifSceneCaptureType)),
+                exifIfdId, captureCond, unsignedShort, print0xa406),
         TagInfo(0xa407, "GainControl", N_("Gain Control"),
                 N_("This tag indicates the degree of overall image gain adjustment."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifGainControl)),
+                exifIfdId, captureCond, unsignedShort, print0xa407),
         TagInfo(0xa408, "Contrast", N_("Contrast"),
                 N_("This tag indicates the direction of contrast processing "
                 "applied by the camera when the image was shot."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifContrast)),
+                exifIfdId, captureCond, unsignedShort, printNormalSoftHard),
         TagInfo(0xa409, "Saturation", N_("Saturation"),
                 N_("This tag indicates the direction of saturation processing "
                 "applied by the camera when the image was shot."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifSaturation)),
+                exifIfdId, captureCond, unsignedShort, print0xa409),
         TagInfo(0xa40a, "Sharpness", N_("Sharpness"),
                 N_("This tag indicates the direction of sharpness processing "
                 "applied by the camera when the image was shot."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifSharpness)),
+                exifIfdId, captureCond, unsignedShort, printNormalSoftHard),
         TagInfo(0xa40b, "DeviceSettingDescription", N_("Device Setting Description"),
                 N_("This tag indicates information on the picture-taking "
                 "conditions of a particular camera model. The tag is used "
@@ -937,7 +950,7 @@ namespace Exiv2 {
                 exifIfdId, captureCond, undefined, printValue),
         TagInfo(0xa40c, "SubjectDistanceRange", N_("Subject Distance Range"),
                 N_("This tag indicates the distance to the subject."),
-                exifIfdId, captureCond, unsignedShort, EXV_PRINT_TAG(exifSubjectDistanceRange)),
+                exifIfdId, captureCond, unsignedShort, print0xa40c),
         TagInfo(0xa420, "ImageUniqueID", N_("Image Unique ID"),
                 N_("This tag indicates an identifier assigned uniquely to "
                 "each image. It is recorded as an ASCII string equivalent "
@@ -972,11 +985,42 @@ namespace Exiv2 {
         { 1, N_("Below sea level") }
     };
 
+    //! GPS status, tag 0x0009
+    extern const TagDetails exifGPSStatus[] = {
+        { 'A', N_("Measurement in progress")      },
+        { 'V', N_("Measurement Interoperability") }
+    };
+
+    //! GPS measurement mode, tag 0x000a
+    extern const TagDetails exifGPSMeasureMode[] = {
+        { '2', N_("Two-dimensional measurement")   },
+        { '3', N_("Three-dimensional measurement") }
+    };
+
     //! GPS speed reference, tag 0x000c
     extern const TagDetails exifGPSSpeedRef[] = {
-        { 75, N_("km/h")  },
-        { 77, N_("mph")   },
-        { 78, N_("knots") }
+        { 'K', N_("km/h")  },
+        { 'M', N_("mph")   },
+        { 'N', N_("knots") }
+    };
+
+    //! GPS direction ref, tags 0x000e, 0x0010, 0x0017
+    extern const TagDetails exifGPSDirRef[] = {
+        { 'T', N_("True direction")     },
+        { 'M', N_("Magnetic direction") }
+    };
+
+    //! GPS Destination distance ref, tag 0x0019
+    extern const TagDetails exifGPSDestDistanceRef[] = {
+        { 'K', N_("Kilometers") },
+        { 'M', N_("Miles")      },
+        { 'N', N_("Knots")      }
+    };
+
+    //! GPS Differential, tag 0x001e
+    extern const TagDetails exifGPSDifferential[] = {
+        { 0, N_("Without correction") },
+        { 1, N_("Correction applied") }
     };
 
     // GPS Info Tags
@@ -987,7 +1031,7 @@ namespace Exiv2 {
                 "present. (Note: The <GPSVersionID> tag is given in bytes, "
                 "unlike the <ExifVersion> tag. When the version is "
                 "2.0.0.0, the tag value is 02000000.H)."),
-                gpsIfdId, gpsTags, unsignedByte, printValue),
+                gpsIfdId, gpsTags, unsignedByte, print0x0000),
         TagInfo(0x0001, "GPSLatitudeRef", N_("GPS Latitude Reference"),
                 N_("Indicates whether the latitude is north or south latitude. The "
                 "ASCII value 'N' indicates north latitude, and 'S' is south latitude."),
@@ -1019,7 +1063,7 @@ namespace Exiv2 {
                 "and the altitude is indicated as an absolute value in the "
                 "GSPAltitude tag. The reference unit is meters. Note that this tag "
                 "is BYTE type, unlike other reference tags."),
-                gpsIfdId, gpsTags, unsignedByte, EXV_PRINT_TAG(exifGPSAltitudeRef)),
+                gpsIfdId, gpsTags, unsignedByte, print0x0005),
         TagInfo(0x0006, "GPSAltitude", N_("GPS Altitude"),
                 N_("Indicates the altitude based on the reference in GPSAltitudeRef. "
                 "Altitude is expressed as one RATIONAL value. The reference unit is meters."),
@@ -1040,11 +1084,11 @@ namespace Exiv2 {
                 N_("Indicates the status of the GPS receiver when the image is recorded. "
                 "\"A\" means measurement is in progress, and \"V\" means the measurement "
                 "is Interoperability."),
-                gpsIfdId, gpsTags, asciiString, printValue),
+                gpsIfdId, gpsTags, asciiString, print0x0009),
         TagInfo(0x000a, "GPSMeasureMode", N_("GPS Measure Mode"),
                 N_("Indicates the GPS measurement mode. \"2\" means two-dimensional measurement and \"3\" "
                 "means three-dimensional measurement is in progress."),
-                gpsIfdId, gpsTags, asciiString, printValue),
+                gpsIfdId, gpsTags, asciiString, print0x000a),
         TagInfo(0x000b, "GPSDOP", N_("GPS Data Degree of Precision"),
                 N_("Indicates the GPS DOP (data degree of precision). An HDOP value is written "
                 "during two-dimensional measurement, and PDOP during three-dimensional measurement."),
@@ -1052,14 +1096,14 @@ namespace Exiv2 {
         TagInfo(0x000c, "GPSSpeedRef", N_("GPS Speed Reference"),
                 N_("Indicates the unit used to express the GPS receiver speed of movement. "
                 "\"K\" \"M\" and \"N\" represents kilometers per hour, miles per hour, and knots."),
-                gpsIfdId, gpsTags, asciiString, EXV_PRINT_TAG(exifGPSSpeedRef)),
+                gpsIfdId, gpsTags, asciiString, print0x000c),
         TagInfo(0x000d, "GPSSpeed", N_("GPS Speed"),
                 N_("Indicates the speed of GPS receiver movement."),
                 gpsIfdId, gpsTags, unsignedRational, printValue),
         TagInfo(0x000e, "GPSTrackRef", N_("GPS Track Ref"),
                 N_("Indicates the reference for giving the direction of GPS receiver movement. "
                 "\"T\" denotes true direction and \"M\" is magnetic direction."),
-                gpsIfdId, gpsTags, asciiString, printValue),
+                gpsIfdId, gpsTags, asciiString, printGPSDirRef),
         TagInfo(0x000f, "GPSTrack", N_("GPS Track"),
                 N_("Indicates the direction of GPS receiver movement. The range of values is "
                 "from 0.00 to 359.99."),
@@ -1067,7 +1111,7 @@ namespace Exiv2 {
         TagInfo(0x0010, "GPSImgDirectionRef", N_("GPS Image Direction Reference"),
                 N_("Indicates the reference for giving the direction of the image when it is captured. "
                 "\"T\" denotes true direction and \"M\" is magnetic direction."),
-                gpsIfdId, gpsTags, asciiString, printValue),
+                gpsIfdId, gpsTags, asciiString, printGPSDirRef),
         TagInfo(0x0011, "GPSImgDirection", N_("GPS Image Direction"),
                 N_("Indicates the direction of the image when it was captured. The range of values "
                 "is from 0.00 to 359.99."),
@@ -1102,7 +1146,7 @@ namespace Exiv2 {
         TagInfo(0x0017, "GPSDestBearingRef", N_("GPS Destination Bearing Reference"),
                 N_("Indicates the reference used for giving the bearing to the destination point. "
                 "\"T\" denotes true direction and \"M\" is magnetic direction."),
-                gpsIfdId, gpsTags, asciiString, printValue),
+                gpsIfdId, gpsTags, asciiString, printGPSDirRef),
         TagInfo(0x0018, "GPSDestBearing", N_("GPS Destination Bearing"),
                 N_("Indicates the bearing to the destination point. The range of values is from "
                 "0.00 to 359.99."),
@@ -1110,7 +1154,7 @@ namespace Exiv2 {
         TagInfo(0x0019, "GPSDestDistanceRef", N_("GPS Destination Distance Reference"),
                 N_("Indicates the unit used to express the distance to the destination point. "
                 "\"K\", \"M\" and \"N\" represent kilometers, miles and knots."),
-                gpsIfdId, gpsTags, asciiString, printValue),
+                gpsIfdId, gpsTags, asciiString, print0x0019),
         TagInfo(0x001a, "GPSDestDistance", N_("GPS Destination Distance"),
                 N_("Indicates the distance to the destination point."),
                 gpsIfdId, gpsTags, unsignedRational, printValue),
@@ -1129,7 +1173,7 @@ namespace Exiv2 {
                 gpsIfdId, gpsTags, asciiString, printValue),
         TagInfo(0x001e, "GPSDifferential", N_("GPS Differential"),
                 N_("Indicates whether differential correction is applied to the GPS receiver."),
-                gpsIfdId, gpsTags, unsignedShort, printValue),
+                gpsIfdId, gpsTags, unsignedShort, print0x001e),
         // End of list marker
         TagInfo(0xffff, "(UnknownGpsTag)", N_("Unknown GPSInfo tag"),
                 N_("Unknown GPSInfo tag"),
@@ -1152,7 +1196,7 @@ namespace Exiv2 {
                 iopIfdId, iopTags, asciiString, printValue),
         TagInfo(0x0002, "InteroperabilityVersion", N_("Interoperability Version"),
                 N_("Interoperability version"),
-                iopIfdId, iopTags, undefined, printValue),
+                iopIfdId, iopTags, undefined, printExifVersion),
         TagInfo(0x1000, "RelatedImageFileFormat", N_("Related Image File Format"),
                 N_("File format of image file"),
                 iopIfdId, iopTags, asciiString, printValue),
@@ -1225,7 +1269,7 @@ namespace Exiv2 {
     const TagInfo* ExifTags::makerTagInfo(uint16_t tag, IfdId ifdId)
     {
         int i = 0;
-        for (; i < MAX_MAKER_TAG_INFOS && makerIfdIds_[i] != ifdId; ++i);
+        for (; i < MAX_MAKER_TAG_INFOS && makerIfdIds_[i] != ifdId; ++i) {}
         if (i == MAX_MAKER_TAG_INFOS) return 0;
 
         for (int k = 0; makerTagInfos_[i][k].tag_ != 0xffff; ++k) {
@@ -1239,7 +1283,7 @@ namespace Exiv2 {
                                           IfdId ifdId)
     {
         int i = 0;
-        for (; i < MAX_MAKER_TAG_INFOS && makerIfdIds_[i] != ifdId; ++i);
+        for (; i < MAX_MAKER_TAG_INFOS && makerIfdIds_[i] != ifdId; ++i) {}
         if (i == MAX_MAKER_TAG_INFOS) return 0;
 
         for (int k = 0; makerTagInfos_[i][k].tag_ != 0xffff; ++k) {
@@ -1254,7 +1298,7 @@ namespace Exiv2 {
     bool ExifTags::isMakerIfd(IfdId ifdId)
     {
         int i = 0;
-        for (; i < MAX_MAKER_TAG_INFOS && makerIfdIds_[i] != ifdId; ++i);
+        for (; i < MAX_MAKER_TAG_INFOS && makerIfdIds_[i] != ifdId; ++i) {}
         return i != MAX_MAKER_TAG_INFOS && makerIfdIds_[i] != IfdId(0);
     }
 
@@ -1448,7 +1492,7 @@ namespace Exiv2 {
     void ExifTags::makerTaglist(std::ostream& os, IfdId ifdId)
     {
         int i = 0;
-        for (; i < MAX_MAKER_TAG_INFOS && makerIfdIds_[i] != ifdId; ++i);
+        for (; i < MAX_MAKER_TAG_INFOS && makerIfdIds_[i] != ifdId; ++i) {}
         if (i != MAX_MAKER_TAG_INFOS) {
             const TagInfo* mnTagInfo = makerTagInfos_[i];
             for (int k=0; mnTagInfo[k].tag_ != 0xffff; ++k) {
@@ -1621,7 +1665,8 @@ namespace Exiv2 {
         int32_t denominator;
         char c;
         is >> nominator >> c >> denominator;
-        if (is && c == '/') r = std::make_pair(nominator, denominator);
+        if (c != '/') is.setstate(std::ios::failbit);
+        if (is) r = std::make_pair(nominator, denominator);
         return is;
     }
 
@@ -1634,9 +1679,10 @@ namespace Exiv2 {
     {
         uint32_t nominator;
         uint32_t denominator;
-        char c;
+        char c('\0');
         is >> nominator >> c >> denominator;
-        if (is && c == '/') r = std::make_pair(nominator, denominator);
+        if (c != '/') is.setstate(std::ios::failbit);
+        if (is) r = std::make_pair(nominator, denominator);
         return is;
     }
 
@@ -1746,6 +1792,31 @@ namespace Exiv2 {
 
     } // printUcs2
 
+    std::ostream& printExifUnit(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifUnit)(os, value, metadata);
+    }
+
+    std::ostream& print0x0000(std::ostream& os, const Value& value, const ExifData*)
+    {
+        if (value.size() != 4 || value.typeId() != unsignedByte) {
+            return os << value;
+        }
+
+        for (int i = 0; i < 3; i++) {
+            os << value.toLong(i);
+            os << ".";
+        }
+        os << value.toLong(3);
+
+        return os;
+    }
+
+    std::ostream& print0x0005(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifGPSAltitudeRef)(os, value, metadata);
+    }
+
     std::ostream& print0x0006(std::ostream& os, const Value& value, const ExifData*)
     {
         std::ostringstream oss;
@@ -1785,6 +1856,41 @@ namespace Exiv2 {
         }
 
         return os;
+    }
+
+    std::ostream& print0x0009(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifGPSStatus)(os, value, metadata);
+    }
+
+    std::ostream& print0x000a(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifGPSMeasureMode)(os, value, metadata);
+    }
+
+    std::ostream& print0x000c(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifGPSSpeedRef)(os, value, metadata);
+    }
+
+    std::ostream& print0x0019(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifGPSDestDistanceRef)(os, value, metadata);
+    }
+
+    std::ostream& print0x001e(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifGPSDifferential)(os, value, metadata);
+    }
+
+    std::ostream& print0x0112(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifOrientation)(os, value, metadata);
+    }
+
+    std::ostream& print0x0213(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifYCbCrPositioning)(os, value, metadata);
     }
 
     std::ostream& print0x8298(std::ostream& os, const Value& value, const ExifData*)
@@ -1845,6 +1951,11 @@ namespace Exiv2 {
         return os;
     }
 
+    std::ostream& print0x8822(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifExposureProgram)(os, value, metadata);
+    }
+
     std::ostream& print0x8827(std::ostream& os, const Value& value, const ExifData*)
     {
         return os << value.toLong();
@@ -1870,7 +1981,10 @@ namespace Exiv2 {
 
     std::ostream& print0x9201(std::ostream& os, const Value& value, const ExifData*)
     {
-        URational ur = exposureTime(value.toFloat());
+        Rational r = value.toRational();
+        if (!value.ok() || r.second == 0) return os << "(" << value << ")";
+
+        URational ur = exposureTime(static_cast<float>(r.first) / r.second);
         os << ur.first;
         if (ur.second > 1) {
             os << "/" << ur.second;
@@ -1932,6 +2046,16 @@ namespace Exiv2 {
         return os;
     }
 
+    std::ostream& print0x9207(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifMeteringMode)(os, value, metadata);
+    }
+
+    std::ostream& print0x9208(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifLightSource)(os, value, metadata);
+    }
+
     std::ostream& print0x920a(std::ostream& os, const Value& value, const ExifData*)
     {
         Rational length = value.toRational();
@@ -1964,6 +2088,41 @@ namespace Exiv2 {
         return os;
     }
 
+    std::ostream& print0xa001(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifColorSpace)(os, value, metadata);
+    }
+
+    std::ostream& print0xa217(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifSensingMethod)(os, value, metadata);
+    }
+
+    std::ostream& print0xa300(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifFileSource)(os, value, metadata);
+    }
+
+    std::ostream& print0xa301(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifSceneType)(os, value, metadata);
+    }
+
+    std::ostream& print0xa401(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifCustomRendered)(os, value, metadata);
+    }
+
+    std::ostream& print0xa402(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifExposureMode)(os, value, metadata);
+    }
+
+    std::ostream& print0xa403(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifWhiteBalance)(os, value, metadata);
+    }
+
     std::ostream& print0xa404(std::ostream& os, const Value& value, const ExifData*)
     {
         Rational zoom = value.toRational();
@@ -1992,6 +2151,78 @@ namespace Exiv2 {
         return os;
     }
 
+    std::ostream& print0xa406(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifSceneCaptureType)(os, value, metadata);
+    }
+
+    std::ostream& print0xa407(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifGainControl)(os, value, metadata);
+    }
+
+    std::ostream& print0xa409(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifSaturation)(os, value, metadata);
+    }
+
+    std::ostream& print0xa40c(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifSubjectDistanceRange)(os, value, metadata);
+    }
+
+    std::ostream& printGPSDirRef(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifGPSDirRef)(os, value, metadata);
+    }
+
+    std::ostream& printNormalSoftHard(std::ostream& os, const Value& value, const ExifData* metadata)
+    {
+        return EXV_PRINT_TAG(exifNormalSoftHard)(os, value, metadata);
+    }
+
+    std::ostream& printExifVersion(std::ostream& os, const Value& value, const ExifData*)
+    {
+        if (value.size() != 4 || value.typeId() != undefined) {
+            return os << "(" << value << ")";
+        }
+
+        char s[5];
+        for (int i = 0; i < 4; ++i) {
+            s[i] = value.toLong(i);
+        }
+        s[4] = '\0';
+
+        return printVersion(os, s);
+    }
+
+    std::ostream& printXmpVersion(std::ostream& os, const Value& value, const ExifData*)
+    {
+        if (value.size() != 4 || value.typeId() != xmpText) {
+            return os << "(" << value << ")";
+        }
+        
+        return printVersion(os, value.toString());
+    }
+
+    std::ostream& printXmpDate(std::ostream& os, const Value& value, const ExifData*)
+    {
+        if (value.size() != 20 || value.typeId() != xmpText) {
+            return os << "(" << value << ")";
+        }
+
+	std::string stringValue = value.toString();
+        if (stringValue[19] == 'Z') {
+            stringValue = stringValue.substr(0, 19);
+        }
+        for (unsigned int i = 0; i < stringValue.length(); ++i) {
+            if (stringValue[i] == 'T') stringValue[i] = ' ';
+            if (stringValue[i] == '-') stringValue[i] = ':';
+        }
+
+        return os << stringValue;
+    }
+
     float fnumber(float apertureValue)
     {
         return static_cast<float>(std::exp(std::log(2.0) * apertureValue / 2));
@@ -2011,3 +2242,14 @@ namespace Exiv2 {
     }
 
 }                                       // namespace Exiv2
+
+namespace {
+    std::ostream& printVersion(std::ostream& os, const std::string& str)
+    {
+        if (str.size() != 4) {
+            return os << "(" << str << ")";
+        }
+        if (str[0] != '0') os << str[0];
+        return os << str[1] << "." << str[2] << str[3];
+    }
+}

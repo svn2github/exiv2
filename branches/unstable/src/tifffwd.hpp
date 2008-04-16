@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -88,9 +88,9 @@ namespace Exiv2 {
     /*!
       @brief Type for a function pointer for a function to decode a TIFF component.
      */
-    typedef const DecoderFct (*FindDecoderFct)(const std::string& make,
-                                                     uint32_t     extendedTag,
-                                                     uint16_t     group);
+    typedef DecoderFct (*FindDecoderFct)(const std::string& make,
+                                               uint32_t     extendedTag,
+                                               uint16_t     group);
     /*!
       @brief Type for a function pointer for a function to encode a TIFF component.
      */

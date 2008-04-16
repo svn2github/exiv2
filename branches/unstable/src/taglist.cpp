@@ -8,12 +8,10 @@
   History:   07-Jan-04, ahu: created
  */
 // *****************************************************************************
-#include "rcsid.hpp"
-EXIV2_RCSID("@(#) $Id$")
-
 #include "makernote.hpp"
 #include "tags.hpp"
 #include "datasets.hpp"
+#include "properties.hpp"
 #include "error.hpp"
 
 #include <string>
@@ -43,10 +41,16 @@ try {
         IfdId ifdId = ExifTags::ifdIdByIfdItem(item);
         if (ExifTags::isMakerIfd(ifdId)) {
             ExifTags::makerTaglist(std::cout, ifdId);
+            break;
         }
-        else {
+
+        try {
+            XmpProperties::printProperties(std::cout, item);
+        }
+        catch(const AnyError&) {
             rc = 2;
         }
+
         break;
     }
     case 1:
@@ -58,7 +62,8 @@ try {
     }
     if (rc) {
         std::cout << "Usage: " << argv[0]
-                  << " [Exif|Canon|CanonCs|CanonSi|CanonCf|Fujifilm|Nikon1|Nikon2|Nikon3|Olympus|Sigma|Sony|Iptc]\n"
+                  << " [Exif|Canon|CanonCs|CanonSi|CanonCf|Fujifilm|Minolta|Nikon1|Nikon2|Nikon3|Olympus|Panasonic|Pentax|Sigma|Sony|Iptc"
+                  <<  "|dc|xmp|xmpRights|xmpMM|xmpBJ|xmpTPg|xmpDM|pdf|photoshop|crs|tiff|exif|aux|iptc]\n"
                   << "Print Exif tags, MakerNote tags, or Iptc datasets\n";
     }
     return rc;

@@ -1,3 +1,69 @@
+Changes from version 0.16-pre1 to 0.16
+--------------------------------------
+
+* Exiv2 utility
+	- 0000484: [tools] exiv2 -T adjusts file timestamp wrongly.
+	           (Reported by Dave Locke)
+	- 0000477: [tools] Adjust year, month and day of the timestamp.
+	           (Based on a patch by David Grundberg)
+	-          [tools] Modified fixiso action to handle Canon tags as well.
+	           (Highlighted by Michael Mather)
+
+* Exiv2 library
+	- 0000537: [miscellaneous] Broken PNG image causes exiv2 to crash.
+	           (digiKam bug 155105, reported by Michal Kosmulski)
+	- 0000534: [exif] Integer overflow when reading thumbnail.
+	           (Reported by Meder Kydyraliev, Google Security Team)
+	- 0000533: [iptc] Read IPTC data from multiple APP13 Photoshop 3.0 segments.
+	- 0000531: [exif] Pentax lens info decoding. (Patch by Michal Cihar)
+	         - [exif] Updated Nikon lens info to v2.99 of Robert Rottmerhusen's
+	           lens database.
+	         - [doc] Added reference tables for XMP properties to documentation.
+	         - [miscellaneous] Updated German translation.
+	           (Oliver Dörr)
+	         - [miscellaneous] Updated Polish translation.
+	           (Piotr Eljasiak)
+
+* MSVC related
+	- 0000535: [build environment] unlink() declaration conflicts with Visual
+	           Studio stdio.h. (Reported with patch by Nikolai Saoukh)
+	- 0000514: [miscellaneous] Linking with libexiv2 masks system localtime,
+	           and on MinGW, that of libexiv2 doesn't handle DST correctly.
+	         - [build environment] Fixed compilation of the samples.
+	         - [build environment] Added support for XMP to MSVC project files.
+
+
+Changes from version 0.15 to 0.16-pre1
+--------------------------------------
+
+* Exiv2 utility
+	- 0000463: [design] Add support for XMP metadata.
+
+* Exiv2 library
+	- 0000529: [exif] Add support for Pentax maker note. (Michal Cihar)
+	- 0000522: [exif] Lightzone-created JPEG causes exiv2 to segfault.
+	           (Reported by Markus Spring)
+	- 0000463: [design] Add support for XMP metadata.
+	         - [exif] Support for Olympus ORF format. (Jeff Costlow)
+	         - [exif] Updated Nikon lens info to v2.40 of Robert Rottmerhusen's
+	           lens database.
+	         - [exif] Added Minolta lenses. (Hiroshi Kawashima)
+	         - [exif] Ported various Exif tags from Exiftool.
+	           (Gilles Caulier)
+	         - [miscellaneous] Added i18n for XMP properties, XMP support
+	           in PNG images. (Gilles Caulier)
+	         - [build environment] Isolated sample programs in their own
+	           directory.
+	         - [miscellaneous] Updated French translation.
+	           (Olivier Tilloy)
+	         - [miscellaneous] Updated German translation.
+	           (Oliver Dörr)
+	         - [miscellaneous] Updated Polish translation.
+	           (Piotr Eljasiak)
+	         - [miscellaneous] Updated Russian translation.
+	           (Alexandre Prokoudine)
+
+
 Changes from version 0.14 to 0.15
 ---------------------------------
 

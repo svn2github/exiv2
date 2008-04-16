@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -38,6 +38,7 @@
 #include "nikonmn.hpp"
 #include "olympusmn.hpp"
 #include "panasonicmn.hpp"
+#include "pentaxmn.hpp"
 #include "sigmamn.hpp"
 #include "sonymn.hpp"
 

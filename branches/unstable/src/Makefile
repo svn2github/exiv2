@@ -1,22 +1,34 @@
 # ************************************************************* -*- Makefile -*-
 #
-# Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+# Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
 #
 # This Makefile is part of the Exiv2 distribution.
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
 #
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
+#    1. Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#    2. Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#    3. The name of the author may not be used to endorse or promote
+#       products derived from this software without specific prior
+#       written permission.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+# GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+# IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # File:      Makefile
 # Version:   $Rev$
@@ -56,7 +68,9 @@ CCHDR =  exv_conf.h           \
 
 # Add library C++ source files to this list
 CCSRC =  basicio.cpp          \
+	 bmpimage.cpp         \
 	 canonmn.cpp          \
+	 convert.cpp          \
 	 cr2image.cpp         \
 	 crwimage.cpp         \
 	 datasets.cpp         \
@@ -64,9 +78,11 @@ CCSRC =  basicio.cpp          \
 	 exif.cpp             \
 	 futils.cpp           \
 	 fujimn.cpp           \
+	 gifimage.cpp         \
 	 ifd.cpp              \
 	 image.cpp            \
 	 iptc.cpp             \
+	 jp2image.cpp         \
 	 jpgimage.cpp         \
 	 makernote.cpp        \
 	 makernote2.cpp       \
@@ -81,17 +97,23 @@ ifdef HAVE_LIBZ
 CCSRC += pngimage.cpp         \
 	 pngchunk.cpp
 endif
-CCSRC += rafimage.cpp         \
+CCSRC += psdimage.cpp         \
+	 rafimage.cpp         \
 	 sigmamn.cpp          \
+	 pentaxmn.cpp         \
 	 sonymn.cpp           \
 	 tags.cpp             \
+	 tgaimage.cpp         \
 	 tiffcomposite.cpp    \
 	 tiffimage.cpp        \
 	 tiffparser.cpp       \
 	 tiffvisitor.cpp      \
 	 types.cpp            \
 	 value.cpp            \
-	 version.cpp
+	 version.cpp          \
+	 properties.cpp       \
+	 xmp.cpp              \
+	 xmpsidecar.cpp
 
 # Add library C source files to this list
 ifndef HAVE_TIMEGM
@@ -99,45 +121,20 @@ CSRC =   localtime.c
 endif
 
 # Add source files of simple applications to this list
-BINSRC = addmoddel.cpp        \
-         crwedit.cpp          \
-         crwparse.cpp         \
-         dataarea-test.cpp    \
-         exifcomment.cpp      \
-         exifdata-test.cpp    \
-         exifprint.cpp        \
-         ifd-test.cpp         \
-         iotest.cpp           \
-         iptceasy.cpp         \
-         iptcprint.cpp        \
-         iptctest.cpp         \
-         key-test.cpp         \
-         largeiptc-test.cpp   \
-         makernote-test.cpp   \
-         mrwthumb.cpp         \
-         taglist.cpp          \
-         write-test.cpp       \
-         write2-test.cpp      \
-         tiff-test.cpp        \
-         tiffmn-test.cpp      \
-         tiffaddpath-test.cpp \
-         tiffparse.cpp        \
-         xmpdump.cpp
+BINSRC = taglist.cpp
 
-# Main source file of the Exiv2 application
+# Source files for the Exiv2 application
 EXIV2MAIN = exiv2.cpp
-# Add additional source files of the Exiv2 application to this list
-EXIV2SRC = actions.cpp        \
-           utils.cpp
-# C source files of the Exiv2 application
+EXIV2SRC  = actions.cpp       \
+	    utils.cpp
+# C source files for the Exiv2 application
 ifndef HAVE_TIMEGM
-EXIVCSRC = localtime.c
+EXIVCSRC  = localtime.c
 endif
 
-# State the main source file of the metacopy application here
+# Source files for the metacopy sample application
 MCMAIN = metacopy.cpp
-# Add additional source files of the metacopy application to this list
-MCSRC = utils.cpp
+MCSRC  = utils.cpp
 
 # ******************************************************************************
 # Library
@@ -151,6 +148,10 @@ SHELL = /bin/sh
 .SUFFIXES: .c .cpp .o .so
 
 .PRECIOUS: %.cpp
+
+CPPFLAGS += $(XMPSDK_CPPFLAGS)
+LDFLAGS += $(EXPAT_LDFLAGS) $(XMPSDK_LDFLAGS)
+LIBS += $(EXPAT_LIBS) $(XMPSDK_LIBS)
 
 # Generic variables
 CCHDR := $(CCHDR) $(CCSRC:.cpp=.hpp)
@@ -179,26 +180,13 @@ MCBIN = $(MCMAIN:.cpp=)
 MCEXE = $(MCMAIN:.cpp=$(EXEEXT))
 
 ifdef DEP_TRACKING
-DEPDIR = .deps
 DEP = $(CCSRC:%.cpp=$(DEPDIR)/%.d) $(CSRC:%.c=$(DEPDIR)/%.d) \
       $(BINSRC:%.cpp=$(DEPDIR)/%.d) \
       $(EXIV2MAIN:%.cpp=$(DEPDIR)/%.d) $(EXIV2SRC:%.cpp=$(DEPDIR)/%.d) \
       $(EXIVCSRC:%.c=$(DEPDIR)/%.d) $(MCMAIN:%.cpp=$(DEPDIR)/%.d) \
       $(MCSRC:%.cpp=$(DEPDIR)/%.d) $(DEPDIR)/path-test.d
 
-# Dependency files post-process commands
-POSTDEPEND = if test ! -d $(DEPDIR); then mkdir $(DEPDIR); fi; \
-	     if test -e $*.d; then cp $*.d $(DEPDIR)/$*.d; \
-	     sed -e 's/^\#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
-                 -e '/^$$/ d' -e 's/$$/ :/' < $*.d >> $(DEPDIR)/$*.d; \
-             $(RM) $*.d; fi
 endif
-
-# Compilation shortcuts
-COMPILE.cc = $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c
-COMPILE.c = $(CC) $(CFLAGS) $(CPPFLAGS) -c
-# LINK.cc does not need $(LIBS), libtool's dark magic takes care of that
-LINK.cc = $(CXX) $(CXXFLAGS) $(LIBRARY) $(LDFLAGS) -rpath $(libdir)
 
 # ******************************************************************************
 # Rules
@@ -249,20 +237,20 @@ $(LIBTOOL): $(LIBTOOL_DEPS)
 bin: lib $(BINARY) $(EXIV2BIN) $(MCBIN) path-test
 
 lib: $(OBJ)
-	$(LIBTOOL) --mode=link $(CXX) $(LDFLAGS) $(LOBJ) -o $(LIBRARY) -rpath $(libdir) -version-info $(EXIV2_LTVERSION) $(LIBS)
+	$(LIBTOOL) --mode=link $(LINK.cc) -o $(LIBRARY) $(LOBJ) -rpath $(libdir) -version-info $(EXIV2_LTVERSION) $(LIBS)
 	@touch lib
 
 path-test: path-test.o utils.o
 	$(CXX) $(CXXFLAGS) path-test.o utils.o -o $@
 
 $(BINARY): %: %.o lib
-	@$(LIBTOOL) --mode=link $(LINK.cc) -o $@ $@.o
+	@$(LIBTOOL) --mode=link $(LINK.cc) -o $@ $(LIBRARY) $@.o -rpath $(libdir)
 
 $(EXIV2BIN): lib $(EXIV2OBJ) $(EXIV2COBJ)
-	@$(LIBTOOL) --mode=link $(LINK.cc) -o $@ $(EXIV2OBJ) $(EXIV2COBJ)
+	@$(LIBTOOL) --mode=link $(LINK.cc) -o $@ $(LIBRARY) $(EXIV2OBJ) $(EXIV2COBJ) -rpath $(libdir)
 
 $(MCBIN): lib $(MCOBJ)
-	@$(LIBTOOL) --mode=link $(LINK.cc) -o $@ $(MCOBJ)
+	@$(LIBTOOL) --mode=link $(LINK.cc) -o $@ $(LIBRARY) $(MCOBJ) -rpath $(libdir)
 
 install-header:
 	$(INSTALL_DIRS) $(DESTDIR)$(incdir)

@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\src&quot;;&quot;..\..&quot;"
+				AdditionalIncludeDirectories="&quot;..\include&quot;;&quot;..\..&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -45,7 +45,9 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				CommandLine="copy /y $(TargetPath) $(SolutionDir)\bin\$(TargetFileName)
+"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -71,7 +73,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;..\..\src&quot;;&quot;..\..&quot;"
+				AdditionalIncludeDirectories="&quot;..\include&quot;;&quot;..\..&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="4"
 				RuntimeTypeInfo="TRUE"
@@ -122,7 +124,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\..\src\largeiptc-test.cpp">
+				RelativePath="..\..\samples\largeiptc-test.cpp">
 			</File>
 		</Filter>
 		<Filter

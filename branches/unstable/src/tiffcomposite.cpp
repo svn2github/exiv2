@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -96,7 +96,8 @@ namespace Exiv2 {
         { 275, "MinoltaCs5D"  },
         { 276, "MinoltaCs7D"  },
         { 277, "CanonPi"      },
-        { 278, "CanonPa"      }
+        { 278, "CanonPa"      },
+        { 279, "Pentax"       }
     };
 
     bool TiffGroupInfo::operator==(const uint16_t& group) const
@@ -549,7 +550,7 @@ namespace Exiv2 {
 
         // Write the number of directory entries
         if (components_.size() > 0xffff) {
-            throw Error(38, tiffGroupName(group()));
+            throw Error(49, tiffGroupName(group()));
         }
         byte buf[4];
         us2Data(buf, static_cast<uint16_t>(components_.size()), byteOrder);
@@ -757,7 +758,7 @@ namespace Exiv2 {
             if (addSizeElement_ && (*i)->tag() == 0x0000) continue;
             // Fill gaps. Repeated tags will cause an exception
             int32_t gap = ((*i)->tag() - nextTag) * elSize_;
-            if (gap < 0) throw Error(39, (*i)->tag());
+            if (gap < 0) throw Error(50, (*i)->tag());
             if (gap > 0) {
                 blob.insert(blob.end(), gap, 0);
                 idx += gap;
@@ -777,7 +778,7 @@ namespace Exiv2 {
         Value const* pv = pValue();
         if (!pv || pv->count() == 0) return 0;
         if (!(pv->count() == 1 && pv->typeId() == elTypeId_)) {
-            throw Error(40, tag());
+            throw Error(51, tag());
         }
         DataBuf buf(pv->size());
         if (elByteOrder_ != invalidByteOrder) byteOrder = elByteOrder_;

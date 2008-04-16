@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -446,17 +446,38 @@ namespace Exiv2 {
     std::ostream& printDegrees(std::ostream& os, const Value& value, const ExifData*);
     //! Print function converting from UCS-2LE to UTF-8
     std::ostream& printUcs2(std::ostream& os, const Value& value, const ExifData*);
-
+    //! Print function for Exif units
+    std::ostream& printExifUnit(std::ostream& os, const Value& value, const ExifData*);
+    //! Print GPS version
+    std::ostream& print0x0000(std::ostream& os, const Value& value, const ExifData*);
+    //! Print GPS altitude ref
+    std::ostream& print0x0005(std::ostream& os, const Value& value, const ExifData*);
     //! Print GPS altitude
     std::ostream& print0x0006(std::ostream& os, const Value& value, const ExifData*);
     //! Print GPS timestamp
     std::ostream& print0x0007(std::ostream& os, const Value& value, const ExifData*);
+    //! Print GPS status
+    std::ostream& print0x0009(std::ostream& os, const Value& value, const ExifData*);
+    //! Print GPS measurement mode
+    std::ostream& print0x000a(std::ostream& os, const Value& value, const ExifData*);
+    //! Print GPS speed ref
+    std::ostream& print0x000c(std::ostream& os, const Value& value, const ExifData*);
+    //! Print GPS destination distance ref
+    std::ostream& print0x0019(std::ostream& os, const Value& value, const ExifData*);
+    //! Print GPS differential correction
+    std::ostream& print0x001e(std::ostream& os, const Value& value, const ExifData*);
+    //! Print orientation
+    std::ostream& print0x0112(std::ostream& os, const Value& value, const ExifData*);
+    //! Print YCbCrPositioning
+    std::ostream& print0x0213(std::ostream& os, const Value& value, const ExifData*);
     //! Print the copyright
     std::ostream& print0x8298(std::ostream& os, const Value& value, const ExifData*);
     //! Print the exposure time
     std::ostream& print0x829a(std::ostream& os, const Value& value, const ExifData*);
     //! Print the f-number
     std::ostream& print0x829d(std::ostream& os, const Value& value, const ExifData*);
+    //! Print exposure program
+    std::ostream& print0x8822(std::ostream& os, const Value& value, const ExifData*);
     //! Print ISO speed ratings
     std::ostream& print0x8827(std::ostream& os, const Value& value, const ExifData*);
     //! Print components configuration specific to compressed data
@@ -469,14 +490,50 @@ namespace Exiv2 {
     std::ostream& print0x9204(std::ostream& os, const Value& value, const ExifData*);
     //! Print the subject distance
     std::ostream& print0x9206(std::ostream& os, const Value& value, const ExifData*);
+    //! Print metering mode
+    std::ostream& print0x9207(std::ostream& os, const Value& value, const ExifData*);
+    //! Print light source
+    std::ostream& print0x9208(std::ostream& os, const Value& value, const ExifData*);
     //! Print the actual focal length of the lens
     std::ostream& print0x920a(std::ostream& os, const Value& value, const ExifData*);
     //! Print the user comment
     std::ostream& print0x9286(std::ostream& os, const Value& value, const ExifData*);
+    //! Print color space
+    std::ostream& print0xa001(std::ostream& os, const Value& value, const ExifData*);
+    //! Print sensing method
+    std::ostream& print0xa217(std::ostream& os, const Value& value, const ExifData*);
+    //! Print file source
+    std::ostream& print0xa300(std::ostream& os, const Value& value, const ExifData*);
+    //! Print scene type
+    std::ostream& print0xa301(std::ostream& os, const Value& value, const ExifData*);
+    //! Print custom rendered
+    std::ostream& print0xa401(std::ostream& os, const Value& value, const ExifData*);
+    //! Print exposure mode
+    std::ostream& print0xa402(std::ostream& os, const Value& value, const ExifData*);
+    //! Print white balance
+    std::ostream& print0xa403(std::ostream& os, const Value& value, const ExifData*);
     //! Print digital zoom ratio
     std::ostream& print0xa404(std::ostream& os, const Value& value, const ExifData*);
     //! Print 35mm equivalent focal length
     std::ostream& print0xa405(std::ostream& os, const Value& value, const ExifData*);
+    //! Print scene capture type
+    std::ostream& print0xa406(std::ostream& os, const Value& value, const ExifData*);
+    //! Print gain control
+    std::ostream& print0xa407(std::ostream& os, const Value& value, const ExifData*);
+    //! Print saturation
+    std::ostream& print0xa409(std::ostream& os, const Value& value, const ExifData*);
+    //! Print subject distance range
+    std::ostream& print0xa40c(std::ostream& os, const Value& value, const ExifData*);
+    //! Print GPS direction ref
+    std::ostream& printGPSDirRef(std::ostream& os, const Value& value, const ExifData*);
+    //! Print contrast, sharpness (normal, soft, hard)
+    std::ostream& printNormalSoftHard(std::ostream& os, const Value& value, const ExifData*);
+    //! Print any version packed in 4 Bytes format : major major minor minor
+    std::ostream& printExifVersion(std::ostream& os, const Value& value, const ExifData*);
+    //! Print any version encoded in the ASCII string majormajorminorminor
+    std::ostream& printXmpVersion(std::ostream& os, const Value& value, const ExifData*);
+    //! Print a date following the format YYYY-MM-DDTHH:MM:SSZ
+    std::ostream& printXmpDate(std::ostream& os, const Value& value, const ExifData*);
     //@}
 
     //! Calculate F number from an APEX aperture value

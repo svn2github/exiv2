@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -84,11 +84,11 @@ namespace Exiv2 {
 # ifdef EXV_STRERROR_R_CHAR_P
         char *buf = 0;
         char buf2[n];
-        memset(buf2, 0x0, n);
+        std::memset(buf2, 0x0, n);
         buf = strerror_r(error, buf2, n);
 # else
         char buf[n];
-        memset(buf, 0x0, n);
+        std::memset(buf, 0x0, n);
         strerror_r(error, buf, n);
 # endif
         os << buf;

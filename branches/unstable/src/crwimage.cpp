@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2005-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -169,6 +169,18 @@ namespace Exiv2 {
         : Image(ImageType::crw, mdExif | mdComment, io)
     {
     } // CrwImage::CrwImage
+
+    int CrwImage::pixelWidth() const
+    {
+        Exiv2::ExifData::const_iterator widthIter = exifData_.findKey(Exiv2::ExifKey("Exif.Photo.PixelXDimension"));
+        return (widthIter == exifData_.end()) ? 0 : widthIter->toLong();
+    }
+
+    int CrwImage::pixelHeight() const
+    {
+        Exiv2::ExifData::const_iterator heightIter = exifData_.findKey(Exiv2::ExifKey("Exif.Photo.PixelYDimension"));
+        return (heightIter == exifData_.end()) ? 0 : heightIter->toLong();
+    }
 
     void CrwImage::setIptcData(const IptcData& /*iptcData*/)
     {
@@ -960,11 +972,7 @@ namespace Exiv2 {
         if (ifdId == canonSiIfdId) {
             // Exif.Photo.FNumber
             float f = fnumber(canonEv(aperture));
-            // Beware: primitive conversion algorithm
-            uint32_t den = 1000000;
-            uint32_t nom = static_cast<uint32_t>(f * den);
-            uint32_t g = gcd(nom, den);
-            URational ur(nom/g, den/g);
+            URational ur = floatToRationalCast(f);
             URationalValue fn;
             fn.value_.push_back(ur);
             image.exifData().add(ExifKey("Exif.Photo.FNumber"), &fn);
@@ -1133,15 +1141,15 @@ namespace Exiv2 {
             uint32_t size = static_cast<uint32_t>(comment.size());
             if (cc && cc->size() > size) size = cc->size();
             DataBuf buf(size);
-            memset(buf.pData_, 0x0, buf.size_);
-            memcpy(buf.pData_, comment.data(), comment.size());
+            std::memset(buf.pData_, 0x0, buf.size_);
+            std::memcpy(buf.pData_, comment.data(), comment.size());
             pHead->add(pCrwMapping->crwTagId_, pCrwMapping->crwDir_, buf);
         }
         else {
             if (cc) {
                 // Just delete the value, do not remove the tag
                 DataBuf buf(cc->size());
-                memset(buf.pData_, 0x0, buf.size_);
+                std::memset(buf.pData_, 0x0, buf.size_);
                 cc->setValue(buf);
             }
         }
@@ -1216,13 +1224,13 @@ namespace Exiv2 {
         const ExifData::const_iterator ed = image.exifData().findKey(key);
         if (ed != image.exifData().end()) {
             struct tm tm;
-            memset(&tm, 0x0, sizeof(tm));
+            std::memset(&tm, 0x0, sizeof(tm));
             int rc = exifTime(ed->toString().c_str(), &tm);
             if (rc == 0) t = timegm(&tm);
         }
         if (t != 0) {
             DataBuf buf(12);
-            memset(buf.pData_, 0x0, 12);
+            std::memset(buf.pData_, 0x0, 12);
             ul2Data(buf.pData_, static_cast<uint32_t>(t), pHead->byteOrder());
             pHead->add(pCrwMapping->crwTagId_, pCrwMapping->crwDir_, buf);
         }
@@ -1252,8 +1260,8 @@ namespace Exiv2 {
             uint32_t size = 28;
             if (cc && cc->size() > size) size = cc->size();
             DataBuf buf(size);
-            memset(buf.pData_, 0x0, buf.size_);
-            if (cc) memcpy(buf.pData_ + 8, cc->pData() + 8, cc->size() - 8);
+            std::memset(buf.pData_, 0x0, buf.size_);
+            if (cc) std::memcpy(buf.pData_ + 8, cc->pData() + 8, cc->size() - 8);
             if (edX != edEnd && edX->size() == 4) {
                 edX->copy(buf.pData_, pHead->byteOrder());
             }
@@ -1325,7 +1333,7 @@ namespace Exiv2 {
     {
         const uint16_t size = 1024;
         DataBuf buf(size);
-        memset(buf.pData_, 0x0, buf.size_);
+        std::memset(buf.pData_, 0x0, buf.size_);
 
         uint16_t len = 0;
         const ExifData::const_iterator b = exifData.begin();

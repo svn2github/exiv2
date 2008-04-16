@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -164,6 +164,8 @@ namespace Action {
         int printComment();
         //! Print uninterpreted Iptc information
         int printIptc();
+        //! print uninterpreted XMP information
+        int printXmp();
         //! Print Exif summary information
         int printSummary();
         //! Print the list of Exif data in user defined format
@@ -216,6 +218,10 @@ namespace Action {
                            const std::string& path) const;
 
         long adjustment_;
+        long yearAdjustment_;
+        long monthAdjustment_;
+        long dayAdjustment_;
+
     }; // class Adjust
 
     /*!
@@ -244,6 +250,10 @@ namespace Action {
           @brief Erase Jpeg comment from the file.
          */
         int eraseComment(Exiv2::Image* image) const;
+        /*!
+          @brief Erase XMP packet from the file.
+         */
+        int eraseXmpData(Exiv2::Image* image) const;
 
     private:
         virtual Erase* clone_() const;
@@ -268,6 +278,8 @@ namespace Action {
                  on the format of the Exif thumbnail image.
          */
         int writeThumbnail() const;
+        //! Write the XMP packet to a file.
+        int writeXmp() const;
 
     private:
         virtual Extract* clone_() const;
@@ -287,10 +299,16 @@ namespace Action {
 
         /*!
           @brief Insert a Jpeg thumbnail image from a file into file \em path.
-                 The filename of the thumbanail is expected to be the image
+                 The filename of the thumbnail is expected to be the image
                  filename (\em path) minus its suffix plus "-thumb.jpg".
          */
         int insertThumbnail(const std::string& path) const;
+        /*!
+          @brief Insert an XMP packet from a file into file \em path.
+                 The filename of the XMP packet is expected to be the image
+                 filename (\em path) minus its suffix plus ".xmp".
+         */
+        int insertXmpPacket(const std::string& path) const;
 
     private:
         virtual Insert* clone_() const;
@@ -325,6 +343,8 @@ namespace Action {
         //! Delete a metadatum from \em pImage according to \em modifyCmd
         static void delMetadatum(Exiv2::Image* pImage,
                                  const ModifyCmd& modifyCmd);
+        //! Register an XMP namespace according to \em modifyCmd
+        static void regNamespace(const ModifyCmd& modifyCmd);
 
     }; // class Modify
 

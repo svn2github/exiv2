@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -82,9 +82,6 @@ namespace {
                       uint32_t offset,
                       Exiv2::ByteOrder byteOrder);
 
-    // Read file path into a DataBuf, which is returned.
-    Exiv2::DataBuf readFile(const std::string& path);
-
 }
 
 // *****************************************************************************
@@ -112,6 +109,11 @@ namespace Exiv2 {
     {
         if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
         if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
+    }
+
+    std::ostream& Exifdatum::write(std::ostream& os) const
+    {
+        return ExifTags::printTag(os, tag(), ifdId(), value());
     }
 
     const Value& Exifdatum::value() const
@@ -215,11 +217,13 @@ namespace Exiv2 {
         ExifData::const_iterator sizes;
         ExifKey key("Exif.Thumbnail.StripByteCounts");
         sizes = exifData.findKey(key);
-        if (sizes == exifData.end()) return 2;
+        if (sizes == exifData.end()) return 1;
 
-        long totalSize = 0;
+        uint32_t totalSize = 0;
         for (long i = 0; i < sizes->count(); ++i) {
-            totalSize += sizes->toLong(i);
+            uint32_t size = sizes->toLong(i);
+            if (size > 0xffffffff - totalSize) return 1;
+            totalSize += size;
         }
         DataBuf stripsBuf(totalSize);
 
@@ -228,22 +232,24 @@ namespace Exiv2 {
         ExifData::iterator stripOffsets;
         key = ExifKey("Exif.Thumbnail.StripOffsets");
         stripOffsets = exifData.findKey(key);
-        if (stripOffsets == exifData.end()) return 2;
-        if (stripOffsets->count() != sizes->count()) return 2;
+        if (stripOffsets == exifData.end()) return 1;
+        if (stripOffsets->count() != sizes->count()) return 1;
 
         std::ostringstream os; // for the strip offsets
-        long currentOffset = 0;
-        long firstOffset = stripOffsets->toLong(0);
-        long lastOffset = 0;
-        long lastSize = 0;
+        uint32_t currentOffset = 0;
+        uint32_t firstOffset = stripOffsets->toLong(0);
+        uint32_t lastOffset = 0;
+        uint32_t lastSize = 0;
         for (long i = 0; i < stripOffsets->count(); ++i) {
-            long offset = stripOffsets->toLong(i);
+            uint32_t offset = stripOffsets->toLong(i);
             lastOffset = offset;
-            long size = sizes->toLong(i);
+            uint32_t size = sizes->toLong(i);
             lastSize = size;
-            if (len < offset + size) return 1;
-
-            memcpy(stripsBuf.pData_ + currentOffset, buf + offset, size);
+            if (   size > 0xffffffff - offset
+                || static_cast<uint32_t>(len) < offset + size) {
+                return 2;
+            }
+            std::memcpy(stripsBuf.pData_ + currentOffset, buf + offset, size);
             os << currentOffset << " ";
             currentOffset += size;
         }
@@ -303,12 +309,15 @@ namespace Exiv2 {
         ExifKey key("Exif.Thumbnail.JPEGInterchangeFormat");
         ExifData::iterator format = exifData.findKey(key);
         if (format == exifData.end()) return 1;
-        long offset = format->toLong();
+        uint32_t offset = format->toLong();
         key = ExifKey("Exif.Thumbnail.JPEGInterchangeFormatLength");
         ExifData::const_iterator length = exifData.findKey(key);
         if (length == exifData.end()) return 1;
-        long size = length->toLong();
-        if (len < offset + size) return 2;
+        uint32_t size = length->toLong();
+        if (   size > 0xffffffff - offset
+            || static_cast<uint32_t>(len) < offset + size) {
+            return 2;
+        }
         format->setDataArea(buf + offset, size);
         format->setValue("0");
         if (pIfd1) {
@@ -351,7 +360,7 @@ namespace Exiv2 {
     {
         pData_ = new byte[rhs.size_];
         size_ = rhs.size_;
-        memcpy(pData_, rhs.pData_, rhs.size_);
+        std::memcpy(pData_, rhs.pData_, rhs.size_);
 
         if (rhs.pTiffHeader_) {
             pTiffHeader_ = new TiffHeader(*rhs.pTiffHeader_);
@@ -404,7 +413,7 @@ namespace Exiv2 {
         delete[] pData_;
         pData_ = new byte[rhs.size_];
         size_ = rhs.size_;
-        memcpy(pData_, rhs.pData_, rhs.size_);
+        std::memcpy(pData_, rhs.pData_, rhs.size_);
 
         delete pTiffHeader_;
         pTiffHeader_ = 0;
@@ -469,7 +478,7 @@ namespace Exiv2 {
 
         // Copy the data buffer
         DataBuf tmpData(len);
-        memcpy(tmpData.pData_, buf, len);
+        std::memcpy(tmpData.pData_, buf, len);
 
         // Read the TIFF header
         std::auto_ptr<TiffHeader> tmpTiffHeader(new TiffHeader);
@@ -595,8 +604,14 @@ namespace Exiv2 {
         if (pIopIfd_) add(pIopIfd_->begin(), pIopIfd_->end(), byteOrder());
         if (pGpsIfd_) add(pGpsIfd_->begin(), pGpsIfd_->end(), byteOrder());
         if (pIfd1_)   add(pIfd1_->begin(),   pIfd1_->end(),   byteOrder());
-        // Read the thumbnail (but don't worry whether it was successful or not)
-        readThumbnail();
+        // Finally, read the thumbnail
+        rc = readThumbnail();
+        if (0 < rc) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Warning: Failed to read thumbnail, rc = "
+                      << rc << "\n";
+#endif
+        }
 
         return 0;
     } // ExifData::load
@@ -612,7 +627,7 @@ namespace Exiv2 {
             std::cerr << "->>>>>> using non-intrusive writing <<<<<<-\n";
 #endif
             buf.alloc(size_);
-            memcpy(buf.pData_, pData_, size_);
+            std::memcpy(buf.pData_, pData_, size_);
         }
         // Else we have to do it the hard way...
         else {
@@ -647,7 +662,7 @@ namespace Exiv2 {
             e.setIfdId(exifIfd.ifdId());
             e.setTag(0x927c);
             DataBuf tmpBuf(makerNote->size());
-            memset(tmpBuf.pData_, 0x0, tmpBuf.size_);
+            std::memset(tmpBuf.pData_, 0x0, tmpBuf.size_);
             e.setValue(undefined, tmpBuf.size_, tmpBuf.pData_, tmpBuf.size_);
             exifIfd.erase(0x927c);
             exifIfd.add(e);
@@ -944,7 +959,7 @@ namespace Exiv2 {
                                                 + pGpsIfd_->dataSize());
             }
             if (   maxOffset > pIfd1_->offset()
-                || maxOffset > pIfd1_->dataOffset() && pIfd1_->dataOffset() > 0)
+                || (maxOffset > pIfd1_->dataOffset() && pIfd1_->dataOffset() > 0))
                 rc = false;
             /*
                Todo: Removed condition from the above if(). Should be re-added...
@@ -1271,10 +1286,6 @@ namespace Exiv2 {
         makerNote->add(e);
     } // addToMakerNote
 
-    std::ostream& operator<<(std::ostream& os, const Exifdatum& md)
-    {
-        return ExifTags::printTag(os, md.tag(), md.ifdId(), md.value());
-    }
 }                                       // namespace Exiv2
 
 // *****************************************************************************
@@ -1298,24 +1309,6 @@ namespace {
             pos = ifd.findTag(tag);
         }
         pos->setValue(offset, byteOrder);
-    }
-
-    Exiv2::DataBuf readFile(const std::string& path)
-    {
-        Exiv2::FileIo file(path);
-        if (file.open("rb") != 0) {
-            throw Exiv2::Error(10, path, "rb", Exiv2::strError());
-        }
-        struct stat st;
-        if (0 != stat(path.c_str(), &st)) {
-            throw Exiv2::Error(2, path, Exiv2::strError(), "::stat");
-        }
-        Exiv2::DataBuf buf(st.st_size);
-        long len = file.read(buf.pData_, buf.size_);
-        if (len != buf.size_) {
-            throw Exiv2::Error(2, path, Exiv2::strError(), "FileIo::read");
-        }
-        return buf;
     }
 
 }

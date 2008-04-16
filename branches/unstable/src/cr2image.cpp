@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -74,9 +74,9 @@ namespace Exiv2 {
         { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   }
     };
 
-    const DecoderFct Cr2Mapping::findDecoder(const std::string& make,
-                                                   uint32_t     extendedTag,
-                                                   uint16_t     group)
+    DecoderFct Cr2Mapping::findDecoder(const std::string& make,
+                                             uint32_t     extendedTag,
+                                             uint16_t     group)
     {
         DecoderFct decoderFct = &TiffDecoder::decodeStdTiffEntry;
         const TiffMappingInfo* td = find(cr2MappingInfo_,
@@ -106,6 +106,18 @@ namespace Exiv2 {
         : Image(ImageType::cr2, mdExif | mdIptc, io)
     {
     } // Cr2Image::Cr2Image
+
+    int Cr2Image::pixelWidth() const
+    {
+        Exiv2::ExifData::const_iterator widthIter = exifData_.findKey(Exiv2::ExifKey("Exif.Photo.PixelXDimension"));
+        return (widthIter == exifData_.end()) ? 0 : widthIter->toLong();
+    }
+
+    int Cr2Image::pixelHeight() const
+    {
+        Exiv2::ExifData::const_iterator heightIter = exifData_.findKey(Exiv2::ExifKey("Exif.Photo.PixelYDimension"));
+        return (heightIter == exifData_.end()) ? 0 : heightIter->toLong();
+    }
 
     void Cr2Image::setExifData(const ExifData& /*exifData*/)
     {

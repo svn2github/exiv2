@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -54,6 +54,12 @@ EXIV2_RCSID("@(#) $Id$")
 #include "rafimage.hpp"
 #include "tiffimage.hpp"
 #include "orfimage.hpp"
+#include "gifimage.hpp"
+#include "psdimage.hpp"
+#include "tgaimage.hpp"
+#include "bmpimage.hpp"
+#include "jp2image.hpp"
+#include "xmpsidecar.hpp"
 
 // + standard includes
 #include <cerrno>
@@ -74,21 +80,27 @@ EXIV2_RCSID("@(#) $Id$")
 namespace Exiv2 {
 
     const ImageFactory::Registry ImageFactory::registry_[] = {
-        //image type       creation fct     type check  Exif mode    IPTC mode    Comment mode
-        //---------------  ---------------  ----------  -----------  -----------  ------------
-        { ImageType::jpeg, newJpegInstance, isJpegType, amReadWrite, amReadWrite, amReadWrite },
-        { ImageType::exv,  newExvInstance,  isExvType,  amReadWrite, amReadWrite, amReadWrite },
-        { ImageType::cr2,  newCr2Instance,  isCr2Type,  amRead,      amRead,      amNone      },
-        { ImageType::crw,  newCrwInstance,  isCrwType,  amReadWrite, amNone,      amReadWrite },
-        { ImageType::mrw,  newMrwInstance,  isMrwType,  amRead,      amRead,      amNone      },
-        { ImageType::tiff, newTiffInstance, isTiffType, amRead,      amRead,      amNone      },
-        { ImageType::orf,  newOrfInstance,  isOrfType,  amRead,      amRead,      amNone      },
-#ifdef EXV_HAVE_LIBZ
-        { ImageType::png,  newPngInstance,  isPngType,  amRead,      amRead,      amNone      },
-#endif // EXV_HAVE_LIBZ
-        { ImageType::raf,  newRafInstance,  isRafType,  amRead,      amRead,      amNone      },
+        //image type       creation fct     type check  Exif mode    IPTC mode    XMP mode     Comment mode
+        //---------------  ---------------  ----------  -----------  -----------  -----------  ------------
+        { ImageType::jpeg, newJpegInstance, isJpegType, amReadWrite, amReadWrite, amReadWrite, amReadWrite },
+        { ImageType::exv,  newExvInstance,  isExvType,  amReadWrite, amReadWrite, amReadWrite, amReadWrite },
+        { ImageType::cr2,  newCr2Instance,  isCr2Type,  amRead,      amRead,      amRead,      amNone      },
+        { ImageType::crw,  newCrwInstance,  isCrwType,  amReadWrite, amNone,      amNone,      amReadWrite },
+        { ImageType::mrw,  newMrwInstance,  isMrwType,  amRead,      amRead,      amRead,      amNone      },
+        { ImageType::tiff, newTiffInstance, isTiffType, amRead,      amRead,      amRead,      amNone      },
+        { ImageType::orf,  newOrfInstance,  isOrfType,  amRead,      amRead,      amRead,      amNone      },
+  #ifdef EXV_HAVE_LIBZ
+        { ImageType::png,  newPngInstance,  isPngType,  amRead,      amRead,      amRead,      amNone      },
+  #endif // EXV_HAVE_LIBZ
+        { ImageType::raf,  newRafInstance,  isRafType,  amRead,      amRead,      amRead,      amNone      },
+        { ImageType::xmp,  newXmpInstance,  isXmpType,  amNone,      amNone,      amReadWrite, amNone      },
+        { ImageType::gif,  newGifInstance,  isGifType,  amNone,      amNone,      amNone,      amNone      },
+        { ImageType::psd,  newPsdInstance,  isPsdType,  amRead,      amRead,      amRead,      amNone      },
+        { ImageType::tga,  newTgaInstance,  isTgaType,  amNone,      amNone,      amNone,      amNone      },
+        { ImageType::bmp,  newBmpInstance,  isBmpType,  amNone,      amNone,      amNone,      amNone      },
+        { ImageType::jp2,  newJp2Instance,  isJp2Type,  amRead,      amRead,      amRead,      amNone      },
         // End of list marker
-        { ImageType::none, 0,               0,          amNone,      amNone,      amNone      }
+        { ImageType::none, 0,               0,          amNone,      amNone,      amNone,      amNone      }
     };
 
     bool ImageFactory::Registry::operator==(const int& imageType) const
@@ -100,8 +112,15 @@ namespace Exiv2 {
                  uint16_t         supportedMetadata,
                  BasicIo::AutoPtr io)
         : io_(io),
+          pixelWidth_(0),
+          pixelHeight_(0),
           imageType_(imageType),
-          supportedMetadata_(supportedMetadata)
+          supportedMetadata_(supportedMetadata),
+#ifdef EXV_HAVE_XMP_TOOLKIT
+          writeXmpFromPacket_(false)
+#else 
+          writeXmpFromPacket_(true)
+#endif
     {
     }
 
@@ -109,6 +128,8 @@ namespace Exiv2 {
     {
         clearExifData();
         clearIptcData();
+        clearXmpPacket();
+        clearXmpData();
         clearComment();
     }
 
@@ -116,6 +137,8 @@ namespace Exiv2 {
     {
         setExifData(image.exifData());
         setIptcData(image.iptcData());
+        setXmpPacket(image.xmpPacket());
+        setXmpData(image.xmpData());
         setComment(image.comment());
     }
 
@@ -137,6 +160,37 @@ namespace Exiv2 {
     void Image::setIptcData(const IptcData& iptcData)
     {
         iptcData_ = iptcData;
+    }
+
+    void Image::clearXmpPacket()
+    {
+        xmpPacket_.clear();
+        writeXmpFromPacket(true);
+    }
+
+    void Image::setXmpPacket(const std::string& xmpPacket)
+    {
+        xmpPacket_ = xmpPacket;
+        writeXmpFromPacket(true);
+    }
+
+    void Image::clearXmpData()
+    {
+        xmpData_.clear();
+        writeXmpFromPacket(false);
+    }
+
+    void Image::setXmpData(const XmpData& xmpData)
+    {
+        xmpData_ = xmpData;
+        writeXmpFromPacket(false);
+    }
+
+    void Image::writeXmpFromPacket(bool flag)
+    {
+#ifdef EXV_HAVE_XMP_TOOLKIT
+        writeXmpFromPacket_ = flag; 
+#endif
     }
 
     void Image::clearComment()
@@ -172,11 +226,16 @@ namespace Exiv2 {
         if (!r) throw Error(13, type);
         AccessMode am = amNone;
         switch (metadataId) {
+        case mdNone:
+            break;
         case mdExif:
             am = r->exifSupport_;
             break;
         case mdIptc:
             am = r->iptcSupport_;
+            break;
+        case mdXmp:
+            am = r->xmpSupport_;
             break;
         case mdComment:
             am = r->commentSupport_;

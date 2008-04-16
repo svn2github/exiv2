@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -43,6 +43,7 @@ EXIV2_RCSID("@(#) $Id$")
 
 // + standard includes
 #include <string>
+#include <cstring>
 
 // *****************************************************************************
 // class member definitions
@@ -57,6 +58,7 @@ namespace Exiv2 {
         { "NIKON",          Group::nikonmn,   newNikonMn,     0               },
         { "OLYMPUS",        Group::olympmn,   newOlympusMn,   newOlympusMn2   },
         { "Panasonic",      Group::panamn,    newPanasonicMn, newPanasonicMn2 },
+        { "PENTAX",         Group::pentaxmn,  newPentaxMn,    newPentaxMn2    },
         { "SIGMA",          Group::sigmamn,   newSigmaMn,     newSigmaMn2     },
         { "SONY",           Group::sonymn,    newSonyMn,      0               },
         // Entries below are only used for lookup by group
@@ -65,7 +67,6 @@ namespace Exiv2 {
         { "-",              Group::nikon3mn,  0,              newNikon3Mn2    },
         { "-",              Group::sony1mn,   0,              newSony1Mn2     },
         { "-",              Group::sony2mn,   0,              newSony2Mn2     }
-
     };
 
     bool TiffMnRegistry::operator==(const std::string& key) const
@@ -233,7 +234,7 @@ namespace Exiv2 {
         if (size < size_) return false;
 
         header_.alloc(size_);
-        memcpy(header_.pData_, pData, header_.size_);
+        std::memcpy(header_.pData_, pData, header_.size_);
         if (   static_cast<uint32_t>(header_.size_) < size_
             || 0 != memcmp(header_.pData_, signature_, 5)) {
             return false;
@@ -268,7 +269,7 @@ namespace Exiv2 {
         if (size < size_) return false;
 
         header_.alloc(size_);
-        memcpy(header_.pData_, pData, header_.size_);
+        std::memcpy(header_.pData_, pData, header_.size_);
 
         // Read offset to the IFD relative to the start of the makernote
         // from the header. Note that we ignore the byteOrder argument
@@ -307,7 +308,7 @@ namespace Exiv2 {
         if (size < size_) return false;
         if (0 != memcmp(pData, signature_, 6)) return false;
         buf_.alloc(size_);
-        memcpy(buf_.pData_, pData, buf_.size_);
+        std::memcpy(buf_.pData_, pData, buf_.size_);
         start_ = size_;
         return true;
 
@@ -340,7 +341,7 @@ namespace Exiv2 {
         if (size < size_) return false;
         if (0 != memcmp(pData, signature_, 6)) return false;
         buf_.alloc(size_);
-        memcpy(buf_.pData_, pData, buf_.size_);
+        std::memcpy(buf_.pData_, pData, buf_.size_);
         TiffHeade2 th;
         if (!th.read(buf_.pData_ + 10, 8)) return false;
         byteOrder_ = th.byteOrder();
@@ -367,15 +368,15 @@ namespace Exiv2 {
     }
 
     bool PanasonicMnHeader::read(const byte* pData,
-                              uint32_t    size,
-                              ByteOrder   /*byteOrder*/)
+                                 uint32_t    size,
+                                 ByteOrder   /*byteOrder*/)
     {
         assert (pData != 0);
 
         if (size < size_) return false;
         if (0 != memcmp(pData, signature_, 9)) return false;
         buf_.alloc(size_);
-        memcpy(buf_.pData_, pData, buf_.size_);
+        std::memcpy(buf_.pData_, pData, buf_.size_);
         start_ = size_;
         return true;
 
@@ -387,6 +388,39 @@ namespace Exiv2 {
         append(blob, signature_, size_);
         return size_;
     } // PanasonicMnHeader::write
+
+    const byte PentaxMnHeader::signature_[] = {
+        'A', 'O', 'C', 0x00, 'M', 'M'
+    };
+    const uint32_t PentaxMnHeader::size_ = 6;
+
+    PentaxMnHeader::PentaxMnHeader()
+    {
+        read(signature_, size_, invalidByteOrder);
+    }
+
+    bool PentaxMnHeader::read(const byte* pData,
+                              uint32_t size,
+                              ByteOrder /*byteOrder*/)
+    {
+        assert (pData != 0);
+
+        if (size < size_) return false;
+        header_.alloc(size_);
+        std::memcpy(header_.pData_, pData, header_.size_);
+        if (   static_cast<uint32_t>(header_.size_) < size_
+            || 0 != memcmp(header_.pData_, signature_, 3)) {
+            return false;
+        }
+        return true;
+    } // PentaxMnHeader::read
+
+    uint32_t PentaxMnHeader::write(Blob&     blob,
+                                   ByteOrder /*byteOrder*/) const
+    {
+        append(blob, signature_, size_);
+        return size_;
+    } // PentaxMnHeader::write
 
     const byte SigmaMnHeader::signature1_[] = {
         'S', 'I', 'G', 'M', 'A', '\0', '\0', '\0', 0x01, 0x00
@@ -411,7 +445,7 @@ namespace Exiv2 {
         if (   0 != memcmp(pData, signature1_, 8)
             && 0 != memcmp(pData, signature2_, 8)) return false;
         buf_.alloc(size_);
-        memcpy(buf_.pData_, pData, buf_.size_);
+        std::memcpy(buf_.pData_, pData, buf_.size_);
         start_ = size_;
         return true;
 
@@ -443,7 +477,7 @@ namespace Exiv2 {
         if (size < size_) return false;
         if (0 != memcmp(pData, signature_, size_)) return false;
         buf_.alloc(size_);
-        memcpy(buf_.pData_, pData, buf_.size_);
+        std::memcpy(buf_.pData_, pData, buf_.size_);
         start_ = size_;
         return true;
 
@@ -563,6 +597,23 @@ namespace Exiv2 {
                                    uint16_t mnGroup)
     {
         return new TiffIfdMakernote(tag, group, mnGroup, new PanasonicMnHeader, false);
+    }
+
+    TiffComponent* newPentaxMn(uint16_t    tag,
+                                uint16_t    group,
+                                uint16_t    mnGroup,
+                                const byte* /*pData*/,
+                                uint32_t    /*size*/,
+                                ByteOrder   /*byteOrder*/)
+    {
+        return newPentaxMn2(tag, group, mnGroup);
+    }
+
+    TiffComponent* newPentaxMn2(uint16_t tag,
+                                uint16_t group,
+                                uint16_t mnGroup)
+    {
+        return new TiffIfdMakernote(tag, group, mnGroup, new PentaxMnHeader);
     }
 
     TiffComponent* newSigmaMn(uint16_t    tag,

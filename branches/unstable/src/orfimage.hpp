@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -95,7 +95,7 @@ namespace Exiv2 {
          */
         void setIptcData(const IptcData& iptcData);
         /*!
-          @brief Not supported. MRW format does not contain a comment.
+          @brief Not supported. ORF format does not contain a comment.
               Calling this function will throw an Error(32).
          */
         void setComment(const std::string& comment);
@@ -104,6 +104,8 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         std::string mimeType() const { return "image/x-olympus-orf"; }
+        int pixelWidth() const;
+        int pixelHeight() const;
         //@}
 
     private:
@@ -141,21 +143,19 @@ namespace Exiv2 {
         //@}
     }; // class OrfHeader
 
-
-
 // *****************************************************************************
 // template, inline and free functions
 
     // These could be static private functions on Image subclasses but then
     // ImageFactory needs to be made a friend.
     /*!
-      @brief Create a new MrwImage instance and return an auto-pointer to it.
+      @brief Create a new OrfImage instance and return an auto-pointer to it.
              Caller owns the returned object and the auto-pointer ensures that
              it will be deleted.
      */
     Image::AutoPtr newOrfInstance(BasicIo::AutoPtr io, bool create);
 
-    //! Check if the file iIo is a MRW image.
+    //! Check if the file iIo is an ORF image.
     bool isOrfType(BasicIo& iIo, bool advance);
 
 }                                       // namespace Exiv2

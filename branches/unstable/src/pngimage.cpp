@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -21,6 +21,7 @@
 /*
   File:    pngimage.cpp
   Version: $Rev: 823 $
+  Author(s): Gilles Caulier (cgilles) <caulier dot gilles at gmail dot com>
   History: 12-Jun-06, gc: submitted
   Credits: See header file
  */
@@ -98,7 +99,7 @@ namespace Exiv2 {
             throw Error(3, "PNG");
         }
         clearMetadata();
-        PngChunk::decode(this, io_->mmap(), io_->size());
+        PngChunk::decode(this, io_->mmap(), io_->size(), &pixelWidth_, &pixelHeight_);
 
         /*
           Todo:

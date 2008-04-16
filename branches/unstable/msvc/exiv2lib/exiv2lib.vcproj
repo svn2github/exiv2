@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="exiv2lib"
 	ProjectGUID="{831EF580-92C8-4CA8-B0CE-3D906280A54D}"
+	RootNamespace="exiv2lib"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -19,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\src;..\.."
+				AdditionalIncludeDirectories="..\..\src;..\..;..\..\xmpsdk\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -36,11 +37,17 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/exiv2.lib"/>
+				OutputFile="$(OutDir)/exiv2.lib"
+				AdditionalLibraryDirectories=""/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				CommandLine="rmdir /s /q ..\include\
+xcopy /y /i ..\..\src\*.h $(SolutionDir)\include\exiv2\
+xcopy /y /i ..\..\src\*.hpp $(SolutionDir)\include\exiv2\
+copy /y $(TargetPath) $(SolutionDir)\lib\$(TargetFileName)
+"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -272,6 +279,21 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\src\makernote2.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\..\src\metadatum.cpp">
 			</File>
 			<File
@@ -299,6 +321,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\src\orfimage.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\panasonicmn.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -312,6 +337,12 @@
 						Name="VCCLCompilerTool"
 						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\src\pentaxmn.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\properties.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\rafimage.cpp">
@@ -362,6 +393,21 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\src\tiffcomposite.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\..\src\tiffimage.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -392,37 +438,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\tiffcomposite.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\..\src\tiffvisitor.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\makernote2.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -465,6 +481,9 @@
 						Name="VCCLCompilerTool"
 						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\src\xmp.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -517,13 +536,16 @@
 				RelativePath="..\..\src\makernote.hpp">
 			</File>
 			<File
+				RelativePath="..\..\src\makernote2.hpp">
+			</File>
+			<File
 				RelativePath="..\..\src\metadatum.hpp">
 			</File>
 			<File
-				RelativePath="..\..\src\mn.hpp">
+				RelativePath="..\..\src\minoltamn.hpp">
 			</File>
 			<File
-				RelativePath="..\..\src\minoltamn.hpp">
+				RelativePath="..\..\src\mn.hpp">
 			</File>
 			<File
 				RelativePath="..\..\src\mrwimage.hpp">
@@ -535,7 +557,16 @@
 				RelativePath="..\..\src\olympusmn.hpp">
 			</File>
 			<File
+				RelativePath="..\..\src\orfimage.hpp">
+			</File>
+			<File
 				RelativePath="..\..\src\panasonicmn.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\pentaxmn.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\properties.hpp">
 			</File>
 			<File
 				RelativePath="..\..\src\rafimage.hpp">
@@ -553,25 +584,25 @@
 				RelativePath="..\..\src\tags.hpp">
 			</File>
 			<File
+				RelativePath="..\..\src\tiffcomposite.hpp">
+			</File>
+			<File
 				RelativePath="..\..\src\tiffimage.hpp">
 			</File>
 			<File
 				RelativePath="..\..\src\tiffparser.hpp">
 			</File>
 			<File
-				RelativePath="..\..\src\tiffcomposite.hpp">
-			</File>
-			<File
 				RelativePath="..\..\src\tiffvisitor.hpp">
-			</File>
-			<File
-				RelativePath="..\..\src\makernote2.hpp">
 			</File>
 			<File
 				RelativePath="..\..\src\types.hpp">
 			</File>
 			<File
 				RelativePath="..\..\src\value.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\xmp.hpp">
 			</File>
 		</Filter>
 		<Filter
