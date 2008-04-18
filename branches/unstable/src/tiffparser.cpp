@@ -380,8 +380,8 @@ namespace Exiv2 {
             std::cerr << "Intrusive writing\n";
 
             // Re-write binary representation from the composite tree
-            pHeader->write(blob);
-            rootDir->write(blob, pHeader->byteOrder(), pHeader->offset(), uint32_t(-1), uint32_t(-1));
+            uint32_t offset = pHeader->write(blob);
+            rootDir->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1));
         }
     } // TiffParser::encode
 
