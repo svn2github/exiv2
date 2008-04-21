@@ -104,6 +104,11 @@ namespace Exiv2 {
         findObject(object);
     }
 
+    void TiffFinder::visitImageEntry(TiffImageEntry* object)
+    {
+        findObject(object);
+    }
+
     void TiffFinder::visitSizeEntry(TiffSizeEntry* object)
     {
         findObject(object);
@@ -165,6 +170,11 @@ namespace Exiv2 {
     }
 
     void TiffDecoder::visitDataEntry(TiffDataEntry* object)
+    {
+        decodeTiffEntry(object);
+    }
+
+    void TiffDecoder::visitImageEntry(TiffImageEntry* object)
     {
         decodeTiffEntry(object);
     }
@@ -447,6 +457,11 @@ namespace Exiv2 {
         }
     }
 
+    void TiffEncoder::visitImageEntry(TiffImageEntry* object)
+    {
+        encodeTiffEntry(object);
+    }
+
     void TiffEncoder::visitSizeEntry(TiffSizeEntry* object)
     {
         encodeTiffEntry(object);
@@ -707,7 +722,12 @@ namespace Exiv2 {
                 << object->pValue()->sizeDataArea()
                 << " " << _("bytes.\n");
         }
-    } // TiffPrinter::visitEntry
+    } // TiffPrinter::visitDataEntry
+
+    void TiffPrinter::visitImageEntry(TiffImageEntry* object)
+    {
+        printTiffEntry(object, prefix());
+    } // TiffPrinter::visitImageEntry
 
     void TiffPrinter::visitSizeEntry(TiffSizeEntry* object)
     {
@@ -854,12 +874,7 @@ namespace Exiv2 {
         return pState_->createFct_(extendedTag, group);
     }
 
-    void TiffReader::visitEntry(TiffEntry* object)
-    {
-        readTiffEntry(object);
-    }
-
-    void TiffReader::visitDataEntry(TiffDataEntry* object)
+    void TiffReader::readDataEntryBase(TiffDataEntryBase* object)
     {
         assert(object != 0);
 
@@ -868,8 +883,23 @@ namespace Exiv2 {
         pRoot_->accept(finder);
         TiffEntryBase* te = dynamic_cast<TiffEntryBase*>(finder.result());
         if (te && te->pValue()) {
-            object->setDataArea(te->pValue(), pData_, size_, baseOffset());
+            object->setStrips(te->pValue(), pData_, size_, baseOffset());
         }
+    }
+
+    void TiffReader::visitEntry(TiffEntry* object)
+    {
+        readTiffEntry(object);
+    }
+
+    void TiffReader::visitDataEntry(TiffDataEntry* object)
+    {
+        readDataEntryBase(object);
+    }
+
+    void TiffReader::visitImageEntry(TiffImageEntry* object)
+    {
+        readDataEntryBase(object);
     }
 
     void TiffReader::visitSizeEntry(TiffSizeEntry* object)
@@ -879,9 +909,9 @@ namespace Exiv2 {
         readTiffEntry(object);
         TiffFinder finder(object->dtTag(), object->dtGroup());
         pRoot_->accept(finder);
-        TiffDataEntry* te = dynamic_cast<TiffDataEntry*>(finder.result());
+        TiffDataEntryBase* te = dynamic_cast<TiffDataEntryBase*>(finder.result());
         if (te && te->pValue()) {
-            te->setDataArea(object->pValue(), pData_, size_, baseOffset());
+            te->setStrips(object->pValue(), pData_, size_, baseOffset());
         }
     }
 

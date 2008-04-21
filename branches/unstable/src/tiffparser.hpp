@@ -168,9 +168,9 @@ namespace Exiv2 {
 
           @return Pointer to the encoder function
          */
-        static const EncoderFct findEncoder(const std::string& make,
-                                                  uint32_t     extendedTag,
-                                                  uint16_t     group);
+        static EncoderFct findEncoder(const std::string& make,
+                                            uint32_t     extendedTag,
+                                            uint16_t     group);
 
     private:
         static const TiffMappingInfo tiffMappingInfo_[]; //<! TIFF mapping table

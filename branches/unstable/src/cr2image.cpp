@@ -88,9 +88,9 @@ namespace Exiv2 {
         return decoderFct;
     }
 
-    const EncoderFct Cr2Mapping::findEncoder(const std::string& make,
-                                                   uint32_t     extendedTag,
-                                                   uint16_t     group)
+    EncoderFct Cr2Mapping::findEncoder(const std::string& make,
+                                             uint32_t     extendedTag,
+                                             uint16_t     group)
     {
         EncoderFct encoderFct = &TiffEncoder::encodeStdTiffEntry;
         const TiffMappingInfo* td = find(cr2MappingInfo_,

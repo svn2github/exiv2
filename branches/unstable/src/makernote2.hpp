@@ -273,28 +273,43 @@ namespace Exiv2 {
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
-                                 uint32_t  dataIdx);
+                                 uint32_t  dataIdx,
+                                 uint32_t  imageIdx);
         //@}
         //! @name Write support (Accessors)
         //@{
         /*!
-          @brief This class does not implement writeData(), it only has write().
-                 This method must not be called; it commits suicide.
+          @brief This class does not really implement writeData(), it only has
+                 write(). This method must not be called; it commits suicide.
          */
         virtual uint32_t doWriteData(Blob&     blob,
                                      ByteOrder byteOrder,
                                      int32_t   offset,
-                                     uint32_t  dataIdx) const;
+                                     uint32_t  dataIdx,
+                                     uint32_t  imageIdx) const;
+        /*!
+          @brief This class does not really implement writeImage(), it only has
+                 write(). This method must not be called; it commits suicide.
+         */
+        virtual uint32_t doWriteImage(Blob&     blob,
+                                      ByteOrder byteOrder,
+                                      int32_t   offset,
+                                      uint32_t  imageIdx) const;
         /*!
           @brief Implements size(). Return the size of the Makernote header,
                  TIFF directory, values and additional data.
          */
         virtual uint32_t doSize() const;
         /*!
-          @brief This class does not implement sizeData(), it only has size().
-                 This method must not be called; it commits suicide.
+          @brief This class does not really implement sizeData(), it only has
+                 size(). This method must not be called; it commits suicide.
          */
         virtual uint32_t doSizeData() const;
+        /*!
+          @brief This class does not really implement sizeData(), it only has
+                 size(). This method must not be called; it commits suicide.
+         */
+        virtual uint32_t doSizeImage() const;
         //@}
 
     private:

@@ -108,6 +108,8 @@ namespace Exiv2 {
         // IFD0
         {    0x8769, Group::ifd0,      Group::exif,      Tag::root, Group::none,      newTiffSubIfd },
         {    0x8825, Group::ifd0,      Group::gps,       Tag::root, Group::none,      newTiffSubIfd },
+        {    0x0111, Group::ifd0,      Group::ifd0,      Tag::root, Group::none,      newTiffImageData<0x0117, Group::ifd0> },
+        {    0x0117, Group::ifd0,      Group::ifd0,      Tag::root, Group::none,      newTiffImageSize<0x0111, Group::ifd0> },
         // SubIfd found in NEF images (up to 3 sub directories seen, groups sub0_0, sub0_1, sub0_2)
         {    0x014a, Group::ifd0,      Group::sub0_0,    Tag::root, Group::none,      newTiffSubIfd },
         { Tag::next, Group::ifd0,      Group::ifd1,      Tag::root, Group::none,      newTiffDirectory },
@@ -254,9 +256,9 @@ namespace Exiv2 {
         return decoderFct;
     }
 
-    const EncoderFct TiffMapping::findEncoder(const std::string& make,
-                                                    uint32_t     extendedTag,
-                                                    uint16_t     group)
+    EncoderFct TiffMapping::findEncoder(const std::string& make,
+                                              uint32_t     extendedTag,
+                                              uint16_t     group)
     {
         EncoderFct encoderFct = &TiffEncoder::encodeStdTiffEntry;
         const TiffMappingInfo* td = find(tiffMappingInfo_,
@@ -381,7 +383,7 @@ namespace Exiv2 {
 
             // Re-write binary representation from the composite tree
             uint32_t offset = pHeader->write(blob);
-            rootDir->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1));
+            rootDir->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1), uint32_t(-1));
         }
     } // TiffParser::encode
 

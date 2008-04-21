@@ -183,7 +183,8 @@ namespace Exiv2 {
                                        ByteOrder byteOrder,
                                        int32_t   offset,
                                        uint32_t  /*valueIdx*/,
-                                       uint32_t  /*dataIdx*/)
+                                       uint32_t  /*dataIdx*/,
+                                       uint32_t  imageIdx)
     {
         if (this->byteOrder() != invalidByteOrder) {
             byteOrder = this->byteOrder();
@@ -191,18 +192,29 @@ namespace Exiv2 {
         uint32_t len = writeHeader(blob, byteOrder);
         len += ifd_.write(blob, byteOrder,
                           offset - baseOffset(offset) + len,
-                          uint32_t(-1), uint32_t(-1));
+                          uint32_t(-1), uint32_t(-1),
+                          imageIdx);
         return len;
     } // TiffIfdMakernote::doWrite
 
     uint32_t TiffIfdMakernote::doWriteData(Blob&     /*blob*/,
                                            ByteOrder /*byteOrder*/,
                                            int32_t   /*offset*/,
-                                           uint32_t  /*dataIdx*/) const
+                                           uint32_t  /*dataIdx*/,
+                                           uint32_t  /*imageIdx*/) const
     {
         assert(false);
         return 0;
     } // TiffIfdMakernote::doWriteData
+
+    uint32_t TiffIfdMakernote::doWriteImage(Blob&     /*blob*/,
+                                            ByteOrder /*byteOrder*/,
+                                            int32_t   /*offset*/,
+                                            uint32_t  /*imageIdx*/) const
+    {
+        assert(false);
+        return 0;
+    } // TiffIfdMakernote::doWriteImage
 
     uint32_t TiffIfdMakernote::doSize() const
     {
@@ -214,6 +226,12 @@ namespace Exiv2 {
         assert(false);
         return 0;
     } // TiffIfdMakernote::doSizeData
+
+    uint32_t TiffIfdMakernote::doSizeImage() const
+    {
+        assert(false);
+        return 0;
+    } // TiffIfdMakernote::doSizeImage
 
     const byte OlympusMnHeader::signature_[] = {
         'O', 'L', 'Y', 'M', 'P', 0x00, 0x01, 0x00

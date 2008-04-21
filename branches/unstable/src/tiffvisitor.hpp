@@ -106,6 +106,8 @@ namespace Exiv2 {
         virtual void visitEntry(TiffEntry* object) =0;
         //! Operation to perform for a TIFF data entry
         virtual void visitDataEntry(TiffDataEntry* object) =0;
+        //! Operation to perform for a TIFF image entry
+        virtual void visitImageEntry(TiffImageEntry* object) =0;
         //! Operation to perform for a TIFF size entry
         virtual void visitSizeEntry(TiffSizeEntry* object) =0;
         //! Operation to perform for a TIFF directory
@@ -165,6 +167,8 @@ namespace Exiv2 {
         virtual void visitEntry(TiffEntry* object);
         //! Find tag and group in a TIFF data entry
         virtual void visitDataEntry(TiffDataEntry* object);
+        //! Find tag and group in a TIFF image entry
+        virtual void visitImageEntry(TiffImageEntry* object);
         //! Find tag and group in a TIFF size entry
         virtual void visitSizeEntry(TiffSizeEntry* object);
         //! Find tag and group in a TIFF directory
@@ -228,6 +232,8 @@ namespace Exiv2 {
         virtual void visitEntry(TiffEntry* object);
         //! Decode a TIFF data entry
         virtual void visitDataEntry(TiffDataEntry* object);
+        //! Decode a TIFF image entry
+        virtual void visitImageEntry(TiffImageEntry* object);
         //! Decode a TIFF size entry
         virtual void visitSizeEntry(TiffSizeEntry* object);
         //! Decode a TIFF directory
@@ -322,6 +328,8 @@ namespace Exiv2 {
         virtual void visitEntry(TiffEntry* object);
         //! Encode a TIFF data entry
         virtual void visitDataEntry(TiffDataEntry* object);
+        //! Encode a TIFF image entry
+        virtual void visitImageEntry(TiffImageEntry* object);
         //! Encode a TIFF size entry
         virtual void visitSizeEntry(TiffSizeEntry* object);
         //! Encode a TIFF directory
@@ -409,50 +417,6 @@ namespace Exiv2 {
         std::string make_;           //!< Camera make, determined from the tags to encode
         bool dirty_;                 //!< Signals if any tag is deleted or allocated
     }; // class TiffEncoder
-
-    /*!
-      @brief Add TIFF component for \em tag and \em group to the composite.
-             Creates all the nodes required from the root element, which must
-             already exist (to invoke the visitor on).
-    */
-    class TiffAdder : public TiffVisitor {
-    public:
-        //! @name Creators
-        //@{
-        //! Constructor, taking \em tag and \em group of the component to add.
-        TiffAdder(uint16_t tag, uint16_t group);
-        //! Virtual destructor
-        virtual ~TiffAdder() {}
-        //@}
-
-        //! @name Manipulators
-        //@{
-        //! Find tag and group in a TIFF entry
-        virtual void visitEntry(TiffEntry* object);
-        //! Find tag and group in a TIFF data entry
-        virtual void visitDataEntry(TiffDataEntry* object);
-        //! Find tag and group in a TIFF size entry
-        virtual void visitSizeEntry(TiffSizeEntry* object);
-        //! Find tag and group in a TIFF directory
-        virtual void visitDirectory(TiffDirectory* object);
-        //! Find tag and group in a TIFF sub-IFD
-        virtual void visitSubIfd(TiffSubIfd* object);
-        //! Find tag and group in a TIFF makernote
-        virtual void visitMnEntry(TiffMnEntry* object);
-        //! Find tag and group in an IFD makernote
-        virtual void visitIfdMakernote(TiffIfdMakernote* object);
-        //! Find tag and group in an array entry component
-        virtual void visitArrayEntry(TiffArrayEntry* object);
-        //! Find tag and group in an array element
-        virtual void visitArrayElement(TiffArrayElement* object);
-        //@}
-
-    private:
-        const uint16_t tag_;      //!< Tag of the new component
-        const uint16_t group_;    //!< Group of the new component
-        TiffPath       tiffPath_; //!< Path to the component
-
-    }; // class TiffAdder
 
     /*!
       @brief Simple state class containing relevant state information for
@@ -546,6 +510,8 @@ namespace Exiv2 {
         virtual void visitEntry(TiffEntry* object);
         //! Read a TIFF data entry from the data buffer
         virtual void visitDataEntry(TiffDataEntry* object);
+        //! Read a TIFF image entry from the data buffer
+        virtual void visitImageEntry(TiffImageEntry* object);
         //! Read a TIFF size entry from the data buffer
         virtual void visitSizeEntry(TiffSizeEntry* object);
         //! Read a TIFF directory from the data buffer
@@ -565,6 +531,8 @@ namespace Exiv2 {
 
         //! Read a standard TIFF entry from the data buffer
         void readTiffEntry(TiffEntryBase* object);
+        //! Read a TiffDataEntryBase from the data buffer
+        void readDataEntryBase(TiffDataEntryBase* object);
         //! Set the \em state class. Assumes ownership of the object passed in.
         void changeState(TiffRwState::AutoPtr state);
         //! Reset the state to the original state as set in the constructor.
@@ -614,6 +582,8 @@ namespace Exiv2 {
         virtual void visitEntry(TiffEntry* object);
         //! Print a TIFF data entry.
         virtual void visitDataEntry(TiffDataEntry* object);
+        //! Print a TIFF image entry.
+        virtual void visitImageEntry(TiffImageEntry* object);
         //! Print a TIFF size entry.
         virtual void visitSizeEntry(TiffSizeEntry* object);
         //! Print a TIFF directory
