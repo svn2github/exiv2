@@ -19,20 +19,21 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*!
-  @file    tiffvisitor.hpp
-  @brief   Operations on a TIFF composite tree, implemented as visitor classes.
+  @file    tiffvisitor_int.hpp
+  @brief   Internal operations on a TIFF composite tree, implemented as visitor
+           classes.
   @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    11-Apr-06, ahu: created
  */
-#ifndef TIFFVISITOR_HPP_
-#define TIFFVISITOR_HPP_
+#ifndef TIFFVISITOR_INT_HPP_
+#define TIFFVISITOR_INT_HPP_
 
 // *****************************************************************************
 // included header files
 #include "exif.hpp"
-#include "tifffwd.hpp"
+#include "tifffwd_int.hpp"
 #include "types.hpp"
 
 // + standard includes
@@ -45,6 +46,7 @@
 // *****************************************************************************
 // namespace extensions
 namespace Exiv2 {
+    namespace Internal {
 
 // *****************************************************************************
 // class definitions
@@ -626,6 +628,6 @@ namespace Exiv2 {
         static const std::string indent_;       //!< Indent for one level
     }; // class TiffPrinter
 
-}                                       // namespace Exiv2
+}}                                      // namespace Internal, Exiv2
 
-#endif                                  // #ifndef TIFFVISITOR_HPP_
+#endif                                  // #ifndef TIFFVISITOR_INT_HPP_

@@ -48,7 +48,7 @@ EXIV2_RCSID("@(#) $Id: pngchunk.cpp 823 2006-06-23 07:35:00Z cgilles $")
 #include <zlib.h>
 
 #include "pngchunk.hpp"
-#include "tiffparser.hpp"
+#include "tiffimage.hpp"
 #include "exif.hpp"
 #include "iptc.hpp"
 #include "image.hpp"
@@ -317,8 +317,7 @@ namespace Exiv2 {
                     std::cerr << "Exiv2::PngChunk::decode: Exif header found at position " << pos << "\n";
 #endif
                     pos = pos + sizeof(exifHeader);
-                    TiffParser::decode(pImage, exifData.pData_ + pos, length - pos,
-                                       TiffCreator::create, TiffMapping::findDecoder);
+                    TiffParser::decode(pImage, exifData.pData_ + pos, length - pos);
                 }
             }
         }

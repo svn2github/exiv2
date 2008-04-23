@@ -73,7 +73,6 @@ BINSRC = addmoddel.cpp        \
          stringto-test.cpp    \
          write-test.cpp       \
          write2-test.cpp      \
-         tiffparse.cpp        \
          xmpparse.cpp         \
          xmpparser-test.cpp   \
          xmpsample.cpp

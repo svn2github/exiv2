@@ -19,21 +19,20 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*!
-  @file    makernote2.hpp
-  @brief   Makernote TIFF composite class TiffIfdMakernote and classes for
-           various makernote headers.
+  @file    makernote2_int.hpp
+  @brief   Internal Makernote TIFF composite class TiffIfdMakernote and classes
+           for various makernote headers.
   @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    11-Apr-06, ahu: created
  */
-#ifndef MAKERNOTE2_HPP_
-#define MAKERNOTE2_HPP_
+#ifndef MAKERNOTE2_INT_HPP_
+#define MAKERNOTE2_INT_HPP_
 
 // *****************************************************************************
 // included header files
-#include "tiffcomposite.hpp"
-#include "tiffvisitor.hpp"
+#include "tiffcomposite_int.hpp"
 #include "types.hpp"
 
 // + standard includes
@@ -42,6 +41,7 @@
 // *****************************************************************************
 // namespace extensions
 namespace Exiv2 {
+    namespace Internal {
 
     namespace Group {
         const uint16_t olympmn   = 257; //!< Olympus makernote
@@ -692,6 +692,6 @@ namespace Exiv2 {
                                uint16_t group,
                                uint16_t mnGroup);
 
-}                                       // namespace Exiv2
+}}                                      // namespace Internal, Exiv2
 
-#endif                                  // #ifndef MAKERNOTE2_HPP_
+#endif                                  // #ifndef MAKERNOTE2_INT_HPP_

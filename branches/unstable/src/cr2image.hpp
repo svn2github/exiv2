@@ -33,9 +33,7 @@
 // included header files
 #include "image.hpp"
 #include "basicio.hpp"
-#include "tifffwd.hpp"
 #include "types.hpp"
-#include "tiffimage.hpp"
 
 // + standard includes
 #include <string>
@@ -122,76 +120,31 @@ namespace Exiv2 {
     }; // class Cr2Image
 
     /*!
-      @brief Table of Cr2 decoding functions and find function. See
-             TiffMapping for details.
+      @brief Stateless parser class for data in CR2 format. Images use this
+             class to decode and encode CR2 data.
+             See class TiffParser for details.
      */
-    class Cr2Mapping {
+    class Cr2Parser {
     public:
         /*!
-          @brief Find the decoder function for a key.
-
-          If the returned pointer is 0, the tag should not be decoded,
-          else the decoder function should be used.
-
-          @param make Camera make
-          @param extendedTag Extended tag
-          @param group %Group
-
-          @return Pointer to the decoder function
-         */
-        static DecoderFct findDecoder(const std::string& make,
-                                            uint32_t     extendedTag,
-                                            uint16_t     group);
-
+          @brief Decode metadata from a buffer \em pData of length \em size
+                 with data in CR2 format to \em pImage.
+                 See TiffParser::decode().
+        */
+        static void decode(      Image*   pImage,
+                           const byte*    pData,
+                                 uint32_t size);
         /*!
-          @brief Find the encoder function for a key.
+          @brief Encode metadata from \em pImage to CR2 format.
+                 See TiffParser::encode().
 
-          If the returned pointer is 0, the tag should not be encoded,
-          else the encoder function should be used.
+        */
+        static void encode(      Blob&    blob,
+                           const byte*    pData,
+                                 uint32_t size,
+                           const Image*   pImage);
 
-          @param make Camera make
-          @param extendedTag Extended tag
-          @param group %Group
-
-          @return Pointer to the encoder function
-         */
-        static EncoderFct findEncoder(const std::string& make,
-                                            uint32_t     extendedTag,
-                                            uint16_t     group);
-
-    private:
-        static const TiffMappingInfo cr2MappingInfo_[]; //<! CR2 mapping table
-
-    }; // class Cr2Mapping
-
-    /*!
-      @brief Canon CR2 header structure.
-     */
-    class Cr2Header : public TiffHeaderBase {
-    public:
-        //! @name Creators
-        //@{
-        //! Default constructor
-        Cr2Header();
-        //! Destructor.
-        ~Cr2Header();
-        //@}
-
-        //! @name Manipulators
-        //@{
-        bool read(const byte* pData, uint32_t size);
-        //@}
-
-        //! @name Accessors
-        //@{
-        uint32_t write(Blob& blob) const;
-        //@}
-
-    private:
-        // DATA
-        uint32_t              offset2_;   //!< Bytes 12-15 from the header
-        static const char*    cr2sig_;    //!< Signature for CR2 type TIFF
-    }; // class Cr2Header
+    }; // class Cr2Parser
 
 // *****************************************************************************
 // template, inline and free functions

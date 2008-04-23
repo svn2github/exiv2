@@ -47,8 +47,7 @@
 // namespace extensions
 /*!
   @brief Provides classes and functions to encode and decode Exif and Iptc data.
-         This namespace corresponds to the <b>libexiv2</b> library.
-
+         The <b>libexiv2</b> API consists of the objects of this namespace.
  */
 namespace Exiv2 {
 

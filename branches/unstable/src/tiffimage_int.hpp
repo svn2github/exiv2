@@ -19,32 +19,122 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*!
-  @file    tiffparser.hpp
-  @brief   Class TiffParser to parse TIFF data.
+  @file    tiffimage_int.hpp
+  @brief   Internal class TiffParserWorker to parse TIFF data.
   @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
-  @date    15-Mar-06, ahu: created
+  @date    23-Apr-08, ahu: created
  */
-#ifndef TIFFPARSER_HPP_
-#define TIFFPARSER_HPP_
+#ifndef TIFFIMAGE_INT_HPP_
+#define TIFFIMAGE_INT_HPP_
 
 // *****************************************************************************
 // included header files
-#include "tifffwd.hpp"
+#include "tifffwd_int.hpp"
 #include "image.hpp"
 #include "types.hpp"
 
 // + standard includes
-#include <iosfwd>
-#include <cassert>
 
 // *****************************************************************************
 // namespace extensions
 namespace Exiv2 {
+    /*!
+      @brief Contains internal objects which are not published and are not part
+             of the <b>libexiv2</b> API.
+     */
+    namespace Internal {
 
 // *****************************************************************************
 // class definitions
+
+    /*!
+      @brief Abstract base class defining the interface of an image header.
+             Used internally by classes for TIFF-based images.  Default
+             implementation is for the regular TIFF header.
+     */
+    class TiffHeaderBase {
+    public:
+        //! @name Creators
+        //@{
+        //! Constructor taking \em tag, \em size and default \em byteOrder and \em offset.
+        TiffHeaderBase(uint16_t  tag,
+                       uint32_t  size,
+                       ByteOrder byteOrder,
+                       uint32_t  offset);
+        //! Virtual destructor.
+        virtual ~TiffHeaderBase() =0;
+        //@}
+
+        //! @name Manipulators
+        //@{
+        /*!
+          @brief Read the image header from a data buffer. Return false if the
+                 data buffer does not contain an image header of the expected
+                 format, else true.
+
+          @param pData Pointer to the data buffer.
+          @param size  Number of bytes in the data buffer.
+          @return True if the TIFF header was read successfully. False if the
+                 data buffer does not contain a valid TIFF header.
+         */
+        virtual bool read(const byte* pData, uint32_t size);
+        //! Set the byte order.
+        virtual void setByteOrder(ByteOrder byteOrder);
+        //! Set the offset to the start of the root directory.
+        virtual void setOffset(uint32_t offset);
+        //@}
+
+        //! @name Accessors
+        //@{
+        /*!
+          @brief Write the image header to the binary image \em blob.
+                 This method appends to the blob.
+
+          @param blob Binary image to add to.
+          @return Number of bytes written.
+         */
+        virtual uint32_t write(Blob& blob) const;
+        /*!
+          @brief Print debug info for the image header to \em os.
+
+          @param os Output stream to write to.
+          @param prefix Prefix to be written before each line of output.
+         */
+        virtual void print(std::ostream& os, const std::string& prefix ="") const;
+        //! Return the byte order (little or big endian).
+        virtual ByteOrder byteOrder() const;
+        //! Return the offset to the start of the root directory.
+        virtual uint32_t offset() const;
+        //! Return the size (in bytes) of the image header.
+        virtual uint32_t size() const;
+        //! Return the tag value (magic number) which identifies the buffer as TIFF data
+        virtual uint16_t tag() const;
+        //@}
+
+    private:
+        // DATA
+        const uint16_t tag_;       //!< Tag to identify the buffer as TIFF data
+        const uint32_t size_;      //!< Size of the header
+        ByteOrder      byteOrder_; //!< Applicable byte order
+        uint32_t       offset_;    //!< Offset to the start of the root dir
+
+    }; // class TiffHeaderBase
+
+    /*!
+      @brief Standard TIFF header structure.
+     */
+    class TiffHeade2 : public TiffHeaderBase {
+    public:
+        //! @name Creators
+        //@{
+        //! Default constructor
+        TiffHeade2();
+        //! Destructor
+        ~TiffHeade2();
+        //@}
+    }; // class TiffHeade2
 
     /*!
       @brief TIFF component factory for standard TIFF components.
@@ -63,7 +153,9 @@ namespace Exiv2 {
                  the root TIFF element to the TIFF entry \em extendedTag and
                  \em group.
         */
-        static void getPath(TiffPath& tiffPath, uint32_t extendedTag, uint16_t group);
+        static void getPath(TiffPath& tiffPath,
+                            uint32_t  extendedTag,
+                            uint16_t  group);
 
     private:
         static const TiffStructure tiffStructure_[]; //<! TIFF structure
@@ -74,7 +166,7 @@ namespace Exiv2 {
              class to decode and encode TIFF-based data. Uses class
              CreationPolicy for the creation of TIFF components.
      */
-    class TiffParser {
+    class TiffParserWorker {
     public:
         /*!
           @brief Decode TIFF metadata from a data buffer \em pData of length
@@ -99,7 +191,6 @@ namespace Exiv2 {
                                  TiffCompFactoryFct createFct,
                                  FindDecoderFct     findDecoderFct,
                                  TiffHeaderBase*    pHeader =0);
-
         /*!
           @brief Encode TIFF metadata from \em pImage into a memory block
                  \em blob.
@@ -130,7 +221,7 @@ namespace Exiv2 {
                     TiffCompFactoryFct createFct,
                     TiffHeaderBase*    pHeader);
 
-    }; // class TiffParser
+    }; // class TiffParserWorker
 
     /*!
       @brief Table of TIFF decoding and encoding functions and find functions.
@@ -177,6 +268,6 @@ namespace Exiv2 {
 
     }; // class TiffMapping
 
-}                                       // namespace Exiv2
+}}                                      // namespace Internal, Exiv2
 
-#endif                                  // #ifndef TIFFPARSER_HPP_
+#endif                                  // #ifndef TIFFIMAGE_INT_HPP_

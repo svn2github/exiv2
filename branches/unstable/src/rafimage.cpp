@@ -38,7 +38,7 @@ EXIV2_RCSID("@(#) $Id$")
 #endif
 
 #include "rafimage.hpp"
-#include "tiffparser.hpp"
+#include "tiffimage.hpp"
 #include "image.hpp"
 #include "basicio.hpp"
 #include "error.hpp"
@@ -107,8 +107,7 @@ namespace Exiv2 {
         uint32_t const start = getULong(pData + 84, bigEndian) + 12;
         if (static_cast<uint32_t>(size) < start) throw Error(14);
         clearMetadata();
-        TiffParser::decode(this, pData + start, size - start,
-                           TiffCreator::create, TiffMapping::findDecoder);
+        TiffParser::decode(this, pData + start, size - start);
     } // RafImage::readMetadata
 
     void RafImage::writeMetadata()

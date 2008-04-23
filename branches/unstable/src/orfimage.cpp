@@ -38,7 +38,8 @@ EXIV2_RCSID("@(#) $Id$")
 #endif
 
 #include "orfimage.hpp"
-#include "tiffparser.hpp"
+#include "orfimage_int.hpp"
+#include "tiffimage_int.hpp"
 #include "image.hpp"
 #include "basicio.hpp"
 #include "error.hpp"
@@ -53,6 +54,8 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
+
+    using namespace Internal;
 
     OrfImage::OrfImage(BasicIo::AutoPtr io, bool /*create*/)
         : Image(ImageType::orf, mdExif | mdIptc, io)
@@ -112,10 +115,7 @@ namespace Exiv2 {
             throw Error(3, "ORF");
         }
         clearMetadata();
-        OrfHeader orfHeader;
-        TiffParser::decode(this, io_->mmap(), io_->size(),
-                           TiffCreator::create, TiffMapping::findDecoder,
-                           &orfHeader);
+        OrfParser::decode(this, io_->mmap(), io_->size());
     } // OrfImage::readMetadata
 
     void OrfImage::writeMetadata()
@@ -123,6 +123,67 @@ namespace Exiv2 {
         // Todo: implement me!
         throw(Error(31, "ORF"));
     } // OrfImage::writeMetadata
+
+    void OrfParser::decode(      Image*   pImage,
+                           const byte*    pData,
+                                 uint32_t size)
+    {
+        OrfHeader orfHeader;
+        TiffParserWorker::decode(pImage,
+                                 pData,
+                                 size,
+                                 TiffCreator::create,
+                                 TiffMapping::findDecoder,
+                                 &orfHeader);
+    }
+
+    void OrfParser::encode(      Blob&    blob,
+                           const byte*    pData,
+                                 uint32_t size,
+                           const Image*   pImage)
+    {
+        /* Todo: Implement me!
+
+        TiffParserWorker::encode(blob,
+                                 pData,
+                                 size,
+                                 pImage,
+                                 TiffCreator::create,
+                                 TiffMapping::findEncoder);
+        */
+    }
+
+    // *************************************************************************
+    // free functions
+    Image::AutoPtr newOrfInstance(BasicIo::AutoPtr io, bool create)
+    {
+        Image::AutoPtr image(new OrfImage(io, create));
+        if (!image->good()) {
+            image.reset();
+        }
+        return image;
+    }
+
+    bool isOrfType(BasicIo& iIo, bool advance)
+    {
+        const int32_t len = 8;
+        byte buf[len];
+        iIo.read(buf, len);
+        if (iIo.error() || iIo.eof()) {
+            return false;
+        }
+        OrfHeader orfHeader;
+        bool rc = orfHeader.read(buf, len);
+        if (!advance || !rc) {
+            iIo.seek(-len, BasicIo::cur);
+        }
+        return rc;
+    }
+
+}                                       // namespace Exiv2
+
+namespace Exiv2 {
+    namespace Internal {
 
     OrfHeader::OrfHeader()
         : TiffHeaderBase('O'<< 8 | 'R', 8, littleEndian, 0x00000008)
@@ -159,31 +220,4 @@ namespace Exiv2 {
         return 0;
     }
 
-    // *************************************************************************
-    // free functions
-    Image::AutoPtr newOrfInstance(BasicIo::AutoPtr io, bool create)
-    {
-        Image::AutoPtr image(new OrfImage(io, create));
-        if (!image->good()) {
-            image.reset();
-        }
-        return image;
-    }
-
-    bool isOrfType(BasicIo& iIo, bool advance)
-    {
-        const int32_t len = 8;
-        byte buf[len];
-        iIo.read(buf, len);
-        if (iIo.error() || iIo.eof()) {
-            return false;
-        }
-        OrfHeader orfHeader;
-        bool rc = orfHeader.read(buf, len);
-        if (!advance || !rc) {
-            iIo.seek(-len, BasicIo::cur);
-        }
-        return rc;
-    }
-
-}                                       // namespace Exiv2
+}}                                      // namespace Internal, Exiv2

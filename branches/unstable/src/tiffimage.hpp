@@ -105,91 +105,50 @@ namespace Exiv2 {
     }; // class TiffImage
 
     /*!
-      @brief Abstract base class defining the interface of an image header.
-             Used internally by classes for TIFF-based images.  Default
-             implementation is for the regular TIFF header.
+      @brief Stateless parser class for data in TIFF format. Images use this
+             class to decode and encode TIFF data.
      */
-    class TiffHeaderBase {
+    class TiffParser {
     public:
-        //! @name Creators
-        //@{
-        //! Constructor taking \em tag, \em size and default \em byteOrder and \em offset.
-        TiffHeaderBase(uint16_t  tag,
-                       uint32_t  size,
-                       ByteOrder byteOrder,
-                       uint32_t  offset);
-        //! Virtual destructor.
-        virtual ~TiffHeaderBase() =0;
-        //@}
-
-        //! @name Manipulators
-        //@{
         /*!
-          @brief Read the image header from a data buffer. Return false if the
-                 data buffer does not contain an image header of the expected
-                 format, else true.
+          @brief Decode metadata from a buffer \em pData of length \em size
+                 with data in TIFF format to \em pImage.
 
-          @param pData Pointer to the data buffer.
-          @param size  Number of bytes in the data buffer.
-          @return True if the TIFF header was read successfully. False if the
-                 data buffer does not contain a valid TIFF header.
-         */
-        virtual bool read(const byte* pData, uint32_t size);
-        //! Set the byte order.
-        virtual void setByteOrder(ByteOrder byteOrder);
-        //! Set the offset to the start of the root directory.
-        virtual void setOffset(uint32_t offset);
-        //@}
-
-        //! @name Accessors
-        //@{
+          @param pImage Pointer to the image container to hold the metadata.
+          @param pData  Pointer to the data buffer. Must point to data in TIFF
+                        format; no checks are performed.
+          @param size   Length of the data buffer.
+        */
+        static void decode(      Image*   pImage,
+                           const byte*    pData,
+                                 uint32_t size);
         /*!
-          @brief Write the image header to the binary image \em blob.
-                 This method appends to the blob.
+          @brief Encode metadata from \em pImage to TIFF format.
 
-          @param blob Binary image to add to.
-          @return Number of bytes written.
-         */
-        virtual uint32_t write(Blob& blob) const;
-        /*!
-          @brief Print debug info for the image header to \em os.
+          The original binary image in the memory block \em pData, \em size
+          is parsed and updated in-place if possible ("non-intrusive" writing).
+          In this case, the \em blob is empty on return. If that is not
+          possible (e.g., if new tags were added), the entire TIFF structure
+          is re-written to the \em blob ("intrusive" writing). The memory
+          block \em pData, \em size may be partly updated in this case and
+          should not be used anymore. If \em pData is 0 or \em size is 0,
+          a new TIFF structure is created and returned in \em blob.
 
-          @param os Output stream to write to.
-          @param prefix Prefix to be written before each line of output.
-         */
-        virtual void print(std::ostream& os, const std::string& prefix ="") const;
-        //! Return the byte order (little or big endian).
-        virtual ByteOrder byteOrder() const;
-        //! Return the offset to the start of the root directory.
-        virtual uint32_t offset() const;
-        //! Return the size (in bytes) of the image header.
-        virtual uint32_t size() const;
-        //! Return the tag value (magic number) which identifies the buffer as TIFF data
-        virtual uint16_t tag() const;
-        //@}
+          @param blob   Container for the binary image if "intrusive"
+                        writing is necessary. Empty otherwise.
+          @param pData  Pointer to the binary image data buffer. Must
+                        point to data in TIFF format; no checks are
+                        performed. Will be modified if "non-intrusive"
+                        writing is possible.
+          @param size   Length of the data buffer.
+          @param pImage Pointer to the image with the metadata to write.
+        */
+        static void encode(      Blob&    blob,
+                           const byte*    pData,
+                                 uint32_t size,
+                           const Image*   pImage);
 
-    private:
-        // DATA
-        const uint16_t tag_;       //!< Tag to identify the buffer as TIFF data
-        const uint32_t size_;      //!< Size of the header
-        ByteOrder      byteOrder_; //!< Applicable byte order
-        uint32_t       offset_;    //!< Offset to the start of the root dir
-
-    }; // class TiffHeaderBase
-
-    /*!
-      @brief Standard TIFF header structure.
-     */
-    class TiffHeade2 : public TiffHeaderBase {
-    public:
-        //! @name Creators
-        //@{
-        //! Default constructor
-        TiffHeade2();
-        //! Destructor
-        ~TiffHeade2();
-        //@}
-    }; // class TiffHeade2
+    }; // class TiffParser
 
 // *****************************************************************************
 // template, inline and free functions

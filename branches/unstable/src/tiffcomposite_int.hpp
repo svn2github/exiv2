@@ -19,20 +19,20 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*!
-  @file    tiffcomposite.hpp
-  @brief   Various classes used in a TIFF composite structure
+  @file    tiffcomposite_int.hpp
+  @brief   Internal classes used in a TIFF composite structure
   @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    11-Apr-06, ahu: created
  */
-#ifndef TIFFCOMPOSITE_HPP_
-#define TIFFCOMPOSITE_HPP_
+#ifndef TIFFCOMPOSITE_INT_HPP_
+#define TIFFCOMPOSITE_INT_HPP_
 
 // *****************************************************************************
 // included header files
 #include "image.hpp"                            // for Blob
-#include "tifffwd.hpp"
+#include "tifffwd_int.hpp"
 #include "types.hpp"
 
 // + standard includes
@@ -44,6 +44,7 @@
 // *****************************************************************************
 // namespace extensions
 namespace Exiv2 {
+    namespace Internal {
 
 // *****************************************************************************
 // class definitions
@@ -1219,6 +1220,7 @@ namespace Exiv2 {
         return TiffComponent::AutoPtr(
             new TiffSizeEntry(tag, ts->group_, dtTag, dtGroup));
     }
-}                                       // namespace Exiv2
 
-#endif                                  // #ifndef TIFFCOMPOSITE_HPP_
+}}                                      // namespace Internal, Exiv2
+
+#endif                                  // #ifndef TIFFCOMPOSITE_INT_HPP_

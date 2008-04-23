@@ -36,9 +36,9 @@ EXIV2_RCSID("@(#) $Id$")
 # include "exv_conf.h"
 #endif
 
-#include "tiffcomposite.hpp"
-#include "tiffvisitor.hpp"
-#include "makernote2.hpp"
+#include "tiffcomposite_int.hpp"
+#include "tiffvisitor_int.hpp"
+#include "makernote2_int.hpp"
 #include "value.hpp"
 #include "error.hpp"
 
@@ -51,6 +51,7 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
+    namespace Internal {
 
     //! Structure for group and group name info
     struct TiffGroupInfo {
@@ -1112,4 +1113,4 @@ namespace Exiv2 {
                                                       ts->newGroup_));
     }
 
-}                                       // namespace Exiv2
+}}                                      // namespace Internal, Exiv2

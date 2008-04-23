@@ -38,9 +38,10 @@ EXIV2_RCSID("@(#) $Id$")
 #endif
 
 #include "cr2image.hpp"
-#include "tiffcomposite.hpp"
-#include "tiffparser.hpp"
-#include "tiffvisitor.hpp"
+#include "cr2image_int.hpp"
+#include "tiffcomposite_int.hpp"
+#include "tiffimage_int.hpp"
+#include "tiffvisitor_int.hpp"
 #include "image.hpp"
 #include "error.hpp"
 #include "futils.hpp"
@@ -56,51 +57,7 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
-    // CR2 mapping table for special CR2 decoding requirements
-    const TiffMappingInfo Cr2Mapping::cr2MappingInfo_[] = {
-        { "*",       Tag::all, Group::ignr,    0, 0 }, // Do not decode tags with group == Group::ignr
-        { "*",         0x014a, Group::ifd0,    0, 0 }, // Todo: Controversial, causes problems with Exiftool
-        { "*",         0x0100, Group::ifd0,    0, 0 }, // CR2 IFD0 refers to a preview image, ignore these tags
-        { "*",         0x0101, Group::ifd0,    0, 0 },
-        { "*",         0x0102, Group::ifd0,    0, 0 },
-        { "*",         0x0103, Group::ifd0,    0, 0 },
-        { "*",         0x0111, Group::ifd0,    0, 0 },
-        { "*",         0x0117, Group::ifd0,    0, 0 },
-        { "*",         0x011a, Group::ifd0,    0, 0 },
-        { "*",         0x011b, Group::ifd0,    0, 0 },
-        { "*",         0x0128, Group::ifd0,    0, 0 },
-        { "*",         0x02bc, Group::ifd0,    &TiffDecoder::decodeXmp,    &TiffEncoder::encodeXmp    },
-        { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   },
-        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   }
-    };
-
-    DecoderFct Cr2Mapping::findDecoder(const std::string& make,
-                                             uint32_t     extendedTag,
-                                             uint16_t     group)
-    {
-        DecoderFct decoderFct = &TiffDecoder::decodeStdTiffEntry;
-        const TiffMappingInfo* td = find(cr2MappingInfo_,
-                                         TiffMappingInfo::Key(make, extendedTag, group));
-        if (td) {
-            // This may set decoderFct to 0, meaning that the tag should not be decoded
-            decoderFct = td->decoderFct_;
-        }
-        return decoderFct;
-    }
-
-    EncoderFct Cr2Mapping::findEncoder(const std::string& make,
-                                             uint32_t     extendedTag,
-                                             uint16_t     group)
-    {
-        EncoderFct encoderFct = &TiffEncoder::encodeStdTiffEntry;
-        const TiffMappingInfo* td = find(cr2MappingInfo_,
-                                         TiffMappingInfo::Key(make, extendedTag, group));
-        if (td) {
-            // This may set encoderFct to 0, meaning that the tag should not be encoded
-            encoderFct = td->encoderFct_;
-        }
-        return encoderFct;
-    }
+    using namespace Internal;
 
     Cr2Image::Cr2Image(BasicIo::AutoPtr io, bool /*create*/)
         : Image(ImageType::cr2, mdExif | mdIptc, io)
@@ -152,17 +109,121 @@ namespace Exiv2 {
             throw Error(3, "CR2");
         }
         clearMetadata();
-        Cr2Header cr2Header;
-        TiffParser::decode(this, io_->mmap(), io_->size(),
-                           TiffCreator::create, Cr2Mapping::findDecoder,
-                           &cr2Header);
+        Cr2Parser::decode(this, io_->mmap(), io_->size());
     } // Cr2Image::readMetadata
 
     void Cr2Image::writeMetadata()
     {
-        //! Todo: implement me!
+        // Todo: implement me!
         throw(Error(31, "CR2"));
     } // Cr2Image::writeMetadata
+
+    void Cr2Parser::decode(      Image*   pImage,
+                           const byte*    pData,
+                                 uint32_t size)
+    {
+        Cr2Header cr2Header;
+        TiffParserWorker::decode(pImage,
+                                 pData,
+                                 size,
+                                 TiffCreator::create,
+                                 Cr2Mapping::findDecoder,
+                                 &cr2Header);
+    }
+
+    void Cr2Parser::encode(      Blob&    blob,
+                           const byte*    pData,
+                                 uint32_t size,
+                           const Image*   pImage)
+    {
+        /* Todo: Implement me!
+
+        TiffParserWorker::encode(blob,
+                                 pData,
+                                 size,
+                                 pImage,
+                                 TiffCreator::create,
+                                 TiffMapping::findEncoder);
+        */
+    }
+
+    // *************************************************************************
+    // free functions
+    Image::AutoPtr newCr2Instance(BasicIo::AutoPtr io, bool create)
+    {
+        Image::AutoPtr image(new Cr2Image(io, create));
+        if (!image->good()) {
+            image.reset();
+        }
+        return image;
+    }
+
+    bool isCr2Type(BasicIo& iIo, bool advance)
+    {
+        const int32_t len = 16;
+        byte buf[len];
+        iIo.read(buf, len);
+        if (iIo.error() || iIo.eof()) {
+            return false;
+        }
+        Cr2Header header;
+        bool rc = header.read(buf, len);
+        if (!advance || !rc) {
+            iIo.seek(-len, BasicIo::cur);
+        }
+        return rc;
+    }
+
+}                                       // namespace Exiv2
+
+namespace Exiv2 {
+    namespace Internal {
+
+    // CR2 mapping table for special CR2 decoding requirements
+    const TiffMappingInfo Cr2Mapping::cr2MappingInfo_[] = {
+        { "*",       Tag::all, Group::ignr,    0, 0 }, // Do not decode tags with group == Group::ignr
+        { "*",         0x014a, Group::ifd0,    0, 0 }, // Todo: Controversial, causes problems with Exiftool
+        { "*",         0x0100, Group::ifd0,    0, 0 }, // CR2 IFD0 refers to a preview image, ignore these tags
+        { "*",         0x0101, Group::ifd0,    0, 0 },
+        { "*",         0x0102, Group::ifd0,    0, 0 },
+        { "*",         0x0103, Group::ifd0,    0, 0 },
+        { "*",         0x0111, Group::ifd0,    0, 0 },
+        { "*",         0x0117, Group::ifd0,    0, 0 },
+        { "*",         0x011a, Group::ifd0,    0, 0 },
+        { "*",         0x011b, Group::ifd0,    0, 0 },
+        { "*",         0x0128, Group::ifd0,    0, 0 },
+        { "*",         0x02bc, Group::ifd0,    &TiffDecoder::decodeXmp,    &TiffEncoder::encodeXmp    },
+        { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   },
+        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   }
+    };
+
+    DecoderFct Cr2Mapping::findDecoder(const std::string& make,
+                                             uint32_t     extendedTag,
+                                             uint16_t     group)
+    {
+        DecoderFct decoderFct = &TiffDecoder::decodeStdTiffEntry;
+        const TiffMappingInfo* td = find(cr2MappingInfo_,
+                                         TiffMappingInfo::Key(make, extendedTag, group));
+        if (td) {
+            // This may set decoderFct to 0, meaning that the tag should not be decoded
+            decoderFct = td->decoderFct_;
+        }
+        return decoderFct;
+    }
+
+    EncoderFct Cr2Mapping::findEncoder(const std::string& make,
+                                             uint32_t     extendedTag,
+                                             uint16_t     group)
+    {
+        EncoderFct encoderFct = &TiffEncoder::encodeStdTiffEntry;
+        const TiffMappingInfo* td = find(cr2MappingInfo_,
+                                         TiffMappingInfo::Key(make, extendedTag, group));
+        if (td) {
+            // This may set encoderFct to 0, meaning that the tag should not be encoded
+            encoderFct = td->encoderFct_;
+        }
+        return encoderFct;
+    }
 
     const char* Cr2Header::cr2sig_ = "CR\2\0";
 
@@ -203,31 +264,4 @@ namespace Exiv2 {
         return 0;
     }
 
-    // *************************************************************************
-    // free functions
-    Image::AutoPtr newCr2Instance(BasicIo::AutoPtr io, bool create)
-    {
-        Image::AutoPtr image(new Cr2Image(io, create));
-        if (!image->good()) {
-            image.reset();
-        }
-        return image;
-    }
-
-    bool isCr2Type(BasicIo& iIo, bool advance)
-    {
-        const int32_t len = 16;
-        byte buf[len];
-        iIo.read(buf, len);
-        if (iIo.error() || iIo.eof()) {
-            return false;
-        }
-        Cr2Header header;
-        bool rc = header.read(buf, len);
-        if (!advance || !rc) {
-            iIo.seek(-len, BasicIo::cur);
-        }
-        return rc;
-    }
-
-}                                       // namespace Exiv2
+}}                                      // namespace Internal, Exiv2

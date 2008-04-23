@@ -51,12 +51,6 @@
 namespace Exiv2 {
 
 // *****************************************************************************
-// type definitions
-
-    //! Container for binary image
-    typedef std::vector<byte> Blob;
-
-// *****************************************************************************
 // class definitions
 
     //! Supported image formats

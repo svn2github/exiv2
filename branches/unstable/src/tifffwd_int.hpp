@@ -19,15 +19,15 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*!
-  @file    tifffwd.hpp
-  @brief   TIFF parser related typedefs and forward definitions.
+  @file    tifffwd_int.hpp
+  @brief   Internal TIFF parser related typedefs and forward definitions.
   @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    24-Jun-06, ahu: created
  */
-#ifndef TIFFFWD_HPP_
-#define TIFFFWD_HPP_
+#ifndef TIFFFWD_INT_HPP_
+#define TIFFFWD_INT_HPP_
 
 // *****************************************************************************
 // included header files
@@ -38,12 +38,11 @@
 #include <stack>
 
 // *****************************************************************************
-// namespace extensions
+// Exiv2 namespace extensions
 namespace Exiv2 {
+    namespace Internal {
 
-// *****************************************************************************
-// class declarations
-
+    class TiffHeaderBase;
     class TiffComponent;
     struct TiffStructure;
     class TiffEntryBase;
@@ -64,13 +63,9 @@ namespace Exiv2 {
     class TiffEncoder;
     class TiffReader;
     class TiffPrinter;
-    class TiffHeaderBase;
 
     class TiffRwState;
     struct TiffMappingInfo;
-
-    class Image;
-    class Value;
 
 // *****************************************************************************
 // type definitions
@@ -104,17 +99,17 @@ namespace Exiv2 {
      */
     typedef std::auto_ptr<TiffComponent> (*NewTiffCompFct)(      uint16_t       tag,
                                                            const TiffStructure* ts);
+    //! Stack to hold a path from the TIFF root element to a TIFF entry
+    typedef std::stack<const TiffStructure*> TiffPath;
+
     /*!
       @brief Type for a factory function to create new TIFF components.
              Use TiffComponent::AutoPtr, it is not used in this declaration only
              to reduce dependencies.
      */
-    typedef std::auto_ptr<TiffComponent> (*TiffCompFactoryFct)(uint32_t extendedTag,
-                                                               uint16_t group);
+    typedef std::auto_ptr<Internal::TiffComponent> (*TiffCompFactoryFct)(uint32_t extendedTag,
+                                                                         uint16_t group);
 
-    //! Stack to hold a path from the TIFF root element to a TIFF entry
-    typedef std::stack<const TiffStructure*> TiffPath;
+}}                                      // namespace Internal, Exiv2
 
-}                                       // namespace Exiv2
-
-#endif                                  // #ifndef TIFFFWD_HPP_
+#endif                                  // #ifndef TIFFFWD_INT_HPP_

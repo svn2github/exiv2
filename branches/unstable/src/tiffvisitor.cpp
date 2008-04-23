@@ -39,10 +39,10 @@ EXIV2_RCSID("@(#) $Id$")
 # include "exv_conf.h"
 #endif
 
-#include "tiffcomposite.hpp"  // Do not change the order of these 2 includes,
-#include "tiffvisitor.hpp"    // see bug #487
-#include "tiffparser.hpp"
-#include "makernote2.hpp"
+#include "tiffcomposite_int.hpp" // Do not change the order of these 2 includes,
+#include "tiffvisitor_int.hpp"   // see bug #487
+#include "tiffimage_int.hpp"
+#include "makernote2_int.hpp"
 #include "exif.hpp"
 #include "iptc.hpp"
 #include "value.hpp"
@@ -59,6 +59,7 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
+    namespace Internal {
 
     TiffVisitor::TiffVisitor()
     {
@@ -1246,4 +1247,4 @@ namespace Exiv2 {
 
     } // TiffReader::visitArrayElement
 
-}                                       // namespace Exiv2
+}}                                      // namespace Internal, Exiv2

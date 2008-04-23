@@ -63,7 +63,6 @@ CCHDR =  exv_conf.h           \
          exv_msvc.h           \
          mn.hpp               \
          rcsid.hpp            \
-         tifffwd.hpp          \
          version.hpp
 
 # Add library C++ source files to this list
@@ -106,7 +105,6 @@ CCSRC += psdimage.cpp         \
 	 tgaimage.cpp         \
 	 tiffcomposite.cpp    \
 	 tiffimage.cpp        \
-	 tiffparser.cpp       \
 	 tiffvisitor.cpp      \
 	 types.cpp            \
 	 value.cpp            \

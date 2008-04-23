@@ -36,10 +36,11 @@ EXIV2_RCSID("@(#) $Id$")
 # include "exv_conf.h"
 #endif
 
-#include "makernote2.hpp"
-#include "tiffcomposite.hpp"
-#include "tiffvisitor.hpp"
+#include "makernote2_int.hpp"
+#include "tiffcomposite_int.hpp"
+#include "tiffvisitor_int.hpp"
 #include "tiffimage.hpp"
+#include "tiffimage_int.hpp"
 
 // + standard includes
 #include <string>
@@ -48,6 +49,7 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
+    namespace Internal {
 
     const TiffMnRegistry TiffMnCreator::registry_[] = {
         { "Canon",          Group::canonmn,   newIfdMn,       newIfdMn2       },
@@ -680,4 +682,4 @@ namespace Exiv2 {
         return new TiffIfdMakernote(tag, group, mnGroup, 0, true);
     }
 
-}                                       // namespace Exiv2
+}}                                      // namespace Internal, Exiv2

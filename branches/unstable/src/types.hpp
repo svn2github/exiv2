@@ -43,6 +43,7 @@
 
 // + standard includes
 #include <string>
+#include <vector>
 #include <iosfwd>
 #include <utility>
 #include <algorithm>
@@ -122,6 +123,9 @@ namespace Exiv2 {
     enum DataLocId { invalidDataLocId,
                      valueData, directoryData,
                      lastDataLocId };
+
+    //! Container for binary data
+    typedef std::vector<byte> Blob;
 
 // *****************************************************************************
 // class definitions
