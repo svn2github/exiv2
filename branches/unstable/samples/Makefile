@@ -71,6 +71,7 @@ BINSRC = addmoddel.cpp        \
          largeiptc-test.cpp   \
          makernote-test.cpp   \
          stringto-test.cpp    \
+         tiff-test.cpp        \
          write-test.cpp       \
          write2-test.cpp      \
          xmpparse.cpp         \
