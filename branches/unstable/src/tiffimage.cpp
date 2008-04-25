@@ -140,7 +140,7 @@ namespace Exiv2 {
             throw Error(3, "TIFF");
         }
         clearMetadata();
-        TiffParser::decode(this, io_->mmap(), io_->size());
+        TiffParser::decode(exifData_, iptcData_, xmpData_, io_->mmap(), io_->size());
     } // TiffImage::readMetadata
 
     void TiffImage::writeMetadata()
@@ -163,7 +163,7 @@ namespace Exiv2 {
             }
         }
         Blob blob;
-        TiffParser::encode(blob, buf.pData_, buf.size_, this);
+        TiffParser::encode(blob, buf.pData_, buf.size_, exifData_, iptcData_, xmpData_);
         // Write updated or new buffer to file
         BasicIo::AutoPtr tempIo(io_->temporary()); // may throw
         assert(tempIo.get() != 0);
@@ -180,26 +180,38 @@ namespace Exiv2 {
 
     } // TiffImage::writeMetadata
 
-    void TiffParser::decode(      Image*   pImage,
-                            const byte*    pData,
-                                  uint32_t size)
+    void TiffParser::decode(
+              ExifData& exifData,
+              IptcData& iptcData,
+              XmpData&  xmpData,
+        const byte*     pData,
+              uint32_t  size
+    )
     {
-        TiffParserWorker::decode(pImage,
+        TiffParserWorker::decode(exifData,
+                                 iptcData,
+                                 xmpData,
                                  pData,
                                  size,
                                  TiffCreator::create,
                                  TiffMapping::findDecoder);
     } // TiffParser::decode
 
-    void TiffParser::encode(      Blob&    blob,
-                            const byte*    pData,
-                                  uint32_t size,
-                            const Image*   pImage)
+    void TiffParser::encode(
+              Blob&     blob,
+        const byte*     pData,
+              uint32_t  size,
+        const ExifData& exifData,
+        const IptcData& iptcData,
+        const XmpData&  xmpData
+    )
     {
         TiffParserWorker::encode(blob,
                                  pData,
                                  size,
-                                 pImage,
+                                 exifData,
+                                 iptcData,
+                                 xmpData,
                                  TiffCreator::create,
                                  TiffMapping::findEncoder);
     } // TiffParser::encode
@@ -457,7 +469,9 @@ namespace Exiv2 {
     } // TiffCreator::getPath
 
     void TiffParserWorker::decode(
-              Image*             pImage,
+              ExifData&          exifData,
+              IptcData&          iptcData,
+              XmpData&           xmpData,
         const byte*              pData,
               uint32_t           size,
               TiffCompFactoryFct createFct,
@@ -473,7 +487,11 @@ namespace Exiv2 {
         }
         TiffComponent::AutoPtr rootDir = parse(pData, size, createFct, pHeader);
         if (0 != rootDir.get()) {
-            TiffDecoder decoder(pImage, rootDir.get(), findDecoderFct);
+            TiffDecoder decoder(exifData,
+                                iptcData,
+                                xmpData,
+                                rootDir.get(),
+                                findDecoderFct);
             rootDir->accept(decoder);
         }
 
@@ -499,14 +517,14 @@ namespace Exiv2 {
               Blob&              blob,
         const byte*              pData,
               uint32_t           size,
-        const Image*             pImage,
+        const ExifData&          exifData,
+        const IptcData&          iptcData,
+        const XmpData&           xmpData,
               TiffCompFactoryFct createFct,
               FindEncoderFct     findEncoderFct,
               TiffHeaderBase*    pHeader
     )
     {
-        // Todo: What if there is no target image yet?
-        assert(pImage != 0);
         // Create standard TIFF header if necessary
         std::auto_ptr<TiffHeaderBase> ph;
         if (!pHeader) {
@@ -519,7 +537,9 @@ namespace Exiv2 {
         }
         assert(rootDir.get());
         // Update existing TIFF components based on metadata entries
-        TiffEncoder encoder(pImage,
+        TiffEncoder encoder(exifData,
+                            iptcData,
+                            xmpData,
                             rootDir.get(),
                             pHeader->byteOrder(),
                             findEncoderFct);

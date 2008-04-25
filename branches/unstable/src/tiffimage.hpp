@@ -112,18 +112,24 @@ namespace Exiv2 {
     public:
         /*!
           @brief Decode metadata from a buffer \em pData of length \em size
-                 with data in TIFF format to \em pImage.
+                 with data in TIFF format to the provided metadata containers.
 
-          @param pImage Pointer to the image container to hold the metadata.
-          @param pData  Pointer to the data buffer. Must point to data in TIFF
-                        format; no checks are performed.
-          @param size   Length of the data buffer.
+          @param exifData Exif metadata container.
+          @param iptcData IPTC metadata container.
+          @param xmpData  XMP metadata container.
+          @param pData    Pointer to the data buffer. Must point to data in TIFF
+                          format; no checks are performed.
+          @param size     Length of the data buffer.
         */
-        static void decode(      Image*   pImage,
-                           const byte*    pData,
-                                 uint32_t size);
+        static void decode(
+                  ExifData& exifData,
+                  IptcData& iptcData,
+                  XmpData&  xmpData,
+            const byte*     pData,
+                  uint32_t  size
+        );
         /*!
-          @brief Encode metadata from \em pImage to TIFF format.
+          @brief Encode metadata from the provided metadata to TIFF format.
 
           The original binary image in the memory block \em pData, \em size
           is parsed and updated in-place if possible ("non-intrusive" writing).
@@ -134,19 +140,25 @@ namespace Exiv2 {
           should not be used anymore. If \em pData is 0 or \em size is 0,
           a new TIFF structure is created and returned in \em blob.
 
-          @param blob   Container for the binary image if "intrusive"
-                        writing is necessary. Empty otherwise.
-          @param pData  Pointer to the binary image data buffer. Must
-                        point to data in TIFF format; no checks are
-                        performed. Will be modified if "non-intrusive"
-                        writing is possible.
-          @param size   Length of the data buffer.
-          @param pImage Pointer to the image with the metadata to write.
+          @param blob     Container for the binary image if "intrusive"
+                          writing is necessary. Empty otherwise.
+          @param pData    Pointer to the binary image data buffer. Must
+                          point to data in TIFF format; no checks are
+                          performed. Will be modified if "non-intrusive"
+                          writing is possible.
+          @param size     Length of the data buffer.
+          @param exifData Exif metadata container.
+          @param iptcData IPTC metadata container.
+          @param xmpData  XMP metadata container.
         */
-        static void encode(      Blob&    blob,
-                           const byte*    pData,
-                                 uint32_t size,
-                           const Image*   pImage);
+        static void encode(
+                  Blob&     blob,
+            const byte*     pData,
+                  uint32_t  size,
+            const ExifData& exifData,
+            const IptcData& iptcData,
+            const XmpData&  xmpData
+        );
 
     }; // class TiffParser
 

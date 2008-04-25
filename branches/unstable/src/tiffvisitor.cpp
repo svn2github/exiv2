@@ -145,15 +145,20 @@ namespace Exiv2 {
         findObject(object);
     }
 
-    TiffDecoder::TiffDecoder(Image* pImage,
-                             TiffComponent* const pRoot,
-                             FindDecoderFct findDecoderFct)
-        : pImage_(pImage),
+    TiffDecoder::TiffDecoder(
+        ExifData&            exifData,
+        IptcData&            iptcData,
+        XmpData&             xmpData,
+        TiffComponent* const pRoot,
+        FindDecoderFct       findDecoderFct
+    )
+        : exifData_(exifData),
+          iptcData_(iptcData),
+          xmpData_(xmpData),
           pRoot_(pRoot),
           findDecoderFct_(findDecoderFct),
           decodedIptc_(false)
     {
-        assert(pImage_ != 0);
         assert(pRoot != 0);
 
         // Find camera make
@@ -209,14 +214,13 @@ namespace Exiv2 {
     {
         const DataValue* v = dynamic_cast<const DataValue*>(object->pValue());
         if (v != 0) {
-            ExifData& exifData = pImage_->exifData();
-            exifData["Exif.Thumbnail.Compression"] = uint16_t(6);
+            exifData_["Exif.Thumbnail.Compression"] = uint16_t(6);
             DataBuf buf(v->size());
             v->copy(buf.pData_);
-            Exifdatum& ed = exifData["Exif.Thumbnail.JPEGInterchangeFormat"];
+            Exifdatum& ed = exifData_["Exif.Thumbnail.JPEGInterchangeFormat"];
             ed = uint32_t(0);
             ed.setDataArea(buf.pData_, buf.size_);
-            exifData["Exif.Thumbnail.JPEGInterchangeFormatLength"] = uint32_t(buf.size_);
+            exifData_["Exif.Thumbnail.JPEGInterchangeFormatLength"] = uint32_t(buf.size_);
         }
     }
 
@@ -250,7 +254,7 @@ namespace Exiv2 {
         long size = 0;
         getObjData(pData, size, 0x02bc, Group::ifd0, object);
         if (pData) {
-            std::string& xmpPacket = pImage_->xmpPacket();
+            std::string xmpPacket;
             xmpPacket.assign(reinterpret_cast<const char*>(pData), size);
             std::string::size_type idx = xmpPacket.find_first_of('<');
             if (idx != std::string::npos && idx > 0) {
@@ -260,7 +264,7 @@ namespace Exiv2 {
 #endif
                 xmpPacket = xmpPacket.substr(idx);
             }
-            if (XmpParser::decode(pImage_->xmpData(), xmpPacket)) {
+            if (XmpParser::decode(xmpData_, xmpPacket)) {
 #ifndef SUPPRESS_WARNINGS
                 std::cerr << "Warning: Failed to decode XMP metadata.\n";
 #endif
@@ -284,7 +288,7 @@ namespace Exiv2 {
         long size = 0;
         getObjData(pData, size, 0x83bb, Group::ifd0, object);
         if (pData) {
-            if (0 == pImage_->iptcData().load(pData, size)) {
+            if (0 == iptcData_.load(pData, size)) {
                 return;
             }
 #ifndef SUPPRESS_WARNINGS
@@ -308,7 +312,7 @@ namespace Exiv2 {
                                               &record, &sizeHdr, &sizeData)) {
                 return;
             }
-            if (0 == pImage_->iptcData().load(record + sizeHdr, sizeData)) {
+            if (0 == iptcData_.load(record + sizeHdr, sizeData)) {
                 return;
             }
 #ifndef SUPPRESS_WARNINGS
@@ -360,24 +364,22 @@ namespace Exiv2 {
     void TiffDecoder::decodeStdTiffEntry(const TiffEntryBase* object)
     {
         assert(object !=0);
-        assert(pImage_ != 0);
         // "Normal" tag has low priority: only decode if it doesn't exist yet.
         // Todo: This also filters duplicates (common in some makernotes)
         // Todo: ExifKey should have an appropriate c'tor, it should not be
         //       necessary to use groupName here
         ExifKey key(object->tag(), tiffGroupName(object->group()));
-        ExifData::iterator pos = pImage_->exifData().findKey(key);
-        if (pos == pImage_->exifData().end()) {
-            pImage_->exifData().add(key, object->pValue());
+        ExifData::iterator pos = exifData_.findKey(key);
+        if (pos == exifData_.end()) {
+            exifData_.add(key, object->pValue());
         }
     } // TiffDecoder::decodeTiffEntry
 
     void TiffDecoder::setExifTag(const ExifKey& key, const Value* pValue)
     {
-        assert(pImage_ != 0);
-        ExifData::iterator pos = pImage_->exifData().findKey(key);
-        if (pos != pImage_->exifData().end()) pImage_->exifData().erase(pos);
-        pImage_->exifData().add(key, pValue);
+        ExifData::iterator pos = exifData_.findKey(key);
+        if (pos != exifData_.end()) exifData_.erase(pos);
+        exifData_.add(key, pValue);
 
     } // TiffDecoder::setExifTag
 
@@ -391,12 +393,17 @@ namespace Exiv2 {
         decodeTiffEntry(object);
     }
 
-    TiffEncoder::TiffEncoder(const Image*   pImage,
-                             TiffComponent* pRoot,
-                             ByteOrder      byteOrder,
-                             FindEncoderFct findEncoderFct)
-        : pImage_(pImage),
-          exifData_(pImage->exifData()),
+    TiffEncoder::TiffEncoder(
+            const ExifData&      exifData,
+            const IptcData&      iptcData,
+            const XmpData&       xmpData,
+                  TiffComponent* pRoot,
+                  ByteOrder      byteOrder,
+                  FindEncoderFct findEncoderFct
+    )
+        : exifData_(exifData),
+          iptcData_(iptcData),
+          xmpData_(xmpData),
           del_(true),
           pRoot_(pRoot),
           byteOrder_(byteOrder),

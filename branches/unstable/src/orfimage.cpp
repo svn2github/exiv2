@@ -115,7 +115,7 @@ namespace Exiv2 {
             throw Error(3, "ORF");
         }
         clearMetadata();
-        OrfParser::decode(this, io_->mmap(), io_->size());
+        OrfParser::decode(exifData_, iptcData_, xmpData_, io_->mmap(), io_->size());
     } // OrfImage::readMetadata
 
     void OrfImage::writeMetadata()
@@ -124,12 +124,18 @@ namespace Exiv2 {
         throw(Error(31, "ORF"));
     } // OrfImage::writeMetadata
 
-    void OrfParser::decode(      Image*   pImage,
-                           const byte*    pData,
-                                 uint32_t size)
+    void OrfParser::decode(
+              ExifData& exifData,
+              IptcData& iptcData,
+              XmpData&  xmpData,
+        const byte*     pData,
+              uint32_t  size
+    )
     {
         OrfHeader orfHeader;
-        TiffParserWorker::decode(pImage,
+        TiffParserWorker::decode(exifData,
+                                 iptcData,
+                                 xmpData,
                                  pData,
                                  size,
                                  TiffCreator::create,
@@ -137,17 +143,23 @@ namespace Exiv2 {
                                  &orfHeader);
     }
 
-    void OrfParser::encode(      Blob&    blob,
-                           const byte*    pData,
-                                 uint32_t size,
-                           const Image*   pImage)
+    void OrfParser::encode(
+              Blob&     blob,
+        const byte*     pData,
+              uint32_t  size,
+        const ExifData& exifData,
+        const IptcData& iptcData,
+        const XmpData&  xmpData
+    )
     {
         /* Todo: Implement me!
 
         TiffParserWorker::encode(blob,
                                  pData,
                                  size,
-                                 pImage,
+                                 exifData,
+                                 iptcData,
+                                 xmpData,
                                  TiffCreator::create,
                                  TiffMapping::findEncoder);
         */

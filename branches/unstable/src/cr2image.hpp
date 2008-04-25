@@ -128,21 +128,29 @@ namespace Exiv2 {
     public:
         /*!
           @brief Decode metadata from a buffer \em pData of length \em size
-                 with data in CR2 format to \em pImage.
+                 with data in CR2 format to the provided metadata containers.
                  See TiffParser::decode().
         */
-        static void decode(      Image*   pImage,
-                           const byte*    pData,
-                                 uint32_t size);
+        static void decode(
+                  ExifData& exifData,
+                  IptcData& iptcData,
+                  XmpData&  xmpData,
+            const byte*     pData,
+                  uint32_t  size
+        );
         /*!
-          @brief Encode metadata from \em pImage to CR2 format.
+          @brief Encode metadata from the provided metadata to CR2 format.
                  See TiffParser::encode().
 
         */
-        static void encode(      Blob&    blob,
-                           const byte*    pData,
-                                 uint32_t size,
-                           const Image*   pImage);
+        static void encode(
+                  Blob&     blob,
+            const byte*     pData,
+                  uint32_t  size,
+            const ExifData& exifData,
+            const IptcData& iptcData,
+            const XmpData&  xmpData
+        );
 
     }; // class Cr2Parser
 

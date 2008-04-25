@@ -218,12 +218,17 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         /*!
-          @brief Constructor, taking the image to add the metadata to, the root
-                 element of the composite to decode.
+          @brief Constructor, taking metadata containers to add the metadata to,
+                 the root element of the composite to decode and a FindDecoderFct
+                 function to get the decoder function for each tag.
          */
-        TiffDecoder(Image*               pImage,
-                    TiffComponent* const pRoot,
-                    FindDecoderFct       findDecoderFct);
+        TiffDecoder(
+            ExifData&            exifData,
+            IptcData&            iptcData,
+            XmpData&             xmpData,
+            TiffComponent* const pRoot,
+            FindDecoderFct       findDecoderFct
+        );
         //! Virtual destructor
         virtual ~TiffDecoder() {}
         //@}
@@ -287,7 +292,9 @@ namespace Exiv2 {
 
     private:
         // DATA
-        Image* pImage_;              //!< Pointer to the image to which the metadata is added
+        ExifData& exifData_;         //!< Exif metadata container
+        IptcData& iptcData_;         //!< IPTC metadata container
+        XmpData&  xmpData_;          //!< XMP metadata container
         TiffComponent* const pRoot_; //!< Root element of the composite
         const FindDecoderFct findDecoderFct_; //!< Ptr to the function to find special decoding functions
         std::string make_;           //!< Camera make, determined from the tags to decode
@@ -301,9 +308,9 @@ namespace Exiv2 {
 
     /*!
       @brief TIFF composite visitor to encode metadata from an image to the TIFF
-             tree (Visitor pattern). Both, image and root element of the tree
-             are supplied in the constructor. Used by TiffParser to encode the
-             metadata into a TIFF composite.
+             tree (Visitor pattern). The metadata containers and root element of
+             the tree are supplied in the constructor. Used by TiffParser to encode
+             the metadata into a TIFF composite.
 
       @note  Encoded tags are removed from the \em pImage metadata.
      */
@@ -316,10 +323,14 @@ namespace Exiv2 {
                  to, the image with the metadata to encode and a function to
                  find special encoders.
          */
-        TiffEncoder(const Image*   pImage,
-                    TiffComponent* pRoot,
-                    ByteOrder      byteOrder,
-                    FindEncoderFct findEncoderFct);
+        TiffEncoder(
+            const ExifData&      exifData,
+            const IptcData&      iptcData,
+            const XmpData&       xmpData,
+                  TiffComponent* pRoot,
+                  ByteOrder      byteOrder,
+                  FindEncoderFct findEncoderFct
+        );
         //! Virtual destructor
         virtual ~TiffEncoder() {}
         //@}
@@ -409,8 +420,9 @@ namespace Exiv2 {
 
     private:
         // DATA
-        const Image* pImage_;        //!< Pointer to the image with the metadata to encode
         ExifData exifData_;          //!< Copy of the Exif data to encode
+        IptcData iptcData_;          //!< Copy of the IPTC data to encode
+        XmpData  xmpData_;           //!< Copy of the XMP data to encode
         bool del_;                   //!< Indicates if Exif data entries should be deleted after encoding
         TiffComponent* pRoot_;       //!< Root element of the composite
         ByteOrder byteOrder_;        //!< Byteorder for encoding

@@ -170,13 +170,15 @@ namespace Exiv2 {
     public:
         /*!
           @brief Decode TIFF metadata from a data buffer \em pData of length
-                 \em size into \em pImage.
+                 \em size into the provided metadata containers.
 
           This is the entry point to access image data in TIFF format. The
           parser uses classes TiffHeade2 and the TiffComponent and TiffVisitor
           hierarchies.
 
-          @param pImage    Pointer to the image to hold the metadata
+          @param exifData  Exif metadata container.
+          @param iptcData  IPTC metadata container.
+          @param xmpData   XMP metadata container.
           @param pData     Pointer to the data buffer. Must point to data
                            in TIFF format; no checks are performed.
           @param size      Length of the data buffer.
@@ -185,20 +187,24 @@ namespace Exiv2 {
           @param pHeader   Optional pointer to a TIFF header. If not provided,
                            a standard TIFF header is used.
         */
-        static void decode(      Image*             pImage,
+        static void decode(      ExifData&          exifData,
+                                 IptcData&          iptcData,
+                                 XmpData&           xmpData,
                            const byte*              pData,
                                  uint32_t           size,
                                  TiffCompFactoryFct createFct,
                                  FindDecoderFct     findDecoderFct,
                                  TiffHeaderBase*    pHeader =0);
         /*!
-          @brief Encode TIFF metadata from \em pImage into a memory block
-                 \em blob.
+          @brief Encode TIFF metadata from the metadata containers into a
+                 memory block \em blob.
         */
         static void encode(      Blob&              blob,
                            const byte*              pData,
                                  uint32_t           size,
-                           const Image*             pImage,
+                           const ExifData&          exifData,
+                           const IptcData&          iptcData,
+                           const XmpData&           xmpData,
                                  TiffCompFactoryFct createFct,
                                  FindEncoderFct     findEncoderFct,
                                  TiffHeaderBase*    pHeader =0);
