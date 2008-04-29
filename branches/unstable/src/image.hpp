@@ -269,10 +269,13 @@ namespace Exiv2 {
          */
         void writeXmpFromPacket(bool flag);
         /*!
-          @brief Set the byteOrder to encode the Exif metadata in.
+          @brief Set the byte order to encode the Exif metadata in.
 
-          If byte order is not set when writeMetadata() is called, a default
-          is used. The default is usually the byte order of the target image.
+          The setting is only used when new Exif metadata is created and may
+          not be applicable at all for some image formats. If the target image
+          already contains Exif metadata, the byte order of the existing data
+          is used. If byte order is not set when writeMetadata() is called,
+          little-endian byte order (II) is used by default.
          */
         void setByteOrder(ByteOrder byteOrder);
         //@}
@@ -280,11 +283,8 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         /*!
-          @brief Return the byteOrder in which the Exif metadata of the image is
+          @brief Return the byte order in which the Exif metadata of the image is
                  encoded. Initially, it is not set (\em invalidByteOrder).
-
-          If byte order is not set when writeMetadata() is called, a default
-          is used. The default is usually the byte order of the target image.
          */
         ByteOrder byteOrder() const { return byteOrder_; }
         /*!

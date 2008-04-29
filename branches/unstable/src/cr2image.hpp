@@ -141,7 +141,6 @@ namespace Exiv2 {
         /*!
           @brief Encode metadata from the provided metadata to CR2 format.
                  See TiffParser::encode().
-
         */
         static void encode(
                   Blob&     blob,

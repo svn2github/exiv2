@@ -51,6 +51,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "image.hpp"
 #include "makernote.hpp"
 #include "futils.hpp"
+#include "tiffimage.hpp"
 
 // + standard includes
 #include <iostream>
@@ -1198,6 +1199,49 @@ namespace Exiv2 {
         }
         return ifd;
     } // ExifData::getIfd
+
+    ByteOrder ExifParser::decode(
+              ExifData& exifData,
+        const byte*     pData,
+              uint32_t  size
+    )
+    {
+        IptcData iptcData;
+        XmpData  xmpData;
+        ByteOrder bo = TiffParser::decode(exifData,
+                                  iptcData,
+                                  xmpData,
+                                  pData,
+                                  size);
+#ifndef SUPPRESS_WARNINGS
+        if (!iptcData.empty()) {
+            std::cerr << "Warning: Ignoring IPTC information encoded in the Exif data.\n";
+        }
+        if (!xmpData.empty()) {
+            std::cerr << "Warning: Ignoring XMP information encoded in the Exif data.\n";
+        }
+#endif
+        return bo;
+    } // ExifParser::decode
+
+    void ExifParser::encode(
+              Blob&     blob,
+        const byte*     pData,
+              uint32_t  size,
+              ByteOrder byteOrder,
+        const ExifData& exifData
+    )
+    {
+        const IptcData iptcData;
+        const XmpData  xmpData;
+        TiffParser::encode(blob,
+                           pData,
+                           size,
+                           byteOrder,
+                           exifData,
+                           iptcData,
+                           xmpData);
+    } // ExifParser::encode
 
     // *************************************************************************
     // free functions

@@ -120,8 +120,8 @@ namespace Exiv2 {
     }; // class OrfImage
 
     /*!
-      @brief Stateless parser class for data in CR2 format. Images use this
-             class to decode and encode CR2 data.
+      @brief Stateless parser class for data in ORF format. Images use this
+             class to decode and encode ORF data.
              See class TiffParser for details.
      */
     class OrfParser {

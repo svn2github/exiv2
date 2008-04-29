@@ -791,6 +791,37 @@ namespace Exiv2 {
 
     }; // class ExifData
 
+    /*!
+      @brief Stateless parser class for Exif data. Images use this class to
+             decode and encode binary Exif data. See class TiffParser for details.
+     */
+    class ExifParser {
+    public:
+        /*!
+          @brief Decode metadata from a buffer \em pData of length \em size
+                 with binary Exif data to the provided metadata container.
+                 Return byte order in which the data is encoded.
+                 See TiffParser::decode().
+        */
+        static ByteOrder decode(
+                  ExifData& exifData,
+            const byte*     pData,
+                  uint32_t  size
+        );
+        /*!
+          @brief Encode metadata from the provided metadata to Exif format.
+                 See TiffParser::encode().
+        */
+        static void encode(
+                  Blob&     blob,
+            const byte*     pData,
+                  uint32_t  size,
+                  ByteOrder byteOrder,
+            const ExifData& exifData
+        );
+
+    }; // class ExifParser
+
 // *****************************************************************************
 // template, inline and free functions
 
