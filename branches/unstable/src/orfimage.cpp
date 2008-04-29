@@ -115,7 +115,12 @@ namespace Exiv2 {
             throw Error(3, "ORF");
         }
         clearMetadata();
-        OrfParser::decode(exifData_, iptcData_, xmpData_, io_->mmap(), io_->size());
+        ByteOrder bo = OrfParser::decode(exifData_,
+                                         iptcData_,
+                                         xmpData_,
+                                         io_->mmap(),
+                                         io_->size());
+        setByteOrder(bo);
     } // OrfImage::readMetadata
 
     void OrfImage::writeMetadata()
@@ -124,7 +129,7 @@ namespace Exiv2 {
         throw(Error(31, "ORF"));
     } // OrfImage::writeMetadata
 
-    void OrfParser::decode(
+    ByteOrder OrfParser::decode(
               ExifData& exifData,
               IptcData& iptcData,
               XmpData&  xmpData,
@@ -133,14 +138,14 @@ namespace Exiv2 {
     )
     {
         OrfHeader orfHeader;
-        TiffParserWorker::decode(exifData,
-                                 iptcData,
-                                 xmpData,
-                                 pData,
-                                 size,
-                                 TiffCreator::create,
-                                 TiffMapping::findDecoder,
-                                 &orfHeader);
+        return TiffParserWorker::decode(exifData,
+                                        iptcData,
+                                        xmpData,
+                                        pData,
+                                        size,
+                                        TiffCreator::create,
+                                        TiffMapping::findDecoder,
+                                        &orfHeader);
     }
 
     void OrfParser::encode(

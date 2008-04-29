@@ -117,10 +117,11 @@ namespace Exiv2 {
           imageType_(imageType),
           supportedMetadata_(supportedMetadata),
 #ifdef EXV_HAVE_XMP_TOOLKIT
-          writeXmpFromPacket_(false)
+          writeXmpFromPacket_(false),
 #else 
-          writeXmpFromPacket_(true)
+          writeXmpFromPacket_(true),
 #endif
+          byteOrder_(invalidByteOrder)
     {
     }
 
@@ -201,6 +202,11 @@ namespace Exiv2 {
     void Image::setComment(const std::string& comment)
     {
         comment_ = comment;
+    }
+
+    void Image::setByteOrder(ByteOrder byteOrder)
+    {
+        byteOrder_ = byteOrder;
     }
 
     bool Image::good() const

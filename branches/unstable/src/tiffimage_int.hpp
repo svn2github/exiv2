@@ -130,7 +130,7 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Default constructor
-        TiffHeade2();
+        TiffHeade2(ByteOrder byteOrder =littleEndian);
         //! Destructor
         ~TiffHeade2();
         //@}
@@ -186,15 +186,18 @@ namespace Exiv2 {
           @param findDecoderFct Function to access special decoding info.
           @param pHeader   Optional pointer to a TIFF header. If not provided,
                            a standard TIFF header is used.
+
+          @return Byte order in which the data is encoded.
         */
-        static void decode(      ExifData&          exifData,
-                                 IptcData&          iptcData,
-                                 XmpData&           xmpData,
-                           const byte*              pData,
-                                 uint32_t           size,
-                                 TiffCompFactoryFct createFct,
-                                 FindDecoderFct     findDecoderFct,
-                                 TiffHeaderBase*    pHeader =0);
+        static ByteOrder decode(
+                  ExifData&          exifData,
+                  IptcData&          iptcData,
+                  XmpData&           xmpData,
+            const byte*              pData,
+                  uint32_t           size,
+                  TiffCompFactoryFct createFct,
+                  FindDecoderFct     findDecoderFct,
+                  TiffHeaderBase*    pHeader =0);
         /*!
           @brief Encode TIFF metadata from the metadata containers into a
                  memory block \em blob.
@@ -207,7 +210,7 @@ namespace Exiv2 {
                            const XmpData&           xmpData,
                                  TiffCompFactoryFct createFct,
                                  FindEncoderFct     findEncoderFct,
-                                 TiffHeaderBase*    pHeader =0);
+                                 TiffHeaderBase*    pHeader);
 
     private:
         /*!

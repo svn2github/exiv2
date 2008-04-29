@@ -140,7 +140,12 @@ namespace Exiv2 {
             throw Error(3, "TIFF");
         }
         clearMetadata();
-        TiffParser::decode(exifData_, iptcData_, xmpData_, io_->mmap(), io_->size());
+        ByteOrder bo = TiffParser::decode(exifData_,
+                                          iptcData_,
+                                          xmpData_,
+                                          io_->mmap(),
+                                          io_->size());
+        setByteOrder(bo);
     } // TiffImage::readMetadata
 
     void TiffImage::writeMetadata()
@@ -149,6 +154,7 @@ namespace Exiv2 {
         std::cerr << "Writing TIFF file " << io_->path() << "\n";
 #endif
         // Read existing image
+        ByteOrder bo = byteOrder();
         DataBuf buf;
         if (io_->open() == 0) {
             IoCloser closer(*io_);
@@ -160,10 +166,18 @@ namespace Exiv2 {
                 if (io_->error() || io_->eof()) {
                     buf.reset();
                 }
+                TiffHeade2 tiffHeader;
+                if (0 == tiffHeader.read(buf.pData_, 8)) {
+                    bo = tiffHeader.byteOrder();
+                }
             }
         }
+        if (bo == invalidByteOrder) {
+            bo = littleEndian;
+        }
+        setByteOrder(bo);
         Blob blob;
-        TiffParser::encode(blob, buf.pData_, buf.size_, exifData_, iptcData_, xmpData_);
+        TiffParser::encode(blob, buf.pData_, buf.size_, bo, exifData_, iptcData_, xmpData_);
         // Write updated or new buffer to file
         BasicIo::AutoPtr tempIo(io_->temporary()); // may throw
         assert(tempIo.get() != 0);
@@ -180,7 +194,7 @@ namespace Exiv2 {
 
     } // TiffImage::writeMetadata
 
-    void TiffParser::decode(
+    ByteOrder TiffParser::decode(
               ExifData& exifData,
               IptcData& iptcData,
               XmpData&  xmpData,
@@ -188,24 +202,26 @@ namespace Exiv2 {
               uint32_t  size
     )
     {
-        TiffParserWorker::decode(exifData,
-                                 iptcData,
-                                 xmpData,
-                                 pData,
-                                 size,
-                                 TiffCreator::create,
-                                 TiffMapping::findDecoder);
+        return TiffParserWorker::decode(exifData,
+                                        iptcData,
+                                        xmpData,
+                                        pData,
+                                        size,
+                                        TiffCreator::create,
+                                        TiffMapping::findDecoder);
     } // TiffParser::decode
 
     void TiffParser::encode(
               Blob&     blob,
         const byte*     pData,
               uint32_t  size,
+              ByteOrder byteOrder,
         const ExifData& exifData,
         const IptcData& iptcData,
         const XmpData&  xmpData
     )
     {
+        std::auto_ptr<TiffHeaderBase> header(new TiffHeade2(byteOrder));
         TiffParserWorker::encode(blob,
                                  pData,
                                  size,
@@ -213,7 +229,8 @@ namespace Exiv2 {
                                  iptcData,
                                  xmpData,
                                  TiffCreator::create,
-                                 TiffMapping::findEncoder);
+                                 TiffMapping::findEncoder,
+                                 header.get());
     } // TiffParser::encode
 
     // *************************************************************************
@@ -468,7 +485,7 @@ namespace Exiv2 {
 
     } // TiffCreator::getPath
 
-    void TiffParserWorker::decode(
+    ByteOrder TiffParserWorker::decode(
               ExifData&          exifData,
               IptcData&          iptcData,
               XmpData&           xmpData,
@@ -494,6 +511,7 @@ namespace Exiv2 {
                                 findDecoderFct);
             rootDir->accept(decoder);
         }
+        return pHeader->byteOrder();
 
     } // TiffParserWorker::decode
 
@@ -525,12 +543,7 @@ namespace Exiv2 {
               TiffHeaderBase*    pHeader
     )
     {
-        // Create standard TIFF header if necessary
-        std::auto_ptr<TiffHeaderBase> ph;
-        if (!pHeader) {
-            ph = std::auto_ptr<TiffHeaderBase>(new TiffHeade2);
-            pHeader = ph.get();
-        }
+        assert(pHeader);
         TiffComponent::AutoPtr rootDir = parse(pData, size, createFct, pHeader);
         if (0 == rootDir.get()) {
             rootDir = createFct(Tag::root, Group::none);
@@ -681,8 +694,8 @@ namespace Exiv2 {
         return tag_;
     }
 
-    TiffHeade2::TiffHeade2()
-        : TiffHeaderBase(42, 8, littleEndian, 0x00000008)
+    TiffHeade2::TiffHeade2(ByteOrder byteOrder)
+        : TiffHeaderBase(42, 8, byteOrder, 0x00000008)
     {
     }
 

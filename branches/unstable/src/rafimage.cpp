@@ -107,7 +107,12 @@ namespace Exiv2 {
         uint32_t const start = getULong(pData + 84, bigEndian) + 12;
         if (static_cast<uint32_t>(size) < start) throw Error(14);
         clearMetadata();
-        TiffParser::decode(exifData_, iptcData_, xmpData_, pData + start, size - start);
+        ByteOrder bo = TiffParser::decode(exifData_,
+                                          iptcData_,
+                                          xmpData_,
+                                          pData + start,
+                                          size - start);
+        setByteOrder(bo);
     } // RafImage::readMetadata
 
     void RafImage::writeMetadata()

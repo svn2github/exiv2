@@ -120,8 +120,10 @@ namespace Exiv2 {
           @param pData    Pointer to the data buffer. Must point to data in TIFF
                           format; no checks are performed.
           @param size     Length of the data buffer.
+
+          @return Byte order in which the data is encoded.
         */
-        static void decode(
+        static ByteOrder decode(
                   ExifData& exifData,
                   IptcData& iptcData,
                   XmpData&  xmpData,
@@ -140,21 +142,23 @@ namespace Exiv2 {
           should not be used anymore. If \em pData is 0 or \em size is 0,
           a new TIFF structure is created and returned in \em blob.
 
-          @param blob     Container for the binary image if "intrusive"
-                          writing is necessary. Empty otherwise.
-          @param pData    Pointer to the binary image data buffer. Must
-                          point to data in TIFF format; no checks are
-                          performed. Will be modified if "non-intrusive"
-                          writing is possible.
-          @param size     Length of the data buffer.
-          @param exifData Exif metadata container.
-          @param iptcData IPTC metadata container.
-          @param xmpData  XMP metadata container.
+          @param blob      Container for the binary image if "intrusive"
+                           writing is necessary. Empty otherwise.
+          @param pData     Pointer to the binary image data buffer. Must
+                           point to data in TIFF format; no checks are
+                           performed. Will be modified if "non-intrusive"
+                           writing is possible.
+          @param size      Length of the data buffer.
+          @param byteOrder Byte order to use.
+          @param exifData  Exif metadata container.
+          @param iptcData  IPTC metadata container.
+          @param xmpData   XMP metadata container.
         */
         static void encode(
                   Blob&     blob,
             const byte*     pData,
                   uint32_t  size,
+                  ByteOrder byteOrder,
             const ExifData& exifData,
             const IptcData& iptcData,
             const XmpData&  xmpData

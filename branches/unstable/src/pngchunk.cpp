@@ -317,11 +317,12 @@ namespace Exiv2 {
                     std::cerr << "Exiv2::PngChunk::decode: Exif header found at position " << pos << "\n";
 #endif
                     pos = pos + sizeof(exifHeader);
-                    TiffParser::decode(pImage->exifData(),
-                                       pImage->iptcData(),
-                                       pImage->xmpData(),
-                                       exifData.pData_ + pos,
-                                       length - pos);
+                    ByteOrder bo = TiffParser::decode(pImage->exifData(),
+                                                      pImage->iptcData(),
+                                                      pImage->xmpData(),
+                                                      exifData.pData_ + pos,
+                                                      length - pos);
+                    pImage->setByteOrder(bo);
                 }
             }
         }

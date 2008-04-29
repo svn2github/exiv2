@@ -268,10 +268,25 @@ namespace Exiv2 {
           access to the raw XMP packet.
          */
         void writeXmpFromPacket(bool flag);
+        /*!
+          @brief Set the byteOrder to encode the Exif metadata in.
+
+          If byte order is not set when writeMetadata() is called, a default
+          is used. The default is usually the byte order of the target image.
+         */
+        void setByteOrder(ByteOrder byteOrder);
         //@}
 
         //! @name Accessors
         //@{
+        /*!
+          @brief Return the byteOrder in which the Exif metadata of the image is
+                 encoded. Initially, it is not set (\em invalidByteOrder).
+
+          If byte order is not set when writeMetadata() is called, a default
+          is used. The default is usually the byte order of the target image.
+         */
+        ByteOrder byteOrder() const { return byteOrder_; }
         /*!
           @brief Check if the Image instance is valid. Use after object
               construction.
@@ -396,6 +411,7 @@ namespace Exiv2 {
         const int         imageType_;         //!< Image type
         const uint16_t    supportedMetadata_; //!< Bitmap with all supported metadata types
         bool              writeXmpFromPacket_;//!< Determines the source when writing XMP
+        ByteOrder         byteOrder_;         //!< Byte order
 
     }; // class Image
 

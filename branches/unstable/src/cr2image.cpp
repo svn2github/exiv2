@@ -109,7 +109,12 @@ namespace Exiv2 {
             throw Error(3, "CR2");
         }
         clearMetadata();
-        Cr2Parser::decode(exifData_, iptcData_, xmpData_, io_->mmap(), io_->size());
+        ByteOrder bo = Cr2Parser::decode(exifData_,
+                                         iptcData_,
+                                         xmpData_,
+                                         io_->mmap(),
+                                         io_->size());
+        setByteOrder(bo);
     } // Cr2Image::readMetadata
 
     void Cr2Image::writeMetadata()
@@ -118,7 +123,7 @@ namespace Exiv2 {
         throw(Error(31, "CR2"));
     } // Cr2Image::writeMetadata
 
-    void Cr2Parser::decode(
+    ByteOrder Cr2Parser::decode(
               ExifData& exifData,
               IptcData& iptcData,
               XmpData&  xmpData,
@@ -127,14 +132,14 @@ namespace Exiv2 {
     )
     {
         Cr2Header cr2Header;
-        TiffParserWorker::decode(exifData,
-                                 iptcData,
-                                 xmpData,
-                                 pData,
-                                 size,
-                                 TiffCreator::create,
-                                 Cr2Mapping::findDecoder,
-                                 &cr2Header);
+        return TiffParserWorker::decode(exifData,
+                                        iptcData,
+                                        xmpData,
+                                        pData,
+                                        size,
+                                        TiffCreator::create,
+                                        Cr2Mapping::findDecoder,
+                                        &cr2Header);
     }
 
     void Cr2Parser::encode(
