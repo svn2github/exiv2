@@ -36,7 +36,6 @@
 // *****************************************************************************
 // included header files
 #include "types.hpp"
-#include "makernote.hpp"
 #include "tags.hpp"
 
 // + standard includes
@@ -53,80 +52,11 @@ namespace Exiv2 {
     class Value;
 
 // *****************************************************************************
-// free functions
-
-    /*!
-      @brief Return an auto-pointer to a newly created empty MakerNote
-             initialized to operate in the memory management model indicated.
-             The caller owns this copy and the auto-pointer ensures that it
-             will be deleted.
-
-      @param alloc Memory management model for the new MakerNote. Determines if
-             memory required to store data should be allocated and deallocated
-             (true) or not (false). If false, only pointers to the buffer
-             provided to read() will be kept. See Ifd for more background on
-             this concept.
-      @param buf Pointer to the makernote character buffer (not used).
-      @param len Length of the makernote character buffer (not used).
-      @param byteOrder Byte order in which the Exif data (and possibly the
-             makernote) is encoded (not used).
-      @param offset Offset from the start of the TIFF header of the makernote
-             buffer (not used).
-
-      @return An auto-pointer to a newly created empty MakerNote. The caller
-             owns this copy and the auto-pointer ensures that it will be
-             deleted.
-     */
-    MakerNote::AutoPtr createCanonMakerNote(bool alloc,
-                                            const byte* buf,
-                                            long len,
-                                            ByteOrder byteOrder,
-                                            long offset);
-
-// *****************************************************************************
 // class definitions
 
     //! MakerNote for Canon cameras
-    class CanonMakerNote : public IfdMakerNote {
+    class CanonMakerNote {
     public:
-        //! Shortcut for a %CanonMakerNote auto pointer.
-        typedef std::auto_ptr<CanonMakerNote> AutoPtr;
-
-        //! @name Creators
-        //@{
-        /*!
-          @brief Constructor. Allows to choose whether or not memory management
-                 is required for the makernote entries.
-         */
-        CanonMakerNote(bool alloc =true);
-        //! Copy constructor
-        CanonMakerNote(const CanonMakerNote& rhs);
-        //! Virtual destructor
-        virtual ~CanonMakerNote() {}
-        //@}
-
-        //! @name Manipulators
-        //@{
-        int read(const byte* buf,
-                 long len,
-                 long start,
-                 ByteOrder byteOrder,
-                 long shift);
-        long copy(byte* buf, ByteOrder byteOrder, long offset);
-        void add(const Entry& entry);
-        Entries::iterator begin() { return entries_.begin(); }
-        Entries::iterator end() { return entries_.end(); }
-        void updateBase(byte* pNewBase);
-        //@}
-
-        //! @name Accessors
-        //@{
-        Entries::const_iterator begin() const { return entries_.begin(); }
-        Entries::const_iterator end() const { return entries_.end(); }
-        Entries::const_iterator findIdx(int idx) const;
-        long size() const;
-        AutoPtr create(bool alloc =true) const;
-        AutoPtr clone() const;
         //! Return read-only list of built-in Canon tags
         static const TagInfo* tagList();
         //! Return read-only list of built-in Canon Camera Settings tags
@@ -139,7 +69,13 @@ namespace Exiv2 {
         static const TagInfo* tagListCf();
         //! Return read-only list of built-in Canon Picture Info tags
         static const TagInfo* tagListPi();
-        //@}
+
+        //! @cond IGNORE
+        // Public only so that we can create a static instance
+        struct RegisterMn {
+            RegisterMn();
+        };
+        //! @endcond
 
         //! @name Print functions for Canon %MakerNote tags
         //@{
@@ -165,40 +101,8 @@ namespace Exiv2 {
         static std::ostream& printSi0x0016(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
     private:
-        //! @name Manipulators
-        //@{
-        //! Add a camera settings entry to the makernote entries
-        void addCsEntry(IfdId ifdId,
-                        uint16_t tag,
-                        long offset,
-                        const byte* data,
-                        int count);
-        //@}
-
-        //! @name Accessors
-        //@{
-        //! Assemble special Canon entries into an entry with the original tag
-        long assemble(Entry& e,
-                      IfdId ifdId,
-                      uint16_t tag,
-                      ByteOrder byteOrder) const;
-        //! Internal virtual create function.
-        CanonMakerNote* create_(bool alloc =true) const;
-        //! Internal virtual copy constructor.
-        CanonMakerNote* clone_() const;
-        //@}
-
         // DATA
-        //! Container to store Makernote entries (instead of Ifd)
-        Entries entries_;
 
         //! Tag information
         static const TagInfo tagInfo_[];

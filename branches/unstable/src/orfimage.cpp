@@ -148,7 +148,7 @@ namespace Exiv2 {
                                         &orfHeader);
     }
 
-    void OrfParser::encode(
+    WriteMethod OrfParser::encode(
               Blob&     blob,
         const byte*     pData,
               uint32_t  size,
@@ -159,7 +159,7 @@ namespace Exiv2 {
     {
         /* Todo: Implement me!
 
-        TiffParserWorker::encode(blob,
+        return TiffParserWorker::encode(blob,
                                  pData,
                                  size,
                                  exifData,
@@ -168,6 +168,8 @@ namespace Exiv2 {
                                  TiffCreator::create,
                                  TiffMapping::findEncoder);
         */
+        blob.clear();
+        return wmIntrusive;
     }
 
     // *************************************************************************

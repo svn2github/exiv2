@@ -177,11 +177,17 @@ namespace Exiv2 {
         }
         setByteOrder(bo);
         Blob blob;
-        TiffParser::encode(blob, buf.pData_, buf.size_, bo, exifData_, iptcData_, xmpData_);
+        WriteMethod wm = TiffParser::encode(blob,
+                                            buf.pData_,
+                                            buf.size_,
+                                            bo,
+                                            exifData_,
+                                            iptcData_,
+                                            xmpData_);
         // Write updated or new buffer to file
         BasicIo::AutoPtr tempIo(io_->temporary()); // may throw
         assert(tempIo.get() != 0);
-        if (blob.size() == 0) {
+        if (wm == wmNonIntrusive) {
             // Buffer may be modified but size is unchanged, write buffer back
             tempIo->write(buf.pData_, buf.size_);
         }
@@ -211,7 +217,7 @@ namespace Exiv2 {
                                         TiffMapping::findDecoder);
     } // TiffParser::decode
 
-    void TiffParser::encode(
+    WriteMethod TiffParser::encode(
               Blob&     blob,
         const byte*     pData,
               uint32_t  size,
@@ -222,15 +228,15 @@ namespace Exiv2 {
     )
     {
         std::auto_ptr<TiffHeaderBase> header(new TiffHeade2(byteOrder));
-        TiffParserWorker::encode(blob,
-                                 pData,
-                                 size,
-                                 exifData,
-                                 iptcData,
-                                 xmpData,
-                                 TiffCreator::create,
-                                 TiffMapping::findEncoder,
-                                 header.get());
+        return TiffParserWorker::encode(blob,
+                                        pData,
+                                        size,
+                                        exifData,
+                                        iptcData,
+                                        xmpData,
+                                        TiffCreator::create,
+                                        TiffMapping::findEncoder,
+                                        header.get());
     } // TiffParser::encode
 
     // *************************************************************************
@@ -531,7 +537,7 @@ namespace Exiv2 {
 
  */
 
-    void TiffParserWorker::encode(
+    WriteMethod TiffParserWorker::encode(
               Blob&              blob,
         const byte*              pData,
               uint32_t           size,
@@ -559,15 +565,19 @@ namespace Exiv2 {
         rootDir->accept(encoder);
         // Add remaining entries from metadata to composite, if any
         encoder.add(rootDir.get(), createFct);
+        WriteMethod writeMethod = wmNonIntrusive;
+        blob.clear();
         if (encoder.dirty()) {
 
             // Todo: Remove debug output
             std::cerr << "Intrusive writing\n";
 
             // Re-write binary representation from the composite tree
+            writeMethod = wmIntrusive;
             uint32_t offset = pHeader->write(blob);
             rootDir->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1), uint32_t(-1));
         }
+        return writeMethod;
     } // TiffParserWorker::encode
 
     TiffComponent::AutoPtr TiffParserWorker::parse(

@@ -90,6 +90,9 @@ namespace Exiv2 {
     //! Type to express the byte order (little or big endian)
     enum ByteOrder { invalidByteOrder, littleEndian, bigEndian };
 
+    //! Type to indicate write method used by TIFF parsers
+    enum WriteMethod { wmIntrusive, wmNonIntrusive };
+
     //! An identifier for each type of metadata
     enum MetadataId { mdNone=0, mdExif=1, mdIptc=2, mdComment=4, mdXmp=8 };
 

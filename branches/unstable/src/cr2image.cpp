@@ -142,7 +142,7 @@ namespace Exiv2 {
                                         &cr2Header);
     }
 
-    void Cr2Parser::encode(
+    WriteMethod Cr2Parser::encode(
               Blob&     blob,
         const byte*     pData,
               uint32_t  size,
@@ -162,6 +162,8 @@ namespace Exiv2 {
                                  TiffCreator::create,
                                  TiffMapping::findEncoder);
         */
+        blob.clear();
+        return wmIntrusive;
     }
 
     // *************************************************************************

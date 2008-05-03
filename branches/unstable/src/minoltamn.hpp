@@ -38,94 +38,21 @@
 
 // *****************************************************************************
 // included header files
-#include "types.hpp"
-#include "makernote.hpp"
 #include "tags.hpp"
 
 // + standard includes
-#include <string>
 #include <iosfwd>
-#include <memory>
 
 // *****************************************************************************
 // namespace extensions
 namespace Exiv2 {
 
 // *****************************************************************************
-// class declarations
-    class Value;
-
-// *****************************************************************************
-// free functions
-
-    /*!
-      @brief Return an auto-pointer to a newly created empty MakerNote
-             initialized to operate in the memory management model indicated.
-             The caller owns this copy and the auto-pointer ensures that it
-             will be deleted.
-
-      @param alloc Memory management model for the new MakerNote. Determines if
-             memory required to store data should be allocated and deallocated
-             (true) or not (false). If false, only pointers to the buffer
-             provided to read() will be kept. See Ifd for more background on
-             this concept.
-      @param buf Pointer to the makernote character buffer (not used).
-      @param len Length of the makernote character buffer (not used).
-      @param byteOrder Byte order in which the Exif data (and possibly the
-             makernote) is encoded (not used).
-      @param offset Offset from the start of the TIFF header of the makernote
-             buffer (not used).
-
-      @return An auto-pointer to a newly created empty MakerNote. The caller
-             owns this copy and the auto-pointer ensures that it will be
-             deleted.
-     */
-    MakerNote::AutoPtr createMinoltaMakerNote(bool alloc,
-                                              const byte* buf,
-                                              long len,
-                                              ByteOrder byteOrder,
-                                              long offset);
-
-// *****************************************************************************
 // class definitions
 
     //! MakerNote for Minolta cameras
-    class MinoltaMakerNote : public IfdMakerNote {
+    class MinoltaMakerNote {
     public:
-        //! Shortcut for a %MinoltaMakerNote auto pointer.
-        typedef std::auto_ptr<MinoltaMakerNote> AutoPtr;
-
-        //! @name Creators
-        //@{
-        /*!
-          @brief Constructor. Allows to choose whether or not memory management
-                 is required for the makernote entries.
-         */
-        MinoltaMakerNote(bool alloc =true);
-        //! Copy constructor
-        MinoltaMakerNote(const MinoltaMakerNote& rhs);
-        //! Virtual destructor
-        virtual ~MinoltaMakerNote() {}
-        //@}
-
-        //! @name Manipulators
-        //@{
-        int read(const byte* buf, long len, long start, ByteOrder byteOrder, long shift);
-        long copy(byte* buf, ByteOrder byteOrder, long offset);
-        void add(const Entry& entry);
-        Entries::iterator begin() { return entries_.begin(); }
-        Entries::iterator end()   { return entries_.end();   }
-        void updateBase(byte* pNewBase);
-        //@}
-
-        //! @name Accessors
-        //@{
-        Entries::const_iterator begin() const { return entries_.begin(); }
-        Entries::const_iterator end() const   { return entries_.end();   }
-        Entries::const_iterator findIdx(int idx) const;
-        long size() const;
-        AutoPtr create(bool alloc =true) const;
-        AutoPtr clone() const;
         //! Return read-only list of built-in Minolta tags
         static const TagInfo* tagList();
         //! Return read-only list of built-in Minolta Standard Camera Settings tags
@@ -134,7 +61,13 @@ namespace Exiv2 {
         static const TagInfo* tagListCs7D();
         //! Return read-only list of built-in Minolta 5D Camera Settings tags
         static const TagInfo* tagListCs5D();
-        //@}
+
+        //! @cond IGNORE
+        // Public only so that we can create a static instance
+        struct RegisterMn {
+            RegisterMn();
+        };
+        //! @endcond
 
         //! @name Print functions for Minolta %MakerNote tags
         //@{
@@ -165,38 +98,7 @@ namespace Exiv2 {
         static std::ostream& printMinoltaExposureCompensation5D(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
     private:
-        //! @name Manipulators
-        //@{
-        //! Add a Dynax 5D and 7D camera settings entry to the makernote entries
-        void addCsEntry(IfdId ifdId, uint16_t tag, long offset, const byte* data, int count);
-        //! Add a standard camera settings entry to the makernote entries
-        void addCsStdEntry(IfdId ifdId, uint32_t tag, long offset, const byte* data, int count);
-        //@}
-
-        //! @name Accessors
-        //@{
-        //! Assemble special Dynax 5D or 7D Minolta entries into an entry with the original tag
-        long assemble(Entry& e, IfdId ifdId, uint16_t tag, ByteOrder byteOrder) const;
-        //! Assemble special standard Minolta entries into an entry with the original tag
-        long assembleStd(Entry& e, IfdId ifdId, uint32_t tag, ByteOrder byteOrder) const;
-        //! Internal virtual create function.
-        MinoltaMakerNote* create_(bool alloc =true) const;
-        //! Internal virtual copy constructor.
-        MinoltaMakerNote* clone_() const;
-        //@}
-
-        // DATA
-        //! Container to store Makernote entries (instead of Ifd)
-        Entries entries_;
-
         //! Tag information
         static const TagInfo tagInfo_[];
         static const TagInfo tagInfoCs5D_[];
@@ -206,6 +108,7 @@ namespace Exiv2 {
     }; // class MinoltaMakerNote
 
     static MinoltaMakerNote::RegisterMn registerMinoltaMakerNote;
+
 }                                       // namespace Exiv2
 
 #endif                                  // #ifndef MINOLTAMN_HPP_

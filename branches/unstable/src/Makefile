@@ -78,12 +78,10 @@ CCSRC =  basicio.cpp          \
 	 futils.cpp           \
 	 fujimn.cpp           \
 	 gifimage.cpp         \
-	 ifd.cpp              \
 	 image.cpp            \
 	 iptc.cpp             \
 	 jp2image.cpp         \
 	 jpgimage.cpp         \
-	 makernote.cpp        \
 	 makernote2.cpp       \
 	 metadatum.cpp        \
 	 minoltamn.cpp        \

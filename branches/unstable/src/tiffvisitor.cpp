@@ -161,6 +161,10 @@ namespace Exiv2 {
     {
         assert(pRoot != 0);
 
+        exifData_.clear();
+        iptcData_.clear();
+        xmpData_.clear();
+
         // Find camera make
         TiffFinder finder(0x010f, Group::ifd0);
         pRoot_->accept(finder);

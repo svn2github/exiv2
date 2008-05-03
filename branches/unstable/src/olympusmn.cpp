@@ -36,7 +36,6 @@ EXIV2_RCSID("@(#) $Id$")
 // included header files
 #include "types.hpp"
 #include "olympusmn.hpp"
-#include "makernote.hpp"
 #include "value.hpp"
 #include "i18n.h"                // NLS support.
 
@@ -407,73 +406,9 @@ namespace Exiv2 {
     //! @cond IGNORE
     OlympusMakerNote::RegisterMn::RegisterMn()
     {
-        MakerNoteFactory::registerMakerNote("OLYMPUS*", "*", createOlympusMakerNote);
-        MakerNoteFactory::registerMakerNote(olympusIfdId, MakerNote::AutoPtr(new OlympusMakerNote));
-
         ExifTags::registerMakerTagInfo(olympusIfdId, tagInfo_);
     }
     //! @endcond
-
-    OlympusMakerNote::OlympusMakerNote(bool alloc)
-        : IfdMakerNote(olympusIfdId, alloc)
-    {
-        byte buf[] = {
-            'O', 'L', 'Y', 'M', 'P', 0x00, 0x01, 0x00
-        };
-        readHeader(buf, 8, byteOrder_);
-    }
-
-    OlympusMakerNote::OlympusMakerNote(const OlympusMakerNote& rhs)
-        : IfdMakerNote(rhs)
-    {
-    }
-
-    int OlympusMakerNote::readHeader(const byte* buf, long len, ByteOrder /*byteOrder*/)
-    {
-        if (len < 8) return 1;
-
-        // Copy the header
-        header_.alloc(8);
-        std::memcpy(header_.pData_, buf, header_.size_);
-        // Adjust the offset of the IFD for the prefix
-        start_ = 8;
-        return 0;
-    }
-
-    int OlympusMakerNote::checkHeader() const
-    {
-        int rc = 0;
-        // Check the OLYMPUS prefix
-        if (   header_.size_ < 8
-            || std::string(reinterpret_cast<char*>(header_.pData_), 5)
-               != std::string("OLYMP", 5)) {
-            rc = 2;
-        }
-        return rc;
-    }
-
-    OlympusMakerNote::AutoPtr OlympusMakerNote::create(bool alloc) const
-    {
-        return AutoPtr(create_(alloc));
-    }
-
-    OlympusMakerNote* OlympusMakerNote::create_(bool alloc) const
-    {
-        AutoPtr makerNote(new OlympusMakerNote(alloc));
-        assert(makerNote.get() != 0);
-        makerNote->readHeader(header_.pData_, header_.size_, byteOrder_);
-        return makerNote.release();
-    }
-
-    OlympusMakerNote::AutoPtr OlympusMakerNote::clone() const
-    {
-        return AutoPtr(clone_());
-    }
-
-    OlympusMakerNote* OlympusMakerNote::clone_() const
-    {
-        return new OlympusMakerNote(*this);
-    }
 
     std::ostream& OlympusMakerNote::print0x0200(std::ostream& os, const Value& value, const ExifData*)
     {
@@ -558,14 +493,5 @@ namespace Exiv2 {
         }
         return os;
     } // OlympusMakerNote::print0x1015
-
-// *****************************************************************************
-// free functions
-
-    MakerNote::AutoPtr createOlympusMakerNote(bool alloc, const byte* /*buf*/, long /*len*/,
-                                              ByteOrder /*byteOrder*/, long /*offset*/)
-    {
-        return MakerNote::AutoPtr(new OlympusMakerNote(alloc));
-    }
 
 }                                       // namespace Exiv2

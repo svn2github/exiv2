@@ -187,7 +187,8 @@ namespace Exiv2 {
           @param pHeader   Optional pointer to a TIFF header. If not provided,
                            a standard TIFF header is used.
 
-          @return Byte order in which the data is encoded.
+          @return Byte order in which the data is encoded, invalidByteOrder if
+                  decoding failed.
         */
         static ByteOrder decode(
                   ExifData&          exifData,
@@ -202,15 +203,17 @@ namespace Exiv2 {
           @brief Encode TIFF metadata from the metadata containers into a
                  memory block \em blob.
         */
-        static void encode(      Blob&              blob,
-                           const byte*              pData,
-                                 uint32_t           size,
-                           const ExifData&          exifData,
-                           const IptcData&          iptcData,
-                           const XmpData&           xmpData,
-                                 TiffCompFactoryFct createFct,
-                                 FindEncoderFct     findEncoderFct,
-                                 TiffHeaderBase*    pHeader);
+        static WriteMethod encode(
+                  Blob&              blob,
+            const byte*              pData,
+                  uint32_t           size,
+            const ExifData&          exifData,
+            const IptcData&          iptcData,
+            const XmpData&           xmpData,
+                  TiffCompFactoryFct createFct,
+                  FindEncoderFct     findEncoderFct,
+                  TiffHeaderBase*    pHeader
+        );
 
     private:
         /*!

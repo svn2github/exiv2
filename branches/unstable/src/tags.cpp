@@ -38,7 +38,6 @@ EXIV2_RCSID("@(#) $Id$")
 #include "futils.hpp"
 #include "ifd.hpp"
 #include "value.hpp"
-#include "makernote.hpp"
 #include "mn.hpp"                // To ensure that all makernotes are registered
 #include "i18n.h"                // NLS support.
 

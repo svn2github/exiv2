@@ -270,7 +270,9 @@ namespace Exiv2 {
                 DataBuf rawExif(resourceSize);
                 io_->read(rawExif.pData_, rawExif.size_);
                 if (io_->error() || io_->eof()) throw Error(14);
-                if (exifData_.load(rawExif.pData_, rawExif.size_)) {
+                ByteOrder bo = ExifParser::decode(exifData_, rawExif.pData_, rawExif.size_);
+                setByteOrder(bo);
+                if (rawExif.size_ > 0 && byteOrder() == invalidByteOrder) {
 #ifndef SUPPRESS_WARNINGS
                     std::cerr << "Warning: Failed to decode Exif metadata.\n";
 #endif

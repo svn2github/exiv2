@@ -35,7 +35,6 @@ EXIV2_RCSID("@(#) $Id$")
 // included header files
 #include "types.hpp"
 #include "sigmamn.hpp"
-#include "makernote.hpp"
 #include "value.hpp"
 #include "i18n.h"                // NLS support.
 
@@ -53,11 +52,6 @@ namespace Exiv2 {
     //! @cond IGNORE
     SigmaMakerNote::RegisterMn::RegisterMn()
     {
-        MakerNoteFactory::registerMakerNote("SIGMA", "*", createSigmaMakerNote);
-        MakerNoteFactory::registerMakerNote("FOVEON", "*", createSigmaMakerNote);
-        MakerNoteFactory::registerMakerNote(
-            sigmaIfdId, MakerNote::AutoPtr(new SigmaMakerNote));
-
         ExifTags::registerMakerTagInfo(sigmaIfdId, tagInfo_);
     }
     //! @endcond
@@ -143,73 +137,6 @@ namespace Exiv2 {
         return tagInfo_;
     }
 
-    SigmaMakerNote::SigmaMakerNote(bool alloc)
-        : IfdMakerNote(sigmaIfdId, alloc)
-    {
-        byte buf[] = {
-            'S', 'I', 'G', 'M', 'A', '\0', '\0', '\0', 0x01, 0x00
-        };
-        readHeader(buf, 10, byteOrder_);
-    }
-
-    SigmaMakerNote::SigmaMakerNote(const SigmaMakerNote& rhs)
-        : IfdMakerNote(rhs)
-    {
-    }
-
-    int SigmaMakerNote::readHeader(const byte* buf,
-                                   long        len,
-                                   ByteOrder   /*byteOrder*/)
-    {
-        if (len < 10) return 1;
-
-        // Copy the header. My one and only Sigma sample has two undocumented
-        // extra bytes (0x01, 0x00) between the ID string and the start of the
-        // Makernote IFD. So we copy 10 bytes into the header.
-        header_.alloc(10);
-        std::memcpy(header_.pData_, buf, header_.size_);
-        // Adjust the offset of the IFD for the prefix
-        start_ = 10;
-        return 0;
-    }
-
-    int SigmaMakerNote::checkHeader() const
-    {
-        int rc = 0;
-        // Check the SIGMA or FOVEON prefix
-        if (   header_.size_ < 10
-            || (   std::string(reinterpret_cast<char*>(header_.pData_), 8)
-                        != std::string("SIGMA\0\0\0", 8)
-                && std::string(reinterpret_cast<char*>(header_.pData_), 8)
-                        != std::string("FOVEON\0\0", 8))) {
-            rc = 2;
-        }
-        return rc;
-    }
-
-    SigmaMakerNote::AutoPtr SigmaMakerNote::create(bool alloc) const
-    {
-        return AutoPtr(create_(alloc));
-    }
-
-    SigmaMakerNote* SigmaMakerNote::create_(bool alloc) const
-    {
-        AutoPtr makerNote(new SigmaMakerNote(alloc));
-        assert(makerNote.get() != 0);
-        makerNote->readHeader(header_.pData_, header_.size_, byteOrder_);
-        return makerNote.release();
-    }
-
-    SigmaMakerNote::AutoPtr SigmaMakerNote::clone() const
-    {
-        return AutoPtr(clone_());
-    }
-
-    SigmaMakerNote* SigmaMakerNote::clone_() const
-    {
-        return new SigmaMakerNote(*this);
-    }
-
     std::ostream& SigmaMakerNote::printStripLabel(std::ostream& os,
                                                   const Value& value,
                                                   const ExifData*)
@@ -248,18 +175,6 @@ namespace Exiv2 {
         default: os << "(" << value << ")"; break;
         }
         return os;
-    }
-
-// *****************************************************************************
-// free functions
-
-    MakerNote::AutoPtr createSigmaMakerNote(bool        alloc,
-                                            const byte* /*buf*/,
-                                            long        /*len*/,
-                                            ByteOrder   /*byteOrder*/,
-                                            long        /*offset*/)
-    {
-        return MakerNote::AutoPtr(new SigmaMakerNote(alloc));
     }
 
 }                                       // namespace Exiv2
