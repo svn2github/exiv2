@@ -58,17 +58,6 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 namespace {
     /*!
-      @brief Set the value of \em exifDatum to \em value. If the object already
-             has a value, it is replaced. Otherwise a new ValueType\<T\> value
-             is created and set to \em value.
-
-      This is a helper function, called from Exifdatum members. It is meant to
-      be used with T = (u)int16_t, (u)int32_t or (U)Rational. Do not use directly.
-    */
-    template<typename T>
-    Exiv2::Exifdatum& setValue(Exiv2::Exifdatum& exifDatum, const T& value);
-
-    /*!
       @brief Exif %Thumbnail image. This abstract base class provides the
              interface for the thumbnail image that is optionally embedded in
              the Exif data. This class is used internally by ExifData, it is
@@ -157,6 +146,24 @@ namespace {
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
+
+    /*!
+      @brief Set the value of \em exifDatum to \em value. If the object already
+             has a value, it is replaced. Otherwise a new ValueType\<T\> value
+             is created and set to \em value.
+
+      This is a helper function, called from Exifdatum members. It is meant to
+      be used with T = (u)int16_t, (u)int32_t or (U)Rational. Do not use directly.
+    */
+    template<typename T>
+    Exiv2::Exifdatum& setValue(Exiv2::Exifdatum& exifDatum, const T& value)
+    {
+        std::auto_ptr<Exiv2::ValueType<T> > v
+            = std::auto_ptr<Exiv2::ValueType<T> >(new Exiv2::ValueType<T>);
+        v->value_.push_back(value);
+        exifDatum.value_ = v;
+        return exifDatum;
+    }
 
     Exifdatum::Exifdatum(const ExifKey& key, const Value* pValue)
         : key_(key.clone())
@@ -444,16 +451,6 @@ namespace Exiv2 {
 // *****************************************************************************
 // local definitions
 namespace {
-
-    template<typename T>
-    Exiv2::Exifdatum& setValue(Exiv2::Exifdatum& exifDatum, const T& value)
-    {
-        std::auto_ptr<Exiv2::ValueType<T> > v
-            = std::auto_ptr<Exiv2::ValueType<T> >(new Exiv2::ValueType<T>);
-        v->value_.push_back(value);
-        exifDatum.value_ = v;
-        return exifDatum;
-    }
 
     Thumbnail::AutoPtr Thumbnail::create(const Exiv2::ExifData& exifData)
     {

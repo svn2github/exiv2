@@ -65,7 +65,7 @@ namespace Exiv2 {
         ErrMsg( 20, N_("Failed to read input data")),
         ErrMsg( 21, N_("Failed to write image")),
         ErrMsg( 22, N_("Input data does not contain a valid image")),
-        ErrMsg( 23, N_("Failed to create Makernote for ifdId %1")), // %1=ifdId
+        ErrMsg( 23, N_("Invalid ifdId %1")), // %1=ifdId
         ErrMsg( 24, N_("Entry::setValue: Value too large (tag=%1, size=%2, requested=%3)")), // %1=tag, %2=dataSize, %3=required size
         ErrMsg( 25, N_("Entry::setDataArea: Value too large (tag=%1, size=%2, requested=%3)")), // %1=tag, %2=dataAreaSize, %3=required size
         ErrMsg( 26, N_("Offset out of range")),

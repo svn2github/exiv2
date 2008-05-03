@@ -36,7 +36,6 @@ EXIV2_RCSID("@(#) $Id$")
 #include "tags.hpp"
 #include "error.hpp"
 #include "futils.hpp"
-#include "ifd.hpp"
 #include "value.hpp"
 #include "mn.hpp"                // To ensure that all makernotes are registered
 #include "i18n.h"                // NLS support.
@@ -1301,6 +1300,20 @@ namespace Exiv2 {
         return i != MAX_MAKER_TAG_INFOS && makerIfdIds_[i] != IfdId(0);
     }
 
+    bool ExifTags::isExifIfd(IfdId ifdId)
+    {
+        bool rc;
+        switch (ifdId) {
+        case ifd0Id:    rc = true; break;
+        case exifIfdId: rc = true; break;
+        case gpsIfdId:  rc = true; break;
+        case iopIfdId:  rc = true; break;
+        case ifd1Id:    rc = true; break;
+        default:        rc = false; break;
+        }
+        return rc;
+    } // ExifTags::isExifIfd
+
     std::string ExifTags::tagName(uint16_t tag, IfdId ifdId)
     {
         if (isExifIfd(ifdId)) {
@@ -1514,21 +1527,12 @@ namespace Exiv2 {
           idx_(0), key_("")
     {
         IfdId ifdId = ExifTags::ifdIdByIfdItem(ifdItem);
-        if (ExifTags::isMakerIfd(ifdId)) {
-            MakerNote::AutoPtr makerNote = MakerNoteFactory::create(ifdId);
-            if (makerNote.get() == 0) throw Error(23, ifdId);
+        if (!ExifTags::isExifIfd(ifdId) && !ExifTags::isMakerIfd(ifdId)) {
+            throw Error(23, ifdId);
         }
         tag_ = tag;
         ifdId_ = ifdId;
         ifdItem_ = ifdItem;
-        makeKey();
-    }
-
-    ExifKey::ExifKey(const Entry& e)
-        : tag_(e.tag()), ifdId_(e.ifdId()),
-          ifdItem_(ExifTags::ifdItem(e.ifdId())),
-          idx_(e.idx()), key_("")
-    {
         makeKey();
     }
 
@@ -1599,9 +1603,8 @@ namespace Exiv2 {
         // Find IfdId
         IfdId ifdId = ExifTags::ifdIdByIfdItem(ifdItem);
         if (ifdId == ifdIdNotSet) throw Error(6, key_);
-        if (ExifTags::isMakerIfd(ifdId)) {
-            MakerNote::AutoPtr makerNote = MakerNoteFactory::create(ifdId);
-            if (makerNote.get() == 0) throw Error(6, key_);
+        if (!ExifTags::isExifIfd(ifdId) && !ExifTags::isMakerIfd(ifdId)) {
+            throw Error(6, key_);
         }
         // Convert tag
         uint16_t tag = ExifTags::tag(tagName, ifdId);
@@ -1624,20 +1627,6 @@ namespace Exiv2 {
 
     // *************************************************************************
     // free functions
-
-    bool isExifIfd(IfdId ifdId)
-    {
-        bool rc;
-        switch (ifdId) {
-        case ifd0Id:    rc = true; break;
-        case exifIfdId: rc = true; break;
-        case gpsIfdId:  rc = true; break;
-        case iopIfdId:  rc = true; break;
-        case ifd1Id:    rc = true; break;
-        default:        rc = false; break;
-        }
-        return rc;
-    } // isExifIfd
 
     std::ostream& operator<<(std::ostream& os, const TagInfo& ti)
     {

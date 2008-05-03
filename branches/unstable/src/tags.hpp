@@ -50,7 +50,6 @@ namespace Exiv2 {
 // class declarations
     class ExifData;
     class Value;
-    class Entry;
 
 // *****************************************************************************
 // type definitions
@@ -300,6 +299,13 @@ namespace Exiv2 {
                  makerIfd returns false.
         */
         static bool isMakerIfd(IfdId ifdId);
+        /*!
+          @brief Return true if \em ifdId is an Exif %Ifd Id, i.e., one of
+                 ifd0Id, exifIfdId, gpsIfdId, iopIfdId or ifd1Id, else false.
+                 This is used to differentiate between standard Exif %Ifds
+                 and %Ifds associated with the makernote.
+        */
+        static bool isExifIfd(IfdId ifdId);
 
     private:
         static int tagInfoIdx(uint16_t tag, IfdId ifdId);
@@ -347,8 +353,6 @@ namespace Exiv2 {
                  item parameters.
          */
         ExifKey(uint16_t tag, const std::string& ifdItem);
-        //! Constructor to build an ExifKey from an IFD entry.
-        explicit ExifKey(const Entry& e);
         //! Copy constructor
         ExifKey(const ExifKey& rhs);
         virtual ~ExifKey();
@@ -422,14 +426,6 @@ namespace Exiv2 {
 
 // *****************************************************************************
 // free functions
-
-    /*!
-      @brief Return true if \em ifdId is an Exif %Ifd Id, i.e., one of
-             ifd0Id, exifIfdId, gpsIfdId, iopIfdId or ifd1Id, else false.
-             This is used to differentiate between standard Exif %Ifds
-             and %Ifds associated with the makernote.
-     */
-    bool isExifIfd(IfdId ifdId);
 
     //! Output operator for TagInfo
     std::ostream& operator<<(std::ostream& os, const TagInfo& ti);

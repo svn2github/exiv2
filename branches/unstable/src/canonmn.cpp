@@ -35,7 +35,6 @@ EXIV2_RCSID("@(#) $Id$")
 #include "types.hpp"
 #include "canonmn.hpp"
 #include "value.hpp"
-#include "ifd.hpp"
 #include "i18n.h"                // NLS support.
 
 // + standard includes

@@ -546,13 +546,14 @@ namespace Action {
 
         // Thumbnail
         printLabel(_("Thumbnail"));
-        std::string thumbExt = exifData.thumbnailExtension();
+        Exiv2::ExifThumbC exifThumb(exifData);
+        std::string thumbExt = exifThumb.extension();
         if (thumbExt.empty()) {
             std::cout << _("None");
         }
         else {
-            Exiv2::DataBuf buf = exifData.copyThumbnail();
-            std::cout << exifData.thumbnailFormat() << ", "
+            Exiv2::DataBuf buf = exifThumb.copy();
+            std::cout << exifThumb.mimeType() << ", "
                       << buf.size_ << " " << _("Bytes");
         }
         std::cout << std::endl;
@@ -706,7 +707,7 @@ namespace Action {
                     continue;
                 }
                 Exiv2::DataBuf buf(md->size());
-                md->copy(buf.pData_, exifData.byteOrder());
+                md->copy(buf.pData_, image->byteOrder());
                 Exiv2::hexdump(std::cout, buf.pData_, buf.size_);
             }
             std::cout << std::endl;
@@ -954,15 +955,14 @@ namespace Action {
 
     int Erase::eraseThumbnail(Exiv2::Image* image) const
     {
-        Exiv2::ExifData& exifData = image->exifData();
-        std::string thumbExt = exifData.thumbnailExtension();
+        Exiv2::ExifThumb exifThumb(image->exifData());
+        std::string thumbExt = exifThumb.extension();
         if (thumbExt.empty()) {
             return 0;
         }
-        long delta = exifData.eraseThumbnail();
+        exifThumb.erase();
         if (Params::instance().verbose_) {
-            std::cout << _("Erasing") << " " << delta
-                        << " " << _("Bytes of thumbnail data") << std::endl;
+            std::cout << _("Erasing thumbnail data") << std::endl;
         }
         return 0;
     }
@@ -1085,7 +1085,8 @@ namespace Action {
             return -3;
         }
         int rc = 0;
-        std::string thumbExt = exifData.thumbnailExtension();
+        Exiv2::ExifThumb exifThumb(exifData);
+        std::string thumbExt = exifThumb.extension();
         if (thumbExt.empty()) {
             std::cerr << path_ << ": " << _("Image does not contain an Exif thumbnail\n");
         }
@@ -1094,13 +1095,13 @@ namespace Action {
             std::string thumbPath = thumb + thumbExt;
             if (dontOverwrite(thumbPath)) return 0;
             if (Params::instance().verbose_) {
-                Exiv2::DataBuf buf = exifData.copyThumbnail();
+                Exiv2::DataBuf buf = exifThumb.copy();
                 std::cout << _("Writing") << " "
-                          << exifData.thumbnailFormat() << " " << _("thumbnail") << " ("
+                          << exifThumb.mimeType() << " " << _("thumbnail") << " ("
                           << buf.size_ << " " << _("Bytes") << ") " << _("to file") << " "
                           << thumbPath << std::endl;
             }
-            rc = exifData.writeThumbnail(thumb);
+            rc = exifThumb.writeFile(thumb);
             if (rc) {
                 std::cerr << path_ << ": " << _("Exif data doesn't contain a thumbnail\n");
             }
@@ -1199,8 +1200,8 @@ namespace Action {
         Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(path);
         assert(image.get() != 0);
         image->readMetadata();
-        Exiv2::ExifData& exifData = image->exifData();
-        exifData.setJpegThumbnail(thumbPath);
+        Exiv2::ExifThumb exifThumb(image->exifData());
+        exifThumb.setJpegThumbnail(thumbPath);
         image->writeMetadata();
 
         return 0;
