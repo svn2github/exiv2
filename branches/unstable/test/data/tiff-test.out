@@ -41,6 +41,33 @@ File Size = 526
 File Format = TIFFEP
 
 
+Creating a new TIFF structure
+Test 1: Writing empty Exif data without original binary data: ok.
+DELETING          Exif.Image.NewSubfileType
+DELETING          Exif.Image.ImageWidth
+DELETING          Exif.Image.ImageLength
+DELETING          Exif.Image.BitsPerSample
+DELETING          Exif.Image.Compression
+DELETING          Exif.Image.PhotometricInterpretation
+DELETING          Exif.Image.DocumentName
+DELETING          Exif.Image.ImageDescription
+DELETING          Exif.Image.StripOffsets
+DELETING          Exif.Image.Orientation
+DELETING          Exif.Image.SamplesPerPixel
+DELETING          Exif.Image.RowsPerStrip
+DELETING          Exif.Image.StripByteCounts
+DELETING          Exif.Image.XResolution
+DELETING          Exif.Image.YResolution
+DELETING          Exif.Image.PlanarConfiguration
+DELETING          Exif.Image.ResolutionUnit
+Intrusive writing
+Test 2: Writing empty Exif data with original binary data: ok.
+Creating a new TIFF structure
+ALLOCATING        Exif.Photo.DateTimeOriginal newSize = 18 
+Intrusive writing
+Test 3: Wrote non-empty Exif data without original binary data:
+Exif.Image.ExifTag                           0x8769 Long        1  26
+Exif.Photo.DateTimeOriginal                  0x9003 Ascii      18  Yesterday at noon
 MIME type:  image/tiff
 Image size: 9 x 9
 Before

@@ -580,7 +580,7 @@ namespace Exiv2 {
 #ifdef DEBUG
             std::cerr << "DELETING          " << key << "\n";
 #endif
-            object->isDeleted_ = true;
+            object->setIsDeleted(true);
             dirty_ = true;
         }
         else { // found metadatum corresponding to object

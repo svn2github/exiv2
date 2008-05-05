@@ -101,9 +101,7 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Constructor
-        TiffComponent(uint16_t tag, uint16_t group)
-            : tag_(tag), group_(group), pStart_(0) {}
-
+        TiffComponent(uint16_t tag, uint16_t group);
         //! Virtual destructor.
         virtual ~TiffComponent() {}
         //@}
@@ -146,6 +144,13 @@ namespace Exiv2 {
                  freed outside of this class.
          */
         void setStart(const byte* pStart) { pStart_ = const_cast<byte*>(pStart); }
+        /*!
+          @brief Set flag indicating whether the component is deleted.
+
+          @note Correct handling of this flag on write is only implemented for
+                subclasses of TiffEntryBase.
+         */
+        void setIsDeleted(bool isDeleted) { isDeleted_ = isDeleted; }
         //@}
 
         //! @name Accessors
@@ -156,6 +161,8 @@ namespace Exiv2 {
         uint16_t group()                      const { return group_; }
         //! Return a pointer to the start of the binary representation of the component
         byte* start()                         const { return pStart_; }
+        //! Return indicator whether the component was deleted.
+        bool isDeleted()                      const { return isDeleted_; }
         //@}
 
         //! @name Write support (Manipulators)
@@ -207,6 +214,10 @@ namespace Exiv2 {
                  when written to a binary image.
          */
         uint32_t size() const;
+        /*!
+          @brief Return the number of components in this component.
+         */
+        uint32_t count() const;
         /*!
           @brief Return the size in bytes of the IFD data of this component when
                  written to a binary image.  This is a support function for
@@ -265,6 +276,8 @@ namespace Exiv2 {
                                       uint32_t  imageIdx) const =0;
         //! Implements size().
         virtual uint32_t doSize() const =0;
+        //! Implements count().
+        virtual uint32_t doCount() const =0;
         //! Implements sizeData().
         virtual uint32_t doSizeData() const =0;
         //! Implements sizeImage().
@@ -280,6 +293,7 @@ namespace Exiv2 {
           a memory buffer. The buffer is allocated and freed outside of this class.
          */
         byte*    pStart_;
+        bool     isDeleted_;  //!< True if this component has been deleted
 
     }; // class TiffComponent
 
@@ -362,7 +376,7 @@ namespace Exiv2 {
         TiffEntryBase(uint16_t tag, uint16_t group, TypeId typeId =invalidTypeId)
             : TiffComponent(tag, group),
               type_(typeId), count_(0), offset_(0), size_(0), pData_(0),
-              isMalloced_(false), isDeleted_(false), pValue_(0) {}
+              isMalloced_(false), pValue_(0) {}
         //! Virtual destructor.
         virtual ~TiffEntryBase();
         //@}
@@ -371,8 +385,6 @@ namespace Exiv2 {
         //@{
         //! Return the Exiv2 type which corresponds to the field type
         TypeId   typeId()        const { return TypeId(type_); }
-        //! Return the number of components in this entry
-        uint32_t count()         const;
         /*!
           @brief Return the offset to the data area relative to the base
                  for the component (usually the start of the TIFF header)
@@ -469,7 +481,6 @@ namespace Exiv2 {
         uint32_t size_;
         byte*    pData_;      //!< Pointer to the data area
         bool     isMalloced_; //!< True if this entry owns the value data
-        bool     isDeleted_;  //!< True if this entry is deleted
         Value*   pValue_;     //!< Converted data value
 
     }; // class TiffEntryBase
@@ -816,6 +827,11 @@ namespace Exiv2 {
                  values and additional data, including the next-IFD, if any.
          */
         virtual uint32_t doSize() const;
+        /*!
+          @brief Implements count(). Return the number of entries in the TIFF
+                 directory. Does not count entries which are marked as deleted.
+         */
+        virtual uint32_t doCount() const;
         /*!
           @brief This class does not really implement sizeData(), it only has
                  size(). This method must not be called; it commits suicide.

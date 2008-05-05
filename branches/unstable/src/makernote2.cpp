@@ -223,6 +223,11 @@ namespace Exiv2 {
         return sizeHeader() + ifd_.size();
     } // TiffIfdMakernote::doSize
 
+    uint32_t TiffIfdMakernote::doCount() const
+    {
+        return ifd_.count();
+    } // TiffIfdMakernote::doCount
+
     uint32_t TiffIfdMakernote::doSizeData() const
     {
         assert(false);

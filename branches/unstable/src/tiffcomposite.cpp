@@ -140,6 +140,11 @@ namespace Exiv2 {
                && key.g_ == group_;
     }
 
+    TiffComponent::TiffComponent(uint16_t tag, uint16_t group)
+        : tag_(tag), group_(group), pStart_(0), isDeleted_(false)
+    {
+    }
+
     TiffSubIfd::TiffSubIfd(uint16_t tag, uint16_t group, uint16_t newGroup)
         : TiffEntryBase(tag, group, unsignedLong), newGroup_(newGroup)
     {
@@ -535,9 +540,18 @@ namespace Exiv2 {
         visitor.visitArrayElement(this);
     } // TiffArrayElement::doAccept
 
-    uint32_t TiffEntryBase::count() const
+    uint32_t TiffComponent::count() const
     {
         return doCount();
+    }
+
+    uint32_t TiffDirectory::doCount() const
+    {
+        uint32_t cnt = 0;
+        for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
+            if (!(*i)->isDeleted()) ++cnt;
+        }
+        return cnt;
     }
 
     uint32_t TiffEntryBase::doCount() const
@@ -579,52 +593,61 @@ namespace Exiv2 {
                                     uint32_t  dataIdx,
                                     uint32_t  imageIdx)
     {
-        // TIFF standard requires IFD entries to be sorted in ascending order by tag
-        std::sort(components_.begin(), components_.end(), cmpTagLt);
+        // Number of components to write
+        const uint32_t compCount = count();
+        if (compCount > 0xffff) throw Error(49, tiffGroupName(group()));
+
+        // Size of next IFD, if any
+        uint32_t sizeNext = 0;
+        if (pNext_) sizeNext = pNext_->size();
+
+        // Nothing to do if there are no entries and the size of the next IFD is 0
+        if (compCount == 0 && sizeNext == 0) return 0;
 
         // Size of all directory entries, without values and additional data
-        const uint32_t sizeDir = 2 + 12 * components_.size() + (hasNext_ ? 4 : 0);
+        const uint32_t sizeDir = 2 + 12 * compCount + (hasNext_ ? 4 : 0);
+
+        // TIFF standard requires IFD entries to be sorted in ascending order by tag
+        std::sort(components_.begin(), components_.end(), cmpTagLt);
 
         // Size of IFD values and additional data
         uint32_t sizeValue = 0;
         uint32_t sizeData = 0;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            uint32_t sv = (*i)->size();
-            if (sv > 4) sizeValue += sv;
-            // Also add the size of data, but only if needed
-            if (imageIdx == uint32_t(-1)) sizeData += (*i)->sizeData();
+            if (!(*i)->isDeleted()) {
+                uint32_t sv = (*i)->size();
+                if (sv > 4) sizeValue += sv;
+                // Also add the size of data, but only if needed
+                if (imageIdx == uint32_t(-1)) sizeData += (*i)->sizeData();
+            }
         }
 
         uint32_t idx = 0;                   // Current IFD index / bytes written
         valueIdx = sizeDir;                 // Offset to the current IFD value
         dataIdx  = sizeDir + sizeValue;     // Offset to the entry's data area
-        if (imageIdx == uint32_t(-1)) {
-            imageIdx = dataIdx + sizeData;  // Offset to the image data
-            if (pNext_) {
-                imageIdx += pNext_->size();
-            }
+        if (imageIdx == uint32_t(-1)) {     // Offset to the image data
+            imageIdx = dataIdx + sizeData + sizeNext;
         }
 
         // Write the IFD. First: number of directory entries
-        if (components_.size() > 0xffff) {
-            throw Error(49, tiffGroupName(group()));
-        }
         byte buf[4];
-        us2Data(buf, static_cast<uint16_t>(components_.size()), byteOrder);
+        us2Data(buf, static_cast<uint16_t>(compCount), byteOrder);
         append(blob, buf, 2);
         idx += 2;
 
         // 2nd: Directory entries - may contain pointers to the value or data
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            idx += writeDirEntry(blob, byteOrder, offset, *i, valueIdx, dataIdx, imageIdx);
-            uint32_t sv = (*i)->size();
-            if (sv > 4) valueIdx += sv;
-            dataIdx += (*i)->sizeData();
+            if (!(*i)->isDeleted()) {
+                idx += writeDirEntry(blob, byteOrder, offset, *i, valueIdx, dataIdx, imageIdx);
+                uint32_t sv = (*i)->size();
+                if (sv > 4) valueIdx += sv;
+                dataIdx += (*i)->sizeData();
+            }
         }
         if (hasNext_) {
             // Add the offset to the next IFD
             memset(buf, 0x0, 4);
-            if (pNext_) {
+            if (pNext_ && sizeNext) {
                 l2Data(buf, offset + dataIdx, byteOrder);
             }
             append(blob, buf, 4);
@@ -636,31 +659,37 @@ namespace Exiv2 {
         valueIdx = sizeDir;
         dataIdx = sizeDir + sizeValue;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            uint32_t sv = (*i)->size();
-            if (sv > 4) {
-                idx += (*i)->write(blob, byteOrder, offset, valueIdx, dataIdx, imageIdx);
-                valueIdx += sv;
+            if (!(*i)->isDeleted()) {
+                uint32_t sv = (*i)->size();
+                if (sv > 4) {
+                    idx += (*i)->write(blob, byteOrder, offset, valueIdx, dataIdx, imageIdx);
+                    valueIdx += sv;
+                }
+                dataIdx += (*i)->sizeData();
             }
-            dataIdx += (*i)->sizeData();
         }
         assert(idx == sizeDir + sizeValue);
 
         // Write data - may contain offsets too (eg sub-IFD)
         dataIdx = sizeDir + sizeValue;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            idx += (*i)->writeData(blob, byteOrder, offset, dataIdx, imageIdx);
-            dataIdx += (*i)->sizeData();
+            if (!(*i)->isDeleted()) {
+                idx += (*i)->writeData(blob, byteOrder, offset, dataIdx, imageIdx);
+                dataIdx += (*i)->sizeData();
+            }
         }
 
-        if (pNext_) {
+        if (pNext_ && sizeNext) {
             idx += pNext_->write(blob, byteOrder, offset + idx, uint32_t(-1), uint32_t(-1), imageIdx);
         }
 
         // Write image data
         imageIdx = idx;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            idx += (*i)->writeImage(blob, byteOrder, offset, imageIdx);
-            imageIdx += (*i)->sizeImage();
+            if (!(*i)->isDeleted()) {
+                idx += (*i)->writeImage(blob, byteOrder, offset, imageIdx);
+                imageIdx += (*i)->sizeImage();
+            }
         }
 
         return idx;
@@ -974,18 +1003,25 @@ namespace Exiv2 {
 
     uint32_t TiffDirectory::doSize() const
     {
+        uint32_t compCount = count();
         // Size of the directory, without values and additional data
-        uint32_t len = 2 + 12 * components_.size() + (hasNext_ ? 4 : 0);
+        uint32_t len = 2 + 12 * compCount + (hasNext_ ? 4 : 0);
         // Size of IFD values and data
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            uint32_t sv = (*i)->size();
-            if (sv > 4) len += sv;
-            len += (*i)->sizeData();
+            if (!isDeleted()) {
+                uint32_t sv = (*i)->size();
+                if (sv > 4) len += sv;
+                len += (*i)->sizeData();
+            }
         }
         // Size of next-IFD, if any
+        uint32_t sizeNext = 0;
         if (pNext_) {
-            len += pNext_->size();
+            sizeNext = pNext_->size();
+            len += sizeNext;
         }
+        // Reset size of IFD if it has no entries and no or empty next IFD.
+        if (compCount == 0 && sizeNext == 0) len = 0;
         return len;
     } // TiffDirectory::doSize
 

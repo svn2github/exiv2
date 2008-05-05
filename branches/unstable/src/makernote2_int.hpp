@@ -301,6 +301,12 @@ namespace Exiv2 {
          */
         virtual uint32_t doSize() const;
         /*!
+          @brief Implements count(). Return the number of entries in the IFD
+                 of the Makernote. Does not count entries which are marked as
+                 deleted.
+         */
+        virtual uint32_t doCount() const;
+        /*!
           @brief This class does not really implement sizeData(), it only has
                  size(). This method must not be called; it commits suicide.
          */

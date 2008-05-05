@@ -550,8 +550,15 @@ namespace Exiv2 {
     )
     {
         assert(pHeader);
+        blob.clear();
+        WriteMethod writeMethod = wmNonIntrusive;
         TiffComponent::AutoPtr rootDir = parse(pData, size, createFct, pHeader);
         if (0 == rootDir.get()) {
+
+            // Todo: Remove debug output
+            std::cerr << "Creating a new TIFF structure\n";
+
+            writeMethod = wmIntrusive;
             rootDir = createFct(Tag::root, Group::none);
         }
         assert(rootDir.get());
@@ -565,8 +572,6 @@ namespace Exiv2 {
         rootDir->accept(encoder);
         // Add remaining entries from metadata to composite, if any
         encoder.add(rootDir.get(), createFct);
-        WriteMethod writeMethod = wmNonIntrusive;
-        blob.clear();
         if (encoder.dirty()) {
 
             // Todo: Remove debug output
@@ -575,7 +580,9 @@ namespace Exiv2 {
             // Re-write binary representation from the composite tree
             writeMethod = wmIntrusive;
             uint32_t offset = pHeader->write(blob);
-            rootDir->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1), uint32_t(-1));
+            uint32_t len = rootDir->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1), uint32_t(-1));
+            // Avoid writing just the header if there is no IFD data
+            if (len == 0) blob.clear();
         }
         return writeMethod;
     } // TiffParserWorker::encode
