@@ -106,7 +106,8 @@ namespace Exiv2 {
 
     /*!
       @brief Stateless parser class for data in TIFF format. Images use this
-             class to decode and encode TIFF data.
+             class to decode and encode TIFF data. It is a wrapper of the
+             internal class Internal::TiffParserWorker.
      */
     class TiffParser {
     public:

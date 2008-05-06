@@ -550,6 +550,7 @@ namespace Exiv2 {
     )
     {
         assert(pHeader);
+        assert(pHeader->byteOrder() != invalidByteOrder);
         blob.clear();
         WriteMethod writeMethod = wmNonIntrusive;
         TiffComponent::AutoPtr rootDir = parse(pData, size, createFct, pHeader);

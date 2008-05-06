@@ -163,8 +163,7 @@ namespace Exiv2 {
 
     /*!
       @brief Stateless parser class for data in TIFF format. Images use this
-             class to decode and encode TIFF-based data. Uses class
-             CreationPolicy for the creation of TIFF components.
+             class to decode and encode TIFF-based data.
      */
     class TiffParserWorker {
     public:

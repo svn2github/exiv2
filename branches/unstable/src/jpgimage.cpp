@@ -592,10 +592,15 @@ namespace Exiv2 {
                 }
                 if (exifData_.count() > 0) {
                     Blob blob;
+                    ByteOrder bo = byteOrder();
+                    if (bo == invalidByteOrder) {
+                        bo = littleEndian;
+                        setByteOrder(bo);
+                    }
                     WriteMethod wm = ExifParser::encode(blob,
                                                         rawExif.pData_,
                                                         rawExif.size_,
-                                                        byteOrder(),
+                                                        bo,
                                                         exifData_);
                     const byte* pExifData = rawExif.pData_;
                     uint32_t exifSize = rawExif.size_;
