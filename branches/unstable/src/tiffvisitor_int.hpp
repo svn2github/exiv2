@@ -363,7 +363,7 @@ namespace Exiv2 {
         virtual void visitArrayElement(TiffArrayElement* object);
 
         //! Entry function, determines how to encode each tag
-        void encodeTiffEntry(TiffEntryBase* object);
+        void encodeTiffEntry(TiffEntryBase* object, bool updateValueData =true);
         //! Encode a standard TIFF entry
         void encodeStdTiffEntry(TiffEntryBase* object);
         //! Encode Olympus Thumbnail from the TIFF makernote into IFD1
@@ -430,7 +430,11 @@ namespace Exiv2 {
         const FindEncoderFct findEncoderFct_; //!< Ptr to the function to find special encoding functions
         std::string make_;           //!< Camera make, determined from the tags to encode
         bool dirty_;                 //!< Signals if any tag is deleted or allocated
-        bool keepValue_;             //!< Signals if a value should be updated when encoding for non-intrusive writing 
+        /*!
+          Signals if the binary value data should be updated when encoding for
+          non-intrusive writing.
+         */
+        bool updateValueData_;
     }; // class TiffEncoder
 
     /*!

@@ -576,9 +576,6 @@ namespace Exiv2 {
         // Add remaining entries from metadata to composite, if any
         encoder.add(rootDir.get(), createFct);
         if (encoder.dirty()) {
-#ifdef DEBUG
-            std::cerr << "Intrusive writing\n";
-#endif
             // Re-write binary representation from the composite tree
             writeMethod = wmIntrusive;
             uint32_t offset = pHeader->write(blob);
@@ -587,6 +584,9 @@ namespace Exiv2 {
             if (len == 0) blob.clear();
         }
 #ifdef DEBUG
+        if (writeMethod == wmIntrusive) {
+            std::cerr << "Intrusive writing\n";
+        }
         else {
             std::cerr << "Non-intrusive writing\n";
         }

@@ -145,6 +145,14 @@ namespace Exiv2 {
     {
     }
 
+    TiffEntryBase::TiffEntryBase(uint16_t tag, uint16_t group, TypeId typeId)
+        : TiffComponent(tag, group),
+          type_(typeId), count_(0), offset_(0),
+          size_(0), pData_(0), isMalloced_(false),
+          pValue_(0)
+    {
+    }
+
     TiffSubIfd::TiffSubIfd(uint16_t tag, uint16_t group, uint16_t newGroup)
         : TiffEntryBase(tag, group, unsignedLong), newGroup_(newGroup)
     {
@@ -212,10 +220,31 @@ namespace Exiv2 {
         isMalloced_ = true;
     } // TiffEntryBase::allocData
 
+    void TiffEntryBase::setData(byte* pData, int32_t size)
+    {
+        pData_ = pData;
+        size_  = size;
+        if (pData_ == 0) size_ = 0;
+    }
+
+    void TiffEntryBase::updateValue(Value::AutoPtr value, ByteOrder byteOrder)
+    {
+        uint32_t newSize = value->size();
+        if (newSize > size_) {
+            allocData(newSize);
+        }
+        memset(pData_, 0x0, size_);
+        size_ = value->copy(pData_, byteOrder);
+        assert(size_ == newSize);
+        setValue(value);
+    } // TiffEntryBase::updateValue
+
     void TiffEntryBase::setValue(Value::AutoPtr value)
     {
+        type_  = static_cast<uint16_t>(value->typeId());
+        count_ = value->count();
         delete pValue_;
-        pValue_ = value.release();
+        pValue_ = value.release();        
     } // TiffEntryBase::setValue
 
     void TiffDataEntry::setStrips(const Value* pSize,
@@ -409,8 +438,8 @@ namespace Exiv2 {
             uint16_t tg = tiffPath.size() == 1 ? tag : ts->tag();
             TiffComponent::AutoPtr atc(ts->newTiffCompFct_(tg, ts));
             assert(ts->extendedTag_ != Tag::next);
-            tc = this->addChild(atc);
-            this->setCount(this->count() + 1);
+            tc = addChild(atc);
+            setCount(count() + 1);
         }
         return tc->addPath(tag, tiffPath);
     } // TiffArrayEntry::doAddPath
@@ -710,25 +739,25 @@ namespace Exiv2 {
                                           uint32_t       imageIdx) const
     {
         assert(pTiffComponent);
-        TiffEntryBase* pTiffEntry = dynamic_cast<TiffEntryBase*>(pTiffComponent);
-        assert(pTiffEntry);
+        TiffEntryBase* pDirEntry = dynamic_cast<TiffEntryBase*>(pTiffComponent);
+        assert(pDirEntry);
         byte buf[8];
-        us2Data(buf,     pTiffEntry->tag(),    byteOrder);
-        us2Data(buf + 2, pTiffEntry->typeId(), byteOrder);
-        ul2Data(buf + 4, pTiffEntry->count(),  byteOrder);
+        us2Data(buf,     pDirEntry->tag(),    byteOrder);
+        us2Data(buf + 2, pDirEntry->typeId(), byteOrder);
+        ul2Data(buf + 4, pDirEntry->count(),  byteOrder);
         append(blob, buf, 8);
-        if (pTiffEntry->size() > 4) {
-            pTiffEntry->setOffset(offset + static_cast<int32_t>(valueIdx));
-            l2Data(buf, pTiffEntry->offset(), byteOrder);
+        if (pDirEntry->size() > 4) {
+            pDirEntry->setOffset(offset + static_cast<int32_t>(valueIdx));
+            l2Data(buf, pDirEntry->offset(), byteOrder);
             append(blob, buf, 4);
         }
         else {
-            const uint32_t len = pTiffEntry->write(blob,
-                                                   byteOrder,
-                                                   offset,
-                                                   valueIdx,
-                                                   dataIdx,
-                                                   imageIdx);
+            const uint32_t len = pDirEntry->write(blob,
+                                                  byteOrder,
+                                                  offset,
+                                                  valueIdx,
+                                                  dataIdx,
+                                                  imageIdx);
             assert(len <= 4);
             if (len < 4) {
                 memset(buf, 0x0, 4);

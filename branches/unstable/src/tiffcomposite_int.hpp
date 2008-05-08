@@ -373,12 +373,28 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Default constructor
-        TiffEntryBase(uint16_t tag, uint16_t group, TypeId typeId =invalidTypeId)
-            : TiffComponent(tag, group),
-              type_(typeId), count_(0), offset_(0), size_(0), pData_(0),
-              isMalloced_(false), pValue_(0) {}
+        TiffEntryBase(uint16_t tag, uint16_t group, TypeId typeId =invalidTypeId);
         //! Virtual destructor.
         virtual ~TiffEntryBase();
+        //@}
+
+        //! @name Manipulators
+        //@{
+        //! Set the offset
+        void setOffset(int32_t offset) { offset_ = offset; }
+        void setData(byte* pData, int32_t size);
+        /*!
+          @brief Update the value. Takes ownership of the pointer passed in.
+
+          Update binary value data and call setValue().
+        */
+        void updateValue(Value::AutoPtr value, ByteOrder byteOrder);
+        /*!
+          @brief Set tag value. Takes ownership of the pointer passed in.
+
+          Update type, count and the pointer to the value.
+        */
+        void setValue(Value::AutoPtr value);
         //@}
 
         //! @name Accessors
@@ -399,24 +415,13 @@ namespace Exiv2 {
         const Value* pValue()    const { return pValue_; }
         //@}
 
+    protected:
         //! @name Manipulators
-        //@{
-
-        // Todo: Using these invalidates pValue_ and size_
-        // Todo: Do we need the data attributes which are also in value?
-        // Todo: Can I remove these setters?
-
+        //@{        
         //! Set the number of components in this entry
         void setCount(uint32_t count) { count_ = count; }
-        //! Set the offset
-        void setOffset(int32_t offset) { offset_ = offset; }
-        //! Allocate \em len bytes for the binary representation of the value.
-        void allocData(uint32_t len);
-        //! Set the value. Takes ownership of the pointer passed in.
-        void setValue(Value::AutoPtr value);
         //@}
 
-    protected:
         //! @name Accessors
         //@{
         //! Implements count().
@@ -470,6 +475,12 @@ namespace Exiv2 {
                                     ByteOrder byteOrder);
 
     private:
+        //! @name Manipulators
+        //@{
+        //! Allocate \em len bytes for the binary representation of the value.
+        void allocData(uint32_t len);
+        //@}
+
         // DATA
         uint16_t type_;       //!< Field Type
         uint32_t count_;      //!< The number of values of the indicated Type

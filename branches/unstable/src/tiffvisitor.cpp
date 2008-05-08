@@ -414,7 +414,7 @@ namespace Exiv2 {
           origByteOrder_(byteOrder),
           findEncoderFct_(findEncoderFct),
           dirty_(false),
-          keepValue_(false)
+          updateValueData_(true)
     {
         assert(pRoot != 0);
 
@@ -441,7 +441,7 @@ namespace Exiv2 {
 
     void TiffEncoder::visitDataEntry(TiffDataEntry* object)
     {
-        encodeTiffEntry(object);
+        encodeTiffEntry(object, false);
 
         if (!dirty_) {
             assert(object);
@@ -523,9 +523,7 @@ namespace Exiv2 {
 
     void TiffEncoder::visitSubIfd(TiffSubIfd* object)
     {
-        keepValue_ = true;
-        encodeTiffEntry(object);
-        keepValue_ = false;
+        encodeTiffEntry(object, false);
     }
 
     void TiffEncoder::visitMnEntry(TiffMnEntry* object)
@@ -560,7 +558,7 @@ namespace Exiv2 {
         encodeTiffEntry(object);
     }
 
-    void TiffEncoder::encodeTiffEntry(TiffEntryBase* object)
+    void TiffEncoder::encodeTiffEntry(TiffEntryBase* object, bool updateValueData)
     {
         assert(object != 0);
 
@@ -569,7 +567,9 @@ namespace Exiv2 {
                                                       object->group());
         // skip encoding if encoderFct == 0
         if (encoderFct) {
+            updateValueData_ = updateValueData;
             EXV_CALL_MEMBER_FN(*this, encoderFct)(object);
+            updateValueData_ = true;
         }
     } // TiffEncoder::encodeTiffEntry
 
@@ -590,72 +590,47 @@ namespace Exiv2 {
 #ifdef DEBUG
             DataBuf buf(object->size_);
             memcpy(buf.pData_, object->pData_, object->size_);
+            bool tooLarge = false;
 #endif
-            bool overwrite = true;
+            bool updateValueData = updateValueData_;
             uint32_t newSize = pos->size();
-            if (newSize > object->size_) { // need to allocate memory, intrusive
+            if (newSize > object->size_) { // value doesn't fit, encode for intrusive writing
                 dirty_ = true;
+                updateValueData = true;
 #ifdef DEBUG
-                std::cerr << "ALLOCATING        " << key << " newSize = " << newSize << " ";
+                tooLarge = true;
 #endif
             }
-            else { // existing memory is sufficient, encode for non-intrusive writing
-
-                // HACK: Don't change the entry's value if there is a data area. This
-                // ensures that the original offsets are not overwritten during
-                // non-intrusive writing.
-                // On the other hand, it is thus not possible to change the offsets
-                // of an entry with a data area in non-intrusive mode.
-                // Todo: BUG!!! New value is not set!!!
-                if (pos->sizeDataArea() != 0) {
-                    overwrite = false;
+            if (updateValueData) {
+                object->updateValue(pos->getValue(), byteOrder()); // clones the value
 #ifdef DEBUG
-                    std::cerr << "NOT OVERWRITING   " << key
-                              << " \tdata area size = "
-                              << std::dec << pos->sizeDataArea();
-#endif
-                }
-
-                // Do not change the value if flag indicates so. (Used eg, to avoid
-                // updating sub-IFD pointers when doing non-intrusive writing)
-                if (keepValue_) {
-                    overwrite = false;
-#ifdef DEBUG
-                    std::cerr << "NOT OVERWRITING   " << key
-                              << " \tkeepValue_ = true";
-#endif
-                }
-
-#ifdef DEBUG
-                if (overwrite) {
-                    std::cerr << "OVERWRITING       " << key;
-                }
-#endif
-
-            }
-
-	    if (overwrite) {
-                // Todo: All of this should be done in setValue (rename to setTagValue)
-                if (newSize > object->size_) {
-                    object->allocData(newSize);
-                }
-                memset(object->pData_, 0x0, object->size_);
-                object->type_ = pos->typeId();
-                object->count_ = pos->count();
-                // offset will be calculated later
-                object->size_ = pos->copy(object->pData_, byteOrder());
-                assert(object->size_ == newSize);
-                object->setValue(pos->getValue()); // clones the value
-#ifdef DEBUG
-                if (0 != memcmp(object->pData_, buf.pData_, buf.size_)) {
+                std::cerr << "UPDATING DATA     " << key;
+                if (   !tooLarge
+                    && 0 != memcmp(object->pData_, buf.pData_, buf.size_)) {
                     std::cerr << "\t\t\t NOT MATCHING";
                     std::cerr << "\nBEFORE:\n";
                     hexdump(std::cerr, buf.pData_, buf.size_);
                     std::cerr << "NOW:\n";
                     hexdump(std::cerr, object->pData_, buf.size_);
                 }
+                if (tooLarge) {
+                    std::cerr << "\t\t\t ALLOCATED " << object->size() << " BYTES";
+                }
 #endif
-            } // overwrite
+            }
+            else {
+                object->setValue(pos->getValue()); // clones the value
+#ifdef DEBUG
+                std::cerr << "NOT UPDATING      " << key;
+                if (!updateValueData_) {
+                    std::cerr << "\t\t\t PRESERVE VALUE DATA";
+                }
+                if (tooLarge) {
+                    std::cerr << "\t\t\t TOO LARGE";
+                }
+#endif
+            } // !updateValueData
+
 #ifdef DEBUG
             std::cerr << "\n";
 #endif
@@ -1150,38 +1125,38 @@ namespace Exiv2 {
         }
         // Component already has tag
         p += 2;
-        object->type_ = getUShort(p, byteOrder());
-        long typeSize = TypeInfo::typeSize(object->typeId());
+        uint16_t type = getUShort(p, byteOrder());
+        long typeSize = TypeInfo::typeSize(TypeId(type));
         if (0 == typeSize) {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Error: Directory " << tiffGroupName(object->group())
                       << ", entry 0x" << std::setw(4)
                       << std::setfill('0') << std::hex << object->tag()
                       << " has an invalid type:\n"
-                      << "Type = " << std::dec << object->type_
+                      << "Type = " << std::dec << type
                       << "; skipping entry.\n";
 #endif
             return;
         }
         p += 2;
-        object->count_ = getULong(p, byteOrder());
-        if (object->count_ >= 0x10000000) {
+        uint32_t count = getULong(p, byteOrder());
+        if (count >= 0x10000000) {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Error: Directory " << tiffGroupName(object->group())
                       << ", entry 0x" << std::setw(4)
                       << std::setfill('0') << std::hex << object->tag()
                       << " has invalid size "
-                      << std::dec << object->count_ << "*" << typeSize 
+                      << std::dec << count << "*" << typeSize
                       << "; skipping entry.\n";
 #endif
             return;
         }
         p += 4;
-        object->size_ = typeSize * object->count_;
-        object->offset_ = getLong(p, byteOrder());
-        object->pData_ = p;
-        if (object->size_ > 4) {
-            if (baseOffset() + object->offset_ >= size_) {
+        uint32_t size = typeSize * count;
+        uint32_t offset = getLong(p, byteOrder());
+        byte* pData = p;
+        if (size > 4) {
+            if (baseOffset() + offset >= size_) {
 #ifndef SUPPRESS_WARNINGS
                 std::cerr << "Error: Offset of "
                           << "directory " << tiffGroupName(object->group())
@@ -1189,16 +1164,13 @@ namespace Exiv2 {
                           << std::setfill('0') << std::hex << object->tag()
                           << " is out of bounds:\n"
                           << "Offset = 0x" << std::setw(8)
-                          << std::setfill('0') << std::hex << object->offset_
+                          << std::setfill('0') << std::hex << offset
                           << "; truncating the entry\n";
 #endif
-                object->size_ = 0;
-                object->count_ = 0;
-                object->offset_ = 0;
                 return;
             }
-            object->pData_ = const_cast<byte*>(pData_) + baseOffset() + object->offset_;
-            if (object->size_ > static_cast<uint32_t>(pLast_ - object->pData_)) {
+            pData = const_cast<byte*>(pData_) + baseOffset() + offset;
+            if (size > static_cast<uint32_t>(pLast_ - pData)) {
 #ifndef SUPPRESS_WARNINGS
                 std::cerr << "Warning: Upper boundary of data for "
                           << "directory " << tiffGroupName(object->group())
@@ -1206,31 +1178,33 @@ namespace Exiv2 {
                           << std::setfill('0') << std::hex << object->tag()
                           << " is out of bounds:\n"
                           << "Offset = 0x" << std::setw(8)
-                          << std::setfill('0') << std::hex << object->offset_
-                          << ", size = " << std::dec << object->size_
+                          << std::setfill('0') << std::hex << offset
+                          << ", size = " << std::dec << size
                           << ", exceeds buffer size by "
                           // cast to make MSVC happy
-                          << static_cast<uint32_t>(object->pData_ + object->size_ - pLast_)
+                          << static_cast<uint32_t>(pData + size - pLast_)
                           << " Bytes; adjusting the size\n";
 #endif
-                object->size_ = static_cast<uint32_t>(pLast_ - object->pData_ + 1);
-                // todo: adjust count_, make size_ a multiple of typeSize
+                size = static_cast<uint32_t>(pLast_ - pData + 1);
+                // Todo: adjust count, make size a multiple of typeSize
             }
         }
         // On the fly type conversion for Exif.Photo.UserComment
         // Todo: This should be somewhere else, maybe in a Value factory
-        // which takes a Key and Type
-        TypeId t = TypeId(object->typeId());
-        if (   object->tag()    == 0x9286
-            && object->group()  == Group::exif
-            && object->typeId() == undefined) {
+        //       which takes a Key and Type
+        TypeId t = TypeId(type);
+        if (   object->tag()   == 0x9286
+            && object->group() == Group::exif
+            && t               == undefined) {
             t = comment;
         }
         Value::AutoPtr v = Value::create(t);
-        if (v.get()) {
-            v->read(object->pData_, object->size_, byteOrder());
-            object->setValue(v);
-        }
+        assert(v.get());
+        v->read(pData, size, byteOrder());
+
+        object->setValue(v);
+        object->setData(pData, size);
+        object->setOffset(offset);
 
     } // TiffReader::readTiffEntry
 
@@ -1255,10 +1229,12 @@ namespace Exiv2 {
     {
         assert(object != 0);
 
-        byte* p = object->start();
-        assert(p >= pData_);
+        uint16_t type = object->elTypeId();
+        uint32_t size = TypeInfo::typeSize(TypeId(type));
+        byte* pData   = object->start();
+        assert(pData >= pData_);
 
-        if (p + 2 > pLast_) {
+        if (pData + size > pLast_) {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Error: Array element in group "
                       << tiffGroupName(object->group())
@@ -1267,19 +1243,17 @@ namespace Exiv2 {
 #endif
             return;
         }
-        object->type_ = object->elTypeId();
-        object->count_ = 1;
-        object->size_ = TypeInfo::typeSize(object->typeId()) * object->count();
-        object->offset_ = 0;
-        object->pData_ = p;
-        Value::AutoPtr v = Value::create(object->typeId());
-        if (v.get()) {
-            ByteOrder b =
-                object->elByteOrder() == invalidByteOrder ?
-                byteOrder() : object->elByteOrder();
-            v->read(object->pData(), object->size(), b);
-            object->setValue(v);
-        }
+
+        ByteOrder bo = object->elByteOrder();
+        if (bo == invalidByteOrder) bo = byteOrder();
+        Value::AutoPtr v = Value::create(TypeId(type));
+        assert(v.get());
+        v->read(pData, size, bo);
+
+        object->setValue(v);
+        object->setData(pData, size);
+        object->setOffset(0);
+        object->setCount(1);
 
     } // TiffReader::visitArrayElement
 
