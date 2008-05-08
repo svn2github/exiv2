@@ -212,6 +212,12 @@ namespace Exiv2 {
         isMalloced_ = true;
     } // TiffEntryBase::allocData
 
+    void TiffEntryBase::setValue(Value::AutoPtr value)
+    {
+        delete pValue_;
+        pValue_ = value.release();
+    } // TiffEntryBase::setValue
+
     void TiffDataEntry::setStrips(const Value* pSize,
                                   const byte*  pData,
                                   uint32_t     sizeData,

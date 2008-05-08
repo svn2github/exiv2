@@ -406,14 +406,14 @@ namespace Exiv2 {
         // Todo: Do we need the data attributes which are also in value?
         // Todo: Can I remove these setters?
 
-        //! Set the field type
-     // void setTypeId(TypeId typeId) { type_ = typeId; }
         //! Set the number of components in this entry
         void setCount(uint32_t count) { count_ = count; }
         //! Set the offset
         void setOffset(int32_t offset) { offset_ = offset; }
         //! Allocate \em len bytes for the binary representation of the value.
         void allocData(uint32_t len);
+        //! Set the value. Takes ownership of the pointer passed in.
+        void setValue(Value::AutoPtr value);
         //@}
 
     protected:

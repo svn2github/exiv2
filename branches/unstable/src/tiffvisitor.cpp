@@ -28,7 +28,7 @@
 #include "rcsid.hpp"
 EXIV2_RCSID("@(#) $Id$")
 
-// Remove debug
+// Todo: Remove debug
 #define DEBUG
 
 // *****************************************************************************
@@ -627,13 +627,17 @@ namespace Exiv2 {
 #ifdef DEBUG
                 if (0 != memcmp(object->pData_, buf.pData_, buf.size_)) {
                     std::cerr << "\t\t\t NOT MATCHING";
+                    std::cerr << "\nBEFORE:\n";
+                    hexdump(std::cerr, buf.pData_, buf.size_);
+                    std::cerr << "NOW:\n";
+                    hexdump(std::cerr, object->pData_, buf.size_);
                 }
 #endif
             } // overwrite
 #ifdef DEBUG
             std::cerr << "\n";
 #endif
-            object->pValue_ = pos->getValue().release();
+            object->setValue(pos->getValue()); // clones the value
             if (del_) exifData_.erase(pos);
         }
     } // TiffEncoder::encodeStdTiffEntry
@@ -1204,7 +1208,7 @@ namespace Exiv2 {
         Value::AutoPtr v = Value::create(t);
         if (v.get()) {
             v->read(object->pData_, object->size_, byteOrder());
-            object->pValue_ = v.release();
+            object->setValue(v);
         }
 
     } // TiffReader::readTiffEntry
@@ -1253,7 +1257,7 @@ namespace Exiv2 {
                 object->elByteOrder() == invalidByteOrder ?
                 byteOrder() : object->elByteOrder();
             v->read(object->pData(), object->size(), b);
-            object->pValue_ = v.release();
+            object->setValue(v);
         }
 
     } // TiffReader::visitArrayElement

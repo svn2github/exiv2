@@ -29,6 +29,9 @@
 #include "rcsid.hpp"
 EXIV2_RCSID("@(#) $Id$")
 
+// Todo: Remove debug
+#define DEBUG
+
 // *****************************************************************************
 // included header files
 #ifdef _MSC_VER
@@ -465,10 +468,10 @@ namespace Exiv2 {
 #ifdef DEBUG
         else {
             if (!ts) {
-                std::cerr << "Warning: No TIFF structure entry found for "
+                std::cerr << "Warning: No TIFF structure entry found for ";
             }
             else {
-                std::cerr << "Warning: No TIFF component creator found for "
+                std::cerr << "Warning: No TIFF component creator found for ";
             }
             std::cerr << "extended tag 0x" << std::setw(4) << std::setfill('0')
                       << std::hex << std::right << extendedTag
@@ -555,10 +558,9 @@ namespace Exiv2 {
         WriteMethod writeMethod = wmNonIntrusive;
         TiffComponent::AutoPtr rootDir = parse(pData, size, createFct, pHeader);
         if (0 == rootDir.get()) {
-
-            // Todo: Remove debug output
+#ifdef DEBUG
             std::cerr << "Creating a new TIFF structure\n";
-
+#endif
             writeMethod = wmIntrusive;
             rootDir = createFct(Tag::root, Group::none);
         }
@@ -574,10 +576,9 @@ namespace Exiv2 {
         // Add remaining entries from metadata to composite, if any
         encoder.add(rootDir.get(), createFct);
         if (encoder.dirty()) {
-
-            // Todo: Remove debug output
+#ifdef DEBUG
             std::cerr << "Intrusive writing\n";
-
+#endif
             // Re-write binary representation from the composite tree
             writeMethod = wmIntrusive;
             uint32_t offset = pHeader->write(blob);
@@ -585,6 +586,11 @@ namespace Exiv2 {
             // Avoid writing just the header if there is no IFD data
             if (len == 0) blob.clear();
         }
+#ifdef DEBUG
+        else {
+            std::cerr << "Non-intrusive writing\n";
+        }
+#endif
         return writeMethod;
     } // TiffParserWorker::encode
 
