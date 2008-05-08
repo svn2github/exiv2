@@ -1043,7 +1043,7 @@ namespace Exiv2 {
         uint32_t len = 2 + 12 * compCount + (hasNext_ ? 4 : 0);
         // Size of IFD values and data
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            if (!isDeleted()) {
+            if (!(*i)->isDeleted()) {
                 uint32_t sv = (*i)->size();
                 if (sv > 4) len += sv;
                 len += (*i)->sizeData();
