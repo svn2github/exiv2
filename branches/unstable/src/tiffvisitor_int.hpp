@@ -430,6 +430,7 @@ namespace Exiv2 {
         const FindEncoderFct findEncoderFct_; //!< Ptr to the function to find special encoding functions
         std::string make_;           //!< Camera make, determined from the tags to encode
         bool dirty_;                 //!< Signals if any tag is deleted or allocated
+        bool keepValue_;             //!< Signals if a value should be updated when encoding for non-intrusive writing 
     }; // class TiffEncoder
 
     /*!

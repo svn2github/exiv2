@@ -413,7 +413,8 @@ namespace Exiv2 {
           byteOrder_(byteOrder),
           origByteOrder_(byteOrder),
           findEncoderFct_(findEncoderFct),
-          dirty_(false)
+          dirty_(false),
+          keepValue_(false)
     {
         assert(pRoot != 0);
 
@@ -522,7 +523,9 @@ namespace Exiv2 {
 
     void TiffEncoder::visitSubIfd(TiffSubIfd* object)
     {
+        keepValue_ = true;
         encodeTiffEntry(object);
+        keepValue_ = false;
     }
 
     void TiffEncoder::visitMnEntry(TiffMnEntry* object)
@@ -590,40 +593,59 @@ namespace Exiv2 {
 #endif
             bool overwrite = true;
             uint32_t newSize = pos->size();
-            if (newSize > object->size_) {
-                object->allocData(newSize);
+            if (newSize > object->size_) { // need to allocate memory, intrusive
                 dirty_ = true;
 #ifdef DEBUG
                 std::cerr << "ALLOCATING        " << key << " newSize = " << newSize << " ";
 #endif
             }
-            else if (pos->sizeDataArea() == 0) {
-                memset(object->pData_, 0x0, object->size_);
-#ifdef DEBUG
-                std::cerr << "OVERWRITING       " << key;
-#endif
-            }
-	    else {
-                // Hack: Don't change the entry's value if there is a data area.
-                // This ensures that the original offsets are not overwritten
-                // during non-intrusive writing.
+            else { // existing memory is sufficient, encode for non-intrusive writing
+
+                // HACK: Don't change the entry's value if there is a data area. This
+                // ensures that the original offsets are not overwritten during
+                // non-intrusive writing.
                 // On the other hand, it is thus not possible to change the offsets
-                // of an entry with a data area in non-intrusive mode. This can be
-                // considered a bug.
-                // Todo: Fix me!
-	        overwrite = false;
+                // of an entry with a data area in non-intrusive mode.
+                // Todo: BUG!!! New value is not set!!!
+                if (pos->sizeDataArea() != 0) {
+                    overwrite = false;
 #ifdef DEBUG
-	        std::cerr << "NOT OVERWRITING   " << key
-                          << " \tdata area size = "
-                          << std::dec << pos->sizeDataArea();
+                    std::cerr << "NOT OVERWRITING   " << key
+                              << " \tdata area size = "
+                              << std::dec << pos->sizeDataArea();
 #endif
+                }
+
+                // Do not change the value if flag indicates so. (Used eg, to avoid
+                // updating sub-IFD pointers when doing non-intrusive writing)
+                if (keepValue_) {
+                    overwrite = false;
+#ifdef DEBUG
+                    std::cerr << "NOT OVERWRITING   " << key
+                              << " \tkeepValue_ = true";
+#endif
+                }
+
+#ifdef DEBUG
+                if (overwrite) {
+                    std::cerr << "OVERWRITING       " << key;
+                }
+#endif
+
             }
+
 	    if (overwrite) {
+                // Todo: All of this should be done in setValue (rename to setTagValue)
+                if (newSize > object->size_) {
+                    object->allocData(newSize);
+                }
+                memset(object->pData_, 0x0, object->size_);
                 object->type_ = pos->typeId();
                 object->count_ = pos->count();
                 // offset will be calculated later
                 object->size_ = pos->copy(object->pData_, byteOrder());
                 assert(object->size_ == newSize);
+                object->setValue(pos->getValue()); // clones the value
 #ifdef DEBUG
                 if (0 != memcmp(object->pData_, buf.pData_, buf.size_)) {
                     std::cerr << "\t\t\t NOT MATCHING";
@@ -637,7 +659,6 @@ namespace Exiv2 {
 #ifdef DEBUG
             std::cerr << "\n";
 #endif
-            object->setValue(pos->getValue()); // clones the value
             if (del_) exifData_.erase(pos);
         }
     } // TiffEncoder::encodeStdTiffEntry
