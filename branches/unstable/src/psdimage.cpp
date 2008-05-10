@@ -256,7 +256,7 @@ namespace Exiv2 {
                 DataBuf rawIPTC(resourceSize);
                 io_->read(rawIPTC.pData_, rawIPTC.size_);
                 if (io_->error() || io_->eof()) throw Error(14);
-                if (iptcData_.load(rawIPTC.pData_, rawIPTC.size_)) {
+                if (IptcParser::decode(iptcData_, rawIPTC.pData_, rawIPTC.size_)) {
 #ifndef SUPPRESS_WARNINGS
                     std::cerr << "Warning: Failed to decode IPTC metadata.\n";
 #endif

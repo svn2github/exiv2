@@ -292,7 +292,7 @@ namespace Exiv2 {
         long size = 0;
         getObjData(pData, size, 0x83bb, Group::ifd0, object);
         if (pData) {
-            if (0 == iptcData_.load(pData, size)) {
+            if (0 == IptcParser::decode(iptcData_, pData, size)) {
                 return;
             }
 #ifndef SUPPRESS_WARNINGS
@@ -316,7 +316,7 @@ namespace Exiv2 {
                                               &record, &sizeHdr, &sizeData)) {
                 return;
             }
-            if (0 == iptcData_.load(record + sizeHdr, sizeData)) {
+            if (0 == IptcParser::decode(iptcData_, record + sizeHdr, sizeData)) {
                 return;
             }
 #ifndef SUPPRESS_WARNINGS

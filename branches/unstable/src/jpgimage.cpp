@@ -197,7 +197,7 @@ namespace Exiv2 {
             append(psBlob, pPsData, sizeFront);
         }
         // Write new iptc record if we have it
-        DataBuf rawIptc(iptcData.copy());
+        DataBuf rawIptc = IptcParser::encode(iptcData);
         if (rawIptc.size_ > 0) {
             byte tmpBuf[12];
             std::memcpy(tmpBuf, Photoshop::bimId_, 4);
@@ -430,7 +430,7 @@ namespace Exiv2 {
         } // while there are segments to process
 
         if (   iptcBlob.size() > 0
-            && iptcData_.load(&iptcBlob[0], static_cast<long>(iptcBlob.size()))) {
+               && IptcParser::decode(iptcData_, &iptcBlob[0], iptcBlob.size())) {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Warning: Failed to decode IPTC metadata.\n";
 #endif

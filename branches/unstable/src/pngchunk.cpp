@@ -336,7 +336,7 @@ namespace Exiv2 {
             long length      = iptcData.size_;
 
             if (length > 0)
-                pImage->iptcData().load(iptcData.pData_, length);
+                IptcParser::decode(pImage->iptcData(), iptcData.pData_, length);
         }
 
         // We look if an ImageMagick XMP raw profile exist.
