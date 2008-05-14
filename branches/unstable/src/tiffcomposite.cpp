@@ -596,19 +596,21 @@ namespace Exiv2 {
 
     uint32_t TiffMnEntry::doCount() const
     {
-        assert(typeId() == undefined);
-        return size();
+        if (!mn_) return 0;
+        return mn_->count();
     }
 
     uint32_t TiffArrayEntry::doCount() const
     {
-        if (elements_.empty()) return 0;
-
+        bool hasUndeletedElements = false;
         uint16_t maxTag = 0;
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
-            if ((*i)->tag() > maxTag) maxTag = (*i)->tag();
+            if ((*i)->tag() > maxTag && !(*i)->isDeleted()) {
+                hasUndeletedElements = true;
+                maxTag = (*i)->tag();
+            }
         }
-        return maxTag + 1;
+        return hasUndeletedElements ? maxTag + 1 : 0;
     }
 
     uint32_t TiffComponent::write(Blob&     blob,
@@ -881,13 +883,14 @@ namespace Exiv2 {
                                      uint32_t  dataIdx,
                                      uint32_t  imageIdx)
     {
-        std::sort(elements_.begin(), elements_.end(), cmpTagLt);
+        const uint32_t cnt = count();
+        if (cnt == 0) return 0;
 
         uint32_t idx = 0;
         int32_t nextTag = 0;
 
         // Some array entries need to have the size in the first element
-        if (addSizeElement_ && !elements_.empty()) {
+        if (addSizeElement_) {
             byte buf[4];
             switch (elSize_) {
             case 2:
@@ -896,13 +899,19 @@ namespace Exiv2 {
             case 4:
                 idx += ul2Data(buf, size(), byteOrder);
                 break;
+            default:
+                assert(false);
             }
             append(blob, buf, elSize_);
             nextTag = 1;
         }
 
         // Tags must be sorted in ascending order
+        std::sort(elements_.begin(), elements_.end(), cmpTagLt);
+        uint32_t seq = 0;
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
+            // Skip deleted entries at the end of the array
+            if (seq++ > cnt) break;
             // Skip the manufactured tag, if it exists
             if (addSizeElement_ && (*i)->tag() == 0x0000) continue;
             // Fill gaps. Repeated tags will cause an exception
@@ -1068,7 +1077,7 @@ namespace Exiv2 {
     uint32_t TiffImageEntry::doSize() const
     {
         return strips_.size() * 4;
-    } // TiffImageEntry::doSize()
+    } // TiffImageEntry::doSize
 
     uint32_t TiffSubIfd::doSize() const
     {
@@ -1140,7 +1149,60 @@ namespace Exiv2 {
             len += i->second;
         }
         return len;
-    } // TiffImageEntry::doSizeImage()
+    } // TiffImageEntry::doSizeImage
+
+    void TiffComponent::setIsDeleted(bool isDeleted) 
+    {
+        doSetIsDeleted(isDeleted);
+    } // TiffComponent::setIsDeleted
+
+    void TiffComponent::doSetIsDeleted(bool isDeleted)
+    {
+        isDeleted_ = isDeleted;
+    } // TiffComponent::doSetIsDeleted
+
+    bool TiffComponent::isDeleted() const
+    {
+        return doIsDeleted();
+    } // TiffComponent::isDeleted
+
+    bool TiffComponent::doIsDeleted() const
+    {
+        return isDeleted_;
+    } // TiffComponent::doIsDeleted
+
+    bool TiffSubIfd::doIsDeleted() const
+    {
+        if (!TiffComponent::doIsDeleted()) return false;
+
+        bool hasChildren = false;
+        for (Ifds::const_iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
+            if ((*i)->count() > 0) {
+                hasChildren = true;
+                break;
+            }
+        }
+        return !hasChildren;
+    } // TiffSubIfd::doIsDeleted
+
+    bool TiffMnEntry::doIsDeleted() const
+    {
+        if (!TiffComponent::doIsDeleted()) return false;
+
+        bool hasChildren = false;
+        if (mn_) {
+            hasChildren = (mn_->count() > 0);
+        }
+        return !hasChildren;        
+    } // TiffMnEntry::isDeleted
+
+    bool TiffArrayEntry::doIsDeleted() const
+    {
+        if (!TiffComponent::doIsDeleted()) return false;
+
+        bool hasChildren = (count() > 0);
+        return !hasChildren;        
+    } // TiffMnEntry::isDeleted
 
     // *************************************************************************
     // free functions

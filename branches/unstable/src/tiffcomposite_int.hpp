@@ -150,7 +150,7 @@ namespace Exiv2 {
           @note Correct handling of this flag on write is only implemented for
                 subclasses of TiffEntryBase.
          */
-        void setIsDeleted(bool isDeleted) { isDeleted_ = isDeleted; }
+        void setIsDeleted(bool isDeleted);
         //@}
 
         //! @name Accessors
@@ -161,8 +161,13 @@ namespace Exiv2 {
         uint16_t group()                      const { return group_; }
         //! Return a pointer to the start of the binary representation of the component
         byte* start()                         const { return pStart_; }
-        //! Return indicator whether the component was deleted.
-        bool isDeleted()                      const { return isDeleted_; }
+        /*!
+          @brief Return an indicator whether the component was deleted.
+
+          Depending on the type of component, this may involve checks whether
+          all children of a component (directory) are deleted too.
+         */
+        bool isDeleted()                      const;
         //@}
 
         //! @name Write support (Manipulators)
@@ -188,6 +193,7 @@ namespace Exiv2 {
                        uint32_t  dataIdx,
                        uint32_t  imageIdx);
         //@}
+
         //! @name Write support (Accessors)
         //@{
         /*!
@@ -240,15 +246,20 @@ namespace Exiv2 {
         //! Implements addPath(). The default implementation does nothing.
         virtual TiffComponent* doAddPath(uint16_t  /*tag*/,
                                          TiffPath& /*tiffPath*/) { return this; }
-
         //! Implements addChild(). The default implementation does nothing.
         virtual TiffComponent* doAddChild(AutoPtr /*tiffComponent*/) { return 0; }
-
         //! Implements addNext(). The default implementation does nothing.
         virtual TiffComponent* doAddNext(AutoPtr /*tiffComponent*/) { return 0; }
-
         //! Implements accept().
         virtual void doAccept(TiffVisitor& visitor) =0;
+        //! Implements setDeleted(). The default implementation just sets the flag.
+        virtual void doSetIsDeleted(bool isDeleted);
+        //@}
+
+        //! @name Accessors
+        //@{
+        //! Implements isDeleted(). The default implementation just returns the flag.
+        virtual bool doIsDeleted() const;
         //@}
 
         //! @name Write support (Manipulators)
@@ -261,6 +272,7 @@ namespace Exiv2 {
                                  uint32_t  dataIdx,
                                  uint32_t  imageIdx) =0;
         //@}
+
         //! @name Write support (Accessors)
         //@{
         //! Implements writeData().
@@ -902,6 +914,18 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
+        //! @name Accessors
+        //@{
+        /*!
+          @brief Implements isDeleted(). If the sub-IFD entry is marked as
+                 deleted, return true only if there are no children. If there
+                 are (not deleted*) children, the sub-IFD can't be considered
+                 deleted, e.g., it must be written anyway.<BR>
+                 *) count() takes care of that.
+         */
+        virtual bool doIsDeleted() const;
+        //@}
+
         //! @name Write support (Manipulators)
         //@{
         /*!
@@ -979,6 +1003,14 @@ namespace Exiv2 {
         //@{
         //! Implements count(). Return number of components in the entry.
         virtual uint32_t doCount() const;
+        /*!
+          @brief Implements isDeleted(). If the makernote entry is marked as
+                 deleted, return true only if there are no children. If there
+                 are (not deleted*) children, the makernote can't be considered
+                 deleted, e.g., it must be written anyway.<BR>
+                 *) count() takes care of that.
+         */
+        virtual bool doIsDeleted() const;
         //@}
 
         //! @name Write support (Manipulators)
@@ -1053,6 +1085,14 @@ namespace Exiv2 {
         //@{
         //! Implements count(). Return number of components in the entry.
         virtual uint32_t doCount() const;
+        /*!
+          @brief Implements isDeleted(). If the array entry is marked as
+                 deleted, return true only if it contains no elements. If there
+                 are (not deleted*) elements, the array can't be considered
+                 deleted, e.g., it must be written anyway.<BR>
+                 *) count() takes care of that.
+         */
+        virtual bool doIsDeleted() const;
         //@}
 
         //! @name Write support (Manipulators)
