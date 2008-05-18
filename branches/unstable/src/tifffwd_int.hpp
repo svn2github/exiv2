@@ -95,8 +95,7 @@ namespace Exiv2 {
     typedef EncoderFct (*FindEncoderFct)(
         const std::string& make,
               uint32_t     extendedTag,
-              uint16_t     group,
-        const EncoderFct   defaultFct
+              uint16_t     group
     );
     /*!
       @brief Type for a function pointer for a function to create a TIFF component.

@@ -414,10 +414,9 @@ namespace Exiv2 {
     const TiffMappingInfo TiffMapping::tiffMappingInfo_[] = {
         { "*",       Tag::all, Group::ignr,    0, 0 }, // Do not decode tags with group == Group::ignr
         { "OLYMPUS",   0x0100, Group::olympmn, &TiffDecoder::decodeOlympThumb,   &TiffEncoder::encodeOlympThumb     },
-        { "*",         0x0111, Group::ifd0,    &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeImageEntry     },
         { "*",         0x014a, Group::ifd0,    0, 0 }, // Todo: Controversial, causes problems with Exiftool
-        { "*",       Tag::all, Group::sub0_0,  &TiffDecoder::decodeSubIfd,       &TiffEncoder::encodeSubIfd         },
-        { "*",       Tag::all, Group::sub0_1,  &TiffDecoder::decodeSubIfd,       &TiffEncoder::encodeSubIfd         },
+        { "*",       Tag::all, Group::sub0_0,  &TiffDecoder::decodeSubIfd,       0 /*Todo*/                         },
+        { "*",       Tag::all, Group::sub0_1,  &TiffDecoder::decodeSubIfd,       0 /*Todo*/                         },
         { "*",         0x02bc, Group::ifd0,    &TiffDecoder::decodeXmp,          &TiffEncoder::encodeXmp            },
         { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,         &TiffEncoder::encodeIptc           },
         { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,         &TiffEncoder::encodeIptc           },
@@ -445,15 +444,14 @@ namespace Exiv2 {
     EncoderFct TiffMapping::findEncoder(
         const std::string& make,
               uint32_t     extendedTag,
-              uint16_t     group,
-        const EncoderFct   defaultFct
+              uint16_t     group
     )
     {
-        EncoderFct encoderFct = defaultFct;
+        EncoderFct encoderFct = 0;
         const TiffMappingInfo* td = find(tiffMappingInfo_,
                                          TiffMappingInfo::Key(make, extendedTag, group));
         if (td) {
-            // This may set decoderFct to 0, meaning that the tag should not be decoded
+            // Returns 0 if no special encoder function is found
             encoderFct = td->encoderFct_;
         }
         return encoderFct;

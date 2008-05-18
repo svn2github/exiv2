@@ -575,6 +575,51 @@ namespace Exiv2 {
         visitor.visitArrayElement(this);
     } // TiffArrayElement::doAccept
 
+    void TiffEntryBase::encode(TiffEncoder& encoder, const Exifdatum* datum)
+    {
+        doEncode(encoder, datum);
+    } // TiffComponent::encode
+
+    void TiffArrayElement::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    {
+        encoder.encodeArrayElement(this, datum);
+    } // TiffArrayElement::doEncode
+
+    void TiffArrayEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    {
+        encoder.encodeArrayEntry(this, datum);
+    } // TiffArrayEntry::doEncode
+
+    void TiffDataEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    {
+        encoder.encodeDataEntry(this, datum);
+    } // TiffDataEntry::doEncode
+
+    void TiffEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    {
+        encoder.encodeTiffEntry(this, datum);
+    } // TiffEntry::doEncode
+
+    void TiffImageEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    {
+        encoder.encodeImageEntry(this, datum);
+    } // TiffImageEntry::doEncode
+
+    void TiffMnEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    {
+        encoder.encodeMnEntry(this, datum);
+    } // TiffMnEntry::doEncode
+
+    void TiffSizeEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    {
+        encoder.encodeSizeEntry(this, datum);
+    } // TiffSizeEntry::doEncode
+
+    void TiffSubIfd::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    {
+        encoder.encodeSubIfd(this, datum);
+    } // TiffSubIfd::doEncode
+
     uint32_t TiffComponent::count() const
     {
         return doCount();

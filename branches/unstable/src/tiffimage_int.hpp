@@ -259,23 +259,22 @@ namespace Exiv2 {
                                             uint32_t     extendedTag,
                                             uint16_t     group);
         /*!
-          @brief Find the encoder function for a key.
+          @brief Find special encoder function for a key.
 
-          If the returned pointer is 0, the tag should not be encoded,
-          else the encoder function should be used.
+          If the returned pointer is 0, the tag should be encoded with the 
+          encoder function of the TIFF component, else the encoder function
+          should be used.
 
           @param make Camera make
           @param extendedTag Extended tag
           @param group %Group
-          @param defaultFct Default encoder function
 
           @return Pointer to the encoder function
          */
         static EncoderFct findEncoder(
             const std::string& make,
                   uint32_t     extendedTag,
-                  uint16_t     group,
-            const EncoderFct   defaultFct
+                  uint16_t     group
         );
 
     private:

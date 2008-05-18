@@ -369,6 +369,14 @@ namespace Exiv2 {
 
         //! @name Manipulators
         //@{
+        /*!
+          @brief Encode a TIFF component from the metadatum provided and
+                 information from the \em encoder as needed.
+
+          Implemented as double-dispatch calls back to one of the specific
+          encoding functions at the \em encoder.
+         */
+        void encode(TiffEncoder& encoder, const Exifdatum* datum);
         //! Set the offset
         void setOffset(int32_t offset) { offset_ = offset; }
         void setData(byte* pData, int32_t size);
@@ -406,7 +414,9 @@ namespace Exiv2 {
 
     protected:
         //! @name Manipulators
-        //@{        
+        //@{
+        //! Implements encode().
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum) =0;
         //! Set the number of components in this entry
         void setCount(uint32_t count) { count_ = count; }
         //@}
@@ -502,6 +512,7 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
         //@}
 
     }; // class TiffEntry
@@ -594,6 +605,7 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
         //@}
 
         //! @name Write support (Manipulators)
@@ -677,6 +689,7 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
         //@}
 
         //! @name Write support (Manipulators)
@@ -749,6 +762,7 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
         //@}
 
     private:
@@ -890,6 +904,7 @@ namespace Exiv2 {
         virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
         //@}
 
         //! @name Write support (Manipulators)
@@ -963,6 +978,7 @@ namespace Exiv2 {
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual TiffComponent* doAddNext(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
         //@}
 
         //! @name Accessors
@@ -1037,6 +1053,7 @@ namespace Exiv2 {
         virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
         //@}
 
         //! @name Accessors
@@ -1110,6 +1127,7 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
         //@}
 
         //! @name Write support (Manipulators)

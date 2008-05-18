@@ -369,37 +369,69 @@ namespace Exiv2 {
         //! Encode an array element
         virtual void visitArrayElement(TiffArrayElement* object);
 
-        //! Encode a standard TIFF entry
-        void encodeStdTiffEntry(TiffEntryBase* object, const Exifdatum* datum);
+        /*!
+          @brief Top level encoder function. Determines how to encode each TIFF
+                 component. This function is called by the visit methods of the
+                 encoder as well as the add() method.
 
-        //! Entry function, determines how to encode each tag
-        void encodeTiffEntry(
+          If no \em datum is provided, search the metadata based on tag and 
+          group of the \em object. This is the case if the function is called
+          from a visit method.
+
+          Then check if a special encoder function is registered for the tag,
+          and if so use it to encode the \em object. Else use the callback
+          encoder function at the object (which results in a double-dispatch to
+          the appropriate encoding function of the encoder.
+
+          @param object Object in the TIFF component tree to encode.
+          @param datum  The corresponding metadatum with the updated value.
+
+          @note Encoder functions may use metadata other than \em datum.
+         */
+        void encodeTiffComponent(
                   TiffEntryBase* object,
-            const Exifdatum*     datum =0,
-            const EncoderFct     defaultFct = &TiffEncoder::encodeStdTiffEntry
+            const Exifdatum*     datum =0
         );
 
-        //! Encode an offset entry (only used during non-intrusive writing)
-        void encodeOffsetEntry(TiffEntryBase* object, const Exifdatum* datum);
-        //! Encode an image entry
-        void encodeImageEntry(TiffEntryBase* object, const Exifdatum* datum);
-        //! Encode Olympus Thumbnail from the TIFF makernote into IFD1
-        void encodeOlympThumb(TiffEntryBase* object, const Exifdatum* datum);
-        //! Encode SubIFD contents to Image group if it contains primary image data
-        void encodeSubIfd(TiffEntryBase* object, const Exifdatum* datum);
-        //! Encode IPTC data to an IPTCNAA or Photoshop ImageResources tag
-        void encodeIptc(TiffEntryBase* object, const Exifdatum* datum);
-        //! Encode XMP packet to an XMLPacket tag
-        void encodeXmp(TiffEntryBase* object, const Exifdatum* datum);
-        //! Encode an entry using big endian byte order and the standard encoding function
-        void encodeBigEndianEntry(TiffEntryBase* object, const Exifdatum* datum);
+        //! Callback encoder function for an array element.
+        void encodeArrayElement(TiffArrayElement* object, const Exifdatum* datum);
+        //! Callback encoder function for an array entry.
+        void encodeArrayEntry(TiffArrayEntry* object, const Exifdatum* datum);
+        //! Callback encoder function for a data entry.
+        void encodeDataEntry(TiffDataEntry* object, const Exifdatum* datum);
+        //! Callback encoder function for a standard TIFF entry
+        void encodeTiffEntry(TiffEntry* object, const Exifdatum* datum);
+        //! Callback encoder function for an image entry.
+        void encodeImageEntry(TiffImageEntry* object, const Exifdatum* datum);
+        //! Callback encoder function for a %Makernote entry.
+        void encodeMnEntry(TiffMnEntry* object, const Exifdatum* datum);
+        //! Callback encoder function for a size entry.
+        void encodeSizeEntry(TiffSizeEntry* object, const Exifdatum* datum);
+        //! Callback encoder function for a sub-IFD entry.
+        void encodeSubIfd(TiffSubIfd* object, const Exifdatum* datum);
 
+        //! Special encoder function for the base part of a TIFF entry.
+        void encodeTiffEntryBase(TiffEntryBase* object, const Exifdatum* datum);
+        //! Special encoder function for an offset entry.
+        void encodeOffsetEntry(TiffEntryBase* object, const Exifdatum* datum);
+        //! Special encoder function to encode an Olympus Thumbnail from the TIFF makernote into IFD1.
+        void encodeOlympThumb(TiffEntryBase* object, const Exifdatum* datum);
+
+        //! Special encoder function to encode SubIFD contents to Image group if it contains primary image data
+        // Todo void encodeNikonSubIfd(TiffEntryBase* object, const Exifdatum* datum);
+
+        //! Special encoder function to encode IPTC data to an IPTCNAA or Photoshop ImageResources tag.
+        void encodeIptc(TiffEntryBase* object, const Exifdatum* datum);
+        //! Special encoder function to encode an XMP packet to an XMLPacket tag.
+        void encodeXmp(TiffEntryBase* object, const Exifdatum* datum);
+        //! Special encoder function for a standard TIFF entry using big endian byte order.
+        void encodeBigEndianEntry(TiffEntryBase* object, const Exifdatum* datum);
         /*!
           @brief Add metadata from image to the TIFF composite.
 
           For each Exif metadatum, the corresponding TiffComponent is created
-          if necessary and populated using its encoder function. This function
-          is used for intrusive writing, to create a new TIFF structure.
+          if necessary and populated using encodeTiffComponent(). The add() function
+          is used during intrusive writing, to create a new TIFF structure.
 
           @note For non-intrusive writing, the encoder is used as a visitor (by 
           passing it to the accept() member of a TiffComponent). The composite

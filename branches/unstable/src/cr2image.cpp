@@ -234,11 +234,11 @@ namespace Exiv2 {
                                              uint32_t     extendedTag,
                                              uint16_t     group)
     {
-        EncoderFct encoderFct = &TiffEncoder::encodeStdTiffEntry;
+        EncoderFct encoderFct = 0;
         const TiffMappingInfo* td = find(cr2MappingInfo_,
                                          TiffMappingInfo::Key(make, extendedTag, group));
         if (td) {
-            // This may set encoderFct to 0, meaning that the tag should not be encoded
+            // Returns 0 if no special encoder function is found
             encoderFct = td->encoderFct_;
         }
         return encoderFct;
