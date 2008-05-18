@@ -637,8 +637,9 @@ namespace Exiv2 {
 
     uint32_t TiffMnEntry::doCount() const
     {
-        if (!mn_) return 0;
-        return mn_->count();
+        // Count of tag Exif.Photo.MakerNote is the size of the Makernote in bytes
+        assert(typeId() == undefined);
+        return size();
     }
 
     uint32_t TiffArrayEntry::doCount() const
