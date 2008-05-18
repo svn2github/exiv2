@@ -141,7 +141,7 @@ namespace Exiv2 {
     }
 
     TiffComponent::TiffComponent(uint16_t tag, uint16_t group)
-        : tag_(tag), group_(group), pStart_(0), isDeleted_(false)
+        : tag_(tag), group_(group), pStart_(0)
     {
     }
 
@@ -393,8 +393,8 @@ namespace Exiv2 {
         }
         if (tc == 0) {
             TiffComponent::AutoPtr atc(new TiffDirectory(dt, ts2->group_));
-            tc = this->addChild(atc);
-            this->setCount(this->count() + 1);
+            tc = addChild(atc);
+            setCount(ifds_.size());
         }
         return tc->addPath(tag, tiffPath);
     } // TiffSubIfd::doAddPath
@@ -439,7 +439,7 @@ namespace Exiv2 {
             TiffComponent::AutoPtr atc(ts->newTiffCompFct_(tg, ts));
             assert(ts->extendedTag_ != Tag::next);
             tc = addChild(atc);
-            setCount(count() + 1);
+            setCount(elements_.size());
         }
         return tc->addPath(tag, tiffPath);
     } // TiffArrayEntry::doAddPath
@@ -582,11 +582,7 @@ namespace Exiv2 {
 
     uint32_t TiffDirectory::doCount() const
     {
-        uint32_t cnt = 0;
-        for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            if (!(*i)->isDeleted()) ++cnt;
-        }
-        return cnt;
+        return components_.size();
     }
 
     uint32_t TiffEntryBase::doCount() const
@@ -602,15 +598,13 @@ namespace Exiv2 {
 
     uint32_t TiffArrayEntry::doCount() const
     {
-        bool hasUndeletedElements = false;
+        if (elements_.empty()) return 0;
+
         uint16_t maxTag = 0;
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
-            if ((*i)->tag() > maxTag && !(*i)->isDeleted()) {
-                hasUndeletedElements = true;
-                maxTag = (*i)->tag();
-            }
+            if ((*i)->tag() > maxTag) maxTag = (*i)->tag();
         }
-        return hasUndeletedElements ? maxTag + 1 : 0;
+        return maxTag + 1;
     }
 
     uint32_t TiffComponent::write(Blob&     blob,
@@ -651,12 +645,10 @@ namespace Exiv2 {
         uint32_t sizeValue = 0;
         uint32_t sizeData = 0;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            if (!(*i)->isDeleted()) {
-                uint32_t sv = (*i)->size();
-                if (sv > 4) sizeValue += sv;
-                // Also add the size of data, but only if needed
-                if (imageIdx == uint32_t(-1)) sizeData += (*i)->sizeData();
-            }
+            uint32_t sv = (*i)->size();
+            if (sv > 4) sizeValue += sv;
+            // Also add the size of data, but only if needed
+            if (imageIdx == uint32_t(-1)) sizeData += (*i)->sizeData();
         }
 
         uint32_t idx = 0;                   // Current IFD index / bytes written
@@ -674,12 +666,10 @@ namespace Exiv2 {
 
         // 2nd: Directory entries - may contain pointers to the value or data
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            if (!(*i)->isDeleted()) {
-                idx += writeDirEntry(blob, byteOrder, offset, *i, valueIdx, dataIdx, imageIdx);
-                uint32_t sv = (*i)->size();
-                if (sv > 4) valueIdx += sv;
-                dataIdx += (*i)->sizeData();
-            }
+            idx += writeDirEntry(blob, byteOrder, offset, *i, valueIdx, dataIdx, imageIdx);
+            uint32_t sv = (*i)->size();
+            if (sv > 4) valueIdx += sv;
+            dataIdx += (*i)->sizeData();
         }
         if (hasNext_) {
             // Add the offset to the next IFD
@@ -696,24 +686,20 @@ namespace Exiv2 {
         valueIdx = sizeDir;
         dataIdx = sizeDir + sizeValue;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            if (!(*i)->isDeleted()) {
-                uint32_t sv = (*i)->size();
-                if (sv > 4) {
-                    idx += (*i)->write(blob, byteOrder, offset, valueIdx, dataIdx, imageIdx);
-                    valueIdx += sv;
-                }
-                dataIdx += (*i)->sizeData();
+            uint32_t sv = (*i)->size();
+            if (sv > 4) {
+                idx += (*i)->write(blob, byteOrder, offset, valueIdx, dataIdx, imageIdx);
+                valueIdx += sv;
             }
+            dataIdx += (*i)->sizeData();
         }
         assert(idx == sizeDir + sizeValue);
 
         // Write data - may contain offsets too (eg sub-IFD)
         dataIdx = sizeDir + sizeValue;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            if (!(*i)->isDeleted()) {
-                idx += (*i)->writeData(blob, byteOrder, offset, dataIdx, imageIdx);
-                dataIdx += (*i)->sizeData();
-            }
+            idx += (*i)->writeData(blob, byteOrder, offset, dataIdx, imageIdx);
+            dataIdx += (*i)->sizeData();
         }
 
         if (pNext_ && sizeNext) {
@@ -723,10 +709,8 @@ namespace Exiv2 {
         // Write image data
         imageIdx = idx;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            if (!(*i)->isDeleted()) {
-                idx += (*i)->writeImage(blob, byteOrder, offset, imageIdx);
-                imageIdx += (*i)->sizeImage();
-            }
+            idx += (*i)->writeImage(blob, byteOrder, offset, imageIdx);
+            imageIdx += (*i)->sizeImage();
         }
 
         return idx;
@@ -832,11 +816,11 @@ namespace Exiv2 {
     } // TiffDataEntry::doWrite
 
     uint32_t TiffImageEntry::doWrite(Blob&     blob,
-                                    ByteOrder byteOrder,
-                                    int32_t   offset,
-                                    uint32_t  /*valueIdx*/,
-                                    uint32_t  /*dataIdx*/,
-                                    uint32_t  imageIdx)
+                                     ByteOrder byteOrder,
+                                     int32_t   offset,
+                                     uint32_t  /*valueIdx*/,
+                                     uint32_t  /*dataIdx*/,
+                                     uint32_t  imageIdx)
     {
         DataBuf buf(strips_.size() * 4);
         uint32_t idx = 0;
@@ -1032,10 +1016,17 @@ namespace Exiv2 {
                                           int32_t   /*offset*/,
                                           uint32_t  /*imageIdx*/) const
     {
-        uint32_t len = 0;
-        for (Strips::const_iterator i = strips_.begin(); i != strips_.end(); ++i) {
-            append(blob, i->first, i->second);
-            len += i->second;
+        uint32_t len = pValue()->sizeDataArea();
+        if (len > 0) {
+            DataBuf buf = pValue()->dataArea();
+            append(blob, buf.pData_, buf.size_);
+        }
+        else {
+            len = 0;
+            for (Strips::const_iterator i = strips_.begin(); i != strips_.end(); ++i) {
+                append(blob, i->first, i->second);
+                len += i->second;
+            }
         }
         return len;
     } // TiffImageEntry::doWriteData
@@ -1052,11 +1043,9 @@ namespace Exiv2 {
         uint32_t len = 2 + 12 * compCount + (hasNext_ ? 4 : 0);
         // Size of IFD values and data
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            if (!(*i)->isDeleted()) {
-                uint32_t sv = (*i)->size();
-                if (sv > 4) len += sv;
-                len += (*i)->sizeData();
-            }
+            uint32_t sv = (*i)->size();
+            if (sv > 4) len += sv;
+            len += (*i)->sizeData();
         }
         // Size of next-IFD, if any
         uint32_t sizeNext = 0;
@@ -1144,65 +1133,14 @@ namespace Exiv2 {
 
     uint32_t TiffImageEntry::doSizeImage() const
     {
-        uint32_t len = 0;
-        for (Strips::const_iterator i = strips_.begin(); i != strips_.end(); ++i) {
-            len += i->second;
+        uint32_t len = pValue()->sizeDataArea();
+        if (len == 0) {
+            for (Strips::const_iterator i = strips_.begin(); i != strips_.end(); ++i) {
+                len += i->second;
+            }
         }
         return len;
     } // TiffImageEntry::doSizeImage
-
-    void TiffComponent::setIsDeleted(bool isDeleted) 
-    {
-        doSetIsDeleted(isDeleted);
-    } // TiffComponent::setIsDeleted
-
-    void TiffComponent::doSetIsDeleted(bool isDeleted)
-    {
-        isDeleted_ = isDeleted;
-    } // TiffComponent::doSetIsDeleted
-
-    bool TiffComponent::isDeleted() const
-    {
-        return doIsDeleted();
-    } // TiffComponent::isDeleted
-
-    bool TiffComponent::doIsDeleted() const
-    {
-        return isDeleted_;
-    } // TiffComponent::doIsDeleted
-
-    bool TiffSubIfd::doIsDeleted() const
-    {
-        if (!TiffComponent::doIsDeleted()) return false;
-
-        bool hasChildren = false;
-        for (Ifds::const_iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
-            if ((*i)->count() > 0) {
-                hasChildren = true;
-                break;
-            }
-        }
-        return !hasChildren;
-    } // TiffSubIfd::doIsDeleted
-
-    bool TiffMnEntry::doIsDeleted() const
-    {
-        if (!TiffComponent::doIsDeleted()) return false;
-
-        bool hasChildren = false;
-        if (mn_) {
-            hasChildren = (mn_->count() > 0);
-        }
-        return !hasChildren;        
-    } // TiffMnEntry::isDeleted
-
-    bool TiffArrayEntry::doIsDeleted() const
-    {
-        if (!TiffComponent::doIsDeleted()) return false;
-
-        bool hasChildren = (count() > 0);
-        return !hasChildren;        
-    } // TiffMnEntry::isDeleted
 
     // *************************************************************************
     // free functions

@@ -40,6 +40,9 @@
 // *****************************************************************************
 // Exiv2 namespace extensions
 namespace Exiv2 {
+
+    class Exifdatum;
+
     namespace Internal {
 
     class TiffHeaderBase;
@@ -79,7 +82,7 @@ namespace Exiv2 {
       @brief Function pointer type for a TiffDecoder member function
              to decode a TIFF component.
      */
-    typedef void (TiffEncoder::*EncoderFct)(TiffEntryBase*);
+    typedef void (TiffEncoder::*EncoderFct)(TiffEntryBase*, const Exifdatum*);
     /*!
       @brief Type for a function pointer for a function to decode a TIFF component.
      */
@@ -89,9 +92,12 @@ namespace Exiv2 {
     /*!
       @brief Type for a function pointer for a function to encode a TIFF component.
      */
-    typedef EncoderFct (*FindEncoderFct)(const std::string& make,
-                                               uint32_t     extendedTag,
-                                               uint16_t     group);
+    typedef EncoderFct (*FindEncoderFct)(
+        const std::string& make,
+              uint32_t     extendedTag,
+              uint16_t     group,
+        const EncoderFct   defaultFct
+    );
     /*!
       @brief Type for a function pointer for a function to create a TIFF component.
              Use TiffComponent::AutoPtr, it is not used in this declaration only

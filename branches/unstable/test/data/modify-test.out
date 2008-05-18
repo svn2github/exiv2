@@ -27,7 +27,7 @@ exiv2-gc.jpg          Exif.Image.Orientation                       Short       1
 exiv2-gc.jpg          Exif.Image.XResolution                       Rational    1  72
 exiv2-gc.jpg          Exif.Image.YResolution                       Rational    1  72
 exiv2-gc.jpg          Exif.Image.ResolutionUnit                    Short       1  inch
-exiv2-gc.jpg          Exif.Image.Software                          Ascii      22  Exiv2 utility!!
+exiv2-gc.jpg          Exif.Image.Software                          Ascii      16  Exiv2 utility!!
 exiv2-gc.jpg          Exif.Image.DateTime                          Ascii      20  2004:06:08 16:04:50
 exiv2-gc.jpg          Exif.Image.YCbCrPositioning                  Short       1  Co-sited
 exiv2-gc.jpg          Exif.Image.ExifTag                           Long        1  6480
@@ -51,12 +51,12 @@ exiv2-gc.jpg          Exif.Photo.ColorSpace                        Short       1
 exiv2-gc.jpg          Exif.Photo.PixelXDimension                   Long        1  1600
 exiv2-gc.jpg          Exif.Photo.PixelYDimension                   Long        1  2400
 exiv2-gc.jpg          Exif.Photo.InteroperabilityTag               Long        1  6738
-exiv2-gc.jpg          Exif.Photo.FileSource                        Undefined   1  Digital still camera
 exiv2-gc.jpg          Exif.Iop.InteroperabilityIndex               Ascii       4  R98
 exiv2-gc.jpg          Exif.Iop.InteroperabilityVersion             Undefined   4  1.00
+exiv2-gc.jpg          Exif.Photo.FileSource                        Undefined   1  Digital still camera
 exiv2-gc.jpg          Exif.Thumbnail.ImageWidth                    Long        1  133
 exiv2-gc.jpg          Exif.Thumbnail.ImageLength                   Long        1  200
 exiv2-gc.jpg          Exif.Thumbnail.Compression                   Short       1  JPEG (old-style)
 exiv2-gc.jpg          Exif.Thumbnail.Orientation                   Short       1  top, left
-exiv2-gc.jpg          Exif.Thumbnail.JPEGInterchangeFormat         Long        1  0
+exiv2-gc.jpg          Exif.Thumbnail.JPEGInterchangeFormat         Long        1  196
 exiv2-gc.jpg          Exif.Thumbnail.JPEGInterchangeFormatLength   Long        1  6144

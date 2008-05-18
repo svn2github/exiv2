@@ -410,11 +410,12 @@ namespace Exiv2 {
           xmpData_(xmpData),
           del_(true),
           pRoot_(pRoot),
+          pSourceTree_(0),
           byteOrder_(byteOrder),
           origByteOrder_(byteOrder),
           findEncoderFct_(findEncoderFct),
           dirty_(false),
-          updateValueData_(true)
+          writeMethod_(wmNonIntrusive)
     {
         assert(pRoot != 0);
 
@@ -434,6 +435,18 @@ namespace Exiv2 {
         }
     }
 
+    void TiffEncoder::setDirty(bool flag)
+    {
+        dirty_ = flag;
+        setGo(geTraverse, !flag);
+    }
+
+    bool TiffEncoder::dirty() const
+    {
+        if (dirty_ || exifData_.count() > 0) return true;
+        return false;
+    }
+
     void TiffEncoder::visitEntry(TiffEntry* object)
     {
         encodeTiffEntry(object);
@@ -441,7 +454,7 @@ namespace Exiv2 {
 
     void TiffEncoder::visitDataEntry(TiffDataEntry* object)
     {
-        encodeTiffEntry(object, false);
+        encodeTiffEntry(object, 0, &TiffEncoder::encodeOffsetEntry);
 
         if (!dirty_) {
             assert(object);
@@ -452,7 +465,7 @@ namespace Exiv2 {
                 ExifKey key(object->tag(), tiffGroupName(object->group()));
                 std::cerr << "DATAAREA GREW     " << key << "\n";
 #endif
-                dirty_ = true;
+                setDirty();
             }
             else {
                 // Write the new dataarea, fill with 0x0
@@ -523,7 +536,7 @@ namespace Exiv2 {
 
     void TiffEncoder::visitSubIfd(TiffSubIfd* object)
     {
-        encodeTiffEntry(object, false);
+        encodeTiffEntry(object, 0, &TiffEncoder::encodeOffsetEntry);
     }
 
     void TiffEncoder::visitMnEntry(TiffMnEntry* object)
@@ -558,130 +571,221 @@ namespace Exiv2 {
         encodeTiffEntry(object);
     }
 
-    void TiffEncoder::encodeTiffEntry(TiffEntryBase* object, bool updateValueData)
+    void TiffEncoder::encodeTiffEntry(
+              TiffEntryBase* object,
+        const Exifdatum*     datum,
+        const EncoderFct     defaultFct
+    )
     {
         assert(object != 0);
 
-        const EncoderFct encoderFct = findEncoderFct_(make_,
-                                                      object->tag(),
-                                                      object->group());
-        // skip encoding if encoderFct == 0
-        if (encoderFct) {
-            updateValueData_ = updateValueData;
-            EXV_CALL_MEMBER_FN(*this, encoderFct)(object);
-            updateValueData_ = true;
-        }
-    } // TiffEncoder::encodeTiffEntry
-
-    void TiffEncoder::encodeStdTiffEntry(TiffEntryBase* object)
-    {
-        assert(object !=0);
-
-        ExifKey key(object->tag(), tiffGroupName(object->group()));
-        ExifData::iterator pos = exifData_.findKey(key);
-        if (pos == exifData_.end()) { // metadatum not found
+        ExifData::iterator pos = exifData_.end();
+        const Exifdatum* ed = datum;
+        if (ed == 0) {
+            ExifKey key(object->tag(), tiffGroupName(object->group()));
+            pos = exifData_.findKey(key);
+            if (pos == exifData_.end()) { // metadatum not found (deleted)
 #ifdef DEBUG
-            std::cerr << "DELETING          " << key << "\n";
+                std::cerr << "DELETING          " << key << "\n";
 #endif
-            object->setIsDeleted(true);
-            dirty_ = true;
-        }
-        else { // found metadatum corresponding to object
-#ifdef DEBUG
-            DataBuf buf(object->size_);
-            memcpy(buf.pData_, object->pData_, object->size_);
-            bool tooLarge = false;
-#endif
-            bool updateValueData = updateValueData_;
-            uint32_t newSize = pos->size();
-            if (newSize > object->size_) { // value doesn't fit, encode for intrusive writing
-                dirty_ = true;
-                updateValueData = true;
-#ifdef DEBUG
-                tooLarge = true;
-#endif
-            }
-            if (updateValueData) {
-                object->updateValue(pos->getValue(), byteOrder()); // clones the value
-#ifdef DEBUG
-                std::cerr << "UPDATING DATA     " << key;
-                if (   !tooLarge
-                    && 0 != memcmp(object->pData_, buf.pData_, buf.size_)) {
-                    std::cerr << "\t\t\t NOT MATCHING";
-                    std::cerr << "\nBEFORE:\n";
-                    hexdump(std::cerr, buf.pData_, buf.size_);
-                    std::cerr << "NOW:\n";
-                    hexdump(std::cerr, object->pData_, buf.size_);
-                }
-                if (tooLarge) {
-                    std::cerr << "\t\t\t ALLOCATED " << object->size() << " BYTES";
-                }
-#endif
+                setDirty();
             }
             else {
-                object->setValue(pos->getValue()); // clones the value
+                ed = &(*pos);
+            }
+        }
+        if (ed) {
+            const EncoderFct fct = findEncoderFct_(make_,
+                                                   object->tag(),
+                                                   object->group(),
+                                                   defaultFct);
+            // skip encoding if fct == 0
+            if (fct) {
+                EXV_CALL_MEMBER_FN(*this, fct)(object, ed);
+            }
+        }
+        if (del_ && pos != exifData_.end()) {
+            exifData_.erase(pos);
+        }
 #ifdef DEBUG
-                std::cerr << "NOT UPDATING      " << key;
-                if (!updateValueData_) {
-                    std::cerr << "\t\t\t PRESERVE VALUE DATA";
-                }
-                if (tooLarge) {
-                    std::cerr << "\t\t\t TOO LARGE";
-                }
+        std::cerr << "\n";
 #endif
-            } // !updateValueData
+
+    } // TiffEncoder::encodeTiffEntry
+
+    void TiffEncoder::encodeStdTiffEntry(TiffEntryBase* object, const Exifdatum* datum)
+    {
+        assert(object != 0);
+        assert(datum != 0);
 
 #ifdef DEBUG
-            std::cerr << "\n";
+        bool tooLarge = false;
 #endif
-            if (del_) exifData_.erase(pos);
+        uint32_t newSize = datum->size();
+        if (newSize > object->size_) { // value doesn't fit, encode for intrusive writing
+            setDirty();
+#ifdef DEBUG
+            tooLarge = true;
+#endif
         }
+        object->updateValue(datum->getValue(), byteOrder()); // clones the value
+#ifdef DEBUG
+        ExifKey key(object->tag(), tiffGroupName(object->group()));
+        std::cerr << "UPDATING DATA     " << key;
+        if (tooLarge) {
+            std::cerr << "\t\t\t ALLOCATED " << object->size_ << " BYTES";
+        }
+#endif
     } // TiffEncoder::encodeStdTiffEntry
 
-    void TiffEncoder::encodeOlympThumb(TiffEntryBase* object)
+    void TiffEncoder::encodeOffsetEntry(TiffEntryBase* object, const Exifdatum* datum)
+    {
+        assert(object != 0);
+        assert(datum != 0);
+
+        uint32_t newSize = datum->size();
+        if (newSize > object->size_) { // value doesn't fit, encode for intrusive writing
+            setDirty();
+            object->updateValue(datum->getValue(), byteOrder()); // clones the value
+#ifdef DEBUG
+            ExifKey key(object->tag(), tiffGroupName(object->group()));
+            std::cerr << "UPDATING DATA     " << key;
+            std::cerr << "\t\t\t ALLOCATED " << object->size() << " BYTES";
+#endif
+        }
+        else {
+            object->setValue(datum->getValue()); // clones the value
+#ifdef DEBUG
+            ExifKey key(object->tag(), tiffGroupName(object->group()));
+            std::cerr << "NOT UPDATING      " << key;
+            std::cerr << "\t\t\t PRESERVE VALUE DATA";
+#endif
+        }
+
+    } // TiffEncoder::encodeOffsetEntry
+
+    void TiffEncoder::encodeImageEntry(TiffEntryBase* object, const Exifdatum* datum)
+    {
+        encodeOffsetEntry(object, datum);
+
+        TiffImageEntry* pImageEntry = dynamic_cast<TiffImageEntry*>(object);
+        assert(pImageEntry);
+
+        uint32_t sizeDataArea = pImageEntry->pValue()->sizeDataArea();
+
+        if (sizeDataArea > 0 && writeMethod() == wmNonIntrusive) {
+#ifdef DEBUG
+            std::cerr << "\t DATAAREA IS SET (NON-INTRUSIVE WRITING)";
+#endif
+            setDirty();
+        }
+
+        if (sizeDataArea > 0 && writeMethod() == wmIntrusive) {
+#ifdef DEBUG
+            std::cerr << "\t DATAAREA IS SET (INTRUSIVE WRITING)";
+#endif
+            // Set pseudo strips (without a data pointer) from the size tag
+            ExifKey key(pImageEntry->szTag(), tiffGroupName(pImageEntry->szGroup()));
+            ExifData::const_iterator pos = exifData_.findKey(key);
+            const byte* zero = 0;
+            if (pos == exifData_.end()) {
+#ifndef SUPPRESS_WARNINGS
+                std::cerr << "Error: Size tag " << key
+                          << " not found. Writing only one strip.\n";
+#endif
+                pImageEntry->strips_.clear();
+                pImageEntry->strips_.push_back(std::make_pair(zero, sizeDataArea));
+            }
+            else {
+                uint32_t sizeTotal = 0;
+                pImageEntry->strips_.clear();
+                for (long i = 0; i < pos->count(); ++i) {
+                    uint32_t len = pos->toLong(i);
+                    pImageEntry->strips_.push_back(std::make_pair(zero, len));
+                    sizeTotal += len;
+                }
+                if (sizeTotal != sizeDataArea) {
+#ifndef SUPPRESS_WARNINGS
+                    ExifKey key2(pImageEntry->tag(), tiffGroupName(pImageEntry->group()));
+                    std::cerr << "Error: Sum of all sizes of " << key
+                              << " != data size of " << key2 << ". "
+                              << "This results in an invalid image.\n";
+#endif
+                    // Todo: How to fix? Write only one strip?
+                }
+            }
+        }
+
+        if (sizeDataArea == 0 && writeMethod() == wmIntrusive) {
+#ifdef DEBUG
+            std::cerr << "\t USE STRIPS FROM SOURCE TREE IMAGE ENTRY";
+#endif
+            // Set strips from source tree
+            if (pSourceTree_) {
+                TiffFinder finder(pImageEntry->tag(), pImageEntry->group());
+                pSourceTree_->accept(finder);
+                TiffImageEntry* ti = dynamic_cast<TiffImageEntry*>(finder.result());
+                if (ti) {
+                    pImageEntry->strips_ = ti->strips_;
+                }
+            }
+#ifndef SUPPRESS_WARNINGS
+            else {
+                ExifKey key2(pImageEntry->tag(), tiffGroupName(pImageEntry->group()));
+                std::cerr << "Warning: No image data to encode " << key2 << ".\n";
+            }
+#endif
+        }
+
+    } // TiffEncoder::encodeImageEntry
+
+    void TiffEncoder::encodeOlympThumb(TiffEntryBase* object, const Exifdatum* datum)
     {
         // Todo
     }
 
-    void TiffEncoder::encodeSubIfd(TiffEntryBase* object)
+    void TiffEncoder::encodeSubIfd(TiffEntryBase* object, const Exifdatum* datum)
     {
         // Todo
     }
 
-    void TiffEncoder::encodeIptc(TiffEntryBase* object)
+    void TiffEncoder::encodeIptc(TiffEntryBase* object, const Exifdatum* datum)
     {
         // Todo
     }
 
-    void TiffEncoder::encodeXmp(TiffEntryBase* object)
+    void TiffEncoder::encodeXmp(TiffEntryBase* object, const Exifdatum* datum)
     {
         // Todo
     }
 
-    void TiffEncoder::encodeBigEndianEntry(TiffEntryBase* object)
+    void TiffEncoder::encodeBigEndianEntry(TiffEntryBase* object, const Exifdatum* datum)
     {
         byteOrder_ = bigEndian;
-        encodeStdTiffEntry(object);
+        encodeStdTiffEntry(object, datum);
         byteOrder_ = origByteOrder_;
     }
 
-    void TiffEncoder::add(TiffComponent*     pRootDir,
-                          TiffCompFactoryFct createFct)
+    void TiffEncoder::add(
+        TiffComponent*     pRootDir, 
+        TiffComponent*     pSourceDir,
+        TiffCompFactoryFct createFct
+    )
     {
         assert(pRootDir != 0);
+        writeMethod_ = wmIntrusive;
+        pSourceTree_ = pSourceDir;
+
         // Ensure that the exifData_ entries are not deleted, to be able to
         // iterate over all remaining entries.
         del_ = false;
-
-        // Todo: What if an image format has a comment??
-        //       i.e., how to take care of non-Exif metadata?
 
         for (ExifData::const_iterator i = exifData_.begin();
              i != exifData_.end(); ++i) {
 
             // Assumption is that the corresponding TIFF entry doesn't exist
 
-            // Todo: This takes tag and group straight from the exif datum.
+            // Todo: This takes tag and group straight from the Exif datum.
             // There is a need for a simple mapping and a provision for quite
             // sophisticated logic to determine the mapped tag and group to
             // handle complex cases (eg, NEF sub-IFDs)
@@ -702,7 +806,7 @@ namespace Exiv2 {
             }
 #endif
             if (object != 0) {
-                encodeTiffEntry(object);
+                encodeTiffEntry(object, &(*i));
             }
         }
     } // TiffEncoder::add

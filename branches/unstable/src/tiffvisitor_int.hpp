@@ -308,11 +308,18 @@ namespace Exiv2 {
 
     /*!
       @brief TIFF composite visitor to encode metadata from an image to the TIFF
-             tree (Visitor pattern). The metadata containers and root element of
-             the tree are supplied in the constructor. Used by TiffParser to encode
-             the metadata into a TIFF composite.
+             tree. The metadata containers and root element of the tree are
+             supplied in the constructor. Used by TiffParserWorker to encode the
+             metadata into a TIFF composite.
 
-      @note  Encoded tags are removed from the \em pImage metadata.
+             For non-intrusive writing, the encoder is used as a visitor (by
+             passing it to the accept() member of a TiffComponent). The
+             composite tree is then traversed and metadata from the image is
+             used to encode each existing component.
+
+             For intrusive writing, add() is called, which loops through the 
+             metadata and creates and populates corresponding TiffComponents
+             as needed.
      */
     class TiffEncoder : public TiffVisitor {
     public:
@@ -362,33 +369,50 @@ namespace Exiv2 {
         //! Encode an array element
         virtual void visitArrayElement(TiffArrayElement* object);
 
-        //! Entry function, determines how to encode each tag
-        void encodeTiffEntry(TiffEntryBase* object, bool updateValueData =true);
         //! Encode a standard TIFF entry
-        void encodeStdTiffEntry(TiffEntryBase* object);
+        void encodeStdTiffEntry(TiffEntryBase* object, const Exifdatum* datum);
+
+        //! Entry function, determines how to encode each tag
+        void encodeTiffEntry(
+                  TiffEntryBase* object,
+            const Exifdatum*     datum =0,
+            const EncoderFct     defaultFct = &TiffEncoder::encodeStdTiffEntry
+        );
+
+        //! Encode an offset entry (only used during non-intrusive writing)
+        void encodeOffsetEntry(TiffEntryBase* object, const Exifdatum* datum);
+        //! Encode an image entry
+        void encodeImageEntry(TiffEntryBase* object, const Exifdatum* datum);
         //! Encode Olympus Thumbnail from the TIFF makernote into IFD1
-        void encodeOlympThumb(TiffEntryBase* object);
+        void encodeOlympThumb(TiffEntryBase* object, const Exifdatum* datum);
         //! Encode SubIFD contents to Image group if it contains primary image data
-        void encodeSubIfd(TiffEntryBase* object);
+        void encodeSubIfd(TiffEntryBase* object, const Exifdatum* datum);
         //! Encode IPTC data to an IPTCNAA or Photoshop ImageResources tag
-        void encodeIptc(TiffEntryBase* object);
+        void encodeIptc(TiffEntryBase* object, const Exifdatum* datum);
         //! Encode XMP packet to an XMLPacket tag
-        void encodeXmp(TiffEntryBase* object);
+        void encodeXmp(TiffEntryBase* object, const Exifdatum* datum);
         //! Encode an entry using big endian byte order and the standard encoding function
-        void encodeBigEndianEntry(TiffEntryBase* object);
+        void encodeBigEndianEntry(TiffEntryBase* object, const Exifdatum* datum);
 
         /*!
           @brief Add metadata from image to the TIFF composite.
 
-          When the encoder is used as a visitor (by passing it to the accept()
-          member of a TiffComponent), the composite tree is traversed and a
-          metadatum from the image is used to encode each component.  This
-          function works the other way around: For each metadatum in the image,
-          the corresponding TiffComponent is created if necessary and populated.
-          In order to encode all tags, both of the above mappings need to be
-          performed.
+          For each Exif metadatum, the corresponding TiffComponent is created
+          if necessary and populated using its encoder function. This function
+          is used for intrusive writing, to create a new TIFF structure.
+
+          @note For non-intrusive writing, the encoder is used as a visitor (by 
+          passing it to the accept() member of a TiffComponent). The composite
+          tree is then traversed and metadata from the image is used to encode
+          each existing component.
         */
-        void add(TiffComponent* pRootDir, TiffCompFactoryFct createFct);
+        void add(
+            TiffComponent*     pRootDir, 
+            TiffComponent*     pSourceDir,
+            TiffCompFactoryFct createFct
+        );
+        //! Set the dirty flag and end of traversing signal.
+        void setDirty(bool flag =true);
         //@}
 
         //! @name Accessors
@@ -402,7 +426,9 @@ namespace Exiv2 {
           @brief True if any tag was deleted or allocated in the process of
                  visiting a TIFF composite tree.
          */
-        bool dirty() const { return dirty_; }
+        bool dirty() const;
+        //! Return the write method used.
+        WriteMethod writeMethod() const { return writeMethod_; }
         //@}
 
     private:
@@ -425,16 +451,13 @@ namespace Exiv2 {
         XmpData  xmpData_;           //!< Copy of the XMP data to encode
         bool del_;                   //!< Indicates if Exif data entries should be deleted after encoding
         TiffComponent* pRoot_;       //!< Root element of the composite
+        TiffComponent* pSourceTree_; //!< Parsed source tree for reference
         ByteOrder byteOrder_;        //!< Byteorder for encoding
         ByteOrder origByteOrder_;    //!< Byteorder as set in the c'tor
         const FindEncoderFct findEncoderFct_; //!< Ptr to the function to find special encoding functions
         std::string make_;           //!< Camera make, determined from the tags to encode
         bool dirty_;                 //!< Signals if any tag is deleted or allocated
-        /*!
-          Signals if the binary value data should be updated when encoding for
-          non-intrusive writing.
-         */
-        bool updateValueData_;
+        WriteMethod writeMethod_;    //!< Write method used.
     }; // class TiffEncoder
 
     /*!

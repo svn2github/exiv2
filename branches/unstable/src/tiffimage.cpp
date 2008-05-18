@@ -413,13 +413,14 @@ namespace Exiv2 {
     // TIFF mapping table for special decoding and encoding requirements
     const TiffMappingInfo TiffMapping::tiffMappingInfo_[] = {
         { "*",       Tag::all, Group::ignr,    0, 0 }, // Do not decode tags with group == Group::ignr
-        { "OLYMPUS",   0x0100, Group::olympmn, &TiffDecoder::decodeOlympThumb, &TiffEncoder::encodeOlympThumb },
+        { "OLYMPUS",   0x0100, Group::olympmn, &TiffDecoder::decodeOlympThumb,   &TiffEncoder::encodeOlympThumb     },
+        { "*",         0x0111, Group::ifd0,    &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeImageEntry     },
         { "*",         0x014a, Group::ifd0,    0, 0 }, // Todo: Controversial, causes problems with Exiftool
-        { "*",       Tag::all, Group::sub0_0,  &TiffDecoder::decodeSubIfd, &TiffEncoder::encodeSubIfd },
-        { "*",       Tag::all, Group::sub0_1,  &TiffDecoder::decodeSubIfd, &TiffEncoder::encodeSubIfd },
-        { "*",         0x02bc, Group::ifd0,    &TiffDecoder::decodeXmp,    &TiffEncoder::encodeXmp    },
-        { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   },
-        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,   &TiffEncoder::encodeIptc   },
+        { "*",       Tag::all, Group::sub0_0,  &TiffDecoder::decodeSubIfd,       &TiffEncoder::encodeSubIfd         },
+        { "*",       Tag::all, Group::sub0_1,  &TiffDecoder::decodeSubIfd,       &TiffEncoder::encodeSubIfd         },
+        { "*",         0x02bc, Group::ifd0,    &TiffDecoder::decodeXmp,          &TiffEncoder::encodeXmp            },
+        { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,         &TiffEncoder::encodeIptc           },
+        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,         &TiffEncoder::encodeIptc           },
         // Minolta makernote entries which need to be encoded in big endian byte order
         { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
         { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
@@ -441,11 +442,14 @@ namespace Exiv2 {
         return decoderFct;
     }
 
-    EncoderFct TiffMapping::findEncoder(const std::string& make,
-                                              uint32_t     extendedTag,
-                                              uint16_t     group)
+    EncoderFct TiffMapping::findEncoder(
+        const std::string& make,
+              uint32_t     extendedTag,
+              uint16_t     group,
+        const EncoderFct   defaultFct
+    )
     {
-        EncoderFct encoderFct = &TiffEncoder::encodeStdTiffEntry;
+        EncoderFct encoderFct = defaultFct;
         const TiffMappingInfo* td = find(tiffMappingInfo_,
                                          TiffMappingInfo::Key(make, extendedTag, group));
         if (td) {
@@ -524,22 +528,6 @@ namespace Exiv2 {
 
     } // TiffParserWorker::decode
 
-/*
-  TODO
-
-  STOP - THINK
-
-  -what do decoder functions do exactly? (add to comments)
-  -what encoder functionality is required to do the reverse?
-  -try to be symmetrical
-  -encode+add steps are together the equivalent of decode
-
-     for each metadatum to be encoded
-            map it to the correct tiff tag(s)
-            encode data
-
- */
-
     WriteMethod TiffParserWorker::encode(
               Blob&              blob,
         const byte*              pData,
@@ -552,41 +540,50 @@ namespace Exiv2 {
               TiffHeaderBase*    pHeader
     )
     {
+        /*
+           1) parse the binary image, if one is provided, and
+           2) attempt updating the parsed tree in-place ("non-intrusive writing")
+           3) else, create a new tree and write a new TIFF structure ("intrusive
+              writing"). If there is a parsed tree, it is only used to access the
+              image data in this case.
+         */
         assert(pHeader);
         assert(pHeader->byteOrder() != invalidByteOrder);
         blob.clear();
-        WriteMethod writeMethod = wmNonIntrusive;
-        TiffComponent::AutoPtr rootDir = parse(pData, size, createFct, pHeader);
-        if (0 == rootDir.get()) {
-#ifdef DEBUG
-            std::cerr << "Creating a new TIFF structure\n";
-#endif
-            writeMethod = wmIntrusive;
-            rootDir = createFct(Tag::root, Group::none);
+        WriteMethod writeMethod = wmIntrusive;
+        TiffComponent::AutoPtr createdTree;
+        TiffComponent::AutoPtr parsedTree = parse(pData, size, createFct, pHeader);
+        if (0 != parsedTree.get()) {
+            // Attempt to update existing TIFF components based on metadata entries
+            TiffEncoder encoder(exifData,
+                                iptcData,
+                                xmpData,
+                                parsedTree.get(),
+                                pHeader->byteOrder(),
+                                findEncoderFct);
+            parsedTree->accept(encoder);
+            if (!encoder.dirty()) writeMethod = wmNonIntrusive;
         }
-        assert(rootDir.get());
-        // Update existing TIFF components based on metadata entries
-        TiffEncoder encoder(exifData,
-                            iptcData,
-                            xmpData,
-                            rootDir.get(),
-                            pHeader->byteOrder(),
-                            findEncoderFct);
-        rootDir->accept(encoder);
-        // Add remaining entries from metadata to composite, if any
-        encoder.add(rootDir.get(), createFct);
-        if (encoder.dirty()) {
-            // Re-write binary representation from the composite tree
-            writeMethod = wmIntrusive;
+        if (writeMethod == wmIntrusive) {
+            createdTree = createFct(Tag::root, Group::none);
+            TiffEncoder encoder(exifData,
+                                iptcData,
+                                xmpData,
+                                createdTree.get(),
+                                pHeader->byteOrder(),
+                                findEncoderFct);
+            // Add entries from metadata to composite
+            encoder.add(createdTree.get(), parsedTree.get(), createFct);
+            // Write binary representation from the composite tree
             uint32_t offset = pHeader->write(blob);
-            uint32_t len = rootDir->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1), uint32_t(-1));
+            uint32_t len = createdTree->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1), uint32_t(-1));
             // Avoid writing just the header if there is no IFD data
             if (len == 0) blob.clear();
+#ifdef DEBUG
+            std::cerr << "Intrusive writing\n";
+#endif
         }
 #ifdef DEBUG
-        if (writeMethod == wmIntrusive) {
-            std::cerr << "Intrusive writing\n";
-        }
         else {
             std::cerr << "Non-intrusive writing\n";
         }

@@ -144,13 +144,6 @@ namespace Exiv2 {
                  freed outside of this class.
          */
         void setStart(const byte* pStart) { pStart_ = const_cast<byte*>(pStart); }
-        /*!
-          @brief Set flag indicating whether the component is deleted.
-
-          @note Correct handling of this flag on write is only implemented for
-                subclasses of TiffEntryBase.
-         */
-        void setIsDeleted(bool isDeleted);
         //@}
 
         //! @name Accessors
@@ -161,13 +154,6 @@ namespace Exiv2 {
         uint16_t group()                      const { return group_; }
         //! Return a pointer to the start of the binary representation of the component
         byte* start()                         const { return pStart_; }
-        /*!
-          @brief Return an indicator whether the component was deleted.
-
-          Depending on the type of component, this may involve checks whether
-          all children of a component (directory) are deleted too.
-         */
-        bool isDeleted()                      const;
         //@}
 
         //! @name Write support (Manipulators)
@@ -252,14 +238,6 @@ namespace Exiv2 {
         virtual TiffComponent* doAddNext(AutoPtr /*tiffComponent*/) { return 0; }
         //! Implements accept().
         virtual void doAccept(TiffVisitor& visitor) =0;
-        //! Implements setDeleted(). The default implementation just sets the flag.
-        virtual void doSetIsDeleted(bool isDeleted);
-        //@}
-
-        //! @name Accessors
-        //@{
-        //! Implements isDeleted(). The default implementation just returns the flag.
-        virtual bool doIsDeleted() const;
         //@}
 
         //! @name Write support (Manipulators)
@@ -305,7 +283,6 @@ namespace Exiv2 {
           a memory buffer. The buffer is allocated and freed outside of this class.
          */
         byte*    pStart_;
-        bool     isDeleted_;  //!< True if this component has been deleted
 
     }; // class TiffComponent
 
@@ -677,6 +654,7 @@ namespace Exiv2 {
              \em Exif.Image.StripByteCounts.
      */
     class TiffImageEntry : public TiffDataEntryBase {
+        friend class TiffEncoder;
     public:
         //! @name Creators
         //@{
@@ -914,18 +892,6 @@ namespace Exiv2 {
         virtual void doAccept(TiffVisitor& visitor);
         //@}
 
-        //! @name Accessors
-        //@{
-        /*!
-          @brief Implements isDeleted(). If the sub-IFD entry is marked as
-                 deleted, return true only if there are no children. If there
-                 are (not deleted*) children, the sub-IFD can't be considered
-                 deleted, e.g., it must be written anyway.<BR>
-                 *) count() takes care of that.
-         */
-        virtual bool doIsDeleted() const;
-        //@}
-
         //! @name Write support (Manipulators)
         //@{
         /*!
@@ -1003,14 +969,6 @@ namespace Exiv2 {
         //@{
         //! Implements count(). Return number of components in the entry.
         virtual uint32_t doCount() const;
-        /*!
-          @brief Implements isDeleted(). If the makernote entry is marked as
-                 deleted, return true only if there are no children. If there
-                 are (not deleted*) children, the makernote can't be considered
-                 deleted, e.g., it must be written anyway.<BR>
-                 *) count() takes care of that.
-         */
-        virtual bool doIsDeleted() const;
         //@}
 
         //! @name Write support (Manipulators)
@@ -1085,14 +1043,6 @@ namespace Exiv2 {
         //@{
         //! Implements count(). Return number of components in the entry.
         virtual uint32_t doCount() const;
-        /*!
-          @brief Implements isDeleted(). If the array entry is marked as
-                 deleted, return true only if it contains no elements. If there
-                 are (not deleted*) elements, the array can't be considered
-                 deleted, e.g., it must be written anyway.<BR>
-                 *) count() takes care of that.
-         */
-        virtual bool doIsDeleted() const;
         //@}
 
         //! @name Write support (Manipulators)

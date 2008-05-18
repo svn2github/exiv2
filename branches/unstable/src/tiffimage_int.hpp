@@ -267,12 +267,16 @@ namespace Exiv2 {
           @param make Camera make
           @param extendedTag Extended tag
           @param group %Group
+          @param defaultFct Default encoder function
 
           @return Pointer to the encoder function
          */
-        static EncoderFct findEncoder(const std::string& make,
-                                            uint32_t     extendedTag,
-                                            uint16_t     group);
+        static EncoderFct findEncoder(
+            const std::string& make,
+                  uint32_t     extendedTag,
+                  uint16_t     group,
+            const EncoderFct   defaultFct
+        );
 
     private:
         static const TiffMappingInfo tiffMappingInfo_[]; //<! TIFF mapping table
