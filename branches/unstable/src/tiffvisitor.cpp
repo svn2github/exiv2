@@ -515,7 +515,8 @@ namespace Exiv2 {
 
     void TiffEncoder::visitMnEntry(TiffMnEntry* object)
     {
-        encodeTiffComponent(object);
+        // Test is required here as well as in the callback encoder function
+        if (!object->mn_) encodeTiffComponent(object);
     }
 
     void TiffEncoder::visitIfdMakernote(TiffIfdMakernote* object)
@@ -709,6 +710,7 @@ namespace Exiv2 {
 
     void TiffEncoder::encodeMnEntry(TiffMnEntry* object, const Exifdatum* datum)
     {
+        // Test is required here as well as in the visit function
         if (!object->mn_) encodeTiffEntryBase(object, datum);
     } // TiffEncoder::encodeMnEntry
 
