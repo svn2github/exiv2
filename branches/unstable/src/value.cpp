@@ -244,6 +244,7 @@ namespace Exiv2 {
 
     long StringValueBase::copy(byte* buf, ByteOrder /*byteOrder*/) const
     {
+        if (value_.size() == 0) return 0;
         // byteOrder not needed
         assert(buf != 0);
         return static_cast<long>(
@@ -463,7 +464,7 @@ namespace Exiv2 {
         std::ostringstream os;
         write(os);
         std::string s = os.str();
-		std::memcpy(buf, &s[0], s.size());
+        std::memcpy(buf, &s[0], s.size());
         return static_cast<long>(s.size());
     }
 

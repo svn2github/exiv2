@@ -61,7 +61,7 @@ void mini1(const char* path)
     std::cout << "Test 3: Wrote non-empty Exif data without original binary data:\n";
     exifData.clear();
     ByteOrder bo = ExifParser::decode(exifData, &blob[0], blob.size());
-    assert(bo = bigEndian);
+    assert(bo == bigEndian);
     print(exifData);
 }
 

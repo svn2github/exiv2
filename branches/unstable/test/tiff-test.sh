@@ -21,7 +21,7 @@ exifprobe $testfile
 $binpath/tiff-test $testfile
 exifprobe $testfile
 
-) > $results 2>&1
+) > $results
 
 # ----------------------------------------------------------------------
 # Evaluate results

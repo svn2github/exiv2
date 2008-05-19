@@ -41,35 +41,11 @@ File Size = 526
 File Format = TIFFEP
 
 
-Creating a new TIFF structure
-Intrusive writing
 Test 1: Writing empty Exif data without original binary data: ok.
-DELETING          Exif.Image.NewSubfileType
-DELETING          Exif.Image.ImageWidth
-DELETING          Exif.Image.ImageLength
-DELETING          Exif.Image.BitsPerSample
-DELETING          Exif.Image.Compression
-DELETING          Exif.Image.PhotometricInterpretation
-DELETING          Exif.Image.DocumentName
-DELETING          Exif.Image.ImageDescription
-DELETING          Exif.Image.StripOffsets
-DELETING          Exif.Image.Orientation
-DELETING          Exif.Image.SamplesPerPixel
-DELETING          Exif.Image.RowsPerStrip
-DELETING          Exif.Image.StripByteCounts
-DELETING          Exif.Image.XResolution
-DELETING          Exif.Image.YResolution
-DELETING          Exif.Image.PlanarConfiguration
-DELETING          Exif.Image.ResolutionUnit
-Intrusive writing
 Test 2: Writing empty Exif data with original binary data: ok.
-Creating a new TIFF structure
-UPDATING DATA     Exif.Photo.DateTimeOriginal			 ALLOCATED 18 BYTES
-Intrusive writing
 Test 3: Wrote non-empty Exif data without original binary data:
 Exif.Image.ExifTag                           0x8769 Long        1  26
 Exif.Photo.DateTimeOriginal                  0x9003 Ascii      18  Yesterday at noon
-Reading TIFF file mini9.tif
 MIME type:  image/tiff
 Image size: 9 x 9
 Before
@@ -110,26 +86,6 @@ Exif.Image.YResolution                       0x011b Rational    1  1207959552/16
 Exif.Image.PlanarConfiguration               0x011c Short       1  1
 Exif.Image.ResolutionUnit                    0x0128 Short       1  2
 Exif.Photo.DateTimeOriginal                  0x9003 Ascii      18  Yesterday at noon
-Writing TIFF file mini9.tif
-UPDATING DATA     Exif.Image.NewSubfileType
-UPDATING DATA     Exif.Image.ImageWidth
-UPDATING DATA     Exif.Image.ImageLength
-UPDATING DATA     Exif.Image.BitsPerSample
-UPDATING DATA     Exif.Image.Compression
-UPDATING DATA     Exif.Image.PhotometricInterpretation
-UPDATING DATA     Exif.Image.DocumentName
-UPDATING DATA     Exif.Image.ImageDescription
-UPDATING DATA     Exif.Image.StripOffsets
-UPDATING DATA     Exif.Image.Orientation
-UPDATING DATA     Exif.Image.SamplesPerPixel
-UPDATING DATA     Exif.Image.RowsPerStrip
-UPDATING DATA     Exif.Image.StripByteCounts
-UPDATING DATA     Exif.Image.XResolution
-UPDATING DATA     Exif.Image.YResolution
-UPDATING DATA     Exif.Image.PlanarConfiguration
-UPDATING DATA     Exif.Image.ResolutionUnit
-UPDATING DATA     Exif.Photo.DateTimeOriginal			 ALLOCATED 18 BYTES
-Intrusive writing
 [30mFile Name = mini9.tif
 File Type = TIFF:II
 File Size = 573
