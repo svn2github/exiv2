@@ -96,14 +96,16 @@ namespace {
         time_t modtime_;
     };
 
-    // Convert a string "YYYY:MM:DD HH:MI:SS" to a struct tm type,
-    // returns 0 if successful
+    /*!
+      @brief Convert a string "YYYY:MM:DD HH:MI:SS" to a struct tm type,
+             returns 0 if successful
+     */
     int str2Tm(const std::string& timeStr, struct tm* tm);
 
-    // Convert a UTC time to a string "YYYY:MM:DD HH:MI:SS", "" on error
+    //! Convert a UTC time to a string "YYYY:MM:DD HH:MI:SS", "" on error
     std::string time2Str(time_t time);
 
-    // Convert a tm structure to a string "YYYY:MM:DD HH:MI:SS", "" on error
+    //! Convert a tm structure to a string "YYYY:MM:DD HH:MI:SS", "" on error
     std::string tm2Str(struct tm* tm);
 
     /*!
@@ -133,8 +135,9 @@ namespace {
     /*!
       @brief Make a file path from the current file path, destination
              directory (if any) and the filename extension passed in.
+
       @param path Path of the existing file
-      @param ext New filename extension (incl. the dot '.' if required)
+      @param ext  New filename extension (incl. the dot '.' if required)
       @return 0 if successful, 1 if the new file exists and the user
              chose not to overwrite it.
      */
@@ -142,7 +145,7 @@ namespace {
 
     /*!
       @brief Check if file \em path exists and whether it should be
-             overwritten. Ask user if necessary. Return 1 if the file 
+             overwritten. Ask user if necessary. Return 1 if the file
              exists and shouldn't be overwritten, else 0.
      */
     int dontOverwrite(const std::string& path);
@@ -1661,6 +1664,7 @@ namespace Action {
 // local definitions
 namespace {
 
+    //! @cond IGNORE
     int Timestamp::read(const std::string& path)
     {
         struct stat buf;
@@ -1692,6 +1696,7 @@ namespace {
         buf.modtime = modtime_;
         return utime(path.c_str(), &buf);
     }
+    //! @endcond
 
     int str2Tm(const std::string& timeStr, struct tm* tm)
     {

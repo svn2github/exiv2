@@ -1356,6 +1356,7 @@ namespace Exiv2 {
 // *****************************************************************************
 // local definitions
 namespace {
+    //! @cond IGNORE
     const RotationMap::OmList RotationMap::omList_[] = {
         { 1,    0 },
         { 3,  180 },
@@ -1391,4 +1392,5 @@ namespace {
         }
         return d;
     }
+    //! @endcond
 }

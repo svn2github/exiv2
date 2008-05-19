@@ -452,6 +452,7 @@ namespace Exiv2 {
 // local definitions
 namespace {
 
+    //! @cond IGNORE
     Thumbnail::AutoPtr Thumbnail::create(const Exiv2::ExifData& exifData)
     {
         Thumbnail::AutoPtr thumbnail;
@@ -516,5 +517,5 @@ namespace {
         if (format == exifData.end()) return Exiv2::DataBuf();
         return format->dataArea();
     }
-
+    //! @endcond
 }
