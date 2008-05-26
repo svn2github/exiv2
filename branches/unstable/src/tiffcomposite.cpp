@@ -404,7 +404,10 @@ namespace Exiv2 {
         const TiffStructure* ts1 = tiffPath.top();
         assert(ts1 != 0);
         tiffPath.pop();
-        assert(!tiffPath.empty());
+        if (tiffPath.empty()) {
+            // If the last element in the path is the makernote tag itself we're done
+            return this;
+        }
         const TiffStructure* ts2 = tiffPath.top();
         assert(ts2 != 0);
         tiffPath.push(ts1);
@@ -899,10 +902,12 @@ namespace Exiv2 {
                                   ByteOrder byteOrder,
                                   int32_t   offset,
                                   uint32_t  valueIdx,
-                                  uint32_t  /*dataIdx*/,
+                                  uint32_t  dataIdx,
                                   uint32_t  imageIdx)
     {
-        if (!mn_) return 0;
+        if (!mn_) {
+            return TiffEntryBase::doWrite(blob, byteOrder, offset, valueIdx, dataIdx, imageIdx);
+        }
         return mn_->write(blob, byteOrder, offset + valueIdx, uint32_t(-1), uint32_t(-1), imageIdx);
     } // TiffMnEntry::doWrite
 
@@ -1121,7 +1126,9 @@ namespace Exiv2 {
 
     uint32_t TiffMnEntry::doSize() const
     {
-        if (!mn_) return 0;
+        if (!mn_) {
+            return TiffEntryBase::doSize();
+        }
         return mn_->size();
     } // TiffMnEntry::doSize
 
