@@ -490,8 +490,13 @@ namespace {
     Exiv2::DataBuf TiffThumbnail::copy(const Exiv2::ExifData& exifData) const
     {
         Exiv2::ExifData thumb;
-
-        // Todo: Copy all IFD1 tags from exifData to thumb
+        // Copy all Thumbnail (IFD1) tags from exifData to Image (IFD0) tags in thumb
+        for (Exiv2::ExifData::const_iterator i = exifData.begin(); i != exifData.end(); ++i) {
+            if (i->groupName() == "Thumbnail") {
+                std::string key = "Exif.Image." + i->tagName();
+                thumb.add(Exiv2::ExifKey(key), &i->value());
+            }
+        }
 
         Exiv2::Blob blob;
         const Exiv2::IptcData emptyIptc;
