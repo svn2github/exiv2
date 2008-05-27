@@ -695,9 +695,16 @@ namespace Exiv2 {
         uint32_t sizeData = 0;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
             uint32_t sv = (*i)->size();
-            if (sv > 4) sizeValue += sv;
+            if (sv > 4) {
+                sv += sv & 1;               // Align value to word boundary
+                sizeValue += sv;
+            }
             // Also add the size of data, but only if needed
-            if (imageIdx == uint32_t(-1)) sizeData += (*i)->sizeData();
+            if (imageIdx == uint32_t(-1)) {
+                uint32_t sd = (*i)->sizeData();
+                sd += sd & 1;               // Align data to word boundary
+                sizeData += sd;
+            }
         }
 
         uint32_t idx = 0;                   // Current IFD index / bytes written
@@ -707,21 +714,25 @@ namespace Exiv2 {
             imageIdx = dataIdx + sizeData + sizeNext;
         }
 
-        // Write the IFD. First: number of directory entries
+        // 1st: Write the IFD, a) Number of directory entries
         byte buf[4];
         us2Data(buf, static_cast<uint16_t>(compCount), byteOrder);
         append(blob, buf, 2);
         idx += 2;
-
-        // 2nd: Directory entries - may contain pointers to the value or data
+        // b) Directory entries - may contain pointers to the value or data
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
             idx += writeDirEntry(blob, byteOrder, offset, *i, valueIdx, dataIdx, imageIdx);
             uint32_t sv = (*i)->size();
-            if (sv > 4) valueIdx += sv;
-            dataIdx += (*i)->sizeData();
+            if (sv > 4) {
+                sv += sv & 1;               // Align value to word boundary
+                valueIdx += sv;
+            }
+            uint32_t sd = (*i)->sizeData();
+            sd += sd & 1;                   // Align data to word boundary
+            dataIdx += sd;
         }
+        // c) Pointer to the next IFD
         if (hasNext_) {
-            // Add the offset to the next IFD
             memset(buf, 0x0, 4);
             if (pNext_ && sizeNext) {
                 l2Data(buf, offset + dataIdx, byteOrder);
@@ -731,31 +742,48 @@ namespace Exiv2 {
         }
         assert(idx == sizeDir);
 
-        // Write IFD values - may contain pointers to additional data
+        // 2nd: Write IFD values - may contain pointers to additional data
         valueIdx = sizeDir;
         dataIdx = sizeDir + sizeValue;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
             uint32_t sv = (*i)->size();
             if (sv > 4) {
-                idx += (*i)->write(blob, byteOrder, offset, valueIdx, dataIdx, imageIdx);
+                uint32_t d = (*i)->write(blob, byteOrder, offset, valueIdx, dataIdx, imageIdx);
+                assert(sv == d);
+                if ((sv & 1) == 1) {
+                    blob.push_back(0x0);    // Align value to word boundary
+                    sv += 1;
+                }
+                idx += sv;
                 valueIdx += sv;
             }
-            dataIdx += (*i)->sizeData();
+            uint32_t sd = (*i)->sizeData();
+            sd += sd & 1;                   // Align data to word boundary
+            dataIdx += sd;
         }
         assert(idx == sizeDir + sizeValue);
 
-        // Write data - may contain offsets too (eg sub-IFD)
+        // 3rd: Write data - may contain offsets too (eg sub-IFD)
         dataIdx = sizeDir + sizeValue;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
-            idx += (*i)->writeData(blob, byteOrder, offset, dataIdx, imageIdx);
-            dataIdx += (*i)->sizeData();
+            uint32_t sd = (*i)->writeData(blob, byteOrder, offset, dataIdx, imageIdx);
+            assert((*i)->sizeData() == sd);
+            if ((sd & 1) == 1) {
+                blob.push_back(0x0);        // Align data to word boundary
+                sd += 1;
+            }
+            idx += sd;
+            dataIdx += sd;
         }
+        // No assertion (sizeData may not be available, see above)
+        // assert(idx == sizeDir + sizeValue + sizeData);
 
+        // 4th: Write next-IFD 
         if (pNext_ && sizeNext) {
             idx += pNext_->write(blob, byteOrder, offset + idx, uint32_t(-1), uint32_t(-1), imageIdx);
         }
 
-        // Write image data
+        // 5th: Write image data
         imageIdx = idx;
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
             idx += (*i)->writeImage(blob, byteOrder, offset, imageIdx);
@@ -1095,8 +1123,13 @@ namespace Exiv2 {
         // Size of IFD values and data
         for (Components::const_iterator i = components_.begin(); i != components_.end(); ++i) {
             uint32_t sv = (*i)->size();
-            if (sv > 4) len += sv;
-            len += (*i)->sizeData();
+            if (sv > 4) {
+                sv += sv & 1;               // Align value to word boundary
+                len += sv;
+            }
+            uint32_t sd = (*i)->sizeData();
+            sd += sd & 1;                   // Align data to word boundary
+            len += sd;
         }
         // Size of next-IFD, if any
         uint32_t sizeNext = 0;
