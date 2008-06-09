@@ -17,7 +17,7 @@ File 1/2: exiv2-empty.jpg
 exiv2-empty.jpg       Exif.Image.DateTime                          Ascii      19  Zwanzig nach fuenf
 exiv2-empty.jpg       Exif.Image.Artist                            Ascii      17  Vincent van Gogh
 exiv2-empty.jpg       Exif.Image.WhitePoint                        Short       5  32 12 4 5 6
-exiv2-empty.jpg       Exif.Image.ExifTag                           Long        1  108
+exiv2-empty.jpg       Exif.Image.ExifTag                           Long        1  110
 exiv2-empty.jpg       Exif.Photo.UserComment                       Undefined  37  This is an ASCII Exif comment
 File 2/2: exiv2-gc.jpg
 exiv2-gc.jpg          Exif.Image.ImageDescription                  Ascii      18  Exif JPEG        

@@ -51,7 +51,7 @@ Exif.Image.ResolutionUnit                     0x0128 IFD0         Short       1 
 Exif.Image.Software                           0x0131 IFD0         Ascii      22 DC-4300 Ver1.03
 Exif.Image.DateTime                           0x0132 IFD0         Ascii      29 Sunday, 11am and ten minutes
 Exif.Image.YCbCrPositioning                   0x0213 IFD0         Short       1 2
-Exif.Image.ExifTag                            0x8769 IFD0         Long        1 263
+Exif.Image.ExifTag                            0x8769 IFD0         Long        1 264
 Exif.Photo.ExposureTime                       0x829a Exif         Rational    1 1/95
 Exif.Photo.FNumber                            0x829d Exif         Rational    1 91/10
 Exif.Photo.ExposureProgram                    0x8822 Exif         Short       1 8
@@ -71,7 +71,7 @@ Exif.Photo.FlashpixVersion                    0xa000 Exif         Undefined   4 
 Exif.Photo.ColorSpace                         0xa001 Exif         Short       1 1
 Exif.Photo.PixelXDimension                    0xa002 Exif         Long        1 1600
 Exif.Photo.PixelYDimension                    0xa003 Exif         Long        1 2400
-Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 630
+Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 632
 Exif.Iop.InteroperabilityIndex                0x0001 Iop          Ascii       5 1234
 Exif.Iop.InteroperabilityVersion              0x0002 Iop          Undefined   4 48 49 48 48 
 Exif.Photo.FileSource                         0xa300 Exif         Undefined   1 3 
@@ -79,7 +79,7 @@ Exif.Thumbnail.ImageWidth                     0x0100 IFD1         Long        1 
 Exif.Thumbnail.ImageLength                    0x0101 IFD1         Long        1 200
 Exif.Thumbnail.Compression                    0x0103 IFD1         Short       1 6
 Exif.Thumbnail.Orientation                    0x0112 IFD1         Short       5 2 3 4 5 6
-Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 753
+Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 756
 Exif.Thumbnail.JPEGInterchangeFormatLength    0x0202 IFD1         Long        1 6144
 ----------------------------------------------
 Assignment, non-intrusive changes
@@ -93,7 +93,7 @@ Exif.Image.ResolutionUnit                     0x0128 IFD0         Short       1 
 Exif.Image.Software                           0x0131 IFD0         Ascii      22 DC-4300 Ver1.03
 Exif.Image.DateTime                           0x0132 IFD0         Ascii      13 Sunday, 11am
 Exif.Image.YCbCrPositioning                   0x0213 IFD0         Short       1 2
-Exif.Image.ExifTag                            0x8769 IFD0         Long        1 263
+Exif.Image.ExifTag                            0x8769 IFD0         Long        1 264
 Exif.Photo.ExposureTime                       0x829a Exif         Rational    1 1/95
 Exif.Photo.FNumber                            0x829d Exif         Rational    1 91/10
 Exif.Photo.ExposureProgram                    0x8822 Exif         Short       1 8
@@ -113,7 +113,7 @@ Exif.Photo.FlashpixVersion                    0xa000 Exif         Undefined   4 
 Exif.Photo.ColorSpace                         0xa001 Exif         Short       1 1
 Exif.Photo.PixelXDimension                    0xa002 Exif         Long        1 1600
 Exif.Photo.PixelYDimension                    0xa003 Exif         Long        1 2400
-Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 630
+Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 632
 Exif.Iop.InteroperabilityIndex                0x0001 Iop          Ascii       4 123
 Exif.Iop.InteroperabilityVersion              0x0002 Iop          Undefined   4 48 49 48 48 
 Exif.Photo.FileSource                         0xa300 Exif         Undefined   1 3 
@@ -121,7 +121,7 @@ Exif.Thumbnail.ImageWidth                     0x0100 IFD1         Long        1 
 Exif.Thumbnail.ImageLength                    0x0101 IFD1         Long        1 200
 Exif.Thumbnail.Compression                    0x0103 IFD1         Short       1 6
 Exif.Thumbnail.Orientation                    0x0112 IFD1         Short       1 2
-Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 753
+Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 756
 Exif.Thumbnail.JPEGInterchangeFormatLength    0x0202 IFD1         Long        1 6144
 ----------------------------------------------
 Assignment, intrusive changes
@@ -135,7 +135,7 @@ Exif.Image.ResolutionUnit                     0x0128 IFD0         Short       1 
 Exif.Image.Software                           0x0131 IFD0         Ascii      22 DC-4300 Ver1.03
 Exif.Image.DateTime                           0x0132 IFD0         Ascii      29 Sunday, 11am and ten minutes
 Exif.Image.YCbCrPositioning                   0x0213 IFD0         Short       1 2
-Exif.Image.ExifTag                            0x8769 IFD0         Long        1 263
+Exif.Image.ExifTag                            0x8769 IFD0         Long        1 264
 Exif.Photo.ExposureTime                       0x829a Exif         Rational    1 1/95
 Exif.Photo.FNumber                            0x829d Exif         Rational    1 91/10
 Exif.Photo.ExposureProgram                    0x8822 Exif         Short       1 8
@@ -155,7 +155,7 @@ Exif.Photo.FlashpixVersion                    0xa000 Exif         Undefined   4 
 Exif.Photo.ColorSpace                         0xa001 Exif         Short       1 1
 Exif.Photo.PixelXDimension                    0xa002 Exif         Long        1 1600
 Exif.Photo.PixelYDimension                    0xa003 Exif         Long        1 2400
-Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 618
+Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 620
 Exif.Iop.InteroperabilityIndex                0x0001 Iop          Ascii       4 123
 Exif.Iop.InteroperabilityVersion              0x0002 Iop          Undefined   4 48 49 48 48 
 Exif.Photo.FileSource                         0xa300 Exif         Undefined   1 3 
@@ -163,7 +163,7 @@ Exif.Thumbnail.ImageWidth                     0x0100 IFD1         Long        1 
 Exif.Thumbnail.ImageLength                    0x0101 IFD1         Long        1 200
 Exif.Thumbnail.Compression                    0x0103 IFD1         Short       1 6
 Exif.Thumbnail.Orientation                    0x0112 IFD1         Short       1 2
-Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 726
+Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 728
 Exif.Thumbnail.JPEGInterchangeFormatLength    0x0202 IFD1         Long        1 6144
 Copy construction, non-intrusive changes
 Exif.Image.Make                               0x010f IFD0         Ascii       6 Canon
@@ -174,7 +174,7 @@ Exif.Image.YResolution                        0x011b IFD0         Rational    1 
 Exif.Image.ResolutionUnit                     0x0128 IFD0         Short       1 2
 Exif.Image.DateTime                           0x0132 IFD0         Ascii      13 Sunday, 11am
 Exif.Image.YCbCrPositioning                   0x0213 IFD0         Short       1 1
-Exif.Image.ExifTag                            0x8769 IFD0         Long        1 177
+Exif.Image.ExifTag                            0x8769 IFD0         Long        1 178
 Exif.Photo.ExposureTime                       0x829a Exif         Rational    1 1/500
 Exif.Photo.FNumber                            0x829d Exif         Rational    1 49/10
 Exif.Photo.ExifVersion                        0x9000 Exif         Undefined   4 48 50 50 48 
@@ -267,7 +267,7 @@ Exif.Photo.FlashpixVersion                    0xa000 Exif         Undefined   4 
 Exif.Photo.ColorSpace                         0xa001 Exif         Short       1 1
 Exif.Photo.PixelXDimension                    0xa002 Exif         Short       1 2272
 Exif.Photo.PixelYDimension                    0xa003 Exif         Short       1 1704
-Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 1370
+Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 1372
 Exif.Iop.InteroperabilityIndex                0x0001 Iop          Ascii       4 123
 Exif.Iop.InteroperabilityVersion              0x0002 Iop          Undefined   4 48 49 48 48 
 Exif.Iop.RelatedImageWidth                    0x1001 Iop          Short       1 2272
@@ -286,7 +286,7 @@ Exif.Thumbnail.Compression                    0x0103 IFD1         Short       1 
 Exif.Thumbnail.XResolution                    0x011a IFD1         Rational    1 180/1
 Exif.Thumbnail.YResolution                    0x011b IFD1         Rational    1 180/1
 Exif.Thumbnail.ResolutionUnit                 0x0128 IFD1         Short       1 2
-Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 1518
+Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 1520
 Exif.Thumbnail.JPEGInterchangeFormatLength    0x0202 IFD1         Long        1 5448
 ----------------------------------------------
 Copy construction, intrusive changes
@@ -298,7 +298,7 @@ Exif.Image.YResolution                        0x011b IFD0         Rational    1 
 Exif.Image.ResolutionUnit                     0x0128 IFD0         Short       1 2
 Exif.Image.DateTime                           0x0132 IFD0         Ascii      29 Sunday, 11am and ten minutes
 Exif.Image.YCbCrPositioning                   0x0213 IFD0         Short       1 1
-Exif.Image.ExifTag                            0x8769 IFD0         Long        1 201
+Exif.Image.ExifTag                            0x8769 IFD0         Long        1 202
 Exif.Photo.ExposureTime                       0x829a Exif         Rational    1 1/500
 Exif.Photo.FNumber                            0x829d Exif         Rational    1 49/10
 Exif.Photo.ExifVersion                        0x9000 Exif         Undefined   4 48 50 50 48 
@@ -391,7 +391,7 @@ Exif.Photo.FlashpixVersion                    0xa000 Exif         Undefined   4 
 Exif.Photo.ColorSpace                         0xa001 Exif         Short       1 1
 Exif.Photo.PixelXDimension                    0xa002 Exif         Short       1 2272
 Exif.Photo.PixelYDimension                    0xa003 Exif         Short       1 1704
-Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 1422
+Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 1424
 Exif.Iop.InteroperabilityIndex                0x0001 Iop          Ascii       5 1234
 Exif.Iop.InteroperabilityVersion              0x0002 Iop          Undefined   4 48 49 48 48 
 Exif.Iop.RelatedImageWidth                    0x1001 Iop          Short       1 2272
@@ -411,7 +411,7 @@ Exif.Thumbnail.Orientation                    0x0112 IFD1         Short       5 
 Exif.Thumbnail.XResolution                    0x011a IFD1         Rational    1 180/1
 Exif.Thumbnail.YResolution                    0x011b IFD1         Rational    1 180/1
 Exif.Thumbnail.ResolutionUnit                 0x0128 IFD1         Short       1 2
-Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 1597
+Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 1600
 Exif.Thumbnail.JPEGInterchangeFormatLength    0x0202 IFD1         Long        1 5448
 ----------------------------------------------
 Assignment, non-intrusive changes
@@ -423,7 +423,7 @@ Exif.Image.YResolution                        0x011b IFD0         Rational    1 
 Exif.Image.ResolutionUnit                     0x0128 IFD0         Short       1 2
 Exif.Image.DateTime                           0x0132 IFD0         Ascii      13 Sunday, 11am
 Exif.Image.YCbCrPositioning                   0x0213 IFD0         Short       1 1
-Exif.Image.ExifTag                            0x8769 IFD0         Long        1 201
+Exif.Image.ExifTag                            0x8769 IFD0         Long        1 202
 Exif.Photo.ExposureTime                       0x829a Exif         Rational    1 1/500
 Exif.Photo.FNumber                            0x829d Exif         Rational    1 49/10
 Exif.Photo.ExifVersion                        0x9000 Exif         Undefined   4 48 50 50 48 
@@ -516,7 +516,7 @@ Exif.Photo.FlashpixVersion                    0xa000 Exif         Undefined   4 
 Exif.Photo.ColorSpace                         0xa001 Exif         Short       1 1
 Exif.Photo.PixelXDimension                    0xa002 Exif         Short       1 2272
 Exif.Photo.PixelYDimension                    0xa003 Exif         Short       1 1704
-Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 1422
+Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 1424
 Exif.Iop.InteroperabilityIndex                0x0001 Iop          Ascii       4 123
 Exif.Iop.InteroperabilityVersion              0x0002 Iop          Undefined   4 48 49 48 48 
 Exif.Iop.RelatedImageWidth                    0x1001 Iop          Short       1 2272
@@ -536,7 +536,7 @@ Exif.Thumbnail.Orientation                    0x0112 IFD1         Short       1 
 Exif.Thumbnail.XResolution                    0x011a IFD1         Rational    1 180/1
 Exif.Thumbnail.YResolution                    0x011b IFD1         Rational    1 180/1
 Exif.Thumbnail.ResolutionUnit                 0x0128 IFD1         Short       1 2
-Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 1597
+Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 1600
 Exif.Thumbnail.JPEGInterchangeFormatLength    0x0202 IFD1         Long        1 5448
 ----------------------------------------------
 Assignment, intrusive changes
@@ -548,7 +548,7 @@ Exif.Image.YResolution                        0x011b IFD0         Rational    1 
 Exif.Image.ResolutionUnit                     0x0128 IFD0         Short       1 2
 Exif.Image.DateTime                           0x0132 IFD0         Ascii      29 Sunday, 11am and ten minutes
 Exif.Image.YCbCrPositioning                   0x0213 IFD0         Short       1 1
-Exif.Image.ExifTag                            0x8769 IFD0         Long        1 201
+Exif.Image.ExifTag                            0x8769 IFD0         Long        1 202
 Exif.Photo.ExposureTime                       0x829a Exif         Rational    1 1/500
 Exif.Photo.FNumber                            0x829d Exif         Rational    1 49/10
 Exif.Photo.ExifVersion                        0x9000 Exif         Undefined   4 48 50 50 48 
@@ -641,7 +641,7 @@ Exif.Photo.FlashpixVersion                    0xa000 Exif         Undefined   4 
 Exif.Photo.ColorSpace                         0xa001 Exif         Short       1 1
 Exif.Photo.PixelXDimension                    0xa002 Exif         Short       1 2272
 Exif.Photo.PixelYDimension                    0xa003 Exif         Short       1 1704
-Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 1410
+Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 1412
 Exif.Iop.InteroperabilityIndex                0x0001 Iop          Ascii       4 123
 Exif.Iop.InteroperabilityVersion              0x0002 Iop          Undefined   4 48 49 48 48 
 Exif.Iop.RelatedImageWidth                    0x1001 Iop          Short       1 2272
@@ -661,7 +661,7 @@ Exif.Thumbnail.Orientation                    0x0112 IFD1         Short       1 
 Exif.Thumbnail.XResolution                    0x011a IFD1         Rational    1 180/1
 Exif.Thumbnail.YResolution                    0x011b IFD1         Rational    1 180/1
 Exif.Thumbnail.ResolutionUnit                 0x0128 IFD1         Short       1 2
-Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 1570
+Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 1572
 Exif.Thumbnail.JPEGInterchangeFormatLength    0x0202 IFD1         Long        1 5448
 Copy construction, non-intrusive changes
 Exif.Image.Make                               0x010f IFD0         Ascii      18 NIKON CORPORATION
@@ -781,7 +781,7 @@ Exif.Image.WhitePoint                         0x013e IFD0         Rational    2 
 Exif.Image.PrimaryChromaticities              0x013f IFD0         Rational    6 64/100 33/100 21/100 71/100 15/100 6/100
 Exif.Image.YCbCrCoefficients                  0x0211 IFD0         Rational    3 299/1000 587/1000 114/1000
 Exif.Image.YCbCrPositioning                   0x0213 IFD0         Short       1 2
-Exif.Image.ExifTag                            0x8769 IFD0         Long        1 349
+Exif.Image.ExifTag                            0x8769 IFD0         Long        1 350
 Exif.Photo.ExposureTime                       0x829a Exif         Rational    1 10/2500
 Exif.Photo.FNumber                            0x829d Exif         Rational    1 90/10
 Exif.Photo.ExposureProgram                    0x8822 Exif         Short       1 2
@@ -846,7 +846,7 @@ Exif.Photo.FlashpixVersion                    0xa000 Exif         Undefined   4 
 Exif.Photo.ColorSpace                         0xa001 Exif         Short       1 65535
 Exif.Photo.PixelXDimension                    0xa002 Exif         Short       1 3008
 Exif.Photo.PixelYDimension                    0xa003 Exif         Short       1 2000
-Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 2425
+Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 2438
 Exif.Iop.InteroperabilityIndex                0x0001 Iop          Ascii       5 1234
 Exif.Iop.InteroperabilityVersion              0x0002 Iop          Undefined   4 48 49 48 48 
 Exif.Photo.SensingMethod                      0xa217 Exif         Short       1 2
@@ -870,7 +870,7 @@ Exif.Thumbnail.Orientation                    0x0112 IFD1         Short       5 
 Exif.Thumbnail.XResolution                    0x011a IFD1         Rational    1 300/1
 Exif.Thumbnail.YResolution                    0x011b IFD1         Rational    1 300/1
 Exif.Thumbnail.ResolutionUnit                 0x0128 IFD1         Short       1 2
-Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 2588
+Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 2602
 Exif.Thumbnail.JPEGInterchangeFormatLength    0x0202 IFD1         Long        1 8930
 Exif.Thumbnail.YCbCrPositioning               0x0213 IFD1         Short       1 2
 ----------------------------------------------
@@ -887,7 +887,7 @@ Exif.Image.WhitePoint                         0x013e IFD0         Rational    2 
 Exif.Image.PrimaryChromaticities              0x013f IFD0         Rational    6 64/100 33/100 21/100 71/100 15/100 6/100
 Exif.Image.YCbCrCoefficients                  0x0211 IFD0         Rational    3 299/1000 587/1000 114/1000
 Exif.Image.YCbCrPositioning                   0x0213 IFD0         Short       1 2
-Exif.Image.ExifTag                            0x8769 IFD0         Long        1 349
+Exif.Image.ExifTag                            0x8769 IFD0         Long        1 350
 Exif.Photo.ExposureTime                       0x829a Exif         Rational    1 10/2500
 Exif.Photo.FNumber                            0x829d Exif         Rational    1 90/10
 Exif.Photo.ExposureProgram                    0x8822 Exif         Short       1 2
@@ -952,7 +952,7 @@ Exif.Photo.FlashpixVersion                    0xa000 Exif         Undefined   4 
 Exif.Photo.ColorSpace                         0xa001 Exif         Short       1 65535
 Exif.Photo.PixelXDimension                    0xa002 Exif         Short       1 3008
 Exif.Photo.PixelYDimension                    0xa003 Exif         Short       1 2000
-Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 2425
+Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 2438
 Exif.Iop.InteroperabilityIndex                0x0001 Iop          Ascii       4 123
 Exif.Iop.InteroperabilityVersion              0x0002 Iop          Undefined   4 48 49 48 48 
 Exif.Photo.SensingMethod                      0xa217 Exif         Short       1 2
@@ -976,7 +976,7 @@ Exif.Thumbnail.Orientation                    0x0112 IFD1         Short       1 
 Exif.Thumbnail.XResolution                    0x011a IFD1         Rational    1 300/1
 Exif.Thumbnail.YResolution                    0x011b IFD1         Rational    1 300/1
 Exif.Thumbnail.ResolutionUnit                 0x0128 IFD1         Short       1 2
-Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 2588
+Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 2602
 Exif.Thumbnail.JPEGInterchangeFormatLength    0x0202 IFD1         Long        1 8930
 Exif.Thumbnail.YCbCrPositioning               0x0213 IFD1         Short       1 2
 ----------------------------------------------
@@ -993,7 +993,7 @@ Exif.Image.WhitePoint                         0x013e IFD0         Rational    2 
 Exif.Image.PrimaryChromaticities              0x013f IFD0         Rational    6 64/100 33/100 21/100 71/100 15/100 6/100
 Exif.Image.YCbCrCoefficients                  0x0211 IFD0         Rational    3 299/1000 587/1000 114/1000
 Exif.Image.YCbCrPositioning                   0x0213 IFD0         Short       1 2
-Exif.Image.ExifTag                            0x8769 IFD0         Long        1 349
+Exif.Image.ExifTag                            0x8769 IFD0         Long        1 350
 Exif.Photo.ExposureTime                       0x829a Exif         Rational    1 10/2500
 Exif.Photo.FNumber                            0x829d Exif         Rational    1 90/10
 Exif.Photo.ExposureProgram                    0x8822 Exif         Short       1 2
@@ -1058,7 +1058,7 @@ Exif.Photo.FlashpixVersion                    0xa000 Exif         Undefined   4 
 Exif.Photo.ColorSpace                         0xa001 Exif         Short       1 65535
 Exif.Photo.PixelXDimension                    0xa002 Exif         Short       1 3008
 Exif.Photo.PixelYDimension                    0xa003 Exif         Short       1 2000
-Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 2413
+Exif.Photo.InteroperabilityTag                0xa005 Exif         Long        1 2426
 Exif.Iop.InteroperabilityIndex                0x0001 Iop          Ascii       4 123
 Exif.Iop.InteroperabilityVersion              0x0002 Iop          Undefined   4 48 49 48 48 
 Exif.Photo.SensingMethod                      0xa217 Exif         Short       1 2
@@ -1082,6 +1082,6 @@ Exif.Thumbnail.Orientation                    0x0112 IFD1         Short       1 
 Exif.Thumbnail.XResolution                    0x011a IFD1         Rational    1 300/1
 Exif.Thumbnail.YResolution                    0x011b IFD1         Rational    1 300/1
 Exif.Thumbnail.ResolutionUnit                 0x0128 IFD1         Short       1 2
-Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 2561
+Exif.Thumbnail.JPEGInterchangeFormat          0x0201 IFD1         Long        1 2574
 Exif.Thumbnail.JPEGInterchangeFormatLength    0x0202 IFD1         Long        1 8930
 Exif.Thumbnail.YCbCrPositioning               0x0213 IFD1         Short       1 2
