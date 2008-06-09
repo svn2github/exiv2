@@ -28,9 +28,6 @@
 #include "rcsid.hpp"
 EXIV2_RCSID("@(#) $Id$")
 
-// Todo: Remove debug
-#define DEBUG
-
 // *****************************************************************************
 // included header files
 #ifdef _MSC_VER
@@ -496,11 +493,10 @@ namespace Exiv2 {
         ul2Data(buf + 4, pTiffEntry->count(),  byteOrder);
         // Move data to offset field, if it fits and is not yet there.
         if (pTiffEntry->size() <= 4 && buf + 8 != pTiffEntry->pData()) {
-
-            // Todo: Remove debug output
+#ifdef DEBUG
             std::cerr << "Copying data for tag " << pTiffEntry->tag()
                       << " to offset area.\n";
-
+#endif
             memset(buf + 8, 0x0, 4);
             memcpy(buf + 8, pTiffEntry->pData(), pTiffEntry->size());
             memset(const_cast<byte*>(pTiffEntry->pData()), 0x0, pTiffEntry->size());
@@ -1132,7 +1128,7 @@ namespace Exiv2 {
 #ifndef SUPPRESS_WARNINGS
                     std::cerr << "Error: "
                               << "Directory " << tiffGroupName(object->group())
-                              << ": Next pointer is out of bounds.\n";
+                              << ": Next pointer is out of bounds; ignored.\n";
 #endif
                     return;
                 }

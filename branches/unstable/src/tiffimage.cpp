@@ -29,9 +29,6 @@
 #include "rcsid.hpp"
 EXIV2_RCSID("@(#) $Id$")
 
-// Todo: Remove debug
-#define DEBUG
-
 // *****************************************************************************
 // included header files
 #ifdef _MSC_VER

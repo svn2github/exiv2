@@ -1099,13 +1099,12 @@ namespace Action {
             if (dontOverwrite(thumbPath)) return 0;
             if (Params::instance().verbose_) {
                 Exiv2::DataBuf buf = exifThumb.copy();
-                std::cout << _("Writing") << " "
-                          << exifThumb.mimeType() << " " << _("thumbnail") << " ("
+                std::cout << _("Writing thumbnail") << " (" << exifThumb.mimeType() << ", "
                           << buf.size_ << " " << _("Bytes") << ") " << _("to file") << " "
                           << thumbPath << std::endl;
             }
             rc = exifThumb.writeFile(thumb);
-            if (rc) {
+            if (rc == 0) {
                 std::cerr << path_ << ": " << _("Exif data doesn't contain a thumbnail\n");
             }
         }
