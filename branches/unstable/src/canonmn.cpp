@@ -50,18 +50,6 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
-    //! @cond IGNORE
-    CanonMakerNote::RegisterMn::RegisterMn()
-    {
-        ExifTags::registerMakerTagInfo(canonIfdId, tagInfo_);
-        ExifTags::registerMakerTagInfo(canonCsIfdId, tagInfoCs_);
-        ExifTags::registerMakerTagInfo(canonSiIfdId, tagInfoSi_);
-        ExifTags::registerMakerTagInfo(canonPaIfdId, tagInfoPa_);
-        ExifTags::registerMakerTagInfo(canonCfIfdId, tagInfoCf_);
-        ExifTags::registerMakerTagInfo(canonPiIfdId, tagInfoPi_);
-    }
-    //! @endcond
-
     //! ModelId, tag 0x0010
     extern const TagDetails canonModelId[] = {
         { 0x1010000, N_("PowerShot A30") },
@@ -693,8 +681,10 @@ namespace Exiv2 {
                                               const Value& value,
                                               const ExifData*)
     {
-        if (value.typeId() != unsignedShort) return os << value;
-        if (value.count() < 3) return os << value;
+        if (   value.count() < 3
+            || value.typeId() != unsignedShort) {
+            return os << "(" << value << ")";
+        }
 
         float fu = value.toFloat(2);
         if (fu == 0.0) return os << value;

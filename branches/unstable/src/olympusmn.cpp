@@ -403,13 +403,6 @@ namespace Exiv2 {
         return tagInfo_;
     }
 
-    //! @cond IGNORE
-    OlympusMakerNote::RegisterMn::RegisterMn()
-    {
-        ExifTags::registerMakerTagInfo(olympusIfdId, tagInfo_);
-    }
-    //! @endcond
-
     std::ostream& OlympusMakerNote::print0x0200(std::ostream& os, const Value& value, const ExifData*)
     {
         if (value.count() != 3 || value.typeId() != unsignedLong) {
@@ -443,6 +436,10 @@ namespace Exiv2 {
 
     std::ostream& OlympusMakerNote::print0x0204(std::ostream& os, const Value& value, const ExifData*)
     {
+        if (   value.count() == 0
+            || value.toRational().second == 0) {
+            return os << "(" << value << ")";
+        }
         float f = value.toFloat();
         if (f == 0.0 || f == 1.0) return os << _("None");
         std::ostringstream oss;

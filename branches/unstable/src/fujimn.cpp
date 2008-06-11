@@ -49,13 +49,6 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
-    //! @cond IGNORE
-    FujiMakerNote::RegisterMn::RegisterMn()
-    {
-        ExifTags::registerMakerTagInfo(fujiIfdId, tagInfo_);
-    }
-    //! @endcond
-
     //! OffOn, multiple tags
     extern const TagDetails fujiOffOn[] = {
         { 0, N_("Off") },

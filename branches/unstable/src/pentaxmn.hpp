@@ -56,13 +56,6 @@ namespace Exiv2 {
         //! Return read-only list of built-in Pentaxfilm tags
         static const TagInfo* tagList();
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
         //! Print Pentax version
         static std::ostream& printPentaxVersion(std::ostream& os, const Value& value, const ExifData*);
         //! Print Pentax resolution
@@ -90,8 +83,6 @@ namespace Exiv2 {
         //! Tag information
         static const TagInfo tagInfo_[];
     }; // class PentaxMakerNote
-
-    static PentaxMakerNote::RegisterMn registerPentaxMakerNote;
 
     /*!
       @brief Print function to translate Pentax "combi-values" to a description

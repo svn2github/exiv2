@@ -49,13 +49,6 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
-    //! @cond IGNORE
-    SigmaMakerNote::RegisterMn::RegisterMn()
-    {
-        ExifTags::registerMakerTagInfo(sigmaIfdId, tagInfo_);
-    }
-    //! @endcond
-
     // Sigma (Foveon) MakerNote Tag Info
     const TagInfo SigmaMakerNote::tagInfo_[] = {
         TagInfo(0x0002, "SerialNumber", N_("Serial Number"),

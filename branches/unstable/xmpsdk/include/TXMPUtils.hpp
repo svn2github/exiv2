@@ -2,7 +2,7 @@
 #define __TXMPUtils_hpp__ 1
 
 #if ( ! __XMP_hpp__ )
-    #error "Do not directly include, use XMP.hpp"
+    #error "Do not directly include, use XMPSDK.hpp"
 #endif
 
 // =================================================================================================
@@ -37,7 +37,7 @@
 /// copied and access is fully thread safe.  String objects are only necessary for output strings.
 /// Input strings are literals and passed as typical C <tt>const char *</tt>.
 ///
-/// The template parameter, class \c TtStringObj, is described in the XMP.hpp umbrella header.
+/// The template parameter, class \c TtStringObj, is described in the XMPSDK.hpp umbrella header.
 //  ================================================================================================
 
 template <class tStringObj>
@@ -436,7 +436,7 @@ public:
     ///
     /// \note As compatibility "tactics" (OK, hacks), a missing date portion or missing TZD are
     /// tolerated. A missing date value may begin with "Thh:" or "hh:"; the year, month, and day are
-    /// all set to zero in the XMP_DateTime value. A missing TZD is assumed to be UTC.
+    /// all set to zero in the XMP_DateTime value. If TZD is missing, assume the time is in local time.
     ///
     /// \param strValue The ISO 8601 string representation of the date/time.
     ///

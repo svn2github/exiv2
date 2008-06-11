@@ -64,20 +64,12 @@ namespace Exiv2 {
         static std::ostream& print0x0009(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
     private:
         //! Tag information
         static const TagInfo tagInfo_[];
 
     }; // class SigmaMakerNote
 
-    static SigmaMakerNote::RegisterMn registerSigmaMakerNote;
 }                                       // namespace Exiv2
 
 #endif                                  // #ifndef SIGMAMN_HPP_

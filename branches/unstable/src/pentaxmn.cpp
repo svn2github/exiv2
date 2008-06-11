@@ -50,13 +50,6 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
-    //! @cond IGNORE
-    PentaxMakerNote::RegisterMn::RegisterMn()
-    {
-        ExifTags::registerMakerTagInfo(pentaxIfdId, tagInfo_);
-    }
-    //! @endcond
-
     //! ShootingMode, tag 0x0001
     extern const TagDetails pentaxShootingMode[] = {
         {   0, N_("Auto")                      },

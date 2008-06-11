@@ -70,13 +70,6 @@ namespace Exiv2 {
         //! Return read-only list of built-in Canon Picture Info tags
         static const TagInfo* tagListPi();
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
         //! @name Print functions for Canon %MakerNote tags
         //@{
         //! Print the image number
@@ -113,8 +106,6 @@ namespace Exiv2 {
         static const TagInfo tagInfoPa_[];
 
     }; // class CanonMakerNote
-
-    static CanonMakerNote::RegisterMn registerCanonMakerNote;
 
 // *****************************************************************************
 // template, inline and free functions

@@ -44,6 +44,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "exiv2.hpp"
 #include "image.hpp"
 #include "jpgimage.hpp"
+#include "xmpsidecar.hpp"
 #include "utils.hpp"
 #include "types.hpp"
 #include "exif.hpp"
@@ -114,12 +115,15 @@ namespace {
       @param source Source file path
       @param target Target file path. An *.exv file is created if target doesn't
                     exist.
+      @param targetType Image type for the target image in case it needs to be
+                    created.
       @param preserve Indicates if existing metadata in the target file should
                     be kept.
       @return 0 if successful, else an error code
     */
     int metacopy(const std::string& source,
                  const std::string& target,
+                 int targetType,
                  bool preserve);
 
     /*!
@@ -1023,13 +1027,16 @@ namespace Action {
         if (Params::instance().target_ & Params::ctThumb) {
             rc = writeThumbnail();
         }
-        if (Params::instance().target_ & Params::ctXmpPacket) {
-            rc = writeXmp();
+        if (Params::instance().target_ & Params::ctXmpSidecar) {
+            std::string xmpPath = newFilePath(path_, ".xmp");
+            if (dontOverwrite(xmpPath)) return 0;
+            rc = metacopy(path_, xmpPath, Exiv2::ImageType::xmp, false);
         }
-        if (Params::instance().target_ & ~Params::ctThumb & ~Params::ctXmpPacket) {
+        if (   !(Params::instance().target_ & Params::ctXmpSidecar)
+            && !(Params::instance().target_ & Params::ctThumb)) {
             std::string exvPath = newFilePath(path_, ".exv");
             if (dontOverwrite(exvPath)) return 0;
-            rc = metacopy(path_, exvPath, false);
+            rc = metacopy(path_, exvPath, Exiv2::ImageType::exv, false);
         }
         return rc;
     }
@@ -1039,37 +1046,6 @@ namespace Action {
                   << ":\n" << e << "\n";
         return 1;
     } // Extract::run
-
-    int Extract::writeXmp() const
-    {
-        if (!Exiv2::fileExists(path_, true)) {
-            std::cerr << path_
-                      << ": " << _("Failed to open the file\n");
-            return -1;
-        }
-        Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(path_);
-        assert(image.get() != 0);
-        image->readMetadata();
-        const std::string& xmpPacket = image->xmpPacket();
-        if (xmpPacket.empty()) {
-            return -3;
-        }
-        std::string xmpPath = newFilePath(path_, ".xmp");
-        if (dontOverwrite(xmpPath)) return 0;
-        if (Params::instance().verbose_) {
-            std::cout << _("Writing XMP packet from") << " " << path_
-                      << " " << _("to") << " " << xmpPath << std::endl;
-        }
-        std::ofstream file(xmpPath.c_str());
-        if (!file) {
-            std::cerr << Params::instance().progname() << ": " 
-                      << _("Failed to open file ") << " " << xmpPath << ": "
-                      << Exiv2::strError() << "\n";
-            return 1;
-        }
-        file << xmpPacket;
-        return 0;
-    } // Extract::writeXmp
 
     int Extract::writeThumbnail() const
     {
@@ -1143,10 +1119,11 @@ namespace Action {
                 || Params::instance().target_ & Params::ctXmp)) {
             std::string suffix = Params::instance().suffix_;
             if (suffix.empty()) suffix = ".exv";
+            if (Params::instance().target_ & Params::ctXmpSidecar) suffix = ".xmp";
             std::string exvPath = newFilePath(path, suffix);
-            rc = metacopy(exvPath, path, true);
+            rc = metacopy(exvPath, path, Exiv2::ImageType::none, true);
         }
-        if (0 == rc && Params::instance().target_ & Params::ctXmpPacket) {
+        if (0 == rc && Params::instance().target_ & Params::ctXmpSidecar) {
             rc = insertXmpPacket(path);
         }
         if (Params::instance().preserve_) {
@@ -1748,6 +1725,7 @@ namespace {
 
     int metacopy(const std::string& source,
                  const std::string& target,
+                 int targetType,
                  bool preserve)
     {
         if (!Exiv2::fileExists(source, true)) {
@@ -1769,8 +1747,7 @@ namespace {
             if (preserve) targetImage->readMetadata();
         }
         else {
-            targetImage
-                = Exiv2::ImageFactory::create(Exiv2::ImageType::exv, target);
+            targetImage = Exiv2::ImageFactory::create(targetType, target);
             assert(targetImage.get() != 0);
         }
         if (   Params::instance().target_ & Params::ctExif

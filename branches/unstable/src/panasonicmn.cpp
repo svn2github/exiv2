@@ -48,13 +48,6 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
-    //! @cond IGNORE
-    PanasonicMakerNote::RegisterMn::RegisterMn()
-    {
-        ExifTags::registerMakerTagInfo(panasonicIfdId, tagInfo_);
-    }
-    //! @endcond
-
     //! Quality, tag 0x0001
     extern const TagDetails panasonicQuality[] = {
         { 2, N_("High")      },

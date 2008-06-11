@@ -51,20 +51,12 @@ namespace Exiv2 {
         //! Return read-only list of built-in Sony tags
         static const TagInfo* tagList();
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
     private:
         //! Tag information
         static const TagInfo tagInfo_[];
 
     }; // class SonyMakerNote
 
-    static SonyMakerNote::RegisterMn registerSonyMakerNote;
 }                                       // namespace Exiv2
 
 #endif                                  // #ifndef SONYMN_HPP_

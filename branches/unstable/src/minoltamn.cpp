@@ -1218,15 +1218,4 @@ namespace Exiv2 {
 
     // TODO : Add camera settings tags info "New2"...
 
-    //! @cond IGNORE
-    MinoltaMakerNote::RegisterMn::RegisterMn()
-    {
-        ExifTags::registerMakerTagInfo(minoltaIfdId,      tagInfo_);
-        ExifTags::registerMakerTagInfo(minoltaCs5DIfdId,  tagInfoCs5D_);
-        ExifTags::registerMakerTagInfo(minoltaCs7DIfdId,  tagInfoCs7D_);
-        ExifTags::registerMakerTagInfo(minoltaCsOldIfdId, tagInfoCsStd_);
-        ExifTags::registerMakerTagInfo(minoltaCsNewIfdId, tagInfoCsStd_);
-    }
-    //! @endcond
-
 }                                       // namespace Exiv2

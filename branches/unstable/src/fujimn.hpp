@@ -52,20 +52,12 @@ namespace Exiv2 {
         //! Return read-only list of built-in Fujifilm tags
         static const TagInfo* tagList();
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
     private:
         //! Tag information
         static const TagInfo tagInfo_[];
 
     }; // class FujiMakerNote
 
-    static FujiMakerNote::RegisterMn registerFujiMakerNote;
 }                                       // namespace Exiv2
 
 #endif                                  // #ifndef FUJIMN_HPP_

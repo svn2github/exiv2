@@ -71,7 +71,8 @@ TESTS = addmoddel.sh      \
         tiff-test.sh      \
         write-test.sh     \
         write2-test.sh    \
-        xmpparser-test.sh
+        xmpparser-test.sh \
+        conversions.sh
 
 test:
 	@list='$(TESTS)'; for p in $$list; do \

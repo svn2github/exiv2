@@ -70,20 +70,12 @@ namespace Exiv2 {
         static std::ostream& print0x1015(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
     private:
         //! Tag information
         static const TagInfo tagInfo_[];
 
     }; // class OlympusMakerNote
 
-    static OlympusMakerNote::RegisterMn registerOlympusMakerNote;
 }                                       // namespace Exiv2
 
 #endif                                  // #ifndef OLYMPUSMN_HPP_

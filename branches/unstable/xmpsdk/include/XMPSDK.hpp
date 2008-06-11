@@ -10,7 +10,7 @@
 // =================================================================================================
 
 //  ================================================================================================
-/// \file XMP.hpp
+/// \file XMPSDK.hpp
 /// \brief Overall header file for the XMP toolkit.
 ///
 /// This is an overall header file, the only one that C++ clients should #include. The full client
@@ -75,16 +75,7 @@
         #include "client-glue/TXMPMeta.incl_cpp"
         #include "client-glue/TXMPIterator.incl_cpp"
         #include "client-glue/TXMPUtils.incl_cpp"
-        #include "client-glue/TXMPFiles.incl_cpp"
     #endif
-
-	#if XMP_INCLUDE_XMPFILES
-		#include "TXMPFiles.hpp"	// ! Needs typedef for SXMPMeta.
-		typedef class TXMPFiles <TXMP_STRING_TYPE>    SXMPFiles;
-		#if TXMP_EXPAND_INLINE
-			#include "client-glue/TXMPFiles.incl_cpp"
-		#endif
-	#endif
 
 #endif  // TXMP_STRING_TYPE
 

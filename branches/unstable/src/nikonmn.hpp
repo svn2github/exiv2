@@ -76,20 +76,11 @@ namespace Exiv2 {
         static std::ostream& print0x0088(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
     private:
         //! Tag information
         static const TagInfo tagInfo_[];
 
     }; // class Nikon1MakerNote
-
-    static Nikon1MakerNote::RegisterMn registerNikon1MakerNote;
 
     /*!
       @brief A second MakerNote format used by Nikon cameras, including the
@@ -106,20 +97,11 @@ namespace Exiv2 {
         static std::ostream& print0x000a(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
     private:
         //! Tag information
         static const TagInfo tagInfo_[];
 
     }; // class Nikon2MakerNote
-
-    static Nikon2MakerNote::RegisterMn registerNikon2MakerNote;
 
     //! A third MakerNote format used by Nikon cameras, e.g., E5400, SQ, D2H, D70
     class Nikon3MakerNote {
@@ -149,20 +131,11 @@ namespace Exiv2 {
         static std::ostream& print0x0098(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
     private:
         //! Tag information
         static const TagInfo tagInfo_[];
 
     }; // class Nikon3MakerNote
-
-    static Nikon3MakerNote::RegisterMn registerNikon3MakerNote;
 
 }                                       // namespace Exiv2
 

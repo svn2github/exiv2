@@ -62,13 +62,6 @@ namespace Exiv2 {
         //! Return read-only list of built-in Minolta 5D Camera Settings tags
         static const TagInfo* tagListCs5D();
 
-        //! @cond IGNORE
-        // Public only so that we can create a static instance
-        struct RegisterMn {
-            RegisterMn();
-        };
-        //! @endcond
-
         //! @name Print functions for Minolta %MakerNote tags
         //@{
         //! Print Exposure Speed setting from standard Minolta Camera Settings makernote
@@ -106,8 +99,6 @@ namespace Exiv2 {
         static const TagInfo tagInfoCsStd_[];
 
     }; // class MinoltaMakerNote
-
-    static MinoltaMakerNote::RegisterMn registerMinoltaMakerNote;
 
 }                                       // namespace Exiv2
 
