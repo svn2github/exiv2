@@ -531,6 +531,31 @@ namespace Exiv2 {
                   ByteOrder byteOrder,
             const ExifData& exifData
         );
+        /*!
+          @brief Encode metadata from the provided metadata to Exif format.
+                 See TiffParser::encode().
+
+          Encode Exif metadata from the \em ExifData container to binary format
+          in the \em blob encoded in \em byteOrder.
+
+          This simpler encode method uses "intrusive" writing, i.e., it builds
+          the binary representation of the metadata from scratch. It does not
+          attempt "non-intrusive", i.e., in-place updating. It's better to use
+          the other encode() method, if the metadata is already available in
+          binary format, in order to allow for "non-intrusive" updating of the
+          existing binary representation.
+
+          This is just an inline wrapper for
+          ExifParser::encode(blob, 0, 0, byteOrder, exifData).
+        */
+        static void encode(
+                  Blob&     blob,
+                  ByteOrder byteOrder,
+            const ExifData& exifData
+        )
+        {
+            encode(blob, 0, 0, byteOrder, exifData);
+        }
 
     }; // class ExifParser
 
