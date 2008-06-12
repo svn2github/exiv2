@@ -726,7 +726,7 @@ namespace Exiv2 {
     float LangAltValue::toFloat(long /*n*/) const
     {
         ok_ = false;
-        return 0.0;
+        return 0.0f;
     }
 
     Rational LangAltValue::toRational(long /*n*/) const
