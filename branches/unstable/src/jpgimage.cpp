@@ -137,7 +137,7 @@ namespace Exiv2 {
                 return -2;
             }
 #ifndef DEBUG
-            if (   (dataSize & 1) 
+            if (   (dataSize & 1)
                 && position + dataSize == static_cast<uint32_t>(sizePsData)) {
                 std::cerr << "Warning: "
                           << "Photoshop IRB data is not padded to even size\n";
@@ -212,7 +212,7 @@ namespace Exiv2 {
         }
         // Write existing stuff after record, data is rounded to be even.
         const uint32_t sizeOldData = sizeHdr + sizeIptc + (sizeIptc & 1);
-        // Note: Because of the rounding, sizeFront + sizeOldData can be 
+        // Note: Because of the rounding, sizeFront + sizeOldData can be
         // _greater_ than sizePsData by 1 (not just equal), if the original
         // data was not padded.
         if (static_cast<uint32_t>(sizePsData) > sizeFront + sizeOldData) {
@@ -403,7 +403,7 @@ namespace Exiv2 {
             }
             else if (   pixelHeight_ == 0
                      && (   marker == sof0_  || marker == sof1_  || marker == sof2_
-                         || marker == sof3_  || marker == sof5_  || marker == sof6_ 
+                         || marker == sof3_  || marker == sof5_  || marker == sof6_
                          || marker == sof7_  || marker == sof9_  || marker == sof10_
                          || marker == sof11_ || marker == sof13_ || marker == sof14_
                          || marker == sof15_)) {
@@ -435,7 +435,9 @@ namespace Exiv2 {
         } // while there are segments to process
 
         if (   iptcBlob.size() > 0
-               && IptcParser::decode(iptcData_, &iptcBlob[0], iptcBlob.size())) {
+            && IptcParser::decode(iptcData_,
+                                  &iptcBlob[0],
+                                  static_cast<uint32_t>(iptcBlob.size()))) {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Warning: Failed to decode IPTC metadata.\n";
 #endif
@@ -611,7 +613,7 @@ namespace Exiv2 {
                     uint32_t exifSize = rawExif.size_;
                     if (wm == wmIntrusive) {
                         pExifData = &blob[0];
-                        exifSize = blob.size();
+                        exifSize = static_cast<uint32_t>(blob.size());
                     }
                     if (exifSize > 0) {
                         // Write APP1 marker, size of APP1 field, Exif id and Exif data

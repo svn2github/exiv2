@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*!
-  @file    makernote2_int.hpp
+  @file    makernote_int.hpp
   @brief   Internal Makernote TIFF composite class TiffIfdMakernote and classes
            for various makernote headers.
   @version $Rev$
@@ -27,8 +27,8 @@
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    11-Apr-06, ahu: created
  */
-#ifndef MAKERNOTE2_INT_HPP_
-#define MAKERNOTE2_INT_HPP_
+#ifndef MAKERNOTE_INT_HPP_
+#define MAKERNOTE_INT_HPP_
 
 // *****************************************************************************
 // included header files
@@ -67,6 +67,7 @@ namespace Exiv2 {
         const uint16_t canonpi   = 277; //!< Canon picture info
         const uint16_t canonpa   = 278; //!< Canon panorama
         const uint16_t pentaxmn  = 279; //!< Pentax makernote
+        const uint16_t nikonpv   = 280; //!< Nikon preview sub-IFD
     }
 
 // *****************************************************************************
@@ -274,7 +275,7 @@ namespace Exiv2 {
                                  int32_t   offset,
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx,
-                                 uint32_t  imageIdx);
+                                 uint32_t& imageIdx);
         //@}
         //! @name Write support (Accessors)
         //@{
@@ -286,15 +287,13 @@ namespace Exiv2 {
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
-                                     uint32_t  imageIdx) const;
+                                     uint32_t& imageIdx) const;
         /*!
-          @brief This class does not really implement writeImage(), it only has
-                 write(). This method must not be called; it commits suicide.
+          @brief Implements writeImage(). Write the image data of the IFD of
+                 the Makernote. Return the number of bytes written.
          */
         virtual uint32_t doWriteImage(Blob&     blob,
-                                      ByteOrder byteOrder,
-                                      int32_t   offset,
-                                      uint32_t  imageIdx) const;
+                                      ByteOrder byteOrder) const;
         /*!
           @brief Implements size(). Return the size of the Makernote header,
                  TIFF directory, values and additional data.
@@ -312,8 +311,8 @@ namespace Exiv2 {
          */
         virtual uint32_t doSizeData() const;
         /*!
-          @brief This class does not really implement sizeData(), it only has
-                 size(). This method must not be called; it commits suicide.
+          @brief Implements sizeImage(). Return the total image data size of the
+                 makernote IFD.
          */
         virtual uint32_t doSizeImage() const;
         //@}
@@ -700,4 +699,4 @@ namespace Exiv2 {
 
 }}                                      // namespace Internal, Exiv2
 
-#endif                                  // #ifndef MAKERNOTE2_INT_HPP_
+#endif                                  // #ifndef MAKERNOTE_INT_HPP_

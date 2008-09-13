@@ -47,16 +47,36 @@ EXIV2_RCSID("@(#) $Id$")
 #include <cstdlib>
 
 // *****************************************************************************
+namespace {
+
+    //! Struct used in the lookup table for pretty print functions
+    struct XmpPrintInfo {
+        //! Comparison operator for key
+        bool operator==(const std::string& key) const
+        {
+            return std::string(key_) == key;
+        }
+
+        const char* key_;               //!< XMP key
+        Exiv2::PrintFct printFct_;             //!< Print function
+    };
+
+}
+
+// *****************************************************************************
 // class member definitions
 namespace Exiv2 {
 
+    //! @cond IGNORE
     extern const XmpPropertyInfo xmpDcInfo[];
+    extern const XmpPropertyInfo xmpDigikamInfo[];
     extern const XmpPropertyInfo xmpXmpInfo[];
     extern const XmpPropertyInfo xmpXmpRightsInfo[];
     extern const XmpPropertyInfo xmpXmpMMInfo[];
     extern const XmpPropertyInfo xmpXmpBJInfo[];
     extern const XmpPropertyInfo xmpXmpTPgInfo[];
     extern const XmpPropertyInfo xmpXmpDMInfo[];
+    extern const XmpPropertyInfo xmpMicrosoftInfo[];
     extern const XmpPropertyInfo xmpPdfInfo[];
     extern const XmpPropertyInfo xmpPhotoshopInfo[];
     extern const XmpPropertyInfo xmpCrsInfo[];
@@ -67,20 +87,22 @@ namespace Exiv2 {
 
     extern const XmpNsInfo xmpNsInfo[] = {
         // Schemas
-        { "http://purl.org/dc/elements/1.1/",             "dc",           xmpDcInfo,        N_("Dublin Core schema")                        },
-        { "http://ns.adobe.com/xap/1.0/",                 "xmp",          xmpXmpInfo,       N_("XMP Basic schema")                          },
-        { "http://ns.adobe.com/xap/1.0/rights/",          "xmpRights",    xmpXmpRightsInfo, N_("XMP Rights Management schema")              },
-        { "http://ns.adobe.com/xap/1.0/mm/",              "xmpMM",        xmpXmpMMInfo,     N_("XMP Media Management schema")               },
-        { "http://ns.adobe.com/xap/1.0/bj/",              "xmpBJ",        xmpXmpBJInfo,     N_("XMP Basic Job Ticket schema")               },
-        { "http://ns.adobe.com/xap/1.0/t/pg/",            "xmpTPg",       xmpXmpTPgInfo,    N_("XMP Paged-Text schema")                     },
-        { "http://ns.adobe.com/xmp/1.0/DynamicMedia/",    "xmpDM",        xmpXmpDMInfo,     N_("XMP Dynamic Media schema")                  },
-        { "http://ns.adobe.com/pdf/1.3/",                 "pdf",          xmpPdfInfo,       N_("Adobe PDF schema")                          },
-        { "http://ns.adobe.com/photoshop/1.0/",           "photoshop",    xmpPhotoshopInfo, N_("Adobe photoshop schema")                    },
-        { "http://ns.adobe.com/camera-raw-settings/1.0/", "crs",          xmpCrsInfo,       N_("Camera Raw schema")                         },
-        { "http://ns.adobe.com/tiff/1.0/",                "tiff",         xmpTiffInfo,      N_("Exif Schema for TIFF Properties")           },
-        { "http://ns.adobe.com/exif/1.0/",                "exif",         xmpExifInfo,      N_("Exif schema for Exif-specific Properties")  },
-        { "http://ns.adobe.com/exif/1.0/aux/",            "aux",          xmpAuxInfo,       N_("Exif schema for Additional Exif Properties")},
-        { "http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/",  "iptc",         xmpIptcInfo,      N_("IPTC Core schema")                          }, 
+        { "http://purl.org/dc/elements/1.1/",             "dc",             xmpDcInfo,        N_("Dublin Core schema")                        },
+        { "http://www.digikam.org/ns/1.0/",               "digiKam",        xmpDigikamInfo,   N_("digiKam Photo Management schema")           },
+        { "http://ns.adobe.com/xap/1.0/",                 "xmp",            xmpXmpInfo,       N_("XMP Basic schema")                          },
+        { "http://ns.adobe.com/xap/1.0/rights/",          "xmpRights",      xmpXmpRightsInfo, N_("XMP Rights Management schema")              },
+        { "http://ns.adobe.com/xap/1.0/mm/",              "xmpMM",          xmpXmpMMInfo,     N_("XMP Media Management schema")               },
+        { "http://ns.adobe.com/xap/1.0/bj/",              "xmpBJ",          xmpXmpBJInfo,     N_("XMP Basic Job Ticket schema")               },
+        { "http://ns.adobe.com/xap/1.0/t/pg/",            "xmpTPg",         xmpXmpTPgInfo,    N_("XMP Paged-Text schema")                     },
+        { "http://ns.adobe.com/xmp/1.0/DynamicMedia/",    "xmpDM",          xmpXmpDMInfo,     N_("XMP Dynamic Media schema")                  },
+        { "http://ns.microsoft.com/Photo/1.0/",           "MicrosoftPhoto", xmpMicrosoftInfo, N_("Microsoft Photo schema")                    },
+        { "http://ns.adobe.com/pdf/1.3/",                 "pdf",            xmpPdfInfo,       N_("Adobe PDF schema")                          },
+        { "http://ns.adobe.com/photoshop/1.0/",           "photoshop",      xmpPhotoshopInfo, N_("Adobe photoshop schema")                    },
+        { "http://ns.adobe.com/camera-raw-settings/1.0/", "crs",            xmpCrsInfo,       N_("Camera Raw schema")                         },
+        { "http://ns.adobe.com/tiff/1.0/",                "tiff",           xmpTiffInfo,      N_("Exif Schema for TIFF Properties")           },
+        { "http://ns.adobe.com/exif/1.0/",                "exif",           xmpExifInfo,      N_("Exif schema for Exif-specific Properties")  },
+        { "http://ns.adobe.com/exif/1.0/aux/",            "aux",            xmpAuxInfo,       N_("Exif schema for Additional Exif Properties")},
+        { "http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/",  "iptc",           xmpIptcInfo,      N_("IPTC Core schema")                          },
                                                                                              // NOTE: 'Iptc4xmpCore' is just too long
 
         // Structures
@@ -124,6 +146,13 @@ namespace Exiv2 {
         { "title",            N_("Title"),            "Lang Alt",        langAlt,      xmpExternal, N_("The title of the document, or the name given to the resource. Typically, it will be "
                                                                                                        "a name by which the resource is formally known.")                                      },
         { "type",             N_("Type"),             "bag open Choice", xmpBag,       xmpExternal, N_("A document type; for example, novel, poem, or working paper.")                         },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpDigikamInfo[] = {
+        { "TagsList", N_("Tags List"), "seq Text", xmpSeq, xmpExternal, N_("The list of complete tags path as string. The path hierarchy is separated by '/' character (ex.: \"City/Paris/Monument/Eiffel Tower\".") },
+
         // End of list marker
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
@@ -307,6 +336,20 @@ namespace Exiv2 {
         { "timeSignature",                N_("Time Signature"),                   "closed Choice of Text", xmpText, xmpInternal, N_("The time signature of the music. One of: 2/4, 3/4, 4/4, 5/4, 7/4, 6/8, 9/8, 12/8, other.") },
         { "scaleType",                    N_("Scale Type"),                       "closed Choice of Text", xmpText, xmpInternal, N_("The musical scale used in the music. One of: Major, Minor, Both, Neither. "
                                                                                                                                     "Neither is most often used for instruments with no associated scale, such as drums.") },
+        // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpMicrosoftInfo[] = {
+        { "CameraSerialNumber", N_("Camera Serial Number"), "Text",     xmpText, xmpExternal, N_("Camera Serial Number.") },
+        { "DateAcquired",       N_("Date Acquired"),        "Date",     xmpText, xmpExternal, N_("Date Acquired.")        },
+        { "FlashManufacturer",  N_("Flash Manufacturer"),   "Text",     xmpText, xmpExternal, N_("Flash Manufacturer.")   },
+        { "FlashModel",         N_("Flash Model"),          "Text",     xmpText, xmpExternal, N_("Flash Model.")          },
+        { "LastKeywordIPTC",    N_("Last Keyword IPTC"),    "bag Text", xmpBag,  xmpExternal, N_("Last Keyword IPTC.")    },
+        { "LastKeywordXMP",     N_("Last Keyword XMP"),     "bag Text", xmpBag,  xmpExternal, N_("Last Keyword XMP.")     },
+        { "LensManufacturer",   N_("Lens Manufacturer"),    "Text",     xmpText, xmpExternal, N_("Lens Manufacturer.")    },
+        { "LensModel",          N_("Lens Model"),           "Text",     xmpText, xmpExternal, N_("Lens Model.")           },
+        { "RatingPercent",      N_("Rating Percent"),       "Text",     xmpText, xmpExternal, N_("Rating Percent.")       },
         // End of list marker
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
@@ -587,7 +630,7 @@ namespace Exiv2 {
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
 
-    extern const XmpPrintInfo xmpPrintInfo[] = { 
+    extern const XmpPrintInfo xmpPrintInfo[] = {
         {"Xmp.crs.CropUnits",                 EXV_PRINT_TAG(xmpCrsCropUnits)},
         {"Xmp.exif.ApertureValue",            print0x9202                   },
         {"Xmp.exif.BrightnessValue",          printFloat                    },
@@ -663,11 +706,6 @@ namespace Exiv2 {
     {
         std::string n(name_);
         return n == name;
-    }
-
-    bool XmpPrintInfo::operator==(const std::string& key) const
-    {
-        return std::string(key_) == key;
     }
 
     XmpProperties::NsRegistry XmpProperties::nsRegistry_;
@@ -909,7 +947,7 @@ namespace Exiv2 {
     }
 
     std::string XmpKey::tagName() const
-    { 
+    {
         return p_->property_;
     }
 
@@ -960,5 +998,6 @@ namespace Exiv2 {
                   << ( property.xmpCategory_ == xmpExternal ? "External" : "Internal" ) << ",\t"
                   << property.desc_                       << "\n";
     }
+    //! @endcond
 
 }                                       // namespace Exiv2

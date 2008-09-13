@@ -68,10 +68,11 @@ namespace Exiv2 {
         AutoPtr value;
         switch (typeId) {
         case invalidTypeId:
-            value = AutoPtr(new DataValue(invalidTypeId));
-            break;
+        case signedByte:
         case unsignedByte:
-            value = AutoPtr(new DataValue(unsignedByte));
+        case tiffFloat:
+        case tiffDouble:
+            value = AutoPtr(new DataValue(typeId));
             break;
         case asciiString:
             value = AutoPtr(new AsciiValue);
@@ -84,9 +85,6 @@ namespace Exiv2 {
             break;
         case unsignedRational:
             value = AutoPtr(new ValueType<URational>);
-            break;
-        case signedByte:
-            value = AutoPtr(new DataValue(signedByte));
             break;
         case undefined:
             value = AutoPtr(new DataValue);
@@ -619,10 +617,10 @@ namespace Exiv2 {
         return os;
     }
 
-    std::string XmpArrayValue::toString(long n) const 
+    std::string XmpArrayValue::toString(long n) const
     {
         ok_ = true;
-        return value_[n]; 
+        return value_[n];
     }
 
     long XmpArrayValue::toLong(long n) const
@@ -701,12 +699,12 @@ namespace Exiv2 {
         return os;
     }
 
-    std::string LangAltValue::toString(long /*n*/) const 
+    std::string LangAltValue::toString(long /*n*/) const
     {
         return toString("x-default");
     }
 
-    std::string LangAltValue::toString(const std::string& qualifier) const 
+    std::string LangAltValue::toString(const std::string& qualifier) const
     {
         ValueType::const_iterator i = value_.find(qualifier);
         if (i != value_.end()) {
@@ -740,11 +738,11 @@ namespace Exiv2 {
         return new LangAltValue(*this);
     }
 
-    DateValue::DateValue() 
+    DateValue::DateValue()
         : Value(date)
     {
     }
-    
+
     DateValue::DateValue(int year, int month, int day)
         : Value(date)
     {
@@ -846,7 +844,7 @@ namespace Exiv2 {
         return l;
     }
 
-    TimeValue::TimeValue() 
+    TimeValue::TimeValue()
         : Value(time)
     {
     }

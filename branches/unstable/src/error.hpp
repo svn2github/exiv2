@@ -46,17 +46,6 @@ namespace Exiv2 {
 // *****************************************************************************
 // class definitions
 
-    //! Helper structure defining an error message
-    struct ErrMsg {
-        //! Constructor
-        ErrMsg(int code, const char* message)
-            : code_(code), message_(message)
-        {
-        }
-        int code_;                              //!< Error code
-        const char* message_;                   //!< Error message
-    };
-
     /*!
       @brief Error class interface. Allows the definition and use of a hierarchy
              of error classes which can all be handled in one catch block.
@@ -64,7 +53,7 @@ namespace Exiv2 {
              easier for library users (they have the option of catching most
              things via std::exception).
      */
-    class AnyError : public std::exception {
+    class EXIV2API AnyError : public std::exception {
     public:
         //! @name Creators
         //@{
@@ -90,7 +79,7 @@ namespace Exiv2 {
       @brief Simple error class used for exceptions. An output operator is
              provided to print errors to a stream.
      */
-    class Error : public AnyError {
+    class EXIV2API Error : public AnyError {
     public:
         //! @name Creators
         //@{
@@ -155,7 +144,6 @@ namespace Exiv2 {
         std::string arg3_;                      //!< Third argument
         std::string msg_;                       //!< Complete error message
 
-        static const ErrMsg errMsg_[];          //!< List of error messages
     }; // class Error
 
 }                                       // namespace Exiv2

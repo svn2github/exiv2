@@ -57,10 +57,10 @@ namespace Exiv2 {
 // class definitions
 
     /*!
-      @brief Information related to one Exif tag. An Exif metadatum consists of
-             an ExifKey and a Value and provides methods to manipulate these.
+      @brief An Exif metadatum, consisting of an ExifKey and a Value and
+             methods to manipulate these.
      */
-    class Exifdatum : public Metadatum {
+    class EXIV2API Exifdatum : public Metadatum {
         template<typename T> friend Exifdatum& setValue(Exifdatum&, const T&);
     public:
         //! @name Creators
@@ -252,12 +252,12 @@ namespace Exiv2 {
              of the Exif data. These methods do not write to the Exif metadata.
              Manipulators are provided in subclass ExifThumb.
 
-      @note Various other preview and thumbnail images may be contained in an 
+      @note Various other preview and thumbnail images may be contained in an
             image, depending on its format and the camera make and model. This
             class only provides access to the Exif thumbnail as specified in the
             Exif standard.
      */
-    class ExifThumbC {
+    class EXIV2API ExifThumbC {
     public:
         //! @name Creators
         //@{
@@ -296,6 +296,7 @@ namespace Exiv2 {
         //@}
 
     private:
+        // DATA
         const ExifData& exifData_; //!< Const reference to the Exif metadata.
 
     }; // class ExifThumb
@@ -306,12 +307,12 @@ namespace Exiv2 {
              embedded in IFD1 of the Exif data. Accessors are provided by the
              base class, ExifThumbC.
 
-      @note Various other preview and thumbnail images may be contained in an 
+      @note Various other preview and thumbnail images may be contained in an
             image, depending on its format and the camera make and model. This
             class only provides access to the Exif thumbnail as specified in the
             Exif standard.
      */
-    class ExifThumb : public ExifThumbC {
+    class EXIV2API ExifThumb : public ExifThumbC {
     public:
         //! @name Creators
         //@{
@@ -340,7 +341,7 @@ namespace Exiv2 {
          */
         void setJpegThumbnail(
             const std::string& path,
-                  URational    xres, 
+                  URational    xres,
                   URational    yres,
                   uint16_t     unit
         );
@@ -403,6 +404,7 @@ namespace Exiv2 {
         //@}
 
     private:
+        // DATA
         ExifData& exifData_;    //!< Reference to the related Exif metadata.
 
     }; // class ExifThumb
@@ -422,7 +424,7 @@ namespace Exiv2 {
       - extract Exif metadata to files, insert from these files
       - extract and delete Exif thumbnail (JPEG and TIFF thumbnails)
     */
-    class ExifData {
+    class EXIV2API ExifData {
     public:
         //! ExifMetadata iterator type
         typedef ExifMetadata::iterator iterator;
@@ -469,6 +471,8 @@ namespace Exiv2 {
         void clear();
         //! Sort metadata by key
         void sortByKey();
+        //! Sort metadata by tag
+        void sortByTag();
         //! Begin of the metadata
         iterator begin() { return exifMetadata_.begin(); }
         //! End of the metadata
@@ -507,7 +511,7 @@ namespace Exiv2 {
       @brief Stateless parser class for Exif data. Images use this class to
              decode and encode binary Exif data. See class TiffParser for details.
      */
-    class ExifParser {
+    class EXIV2API ExifParser {
     public:
         /*!
           @brief Decode metadata from a buffer \em pData of length \em size

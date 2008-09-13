@@ -41,7 +41,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "tiffimage_int.hpp"
 #include "tiffcomposite_int.hpp"
 #include "tiffvisitor_int.hpp"
-#include "makernote2_int.hpp"
+#include "makernote_int.hpp"
 #include "image.hpp"
 #include "error.hpp"
 #include "futils.hpp"
@@ -59,7 +59,6 @@ EXIV2_RCSID("@(#) $Id$")
 
    Todo:
 
-   + Support all TIFF data types
    + Review boundary checking, is it better to check the offsets?
    + Define and implement consistent error handling for recursive hierarchy
    + Make TiffImage a template StandardImage, which can be parametrized with
@@ -80,12 +79,9 @@ EXIV2_RCSID("@(#) $Id$")
 
    in crwimage.* :
 
-   + Fix CiffHeader according to TiffHeade2
+   + Fix CiffHeader according to TiffHeader
    + Combine Error(15) and Error(33), add format argument %1
    + Search crwimage for todos, fix writeMetadata comment
-   + Add Ciff components to TIFF component hierarchy
-   + rename all Ciff stuff to Crw for easier reference - not needed when CIFF
-     components are part of the TIFF hierarchy
    + rename loadStack to getPath for consistency
 
    -------------------------------------------------------------------------- */
@@ -103,9 +99,8 @@ namespace Exiv2 {
 
     int TiffImage::pixelWidth() const
     {
-        ExifData::const_iterator imageWidth;
-        if ((imageWidth = exifData_.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth"))) != exifData_.end())
-        {
+        ExifData::const_iterator imageWidth = exifData_.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth"));
+        if (imageWidth != exifData_.end() && imageWidth->count() > 0) {
             return imageWidth->toLong();
         }
         return 0;
@@ -113,9 +108,8 @@ namespace Exiv2 {
 
     int TiffImage::pixelHeight() const
     {
-        ExifData::const_iterator imageHeight;
-        if ((imageHeight = exifData_.findKey(Exiv2::ExifKey("Exif.Image.ImageLength"))) != exifData_.end())
-        {
+        ExifData::const_iterator imageHeight = exifData_.findKey(Exiv2::ExifKey("Exif.Image.ImageLength"));
+        if (imageHeight != exifData_.end() && imageHeight->count() > 0) {
             return imageHeight->toLong();
         }
         return 0;
@@ -166,7 +160,7 @@ namespace Exiv2 {
                 if (io_->error() || io_->eof()) {
                     buf.reset();
                 }
-                TiffHeade2 tiffHeader;
+                TiffHeader tiffHeader;
                 if (0 == tiffHeader.read(buf.pData_, 8)) {
                     bo = tiffHeader.byteOrder();
                 }
@@ -227,7 +221,7 @@ namespace Exiv2 {
         const XmpData&  xmpData
     )
     {
-        std::auto_ptr<TiffHeaderBase> header(new TiffHeade2(byteOrder));
+        std::auto_ptr<TiffHeaderBase> header(new TiffHeader(byteOrder));
         return TiffParserWorker::encode(blob,
                                         pData,
                                         size,
@@ -258,7 +252,7 @@ namespace Exiv2 {
         if (iIo.error() || iIo.eof()) {
             return false;
         }
-        TiffHeade2 tiffHeader;
+        TiffHeader tiffHeader;
         bool rc = tiffHeader.read(buf, len);
         if (!advance || !rc) {
             iIo.seek(-len, BasicIo::cur);
@@ -292,22 +286,53 @@ namespace Exiv2 {
         {    0x8825, Group::ifd0,      Group::gps,       Tag::root, Group::none,      newTiffSubIfd },
         {    0x0111, Group::ifd0,      Group::ifd0,      Tag::root, Group::none,      newTiffImageData<0x0117, Group::ifd0> },
         {    0x0117, Group::ifd0,      Group::ifd0,      Tag::root, Group::none,      newTiffImageSize<0x0111, Group::ifd0> },
-        // SubIfd found in NEF images (up to 3 sub directories seen, groups sub0_0, sub0_1, sub0_2)
-        {    0x014a, Group::ifd0,      Group::sub0_0,    Tag::root, Group::none,      newTiffSubIfd },
+        {    0x0144, Group::ifd0,      Group::ifd0,      Tag::root, Group::none,      newTiffImageData<0x0145, Group::ifd0> },
+        {    0x0145, Group::ifd0,      Group::ifd0,      Tag::root, Group::none,      newTiffImageSize<0x0144, Group::ifd0> },
+        {    0x0201, Group::ifd0,      Group::ifd0,      Tag::root, Group::none,      newTiffImageData<0x0202, Group::ifd0> },
+        {    0x0202, Group::ifd0,      Group::ifd0,      Tag::root, Group::none,      newTiffImageSize<0x0201, Group::ifd0> },
+        {    0x014a, Group::ifd0,      Group::subimg1,   Tag::root, Group::none,      newTiffSubIfd },
         { Tag::next, Group::ifd0,      Group::ifd1,      Tag::root, Group::none,      newTiffDirectory },
         {  Tag::all, Group::ifd0,      Group::ifd0,      Tag::root, Group::none,      newTiffEntry },
 
-        // Subdir sub0_0
-        { Tag::next, Group::sub0_0,    Group::ignr,      0x014a,    Group::ifd0,      newTiffDirectory },
-        {  Tag::all, Group::sub0_0,    Group::sub0_0,    0x014a,    Group::ifd0,      newTiffEntry },
+        // Subdir subimg1
+        {    0x0111, Group::subimg1,   Group::subimg1,   0x014a,    Group::ifd0,      newTiffImageData<0x0117, Group::subimg1> },
+        {    0x0117, Group::subimg1,   Group::subimg1,   0x014a,    Group::ifd0,      newTiffImageSize<0x0111, Group::subimg1> },
+        {    0x0144, Group::subimg1,   Group::subimg1,   0x014a,    Group::ifd0,      newTiffImageData<0x0145, Group::subimg1> },
+        {    0x0145, Group::subimg1,   Group::subimg1,   0x014a,    Group::ifd0,      newTiffImageSize<0x0144, Group::subimg1> },
+        {    0x0201, Group::subimg1,   Group::subimg1,   0x014a,    Group::ifd0,      newTiffImageData<0x0202, Group::subimg1> },
+        {    0x0202, Group::subimg1,   Group::subimg1,   0x014a,    Group::ifd0,      newTiffImageSize<0x0201, Group::subimg1> },
+        { Tag::next, Group::subimg1,   Group::ignr,      0x014a,    Group::ifd0,      newTiffDirectory },
+        {  Tag::all, Group::subimg1,   Group::subimg1,   0x014a,    Group::ifd0,      newTiffEntry },
 
-        // Subdir sub0_1
-        { Tag::next, Group::sub0_1,    Group::ignr,      0x014a,    Group::ifd0,      newTiffDirectory },
-        {  Tag::all, Group::sub0_1,    Group::sub0_1,    0x014a,    Group::ifd0,      newTiffEntry },
+        // Subdir subimg2
+        {    0x0111, Group::subimg2,   Group::subimg2,   0x014a,    Group::ifd0,      newTiffImageData<0x0117, Group::subimg2> },
+        {    0x0117, Group::subimg2,   Group::subimg2,   0x014a,    Group::ifd0,      newTiffImageSize<0x0111, Group::subimg2> },
+        {    0x0144, Group::subimg2,   Group::subimg2,   0x014a,    Group::ifd0,      newTiffImageData<0x0145, Group::subimg2> },
+        {    0x0145, Group::subimg2,   Group::subimg2,   0x014a,    Group::ifd0,      newTiffImageSize<0x0144, Group::subimg2> },
+        {    0x0201, Group::subimg2,   Group::subimg2,   0x014a,    Group::ifd0,      newTiffImageData<0x0202, Group::subimg2> },
+        {    0x0202, Group::subimg2,   Group::subimg2,   0x014a,    Group::ifd0,      newTiffImageSize<0x0201, Group::subimg2> },
+        { Tag::next, Group::subimg2,   Group::ignr,      0x014a,    Group::ifd0,      newTiffDirectory },
+        {  Tag::all, Group::subimg2,   Group::subimg2,   0x014a,    Group::ifd0,      newTiffEntry },
 
-        // Subdir sub0_2
-        { Tag::next, Group::sub0_2,    Group::ignr,      0x014a,    Group::ifd0,      newTiffDirectory },
-        {  Tag::all, Group::sub0_2,    Group::sub0_2,    0x014a,    Group::ifd0,      newTiffEntry },
+        // Subdir subimg3
+        {    0x0111, Group::subimg3,   Group::subimg3,   0x014a,    Group::ifd0,      newTiffImageData<0x0117, Group::subimg3> },
+        {    0x0117, Group::subimg3,   Group::subimg3,   0x014a,    Group::ifd0,      newTiffImageSize<0x0111, Group::subimg3> },
+        {    0x0144, Group::subimg3,   Group::subimg3,   0x014a,    Group::ifd0,      newTiffImageData<0x0145, Group::subimg3> },
+        {    0x0145, Group::subimg3,   Group::subimg3,   0x014a,    Group::ifd0,      newTiffImageSize<0x0144, Group::subimg3> },
+        {    0x0201, Group::subimg3,   Group::subimg3,   0x014a,    Group::ifd0,      newTiffImageData<0x0202, Group::subimg3> },
+        {    0x0202, Group::subimg3,   Group::subimg3,   0x014a,    Group::ifd0,      newTiffImageSize<0x0201, Group::subimg3> },
+        { Tag::next, Group::subimg3,   Group::ignr,      0x014a,    Group::ifd0,      newTiffDirectory },
+        {  Tag::all, Group::subimg3,   Group::subimg3,   0x014a,    Group::ifd0,      newTiffEntry },
+
+        // Subdir subimg4
+        {    0x0111, Group::subimg4,   Group::subimg4,   0x014a,    Group::ifd0,      newTiffImageData<0x0117, Group::subimg4> },
+        {    0x0117, Group::subimg4,   Group::subimg4,   0x014a,    Group::ifd0,      newTiffImageSize<0x0111, Group::subimg4> },
+        {    0x0144, Group::subimg4,   Group::subimg4,   0x014a,    Group::ifd0,      newTiffImageData<0x0145, Group::subimg4> },
+        {    0x0145, Group::subimg4,   Group::subimg4,   0x014a,    Group::ifd0,      newTiffImageSize<0x0144, Group::subimg4> },
+        {    0x0201, Group::subimg4,   Group::subimg4,   0x014a,    Group::ifd0,      newTiffImageData<0x0202, Group::subimg4> },
+        {    0x0202, Group::subimg4,   Group::subimg4,   0x014a,    Group::ifd0,      newTiffImageSize<0x0201, Group::subimg4> },
+        { Tag::next, Group::subimg4,   Group::ignr,      0x014a,    Group::ifd0,      newTiffDirectory },
+        {  Tag::all, Group::subimg4,   Group::subimg4,   0x014a,    Group::ifd0,      newTiffEntry },
 
         // Exif subdir
         {    0xa005, Group::exif,      Group::iop,       0x8769,    Group::ifd0,      newTiffSubIfd },
@@ -328,13 +353,21 @@ namespace Exiv2 {
         {    0x0117, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbSize<0x0111, Group::ifd1> },
         {    0x0201, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbData<0x0202, Group::ifd1> },
         {    0x0202, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffThumbSize<0x0201, Group::ifd1> },
-        { Tag::next, Group::ifd1,      Group::ignr,      Tag::next, Group::ifd0,      newTiffDirectory },
+        { Tag::next, Group::ifd1,      Group::ifd2,      Tag::next, Group::ifd0,      newTiffDirectory },
         {  Tag::all, Group::ifd1,      Group::ifd1,      Tag::next, Group::ifd0,      newTiffEntry },
+
+        // IFD2 (eg, in Pentax PEF files)
+        {    0x0111, Group::ifd2,      Group::ifd2,      Tag::next, Group::ifd1,      newTiffImageData<0x0117, Group::ifd2> },
+        {    0x0117, Group::ifd2,      Group::ifd2,      Tag::next, Group::ifd1,      newTiffImageSize<0x0111, Group::ifd2> },
+        {    0x0201, Group::ifd2,      Group::ifd2,      Tag::next, Group::ifd1,      newTiffImageData<0x0202, Group::ifd2> },
+        {    0x0202, Group::ifd2,      Group::ifd2,      Tag::next, Group::ifd1,      newTiffImageSize<0x0201, Group::ifd2> },
+        { Tag::next, Group::ifd2,      Group::ignr,      Tag::next, Group::ifd1,      newTiffDirectory },
+        {  Tag::all, Group::ifd2,      Group::ifd2,      Tag::next, Group::ifd1,      newTiffEntry },
 
         // Olympus makernote - some Olympus cameras use Minolta structures
         // Todo: Adding such tags will not work (maybe result in a Minolta makernote), need separate groups
-        {    0x0001, Group::olympmn,   Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedLong, false> },
-        {    0x0003, Group::olympmn,   Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedLong, false> },
+        {    0x0001, Group::olympmn,   Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false> },
+        {    0x0003, Group::olympmn,   Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false> },
         { Tag::next, Group::olympmn,   Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::olympmn,   Group::olympmn,   0x927c,    Group::exif,      newTiffEntry },
 
@@ -343,20 +376,20 @@ namespace Exiv2 {
         {  Tag::all, Group::fujimn,    Group::fujimn,    0x927c,    Group::exif,      newTiffEntry },
 
         // Canon makernote
-        {    0x0001, Group::canonmn,   Group::canoncs,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedShort, true> },
-        {    0x0004, Group::canonmn,   Group::canonsi,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedShort, true> },
-        {    0x0005, Group::canonmn,   Group::canonpa,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedShort, true> },
-        {    0x000f, Group::canonmn,   Group::canoncf,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedShort, true> },
-        {    0x0012, Group::canonmn,   Group::canonpi,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedShort, true> },
+        {    0x0001, Group::canonmn,   Group::canoncs,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedShort, true> },
+        {    0x0004, Group::canonmn,   Group::canonsi,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedShort, true> },
+        {    0x0005, Group::canonmn,   Group::canonpa,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedShort, false> },
+        {    0x000f, Group::canonmn,   Group::canoncf,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedShort, true> },
+        {    0x0012, Group::canonmn,   Group::canonpi,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedShort, false> },
         { Tag::next, Group::canonmn,   Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::canonmn,   Group::canonmn,   0x927c,    Group::exif,      newTiffEntry },
 
         // Canon makernote composite tags
-        {  Tag::all, Group::canoncs,   Group::canoncs,   0x0001,    Group::canonmn,   newTiffArrayElement<unsignedShort> },
-        {  Tag::all, Group::canonsi,   Group::canonsi,   0x0004,    Group::canonmn,   newTiffArrayElement<unsignedShort> },
-        {  Tag::all, Group::canonpa,   Group::canonpa,   0x0005,    Group::canonmn,   newTiffArrayElement<unsignedShort> },
-        {  Tag::all, Group::canoncf,   Group::canoncf,   0x000f,    Group::canonmn,   newTiffArrayElement<unsignedShort> },
-        {  Tag::all, Group::canonpi,   Group::canonpi,   0x0012,    Group::canonmn,   newTiffArrayElement<unsignedShort> },
+        {  Tag::all, Group::canoncs,   Group::canoncs,   0x0001,    Group::canonmn,   newTiffArrayElement<ttUnsignedShort> },
+        {  Tag::all, Group::canonsi,   Group::canonsi,   0x0004,    Group::canonmn,   newTiffArrayElement<ttUnsignedShort> },
+        {  Tag::all, Group::canonpa,   Group::canonpa,   0x0005,    Group::canonmn,   newTiffArrayElement<ttUnsignedShort> },
+        {  Tag::all, Group::canoncf,   Group::canoncf,   0x000f,    Group::canonmn,   newTiffArrayElement<ttUnsignedShort> },
+        {  Tag::all, Group::canonpi,   Group::canonpi,   0x0012,    Group::canonmn,   newTiffArrayElement<ttUnsignedShort> },
 
         // Nikon1 makernote
         { Tag::next, Group::nikon1mn,  Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
@@ -368,11 +401,24 @@ namespace Exiv2 {
 
         // Nikon3 makernote
         { Tag::next, Group::nikon3mn,  Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
+        {    0x0011, Group::nikon3mn,  Group::nikonpv,   0x927c,    Group::exif,      newTiffSubIfd },
         {  Tag::all, Group::nikon3mn,  Group::nikon3mn,  0x927c,    Group::exif,      newTiffEntry },
+
+        // Nikon3 makernote preview sub-IFD
+        {    0x0201, Group::nikonpv,   Group::nikonpv,   0x0011,    Group::nikon3mn,  newTiffThumbData<0x0202, Group::nikonpv> },
+        {    0x0202, Group::nikonpv,   Group::nikonpv,   0x0011,    Group::nikon3mn,  newTiffThumbSize<0x0201, Group::nikonpv> },
+        { Tag::next, Group::nikonpv,   Group::ignr,      0x0011,    Group::nikon3mn,  newTiffDirectory },
+        {  Tag::all, Group::nikonpv,   Group::nikonpv,   0x0011,    Group::nikon3mn,  newTiffEntry },
 
         // Panasonic makernote
         { Tag::next, Group::panamn,    Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::panamn,    Group::panamn,    0x927c,    Group::exif,      newTiffEntry },
+
+        // Pentax makernote
+        {    0x0003, Group::pentaxmn,  Group::pentaxmn,  0x927c,    Group::exif,      newTiffThumbSize<0x0004, Group::pentaxmn> },
+        {    0x0004, Group::pentaxmn,  Group::pentaxmn,  0x927c,    Group::exif,      newTiffThumbData<0x0003, Group::pentaxmn> },
+        { Tag::next, Group::pentaxmn,  Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
+        {  Tag::all, Group::pentaxmn,  Group::pentaxmn,  0x927c,    Group::exif,      newTiffEntry },
 
         // Sigma/Foveon makernote
         { Tag::next, Group::sigmamn,   Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
@@ -387,20 +433,20 @@ namespace Exiv2 {
         {  Tag::all, Group::sony2mn,   Group::sony2mn,   0x927c,    Group::exif,      newTiffEntry },
 
         // Minolta makernote
-        {    0x0001, Group::minoltamn, Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedLong, false>  },
-        {    0x0003, Group::minoltamn, Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedLong, false>  },
-        {    0x0004, Group::minoltamn, Group::minocs7,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedShort, false> },
+        {    0x0001, Group::minoltamn, Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false>  },
+        {    0x0003, Group::minoltamn, Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false>  },
+        {    0x0004, Group::minoltamn, Group::minocs7,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedShort, false> },
         {    0x0088, Group::minoltamn, Group::minoltamn, 0x927c,    Group::exif,      newTiffThumbData<0x0089, Group::minoltamn> },
         {    0x0089, Group::minoltamn, Group::minoltamn, 0x927c,    Group::exif,      newTiffThumbSize<0x0088, Group::minoltamn> },
-        {    0x0114, Group::minoltamn, Group::minocs5,   0x927c,    Group::exif,      newTiffArrayEntry<unsignedShort, false> },
+        {    0x0114, Group::minoltamn, Group::minocs5,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedShort, false> },
         { Tag::next, Group::minoltamn, Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::minoltamn, Group::minoltamn, 0x927c,    Group::exif,      newTiffEntry },
 
         // Minolta makernote composite tags
-        {  Tag::all, Group::minocso,   Group::minocso,   0x0001,    Group::minoltamn, newTiffArrayElement<unsignedLong,  bigEndian> },
-        {  Tag::all, Group::minocsn,   Group::minocsn,   0x0003,    Group::minoltamn, newTiffArrayElement<unsignedLong,  bigEndian> },
-        {  Tag::all, Group::minocs7,   Group::minocs7,   0x0004,    Group::minoltamn, newTiffArrayElement<unsignedShort, bigEndian> },
-        {  Tag::all, Group::minocs5,   Group::minocs5,   0x0114,    Group::minoltamn, newTiffArrayElement<unsignedShort, bigEndian> },
+        {  Tag::all, Group::minocso,   Group::minocso,   0x0001,    Group::minoltamn, newTiffArrayElement<ttUnsignedLong,  bigEndian> },
+        {  Tag::all, Group::minocsn,   Group::minocsn,   0x0003,    Group::minoltamn, newTiffArrayElement<ttUnsignedLong,  bigEndian> },
+        {  Tag::all, Group::minocs7,   Group::minocs7,   0x0004,    Group::minoltamn, newTiffArrayElement<ttUnsignedShort, bigEndian> },
+        {  Tag::all, Group::minocs5,   Group::minocs5,   0x0114,    Group::minoltamn, newTiffArrayElement<ttUnsignedShort, bigEndian> },
 
         // Tags which are not de/encoded
         { Tag::next, Group::ignr,      Group::ignr,      Tag::none, Group::none,      newTiffDirectory },
@@ -411,12 +457,9 @@ namespace Exiv2 {
     const TiffMappingInfo TiffMapping::tiffMappingInfo_[] = {
         { "*",       Tag::all, Group::ignr,    0, 0 }, // Do not decode tags with group == Group::ignr
         { "OLYMPUS",   0x0100, Group::olympmn, &TiffDecoder::decodeOlympThumb,   &TiffEncoder::encodeOlympThumb     },
-        { "*",         0x014a, Group::ifd0,    0, 0 }, // Todo: Controversial, causes problems with Exiftool
-        { "*",       Tag::all, Group::sub0_0,  &TiffDecoder::decodeSubIfd,       0 /*Todo*/                         },
-        { "*",       Tag::all, Group::sub0_1,  &TiffDecoder::decodeSubIfd,       0 /*Todo*/                         },
-        { "*",         0x02bc, Group::ifd0,    &TiffDecoder::decodeXmp,          &TiffEncoder::encodeXmp            },
-        { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,         &TiffEncoder::encodeIptc           },
-        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,         &TiffEncoder::encodeIptc           },
+        { "*",         0x02bc, Group::ifd0,    &TiffDecoder::decodeXmp,          0 /*done before the tree is traversed*/ },
+        { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,         0 /*done before the tree is traversed*/ },
+        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,         0 /*done before the tree is traversed*/ },
         // Minolta makernote entries which need to be encoded in big endian byte order
         { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
         { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
@@ -507,7 +550,7 @@ namespace Exiv2 {
         // Create standard TIFF header if necessary
         std::auto_ptr<TiffHeaderBase> ph;
         if (!pHeader) {
-            ph = std::auto_ptr<TiffHeaderBase>(new TiffHeade2);
+            ph = std::auto_ptr<TiffHeaderBase>(new TiffHeader);
             pHeader = ph.get();
         }
         TiffComponent::AutoPtr rootDir = parse(pData, size, createFct, pHeader);
@@ -571,7 +614,8 @@ namespace Exiv2 {
             encoder.add(createdTree.get(), parsedTree.get(), createFct);
             // Write binary representation from the composite tree
             uint32_t offset = pHeader->write(blob);
-            uint32_t len = createdTree->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1), uint32_t(-1));
+            uint32_t imageIdx(uint32_t(-1));
+            uint32_t len = createdTree->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1), imageIdx);
             // Avoid writing just the header if there is no IFD data
             if (len == 0) blob.clear();
 #ifdef DEBUG
@@ -668,7 +712,7 @@ namespace Exiv2 {
     void TiffHeaderBase::print(std::ostream& os, const std::string& prefix) const
     {
         os << prefix
-           << _("TIFF header, offset") << " = 0x" 
+           << _("TIFF header, offset") << " = 0x"
            << std::setw(8) << std::setfill('0') << std::hex << std::right
            << offset_;
 
@@ -710,12 +754,12 @@ namespace Exiv2 {
         return tag_;
     }
 
-    TiffHeade2::TiffHeade2(ByteOrder byteOrder)
+    TiffHeader::TiffHeader(ByteOrder byteOrder)
         : TiffHeaderBase(42, 8, byteOrder, 0x00000008)
     {
     }
 
-    TiffHeade2::~TiffHeade2()
+    TiffHeader::~TiffHeader()
     {
     }
 

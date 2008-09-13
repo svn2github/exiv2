@@ -99,33 +99,51 @@ namespace Exiv2 {
     //! An identifier for each mode of metadata support
     enum AccessMode { amNone=0, amRead=1, amWrite=2, amReadWrite=3 };
 
-    //! Type identifiers for IFD format types
-    enum TypeId { invalidTypeId, unsignedByte, asciiString, unsignedShort,
-                  unsignedLong, unsignedRational, signedByte, undefined,
-                  signedShort, signedLong, signedRational,
-                  string, date, time,
-                  comment,
-                  directory,
-                  xmpText, xmpAlt, xmpBag, xmpSeq, langAlt,
-                  lastTypeId };
+    /*!
+      @brief %Exiv2 value type identifiers.
 
-    // Todo: decentralize IfdId, so that new ids can be defined elsewhere
+      Used primarily as identifiers when creating %Exiv2 Value instances.
+      See Value::create. 0x0000 to 0xffff are reserved for TIFF (Exif) types.
+     */
+    enum TypeId {
+        unsignedByte       = 1, //!< Exif BYTE type, 8-bit unsigned integer.
+        asciiString        = 2, //!< Exif ASCII type, 8-bit byte.
+        unsignedShort      = 3, //!< Exif SHORT type, 16-bit (2-byte) unsigned integer.
+        unsignedLong       = 4, //!< Exif LONG type, 32-bit (4-byte) unsigned integer.
+        unsignedRational   = 5, //!< Exif RATIONAL type, two LONGs: numerator and denumerator of a fraction.
+        signedByte         = 6, //!< Exif SBYTE type, an 8-bit signed (twos-complement) integer.
+        undefined          = 7, //!< Exif UNDEFINED type, an 8-bit byte that may contain anything.
+        signedShort        = 8, //!< Exif SSHORT type, a 16-bit (2-byte) signed (twos-complement) integer.
+        signedLong         = 9, //!< Exif SLONG type, a 32-bit (4-byte) signed (twos-complement) integer.
+        signedRational     =10, //!< Exif SRATIONAL type, two SLONGs: numerator and denumerator of a fraction.
+        tiffFloat          =11, //!< TIFF FLOAT type, single precision (4-byte) IEEE format.
+        tiffDouble         =12, //!< TIFF DOUBLE type, double precision (8-byte) IEEE format.
+        string        =0x10000, //!< IPTC string type.
+        date          =0x10001, //!< IPTC date type.
+        time          =0x10002, //!< IPTC time type.
+        comment       =0x10003, //!< %Exiv2 type for the Exif user comment.
+        directory     =0x10004, //!< %Exiv2 type for a CIFF directory.
+        xmpText       =0x10005, //!< XMP text type.
+        xmpAlt        =0x10006, //!< XMP alternative type.
+        xmpBag        =0x10007, //!< XMP bag type.
+        xmpSeq        =0x10008, //!< XMP sequence type.
+        langAlt       =0x10009, //!< XMP language alternative type.
+        invalidTypeId =0x1fffe, //!< Invalid type id.
+        lastTypeId    =0x1ffff  //!< Last type id.
+    };
+
     //! Type to specify the IFD to which a metadata belongs
     enum IfdId { ifdIdNotSet,
-                 ifd0Id, exifIfdId, gpsIfdId, iopIfdId, ifd1Id,
+                 ifd0Id, exifIfdId, gpsIfdId, iopIfdId, ifd1Id, ifd2Id,
+                 subImage1Id, subImage2Id, subImage3Id, subImage4Id,
                  canonIfdId, canonCsIfdId, canonSiIfdId, canonCfIfdId,
                  canonPiIfdId, canonPaIfdId,
                  fujiIfdId,
                  minoltaIfdId, minoltaCs5DIfdId, minoltaCs7DIfdId,
                  minoltaCsOldIfdId, minoltaCsNewIfdId,
-                 nikon1IfdId, nikon2IfdId, nikon3IfdId,
+                 nikon1IfdId, nikon2IfdId, nikon3IfdId, nikonPvIfdId,
                  olympusIfdId, panasonicIfdId, pentaxIfdId, sigmaIfdId, sonyIfdId,
                  lastIfdId };
-
-    //! Type to identify where the data is stored in a directory
-    enum DataLocId { invalidDataLocId,
-                     valueData, directoryData,
-                     lastDataLocId };
 
     //! Container for binary data
     typedef std::vector<byte> Blob;
@@ -133,19 +151,10 @@ namespace Exiv2 {
 // *****************************************************************************
 // class definitions
 
-    //! Information pertaining to the defined types
-    struct TypeInfoTable {
-        //! Constructor
-        TypeInfoTable(TypeId typeId, const char* name, long size);
-        TypeId typeId_;                         //!< Type id
-        const char* name_;                      //!< Name of the type
-        long size_;                             //!< Bytes per data entry
-    }; // struct TypeInfoTable
-
     //! Type information lookup functions. Implemented as a static class.
-    class TypeInfo {
+    class EXIV2API TypeInfo {
         //! Prevent construction: not implemented.
-        TypeInfo() {}
+        TypeInfo();
         //! Prevent copy-construction: not implemented.
         TypeInfo(const TypeInfo& rhs);
         //! Prevent assignment: not implemented.
@@ -159,8 +168,6 @@ namespace Exiv2 {
         //! Return the size in bytes of one element of this type
         static long typeSize(TypeId typeId);
 
-    private:
-        static const TypeInfoTable typeInfoTable_[];
     };
 
     /*!
@@ -168,7 +175,7 @@ namespace Exiv2 {
              std::auto_ptr_ref. See http://www.josuttis.com/libbook/auto_ptr.html
              for a discussion.
      */
-    struct DataBufRef {
+    struct EXIV2API DataBufRef {
         //! Constructor
         DataBufRef(std::pair<byte*, long> rhs) : p(rhs) {}
         //! Pointer to a byte array and its size
@@ -179,10 +186,9 @@ namespace Exiv2 {
       @brief Utility class containing a character array. All it does is to take
              care of memory allocation and deletion. Its primary use is meant to
              be as a stack variable in functions that need a temporary data
-             buffer. Todo: this should be some sort of smart pointer,
-             essentially an std::auto_ptr for a character array. But it isn't...
+             buffer. 
      */
-    class DataBuf {
+    class EXIV2API DataBuf {
     public:
         //! @name Creators
         //@{
@@ -210,7 +216,11 @@ namespace Exiv2 {
                  the original object is modified.
          */
         DataBuf& operator=(DataBuf& rhs);
-        //! Allocate a data buffer of the given size
+        /*!
+          @brief Allocate a data buffer of at least the given size. Note that if
+                 the requested \em size is less than the current buffer size, no
+                 new memory is allocated and the buffer size doesn't change.
+         */
         void alloc(long size);
         /*!
           @brief Release ownership of the buffer to the caller. Returns the
@@ -247,71 +257,71 @@ namespace Exiv2 {
 // free functions
 
     //! Read a 2 byte unsigned short value from the data buffer
-    uint16_t getUShort(const byte* buf, ByteOrder byteOrder);
+    EXIV2API uint16_t getUShort(const byte* buf, ByteOrder byteOrder);
     //! Read a 4 byte unsigned long value from the data buffer
-    uint32_t getULong(const byte* buf, ByteOrder byteOrder);
+    EXIV2API uint32_t getULong(const byte* buf, ByteOrder byteOrder);
     //! Read an 8 byte unsigned rational value from the data buffer
-    URational getURational(const byte* buf, ByteOrder byteOrder);
+    EXIV2API URational getURational(const byte* buf, ByteOrder byteOrder);
     //! Read a 2 byte signed short value from the data buffer
-    int16_t getShort(const byte* buf, ByteOrder byteOrder);
+    EXIV2API int16_t getShort(const byte* buf, ByteOrder byteOrder);
     //! Read a 4 byte signed long value from the data buffer
-    int32_t getLong(const byte* buf, ByteOrder byteOrder);
+    EXIV2API int32_t getLong(const byte* buf, ByteOrder byteOrder);
     //! Read an 8 byte signed rational value from the data buffer
-    Rational getRational(const byte* buf, ByteOrder byteOrder);
+    EXIV2API Rational getRational(const byte* buf, ByteOrder byteOrder);
 
     //! Output operator for our fake rational
-    std::ostream& operator<<(std::ostream& os, const Rational& r);
+    EXIV2API std::ostream& operator<<(std::ostream& os, const Rational& r);
     //! Input operator for our fake rational
-    std::istream& operator>>(std::istream& is, Rational& r);
+    EXIV2API std::istream& operator>>(std::istream& is, Rational& r);
     //! Output operator for our fake unsigned rational
-    std::ostream& operator<<(std::ostream& os, const URational& r);
+    EXIV2API std::ostream& operator<<(std::ostream& os, const URational& r);
     //! Input operator for our fake unsigned rational
-    std::istream& operator>>(std::istream& is, URational& r);
+    EXIV2API std::istream& operator>>(std::istream& is, URational& r);
 
     /*!
       @brief Convert an unsigned short to data, write the data to the buffer,
              return number of bytes written.
      */
-    long us2Data(byte* buf, uint16_t s, ByteOrder byteOrder);
+    EXIV2API long us2Data(byte* buf, uint16_t s, ByteOrder byteOrder);
     /*!
       @brief Convert an unsigned long to data, write the data to the buffer,
              return number of bytes written.
      */
-    long ul2Data(byte* buf, uint32_t l, ByteOrder byteOrder);
+    EXIV2API long ul2Data(byte* buf, uint32_t l, ByteOrder byteOrder);
     /*!
       @brief Convert an unsigned rational to data, write the data to the buffer,
              return number of bytes written.
      */
-    long ur2Data(byte* buf, URational l, ByteOrder byteOrder);
+    EXIV2API long ur2Data(byte* buf, URational l, ByteOrder byteOrder);
     /*!
       @brief Convert a signed short to data, write the data to the buffer,
              return number of bytes written.
      */
-    long s2Data(byte* buf, int16_t s, ByteOrder byteOrder);
+    EXIV2API long s2Data(byte* buf, int16_t s, ByteOrder byteOrder);
     /*!
       @brief Convert a signed long to data, write the data to the buffer,
              return number of bytes written.
      */
-    long l2Data(byte* buf, int32_t l, ByteOrder byteOrder);
+    EXIV2API long l2Data(byte* buf, int32_t l, ByteOrder byteOrder);
     /*!
       @brief Convert a signed rational to data, write the data to the buffer,
              return number of bytes written.
      */
-    long r2Data(byte* buf, Rational l, ByteOrder byteOrder);
+    EXIV2API long r2Data(byte* buf, Rational l, ByteOrder byteOrder);
 
     /*!
       @brief Print len bytes from buf in hex and ASCII format to the given
              stream, prefixed with the position in the buffer adjusted by
              offset.
      */
-    void hexdump(std::ostream& os, const byte* buf, long len, long offset =0);
+    EXIV2API void hexdump(std::ostream& os, const byte* buf, long len, long offset =0);
 
     /*!
       @brief Return true if str is a hex number starting with prefix followed
              by size hex digits, false otherwise. If size is 0, any number of
              digits is allowed and all are checked.
      */
-    bool isHex(const std::string& str,
+    EXIV2API bool isHex(const std::string& str,
                size_t size =0,
                const std::string& prefix ="");
 
@@ -320,16 +330,16 @@ namespace Exiv2 {
              "2007:05:24 12:31:55" to broken down time format,
              returns 0 if successful, else 1.
      */
-    int exifTime(const char* buf, struct tm* tm);
+    EXIV2API int exifTime(const char* buf, struct tm* tm);
 
     /*!
       @brief Translate a string using the gettext framework. This wrapper hides
              all the implementation details from the interface.
      */
-    const char* exvGettext(const char* str);
+    EXIV2API const char* exvGettext(const char* str);
 
     /*!
-      @brief Return a \em long set to the value represented by \em s. 
+      @brief Return a \em long set to the value represented by \em s.
 
       Besides strings that represent \em long values, the function also
       handles \em float, \em Rational and boolean
@@ -340,10 +350,10 @@ namespace Exiv2 {
       @return Returns the \em long value represented by \em s and sets \em ok
               to \c true if the conversion was successful or \c false if not.
     */
-    long parseLong(const std::string& s, bool& ok);
+    EXIV2API long parseLong(const std::string& s, bool& ok);
 
     /*!
-      @brief Return a \em float set to the value represented by \em s. 
+      @brief Return a \em float set to the value represented by \em s.
 
       Besides strings that represent \em float values, the function also
       handles \em long, \em Rational and boolean
@@ -354,10 +364,10 @@ namespace Exiv2 {
       @return Returns the \em float value represented by \em s and sets \em ok
               to \c true if the conversion was successful or \c false if not.
     */
-    float parseFloat(const std::string& s, bool& ok);
-    
+    EXIV2API float parseFloat(const std::string& s, bool& ok);
+
     /*!
-      @brief Return a \em Rational set to the value represented by \em s. 
+      @brief Return a \em Rational set to the value represented by \em s.
 
       Besides strings that represent \em Rational values, the function also
       handles \em long, \em float and boolean
@@ -370,7 +380,7 @@ namespace Exiv2 {
       @return Returns the \em Rational value represented by \em s and sets \em ok
               to \c true if the conversion was successful or \c false if not.
     */
-    Rational parseRational(const std::string& s, bool& ok);
+    EXIV2API Rational parseRational(const std::string& s, bool& ok);
 
     /*!
       @brief Very simple conversion of a \em float to a \em Rational.
@@ -378,7 +388,7 @@ namespace Exiv2 {
       Test it with the values that you expect and check the implementation
       to see if this is really what you want!
      */
-    Rational floatToRationalCast(float f);
+    EXIV2API Rational floatToRationalCast(float f);
 
 // *****************************************************************************
 // template and inline definitions
@@ -456,7 +466,7 @@ namespace Exiv2 {
 
       @param  s  String to convert
       @param  ok Output variable indicating the success of the operation.
-      @return Returns the converted value and sets \em ok to \c true if the 
+      @return Returns the converted value and sets \em ok to \c true if the
               conversion was successful or \c false if not.
      */
     template<typename T>
@@ -475,7 +485,7 @@ namespace Exiv2 {
       @brief Specialization of stringTo(const std::string& s, bool& ok) for \em bool.
 
       Handles the same string values as the XMP SDK. Converts the string to lowercase
-      and returns \c true if it is "true", "t" or "1", and \c false if it is 
+      and returns \c true if it is "true", "t" or "1", and \c false if it is
       "false", "f" or "0".
      */
     template<>

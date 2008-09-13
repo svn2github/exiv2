@@ -49,6 +49,27 @@ namespace Exiv2 {
 // *****************************************************************************
 // class definitions
 
+    //! TIFF value type.
+    typedef uint16_t TiffType;
+
+    const TiffType ttUnsignedByte     = 1; //!< Exif BYTE type
+    const TiffType ttAsciiString      = 2; //!< Exif ASCII type
+    const TiffType ttUnsignedShort    = 3; //!< Exif SHORT type
+    const TiffType ttUnsignedLong     = 4; //!< Exif LONG type
+    const TiffType ttUnsignedRational = 5; //!< Exif RATIONAL type
+    const TiffType ttSignedByte       = 6; //!< Exif SBYTE type
+    const TiffType ttUndefined        = 7; //!< Exif UNDEFINED type
+    const TiffType ttSignedShort      = 8; //!< Exif SSHORT type
+    const TiffType ttSignedLong       = 9; //!< Exif SLONG type
+    const TiffType ttSignedRational   =10; //!< Exif SRATIONAL type
+    const TiffType ttTiffFloat        =11; //!< TIFF FLOAT type
+    const TiffType ttTiffDouble       =12; //!< TIFF DOUBLE type
+
+    //! Convert the \em tiffType of a \em tag and \em group to an Exiv2 \em typeId.
+    TypeId toTypeId(TiffType tiffType, uint16_t tag, uint16_t group);
+    //! Convert the %Exiv2 \em typeId to a TIFF value type.
+    TiffType toTiffType(TypeId typeId);
+
     /*!
       Known TIFF groups
 
@@ -60,13 +81,14 @@ namespace Exiv2 {
         const uint16_t none    =   0; //!< Dummy group
         const uint16_t ifd0    =   1; //!< Exif IFD0
         const uint16_t ifd1    =   2; //!< Thumbnail IFD
-        const uint16_t exif    =   3; //!< Exif IFD
-        const uint16_t gps     =   4; //!< GPS IFD
-        const uint16_t iop     =   5; //!< Interoperability IFD
-        const uint16_t sub0_0  =   6; //!< Tiff SubIFD 0 in IFD0
-        const uint16_t sub0_1  =   7; //!< Tiff SubIFD 1 in IFD0
-        const uint16_t sub0_2  =   8; //!< Tiff SubIFD 2 in IFD0
-        const uint16_t sub0_3  =   9; //!< Tiff SubIFD 3 in IFD0
+        const uint16_t ifd2    =   3; //!< IFD2
+        const uint16_t exif    =   4; //!< Exif IFD
+        const uint16_t gps     =   5; //!< GPS IFD
+        const uint16_t iop     =   6; //!< Interoperability IFD
+        const uint16_t subimg1 =   7; //!< 1st TIFF SubIFD in IFD0
+        const uint16_t subimg2 =   8; //!< 2nd TIFF SubIFD in IFD0
+        const uint16_t subimg3 =   9; //!< 3rd TIFF SubIFD in IFD0
+        const uint16_t subimg4 =  10; //!< 4th TIFF SubIFD in IFD0
         const uint16_t mn      = 256; //!< Makernote
         const uint16_t ignr    = 511; //!< Read but do not decode
     }
@@ -177,7 +199,7 @@ namespace Exiv2 {
                        int32_t   offset,
                        uint32_t  valueIdx,
                        uint32_t  dataIdx,
-                       uint32_t  imageIdx);
+                       uint32_t& imageIdx);
         //@}
 
         //! @name Write support (Accessors)
@@ -191,16 +213,14 @@ namespace Exiv2 {
                            ByteOrder byteOrder,
                            int32_t   offset,
                            uint32_t  dataIdx,
-                           uint32_t  imageIdx) const;
+                           uint32_t& imageIdx) const;
         /*!
           @brief Write the image data of this component to a binary image.
-                 Return the number of bytes written. Components derived from
-                 TiffEntryBase implement this method if needed.
+                 Return the number of bytes written. TIFF components implement
+                 this method if needed.
          */
         uint32_t writeImage(Blob&     blob,
-                            ByteOrder byteOrder,
-                            int32_t   offset,
-                            uint32_t  imageIdx) const;
+                            ByteOrder byteOrder) const;
         /*!
           @brief Return the size in bytes of the IFD value of this component
                  when written to a binary image.
@@ -218,10 +238,10 @@ namespace Exiv2 {
          */
         uint32_t sizeData() const;
         /*!
-          @brief Return the size in bytes of the image data of this component when
-                 written to a binary image.  This is a support function for
-                 write(). Components derived from TiffEntryBase implement this
-                 method corresponding to their implementation of writeImage().
+          @brief Return the size in bytes of the image data of this component
+                 when written to a binary image.  This is a support function for
+                 write(). TIFF components implement this method corresponding to
+                 their implementation of writeImage().
          */
         uint32_t sizeImage() const;
         //@}
@@ -248,7 +268,7 @@ namespace Exiv2 {
                                  int32_t   offset,
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx,
-                                 uint32_t  imageIdx) =0;
+                                 uint32_t& imageIdx) =0;
         //@}
 
         //! @name Write support (Accessors)
@@ -258,12 +278,10 @@ namespace Exiv2 {
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
-                                     uint32_t  imageIdx) const =0;
+                                     uint32_t& imageIdx) const =0;
         //! Implements writeImage().
         virtual uint32_t doWriteImage(Blob&     blob,
-                                      ByteOrder byteOrder,
-                                      int32_t   offset,
-                                      uint32_t  imageIdx) const =0;
+                                      ByteOrder byteOrder) const =0;
         //! Implements size().
         virtual uint32_t doSize() const =0;
         //! Implements count().
@@ -362,7 +380,7 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Default constructor
-        TiffEntryBase(uint16_t tag, uint16_t group, TypeId typeId =invalidTypeId);
+        TiffEntryBase(uint16_t tag, uint16_t group, TiffType tiffType =ttUndefined);
         //! Virtual destructor.
         virtual ~TiffEntryBase();
         //@}
@@ -379,6 +397,7 @@ namespace Exiv2 {
         void encode(TiffEncoder& encoder, const Exifdatum* datum);
         //! Set the offset
         void setOffset(int32_t offset) { offset_ = offset; }
+        //! Set pointer and size of the entry's data.
         void setData(byte* pData, int32_t size);
         /*!
           @brief Update the value. Takes ownership of the pointer passed in.
@@ -396,8 +415,8 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
-        //! Return the Exiv2 type which corresponds to the field type
-        TypeId   typeId()        const { return TypeId(type_); }
+        //! Return the TIFF type
+        TiffType tiffType()      const { return tiffType_; }
         /*!
           @brief Return the offset to the data area relative to the base
                  for the component (usually the start of the TIFF header)
@@ -438,7 +457,7 @@ namespace Exiv2 {
                                  int32_t   offset,
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx,
-                                 uint32_t  imageIdx);
+                                 uint32_t& imageIdx);
         //@}
         //! @name Write support (Accessors)
         //@{
@@ -450,15 +469,13 @@ namespace Exiv2 {
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
-                                     uint32_t  imageIdx) const;
+                                     uint32_t& imageIdx) const;
         /*!
           @brief Implements writeImage(). Standard TIFF entries have no image data:
                  write nothing and return 0.
          */
         virtual uint32_t doWriteImage(Blob&     blob,
-                                      ByteOrder byteOrder,
-                                      int32_t   offset,
-                                      uint32_t  imageIdx) const;
+                                      ByteOrder byteOrder) const;
         //! Implements size(). Return the size of a standard TIFF entry
         virtual uint32_t doSize() const;
         //! Implements sizeData(). Return 0.
@@ -470,7 +487,7 @@ namespace Exiv2 {
         //! Helper function to write an \em offset to a preallocated binary buffer
         static uint32_t writeOffset(byte*     buf,
                                     int32_t   offset,
-                                    TypeId    type,
+                                    TiffType  tiffType,
                                     ByteOrder byteOrder);
 
     private:
@@ -481,8 +498,8 @@ namespace Exiv2 {
         //@}
 
         // DATA
-        uint16_t type_;       //!< Field Type
-        uint32_t count_;      //!< The number of values of the indicated Type
+        TiffType tiffType_;   //!< Field TIFF type
+        uint32_t count_;      //!< The number of values of the indicated type
         int32_t  offset_;     //!< Offset to the data area
         /*!
           Size of the data buffer holding the value in bytes, there is no
@@ -626,7 +643,7 @@ namespace Exiv2 {
                                  int32_t   offset,
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx,
-                                 uint32_t  imageIdx);
+                                 uint32_t& imageIdx);
         //@}
         //! @name Write support (Accessors)
         //@{
@@ -638,7 +655,7 @@ namespace Exiv2 {
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
-                                     uint32_t  imageIdx) const;
+                                     uint32_t& imageIdx) const;
         // Using doWriteImage from base class
         // Using doSize() from base class
         //! Implements sizeData(). Return the size of the data area.
@@ -704,7 +721,7 @@ namespace Exiv2 {
                                  int32_t   offset,
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx,
-                                 uint32_t  imageIdx);
+                                 uint32_t& imageIdx);
         //@}
         //! @name Write support (Accessors)
         //@{
@@ -714,9 +731,7 @@ namespace Exiv2 {
                  Return the number of bytes written.
          */
         virtual uint32_t doWriteImage(Blob&     blob,
-                                      ByteOrder byteOrder,
-                                      int32_t   offset,
-                                      uint32_t  imageIdx) const;
+                                      ByteOrder byteOrder) const;
         //! Implements size(). Return the size of the strip pointers.
         virtual uint32_t doSize() const;
         // Using doSizeData from base class
@@ -816,7 +831,7 @@ namespace Exiv2 {
                                  int32_t   offset,
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx,
-                                 uint32_t  imageIdx);
+                                 uint32_t& imageIdx);
         //@}
         //! @name Write support (Accessors)
         //@{
@@ -828,15 +843,15 @@ namespace Exiv2 {
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
-                                     uint32_t  imageIdx) const;
+                                     uint32_t& imageIdx) const;
         /*!
-          @brief This class does not really implement writeImage(), it only has
-                 write(). This method must not be called; it commits suicide.
+          @brief Implements writeImage(). Write the image data of the TIFF
+                 directory to the blob by forwarding the call to each component
+                 as well as the next-IFD, if there is any. Return the number of
+                 bytes written.
          */
         virtual uint32_t doWriteImage(Blob&     blob,
-                                      ByteOrder byteOrder,
-                                      int32_t   offset,
-                                      uint32_t  imageIdx) const;
+                                      ByteOrder byteOrder) const;
         /*!
           @brief Implements size(). Return the size of the TIFF directory,
                  values and additional data, including the next-IFD, if any.
@@ -853,8 +868,8 @@ namespace Exiv2 {
          */
         virtual uint32_t doSizeData() const;
         /*!
-          @brief This class does not really implement sizeImage(), it only has
-                 size(). This method must not be called; it commits suicide.
+          @brief Implements sizeImage(). Return the sum of the image sizes of 
+                 all components plus that of the next-IFD, if there is any.
          */
         virtual uint32_t doSizeImage() const;
         //@}
@@ -869,7 +884,7 @@ namespace Exiv2 {
                                TiffComponent* pTiffComponent,
                                uint32_t       valueIdx,
                                uint32_t       dataIdx,
-                               uint32_t       imageIdx) const;
+                               uint32_t&      imageIdx) const;
         //@}
 
     private:
@@ -919,7 +934,7 @@ namespace Exiv2 {
                                  int32_t   offset,
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx,
-                                 uint32_t  imageIdx);
+                                 uint32_t& imageIdx);
         //@}
         //! @name Write support (Accessors)
         //@{
@@ -931,13 +946,19 @@ namespace Exiv2 {
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
-                                     uint32_t  imageIdx) const;
-        // Using doWriteImage from base class
+                                     uint32_t& imageIdx) const;
+        /*!
+          @brief Implements writeImage(). Write the image data of each sub-IFD to
+                 the blob. Return the number of bytes written.
+         */
+        virtual uint32_t doWriteImage(Blob&     blob,
+                                      ByteOrder byteOrder) const;
         //! Implements size(). Return the size of the sub-Ifd pointers.
         uint32_t doSize() const;
         //! Implements sizeData(). Return the sum of the sizes of all sub-IFDs.
         virtual uint32_t doSizeData() const;
-        // Using doSizeImage from base class
+        //! Implements sizeImage(). Return the sum of the image sizes of all sub-IFDs.
+        virtual uint32_t doSizeImage() const;
         //@}
 
     private:
@@ -998,7 +1019,7 @@ namespace Exiv2 {
                                  int32_t   offset,
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx,
-                                 uint32_t  imageIdx);
+                                 uint32_t& imageIdx);
         //@}
         //! @name Write support (Accessors)
         //@{
@@ -1021,8 +1042,8 @@ namespace Exiv2 {
     }; // class TiffMnEntry
 
     /*!
-      @brief Composite to model an array of tags, each consisting of one value
-             of a given type. Canon and Minolta makernotes use such tags.  The
+      @brief Composite to model an array of tags, each consisting of values
+             of a given type. Canon and Minolta makernotes use such tags. The
              elements of this component are of type TiffArrayElement.
      */
     class TiffArrayEntry : public TiffEntryBase {
@@ -1033,7 +1054,7 @@ namespace Exiv2 {
         TiffArrayEntry(uint16_t tag,
                        uint16_t group,
                        uint16_t elGroup,
-                       TypeId   elTypeId,
+                       TiffType elTiffType,
                        bool     addSizeElement);
         //! Virtual destructor
         virtual ~TiffArrayEntry();
@@ -1041,7 +1062,7 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
-        //! Return the type for the array elements
+        //! Return the size of the array elements
         uint16_t  elSize()  const { return elSize_; }
         //! Return the group for the array elements
         uint16_t  elGroup() const { return elGroup_; }
@@ -1074,7 +1095,7 @@ namespace Exiv2 {
                                  int32_t   offset,
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx,
-                                 uint32_t  imageIdx);
+                                 uint32_t& imageIdx);
         //@}
         //! @name Write support (Accessors)
         //@{
@@ -1097,9 +1118,8 @@ namespace Exiv2 {
     }; // class TiffArrayEntry
 
     /*!
-      @brief Element of a TiffArrayEntry. The value is exactly one component of
-             a given type and all elements of a TiffArrayEntry have the same
-             type. Canon and Minolta makernotes use such arrays.
+      @brief Element of a TiffArrayEntry. The value of all elements of a TiffArrayEntry
+             must be of the same type. Canon and Minolta makernotes use such arrays.
      */
     class TiffArrayElement : public TiffEntryBase {
     public:
@@ -1108,10 +1128,10 @@ namespace Exiv2 {
         //! Constructor
         TiffArrayElement(uint16_t  tag,
                          uint16_t  group,
-                         TypeId    elTypeId,
+                         TiffType  elTiffType,
                          ByteOrder elByteOrder)
             : TiffEntryBase(tag, group),
-              elTypeId_(elTypeId),
+              elTiffType_(elTiffType),
               elByteOrder_(elByteOrder) {}
         //! Virtual destructor.
         virtual ~TiffArrayElement() {}
@@ -1119,7 +1139,7 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
-        TypeId    elTypeId()    const { return elTypeId_; }
+        TiffType  elTiffType()  const { return elTiffType_; }
         ByteOrder elByteOrder() const { return elByteOrder_; }
         //@}
 
@@ -1134,15 +1154,15 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Implements write(). Write the value using the element specific
-                 byte order, if any. Make sure the value has only one component
-                 and that it is of the correct type, else throw Error(51).
+                 byte order, if any. Make sure the value is of the correct type,
+                 else throw Error(51).
          */
         virtual uint32_t doWrite(Blob&     blob,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
                                  uint32_t  dataIdx,
-                                 uint32_t  imageIdx);
+                                 uint32_t& imageIdx);
         //@}
         // Using doWriteData from base class
         // Using doWriteImage from base class
@@ -1152,7 +1172,7 @@ namespace Exiv2 {
 
     private:
         // DATA
-        TypeId    elTypeId_;      //!< Type of the element
+        TiffType  elTiffType_;    //!< TIFF type of the element
         ByteOrder elByteOrder_;   //!< Byte order to read/write the element
 
     }; // class TiffArrayElement
@@ -1189,30 +1209,30 @@ namespace Exiv2 {
                                           const TiffStructure* ts);
 
     //! Function to create and initialize a new array entry
-    template<TypeId typeId, bool addSizeElement>
+    template<TiffType tiffType, bool addSizeElement>
     TiffComponent::AutoPtr newTiffArrayEntry(uint16_t tag,
                                              const TiffStructure* ts)
     {
         assert(ts);
         return TiffComponent::AutoPtr(
-            new TiffArrayEntry(tag, ts->group_, ts->newGroup_, typeId, addSizeElement));
+            new TiffArrayEntry(tag, ts->group_, ts->newGroup_, tiffType, addSizeElement));
     }
 
     //! Function to create and initialize a new array element
-    template<TypeId typeId, ByteOrder byteOrder>
+    template<TiffType tiffType, ByteOrder byteOrder>
     TiffComponent::AutoPtr newTiffArrayElement(uint16_t tag,
                                                const TiffStructure* ts)
     {
         assert(ts);
         return TiffComponent::AutoPtr(
-            new TiffArrayElement(tag, ts->group_, typeId, byteOrder));
+            new TiffArrayElement(tag, ts->group_, tiffType, byteOrder));
     }
 
-    template<TypeId typeId>
+    template<TiffType tiffType>
     TiffComponent::AutoPtr newTiffArrayElement(uint16_t tag,
                                                const TiffStructure* ts)
     {
-        return newTiffArrayElement<typeId, invalidByteOrder>(tag, ts);
+        return newTiffArrayElement<tiffType, invalidByteOrder>(tag, ts);
     }
 
     //! Function to create and initialize a new TIFF entry for a thumbnail (data)

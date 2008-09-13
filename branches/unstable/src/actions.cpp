@@ -261,7 +261,7 @@ namespace Action {
             std::cout << buf.st_size << " " << _("Bytes") << std::endl;
         }
 
-        // MIME type 
+        // MIME type
         printLabel(_("MIME type"));
         std::cout << image->mimeType() << "\n";
 
@@ -494,14 +494,14 @@ namespace Action {
         if (md == exifData.end()) {
             md = exifData.findKey(Exiv2::ExifKey("Exif.Photo.PixelXDimension"));
         }
-        if (md != exifData.end()) {
+        if (md != exifData.end() && md->count() > 0) {
             xdim = md->toLong();
         }
         md = exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageLength"));
         if (md == exifData.end()) {
             md = exifData.findKey(Exiv2::ExifKey("Exif.Photo.PixelYDimension"));
         }
-        if (md != exifData.end()) {
+        if (md != exifData.end() && md->count() > 0) {
             ydim = md->toLong();
         }
         if (xdim != 0 && ydim != 0) {
@@ -665,8 +665,16 @@ namespace Action {
             if (Params::instance().printItems_ & Params::prType) {
                 if (!first) std::cout << " ";
                 first = false;
-                std::cout << std::setw(9) << std::setfill(' ') << std::left
-                          << md->typeName();
+                std::cout << std::setw(9) << std::setfill(' ') << std::left;
+                const char* tn = md->typeName();
+                if (tn) {
+                    std::cout << tn;
+                }
+                else {
+                    std::ostringstream os;
+                    os << "0x" << std::setw(4) << std::setfill('0') << std::hex << md->typeId();
+                    std::cout << os.str();
+                }
             }
             if (Params::instance().printItems_ & Params::prCount) {
                 if (!first) std::cout << " ";
@@ -1358,7 +1366,7 @@ namespace Action {
         else {
             std::cerr << _("Warning") << ": " << modifyCmd.key_ << ": "
                       << _("Failed to read") << " "
-                      << Exiv2::TypeInfo::typeName(value->typeId()) 
+                      << Exiv2::TypeInfo::typeName(value->typeId())
                       << " " << _("value")
                       << " \"" << modifyCmd.value_ << "\"\n";
         }
@@ -1399,7 +1407,7 @@ namespace Action {
     void Modify::regNamespace(const ModifyCmd& modifyCmd)
     {
         if (Params::instance().verbose_) {
-            std::cout << _("Reg ") << modifyCmd.key_ << "=\"" 
+            std::cout << _("Reg ") << modifyCmd.key_ << "=\""
                       << modifyCmd.value_ << "\"" << std::endl;
         }
         // Registration has been done immediately after parsing the command.
@@ -1888,11 +1896,11 @@ namespace {
         return 0;
     } // renameFile
 
-    std::string newFilePath(const std::string& path, const std::string& ext) 
+    std::string newFilePath(const std::string& path, const std::string& ext)
     {
         std::string directory = Params::instance().directory_;
         if (directory.empty()) directory = Util::dirname(path);
-        std::string newPath =   directory + EXV_SEPERATOR_STR 
+        std::string newPath =   directory + EXV_SEPERATOR_STR
                               + Util::basename(path, true) + ext;
         return newPath;
     }

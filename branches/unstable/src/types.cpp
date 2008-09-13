@@ -48,58 +48,81 @@ EXIV2_RCSID("@(#) $Id$")
 #include <cstring>
 
 // *****************************************************************************
+namespace {
+
+    //! Information pertaining to the defined %Exiv2 value type identifiers.
+    struct TypeInfoTable {
+        Exiv2::TypeId typeId_;                  //!< Type id
+        const char* name_;                      //!< Name of the type
+        long size_;                             //!< Bytes per data entry
+        //! Comparison operator for \em typeId
+        bool operator==(Exiv2::TypeId typeId) const;
+        //! Comparison operator for \em name
+        bool operator==(const std::string& name) const;
+    }; // struct TypeInfoTable
+
+    //! Lookup list with information of Exiv2 types
+    const TypeInfoTable typeInfoTable[] = {
+        { Exiv2::invalidTypeId,    "Invalid",     0 },
+        { Exiv2::unsignedByte,     "Byte",        1 },
+        { Exiv2::asciiString,      "Ascii",       1 },
+        { Exiv2::unsignedShort,    "Short",       2 },
+        { Exiv2::unsignedLong,     "Long",        4 },
+        { Exiv2::unsignedRational, "Rational",    8 },
+        { Exiv2::signedByte,       "SByte",       1 },
+        { Exiv2::undefined,        "Undefined",   1 },
+        { Exiv2::signedShort,      "SShort",      2 },
+        { Exiv2::signedLong,       "SLong",       4 },
+        { Exiv2::signedRational,   "SRational",   8 },
+        { Exiv2::tiffFloat,        "Float",       4 },
+        { Exiv2::tiffDouble,       "Double",      8 },
+        { Exiv2::string,           "String",      1 },
+        { Exiv2::date,             "Date",        8 },
+        { Exiv2::time,             "Time",       11 },
+        { Exiv2::comment,          "Comment",     1 },
+        { Exiv2::directory,        "Directory",   1 },
+        { Exiv2::xmpText,          "XmpText",     1 },
+        { Exiv2::xmpAlt,           "XmpAlt",      1 },
+        { Exiv2::xmpBag,           "XmpBag",      1 },
+        { Exiv2::xmpSeq,           "XmpSeq",      1 },
+        { Exiv2::langAlt,          "LangAlt",     1 }
+    };
+
+    bool TypeInfoTable::operator==(Exiv2::TypeId typeId) const
+    {
+        return typeId_ == typeId;
+    }
+
+    bool TypeInfoTable::operator==(const std::string& name) const
+    {
+        return std::string(name_) == name;
+    }
+
+}
+
+// *****************************************************************************
 // class member definitions
 namespace Exiv2 {
 
-    TypeInfoTable::TypeInfoTable(TypeId typeId, const char* name, long size)
-        : typeId_(typeId), name_(name), size_(size)
-    {
-    }
-
-    //! Lookup list of supported IFD type information
-    const TypeInfoTable TypeInfo::typeInfoTable_[] = {
-        TypeInfoTable(invalidTypeId,    "Invalid",     0),
-        TypeInfoTable(unsignedByte,     "Byte",        1),
-        TypeInfoTable(asciiString,      "Ascii",       1),
-        TypeInfoTable(unsignedShort,    "Short",       2),
-        TypeInfoTable(unsignedLong,     "Long",        4),
-        TypeInfoTable(unsignedRational, "Rational",    8),
-        TypeInfoTable(signedByte,       "SByte",       1),
-        TypeInfoTable(undefined,        "Undefined",   1),
-        TypeInfoTable(signedShort,      "SShort",      2),
-        TypeInfoTable(signedLong,       "SLong",       4),
-        TypeInfoTable(signedRational,   "SRational",   8),
-        TypeInfoTable(string,           "String",      1),
-        TypeInfoTable(date,             "Date",        8),
-        TypeInfoTable(time,             "Time",       11),
-        TypeInfoTable(comment,          "Comment",     1),
-        TypeInfoTable(directory,        "Directory",   1),
-        TypeInfoTable(xmpText,          "XmpText",     1),
-        TypeInfoTable(xmpAlt,           "XmpAlt",      1),
-        TypeInfoTable(xmpBag,           "XmpBag",      1),
-        TypeInfoTable(xmpSeq,           "XmpSeq",      1),
-        TypeInfoTable(langAlt,          "LangAlt",     1),
-        // End of list marker
-        TypeInfoTable(lastTypeId,       "(Unknown)",   0)
-    };
-
     const char* TypeInfo::typeName(TypeId typeId)
     {
-        return typeInfoTable_[ typeId < lastTypeId ? typeId : 0 ].name_;
+        const TypeInfoTable* tit = find(typeInfoTable, typeId);
+        if (!tit) return 0;
+        return tit->name_;
     }
 
     TypeId TypeInfo::typeId(const std::string& typeName)
     {
-        int i = 0;
-        for (;    typeInfoTable_[i].typeId_ != lastTypeId
-               && typeInfoTable_[i].name_ != typeName; ++i) {}
-        return typeInfoTable_[i].typeId_ == lastTypeId ?
-               invalidTypeId : typeInfoTable_[i].typeId_;
+        const TypeInfoTable* tit = find(typeInfoTable, typeName);
+        if (!tit) return invalidTypeId;
+        return tit->typeId_;
     }
 
     long TypeInfo::typeSize(TypeId typeId)
     {
-        return typeInfoTable_[ typeId < lastTypeId ? typeId : 0 ].size_;
+        const TypeInfoTable* tit = find(typeInfoTable, typeId);
+        if (!tit) return 0;
+        return tit->size_;
     }
 
     DataBuf::DataBuf(DataBuf& rhs)
@@ -392,7 +415,7 @@ namespace Exiv2 {
         if (ok) return b ? 1 : 0;
 
         // everything failed, return from stringTo<long> is probably the best fit
-        return ret; 
+        return ret;
     }
 
     float parseFloat(const std::string& s, bool& ok)

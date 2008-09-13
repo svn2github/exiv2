@@ -42,6 +42,7 @@
 #include <iomanip>
 #include <cassert>
 #include <map>
+#include <set>
 
 // *****************************************************************************
 // namespace extensions
@@ -68,7 +69,7 @@ namespace Exiv2 {
      */
     class TiffVisitor {
     public:
-        //! Events for the stop/go flag. See setGo(). 
+        //! Events for the stop/go flag. See setGo().
         enum GoEvent {
             //! Signal to control traversing of the composite tree.
             geTraverse       = 0,
@@ -262,8 +263,6 @@ namespace Exiv2 {
         void decodeStdTiffEntry(const TiffEntryBase* object);
         //! Decode Olympus Thumbnail from the TIFF makernote into IFD1
         void decodeOlympThumb(const TiffEntryBase* object);
-        //! Decode SubIFD contents to Image group if it contains primary image data
-        void decodeSubIfd(const TiffEntryBase* object);
         //! Decode IPTC data from an IPTCNAA tag or Photoshop ImageResources
         void decodeIptc(const TiffEntryBase* object);
         //! Decode XMP packet from an XMLPacket tag
@@ -273,8 +272,6 @@ namespace Exiv2 {
     private:
         //! @name Manipulators
         //@{
-        //! Set an Exif tag in the image. Overwrites existing tags
-        void setExifTag(const ExifKey& key, const Value* pValue);
         /*!
           @brief Get the data for a \em tag and \em group, either from the
                  \em object provided, if it matches or from the matching element
@@ -298,12 +295,8 @@ namespace Exiv2 {
         TiffComponent* const pRoot_; //!< Root element of the composite
         const FindDecoderFct findDecoderFct_; //!< Ptr to the function to find special decoding functions
         std::string make_;           //!< Camera make, determined from the tags to decode
-
-        //! Type used to remember tag 0x00fe (NewSubfileType) for each group
-        typedef std::map<uint16_t, uint32_t> GroupType;
-        GroupType groupType_;        //!< NewSubfileType for each group
-
         bool decodedIptc_;           //!< Indicates if IPTC has been decoded yet
+
     }; // class TiffDecoder
 
     /*!
@@ -317,7 +310,7 @@ namespace Exiv2 {
              composite tree is then traversed and metadata from the image is
              used to encode each existing component.
 
-             For intrusive writing, add() is called, which loops through the 
+             For intrusive writing, add() is called, which loops through the
              metadata and creates and populates corresponding TiffComponents
              as needed.
      */
@@ -374,7 +367,7 @@ namespace Exiv2 {
                  component. This function is called by the visit methods of the
                  encoder as well as the add() method.
 
-          If no \em datum is provided, search the metadata based on tag and 
+          If no \em datum is provided, search the metadata based on tag and
           group of the \em object. This is the case if the function is called
           from a visit method.
 
@@ -422,8 +415,6 @@ namespace Exiv2 {
 
         //! Special encoder function to encode IPTC data to an IPTCNAA or Photoshop ImageResources tag.
         void encodeIptc(TiffEntryBase* object, const Exifdatum* datum);
-        //! Special encoder function to encode an XMP packet to an XMLPacket tag.
-        void encodeXmp(TiffEntryBase* object, const Exifdatum* datum);
         //! Special encoder function for a standard TIFF entry using big endian byte order.
         void encodeBigEndianEntry(TiffEntryBase* object, const Exifdatum* datum);
         /*!
@@ -433,13 +424,13 @@ namespace Exiv2 {
           if necessary and populated using encodeTiffComponent(). The add() function
           is used during intrusive writing, to create a new TIFF structure.
 
-          @note For non-intrusive writing, the encoder is used as a visitor (by 
+          @note For non-intrusive writing, the encoder is used as a visitor (by
           passing it to the accept() member of a TiffComponent). The composite
           tree is then traversed and metadata from the image is used to encode
           each existing component.
         */
         void add(
-            TiffComponent*     pRootDir, 
+            TiffComponent*     pRootDir,
             TiffComponent*     pSourceDir,
             TiffCompFactoryFct createFct
         );
@@ -464,6 +455,21 @@ namespace Exiv2 {
         //@}
 
     private:
+        //! @name Manipulators
+        //@{
+        /*!
+          Encode IPTC data. Updates or adds tag Exif.Image.IPTCNAA, updates but
+          never adds tag Exif.Image.ImageResources.
+          This method is called from the constructor.
+         */
+        void encodeIptc();
+        /*!
+          Encode XMP data. Adds tag Exif.Image.XMLPacket with the XMP packet.
+          This method is called from the constructor.
+         */
+        void encodeXmp();
+        //@}
+
         //! @name Accessors
         //@{
         /*!

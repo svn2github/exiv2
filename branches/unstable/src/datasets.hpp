@@ -46,8 +46,8 @@ namespace Exiv2 {
 // *****************************************************************************
 // class definitions
 
-    //! Contains information about one record
-    struct RecordInfo {
+    //! Details of an IPTC record.
+    struct EXIV2API RecordInfo {
         //! Constructor
         RecordInfo(uint16_t recordId, const char* name, const char* desc);
         uint16_t recordId_;                     //!< Record id
@@ -55,8 +55,8 @@ namespace Exiv2 {
         const char* desc_;                      //!< Record description
     };
 
-    //! Dataset information
-    struct DataSet {
+    //! Details of an IPTC dataset.
+    struct EXIV2API DataSet {
         //! Constructor
         DataSet(
             uint16_t number,
@@ -84,8 +84,8 @@ namespace Exiv2 {
         const char* photoshop_;                 //!< Photoshop string
     }; // struct DataSet
 
-    //! Container for IPTC dataset information. Implemented as a static class.
-    class IptcDataSets {
+    //! IPTC dataset reference, implemented as a static class.
+    class EXIV2API IptcDataSets {
     public:
         /*!
           @name Record identifiers
@@ -274,7 +274,7 @@ namespace Exiv2 {
     /*!
       @brief Concrete keys for IPTC metadata.
      */
-    class IptcKey : public Key {
+    class EXIV2API IptcKey : public Key {
     public:
         //! Shortcut for an %IptcKey auto pointer.
         typedef std::auto_ptr<IptcKey> AutoPtr;
@@ -351,7 +351,7 @@ namespace Exiv2 {
 
     private:
         //! Internal virtual copy constructor.
-        virtual IptcKey* clone_() const;
+        EXV_DLLLOCAL virtual IptcKey* clone_() const;
 
         // DATA
         static const char* familyName_;
@@ -366,7 +366,7 @@ namespace Exiv2 {
 // free functions
 
     //! Output operator for dataSet
-    std::ostream& operator<<(std::ostream& os, const DataSet& dataSet);
+    EXIV2API std::ostream& operator<<(std::ostream& os, const DataSet& dataSet);
 
 }                                       // namespace Exiv2
 

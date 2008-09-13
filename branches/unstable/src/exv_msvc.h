@@ -23,13 +23,13 @@
 #define EXV_PACKAGE_NAME "exiv2"
 
 /* Define to the full name and version of this package. */
-#define EXV_PACKAGE_STRING "exiv2 0.17.1"
+#define EXV_PACKAGE_STRING "exiv2 0.18-pre1"
 
 /* Define to the one symbol short name of this package. */
 #define EXV_PACKAGE_TARNAME "exiv2"
 
 /* Define to the version of this package. */
-#define EXV_PACKAGE_VERSION "0.17.1"
+#define EXV_PACKAGE_VERSION "0.18-pre1"
 
 /* Define to `int' if <sys/types.h> does not define pid_t. */
 typedef int pid_t;
@@ -60,6 +60,13 @@ typedef int pid_t;
 /* File path seperator */
 #define EXV_SEPERATOR_STR "\\"
 #define EXV_SEPERATOR_CHR '\\'
+
+/* Todo: Shared library support */
+#define EXV_IMPORT
+#define EXV_EXPORT
+#define EXV_DLLLOCAL
+#define EXV_DLLPUBLIC
+#define EXIV2API
 
 /*
   Visual Studio C++ 2005 (8.0)

@@ -59,39 +59,30 @@ namespace Exiv2 {
     enum XmpCategory { xmpInternal, xmpExternal };
 
     //! Information about one XMP property.
-    struct XmpPropertyInfo {
+    struct EXIV2API XmpPropertyInfo {
         //! Comparison operator for name
         bool operator==(const std::string& name) const;
 
         const char*   name_;            //!< Property name
         const char*   title_;           //!< Property title or label
         const char*   xmpValueType_;    //!< XMP value type (for info only)
-        TypeId        typeId_;          //!< Exiv2 default type for the property 
+        TypeId        typeId_;          //!< Exiv2 default type for the property
         XmpCategory   xmpCategory_;     //!< Category (internal or external)
         const char*   desc_;            //!< Property description
     };
 
-    //! Struct used in the lookup table for pretty print functions
-    struct XmpPrintInfo {
-        //! Comparison operator for key
-        bool operator==(const std::string& key) const;
-
-        const char* key_;               //!< XMP key
-        PrintFct printFct_;             //!< Print function
-    };
-
     //! Structure mapping XMP namespaces and (preferred) prefixes.
-    struct XmpNsInfo {
+    struct EXIV2API XmpNsInfo {
         //! For comparison with prefix
         struct Prefix {
-            //! Constructor. 
+            //! Constructor.
             Prefix(const std::string& prefix);
             //! The prefix string.
             std::string prefix_;
         };
         //! For comparison with namespace
         struct Ns {
-            //! Constructor. 
+            //! Constructor.
             Ns(const std::string& ns);
             //! The namespace string
             std::string ns_;
@@ -107,8 +98,8 @@ namespace Exiv2 {
         const char* desc_;              //!< Brief description of the namespace
     };
 
-    //! Container for XMP property information. Implemented as a static class.
-    class XmpProperties {
+    //! XMP property reference, implemented as a static class.
+    class EXIV2API XmpProperties {
         //! Prevent construction: not implemented.
         XmpProperties();
         //! Prevent copy-construction: not implemented.
@@ -120,14 +111,14 @@ namespace Exiv2 {
         /*!
           @brief Return the title (label) of the property.
           @param key The property key
-          @return The title (label) of the property, 0 if the 
+          @return The title (label) of the property, 0 if the
                  key is of an unknown property.
          */
         static const char* propertyTitle(const XmpKey& key);
         /*!
           @brief Return the description of the property.
           @param key The property key
-          @return The description of the property, 0 if the 
+          @return The description of the property, 0 if the
                  key is of an unknown property.
          */
         static const char* propertyDesc(const XmpKey& key);
@@ -141,7 +132,7 @@ namespace Exiv2 {
         /*!
           @brief Return information for the property for key.
           @param key The property key
-          @return A pointer to the property information, 0 if the 
+          @return A pointer to the property information, 0 if the
                  key is of an unknown property.
          */
         static const XmpPropertyInfo* propertyInfo(const XmpKey& key);
@@ -164,7 +155,7 @@ namespace Exiv2 {
         /*!
           @brief Return read-only list of built-in properties for \em prefix.
           @param prefix Prefix
-          @return Pointer to the built-in properties for prefix, may be 0 if 
+          @return Pointer to the built-in properties for prefix, may be 0 if
                   none is configured in the namespace info.
           @throw Error if no namespace is registered with \em prefix.
          */
@@ -191,7 +182,6 @@ namespace Exiv2 {
         static std::ostream& printProperty(std::ostream& os,
                                            const std::string& key,
                                            const Value& value);
-
         /*!
           @brief Register namespace \em ns with preferred prefix \em prefix.
 
@@ -230,7 +220,7 @@ namespace Exiv2 {
     /*!
       @brief Concrete keys for XMP metadata.
      */
-    class XmpKey : public Key {
+    class EXIV2API XmpKey : public Key {
     public:
         //! Shortcut for an %XmpKey auto pointer.
         typedef std::auto_ptr<XmpKey> AutoPtr;
@@ -291,7 +281,7 @@ namespace Exiv2 {
 
     private:
         //! Internal virtual copy constructor.
-        virtual XmpKey* clone_() const;
+        EXV_DLLLOCAL virtual XmpKey* clone_() const;
 
     private:
         // Pimpl idiom
@@ -304,7 +294,7 @@ namespace Exiv2 {
 // free functions
 
     //! Output operator for property info
-    std::ostream& operator<<(std::ostream& os, const XmpPropertyInfo& propertyInfo);
+    EXIV2API std::ostream& operator<<(std::ostream& os, const XmpPropertyInfo& propertyInfo);
 
 }                                       // namespace Exiv2
 

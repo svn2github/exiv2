@@ -1,10 +1,10 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
-AC_INIT(exiv2, 0.17.1, ahuggel@gmx.net)
-# See http://www.gnu.org/software/libtool/manual.html#Updating-version-info
-EXIV2_LTVERSION=4:1:0
+AC_PREREQ(2.61)
+AC_INIT(exiv2, 0.18-pre1, ahuggel@gmx.net)
+# See http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
+EXIV2_LTVERSION=5:0:0
 PACKAGE=$PACKAGE_NAME
 VERSION=$PACKAGE_VERSION
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
@@ -188,6 +188,16 @@ else
     EXV_LIB_STATIC=
 fi
 AC_SUBST(EXV_LIB_STATIC)
+
+# g++ visibility support
+AX_CXX_CHECK_FLAG(-fvisibility-inlines-hidden,[],[],[GXX_VISIBILITY=yes],[GXX_VISIBILITY=no])
+if test "$GXX_VISIBILITY" = "yes"; then
+    CXXFLAGS="${CXXFLAGS} -fvisibility=hidden -fvisibility-inlines-hidden"
+    AC_DEFINE(HAVE_GXXCLASSVISIBILITY,1)
+fi
+if test "$enable_shared" = "yes"; then
+    AC_DEFINE(HAVE_DLL)
+fi
 
 # ---------------------------------------------------------------------------
 # Create output files.

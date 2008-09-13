@@ -39,7 +39,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "tiffcomposite_int.hpp" // Do not change the order of these 2 includes,
 #include "tiffvisitor_int.hpp"   // see bug #487
 #include "tiffimage_int.hpp"
-#include "makernote2_int.hpp"
+#include "makernote_int.hpp"
 #include "exif.hpp"
 #include "iptc.hpp"
 #include "value.hpp"
@@ -74,7 +74,7 @@ namespace Exiv2 {
     bool TiffVisitor::go(GoEvent event) const
     {
         assert(event >= 0 && event < events_);
-        return go_[event]; 
+        return go_[event];
     }
 
     void TiffFinder::init(uint16_t tag, uint16_t group)
@@ -325,33 +325,12 @@ namespace Exiv2 {
         }
     } // TiffMetadataDecoder::decodeIptc
 
-    void TiffDecoder::decodeSubIfd(const TiffEntryBase* object)
-    {
-        assert(object);
-
-        // Only applicable if ifd0 NewSubfileType is Thumbnail/Preview image
-        GroupType::const_iterator i = groupType_.find(Group::ifd0);
-        if (i == groupType_.end() || (i->second & 1) == 0) return;
-
-        // Only applicable if subIFD NewSubfileType is Primary image
-        i = groupType_.find(object->group());
-        if (i == groupType_.end() || (i->second & 1) == 1) return;
-
-        // Todo: ExifKey should have an appropriate c'tor, it should not be
-        //       necessary to use groupName here
-        ExifKey key(object->tag(), tiffGroupName(Group::ifd0));
-        setExifTag(key, object->pValue());
-
-    }
-
     void TiffDecoder::decodeTiffEntry(const TiffEntryBase* object)
     {
         assert(object != 0);
 
-        // Remember NewSubfileType
-        if (object->tag() == 0x00fe && object->pValue()) {
-            groupType_[object->group()] = object->pValue()->toLong();
-        }
+        // Don't decode the entry if value is not set
+        if (!object->pValue()) return;
 
         const DecoderFct decoderFct = findDecoderFct_(make_,
                                                       object->tag(),
@@ -365,24 +344,12 @@ namespace Exiv2 {
     void TiffDecoder::decodeStdTiffEntry(const TiffEntryBase* object)
     {
         assert(object !=0);
-        // "Normal" tag has low priority: only decode if it doesn't exist yet.
-        // Todo: This also filters duplicates (common in some makernotes)
         // Todo: ExifKey should have an appropriate c'tor, it should not be
         //       necessary to use groupName here
         ExifKey key(object->tag(), tiffGroupName(object->group()));
-        ExifData::iterator pos = exifData_.findKey(key);
-        if (pos == exifData_.end()) {
-            exifData_.add(key, object->pValue());
-        }
+        exifData_.add(key, object->pValue());
+
     } // TiffDecoder::decodeTiffEntry
-
-    void TiffDecoder::setExifTag(const ExifKey& key, const Value* pValue)
-    {
-        ExifData::iterator pos = exifData_.findKey(key);
-        if (pos != exifData_.end()) exifData_.erase(pos);
-        exifData_.add(key, pValue);
-
-    } // TiffDecoder::setExifTag
 
     void TiffDecoder::visitArrayEntry(TiffArrayEntry* /*object*/)
     {
@@ -416,6 +383,9 @@ namespace Exiv2 {
     {
         assert(pRoot != 0);
 
+        encodeIptc();
+        encodeXmp();
+
         // Find camera make
         ExifKey key("Exif.Image.Make");
         ExifData::const_iterator pos = exifData_.findKey(key);
@@ -431,6 +401,70 @@ namespace Exiv2 {
             }
         }
     }
+
+    void TiffEncoder::encodeIptc()
+    {
+        // Update IPTCNAA Exif tag, if it exists. Delete the tag if there
+        // is no IPTC data anymore.
+        // If there is new IPTC data and Exif.Image.ImageResources does
+        // not exist, create a new IPTCNAA Exif tag.
+        bool del = false;
+        const ExifKey iptcNaaKey("Exif.Image.IPTCNAA");
+        ExifData::iterator pos = exifData_.findKey(iptcNaaKey);
+        if (pos != exifData_.end()) {
+            exifData_.erase(pos);
+            del = true;
+        }
+        DataBuf rawIptc = IptcParser::encode(iptcData_);
+        const ExifKey irbKey("Exif.Image.ImageResources");
+        pos = exifData_.findKey(irbKey);
+        if (rawIptc.size_ != 0 && (del || pos == exifData_.end())) {
+            Value::AutoPtr value = Value::create(unsignedLong);
+            value->read(rawIptc.pData_, rawIptc.size_, byteOrder_);
+            Exifdatum iptcDatum(iptcNaaKey, value.get());
+            exifData_.add(iptcDatum);
+            pos = exifData_.findKey(irbKey); // needed after add()
+        }
+        // Also update IPTC IRB in Exif.Image.ImageResources if it exists,
+        // but don't create it if not.
+        if (pos != exifData_.end()) {
+            DataBuf irbBuf(pos->value().size());
+            pos->value().copy(irbBuf.pData_, invalidByteOrder);
+            irbBuf = Photoshop::setIptcIrb(irbBuf.pData_, irbBuf.size_, iptcData_);
+            exifData_.erase(pos);
+            if (irbBuf.size_ != 0) {
+                Value::AutoPtr value = Value::create(undefined);
+                value->read(irbBuf.pData_, irbBuf.size_, invalidByteOrder);
+                Exifdatum iptcDatum(irbKey, value.get());
+                exifData_.add(iptcDatum);
+            }
+        }
+    } // TiffEncoder::encodeIptc
+
+    void TiffEncoder::encodeXmp()
+    {
+        const ExifKey xmpKey("Exif.Image.XMLPacket");
+        // Remove any existing XMP Exif tag
+        ExifData::iterator pos = exifData_.findKey(xmpKey);
+        if (pos != exifData_.end()) {
+            exifData_.erase(pos);
+        }
+        std::string xmpPacket;
+        if (XmpParser::encode(xmpPacket, xmpData_)) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Error: Failed to encode XMP metadata.\n";
+#endif
+        }
+        if (!xmpPacket.empty()) {
+            // Set the XMP Exif tag to the new value
+            Value::AutoPtr value = Value::create(unsignedByte);
+            value->read(reinterpret_cast<const byte*>(&xmpPacket[0]),
+                        static_cast<long>(xmpPacket.size()),
+                        invalidByteOrder);
+            Exifdatum xmpDatum(xmpKey, value.get());
+            exifData_.add(xmpDatum);
+        }
+    } // TiffEncoder::encodeXmp
 
     void TiffEncoder::setDirty(bool flag)
     {
@@ -489,8 +523,8 @@ namespace Exiv2 {
         assert(pTiffComponent);
         TiffEntryBase* pTiffEntry = dynamic_cast<TiffEntryBase*>(pTiffComponent);
         assert(pTiffEntry);
-        us2Data(buf + 2, pTiffEntry->typeId(), byteOrder);
-        ul2Data(buf + 4, pTiffEntry->count(),  byteOrder);
+        us2Data(buf + 2, pTiffEntry->tiffType(), byteOrder);
+        ul2Data(buf + 4, pTiffEntry->count(),    byteOrder);
         // Move data to offset field, if it fits and is not yet there.
         if (pTiffEntry->size() <= 4 && buf + 8 != pTiffEntry->pData()) {
 #ifdef DEBUG
@@ -776,16 +810,6 @@ namespace Exiv2 {
         // Todo
     }
 
-    void TiffEncoder::encodeIptc(TiffEntryBase* object, const Exifdatum* datum)
-    {
-        // Todo
-    }
-
-    void TiffEncoder::encodeXmp(TiffEntryBase* object, const Exifdatum* datum)
-    {
-        // Todo
-    }
-
     void TiffEncoder::encodeBigEndianEntry(TiffEntryBase* object, const Exifdatum* datum)
     {
         byteOrder_ = bigEndian;
@@ -794,7 +818,7 @@ namespace Exiv2 {
     }
 
     void TiffEncoder::add(
-        TiffComponent*     pRootDir, 
+        TiffComponent*     pRootDir,
         TiffComponent*     pSourceDir,
         TiffCompFactoryFct createFct
     )
@@ -827,9 +851,9 @@ namespace Exiv2 {
 #ifdef DEBUG
             if (object == 0) {
                 std::cerr << "Warning: addPath() didn't add an entry for "
-                          << tiffGroupId(i->groupName())
+                          << i->groupName()
                           << " tag 0x" << std::setw(4) << std::setfill('0')
-                          << i->tag() << "\n";
+                          << std::hex << i->tag() << "\n";
             }
 #endif
             if (object != 0) {
@@ -929,7 +953,7 @@ namespace Exiv2 {
         os_ << px << tiffGroupName(object->group())
             << " " << _("tag") << " 0x" << std::setw(4) << std::setfill('0')
             << std::hex << std::right << object->tag()
-            << ", " << _("type") << " " << TypeInfo::typeName(object->typeId())
+            << ", " << _("type") << " 0x" << std::hex << object->tiffType()
             << ", " << std::dec << object->count() << " "<< _("component");
         if (object->count() > 1) os_ << "s";
         os_ << " in " << object->size() << " " << _("bytes");
@@ -1144,8 +1168,8 @@ namespace Exiv2 {
         assert(object != 0);
 
         readTiffEntry(object);
-        if ((object->typeId() == unsignedLong || object->typeId() == signedLong)
-             && object->count() >= 1) {
+        if (   (object->tiffType() == ttUnsignedLong || object->tiffType() == ttSignedLong)
+            && object->count() >= 1) {
             for (uint32_t i = 0; i < object->count(); ++i) {
                 int32_t offset = getLong(object->pData() + 4*i, byteOrder());
                 if (   baseOffset() + offset > size_
@@ -1234,8 +1258,7 @@ namespace Exiv2 {
 
     void TiffReader::visitIfdMakernoteEnd(TiffIfdMakernote* /*object*/)
     {
-        // Reset state (byte order, create function, offset) back to that
-        // for the image
+        // Reset state (byte order, create function, offset) back to that for the image
         resetState();
     } // TiffReader::visitIfdMakernoteEnd
 
@@ -1256,18 +1279,18 @@ namespace Exiv2 {
         }
         // Component already has tag
         p += 2;
-        uint16_t type = getUShort(p, byteOrder());
-        long typeSize = TypeInfo::typeSize(TypeId(type));
+        TiffType tiffType = getUShort(p, byteOrder());
+        TypeId typeId = toTypeId(tiffType, object->tag(), object->group());
+        long typeSize = TypeInfo::typeSize(typeId);
         if (0 == typeSize) {
 #ifndef SUPPRESS_WARNINGS
-            std::cerr << "Error: Directory " << tiffGroupName(object->group())
+            std::cerr << "Warning: Directory " << tiffGroupName(object->group())
                       << ", entry 0x" << std::setw(4)
                       << std::setfill('0') << std::hex << object->tag()
-                      << " has an invalid type:\n"
-                      << "Type = " << std::dec << type
-                      << "; skipping entry.\n";
+                      << " has unknown Exif (TIFF) type " << std::dec << tiffType
+                      << "; setting type size 1.\n";
 #endif
-            return;
+            typeSize = 1;
         }
         p += 2;
         uint32_t count = getULong(p, byteOrder());
@@ -1286,28 +1309,28 @@ namespace Exiv2 {
         uint32_t size = typeSize * count;
         uint32_t offset = getLong(p, byteOrder());
         byte* pData = p;
-        if (size > 4) {
-            if (baseOffset() + offset >= size_) {
+        if (size > 4 && baseOffset() + offset >= size_) {
 #ifndef SUPPRESS_WARNINGS
                 std::cerr << "Error: Offset of "
                           << "directory " << tiffGroupName(object->group())
                           << ", entry 0x" << std::setw(4)
                           << std::setfill('0') << std::hex << object->tag()
-                          << " is out of bounds:\n"
+                          << " is out of bounds: "
                           << "Offset = 0x" << std::setw(8)
                           << std::setfill('0') << std::hex << offset
                           << "; truncating the entry\n";
 #endif
-                return;
-            }
+                size = 0;
+        }
+        if (size > 4) {
             pData = const_cast<byte*>(pData_) + baseOffset() + offset;
             if (size > static_cast<uint32_t>(pLast_ - pData)) {
 #ifndef SUPPRESS_WARNINGS
-                std::cerr << "Warning: Upper boundary of data for "
+                std::cerr << "Error: Upper boundary of data for "
                           << "directory " << tiffGroupName(object->group())
                           << ", entry 0x" << std::setw(4)
                           << std::setfill('0') << std::hex << object->tag()
-                          << " is out of bounds:\n"
+                          << " is out of bounds: "
                           << "Offset = 0x" << std::setw(8)
                           << std::setfill('0') << std::hex << offset
                           << ", size = " << std::dec << size
@@ -1320,16 +1343,7 @@ namespace Exiv2 {
                 // Todo: adjust count, make size a multiple of typeSize
             }
         }
-        // On the fly type conversion for Exif.Photo.UserComment
-        // Todo: This should be somewhere else, maybe in a Value factory
-        //       which takes a Key and Type
-        TypeId t = TypeId(type);
-        if (   object->tag()   == 0x9286
-            && object->group() == Group::exif
-            && t               == undefined) {
-            t = comment;
-        }
-        Value::AutoPtr v = Value::create(t);
+        Value::AutoPtr v = Value::create(typeId);
         assert(v.get());
         v->read(pData, size, byteOrder());
 
@@ -1345,13 +1359,17 @@ namespace Exiv2 {
 
         readTiffEntry(object);
         // Todo: size here is that of the data area
-        uint16_t s = static_cast<uint16_t>(object->size_ / object->elSize());
-        for (uint16_t i = 0; i < s; ++i) {
+        const uint16_t sz = static_cast<uint16_t>(object->size_ / object->elSize());
+        for (uint16_t i = 0; i < sz; ++i) {
             uint16_t tag = i;
             TiffComponent::AutoPtr tc = create(tag, object->elGroup());
             assert(tc.get());
             tc->setStart(object->pData() + i * object->elSize());
             object->addChild(tc);
+            // Hack: Exif.CanonCs.Lens has 3 components
+            if (object->elGroup() == Group::canoncs && tag == 0x0017) {
+                i += 2;
+            }
         }
 
     } // TiffReader::visitArrayEntry
@@ -1360,8 +1378,12 @@ namespace Exiv2 {
     {
         assert(object != 0);
 
-        uint16_t type = object->elTypeId();
-        uint32_t size = TypeInfo::typeSize(TypeId(type));
+        TypeId typeId = toTypeId(object->elTiffType(), object->tag(), object->group());
+        uint32_t size = TypeInfo::typeSize(typeId);
+        // Hack: Exif.CanonCs.Lens has 3 components
+        if (object->group() == Group::canoncs && object->tag() == 0x0017) {
+            size *= 3;
+        }
         byte* pData   = object->start();
         assert(pData >= pData_);
 
@@ -1377,7 +1399,7 @@ namespace Exiv2 {
 
         ByteOrder bo = object->elByteOrder();
         if (bo == invalidByteOrder) bo = byteOrder();
-        Value::AutoPtr v = Value::create(TypeId(type));
+        Value::AutoPtr v = Value::create(typeId);
         assert(v.get());
         v->read(pData, size, bo);
 

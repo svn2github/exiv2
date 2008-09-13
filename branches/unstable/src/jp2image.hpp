@@ -23,6 +23,8 @@
   @brief   JPEG-2000 image, implemented using the following references:
            <a href="http://jpeg.org/public/fcd15444-6.pdf">ISO/IEC JTC 1/SC 29/WG1 N2401: JPEG 2000 Part 6 FCD 15444-6</a><br>
   @version $Rev$
+  @author  Gilles Caulier (cgilles)
+           <a href="mailto:caulier dot gilles at gmail dot com">caulier dot gilles at gmail dot com</a>
   @author  Marco Piovanelli, Ovolab (marco)
            <a href="mailto:marco.piovanelli@pobox.com">marco.piovanelli@pobox.com</a>
   @date    12-Mar-2007, marco: created
@@ -35,34 +37,29 @@
 #include "exif.hpp"
 #include "iptc.hpp"
 #include "image.hpp"
+#include "types.hpp"
 
 // + standard includes
 #include <string>
 
 // *****************************************************************************
 // namespace extensions
-namespace Exiv2 {
+namespace Exiv2 
+{
 
 // *****************************************************************************
 // class definitions
 
     // Add JPEG-2000 to the supported image formats
-    namespace ImageType {
+    namespace ImageType 
+    {
         const int jp2 = 15;                     //!< JPEG-2000 image type
     }
 
     /*!
       @brief Class to access JPEG-2000 images.
      */
-    class Jp2Image : public Image {
-        //! @name NOT Implemented
-        //@{
-        //! Copy constructor
-        Jp2Image(const Jp2Image& rhs);
-        //! Assignment operator
-        Jp2Image& operator=(const Jp2Image& rhs);
-        //@}
-
+    class EXIV2API Jp2Image : public Image {
     public:
         //! @name Creators
         //@{
@@ -77,28 +74,17 @@ namespace Exiv2 {
               auto-pointer. Callers should not continue to use the BasicIo
               instance after it is passed to this method.  Use the Image::io()
               method to get a temporary reference.
+          @param create Specifies if an existing image should be read (false)
+              or if a new file should be created (true). 
+              This option is not yet implemented.
          */
-        Jp2Image(BasicIo::AutoPtr io);
+        Jp2Image(BasicIo::AutoPtr io, bool create);
         //@}
 
         //! @name Manipulators
         //@{
         void readMetadata();
-        /*!
-          @brief Todo: Write metadata back to the image. This method is not
-              yet implemented. Calling it will throw an Error(31).
-         */
         void writeMetadata();
-        /*!
-          @brief Todo: Not supported yet. Calling this function will throw
-              an instance of Error(32).
-         */
-        void setExifData(const ExifData& exifData);
-        /*!
-          @brief Todo: Not supported yet. Calling this function will throw
-              an instance of Error(32).
-         */
-        void setIptcData(const IptcData& iptcData);
         /*!
           @brief Todo: Not supported yet(?). Calling this function will throw
               an instance of Error(32).
@@ -109,6 +95,23 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         std::string mimeType() const { return "image/jp2"; }
+        //@}
+
+    private:
+        //! @name NOT Implemented
+        //@{
+        //! Copy constructor
+        Jp2Image(const Jp2Image& rhs);
+        //! Assignment operator
+        Jp2Image& operator=(const Jp2Image& rhs);
+        /*!
+          @brief Provides the main implementation of writeMetadata() by
+                writing all buffered metadata to the provided BasicIo.
+          @param oIo BasicIo instance to write to (a temporary location).
+
+          @return 4 if opening or writing to the associated BasicIo fails
+         */
+        EXV_DLLLOCAL void doWriteMetadata(BasicIo& oIo);
         //@}
 
     }; // class Jp2Image
@@ -123,10 +126,10 @@ namespace Exiv2 {
              Caller owns the returned object and the auto-pointer ensures that
              it will be deleted.
      */
-    Image::AutoPtr newJp2Instance(BasicIo::AutoPtr io, bool create);
+    EXIV2API Image::AutoPtr newJp2Instance(BasicIo::AutoPtr io, bool create);
 
     //! Check if the file iIo is a JPEG-2000 image.
-    bool isJp2Type(BasicIo& iIo, bool advance);
+    EXIV2API bool isJp2Type(BasicIo& iIo, bool advance);
 
 }                                       // namespace Exiv2
 

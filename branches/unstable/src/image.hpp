@@ -20,7 +20,7 @@
  */
 /*!
   @file    image.hpp
-  @brief   Class JpegImage to access JPEG images
+  @brief   Class Image, defining the interface for all Image subclasses.
   @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
@@ -68,7 +68,7 @@ namespace Exiv2 {
       ImageFactory method. The Image class can then be used to to read, write,
       and save metadata.
      */
-    class Image {
+    class EXIV2API Image {
     public:
         //! Image auto_ptr type
         typedef std::auto_ptr<Image> AutoPtr;
@@ -77,10 +77,10 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Constructor taking the image type, a bitmap of the supported
-              metadata types and an auto-pointer that owns an IO instance. 
+              metadata types and an auto-pointer that owns an IO instance.
               See subclass constructor doc.
          */
-        Image(int              imageType, 
+        Image(int              imageType,
               uint16_t         supportedMetadata,
               BasicIo::AutoPtr io);
         //! Virtual Destructor
@@ -142,8 +142,8 @@ namespace Exiv2 {
           @brief Assign a raw XMP packet. The new XMP packet is not written
               to the image until the writeMetadata() method is called.
 
-          Subsequent calls to writeMetadata() write the XMP packet from 
-          the buffered raw XMP packet rather than from buffered parsed XMP 
+          Subsequent calls to writeMetadata() write the XMP packet from
+          the buffered raw XMP packet rather than from buffered parsed XMP
           data. In order to write from parsed XMP data again, use
           either writeXmpFromPacket(false) or setXmpData().
 
@@ -154,10 +154,10 @@ namespace Exiv2 {
           @brief Erase the buffered XMP packet. XMP data is not removed from
               the actual image until the writeMetadata() method is called.
 
-          This has the same effect as clearXmpData() but operates on the 
+          This has the same effect as clearXmpData() but operates on the
           buffered raw XMP packet only, not the parsed XMP data.
 
-          Subsequent calls to writeMetadata() write the XMP packet from 
+          Subsequent calls to writeMetadata() write the XMP packet from
           the buffered raw XMP packet rather than from buffered parsed XMP
           data. In order to write from parsed XMP data again, use
           either writeXmpFromPacket(false) or setXmpData().
@@ -169,7 +169,7 @@ namespace Exiv2 {
 
           Subsequent calls to writeMetadata() encode the XMP data to
           a raw XMP packet and write the newly encoded packet to the image.
-          In the process, the buffered raw XMP packet is updated. 
+          In the process, the buffered raw XMP packet is updated.
           In order to write directly from the raw XMP packet, use
           writeXmpFromPacket(true) or setXmpPacket().
 
@@ -180,7 +180,7 @@ namespace Exiv2 {
           @brief Erase any buffered XMP data. XMP data is not removed from
               the actual image until the writeMetadata() method is called.
 
-          This has the same effect as clearXmpPacket() but operates on the 
+          This has the same effect as clearXmpPacket() but operates on the
           buffered parsed XMP data.
 
           Subsequent calls to writeMetadata() encode the XMP data to
@@ -260,11 +260,11 @@ namespace Exiv2 {
           XMP from the buffered raw XMP packet or from parsed XMP data.
           The default is to write from parsed XMP data. The switch is also
           set by all functions to set and clear the buffered raw XMP packet
-          and parsed XMP data, so using this function should usually not be 
+          and parsed XMP data, so using this function should usually not be
           necessary.
 
-          If %Exiv2 was compiled without XMP support, the default for this 
-          flag is true and it will never be changed in order to preserve 
+          If %Exiv2 was compiled without XMP support, the default for this
+          flag is true and it will never be changed in order to preserve
           access to the raw XMP packet.
          */
         void writeXmpFromPacket(bool flag);
@@ -425,7 +425,7 @@ namespace Exiv2 {
 
       The factory is implemented as a static class.
     */
-    class ImageFactory {
+    class EXIV2API ImageFactory {
         friend bool Image::good() const;
     public:
         /*!
@@ -559,21 +559,6 @@ namespace Exiv2 {
         static bool checkType(int type, BasicIo& io, bool advance);
 
     private:
-        //! Struct for storing image types and function pointers.
-        struct Registry {
-            //! Comparison operator to compare a Registry structure with an image type
-            bool operator==(const int& imageType) const;
-
-            // DATA
-            int            imageType_;
-            NewInstanceFct newInstance_;
-            IsThisTypeFct  isThisType_;
-            AccessMode     exifSupport_;
-            AccessMode     iptcSupport_;
-            AccessMode     xmpSupport_;
-            AccessMode     commentSupport_;
-        };
-
         //! @name Creators
         //@{
         //! Prevent construction: not implemented.
@@ -582,9 +567,6 @@ namespace Exiv2 {
         ImageFactory(const ImageFactory& rhs);
         //@}
 
-        // DATA
-        //! List of image types, creation functions and access modes
-        static const Registry registry_[];
     }; // class ImageFactory
 
 // *****************************************************************************

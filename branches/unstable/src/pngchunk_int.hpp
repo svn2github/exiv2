@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*!
-  @file    pngchunk.hpp
+  @file    pngchunk_int.hpp
   @brief   Class PngChunk to parse PNG chunk data implemented using the following references:<br>
            <a href="http://www.vias.org/pngguide/chapter11_05.html">PNG iTXt chunk structure</a> from PNG definitive guide,<br>
            <a href="http://www.vias.org/pngguide/chapter11_04.html">PNG tTXt and zTXt chunks structures</a> from PNG definitive guide,<br>
@@ -32,8 +32,8 @@
            <a href="mailto:caulier dot gilles at gmail dot com">caulier dot gilles at gmail dot com</a>
   @date    12-Jun-06, gc: submitted
  */
-#ifndef PNGCHUNK_HPP_
-#define PNGCHUNK_HPP_
+#ifndef PNGCHUNK_INT_HPP_
+#define PNGCHUNK_INT_HPP_
 
 // *****************************************************************************
 // included header files
@@ -42,6 +42,7 @@
 // + standard includes
 #include <iosfwd>
 #include <cassert>
+#include <cstdarg>
 
 // *****************************************************************************
 // namespace extensions
@@ -49,8 +50,9 @@ namespace Exiv2 {
 
 // *****************************************************************************
 // class declarations
-
     class Image;
+
+    namespace Internal {
 
 // *****************************************************************************
 // class definitions
@@ -62,34 +64,74 @@ namespace Exiv2 {
     class PngChunk {
     public:
         /*!
-          @brief Decode PNG chunk metadata from a data buffer \em pData of length
-                 \em size into \em pImage.
+          @brief Text Chunk types.
+        */
+        enum TxtChunkType {
+            tEXt_Chunk = 0,
+            zTXt_Chunk = 1,
+            iTXt_Chunk = 2
+        };
+        /*!
+          @brief Metadata Chunk types.
+        */
+        enum MetadataType {
+            exif_Data    = 0,
+            iptc_Data    = 1,
+            xmp_Data     = 2,
+            comment_Data = 3
+        };
 
-          @param pImage    Pointer to the image to hold the metadata
-          @param pData     Pointer to the data buffer. Must point to PNG chunk data;
-                           no checks are performed.
-          @param size      Length of the data buffer.
+    public:
+        /*!
+          @brief Decode PNG IHDR chunk data from a data buffer
+                 \em data and return image size to \em outWidth and \em outHeight.
+
+          @param data      PNG Chunk data buffer.
           @param outWidth  Integer pointer to be set to the width of the image.
           @param outHeight Integer pointer to be set to the height of the image.
         */
-        static void decode(Image*      pImage,
-                           const byte* pData,
-                           long        size,
-                           int*        outWidth,
-                           int*        outHeight);
-
-    private:
-        //! @name Accessors
-        //@{
+        static void decodeIHDRChunk(const DataBuf& data,
+                                    int*           outWidth,
+                                    int*           outHeight);
 
         /*!
-          @brief Parse PNG chunk to determine type and extract content. 
+          @brief Decode PNG tEXt, zTXt, or iTXt chunk data from \em pImage passed by data buffer
+                 \em data and extract Comment, Exif, Iptc, Xmp metadata accordingly.
+
+          @param pImage    Pointer to the image to hold the metadata
+          @param data      PNG Chunk data buffer.
+          @param type      PNG Chunk TXT type.
+        */
+        static void decodeTXTChunk(Image*         pImage,
+                                   const DataBuf& data,
+                                   TxtChunkType   type);
+
+        /*!
+          @brief Return PNG TXT chunk key as data buffer.
+
+          @param data        PNG Chunk data buffer.
+          @param stripHeader Set true if chunk data start with header bytes, else false (default).
+        */
+        static DataBuf keyTXTChunk(const DataBuf& data, bool stripHeader=false);
+
+        /*!
+          @brief Return a complete PNG chunk data compressed or not as buffer. Data returned is formated 
+                 accordingly with metadata \em type to host passed by \em metadata.
+
+          @param metadata    metadata buffer.
+          @param type        metadata type.
+          @param compress    compress or not metadata.
+        */
+        static DataBuf makeMetadataChunk(const DataBuf& metadata, MetadataType type, bool compress);
+
+    private:
+        /*!
+          @brief Parse PNG Text chunk to determine type and extract content. 
                  Supported Chunk types are tTXt, zTXt, and iTXt.
          */
-        static DataBuf parsePngChunk(const byte* pData, 
-                                     long        size, 
-                                     long&       index, 
-                                     int         keysize);
+        static DataBuf parseTXTChunk(const DataBuf& data,
+                                     int            keysize,
+                                     TxtChunkType   type);
 
         /*!
           @brief Parse PNG chunk contents to extract metadata container and assign it to image. 
@@ -105,9 +147,24 @@ namespace Exiv2 {
                                       const DataBuf arr);
 
         /*!
-          @brief Decode from ImageMagick raw text profile which host encoded Exif/Iptc/Xmp metadata byte array.
-         */
-        static DataBuf readRawProfile(const DataBuf& text);
+          @brief Return a compressed (zTXt) or uncompressed (tEXt) PNG ASCII text chunk 
+                 (header + key + flags + data + CRC) as data buffer.
+
+          @param key         PNG Chunk key.
+          @param data        PNG Chunk raw data.
+          @param compress    Compress or not PNG Chunk data.
+        */
+        static DataBuf makeAsciiTxtChunk(const DataBuf& key, const DataBuf& data, bool compress);
+
+        /*!
+          @brief Return a compressed or uncompressed (iTXt) PNG UTF8 text chunk 
+                 (header + key + flags + data + CRC) as data buffer.
+
+          @param key         PNG Chunk key.
+          @param data        PNG Chunk raw data.
+          @param compress    Compress or not PNG Chunk data.
+        */
+        static DataBuf makeUtf8TxtChunk(const DataBuf& key, const DataBuf& data, bool compress);
 
         /*!
           @brief Wrapper around zlib to uncompress a PNG chunk content.
@@ -116,13 +173,22 @@ namespace Exiv2 {
                                    unsigned int compressedTextSize, 
                                    DataBuf&     arr);
 
-/* TODO : code backported from digiKam. Not yet adapted and used.
+        /*!
+          @brief Wrapper around zlib to compress a PNG chunk content.
+         */
+        static void zlibCompress(const byte*  text, 
+                                 unsigned int textSize, 
+                                 DataBuf&     arr);
 
-        static DataBuf writeRawProfile(const DataBuf& text);
+        /*!
+          @brief Decode from ImageMagick raw text profile which host encoded Exif/Iptc/Xmp metadata byte array.
+         */
+        static DataBuf readRawProfile(const DataBuf& text);
 
-        static size_t concatenateString(char*        destination, 
-                                        const char*  source, 
-                                        const size_t length);
+        /*!
+          @brief Encode to ImageMagick raw text profile which host encoded Exif/Iptc/Xmp metadata byte array.
+         */
+        static DataBuf writeRawProfile(const DataBuf& profile_data, const DataBuf& profile_type);
 
         static size_t copyString(char* destination, 
                                  const char* source, 
@@ -136,11 +202,10 @@ namespace Exiv2 {
         static long formatStringList(char *string, 
                                      const size_t length, 
                                      const char *format, 
-                                     va_list operands);*/
-        //@}
+                                     va_list operands);
 
     }; // class PngChunk
 
-}                                       // namespace Exiv2
+}}                                      // namespace Internal, Exiv2
 
-#endif                                  // #ifndef PNGCHUNK_HPP_
+#endif                                  // #ifndef PNGCHUNK_INT_HPP_

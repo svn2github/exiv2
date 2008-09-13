@@ -306,7 +306,7 @@ namespace Exiv2 {
 
     void ExifThumb::setJpegThumbnail(
         const std::string& path,
-              URational    xres, 
+              URational    xres,
               URational    yres,
               uint16_t     unit
     )
@@ -398,6 +398,16 @@ namespace Exiv2 {
         exifMetadata_.clear();
     }
 
+    void ExifData::sortByKey()
+    {
+        std::sort(exifMetadata_.begin(), exifMetadata_.end(), cmpMetadataByKey);
+    }
+
+    void ExifData::sortByTag()
+    {
+        std::sort(exifMetadata_.begin(), exifMetadata_.end(), cmpMetadataByTag);
+    }
+
     ExifData::iterator ExifData::erase(ExifData::iterator pos)
     {
         return exifMetadata_.erase(pos);
@@ -435,13 +445,25 @@ namespace Exiv2 {
         const ExifData& exifData
     )
     {
+        static const char* filteredTags[] = {
+            "Exif.Image.StripOffsets",
+            "Exif.Image.RowsPerStrip",
+            "Exif.Image.StripByteCounts"
+        };
+
+        ExifData ed = exifData;
+        for (unsigned int i = 0; i < EXV_COUNTOF(filteredTags); ++i) {
+            ExifData::iterator pos = ed.findKey(ExifKey(filteredTags[i]));
+            if (pos != ed.end()) ed.erase(pos);
+        }
+
         const IptcData iptcData;
         const XmpData  xmpData;
         return TiffParser::encode(blob,
                                   pData,
                                   size,
                                   byteOrder,
-                                  exifData,
+                                  ed,
                                   iptcData,
                                   xmpData);
     } // ExifParser::encode
@@ -459,6 +481,7 @@ namespace {
         const Exiv2::ExifKey k1("Exif.Thumbnail.Compression");
         Exiv2::ExifData::const_iterator pos = exifData.findKey(k1);
         if (pos != exifData.end()) {
+            if (pos->count() == 0) return thumbnail;
             long compression = pos->toLong();
             if (compression == 6) {
                 thumbnail = Thumbnail::AutoPtr(new JpegThumbnail);
