@@ -10,6 +10,9 @@
  */
 
 /* Todo: The PACKAGE_* defines should be generated */
+#ifdef EXV_HAVE_DLL
+#include "exv_conf.h"
+#else
 
 #ifdef _MSC_VER
 
@@ -78,3 +81,5 @@ typedef int pid_t;
 #endif
 
 #endif /* _MSC_VER */
+
+#endif /* EXV_HAVE_DLL */
