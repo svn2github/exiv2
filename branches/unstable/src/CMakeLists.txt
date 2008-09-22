@@ -155,10 +155,6 @@ if( MSVC )
     set( LIBEXIV2_SRC   ${LIBEXIV2_SRC} getopt_win32.c )
 endif( MSVC )
 
-# the following lines need to be added to circumvent the error in xmpsdk\src\MD5.h
-if( ${EXV_HAVE_STDINT_H} )
-    add_definitions( -DEXV_HAVE_STDINT_H )
-endif( ${EXV_HAVE_STDINT_H} )
 
 if( ENABLE_XMP )
     if( NOT ENABLE_LIBXMP )
@@ -169,17 +165,19 @@ endif( ENABLE_XMP )
 # ******************************************************************************
 # Library
 add_library( exiv2 ${STATIC_FLAG} ${LIBEXIV2_SRC} )
-set_target_properties( exiv2 PROPERTIES DEFINE_SYMBOL EXV_BUILDING_LIB )
+set_target_properties( exiv2 PROPERTIES VERSION ${GENERIC_LIB_VERSION} 
+                                        SOVERSION ${GENERIC_LIB_SOVERSION}
+                                        DEFINE_SYMBOL EXV_BUILDING_LIB )
 
+if( ENABLE_LIBXMP )
+    target_link_libraries( exiv2 ${XMPLIB} )
+endif( ENABLE_LIBXMP )
 target_link_libraries( exiv2 ${EXPAT_LIBRARIES} )
 if( ENABLE_PNG )
     if( ZLIB_FOUND )
         target_link_libraries( exiv2 ${ZLIB_LIBRARIES} )
     endif( ZLIB_FOUND )
 endif( ENABLE_PNG )
-if( ENABLE_LIBXMP )
-    target_link_libraries( exiv2 ${XMPLIB} )
-endif( ENABLE_LIBXMP )
 if( ENABLE_NLS )
     target_link_libraries( exiv2 ${LIBINTL_LIBRARIES} )
 endif( ENABLE_NLS )

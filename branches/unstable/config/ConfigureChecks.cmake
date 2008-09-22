@@ -75,10 +75,12 @@ endif( ENABLE_SHARED_EXIV2 )
 
 if( ENABLE_NLS )
     if( NOT LOCALEDIR )
-        file( TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/share" LOCALEDIR )
-        message( STATUS "${LOCALEDIR}" )
+        set( LOCALEDIR "\"${CMAKE_INSTALL_PREFIX}/share/locale\"" )
+        if( WIN32 )
+            string( REPLACE "/" "\\\\" LOCALEDIR ${LOCALEDIR} )
+        endif( WIN32 )
     endif( NOT LOCALEDIR )
-    add_definitions( -DEXV_LOCALEDIR="${LOCALEDIR}" )
+    add_definitions( -DEXV_LOCALEDIR=${LOCALEDIR} )
 endif( ENABLE_NLS )
 
 # checking for Header files

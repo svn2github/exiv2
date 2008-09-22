@@ -30,6 +30,7 @@
 if( ENABLE_XMP AND ENABLE_LIBXMP )
     add_library( xmp STATIC ${XMPSRC} )
     get_target_property( XMPLIB xmp LOCATION )
+    set( XMPLIB ${XMPLIB} PARENT_SCOPE )
     
     install(TARGETS xmp ${INSTALL_TARGET_STANDARD_ARGS} )
 endif( ENABLE_XMP AND ENABLE_LIBXMP )

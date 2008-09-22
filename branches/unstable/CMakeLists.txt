@@ -32,12 +32,14 @@ project( exiv2 )
 
 cmake_minimum_required( VERSION 2.6 )
 
-set( PACKAGE_BUGREPORT  "ahuggel@gmx.net" )
-set( PACKAGE            "exiv2" )
-set( PACKAGE_NAME       "exiv2" )
-set( PACKAGE_STRING     "exiv2 0.18" )
-set( PACKAGE_TARNAME    "exiv2" )
-set( PACKAGE_VERSION    "0.18" )
+set( PACKAGE_BUGREPORT      "ahuggel@gmx.net" )
+set( PACKAGE                "exiv2" )
+set( PACKAGE_NAME           "exiv2" )
+set( PACKAGE_STRING         "exiv2 0.18" )
+set( PACKAGE_TARNAME        "exiv2" )
+set( PACKAGE_VERSION        "0.18" )
+set( GENERIC_LIB_VERSION    "0.18" )
+set( GENERIC_LIB_SOVERSION  "2" )
 
 # options and there default values
 option( ENABLE_SHARED_EXIV2 "Build exiv2 as a shared library (dll)"             ON )
@@ -51,7 +53,8 @@ option( ENABLE_LENSDATA     "include lens data"                                 
 option( BUILD_samples       "Build the unit tests"                          OFF )
 
 if( ENABLE_XMP )
-    set( HAVE_XMP_TOOLKIT ON ) 
+    set( HAVE_XMP_TOOLKIT ON )
+    set( XMPLIB "do" )
 endif( ENABLE_XMP )
 
 if( BUILD_samples )
@@ -80,6 +83,10 @@ set( XMPSRC ${CMAKE_SOURCE_DIR}/xmpsdk/src/XMPMeta.cpp
             ${CMAKE_SOURCE_DIR}/xmpsdk/src/WXMPIterator.cpp
             ${CMAKE_SOURCE_DIR}/xmpsdk/src/WXMPUtils.cpp )
 
+# the following lines need to be added to circumvent the error in xmpsdk\src\MD5.h
+if( ${EXV_HAVE_STDINT_H} )
+    add_definitions( -DEXV_HAVE_STDINT_H )
+endif( ${EXV_HAVE_STDINT_H} )
 
 add_subdirectory( xmpsdk )
 add_subdirectory( src )
