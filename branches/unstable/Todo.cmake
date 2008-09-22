@@ -1,20 +1,19 @@
-* Need soname versioning for shared library
+DONE * Need soname versioning for shared library
 
 * Need g++ specific compiler options (warnings) and settings (visibility)
 
-* How do I (quickly) recompile a configured library with debugging symbols
-  (-ggdb) for debugging?
+* enable build types in cmake. In case required, add support for it
 
 * The following options of the configure script should be supported
-   --without-zlib
+   DONE --without-zlib
    --disable-nls
-   --disable-printucs2
-   --disable-xmp
+   DONE --disable-printucs2
+   DONE --disable-xmp
    --enable-commercial
-   --disable-lensdata
-   --disable-shared
+   DONE --disable-lensdata
+   DONE --disable-shared
 
-* Add further messages to display option settings
+DONE * Add further messages to display option settings
 
    ------------------------------------------------------------------
    -- Exiv2 0.18-pre1 feature configuration summary
@@ -32,41 +31,29 @@
    -- XMP metadata support........... YES
    ------------------------------------------------------------------
 
-* Need targets to build/install doc, man page
+* Need targets to build/install doc, DONE man page
 
-* More generally, are all the targets of the old framework supported / 
-  how do I perform these:
-   Makefile: xmpsdk, uninstall, doc, samples, (maintainer-)clean
-   src/Makefile: uninstall, (maintainer-)clean
-   samples/Makefile: relink
+DONE * add possibility to build xmp as a convenience library
 
-* How to build XMPSDK as a "convenience library" (as libtool calls it) 
-  instead of just adding the source files individually?
-
-* Is config/FindEXPAT needed? (a file with the same name is included in the
-  cmake-2.6 distribution)
-
-* Compilation fails if Expat (possibly also other dependencies?) is in a
+DONE * Compilation fails if Expat (possibly also other dependencies?) is in a
   non-standard place
 
-* This is probably not necessary in src/CMakeLists.txt / can be removed:
+WONTFIX * This is probably not necessary in src/CMakeLists.txt / can be removed:
    set( LIBEXIV2_SRC   ${LIBEXIV2_SRC} getopt_win32.c )
+   it is necessary as both windows compilers do not autoexport
 
-* Do we need to worry about MSVC warnings like this:
+DONE * Do we need to worry about MSVC warnings like this:
 d:\home\ahuggel\msys\src\exiv2\src\exif.hpp(245) : warning C4251: 'Exiv2::Exifdatum::value_' : class 'std::auto_ptr<_Ty>' needs to have dll-interface to be used by clients of class 'Exiv2::Exifdatum'
         with
         [
             _Ty=Exiv2::Value
         ]
 
-* How to cross-compile on Linux for Windows (MinGW) (some applications and
-  my own release-build process need this)
+* add information on how to cross-compile on Linux for Windows (MinGW) (some applications and
+  my own release-build process need this) to the README.cmake
 
-* How does cmake handle RPATH? (I'll read up on this)
+INFO * check How does cmake handle RPATH? (I'll read up on this)
 
-* Is the pkgconfig file not installed in MinGW?
-
-* Can cmake be used to improve platform check in XMPSDK
-   if ( APPLE ); if ( UNIX ); if ( WIN32 )
+DONE * Is the pkgconfig file not installed in MinGW? - it is now
 
 * Can the logic needed to build the doc be re-written using cmake?
