@@ -40,15 +40,19 @@ set( PACKAGE_TARNAME    "exiv2" )
 set( PACKAGE_VERSION    "0.18" )
 
 # options and there default values
-option( EXV_HAVE_DLL "Build exiv2 as a shared library (dll)" ON )
-option( BUILD_samples "Build the unit tests" OFF )
+option( ENABLE_SHARED_EXIV2 "Build exiv2 as a shared library (dll)"             ON )
+option( ENABLE_XMP          "Build with XMP metadata support"                   ON )
+option( ENABLE_LIBXMP       "Build a static convenience Library for XMP"        OFF )
+option( ENABLE_PNG          "Build with png support (requires libz)"            ON )
+option( ENABLE_NLS          "Build native language support (requires gettext)"  OFF )
+option( ENABLE_PRINTUCS2    "Build with Printucs2"                              ON )
+option( ENABLE_LENSDATA     "include lens data"                                 ON )
 
-if( EXV_HAVE_DLL )
-    add_definitions( -DEXV_HAVE_DLL )
-    set( STATIC_FLAG SHARED )
-else( EXV_HAVE_DLL )
-    set( STATIC_FLAG STATIC )
-endif( EXV_HAVE_DLL )
+option( BUILD_samples       "Build the unit tests"                          OFF )
+
+if( ENABLE_XMP )
+    set( HAVE_XMP_TOOLKIT ON ) 
+endif( ENABLE_XMP )
 
 if( BUILD_samples )
     ENABLE_TESTING()
@@ -76,6 +80,8 @@ set( XMPSRC ${CMAKE_SOURCE_DIR}/xmpsdk/src/XMPMeta.cpp
             ${CMAKE_SOURCE_DIR}/xmpsdk/src/WXMPIterator.cpp
             ${CMAKE_SOURCE_DIR}/xmpsdk/src/WXMPUtils.cpp )
 
+
+add_subdirectory( xmpsdk )
 add_subdirectory( src )
 
 if( BUILD_samples )

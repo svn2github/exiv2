@@ -24,7 +24,7 @@
 
 /* Define to 1 if translation of program messages to the user's
    native language is requested. */
-#cmakedefine ENABLE_NLS 1
+#cmakedefine EXV_ENABLE_NLS 1
 
 /* Define to 1 if you have the `iconv' function. */
 #cmakedefine EXV_HAVE_ICONV 1
@@ -239,5 +239,5 @@ typedef int pid_t;
   See, eg. http://www.informit.com/guides/content.asp?g=cplusplus&seqNum=259
 */
 #if _MSC_VER >= 1400
-# pragma warning(disable : 4996)
+# pragma warning(disable : 4996 4251)
 #endif
