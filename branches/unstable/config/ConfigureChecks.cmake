@@ -122,6 +122,12 @@ check_function_exists( strtol HAVE_STRTOL )
 check_function_exists( timegm HAVE_TIMEGM )
 check_function_exists( vprintf HAVE_VPRINTF )
 
+message( STATUS "None:              ${CMAKE_CXX_FLAGS}" )
+message( STATUS "Debug:             ${CMAKE_CXX_FLAGS_DEBUG}" )
+message( STATUS "Release:           ${CMAKE_CXX_FLAGS_RELEASE}" )
+message( STATUS "RelWithDebInfo:    ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}" )
+message( STATUS "MinSizeRel:        ${CMAKE_CXX_FLAGS_MINSIZEREL}" )
+
 if( HAVE_STDBOOL_H )
     check_symbol_exists( "_Bool" stdbool.h HAVE__BOOL )
 endif( HAVE_STDBOOL_H )

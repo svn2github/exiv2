@@ -53,6 +53,12 @@ option( ENABLE_COMMERCIAL   "compile with the EXV_COMMERCIAL_VERSION symbol set"
 
 option( BUILD_samples       "Build the unit tests"                                  OFF )
 
+if( MINGW OR UNIX )
+    if( ${CMAKE_BUILD_TYPE} MATCHES "Debug" )
+        add_definitions( -Wall -Wcast-align -Wpointer-arith -Wformat-security -Wmissing-format-attribute -Woverloaded-virtual -W )
+    endif( ${CMAKE_BUILD_TYPE} MATCHES "Debug" )
+endif( MINGW OR UNIX )
+
 if( ENABLE_XMP )
     set( HAVE_XMP_TOOLKIT ON )
     set( XMPLIB "do" )

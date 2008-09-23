@@ -1,6 +1,6 @@
 DONE * Need soname versioning for shared library
 
-* Need g++ specific compiler options (warnings) and settings (visibility)
+* Need g++ specific DONE compiler options (warnings) and settings (visibility)
 
 * enable build types in cmake. In case required, add support for it
 
