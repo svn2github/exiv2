@@ -5,13 +5,13 @@ DONE * Need soname versioning for shared library
 * enable build types in cmake. In case required, add support for it
 
 * The following options of the configure script should be supported
-   DONE --without-zlib
-   --disable-nls
-   DONE --disable-printucs2
-   DONE --disable-xmp
-   --enable-commercial
-   DONE --disable-lensdata
-   DONE --disable-shared
+   --without-zlib       DONE - ENABLE_PNG
+   --disable-nls        DONE - ENABLE_NLS ??? that doesn't work correctly here
+   --disable-printucs2  DONE - ENABLE_PRINTUCS2
+   --disable-xmp        DONE - ENABLE_XMP
+   --enable-commercial  DONE - ENABLE_COMMERCIAL
+   --disable-lensdata   DONE - ENABLE_LENSDATA
+   --disable-shared     DONE - ENABLE_SHARED_EXIV2
 
 DONE * Add further messages to display option settings
 
