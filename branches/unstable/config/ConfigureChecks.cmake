@@ -83,6 +83,10 @@ if( ENABLE_NLS )
     add_definitions( -DEXV_LOCALEDIR=${LOCALEDIR} )
 endif( ENABLE_NLS )
 
+if( ENABLE_COMMERCIAL )
+    add_definitions( -DEXV_COMMERCIAL_VERSION )
+endif( ENABLE_COMMERCIAL )
+
 # checking for Header files
 check_include_file( "inttypes.h" HAVE_INTTYPES_H )
 check_include_file( "libintl.h" HAVE_LIBINTL_H )
@@ -254,5 +258,5 @@ OptionOutput( "Building static libxmp:          " ENABLE_LIBXMP )
 OptionOutput( "Native language support:         " ENABLE_NLS )
 OptionOutput( "Conversion of Windows XP tags:   " ENABLE_PRINTUCS2 )
 OptionOutput( "Nikon lens database:             " ENABLE_LENSDATA )
-
+OptionOutput( "commercial build:                " ENABLE_COMMERCIAL )
 message( STATUS "-------------------------------------------------------------" )
