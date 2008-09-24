@@ -210,4 +210,4 @@ install( FILES ${LIBEXIV2_HDR} DESTINATION include/exiv2 )
 
 # ******************************************************************************
 # Man page
-install( FILES exiv2.1 DESTINATION share/man/man1 )
+install( FILES exiv2.1 DESTINATION man/man1 )
