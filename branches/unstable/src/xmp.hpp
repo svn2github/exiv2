@@ -45,6 +45,10 @@
 namespace Exiv2 {
 
 // *****************************************************************************
+// class declarations
+    class ExifData;
+
+// *****************************************************************************
 // class definitions
 
     /*!
@@ -111,16 +115,16 @@ namespace Exiv2 {
                  std::string&).  If the %Xmpdatum does not have a Value yet,
                  then a %Value of the correct type for this %Xmpdatum is
                  created. If the key is unknown, a XmpTextValue is used as
-                 default.
+                 default. Return 0 if the value was read successfully.
          */
-        void setValue(const std::string& value);
+        int setValue(const std::string& value);
         //@}
 
         //! @name Accessors
         //@{
         //! Not implemented. Calling this method will raise an exception.
         long copy(byte* buf, ByteOrder byteOrder) const;
-        std::ostream& write(std::ostream& os) const;
+        std::ostream& write(std::ostream& os, const ExifData* pMetadata =0) const;
         /*!
           @brief Return the key of the Xmpdatum. The key is of the form
                  '<b>Xmp</b>.prefix.property'. Note however that the
@@ -128,6 +132,7 @@ namespace Exiv2 {
                  contain multiple metadata with the same key.
          */
         std::string key() const;
+        const char* familyName() const;
         //! Return the (preferred) schema namespace prefix.
         std::string groupName() const;
         //! Return the property name.

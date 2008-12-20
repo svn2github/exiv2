@@ -46,7 +46,7 @@ namespace Exiv2 {
     Key::~Key()
     {
     }
-    
+
     Key::AutoPtr Key::clone() const
     {
         return AutoPtr(clone_());
@@ -74,10 +74,10 @@ namespace Exiv2 {
         return *this;
     }
 
-    std::string Metadatum::print() const
+    std::string Metadatum::print(const ExifData* pMetadata) const
     {
         std::ostringstream os;
-        write(os);
+        write(os, pMetadata);
         return os.str();
     }
 

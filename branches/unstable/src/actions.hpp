@@ -48,6 +48,8 @@
 namespace Exiv2 {
     class ExifData;
     class Image;
+    class Metadatum;
+    class PreviewImage;
 }
 
 // *****************************************************************************
@@ -162,14 +164,16 @@ namespace Action {
 
         //! Print the Jpeg comment
         int printComment();
-        //! Print uninterpreted Iptc information
-        int printIptc();
-        //! print uninterpreted XMP information
-        int printXmp();
+        //! Print list of available preview images
+        int printPreviewList();
         //! Print Exif summary information
         int printSummary();
-        //! Print the list of Exif data in user defined format
+        //! Print Exif, IPTC and XMP metadata in user defined format
         int printList();
+        //! Print a metadatum in a user defined format
+        void printMetadatum(const Exiv2::Metadatum& md,
+                            const Exiv2::Image* pImage,
+                            bool const manyFiles);
         //! Print the label for a summary line
         void printLabel(const std::string& label) const;
         /*!
@@ -278,6 +282,17 @@ namespace Action {
                  on the format of the Exif thumbnail image.
          */
         int writeThumbnail() const;
+        /*!
+          @brief Write preview images to files.
+         */
+        int writePreviews() const;
+        /*!
+          @brief Write one preview image to a file. The filename is composed by
+                 removing the suffix from the image filename and appending
+                 "-preview<num>" and the appropriate suffix (".jpg" or ".tif"),
+                 depending on the format of the Exif thumbnail image.
+         */
+        void writePreviewFile(const Exiv2::PreviewImage& pvImg, int num) const;
 
     private:
         virtual Extract* clone_() const;
@@ -324,8 +339,8 @@ namespace Action {
         typedef std::auto_ptr<Modify> AutoPtr;
         AutoPtr clone() const;
         Modify() {}
-        //! Apply modification commands to the \em pImage
-        static void applyCommands(Exiv2::Image* pImage);
+        //! Apply modification commands to the \em pImage, return 0 if successful.
+        static int applyCommands(Exiv2::Image* pImage);
 
     private:
         virtual Modify* clone_() const;
@@ -333,11 +348,11 @@ namespace Action {
         Modify(const Modify& /*src*/) : Task() {}
 
         //! Add a metadatum to \em pImage according to \em modifyCmd
-        static void addMetadatum(Exiv2::Image* pImage,
-                                 const ModifyCmd& modifyCmd);
+        static int addMetadatum(Exiv2::Image* pImage,
+                                const ModifyCmd& modifyCmd);
         //! Set a metadatum in \em pImage according to \em modifyCmd
-        static void setMetadatum(Exiv2::Image* pImage,
-                                 const ModifyCmd& modifyCmd);
+        static int setMetadatum(Exiv2::Image* pImage,
+                                const ModifyCmd& modifyCmd);
         //! Delete a metadatum from \em pImage according to \em modifyCmd
         static void delMetadatum(Exiv2::Image* pImage,
                                  const ModifyCmd& modifyCmd);

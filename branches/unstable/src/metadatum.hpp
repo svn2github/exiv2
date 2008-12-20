@@ -47,6 +47,10 @@
 namespace Exiv2 {
 
 // *****************************************************************************
+// class declarations
+    class ExifData;
+
+// *****************************************************************************
 // class definitions
 
     /*!
@@ -147,9 +151,9 @@ namespace Exiv2 {
           @brief Set the value to the string buf.
                  Uses Value::read(const std::string& buf). If the metadatum does
                  not have a value yet, then one is created. See subclasses for
-                 more details.
+                 more details. Return 0 if the value was read successfully.
          */
-        virtual void setValue(const std::string& buf) =0;
+        virtual int setValue(const std::string& buf) =0;
         //@}
 
         //! @name Accessors
@@ -157,9 +161,9 @@ namespace Exiv2 {
         /*!
           @brief Write the interpreted value to a string.
 
-          Implemented in terms of std::ostream& write(std::ostream& os).
+          Implemented in terms of write(), see there.
          */
-        std::string print() const;
+        std::string print(const ExifData* pMetadata =0) const;
         /*!
           @brief Write value to a data buffer and return the number
                  of bytes written.
@@ -176,20 +180,38 @@ namespace Exiv2 {
           @brief Write the interpreted value to an output stream, return
                  the stream.
 
-          You do not usually have to use this function; it is used for the
-          implementation of the output operator for %Metadatum,
-          operator<<(std::ostream &os, const Metadatum &md). See also
-          std::string print() const, which prints the interpreted value
-          to a string.
+          The method takes an optional pointer to a metadata container.
+          Pretty-print functions may use that to refer to other metadata as it
+          is sometimes not sufficient to know only the value of the metadatum
+          that should be interpreted. Thus, it is advisable to always call this
+          method with a pointer to the metadata container if possible.
+
+          This functionality is currently only implemented for Exif tags.
+          The pointer is ignored when used to write IPTC datasets or XMP
+          properties.
+
+          Without the optional metadata pointer, you do not usually have to use
+          this function; it is used for the implementation of the output
+          operator for %Metadatum,
+          operator<<(std::ostream &os, const Metadatum &md).
+
+          See also print(), which prints the interpreted value to a string.
          */
-        virtual std::ostream& write(std::ostream& os) const =0;
+        virtual std::ostream& write(
+                  std::ostream& os,
+            const ExifData*     pMetadata =0
+        ) const =0;
         /*!
           @brief Return the key of the metadatum. The key is of the form
-                 'familyName.ifdItem.tagName'. Note however that the key
-                 is not necessarily unique, i.e., an ExifData object may
+                 'familyName.groupName.tagName'. Note however that the key
+                 is not necessarily unique, e.g., an ExifData object may
                  contain multiple metadata with the same key.
          */
         virtual std::string key() const =0;
+        //! Return the name of the metadata family (which is also the first part of the key)
+        virtual const char* familyName() const =0;
+        //! Return the name of the metadata group (which is also the second part of the key)
+        virtual std::string groupName() const =0;
         //! Return the name of the tag (which is also the third part of the key)
         virtual std::string tagName() const =0;
         //! Return a label for the tag 	
@@ -283,7 +305,7 @@ namespace Exiv2 {
     //! Unary predicate that matches a Exifdatum with a given key
     class EXIV2API FindMetadatumByKey {
     public:
-        //! Constructor, initializes the object with the tag to look for
+        //! Constructor, initializes the object with the key to look for
         FindMetadatumByKey(const std::string& key) : key_(key) {}
         /*!
           @brief Returns true if the key of the argument metadatum is equal
@@ -295,7 +317,7 @@ namespace Exiv2 {
     private:
         std::string key_;
 
-    }; // class FindMetadatumByTag
+    }; // class FindMetadatumByKey
 
     /*!
       @brief Output operator for Metadatum types, writing the interpreted

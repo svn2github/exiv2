@@ -20,9 +20,9 @@
  */
 /*!
   @file    canonmn.hpp
-  @brief   Canon MakerNote.<BR>References:<BR>
-           <a href="http://www.burren.cx/david/canon.html">EXIF MakerNote of Canon</a> by David Burren<br>
-           <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Canon.html">Canon makernote tags</a> by Phil Harvey
+  @brief   Canon makernote tags.<BR>References:<BR>
+           [1] <a href="http://www.burren.cx/david/canon.html">EXIF MakerNote of Canon</a> by David Burren<br>
+           [2] <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Canon.html">Canon makernote tags</a> by Phil Harvey
   @version $Rev$
   @author  <a href="mailto:ahuggel@gmx.net">Andreas Huggel (ahu)</a><br>
            <a href="mailto:david@edeca.net">David Cannings (dc)</a>
@@ -78,6 +78,8 @@ namespace Exiv2 {
         static std::ostream& print0x000c(std::ostream& os, const Value& value, const ExifData*);
         //! Self timer
         static std::ostream& printCs0x0002(std::ostream& os, const Value& value, const ExifData*);
+        //! Camera lens type. For some values, the exact type can only be determined if \em metadata is provided.
+        static std::ostream& printCsLensType(std::ostream& os, const Value& value, const ExifData* metadata);
         //! Camera lens information
         static std::ostream& printCsLens(std::ostream& os, const Value& value, const ExifData*);
         //! ISO speed used

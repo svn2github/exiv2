@@ -168,6 +168,11 @@ namespace Exiv2 {
         return p_->key_.get() == 0 ? "" : p_->key_->key();
     }
 
+    const char* Xmpdatum::familyName() const
+    {
+        return p_->key_.get() == 0 ? "" : p_->key_->familyName();
+    }
+
     std::string Xmpdatum::groupName() const
     {
         return p_->key_.get() == 0 ? "" : p_->key_->groupName();
@@ -250,7 +255,7 @@ namespace Exiv2 {
         return 0;
     }
 
-    std::ostream& Xmpdatum::write(std::ostream& os) const
+    std::ostream& Xmpdatum::write(std::ostream& os, const ExifData*) const
     {
         return XmpProperties::printProperty(os, key(), value());
     }
@@ -273,7 +278,7 @@ namespace Exiv2 {
         if (pValue) p_->value_ = pValue->clone();
     }
 
-    void Xmpdatum::setValue(const std::string& value)
+    int Xmpdatum::setValue(const std::string& value)
     {
         if (p_->value_.get() == 0) {
             TypeId type = xmpText;
@@ -282,7 +287,7 @@ namespace Exiv2 {
             }
             p_->value_ = Value::create(type);
         }
-        p_->value_->read(value);
+        return p_->value_->read(value);
     }
 
     Xmpdatum& XmpData::operator[](const std::string& key)

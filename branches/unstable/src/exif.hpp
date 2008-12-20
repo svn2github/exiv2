@@ -132,9 +132,10 @@ namespace Exiv2 {
           @brief Set the value to the string \em value.  Uses Value::read(const
                  std::string&).  If the %Exifdatum does not have a Value yet,
                  then a %Value of the correct type for this %Exifdatum is
-                 created. An AsciiValue is created for unknown tags.
+                 created. An AsciiValue is created for unknown tags. Return
+                 0 if the value was read successfully.
          */
-        void setValue(const std::string& value);
+        int setValue(const std::string& value);
         /*!
           @brief Set the data area by copying (cloning) the buffer pointed to
                  by \em buf.
@@ -157,6 +158,8 @@ namespace Exiv2 {
         //! Return the key of the %Exifdatum.
         std::string key() const
             { return key_.get() == 0 ? "" : key_->key(); }
+        const char* familyName() const
+            { return key_.get() == 0 ? "" : key_->familyName(); }
         std::string groupName() const
             { return key_.get() == 0 ? "" : key_->groupName(); }
         std::string tagName() const
@@ -190,7 +193,7 @@ namespace Exiv2 {
         */
         long copy(byte* buf, ByteOrder byteOrder) const
             { return value_.get() == 0 ? 0 : value_->copy(buf, byteOrder); }
-        std::ostream& write(std::ostream& os) const;
+        std::ostream& write(std::ostream& os, const ExifData* pMetadata =0) const;
         //! Return the type id of the value
         TypeId typeId() const
             { return value_.get() == 0 ? invalidTypeId : value_->typeId(); }
@@ -464,6 +467,12 @@ namespace Exiv2 {
                  by this call.
          */
         iterator erase(iterator pos);
+        /*!
+          @brief Remove all elements of the range \em beg, \em end, return the
+                 position of the next element. Note that iterators into
+                 the metadata are potentially invalidated by this call.
+         */
+        iterator erase(iterator beg, iterator end);
         /*!
           @brief Delete all Exifdatum instances resulting in an empty container.
                  Note that this also removes thumbnails.

@@ -71,6 +71,21 @@ namespace Exiv2 {
         const uint16_t olymp1mn  = 281; //!< Olympus makernote
         const uint16_t olymp2mn  = 282; //!< Olympus II makernote
         const uint16_t olympcs   = 283; //!< Olympus camera settings
+        const uint16_t olympeq   = 284; //!< Olympus equipment tags
+        const uint16_t olymprd   = 285; //!< Olympus raw development tags
+        const uint16_t olymprd2  = 286; //!< Olympus raw development 2 tags
+        const uint16_t olympip   = 287; //!< Olympus image processing tags
+        const uint16_t olympfi   = 288; //!< Olympus focus info tags
+        const uint16_t olympfe1  = 289; //!< Olympus FE 1 tags
+        const uint16_t olympfe2  = 290; //!< Olympus FE 2 tags
+        const uint16_t olympfe3  = 291; //!< Olympus FE 3 tags
+        const uint16_t olympfe4  = 292; //!< Olympus FE 4 tags
+        const uint16_t olympfe5  = 293; //!< Olympus FE 5 tags
+        const uint16_t olympfe6  = 294; //!< Olympus FE 6 tags
+        const uint16_t olympfe7  = 295; //!< Olympus FE 7 tags
+        const uint16_t olympfe8  = 296; //!< Olympus FE 8 tags
+        const uint16_t olympfe9  = 297; //!< Olympus FE 9 tags
+        const uint16_t olympri   = 298; //!< Olympus raw info tags
     }
 
 // *****************************************************************************
@@ -213,7 +228,9 @@ namespace Exiv2 {
                          bool      hasNext =true)
             : TiffComponent(tag, group),
               pHeader_(pHeader),
-              ifd_(tag, mnGroup, hasNext) {}
+              ifd_(tag, mnGroup, hasNext),
+              mnOffset_(0),
+              byteOrder_(invalidByteOrder) {}
         //! Virtual destructor
         virtual ~TiffIfdMakernote();
         //@}
@@ -234,27 +251,34 @@ namespace Exiv2 {
         uint32_t sizeHeader() const;
         //! Write the header to a data buffer, return the number of bytes written.
         uint32_t writeHeader(Blob& blob, ByteOrder byteOrder) const;
-        //@}
+        /*!
+          @brief Return the offset to the makernote from the start of the
+                 TIFF header.
+        */
+        uint32_t mnOffset() const;
         /*!
           @brief Return the offset to the start of the Makernote IFD from
                  the start of the Makernote.
+                 Returns 0 if there is no header.
          */
         uint32_t ifdOffset() const;
         /*!
-          @brief Return the byte order for the makernote. Default (if there is
-                 no header) is invalidByteOrder. This means that the byte order
-                 of the the image should be used for the makernote.
+          @brief Return the byte order for the makernote.
+
+          After the makernote has been read, this returns the actual byte order
+          of the makernote, either \c bigEndian or \c littleEndian.  Before
+          that, it returns the byte order set in the header
+          (\c invalidByteOrder if there is no header). In this case, the return
+          value \c invalidByteOrder means that the byte order of the the image
+          should be used for the makernote.
          */
         ByteOrder byteOrder() const;
         /*!
-          @brief Return the base offset for the makernote IFD entries relative
-                 to the start of the TIFF header. The default, if there is no
-                 header, is 0.
-
-          @param mnOffset Offset to the makernote from the start of the
-                 TIFF header.
+          @brief Return the base offset for use with the makernote IFD entries
+                 relative to the start of the TIFF header.
+                 Returns 0 if there is no header.
          */
-        uint32_t baseOffset (uint32_t mnOffset) const;
+        uint32_t baseOffset() const;
         //@}
 
     protected:
@@ -324,6 +348,8 @@ namespace Exiv2 {
         // DATA
         MnHeader*     pHeader_;                 //!< Makernote header
         TiffDirectory ifd_;                     //!< Makernote IFD
+        uint32_t      mnOffset_;                //!< Makernote offset
+        ByteOrder     byteOrder_;               //!< Byte order of the makernote
 
     }; // class TiffIfdMakernote
 

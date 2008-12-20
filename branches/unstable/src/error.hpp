@@ -46,6 +46,12 @@ namespace Exiv2 {
 // *****************************************************************************
 // class definitions
 
+#ifdef _MSC_VER
+// Disable MSVC warnings "non - DLL-interface classkey 'identifier' used as base
+// for DLL-interface classkey 'identifier'"
+# pragma warning( disable : 4275 )
+#endif
+
     /*!
       @brief Error class interface. Allows the definition and use of a hierarchy
              of error classes which can all be handled in one catch block.
@@ -67,6 +73,7 @@ namespace Exiv2 {
         //@{
         //! Return the error code.
         virtual int code() const throw() =0;
+        //@}
     }; // AnyError
 
     //! %AnyBase output operator
@@ -112,7 +119,7 @@ namespace Exiv2 {
         {
             setMsg();
         }
-        //! Virtual destructor.
+        //! Virtual destructor. (Needed because of throw())
         virtual ~Error() throw()
         {
         }
@@ -146,6 +153,9 @@ namespace Exiv2 {
 
     }; // class Error
 
-}                                       // namespace Exiv2
+#ifdef _MSC_VER
+# pragma warning( default : 4275 )
+#endif
 
+}                                       // namespace Exiv2
 #endif                                  // #ifndef ERROR_HPP_

@@ -76,7 +76,7 @@ namespace Exiv2 {
     struct EXIV2API IfdInfo {
         struct Item;
         bool operator==(IfdId ifdId) const;     //!< Comparison operator for IFD id
-        bool operator==(Item item) const;       //!< Comparison operator for IFD item
+        bool operator==(const Item& item) const;       //!< Comparison operator for IFD item
         IfdId ifdId_;                           //!< IFD id
         const char* name_;                      //!< IFD name
         const char* item_; //!< Related IFD item. This is also an IFD name, unique for each IFD.
@@ -141,7 +141,7 @@ namespace Exiv2 {
     }; // struct TagDetailsBitmask
 
     /*!
-      @brief Generic print function to translate a long value to a description
+      @brief Generic pretty-print function to translate a long value to a description
              by looking up a reference table.
      */
     template <int N, const TagDetails (&array)[N]>
@@ -168,6 +168,10 @@ namespace Exiv2 {
     std::ostream& printTagBitmask(std::ostream& os, const Value& value, const ExifData*)
     {
         const uint32_t val = static_cast<uint32_t>(value.toLong());
+        if (val == 0 && N > 0) {
+            const TagDetailsBitmask* td = *(&array);
+            if (td->mask_ == 0) return os << exvGettext(td->label_);
+        }
         bool sep = false;
         for (int i = 0; i < N; i++) {
             // *& acrobatics is a workaround for a MSVC 7.1 bug
@@ -288,6 +292,8 @@ namespace Exiv2 {
         static const TagInfo* iopTagList();
         //! Return read-only list of built-in GPS tags
         static const TagInfo* gpsTagList();
+        //! Return read-only list of built-in Exiv2 Makernote info tags
+        static const TagInfo* mnTagList();
         //! Print a list of all standard Exif tags to output stream
         static void taglist(std::ostream& os);
         //! Print the list of tags for \em %IfdId
@@ -356,6 +362,8 @@ namespace Exiv2 {
           @brief Assignment operator.
          */
         ExifKey& operator=(const ExifKey& rhs);
+        //! Set the index.
+        void setIdx(int idx);
         //@}
 
         //! @name Accessors
@@ -380,7 +388,7 @@ namespace Exiv2 {
         std::string ifdItem() const { return ifdItem_; }
         //! Return the name of the Exif section (deprecated)
         std::string sectionName() const;
-        //! Return the index (unique id of this key within the original IFD)
+        //! Return the index (unique id of this key within the original Exif data, 0 if not set)
         int idx() const { return idx_; }
         //@}
 
@@ -412,7 +420,7 @@ namespace Exiv2 {
         uint16_t tag_;                  //!< Tag value
         IfdId ifdId_;                   //!< The IFD associated with this tag
         std::string ifdItem_;           //!< The IFD item
-        int idx_;                       //!< Unique id of an entry within one IFD
+        int idx_;                       //!< Unique id of the Exif key in the image
         std::string key_;               //!< Key
     }; // class ExifKey
 

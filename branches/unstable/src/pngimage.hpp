@@ -23,7 +23,7 @@
   @brief   PNG image, implemented using the following references:
            <a href="http://www.w3.org/TR/PNG/">PNG specification</a> by W3C<br>
            <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/PNG.html">PNG tags list</a> by Phil Harvey<br>
-  @version $Rev: 823 $
+  @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @author  Gilles Caulier (cgilles)
@@ -44,14 +44,14 @@
 
 // *****************************************************************************
 // namespace extensions
-namespace Exiv2 
+namespace Exiv2
 {
 
 // *****************************************************************************
 // class definitions
 
     // Add PNG to the supported image formats
-    namespace ImageType 
+    namespace ImageType
     {
         const int png = 6;          //!< PNG image type (see class PngImage)
     }

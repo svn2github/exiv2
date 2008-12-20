@@ -37,6 +37,7 @@
 // + standard includes
 #include <string>
 #include <vector>
+#include <set>
 #include <iostream>
 
 // *****************************************************************************
@@ -72,7 +73,7 @@ struct CmdIdAndString {
   @brief Implements the command line handling for the program.
 
   Derives from Util::Getopt to use the command line argument parsing
-  functionalty provided there. This class is implemented as a Singleton,
+  functionality provided there. This class is implemented as a singleton,
   i.e., there is only one global instance of it, which can be accessed
   from everywhere.
 
@@ -113,6 +114,8 @@ public:
     typedef std::vector<std::string> CmdLines;
     //! Container to store filenames.
     typedef std::vector<std::string> Files;
+    //! Container for preview image numbers
+    typedef std::set<int> PreviewNumbers;
 
     /*!
       @brief Controls all access to the global Params instance.
@@ -123,9 +126,14 @@ public:
     void cleanup();
 
     //! Enumerates print modes
-    enum PrintMode { pmSummary, pmList, pmIptc, pmXmp, pmComment };
+    enum PrintMode {
+        pmSummary,
+        pmList,
+        pmComment,
+        pmPreview
+    };
 
-    //! Individual items to print
+    //! Individual items to print, bitmap
     enum PrintItem {
         prTag   =    1,
         prGroup =    2,
@@ -147,7 +155,8 @@ public:
         ctComment    =  4,
         ctThumb      =  8,
         ctXmp        = 16,
-        ctXmpSidecar = 32
+        ctXmpSidecar = 32,
+        ctPreview    = 64
     };
 
     //! Enumerates the policies to handle existing files in rename action
@@ -176,6 +185,7 @@ public:
     bool adjust_;                       //!< Adjustment flag.
     PrintMode printMode_;               //!< Print mode.
     unsigned long printItems_;          //!< Print items.
+    unsigned long printTags_;           //!< Print tags (bitmap of MetadataId flags).
     //! %Action (integer rather than TaskType to avoid dependency).
     int  action_;
     int  target_;                       //!< What common target to process.
@@ -191,6 +201,7 @@ public:
     std::string directory_;             //!< Location for files to extract/insert
     std::string suffix_;                //!< File extension of the file to insert
     Files files_;                       //!< List of non-option arguments.
+    PreviewNumbers previewNumbers_;     //!< List of preview numbers
 
 private:
     //! Pointer to the global Params object.
@@ -219,6 +230,7 @@ private:
                adjust_(false),
                printMode_(pmSummary),
                printItems_(0),
+               printTags_(Exiv2::mdNone),
                action_(0),
                target_(ctExif|ctIptc|ctComment|ctXmp),
                adjustment_(0),
@@ -240,7 +252,7 @@ private:
     int evalAdjust(const std::string& optarg);
     int evalYodAdjust(const Yod& yod, const std::string& optarg);
     int evalPrint(const std::string& optarg);
-    int evalPrintCols(const std::string& optarg);
+    int evalPrintFlags(const std::string& optarg);
     int evalDelete(const std::string& optarg);
     int evalExtract(const std::string& optarg);
     int evalInsert(const std::string& optarg);

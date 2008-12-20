@@ -78,6 +78,7 @@ namespace Exiv2 {
         {   8, "SubImage2"    },
         {   9, "SubImage3"    },
         {  10, "SubImage4"    },
+        { 256, "MakerNote"    },
         // 257 not needed (olympmn)
         { 258, "Fujifilm"     },
         { 259, "Canon"        },
@@ -104,7 +105,22 @@ namespace Exiv2 {
         { 280, "NikonPreview" },
         { 281, "Olympus"      },
         { 282, "Olympus2"     },
-        { 283, "OlympusCs"    }
+        { 283, "OlympusCs"    },
+        { 284, "OlympusEq"    },
+        { 285, "OlympusRd"    },
+        { 286, "OlympusRd2"   },
+        { 287, "OlympusIp"    },
+        { 288, "OlympusFi"    },
+        { 289, "OlympusFe1"   },
+        { 290, "OlympusFe2"   },
+        { 291, "OlympusFe3"   },
+        { 292, "OlympusFe4"   },
+        { 293, "OlympusFe5"   },
+        { 294, "OlympusFe6"   },
+        { 295, "OlympusFe7"   },
+        { 296, "OlympusFe8"   },
+        { 297, "OlympusFe9"   },
+        { 298, "OlympusRi"    }
     };
 
     bool TiffGroupInfo::operator==(const uint16_t& group) const
@@ -154,7 +170,7 @@ namespace Exiv2 {
     TiffEntryBase::TiffEntryBase(uint16_t tag, uint16_t group, TiffType tiffType)
         : TiffComponent(tag, group),
           tiffType_(tiffType), count_(0), offset_(0),
-          size_(0), pData_(0), isMalloced_(false),
+          size_(0), pData_(0), isMalloced_(false), idx_(0),
           pValue_(0)
     {
     }
@@ -284,32 +300,34 @@ namespace Exiv2 {
 #endif
             return;
         }
-        long size = 0;
-        for (long i = 0; i < pSize->count(); ++i) {
-            size += pSize->toLong(i);
+        uint32_t size = 0;
+        for (int i = 0; i < pSize->count(); ++i) {
+            size += static_cast<uint32_t>(pSize->toLong(i));
         }
-        long offset = pValue()->toLong(0);
+        uint32_t offset = static_cast<uint32_t>(pValue()->toLong(0));
         // Todo: Remove limitation of JPEG writer: strips must be contiguous
         // Until then we check: last offset + last size - first offset == size?
-        if (  pValue()->toLong(pValue()->count()-1)
-            + pSize->toLong(pSize->count()-1)
+        if (  static_cast<uint32_t>(pValue()->toLong(pValue()->count()-1))
+            + static_cast<uint32_t>(pSize->toLong(pSize->count()-1))
             - offset != size) {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Warning: "
                       << "Directory " << tiffGroupName(group())
                       << ", entry 0x" << std::setw(4)
                       << std::setfill('0') << std::hex << tag()
-                      << " Data area is not contiguous, ignoring it.\n";
+                      << ": Data area is not contiguous, ignoring it.\n";
 #endif
             return;
         }
-        if (baseOffset + offset + size > sizeData) {
+        if (   offset > sizeData
+            || size > sizeData
+            || baseOffset + offset > sizeData - size) {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Warning: "
                       << "Directory " << tiffGroupName(group())
                       << ", entry 0x" << std::setw(4)
                       << std::setfill('0') << std::hex << tag()
-                      << " Data area exceeds data buffer, ignoring it.\n";
+                      << ": Data area exceeds data buffer, ignoring it.\n";
 #endif
             return;
         }
@@ -338,23 +356,25 @@ namespace Exiv2 {
             return;
         }
         for (int i = 0; i < pValue()->count(); ++i) {
-            const byte* pStrip = pData + baseOffset + pValue()->toLong(i);
-            const uint32_t stripSize = static_cast<uint32_t>(pSize->toLong(i));
-            if (   stripSize > 0
-                && pData + sizeData > pStrip
-                && static_cast<uint32_t>(pData + sizeData - pStrip) >= stripSize) {
-                strips_.push_back(std::make_pair(pStrip, stripSize));
-            }
+            const uint32_t offset = static_cast<uint32_t>(pValue()->toLong(i));
+            const byte* pStrip = pData + baseOffset + offset;
+            const uint32_t size = static_cast<uint32_t>(pSize->toLong(i));
+
+            if (   offset > sizeData
+                || size > sizeData
+                || baseOffset + offset > sizeData - size) {
 #ifndef SUPPRESS_WARNINGS
-            else {
                 std::cerr << "Warning: "
                           << "Directory " << tiffGroupName(group())
                           << ", entry 0x" << std::setw(4)
                           << std::setfill('0') << std::hex << tag()
                           << ": Strip " << std::dec << i
                           << " is outside of the data area; ignored.\n";
-            }
 #endif
+            }
+            else if (size != 0) {
+                strips_.push_back(std::make_pair(pStrip, size));
+            }
         }
     } // TiffImageEntry::setStrips
 
@@ -372,10 +392,12 @@ namespace Exiv2 {
         // Prevent dangling subIFD tags: Do not add a subIFD tag if it has no child
         if (tiffPath.size() == 1 && ts->newTiffCompFct_ == newTiffSubIfd) return 0;
         TiffComponent* tc = 0;
-        // To allow duplicate entries, we only check if the new component already
-        // exists if there is still at least one composite tag on the stack
-        // Todo: Find a generic way to require subIFDs to be unique tags
-        if (tiffPath.size() > 1 || ts->newTiffCompFct_ == newTiffSubIfd) {
+        // Allow duplicate entries but not for subIFDs and the MakerNote tag. So we
+        // only check if the new component already exists if there is still at least
+        // one composite tag on the stack, or it is a subIFD or the MakerNote tag.
+        if (   tiffPath.size() > 1
+            || ts->newTiffCompFct_ == newTiffSubIfd
+            || (ts->extendedTag_ == 0x927c && ts->group_ == Group::exif)) {
             if (ts->extendedTag_ == Tag::next) {
                 tc = pNext_;
             }
@@ -722,9 +744,11 @@ namespace Exiv2 {
         // Size of all directory entries, without values and additional data
         const uint32_t sizeDir = 2 + 12 * compCount + (hasNext_ ? 4 : 0);
 
-        // TIFF standard requires IFD entries to be sorted in ascending order by tag
-        std::sort(components_.begin(), components_.end(), cmpTagLt);
-
+        // TIFF standard requires IFD entries to be sorted in ascending order by tag.
+        // Not sorting makernote directories sometimes preserves them better.
+        if (group() < Group::mn) {
+            std::sort(components_.begin(), components_.end(), cmpTagLt);
+        }
         // Size of IFD values and additional data
         uint32_t sizeValue = 0;
         uint32_t sizeData = 0;
@@ -917,23 +941,30 @@ namespace Exiv2 {
 
     uint32_t TiffImageEntry::doWrite(Blob&     blob,
                                      ByteOrder byteOrder,
-                                     int32_t   /*offset*/,
+                                     int32_t   offset,
                                      uint32_t  /*valueIdx*/,
-                                     uint32_t  /*dataIdx*/,
+                                     uint32_t  dataIdx,
                                      uint32_t& imageIdx)
     {
+        uint32_t o2 = imageIdx;
+        // For makernotes, write TIFF image data to the data area
+        if (group() > Group::mn) o2 = offset + dataIdx;
 #ifdef DEBUG
         std::cerr << "TiffImageEntry, Directory " << tiffGroupName(group())
                   << ", entry 0x" << std::setw(4)
                   << std::setfill('0') << std::hex << tag() << std::dec
-                  << ": Writing offset " << imageIdx << "\n";
+                  << ": Writing offset " << o2 << "\n";
 #endif
         DataBuf buf(static_cast<long>(strips_.size()) * 4);
         uint32_t idx = 0;
         for (Strips::const_iterator i = strips_.begin(); i != strips_.end(); ++i) {
-            idx += writeOffset(buf.pData_ + idx, imageIdx, tiffType(), byteOrder);
-            imageIdx += i->second;
-            imageIdx += i->second & 1;      // Align strip data to word boundary
+            idx += writeOffset(buf.pData_ + idx, o2, tiffType(), byteOrder);
+            o2 += i->second;
+            o2 += i->second & 1;                // Align strip data to word boundary
+            if (!(group() > Group::mn)) {
+                imageIdx += i->second;
+                imageIdx += i->second & 1;      // Align strip data to word boundary
+            }
         }
         append(blob, buf.pData_, buf.size_);
         return buf.size_;
@@ -1001,6 +1032,7 @@ namespace Exiv2 {
 
         // Tags must be sorted in ascending order
         std::sort(elements_.begin(), elements_.end(), cmpTagLt);
+
         uint32_t seq = 0;
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
             // Skip deleted entries at the end of the array
@@ -1070,6 +1102,20 @@ namespace Exiv2 {
     {
         return 0;
     } // TiffEntryBase::doWriteData
+
+    uint32_t TiffImageEntry::doWriteData(Blob&     blob,
+                                         ByteOrder byteOrder,
+                                         int32_t   /*offset*/,
+                                         uint32_t  /*dataIdx*/,
+                                         uint32_t& /*imageIdx*/) const
+    {
+        uint32_t len = 0;
+        // For makernotes, write TIFF image data to the data area
+        if (group() > Group::mn) {
+            len = writeImage(blob, byteOrder);
+        }
+        return len;
+    } // TiffImageEntry::doWriteData
 
     uint32_t TiffDataEntry::doWriteData(Blob&     blob,
                                         ByteOrder /*byteOrder*/,
@@ -1272,6 +1318,16 @@ namespace Exiv2 {
         return 0;
     } // TiffEntryBase::doSizeData
 
+    uint32_t TiffImageEntry::doSizeData() const
+    {
+        uint32_t len = 0;
+        // For makernotes, TIFF image data is written to the data area
+        if (group() > Group::mn) {
+            len = sizeImage();
+        }
+        return len;
+    } // TiffImageEntry::doSizeData
+
     uint32_t TiffDataEntry::doSizeData() const
     {
         if (!pValue()) return 0;
@@ -1335,7 +1391,7 @@ namespace Exiv2 {
     TypeId toTypeId(TiffType tiffType, uint16_t tag, uint16_t group)
     {
         TypeId ti = TypeId(tiffType);
-        // On the fly type conversion for Exif.Photo.UserComment        
+        // On the fly type conversion for Exif.Photo.UserComment
         if (tag == 0x9286 && group == Group::exif && ti == undefined) {
             ti = comment;
         }
@@ -1359,7 +1415,8 @@ namespace Exiv2 {
     {
         assert(lhs != 0);
         assert(rhs != 0);
-        return lhs->tag() < rhs->tag();
+        if (lhs->tag() != rhs->tag()) return lhs->tag() < rhs->tag();
+        return lhs->idx() < rhs->idx();
     }
 
     TiffComponent::AutoPtr newTiffDirectory(uint16_t tag,

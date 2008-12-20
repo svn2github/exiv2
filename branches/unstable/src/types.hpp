@@ -137,13 +137,18 @@ namespace Exiv2 {
     enum IfdId { ifdIdNotSet,
                  ifd0Id, exifIfdId, gpsIfdId, iopIfdId, ifd1Id, ifd2Id,
                  subImage1Id, subImage2Id, subImage3Id, subImage4Id,
+                 mnIfdId,
                  canonIfdId, canonCsIfdId, canonSiIfdId, canonCfIfdId,
                  canonPiIfdId, canonPaIfdId,
                  fujiIfdId,
                  minoltaIfdId, minoltaCs5DIfdId, minoltaCs7DIfdId,
                  minoltaCsOldIfdId, minoltaCsNewIfdId,
                  nikon1IfdId, nikon2IfdId, nikon3IfdId, nikonPvIfdId,
-                 olympusIfdId, olympus2IfdId, olympusCsIfdId,
+                 olympusIfdId, olympus2IfdId, olympusCsIfdId, olympusEqIfdId,
+                 olympusRdIfdId, olympusRd2IfdId, olympusIpIfdId, olympusFiIfdId,
+                 olympusFe1IfdId, olympusFe2IfdId, olympusFe3IfdId, olympusFe4IfdId,
+                 olympusFe5IfdId, olympusFe6IfdId, olympusFe7IfdId, olympusFe8IfdId,
+                 olympusFe9IfdId, olympusRiIfdId,
                  panasonicIfdId, pentaxIfdId, sigmaIfdId, sonyIfdId,
                  lastIfdId };
 
@@ -188,7 +193,7 @@ namespace Exiv2 {
       @brief Utility class containing a character array. All it does is to take
              care of memory allocation and deletion. Its primary use is meant to
              be as a stack variable in functions that need a temporary data
-             buffer. 
+             buffer.
      */
     class EXIV2API DataBuf {
     public:

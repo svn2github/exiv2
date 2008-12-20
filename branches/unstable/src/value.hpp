@@ -958,7 +958,7 @@ namespace Exiv2 {
         //@}
 
         //! Simple Date helper structure
-        struct Date
+        EXIV2API struct Date
         {
             Date() : year(0), month(0), day(0) {}
             int year;                           //!< Year
@@ -1211,7 +1211,7 @@ namespace Exiv2 {
         ValueType() : Value(getType<T>()), pDataArea_(0), sizeDataArea_(0) {}
         //! Constructor
         ValueType(const byte* buf, long len, ByteOrder byteOrder);
-        //! Constructor
+        //! Constructor (Note: Argument \em byteOrder is ignored and deprecated)
         explicit ValueType(const T& val, ByteOrder byteOrder =littleEndian);
         //! Copy constructor
         ValueType(const ValueType<T>& rhs);
@@ -1432,12 +1432,10 @@ namespace Exiv2 {
     }
 
     template<typename T>
-    ValueType<T>::ValueType(const T& val, ByteOrder byteOrder)
+    ValueType<T>::ValueType(const T& val, ByteOrder /*byteOrder*/)
         : Value(getType<T>()), pDataArea_(0), sizeDataArea_(0)
     {
-        read(reinterpret_cast<const byte*>(&val),
-             TypeInfo::typeSize(typeId()),
-             byteOrder);
+        value_.push_back(val);
     }
 
     template<typename T>

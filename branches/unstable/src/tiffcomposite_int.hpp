@@ -245,6 +245,12 @@ namespace Exiv2 {
                  their implementation of writeImage().
          */
         uint32_t sizeImage() const;
+        /*!
+          @brief Return the unique id of the entry in the image.
+         */
+        // Todo: This is only implemented in TiffEntryBase. It is needed here so that
+        //       we can sort components by tag and idx. Something is not quite right.
+        virtual int idx()        const { return 0; }
         //@}
 
     protected:
@@ -424,6 +430,10 @@ namespace Exiv2 {
          */
         int32_t offset()         const { return offset_; }
         /*!
+          @brief Return the unique id of the entry in the image
+         */
+        virtual int idx()        const { return idx_; }
+        /*!
           @brief Return a pointer to the binary representation of the
                  value of this component.
          */
@@ -439,6 +449,8 @@ namespace Exiv2 {
         virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum) =0;
         //! Set the number of components in this entry
         void setCount(uint32_t count) { count_ = count; }
+        //! Set the unique id of the entry in the image
+        void setIdx(int idx) { idx_ = idx; }
         //@}
 
         //! @name Accessors
@@ -509,6 +521,7 @@ namespace Exiv2 {
         uint32_t size_;
         byte*    pData_;      //!< Pointer to the data area
         bool     isMalloced_; //!< True if this entry owns the value data
+        int      idx_;        //!< Unique id of the entry in the image
         Value*   pValue_;     //!< Converted data value
 
     }; // class TiffEntryBase
@@ -726,7 +739,19 @@ namespace Exiv2 {
         //@}
         //! @name Write support (Accessors)
         //@{
-        // Using doWriteData from base class
+        /*!
+          @brief Implements writeData(). Write the image data area to the blob.
+                 Return the number of bytes written.
+
+          This function writes the image data to the data area of the current
+          directory. It is used for TIFF image entries in the makernote (large 
+          preview images) so that the image data remains in the makernote IFD.
+         */
+        virtual uint32_t doWriteData(Blob&     blob,
+                                     ByteOrder byteOrder,
+                                     int32_t   offset,
+                                     uint32_t  dataIdx,
+                                     uint32_t& imageIdx) const;
         /*!
           @brief Implements writeImage(). Write the image data area to the blob.
                  Return the number of bytes written.
@@ -735,7 +760,8 @@ namespace Exiv2 {
                                       ByteOrder byteOrder) const;
         //! Implements size(). Return the size of the strip pointers.
         virtual uint32_t doSize() const;
-        // Using doSizeData from base class
+        //! Implements sizeData(). Return the size of the image data area.
+        virtual uint32_t doSizeData() const;
         //! Implements sizeImage(). Return the size of the image data area.
         virtual uint32_t doSizeImage() const;
         //@}
@@ -869,7 +895,7 @@ namespace Exiv2 {
          */
         virtual uint32_t doSizeData() const;
         /*!
-          @brief Implements sizeImage(). Return the sum of the image sizes of 
+          @brief Implements sizeImage(). Return the sum of the image sizes of
                  all components plus that of the next-IFD, if there is any.
          */
         virtual uint32_t doSizeImage() const;

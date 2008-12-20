@@ -164,7 +164,7 @@ namespace Exiv2 {
         // Write new buffer to file
         BasicIo::AutoPtr tempIo(io_->temporary()); // may throw
         assert(tempIo.get() != 0);
-        tempIo->write(&blob[0], static_cast<long>(blob.size()));
+        tempIo->write((blob.size() > 0 ? &blob[0] : 0), static_cast<long>(blob.size()));
         io_->close();
         io_->transfer(*tempIo); // may throw
 
@@ -183,6 +183,12 @@ namespace Exiv2 {
 #endif
         head->decode(*pCrwImage);
 
+        // a hack to get absolute offset of preview image inside CRW structure
+        CiffComponent* preview = head->findComponent(0x2007, 0x0000);
+        if (preview) {
+            (pCrwImage->exifData())["Exif.Image2.JPEGInterchangeFormat"] = uint32_t(preview->pData() - pData);
+            (pCrwImage->exifData())["Exif.Image2.JPEGInterchangeFormatLength"] = preview->size();
+        }
     } // CrwParser::decode
 
     void CrwParser::encode(

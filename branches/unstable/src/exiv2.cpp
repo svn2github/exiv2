@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*
-  Abstract:  Command line program to display and manipulate image %Exif data
+  Abstract:  Command line program to display and manipulate image metadata.
 
   File:      exiv2.cpp
   Version:   $Rev$
@@ -50,6 +50,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include <iomanip>
 #include <cstring>
 #include <cassert>
+#include <cctype>
 
 // *****************************************************************************
 // local declarations
@@ -79,6 +80,17 @@ namespace {
      */
     int parseCommonTargets(const std::string& optarg,
                            const std::string& action);
+
+    /*! 
+      @brief Parse numbers separated by commas into container
+      @param previewNumbers Container for the numbers
+      @param optarg Option arguments
+      @param j Starting index into optarg
+      @return Number of characters processed
+     */
+    int parsePreviewNumbers(Params::PreviewNumbers& previewNumbers,
+                            const std::string& optarg,
+                            int j);
 
     /*!
       @brief Parse metadata modification commands from multiple files
@@ -251,13 +263,18 @@ void Params::help(std::ostream& os) const
        << _("   -D day  Day adjustment with the 'adjust' action.\n")
        << _("   -p mode Print mode for the 'print' action. Possible modes are:\n")
        << _("             s : print a summary of the Exif metadata (the default)\n")
-       << _("             t : interpreted (translated) Exif data (shortcut for -Pkyct)\n")
-       << _("             v : plain Exif data values (shortcut for -Pxgnycv)\n")
-       << _("             h : hexdump of the Exif data (shortcut for -Pxgnycsh)\n")
-       << _("             i : IPTC data values\n")
-       << _("             x : XMP properties\n")
+       << _("             a : print Exif, IPTC and XMP metadata (shortcut for -Pkyct)\n")
+       << _("             t : interpreted (translated) Exif data (-PEkyct)\n")
+       << _("             v : plain Exif data values (-PExgnycv)\n")
+       << _("             h : hexdump of the Exif data (-PExgnycsh)\n")
+       << _("             i : IPTC data values (-PIkyct)\n")
+       << _("             x : XMP properties (-PXkyct)\n")
        << _("             c : JPEG comment\n")
-       << _("   -P cols Print columns for the Exif taglist ('print' action). Valid are:\n")
+       << _("             p : list available previews\n")
+       << _("   -P flgs Print flags for fine control of tag lists ('print' action):\n")
+       << _("             E : include Exif tags in the list\n")
+       << _("             I : IPTC datasets\n")
+       << _("             X : XMP properties\n")
        << _("             x : print a column with the tag value\n")
        << _("             g : group name\n")
        << _("             k : key\n")
@@ -282,7 +299,9 @@ void Params::help(std::ostream& os) const
             "           Only JPEG thumbnails can be inserted, they need to be named\n"
             "           <file>-thumb.jpg\n")
        << _("   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
-            "           are the same as those for the -d option, plus a modifier:\n"
+            "           are the same as those for the -d option, plus a target to extract\n"
+            "           preview images and a modifier to generate an XMP sidecar file:\n"
+            "             p[<n>[,<m> ...]] : Extract preview images.\n"
             "             X : Extract metadata to an XMP sidecar file <file>.xmp\n")
        << _("   -r fmt  Filename format for the 'rename' action. The format string\n"
             "           follows strftime(3). The following keywords are supported:\n")
@@ -320,7 +339,7 @@ int Params::option(int opt, const std::string& optarg, int optopt)
     case 'O': rc = evalYodAdjust(yodMonth, optarg); break;
     case 'D': rc = evalYodAdjust(yodDay, optarg); break;
     case 'p': rc = evalPrint(optarg); break;
-    case 'P': rc = evalPrintCols(optarg); break;
+    case 'P': rc = evalPrintFlags(optarg); break;
     case 'd': rc = evalDelete(optarg); break;
     case 'e': rc = evalExtract(optarg); break;
     case 'i': rc = evalInsert(optarg); break;
@@ -450,13 +469,15 @@ int Params::evalPrint(const std::string& optarg)
     switch (action_) {
     case Action::none:
         switch (optarg[0]) {
-        case 's': printMode_ = pmSummary; break;
-        case 't': rc = evalPrintCols("kyct"); break;
-        case 'v': rc = evalPrintCols("xgnycv"); break;
-        case 'h': rc = evalPrintCols("xgnycsh"); break;
-        case 'i': printMode_ = pmIptc; break;
-        case 'x': printMode_ = pmXmp; break;
-        case 'c': printMode_ = pmComment; break;
+        case 's': action_ = Action::print; printMode_ = pmSummary; break;
+        case 'a': rc = evalPrintFlags("kyct"); break;
+        case 't': rc = evalPrintFlags("Ekyct"); break;
+        case 'v': rc = evalPrintFlags("Exgnycv"); break;
+        case 'h': rc = evalPrintFlags("Exgnycsh"); break;
+        case 'i': rc = evalPrintFlags("Ikyct"); break;
+        case 'x': rc = evalPrintFlags("Xkyct"); break;
+        case 'c': action_ = Action::print; printMode_ = pmComment; break;
+        case 'p': action_ = Action::print; printMode_ = pmPreview; break;
         default:
             std::cerr << progname() << ": " << _("Unrecognized print mode") << " `"
                       << optarg << "'\n";
@@ -477,7 +498,7 @@ int Params::evalPrint(const std::string& optarg)
     return rc;
 } // Params::evalPrint
 
-int Params::evalPrintCols(const std::string& optarg)
+int Params::evalPrintFlags(const std::string& optarg)
 {
     int rc = 0;
     switch (action_) {
@@ -486,6 +507,9 @@ int Params::evalPrintCols(const std::string& optarg)
         printMode_ = pmList;
         for (std::size_t i = 0; i < optarg.length(); ++i) {
             switch (optarg[i]) {
+            case 'E': printTags_  |= Exiv2::mdExif; break;
+            case 'I': printTags_  |= Exiv2::mdIptc; break;
+            case 'X': printTags_  |= Exiv2::mdXmp;  break;
             case 'x': printItems_ |= prTag;   break;
             case 'g': printItems_ |= prGroup; break;
             case 'k': printItems_ |= prKey;   break;
@@ -516,7 +540,7 @@ int Params::evalPrintCols(const std::string& optarg)
         break;
     }
     return rc;
-} // Params::evalPrintCols
+} // Params::evalPrintFlags
 
 int Params::evalDelete(const std::string& optarg)
 {
@@ -850,6 +874,15 @@ namespace {
                 target |= Params::ctXmpSidecar;
                 if (optarg == "X") target |= Params::ctExif | Params::ctIptc | Params::ctXmp;
                 break;
+            case 'p':
+            {
+                if (strcmp(action.c_str(), "extract") == 0) {
+                    i += parsePreviewNumbers(Params::instance().previewNumbers_, optarg, i + 1);
+                    target |= Params::ctPreview;
+                    break;
+                }
+                // fallthrough
+            }
             default:
                 std::cerr << Params::instance().progname() << ": " << _("Unrecognized ")
                           << action << " " << _("target") << " `"  << optarg[i] << "'\n";
@@ -859,6 +892,46 @@ namespace {
         }
         return rc ? rc : target;
     } // parseCommonTargets
+
+    int parsePreviewNumbers(Params::PreviewNumbers& previewNumbers,
+                            const std::string& optarg,
+                            int j)
+    {
+        size_t k = j;
+        for (size_t i = j; i < optarg.size(); ++i) {
+            std::ostringstream os;
+            for (k = i; k < optarg.size() && isdigit(optarg[k]); ++k) {
+                os << optarg[k];
+            }
+            if (k > i) {
+                bool ok = false;
+                int num = Exiv2::stringTo<int>(os.str(), ok);
+                if (ok && num >= 0) {
+                    previewNumbers.insert(num);
+                }
+                else {
+                    std::cerr << Params::instance().progname() << ": "
+                              << _("Invalid preview number") << ": " << num << "\n";
+                }
+                i = k;
+            }
+            if (!(k < optarg.size() && optarg[i] == ',')) break;
+        }
+        int ret = static_cast<int>(k - j);
+        if (ret == 0) {
+            previewNumbers.insert(0);
+        }
+#ifdef DEBUG
+        std::cout << "\nThe set now contains: ";
+        for (Params::PreviewNumbers::const_iterator i = previewNumbers.begin();
+             i != previewNumbers.end();
+             ++i) {
+            std::cout << *i << ", ";
+        }
+        std::cout << std::endl;
+#endif
+        return k - j;
+    } // parsePreviewNumbers
 
     bool parseCmdFiles(ModifyCmds& modifyCmds,
                        const Params::CmdFiles& cmdFiles)

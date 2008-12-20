@@ -59,12 +59,6 @@ EXIV2_RCSID("@(#) $Id$")
 
    Todo:
 
-   + Review boundary checking, is it better to check the offsets?
-   + Define and implement consistent error handling for recursive hierarchy
-   + Make TiffImage a template StandardImage, which can be parametrized with
-     a parser and the necessary checking functions to cover all types of
-     images which need to be loaded completely.
-   + TiffComponent: should it have end() and setEnd() or pData and size?
    + Can NewTiffCompFct and TiffCompFactoryFct be combined?
    + Create function is repeated when actually only the table changes. Fix it.
    + Is it easier (for writing) to combine all creation tables into one?
@@ -72,10 +66,6 @@ EXIV2_RCSID("@(#) $Id$")
      do. What a mess. (That'll become an issue when it comes to writing to CR2)
    + Sony makernotes in RAW files do not seem to have header like those in Jpegs.
      And maybe no next pointer either.
-   + Filtering of large unknown tags: Should be moved to writing/encoding code
-     and done only if really needed (i.e., if writing to a Jpeg segment)
-   + Make Tiff parser completely standalone, depending only on very low level
-     stuff from exiv2
 
    in crwimage.* :
 
@@ -187,7 +177,7 @@ namespace Exiv2 {
         }
         else {
             // Size of the buffer changed, write from blob
-            tempIo->write(&blob[0], static_cast<long>(blob.size()));
+            tempIo->write((blob.size() > 0 ? &blob[0] : 0), static_cast<long>(blob.size()));
         }
         io_->close();
         io_->transfer(*tempIo); // may throw
@@ -374,14 +364,74 @@ namespace Exiv2 {
         // Olympus2 makernote
         {    0x0001, Group::olymp2mn,  Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false> },
         {    0x0003, Group::olymp2mn,  Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false> },
+        {    0x2010, Group::olymp2mn,  Group::olympeq,   0x927c,    Group::exif,      newTiffSubIfd },
         {    0x2020, Group::olymp2mn,  Group::olympcs,   0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2030, Group::olymp2mn,  Group::olymprd,   0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2031, Group::olymp2mn,  Group::olymprd2,  0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2040, Group::olymp2mn,  Group::olympip,   0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2050, Group::olymp2mn,  Group::olympfi,   0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2100, Group::olymp2mn,  Group::olympfe1,  0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2200, Group::olymp2mn,  Group::olympfe2,  0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2300, Group::olymp2mn,  Group::olympfe3,  0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2400, Group::olymp2mn,  Group::olympfe4,  0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2500, Group::olymp2mn,  Group::olympfe5,  0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2600, Group::olymp2mn,  Group::olympfe6,  0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2700, Group::olymp2mn,  Group::olympfe7,  0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2800, Group::olymp2mn,  Group::olympfe8,  0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x2900, Group::olymp2mn,  Group::olympfe9,  0x927c,    Group::exif,      newTiffSubIfd },
+        {    0x3000, Group::olymp2mn,  Group::olympri,   0x927c,    Group::exif,      newTiffSubIfd },
         { Tag::next, Group::olymp2mn,  Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
         {  Tag::all, Group::olymp2mn,  Group::olymp2mn,  0x927c,    Group::exif,      newTiffEntry },
+
+        // Olympus2 equipment subdir
+        {  Tag::all, Group::olympeq,   Group::olympeq,   0x2010,    Group::olymp2mn,  newTiffEntry },
 
         // Olympus2 camera settings subdir
         {    0x0101, Group::olympcs,   Group::olympcs,   0x2020,    Group::olymp2mn,  newTiffImageData<0x0102, Group::olympcs> },
         {    0x0102, Group::olympcs,   Group::olympcs,   0x2020,    Group::olymp2mn,  newTiffImageSize<0x0101, Group::olympcs> },
         {  Tag::all, Group::olympcs,   Group::olympcs,   0x2020,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 raw development subdir
+        {  Tag::all, Group::olymprd,   Group::olymprd,   0x2030,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 raw development 2 subdir
+        {  Tag::all, Group::olymprd2,  Group::olymprd2,  0x2031,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 image processing subdir
+        {  Tag::all, Group::olympip,   Group::olympip,   0x2040,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 focus info subdir
+        {  Tag::all, Group::olympfi,   Group::olympfi,   0x2050,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 FE 1 subdir
+        {  Tag::all, Group::olympfe1,  Group::olympfe1,  0x2100,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 FE 2 subdir
+        {  Tag::all, Group::olympfe2,  Group::olympfe2,  0x2200,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 FE 3 subdir
+        {  Tag::all, Group::olympfe3,  Group::olympfe3,  0x2300,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 FE 4 subdir
+        {  Tag::all, Group::olympfe4,  Group::olympfe4,  0x2400,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 FE 5 subdir
+        {  Tag::all, Group::olympfe5,  Group::olympfe5,  0x2500,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 FE 6 subdir
+        {  Tag::all, Group::olympfe6,  Group::olympfe6,  0x2600,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 FE 7 subdir
+        {  Tag::all, Group::olympfe7,  Group::olympfe7,  0x2700,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 FE 8 subdir
+        {  Tag::all, Group::olympfe8,  Group::olympfe8,  0x2800,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 FE 9 subdir
+        {  Tag::all, Group::olympfe9,  Group::olympfe9,  0x2900,    Group::olymp2mn,  newTiffEntry },
+
+        // Olympus2 Raw Info subdir
+        {  Tag::all, Group::olympri,   Group::olympri,   0x3000,    Group::olymp2mn,  newTiffEntry },
 
         // Fujifilm makernote
         { Tag::next, Group::fujimn,    Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
@@ -473,9 +523,9 @@ namespace Exiv2 {
         { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,         0 /*done before the tree is traversed*/ },
         // Minolta makernote entries which need to be encoded in big endian byte order
         { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
-        { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
-        { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
-        { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry }
+        { "*",       Tag::all, Group::minocsn, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
+        { "*",       Tag::all, Group::minocs7, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
+        { "*",       Tag::all, Group::minocs5, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry }
     };
 
     DecoderFct TiffMapping::findDecoder(const std::string& make,

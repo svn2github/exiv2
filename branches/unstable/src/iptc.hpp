@@ -46,6 +46,10 @@
 namespace Exiv2 {
 
 // *****************************************************************************
+// class declarations
+    class ExifData;
+
+// *****************************************************************************
 // class definitions
 
     /*!
@@ -102,16 +106,16 @@ namespace Exiv2 {
                  If the %Iptcdatum does not have a Value yet, then a %Value of
                  the correct type for this %Iptcdatum is created. If that
                  fails (because of an unknown dataset), a StringValue is
-                 created.
+                 created. Return 0 if the value was read successfully.
          */
-        void setValue(const std::string& value);
+        int setValue(const std::string& value);
         //@}
 
         //! @name Accessors
         //@{
         long copy(byte* buf, ByteOrder byteOrder) const
             { return value_.get() == 0 ? 0 : value_->copy(buf, byteOrder); }
-        std::ostream& write(std::ostream& os) const;
+        std::ostream& write(std::ostream& os, const ExifData* pMetadata =0) const;
         /*!
           @brief Return the key of the Iptcdatum. The key is of the form
                  '<b>Iptc</b>.recordName.datasetName'. Note however that the key
@@ -120,7 +124,7 @@ namespace Exiv2 {
          */
         std::string key() const { return key_.get() == 0 ? "" : key_->key(); }
         /*!
-           @brief Return the name of the record
+           @brief Return the name of the record (deprecated)
            @return record name
          */
         std::string recordName() const
@@ -131,6 +135,10 @@ namespace Exiv2 {
          */
         uint16_t record() const
             { return key_.get() == 0 ? 0 : key_->record(); }
+        const char* familyName() const
+            { return key_.get() == 0 ? "" : key_->familyName(); }
+        std::string groupName() const
+            { return key_.get() == 0 ? "" : key_->groupName(); }
         /*!
            @brief Return the name of the tag (aka dataset)
            @return tag name

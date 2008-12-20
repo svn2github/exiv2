@@ -54,6 +54,27 @@ EXIV2_RCSID("@(#) $Id$")
 #include <cassert>
 
 // *****************************************************************************
+namespace {
+    //! Unary predicate that matches an Exifdatum with a given group and index.
+    class FindExifdatum {
+    public:
+        //! Constructor, initializes the object with the group and index to look for.
+        FindExifdatum(uint16_t group, int idx)
+            : groupName_(Exiv2::Internal::tiffGroupName(group)), idx_(idx) {}
+        //! Returns true if group and index match.
+        bool operator()(const Exiv2::Exifdatum& md) const
+        {
+            return idx_ == md.idx() && 0 == strcmp(md.ifdItem().c_str(), groupName_);
+        }
+
+    private:
+        const char* groupName_;
+        int idx_;
+
+    }; // class FindExifdatum
+}
+
+// *****************************************************************************
 // class member definitions
 namespace Exiv2 {
     namespace Internal {
@@ -203,12 +224,26 @@ namespace Exiv2 {
 
     void TiffDecoder::visitMnEntry(TiffMnEntry* object)
     {
-        if (!object->mn_) decodeTiffEntry(object);
+        // Always decode binary makernote tag
+        decodeTiffEntry(object);
     }
 
-    void TiffDecoder::visitIfdMakernote(TiffIfdMakernote* /*object*/)
+    void TiffDecoder::visitIfdMakernote(TiffIfdMakernote* object)
     {
-        // Nothing to do
+        assert(object != 0);
+
+        exifData_["Exif.MakerNote.Offset"] = object->mnOffset();
+        switch (object->byteOrder()) {
+        case littleEndian:
+            exifData_["Exif.MakerNote.ByteOrder"] = "II";
+            break;
+        case bigEndian:
+            exifData_["Exif.MakerNote.ByteOrder"] = "MM";
+            break;
+        case invalidByteOrder:
+            assert(object->byteOrder() != invalidByteOrder);
+            break;
+        }
     }
 
     void TiffDecoder::getObjData(byte const*& pData,
@@ -333,6 +368,7 @@ namespace Exiv2 {
         // Todo: ExifKey should have an appropriate c'tor, it should not be
         //       necessary to use groupName here
         ExifKey key(object->tag(), tiffGroupName(object->group()));
+        key.setIdx(object->idx());
         exifData_.add(key, object->pValue());
 
     } // TiffDecoder::decodeTiffEntry
@@ -395,15 +431,19 @@ namespace Exiv2 {
         // If there is new IPTC data and Exif.Image.ImageResources does
         // not exist, create a new IPTCNAA Exif tag.
         bool del = false;
-        const ExifKey iptcNaaKey("Exif.Image.IPTCNAA");
+        ExifKey iptcNaaKey("Exif.Image.IPTCNAA");
         ExifData::iterator pos = exifData_.findKey(iptcNaaKey);
         if (pos != exifData_.end()) {
+            iptcNaaKey.setIdx(pos->idx());
             exifData_.erase(pos);
             del = true;
         }
         DataBuf rawIptc = IptcParser::encode(iptcData_);
-        const ExifKey irbKey("Exif.Image.ImageResources");
+        ExifKey irbKey("Exif.Image.ImageResources");
         pos = exifData_.findKey(irbKey);
+        if (pos != exifData_.end()) {
+            irbKey.setIdx(pos->idx());
+        }
         if (rawIptc.size_ != 0 && (del || pos == exifData_.end())) {
             Value::AutoPtr value = Value::create(unsignedLong);
             value->read(rawIptc.pData_, rawIptc.size_, byteOrder_);
@@ -429,14 +469,15 @@ namespace Exiv2 {
 
     void TiffEncoder::encodeXmp()
     {
-        const ExifKey xmpKey("Exif.Image.XMLPacket");
+        ExifKey xmpKey("Exif.Image.XMLPacket");
         // Remove any existing XMP Exif tag
         ExifData::iterator pos = exifData_.findKey(xmpKey);
         if (pos != exifData_.end()) {
+            xmpKey.setIdx(pos->idx());
             exifData_.erase(pos);
         }
         std::string xmpPacket;
-        if (XmpParser::encode(xmpPacket, xmpData_)) {
+        if (XmpParser::encode(xmpPacket, xmpData_) > 1) {
 #ifndef SUPPRESS_WARNINGS
             std::cerr << "Error: Failed to encode XMP metadata.\n";
 #endif
@@ -532,13 +573,31 @@ namespace Exiv2 {
     void TiffEncoder::visitMnEntry(TiffMnEntry* object)
     {
         // Test is required here as well as in the callback encoder function
-        if (!object->mn_) encodeTiffComponent(object);
+        if (!object->mn_) {
+            encodeTiffComponent(object);
+        }
+        else if (del_) {
+            // The makernote is made up of decoded tags, delete binary tag
+            ExifKey key(object->tag(), tiffGroupName(object->group()));
+            ExifData::iterator pos = exifData_.findKey(key);
+            if (pos != exifData_.end()) exifData_.erase(pos);
+        }
     }
 
     void TiffEncoder::visitIfdMakernote(TiffIfdMakernote* object)
     {
         assert(object != 0);
-
+        if (del_) {
+            // Remove synthesized tags
+            static const char* synthesizedTags[] = {
+                "Exif.MakerNote.Offset",
+                "Exif.MakerNote.ByteOrder",
+            };
+            for (unsigned int i = 0; i < EXV_COUNTOF(synthesizedTags); ++i) {
+                ExifData::iterator pos = exifData_.findKey(ExifKey(synthesizedTags[i]));
+                if (pos != exifData_.end()) exifData_.erase(pos);
+            }
+        }
         // Modify encoder for Makernote peculiarities, byte order
         if (object->byteOrder() != invalidByteOrder) {
             byteOrder_ = object->byteOrder();
@@ -572,17 +631,33 @@ namespace Exiv2 {
         ExifData::iterator pos = exifData_.end();
         const Exifdatum* ed = datum;
         if (ed == 0) {
+            // Non-intrusive writing: find matching tag
             ExifKey key(object->tag(), tiffGroupName(object->group()));
             pos = exifData_.findKey(key);
-            if (pos == exifData_.end()) { // metadatum not found (deleted)
-#ifdef DEBUG
-                std::cerr << "DELETING          " << key << "\n";
-#endif
-                setDirty();
+            if (pos != exifData_.end()) {
+                ed = &(*pos);
+                if (object->idx() != pos->idx()) {
+                    // Try to find exact match (in case of duplicate tags)
+                    ExifData::iterator pos2 =
+                        std::find_if(exifData_.begin(), exifData_.end(),
+                                     FindExifdatum(object->group(), object->idx()));
+                    if (pos2 != exifData_.end() && pos2->key() == key.key()) {
+                        ed = &(*pos2);
+                        pos = pos2; // make sure we delete the correct tag below
+                    }
+                }
             }
             else {
-                ed = &(*pos);
+                setDirty();
+#ifdef DEBUG
+                std::cerr << "DELETING          " << key << ", idx = " << object->idx() << "\n";
+#endif
             }
+        }
+        else {
+            // For intrusive writing, the index is used to preserve the order of
+            // duplicate tags
+            object->idx_ = ed->idx();
         }
         if (ed) {
             const EncoderFct fct = findEncoderFct_(make_, object->tag(), object->group());
@@ -602,7 +677,6 @@ namespace Exiv2 {
 #ifdef DEBUG
         std::cerr << "\n";
 #endif
-
     } // TiffEncoder::encodeTiffComponent
 
     void TiffEncoder::encodeArrayElement(TiffArrayElement* object, const Exifdatum* datum)
@@ -760,7 +834,7 @@ namespace Exiv2 {
         ExifKey key(object->tag(), tiffGroupName(object->group()));
         std::cerr << "UPDATING DATA     " << key;
         if (tooLarge) {
-            std::cerr << "\t\t\t ALLOCATED " << object->size_ << " BYTES";
+            std::cerr << "\t\t\t ALLOCATED " << std::dec << object->size_ << " BYTES";
         }
 #endif
     } // TiffEncoder::encodeTiffEntryBase
@@ -815,18 +889,17 @@ namespace Exiv2 {
         for (ExifData::const_iterator i = exifData_.begin();
              i != exifData_.end(); ++i) {
 
-            // Assumption is that the corresponding TIFF entry doesn't exist
+            uint16_t group = tiffGroupId(i->groupName());
+            // Skip synthesized info tags
+            if (group == Group::mn) continue;
 
-            // Todo: This takes tag and group straight from the Exif datum.
-            // There is a need for a simple mapping and a provision for quite
-            // sophisticated logic to determine the mapped tag and group to
-            // handle complex cases (eg, NEF sub-IFDs)
+            // Assumption is that the corresponding TIFF entry doesn't exist
 
             // Todo: getPath depends on the Creator class, not the createFct
             //       how to get it through to here???
 
             TiffPath tiffPath;
-            TiffCreator::getPath(tiffPath, i->tag(), tiffGroupId(i->groupName()));
+            TiffCreator::getPath(tiffPath, i->tag(), group);
             TiffComponent* tc = pRootDir->addPath(i->tag(), tiffPath);
             TiffEntryBase* object = dynamic_cast<TiffEntryBase*>(tc);
 #ifdef DEBUG
@@ -1063,12 +1136,34 @@ namespace Exiv2 {
         }
     }
 
+    bool TiffReader::circularReference(const byte* start, uint16_t group)
+    {
+        DirList::const_iterator pos = dirList_.find(start);
+        if (pos != dirList_.end()) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Error: "
+                      << tiffGroupName(group)  << " pointer references previously read "
+                      << tiffGroupName(pos->second) << " directory. Ignored.\n";
+#endif
+            return true;
+        }
+        dirList_[start] = group;
+        return false;
+    }
+
+    int TiffReader::nextIdx(uint16_t group)
+    {
+        return ++idxSeq_[group];
+    }
+
     void TiffReader::visitDirectory(TiffDirectory* object)
     {
         assert(object != 0);
 
         const byte* p = object->start();
         assert(p >= pData_);
+
+        if (circularReference(object->start(), object->group())) return;
 
         if (p + 2 > pLast_) {
 #ifndef SUPPRESS_WARNINGS
@@ -1231,12 +1326,17 @@ namespace Exiv2 {
             setGo(geKnownMakernote, false);
             return;
         }
-        // Modify reader for Makernote peculiarities, byte order and offset
-        TiffRwState::AutoPtr state(
-            new TiffRwState(object->byteOrder(),
-                            object->baseOffset(static_cast<uint32_t>(object->start() - pData_))));
-        changeState(state);
+
         object->ifd_.setStart(object->start() + object->ifdOffset());
+
+        // Modify reader for Makernote peculiarities, byte order and offset
+        object->mnOffset_ = static_cast<uint32_t>(object->start() - pData_);
+        TiffRwState::AutoPtr state(
+            new TiffRwState(object->byteOrder(), object->baseOffset())
+        );
+        changeState(state);
+
+        object->byteOrder_ = byteOrder(); // set the actual byte order of the makernote
 
     } // TiffReader::visitIfdMakernote
 
@@ -1323,7 +1423,7 @@ namespace Exiv2 {
                           << static_cast<uint32_t>(pData + size - pLast_)
                           << " Bytes; adjusting the size\n";
 #endif
-                size = static_cast<uint32_t>(pLast_ - pData + 1);
+                size = static_cast<uint32_t>(pLast_ - pData);
                 // Todo: adjust count, make size a multiple of typeSize
             }
         }
@@ -1334,6 +1434,7 @@ namespace Exiv2 {
         object->setValue(v);
         object->setData(pData, size);
         object->setOffset(offset);
+        object->setIdx(nextIdx(object->group()));
 
     } // TiffReader::readTiffEntry
 
@@ -1390,6 +1491,7 @@ namespace Exiv2 {
         object->setValue(v);
         object->setData(pData, size);
         object->setOffset(0);
+        object->setIdx(nextIdx(object->group()));
         object->setCount(1);
 
     } // TiffReader::visitArrayElement

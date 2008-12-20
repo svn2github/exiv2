@@ -47,6 +47,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include <cstdlib>
 #include <cassert>
 #include <cmath>
+#include <cstring>
 
 #ifdef EXV_HAVE_ICONV
 # include <iconv.h>
@@ -75,9 +76,11 @@ namespace Exiv2 {
         return ifdId_ == ifdId;
     }
 
-    bool IfdInfo::operator==(Item item) const
+    bool IfdInfo::operator==(const Item& item) const
     {
-        return std::string(item_) == item.i_;
+        const char* i = item.i_.c_str();
+        if (i == 0) return false;
+        return 0 == strcmp(i, item_);
     }
 
     // Important: IFD item must be unique!
@@ -93,6 +96,7 @@ namespace Exiv2 {
         { subImage2Id,       "SubImage2", "SubImage2",    ExifTags::ifdTagList           },
         { subImage3Id,       "SubImage3", "SubImage3",    ExifTags::ifdTagList           },
         { subImage4Id,       "SubImage4", "SubImage4",    ExifTags::ifdTagList           },
+        { mnIfdId,           "Makernote", "MakerNote",    ExifTags::mnTagList            },
         { canonIfdId,        "Makernote", "Canon",        CanonMakerNote::tagList        },
         { canonCsIfdId,      "Makernote", "CanonCs",      CanonMakerNote::tagListCs      },
         { canonSiIfdId,      "Makernote", "CanonSi",      CanonMakerNote::tagListSi      },
@@ -112,6 +116,21 @@ namespace Exiv2 {
         { olympusIfdId,      "Makernote", "Olympus",      OlympusMakerNote::tagList      },
         { olympus2IfdId,     "Makernote", "Olympus2",     OlympusMakerNote::tagList      },
         { olympusCsIfdId,    "Makernote", "OlympusCs",    OlympusMakerNote::tagListCs    },
+        { olympusEqIfdId,    "Makernote", "OlympusEq",    OlympusMakerNote::tagListEq    },
+        { olympusRdIfdId,    "Makernote", "OlympusRd",    OlympusMakerNote::tagListRd    },
+        { olympusRd2IfdId,   "Makernote", "OlympusRd2",   OlympusMakerNote::tagListRd2   },
+        { olympusIpIfdId,    "Makernote", "OlympusIp",    OlympusMakerNote::tagListIp    },
+        { olympusFiIfdId,    "Makernote", "OlympusFi",    OlympusMakerNote::tagListFi    },
+        { olympusFe1IfdId,   "Makernote", "OlympusFe1",   OlympusMakerNote::tagListFe    },
+        { olympusFe2IfdId,   "Makernote", "OlympusFe2",   OlympusMakerNote::tagListFe    },
+        { olympusFe3IfdId,   "Makernote", "OlympusFe3",   OlympusMakerNote::tagListFe    },
+        { olympusFe4IfdId,   "Makernote", "OlympusFe4",   OlympusMakerNote::tagListFe    },
+        { olympusFe5IfdId,   "Makernote", "OlympusFe5",   OlympusMakerNote::tagListFe    },
+        { olympusFe6IfdId,   "Makernote", "OlympusFe6",   OlympusMakerNote::tagListFe    },
+        { olympusFe7IfdId,   "Makernote", "OlympusFe7",   OlympusMakerNote::tagListFe    },
+        { olympusFe8IfdId,   "Makernote", "OlympusFe8",   OlympusMakerNote::tagListFe    },
+        { olympusFe9IfdId,   "Makernote", "OlympusFe9",   OlympusMakerNote::tagListFe    },
+        { olympusRiIfdId,    "Makernote", "OlympusRi",    OlympusMakerNote::tagListRi    },
         { panasonicIfdId,    "Makernote", "Panasonic",    PanasonicMakerNote::tagList    },
         { pentaxIfdId,       "Makernote", "Pentax",       PentaxMakerNote::tagList       },
         { sigmaIfdId,        "Makernote", "Sigma",        SigmaMakerNote::tagList        },
@@ -1593,6 +1612,25 @@ namespace Exiv2 {
         return iopTagInfo;
     }
 
+    // Synthesized Exiv2 Makernote info Tags (read-only)
+    static const TagInfo mnTagInfo[] = {
+        TagInfo(0x0001, "Offset", N_("Offset"),
+                N_("Offset of the makernote from the start of the TIFF header."),
+                mnIfdId, makerTags, unsignedLong, printValue),
+        TagInfo(0x0002, "ByteOrder", N_("Byte Order"),
+                N_("Byte order used to encode MakerNote tags, 'MM' (big-endian) or 'II' (little-endian)."),
+                mnIfdId, makerTags, asciiString, printValue),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownMnTag)", N_("Unknown Exiv2 Makernote info tag"),
+                N_("Unknown Exiv2 Makernote info tag"),
+                ifdIdNotSet, sectionIdNotSet, invalidTypeId, printValue)
+    };
+
+    const TagInfo* ExifTags::mnTagList()
+    {
+        return mnTagInfo;
+    }
+
     // Unknown Tag
     static const TagInfo unknownTag(0xffff, "Unknown tag", N_("Unknown tag"),
                                     N_("Unknown tag"),
@@ -1619,8 +1657,12 @@ namespace Exiv2 {
     {
         const TagInfo* ti = tagList(ifdId);
         if (ti == 0) return 0;
+        const char* tn = tagName.c_str();
+        if (tn == 0) return 0;
         for (int idx = 0; ti[idx].tag_ != 0xffff; ++idx) {
-            if (std::string(ti[idx].name_) == tagName) return &ti[idx];
+            if (0 == strcmp(ti[idx].name_, tn)) {
+                return &ti[idx];
+            }
         }
         return 0;
     } // ExifTags::tagInfo
@@ -1835,6 +1877,11 @@ namespace Exiv2 {
         return *this;
     }
 
+    void ExifKey::setIdx(int idx)
+    {
+        idx_ = idx;
+    }
+
     std::string ExifKey::tagName() const
     {
         return ExifTags::tagName(tag_, ifdId_);
@@ -1866,7 +1913,7 @@ namespace Exiv2 {
         std::string::size_type pos1 = key_.find('.');
         if (pos1 == std::string::npos) throw Error(6, key_);
         std::string familyName = key_.substr(0, pos1);
-        if (familyName != std::string(familyName_)) {
+        if (0 != strcmp(familyName.c_str(), familyName_)) {
             throw Error(6, key_);
         }
         std::string::size_type pos0 = pos1 + 1;
@@ -1928,7 +1975,7 @@ namespace Exiv2 {
     {
         int32_t nominator;
         int32_t denominator;
-        char c;
+        char c('\0');
         is >> nominator >> c >> denominator;
         if (c != '/') is.setstate(std::ios::failbit);
         if (is) r = std::make_pair(nominator, denominator);
