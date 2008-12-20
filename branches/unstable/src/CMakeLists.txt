@@ -65,6 +65,7 @@ set( LIBEXIV2_HDR   basicio.hpp
                     panasonicmn.hpp
                     pentaxmn.hpp
                     pngimage.hpp
+		    preview.hpp
                     properties.hpp
                     psdimage.hpp
                     rafimage.hpp
@@ -105,11 +106,13 @@ set( LIBEXIV2_SRC   basicio.cpp
                     nikonmn.cpp
                     olympusmn.cpp
                     orfimage.cpp
+                    pentaxmn.cpp
                     panasonicmn.cpp
+		    preview.cpp
+                    properties.cpp
                     psdimage.cpp
                     rafimage.cpp
                     sigmamn.cpp
-                    pentaxmn.cpp
                     sonymn.cpp
                     tags.cpp
                     tgaimage.cpp
@@ -119,11 +122,10 @@ set( LIBEXIV2_SRC   basicio.cpp
                     types.cpp
                     value.cpp
                     version.cpp
-                    properties.cpp
                     xmp.cpp
                     xmpsidecar.cpp )
-#                     crwparse.cpp
-#                       tiffparse.cpp
+#                   crwparse.cpp
+#                   tiffparse.cpp
 
 # Add source files of simple applications to this list
 set( TAGLIST_SRC    taglist.cpp )
