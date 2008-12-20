@@ -366,10 +366,22 @@ namespace Exiv2 {
 
         // Olympus makernote - some Olympus cameras use Minolta structures
         // Todo: Adding such tags will not work (maybe result in a Minolta makernote), need separate groups
-        {    0x0001, Group::olympmn,   Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false> },
-        {    0x0003, Group::olympmn,   Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false> },
-        { Tag::next, Group::olympmn,   Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
-        {  Tag::all, Group::olympmn,   Group::olympmn,   0x927c,    Group::exif,      newTiffEntry },
+        {    0x0001, Group::olymp1mn,  Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false> },
+        {    0x0003, Group::olymp1mn,  Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false> },
+        { Tag::next, Group::olymp1mn,  Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
+        {  Tag::all, Group::olymp1mn,  Group::olymp1mn,  0x927c,    Group::exif,      newTiffEntry },
+
+        // Olympus2 makernote
+        {    0x0001, Group::olymp2mn,  Group::minocso,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false> },
+        {    0x0003, Group::olymp2mn,  Group::minocsn,   0x927c,    Group::exif,      newTiffArrayEntry<ttUnsignedLong, false> },
+        {    0x2020, Group::olymp2mn,  Group::olympcs,   0x927c,    Group::exif,      newTiffSubIfd },
+        { Tag::next, Group::olymp2mn,  Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
+        {  Tag::all, Group::olymp2mn,  Group::olymp2mn,  0x927c,    Group::exif,      newTiffEntry },
+
+        // Olympus2 camera settings subdir
+        {    0x0101, Group::olympcs,   Group::olympcs,   0x2020,    Group::olymp2mn,  newTiffImageData<0x0102, Group::olympcs> },
+        {    0x0102, Group::olympcs,   Group::olympcs,   0x2020,    Group::olymp2mn,  newTiffImageSize<0x0101, Group::olympcs> },
+        {  Tag::all, Group::olympcs,   Group::olympcs,   0x2020,    Group::olymp2mn,  newTiffEntry },
 
         // Fujifilm makernote
         { Tag::next, Group::fujimn,    Group::ignr,      0x927c,    Group::exif,      newTiffDirectory },
@@ -404,7 +416,7 @@ namespace Exiv2 {
         {    0x0011, Group::nikon3mn,  Group::nikonpv,   0x927c,    Group::exif,      newTiffSubIfd },
         {  Tag::all, Group::nikon3mn,  Group::nikon3mn,  0x927c,    Group::exif,      newTiffEntry },
 
-        // Nikon3 makernote preview sub-IFD
+        // Nikon3 makernote preview subdir
         {    0x0201, Group::nikonpv,   Group::nikonpv,   0x0011,    Group::nikon3mn,  newTiffThumbData<0x0202, Group::nikonpv> },
         {    0x0202, Group::nikonpv,   Group::nikonpv,   0x0011,    Group::nikon3mn,  newTiffThumbSize<0x0201, Group::nikonpv> },
         { Tag::next, Group::nikonpv,   Group::ignr,      0x0011,    Group::nikon3mn,  newTiffDirectory },
@@ -456,7 +468,8 @@ namespace Exiv2 {
     // TIFF mapping table for special decoding and encoding requirements
     const TiffMappingInfo TiffMapping::tiffMappingInfo_[] = {
         { "*",       Tag::all, Group::ignr,    0, 0 }, // Do not decode tags with group == Group::ignr
-        { "OLYMPUS",   0x0100, Group::olympmn, &TiffDecoder::decodeOlympThumb,   &TiffEncoder::encodeOlympThumb     },
+        { "OLYMPUS",   0x0100, Group::olymp1mn,&TiffDecoder::decodeOlympThumb,   &TiffEncoder::encodeOlympThumb     },
+        { "OLYMPUS",   0x0100, Group::olymp2mn,&TiffDecoder::decodeOlympThumb,   &TiffEncoder::encodeOlympThumb     },
         { "*",         0x02bc, Group::ifd0,    &TiffDecoder::decodeXmp,          0 /*done before the tree is traversed*/ },
         { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,         0 /*done before the tree is traversed*/ },
         { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,         0 /*done before the tree is traversed*/ },

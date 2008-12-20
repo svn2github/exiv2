@@ -118,6 +118,7 @@ namespace Exiv2 {
         signedRational     =10, //!< Exif SRATIONAL type, two SLONGs: numerator and denumerator of a fraction.
         tiffFloat          =11, //!< TIFF FLOAT type, single precision (4-byte) IEEE format.
         tiffDouble         =12, //!< TIFF DOUBLE type, double precision (8-byte) IEEE format.
+        tiffIfd            =13, //!< TIFF IFD type, 32-bit (4-byte) unsigned integer.
         string        =0x10000, //!< IPTC string type.
         date          =0x10001, //!< IPTC date type.
         time          =0x10002, //!< IPTC time type.
@@ -142,7 +143,8 @@ namespace Exiv2 {
                  minoltaIfdId, minoltaCs5DIfdId, minoltaCs7DIfdId,
                  minoltaCsOldIfdId, minoltaCsNewIfdId,
                  nikon1IfdId, nikon2IfdId, nikon3IfdId, nikonPvIfdId,
-                 olympusIfdId, panasonicIfdId, pentaxIfdId, sigmaIfdId, sonyIfdId,
+                 olympusIfdId, olympus2IfdId, olympusCsIfdId,
+                 panasonicIfdId, pentaxIfdId, sigmaIfdId, sonyIfdId,
                  lastIfdId };
 
     //! Container for binary data
