@@ -49,22 +49,20 @@ set( CMAKE_REQUIRED_LIBRARIES ${ICONV_LIBRARIES} )
 find_library( ICONV_LIBRARIES iconv )
 find_library( LIBINTL_LIBRARIES libintl )
 
-find_package( EXPAT )
 if( ENABLE_PNG )
     find_package( ZLIB )
+    include_directories( ${ZLIB_INCLUDE_DIR} )
+    set (HAVE_LIBZ ${ZLIB_FOUND})
 endif( ENABLE_PNG )
 
-include_directories( ${EXPAT_INCLUDE_DIR} )
-
-# the FindEXPAT.cmake library file doesn't check for REQUIRED flags - so we need to check ourselfes
-
-if( NOT EXPAT_FOUND )
-    message( FATAL_ERROR "missing library expat required for xmp" )
-endif( NOT EXPAT_FOUND )
-
-if( ENABLE_PNG )
-    set( HAVE_LIBZ ${ZLIB_FOUND} )
-endif( ENABLE_PNG )
+if (ENABLE_XMP)
+    find_package(EXPAT)
+    include_directories(${EXPAT_INCLUDE_DIR})
+    # FindEXPAT.cmake doesn't check for REQUIRED flags - so we need to check ourselves
+    if (NOT EXPAT_FOUND)
+        message(FATAL_ERROR "missing library expat required for XMP")
+    endif( NOT EXPAT_FOUND )
+endif (ENABLE_XMP)
 
 if( ENABLE_SHARED_EXIV2 )
     add_definitions( -DEXV_HAVE_DLL )
