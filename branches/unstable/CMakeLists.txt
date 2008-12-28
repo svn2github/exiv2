@@ -42,14 +42,14 @@ set( GENERIC_LIB_VERSION    "0.18" )
 set( GENERIC_LIB_SOVERSION  "2" )
 
 # options and there default values
-option( ENABLE_SHARED_EXIV2 "Build exiv2 as a shared library (dll)"                 ON )
-option( ENABLE_XMP          "Build with XMP metadata support"                       ON )
-option( ENABLE_LIBXMP       "Build a static convenience Library for XMP"            OFF )
-option( ENABLE_PNG          "Build with png support (requires libz)"                ON )
-option( ENABLE_NLS          "Build native language support (requires gettext)"      OFF )
-option( ENABLE_PRINTUCS2    "Build with Printucs2"                                  ON )
-option( ENABLE_LENSDATA     "include lens data"                                     ON )
-option( ENABLE_COMMERCIAL   "compile with the EXV_COMMERCIAL_VERSION symbol set"    OFF )
+option( EXIV2_ENABLE_SHARED       "Build exiv2 as a shared library (dll)"                 ON )
+option( EXIV2_ENABLE_XMP          "Build with XMP metadata support"                       ON )
+option( EXIV2_ENABLE_LIBXMP       "Build a static convenience Library for XMP"            OFF )
+option( EXIV2_ENABLE_PNG          "Build with png support (requires libz)"                ON )
+option( EXIV2_ENABLE_NLS          "Build native language support (requires gettext)"      OFF )
+option( EXIV2_ENABLE_PRINTUCS2    "Build with Printucs2"                                  ON )
+option( EXIV2_ENABLE_LENSDATA     "include lens data"                                     ON )
+option( EXIV2_ENABLE_COMMERCIAL   "compile with the EXV_COMMERCIAL_VERSION symbol set"    OFF )
 
 option( BUILD_samples       "Build the unit tests"                                  OFF )
 
@@ -57,13 +57,13 @@ if( MINGW OR UNIX )
         add_definitions( -Wall -Wcast-align -Wpointer-arith -Wformat-security -Wmissing-format-attribute -Woverloaded-virtual -W )
 endif( MINGW OR UNIX )
 
-if( ENABLE_XMP )
+if( EXIV2_ENABLE_XMP )
     set( HAVE_XMP_TOOLKIT ON )
     set( XMPLIB "do" )
-endif( ENABLE_XMP )
+endif( EXIV2_ENABLE_XMP )
 
 if( BUILD_samples )
-    ENABLE_TESTING()
+    EXIV2_ENABLE_TESTING()
 endif( BUILD_samples )
 
 

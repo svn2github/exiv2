@@ -139,12 +139,12 @@ set( EXIV2_SRC      exiv2.cpp
 set( MC_SRC         metacopy.cpp
                     utils.cpp )
 
-if( ENABLE_PNG )
+if( EXIV2_ENABLE_PNG )
     if( ZLIB_FOUND )
         set( LIBEXIV2_SRC ${LIBEXIV2_SRC}   pngchunk.cpp
                                             pngimage.cpp )
     endif( ZLIB_FOUND )
-endif( ENABLE_PNG )
+endif( EXIV2_ENABLE_PNG )
 
 if(NOT HAVE_TIMEGM )
     set( LIBEXIV2_SRC   ${LIBEXIV2_SRC} localtime.c )
@@ -158,11 +158,11 @@ if( MSVC )
 endif( MSVC )
 
 
-if( ENABLE_XMP )
-    if( NOT ENABLE_LIBXMP )
+if( EXIV2_ENABLE_XMP )
+    if( NOT EXIV2_ENABLE_LIBXMP )
         set( LIBEXIV2_SRC ${XMPSRC} ${LIBEXIV2_SRC} )
-    endif( NOT ENABLE_LIBXMP )
-endif( ENABLE_XMP )
+    endif( NOT EXIV2_ENABLE_LIBXMP )
+endif( EXIV2_ENABLE_XMP )
 
 # ******************************************************************************
 # Library
@@ -171,18 +171,18 @@ set_target_properties( exiv2 PROPERTIES VERSION ${GENERIC_LIB_VERSION}
                                         SOVERSION ${GENERIC_LIB_SOVERSION}
                                         DEFINE_SYMBOL EXV_BUILDING_LIB )
 
-if( ENABLE_LIBXMP )
+if( EXIV2_ENABLE_LIBXMP )
     target_link_libraries( exiv2 ${XMPLIB} )
-endif( ENABLE_LIBXMP )
+endif( EXIV2_ENABLE_LIBXMP )
 target_link_libraries( exiv2 ${EXPAT_LIBRARIES} )
-if( ENABLE_PNG )
+if( EXIV2_ENABLE_PNG )
     if( ZLIB_FOUND )
         target_link_libraries( exiv2 ${ZLIB_LIBRARIES} )
     endif( ZLIB_FOUND )
-endif( ENABLE_PNG )
-if( ENABLE_NLS )
+endif( EXIV2_ENABLE_PNG )
+if( EXIV2_ENABLE_NLS )
     target_link_libraries( exiv2 ${LIBINTL_LIBRARIES} )
-endif( ENABLE_NLS )
+endif( EXIV2_ENABLE_NLS )
 
 install( TARGETS exiv2 ${INSTALL_TARGET_STANDARD_ARGS} )
 

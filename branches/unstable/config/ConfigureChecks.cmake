@@ -38,8 +38,8 @@ include( CheckCSourceCompiles )
 set( STDC_HEADERS ON )
 set( HAVE_DECL_STRERROR_R 0 )
 
-set( HAVE_PRINTUCS2 ${ENABLE_PRINTUCS2} )
-set( HAVE_LENSDATA ${ENABLE_LENSDATA} )
+set( HAVE_PRINTUCS2 ${EXIV2_ENABLE_PRINTUCS2} )
+set( HAVE_LENSDATA ${EXIV2_ENABLE_LENSDATA} )
 
 include_directories( ${CMAKE_INCLUDE_PATH} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/xmpsdk/include )
 link_directories( ${CMAKE_LIBRARY_PATH} )
@@ -49,29 +49,29 @@ set( CMAKE_REQUIRED_LIBRARIES ${ICONV_LIBRARIES} )
 find_library( ICONV_LIBRARIES iconv )
 find_library( LIBINTL_LIBRARIES libintl )
 
-if( ENABLE_PNG )
+if( EXIV2_ENABLE_PNG )
     find_package( ZLIB )
     include_directories( ${ZLIB_INCLUDE_DIR} )
     set (HAVE_LIBZ ${ZLIB_FOUND})
-endif( ENABLE_PNG )
+endif( EXIV2_ENABLE_PNG )
 
-if (ENABLE_XMP)
+if (EXIV2_ENABLE_XMP)
     find_package(EXPAT)
     include_directories(${EXPAT_INCLUDE_DIR})
     # FindEXPAT.cmake doesn't check for REQUIRED flags - so we need to check ourselves
     if (NOT EXPAT_FOUND)
         message(FATAL_ERROR "missing library expat required for XMP")
     endif( NOT EXPAT_FOUND )
-endif (ENABLE_XMP)
+endif (EXIV2_ENABLE_XMP)
 
-if( ENABLE_SHARED_EXIV2 )
+if( EXIV2_ENABLE_SHARED )
     add_definitions( -DEXV_HAVE_DLL )
     set( STATIC_FLAG SHARED )
-else( ENABLE_SHARED_EXIV2 )
+else( EXIV2_ENABLE_SHARED )
     set( STATIC_FLAG STATIC )
-endif( ENABLE_SHARED_EXIV2 )
+endif( EXIV2_ENABLE_SHARED )
 
-if( ENABLE_NLS )
+if( EXIV2_ENABLE_NLS )
     if( NOT LOCALEDIR )
         set( LOCALEDIR "\"${CMAKE_INSTALL_PREFIX}/share/locale\"" )
         if( WIN32 )
@@ -79,11 +79,11 @@ if( ENABLE_NLS )
         endif( WIN32 )
     endif( NOT LOCALEDIR )
     add_definitions( -DEXV_LOCALEDIR=${LOCALEDIR} )
-endif( ENABLE_NLS )
+endif( EXIV2_ENABLE_NLS )
 
-if( ENABLE_COMMERCIAL )
+if( EXIV2_ENABLE_COMMERCIAL )
     add_definitions( -DEXV_COMMERCIAL_VERSION )
-endif( ENABLE_COMMERCIAL )
+endif( EXIV2_ENABLE_COMMERCIAL )
 
 # checking for Header files
 check_include_file( "inttypes.h" HAVE_INTTYPES_H )
@@ -216,7 +216,7 @@ HAVE_VPRINTF
 
 HAVE__BOOL
 HAVE_LENSDATA
-ENABLE_NLS
+EXIV2_ENABLE_NLS
 HAVE_DECL_STRERROR_R
 HAVE_PRINTUCS2
 HAVE_LIBZ
@@ -255,12 +255,12 @@ macro( OptionOutput _outputstring )
 endmacro( OptionOutput _outputstring )
 
 message( STATUS "-------------------------------------------------------------" )
-OptionOutput( "Building PNG support:            " ENABLE_PNG AND ZLIB_FOUND )
-OptionOutput( "Building shared library:         " ENABLE_SHARED_EXIV2 )
-OptionOutput( "XMP metadata support:            " ENABLE_XMP )
+OptionOutput( "Building PNG support:            " EXIV2_ENABLE_PNG AND ZLIB_FOUND )
+OptionOutput( "Building shared library:         " EXIV2_ENABLE_SHARED )
+OptionOutput( "XMP metadata support:            " EXIV2_ENABLE_XMP )
 OptionOutput( "Building static libxmp:          " ENABLE_LIBXMP )
-OptionOutput( "Native language support:         " ENABLE_NLS )
-OptionOutput( "Conversion of Windows XP tags:   " ENABLE_PRINTUCS2 )
-OptionOutput( "Nikon lens database:             " ENABLE_LENSDATA )
-OptionOutput( "commercial build:                " ENABLE_COMMERCIAL )
+OptionOutput( "Native language support:         " EXIV2_ENABLE_NLS )
+OptionOutput( "Conversion of Windows XP tags:   " EXIV2_ENABLE_PRINTUCS2 )
+OptionOutput( "Nikon lens database:             " EXIV2_ENABLE_LENSDATA )
+OptionOutput( "commercial build:                " EXIV2_ENABLE_COMMERCIAL )
 message( STATUS "-------------------------------------------------------------" )
