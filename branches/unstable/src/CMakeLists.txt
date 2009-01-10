@@ -33,6 +33,7 @@ set( LIBEXIV2_PRIVATE_HDR   cr2image_int.hpp
                             makernote_int.hpp
                             orfimage_int.hpp
                             pngchunk_int.hpp
+                            rw2image_int.hpp
                             tiffcomposite_int.hpp
                             tifffwd_int.hpp
                             tiffimage_int.hpp
@@ -70,6 +71,7 @@ set( LIBEXIV2_HDR   basicio.hpp
                     psdimage.hpp
                     rafimage.hpp
                     rcsid.hpp
+                    rw2image.hpp
                     sigmamn.hpp
                     sonymn.hpp
                     tags.hpp
@@ -112,6 +114,7 @@ set( LIBEXIV2_SRC   basicio.cpp
                     properties.cpp
                     psdimage.cpp
                     rafimage.cpp
+                    rw2image.cpp
                     sigmamn.cpp
                     sonymn.cpp
                     tags.cpp
