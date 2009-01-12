@@ -181,26 +181,6 @@ namespace Exiv2 {
     //! Container type to hold all metadata
     typedef std::vector<Iptcdatum> IptcMetadata;
 
-    //! Unary predicate that matches an Iptcdatum with given record and dataset
-    class EXIV2API FindMetadatumById {
-    public:
-        //! Constructor, initializes the object with the record and dataset id
-        FindMetadatumById(uint16_t dataset, uint16_t record)
-            : dataset_(dataset), record_(record) {}
-        /*!
-          @brief Returns true if the record and dataset id of the argument
-                Iptcdatum is equal to that of the object.
-        */
-        bool operator()(const Iptcdatum& iptcdatum) const
-            { return dataset_ == iptcdatum.tag() && record_ == iptcdatum.record(); }
-
-    private:
-        // DATA
-        uint16_t dataset_;
-        uint16_t record_;
-
-    }; // class FindMetadatumById
-
     /*!
       @brief A container for IPTC data. This is a top-level class of
              the %Exiv2 library.

@@ -60,6 +60,28 @@ namespace {
         const Exiv2::byte*     data,
               uint32_t         sizeData
     );
+
+    //! Unary predicate that matches an Iptcdatum with given record and dataset
+    class FindIptcdatum {
+    public:
+        //! Constructor, initializes the object with the record and dataset id
+        FindIptcdatum(uint16_t dataset, uint16_t record)
+            : dataset_(dataset), record_(record) {}
+        /*!
+          @brief Returns true if the record and dataset id of the argument
+                Iptcdatum is equal to that of the object.
+        */
+        bool operator()(const Exiv2::Iptcdatum& iptcdatum) const
+        {
+            return dataset_ == iptcdatum.tag() && record_ == iptcdatum.record();
+        }
+
+    private:
+        // DATA
+        uint16_t dataset_;
+        uint16_t record_;
+
+    }; // class FindIptcdatum
 }
 
 // *****************************************************************************
@@ -193,25 +215,25 @@ namespace Exiv2 {
     IptcData::const_iterator IptcData::findKey(const IptcKey& key) const
     {
         return std::find_if(iptcMetadata_.begin(), iptcMetadata_.end(),
-                            FindMetadatumById(key.tag(), key.record()));
+                            FindIptcdatum(key.tag(), key.record()));
     }
 
     IptcData::iterator IptcData::findKey(const IptcKey& key)
     {
         return std::find_if(iptcMetadata_.begin(), iptcMetadata_.end(),
-                            FindMetadatumById(key.tag(), key.record()));
+                            FindIptcdatum(key.tag(), key.record()));
     }
 
     IptcData::const_iterator IptcData::findId(uint16_t dataset, uint16_t record) const
     {
         return std::find_if(iptcMetadata_.begin(), iptcMetadata_.end(),
-                            FindMetadatumById(dataset, record));
+                            FindIptcdatum(dataset, record));
     }
 
     IptcData::iterator IptcData::findId(uint16_t dataset, uint16_t record)
     {
         return std::find_if(iptcMetadata_.begin(), iptcMetadata_.end(),
-                            FindMetadatumById(dataset, record));
+                            FindIptcdatum(dataset, record));
     }
 
     void IptcData::sortByKey()

@@ -63,12 +63,34 @@ namespace {
         //! Constructor, initializes the object with the IfdId to look for.
         FindExifdatum(Exiv2::IfdId ifdId) : ifdId_(ifdId) {}
         //! Returns true if IFD id matches.
-        bool operator()(const Exiv2::Exifdatum& md) const { return ifdId_ == md.ifdId(); }
+        bool operator()(const Exiv2::Exifdatum& md) const
+        {
+            return ifdId_ == md.ifdId();
+        }
 
     private:
         Exiv2::IfdId ifdId_;
 
     }; // class FindExifdatum
+
+    //! Unary predicate that matches a Exifdatum with a given key
+    class FindExifdatumByKey {
+    public:
+        //! Constructor, initializes the object with the key to look for
+        FindExifdatumByKey(const std::string& key) : key_(key) {}
+        /*!
+          @brief Returns true if the key of \em exifdatum is equal
+                 to that of the object.
+        */
+        bool operator()(const Exiv2::Exifdatum& exifdatum) const
+        {
+            return key_ == exifdatum.key();
+        }
+
+    private:
+        std::string key_;
+
+    }; // class FindExifdatumByKey
 
     /*!
       @brief Exif %Thumbnail image. This abstract base class provides the
@@ -394,13 +416,13 @@ namespace Exiv2 {
     ExifData::const_iterator ExifData::findKey(const ExifKey& key) const
     {
         return std::find_if(exifMetadata_.begin(), exifMetadata_.end(),
-                            FindMetadatumByKey(key.key()));
+                            FindExifdatumByKey(key.key()));
     }
 
     ExifData::iterator ExifData::findKey(const ExifKey& key)
     {
         return std::find_if(exifMetadata_.begin(), exifMetadata_.end(),
-                            FindMetadatumByKey(key.key()));
+                            FindExifdatumByKey(key.key()));
     }
 
     void ExifData::clear()
