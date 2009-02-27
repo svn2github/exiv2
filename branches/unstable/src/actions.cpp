@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -347,6 +347,9 @@ namespace Action {
                 std::cout << " ("<< _("35 mm equivalent") << ": "
                           << md->print(&exifData) << ")";
             }
+        }
+        else {
+            printTag(exifData, "Exif.Canon.FocalLength");
         }
         std::cout << std::endl;
 
@@ -1032,6 +1035,7 @@ namespace Action {
         if (Params::instance().verbose_ && image->xmpData().count() > 0) {
             std::cout << _("Erasing XMP data from the file") << std::endl;
         }
+        image->clearXmpData();                  // Quick fix for bug #612
         image->clearXmpPacket();
         return 0;
     }

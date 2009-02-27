@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -66,7 +66,7 @@ namespace Exiv2 {
     enum SectionId { sectionIdNotSet,
                      imgStruct, recOffset, imgCharacter, otherTags, exifFormat,
                      exifVersion, imgConfig, userInfo, relatedFile, dateTime,
-                     captureCond, gpsTags, iopTags, makerTags, dngTags,
+                     captureCond, gpsTags, iopTags, makerTags, dngTags, panaRaw,
                      lastSectionId };
 
 // *****************************************************************************
@@ -173,7 +173,7 @@ namespace Exiv2 {
             if (td->mask_ == 0) return os << exvGettext(td->label_);
         }
         bool sep = false;
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < N; ++i) {
             // *& acrobatics is a workaround for a MSVC 7.1 bug
             const TagDetailsBitmask* td = *(&array) + i;
 

@@ -2,6 +2,10 @@ rmdir/s/q .\addmoddel\Debug
 rmdir/s/q .\addmoddel\DebugDLL
 rmdir/s/q .\addmoddel\Release
 rmdir/s/q .\addmoddel\ReleaseDLL
+rmdir/s/q .\organize\Debug
+rmdir/s/q .\organize\DebugDLL
+rmdir/s/q .\organize\Release
+rmdir/s/q .\organize\ReleaseDLL
 rmdir/s/q .\exifcomment\Debug
 rmdir/s/q .\exifdata-test\Debug
 rmdir/s/q .\exifprint\Debug
@@ -90,11 +94,6 @@ rmdir/s/q .\prevtest\Release
 rmdir/s/q .\prevtest\ReleaseDLL
 rmdir/s/q .\prevtest\Debug
 rmdir/s/q .\prevtest\DebugDLL
-rmdir/s/q .\zlib4exiv2\Release
-rmdir/s/q .\zlib4exiv2\ReleaseDLL
-rmdir/s/q .\zlib4exiv2\Debug
-rmdir/s/q .\zlib4exiv2\DebugDLL
-rmdir/s/q .\zlib4exiv2\DebugDLL
 rmdir/s/q ..\..\expat-2.0.1\win32\bin\DebugDLL
 rmdir/s/q ..\..\expat-2.0.1\win32\bin\ReleaseDLL
 

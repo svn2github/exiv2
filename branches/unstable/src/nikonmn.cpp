@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
  *
  * Lens database to decode Exif.Nikon3.LensData
  * Copyright (C) 2005-2008 Robert Rottmerhusen <lens_id@rottmerhusen.com>
@@ -74,8 +74,22 @@ namespace {
 // class member definitions
 namespace Exiv2 {
 
+    //! OffOn, multiple tags
+    extern const TagDetails nikonOffOn[] = {
+        {  0, N_("Off") },
+        {  1, N_("On")  }
+    };
+
+    //! Off, Low, Normal, High, multiple tags
+    extern const TagDetails nikonOlnh[] = {
+        {  0, N_("Off")    },
+        {  1, N_("Low")    },
+        {  3, N_("Normal") },
+        {  5, N_("High")   }
+    };
+
     //! Focus area for Nikon cameras.
-    static const char *nikonFocusarea[] = {
+    extern const char *nikonFocusarea[] = {
         N_("Single area"),
         N_("Dynamic area"),
         N_("Dynamic area, closest subject"),
@@ -88,7 +102,7 @@ namespace Exiv2 {
     // module. Note that relative size and position will vary depending on if
     // "wide" or not
     //! Focus points for Nikon cameras, used for Nikon 1 and Nikon 3 makernotes.
-    static const char *nikonFocuspoints[] = {
+    extern const char *nikonFocuspoints[] = {
         N_("Center"),
         N_("Top"),
         N_("Bottom"),
@@ -140,14 +154,25 @@ namespace Exiv2 {
     };
 
     //! ShootingMode, tag 0x0089
-    extern const TagDetails nikonShootingMode[] = {
-        {  1, N_("Continuous")               },
-        {  2, N_("Delay")                    },
-        {  4, N_("PC control")               },
-        {  8, N_("Exposure bracketing")      },
-        { 16, N_("Unused LE-NR slowdown")    },
-        { 32, N_("White balance bracketing") },
-        { 64, N_("IR control")               }
+    extern const TagDetailsBitmask nikonShootingMode[] = {
+        { 0x0001, N_("Continuous")               },
+        { 0x0002, N_("Delay")                    },
+        { 0x0004, N_("PC control")               },
+        { 0x0010, N_("Exposure bracketing")      },
+        { 0x0020, N_("Auto ISO") },
+        { 0x0040, N_("White balance bracketing") },
+        { 0x0080, N_("IR control")               }
+    };
+
+    //! ShootingMode D70, tag 0x0089
+    extern const TagDetailsBitmask nikonShootingModeD70[] = {
+        { 0x0001, N_("Continuous")               },
+        { 0x0002, N_("Delay")                    },
+        { 0x0004, N_("PC control")               },
+        { 0x0010, N_("Exposure bracketing")      },
+        { 0x0020, N_("Unused LE-NR slowdown") },
+        { 0x0040, N_("White balance bracketing") },
+        { 0x0080, N_("IR control")               }
     };
 
     //! AutoBracketRelease, tag 0x008a
@@ -157,13 +182,37 @@ namespace Exiv2 {
         { 2, N_("Manual release") }
     };
 
+    //! NEFCompression, tag 0x0093
+    extern const TagDetails nikonNefCompression[] = {
+        {  1, N_("Lossy (type 1)") },
+        {  2, N_("Uncompressed")   },
+        {  3, N_("Lossless")       },
+        {  4, N_("Lossy (type 2)") }
+    };
+
+    //! RetouchHistory, tag 0x009e
+    extern const TagDetails nikonRetouchHistory[] = {
+        {  0, N_("None")          },
+        {  3, N_("B & W")         },
+        {  4, N_("Sepia")         },
+        {  5, N_("Trim")          },
+        {  6, N_("Small picture") },
+        {  7, N_("D-Lighting")    },
+        {  8, N_("Red eye")       },
+        {  9, N_("Cyanotype")     },
+        { 10, N_("Sky light")     },
+        { 11, N_("Warm tone")     },
+        { 12, N_("Color custom")  },
+        { 13, N_("Image overlay") }
+    };
+
     //! HighISONoiseReduction, tag 0x00b1
     extern const TagDetails nikonHighISONoiseReduction[] = {
-        { 0, N_("Off")                  },
-        { 1, N_("On for ISO 1600/3200") },
-        { 2, N_("Weak")                 },
-        { 4, N_("Normal")               },
-        { 6, N_("Strong")               }
+        { 0, N_("Off")     },
+        { 1, N_("Minimal") },
+        { 2, N_("Low")     },
+        { 4, N_("Normal")  },
+        { 6, N_("High")    }
     };
 
     // Nikon1 MakerNote Tag Info
@@ -479,229 +528,98 @@ namespace Exiv2 {
 
     // Nikon3 MakerNote Tag Info
     const TagInfo Nikon3MakerNote::tagInfo_[] = {
-        TagInfo(0x0001, "Version", N_("Version"),
-                N_("Nikon Makernote version"),
-                nikon3IfdId, makerTags, undefined, printExifVersion),
-        TagInfo(0x0002, "ISOSpeed", N_("ISO Speed"),
-                N_("ISO speed setting"),
-                nikon3IfdId, makerTags, unsignedShort, print0x0002),
-        TagInfo(0x0003, "ColorMode", N_("Color Mode"),
-                N_("Color mode"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-         TagInfo(0x0004, "Quality", N_("Quality"),
-                N_("Image quality setting"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0005, "WhiteBalance", N_("White Balance"),
-                N_("White balance"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0006, "Sharpening", N_("Sharpening"),
-                N_("Image sharpening setting"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0007, "Focus", N_("Focus"),
-                N_("Focus mode"),
-                nikon3IfdId, makerTags, asciiString, print0x0007),
-        TagInfo(0x0008, "FlashSetting", N_("Flash Setting"),
-                N_("Flash setting"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0009, "FlashDevice", N_("Flash Device"),
-                N_("Flash device"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x000a, "0x000a", "0x000a",
-                N_("Unknown"),
-                nikon3IfdId, makerTags, unsignedRational, printValue),
-        TagInfo(0x000b, "WhiteBalanceBias", N_("White Balance Bias"),
-                N_("White balance bias"),
-                nikon3IfdId, makerTags, signedShort, printValue),
-        TagInfo(0x000c, "ColorBalance1", N_("Color Balance 1"),
-                N_("Color balance settings 1"),
-                nikon3IfdId, makerTags, unsignedRational, printValue),
-        TagInfo(0x000d, "ProgramShift", N_("Program Shift"),
-                N_("Program shift"),
-                nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x000e, "ExposureDiff", N_("Exposure Difference"),
-                N_("Exposure difference"),
-                nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x000f, "ISOSelection", N_("ISO Selection"),
-                N_("ISO selection"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0010, "DataDump", N_("Data Dump"),
-                N_("Data dump"),
-                nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x0011, "Preview", N_("Pointer to a preview image"),
-                N_("Offset to an IFD containing a preview image"),
-                nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x0012, "FlashComp", N_("Flash Comp"),
-                N_("Flash compensation setting"),
-                nikon3IfdId, makerTags, undefined, EXV_PRINT_TAG(nikonFlashComp)),
-        TagInfo(0x0013, "ISOSettings", N_("ISO Settings"),
-                N_("ISO setting"),
-                nikon3IfdId, makerTags, unsignedShort, print0x0002), // use 0x0002 print fct
-        TagInfo(0x0016, "ImageBoundary", N_("Image Boundary"),
-                N_("Image boundary"),
-                nikon3IfdId, makerTags, unsignedShort, printValue),
-        TagInfo(0x0017, "0x0017", "0x0017",
-                N_("Unknown"),
-                nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x0018, "FlashBracketComp", N_("Flash Bracket Comp"),
-                N_("Flash bracket compensation applied"),
-                nikon3IfdId, makerTags, undefined, EXV_PRINT_TAG(nikonFlashComp)), // use 0x0012 print fct
-        TagInfo(0x0019, "ExposureBracketComp", N_("Exposure Bracket Comp"),
-                N_("AE bracket compensation applied"),
-                nikon3IfdId, makerTags, signedRational, printValue),
-        TagInfo(0x001a, "ImageProcessing", N_("Image Processing"),
-                N_("Image processing"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x001b, "CropHiSpeed", N_("Crop High Speed"),
-                N_("Crop high speed"),
-                nikon3IfdId, makerTags, unsignedShort, printValue),
-        TagInfo(0x001d, "SerialNumber", N_("Serial Number"),
-                N_("Serial Number"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x001e, "ColorSpace", N_("Color Space"),
-                N_("Color space"),
-                nikon3IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonColorSpace)),
-        TagInfo(0x0080, "ImageAdjustment", N_("Image Adjustment"),
-                N_("Image adjustment setting"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0081, "ToneComp", N_("Tone Compensation"),
-                N_("Tone compensation"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0082, "AuxiliaryLens", N_("Auxiliary Lens"),
-                N_("Auxiliary lens (adapter)"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0083, "LensType", N_("Lens Type"),
-                N_("Lens type"),
-                nikon3IfdId, makerTags, unsignedByte, print0x0083),
-        TagInfo(0x0084, "Lens", N_("Lens"),
-                N_("Lens"),
-                nikon3IfdId, makerTags, unsignedRational, print0x0084),
-        TagInfo(0x0085, "FocusDistance", N_("Focus Distance"),
-                N_("Manual focus distance"),
-                nikon3IfdId, makerTags, unsignedRational, print0x0085),
-        TagInfo(0x0086, "DigitalZoom", N_("Digital Zoom"),
-                N_("Digital zoom setting"),
-                nikon3IfdId, makerTags, unsignedRational, print0x0086),
-        TagInfo(0x0087, "FlashMode", N_("Flash Mode"),
-                N_("Mode of flash used"),
-                nikon3IfdId, makerTags, unsignedByte, EXV_PRINT_TAG(nikonFlashMode)),
-        TagInfo(0x0088, "AFFocusPos", N_("AF Focus Position"),
-                N_("AF focus position information"),
-                nikon3IfdId, makerTags, undefined, print0x0088),
-        TagInfo(0x0089, "ShootingMode", N_("Shooting Mode"),
-                N_("Shooting mode"),
-                nikon3IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonShootingMode)),
-        TagInfo(0x008a, "AutoBracketRelease", N_("Auto Bracket Release"),
-                N_("Auto bracket release"),
-                nikon3IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonAutoBracketRelease)),
-        TagInfo(0x008b, "LensFStops", N_("Lens FStops"),
-                N_("Lens FStops"),
-                nikon3IfdId, makerTags, undefined, print0x008b),
-        TagInfo(0x008c, "ToneCurve", N_("Tone Curve"),
-                N_("Tone curve"),
-                nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x008d, "ColorMode", N_("Color Mode"),
-                N_("Color mode"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x008f, "SceneMode", N_("Scene Mode"),
-                N_("Scene mode"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0090, "LightSource", N_("Light Source"),
-                N_("Light source"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0091, "0x0091", "0x0091",
-                N_("Unknown"),
-                nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x0092, "HueAdjustment", N_("Hue Adjustment"),
-                N_("Hue adjustment"),
-                nikon3IfdId, makerTags, signedShort, printValue),
-        TagInfo(0x0094, "Saturation", N_("Saturation"),
-                N_("Saturation"),
-                nikon3IfdId, makerTags, signedShort, printValue),
-        TagInfo(0x0095, "NoiseReduction", N_("Noise Reduction"),
-                N_("Noise reduction"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0096, "CompressionCurve", N_("Compression Curve"),
-                N_("Compression curve"),
-                nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x0097, "ColorBalance2", N_("Color Balance 2"),
-                N_("Color balance settings 2"),
-                nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x0098, "LensData", N_("Lens Data"),
-                N_("Lens data settings"),
-                nikon3IfdId, makerTags, undefined, print0x0098),
-        TagInfo(0x0099, "RawImageCenter", N_("Raw Image Center"),
-                N_("Raw image center"),
-                nikon3IfdId, makerTags, unsignedShort, printValue),
-        TagInfo(0x009a, "SensorPixelSize", N_("Sensor Pixel Size"),
-                N_("Sensor pixel size"),
-                nikon3IfdId, makerTags, unsignedRational, printValue),
-        TagInfo(0x009b, "0x009b", "0x009b",
-                N_("Unknown"),
-                nikon3IfdId, makerTags, unsignedShort, printValue),
-        TagInfo(0x009f, "0x009f", "0x009f",
-                N_("Unknown"),
-                nikon3IfdId, makerTags, signedShort, printValue),
-        TagInfo(0x00a0, "SerialNO", N_("Serial NO"),
-                N_("Camera serial number, usually starts with \"NO= \""),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x00a2, "ImageDataSize", N_("Image Data Size"),
-                N_("Image data size"),
-                nikon3IfdId, makerTags, unsignedLong, printValue),
-        TagInfo(0x00a3, "0x00a3", "0x00a3",
-                N_("Unknown"),
-                nikon3IfdId, makerTags, unsignedByte, printValue),
-        TagInfo(0x00a5, "ImageCount", N_("Image Count"),
-                N_("Image count"),
-                nikon3IfdId, makerTags, unsignedLong, printValue),
-        TagInfo(0x00a6, "DeleteImageCount", N_("Delete Image Count"),
-                N_("Delete image count"),
-                nikon3IfdId, makerTags, unsignedLong, printValue),
-        TagInfo(0x00a7, "ShutterCount", N_("Shutter Count"),
-                N_("Number of shots taken by camera"),
-                nikon3IfdId, makerTags, unsignedLong, printValue),
-        TagInfo(0x00a8, "0x00a8", "0x00a8",
-                N_("Unknown"),
-                nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x00a9, "ImageOptimization", N_("Image Optimization"),
-                N_("Image optimization"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x00aa, "Saturation", N_("Saturation"),
-                N_("Saturation"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x00ab, "VariProgram", N_("Program Variation"),
-                N_("Program variation"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x00ac, "ImageStabilization", N_("Image Stabilization"),
-                N_("Image stabilization"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x00ad, "AFResponse", N_("AF Response"),
-                N_("AF response"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-        TagInfo(0x00b1, "HighISONoiseReduction", N_("High ISO Noise Reduction"),
-                N_("High ISO Noise Reduction"),
-                nikon3IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonHighISONoiseReduction)),
-        TagInfo(0x0e00, "PrintIM", N_("Print IM"),
-                N_("PrintIM information"),
-                nikon3IfdId, makerTags, undefined, printValue),
-
+        TagInfo(0x0001, "Version", N_("Version"), N_("Nikon Makernote version"), nikon3IfdId, makerTags, undefined, printExifVersion),
+        TagInfo(0x0002, "ISOSpeed", N_("ISO Speed"), N_("ISO speed setting"), nikon3IfdId, makerTags, unsignedShort, print0x0002),
+        TagInfo(0x0003, "ColorMode", N_("Color Mode"), N_("Color mode"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0004, "Quality", N_("Quality"), N_("Image quality setting"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0005, "WhiteBalance", N_("White Balance"), N_("White balance"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0006, "Sharpening", N_("Sharpening"), N_("Image sharpening setting"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0007, "Focus", N_("Focus"), N_("Focus mode"), nikon3IfdId, makerTags, asciiString, print0x0007),
+        TagInfo(0x0008, "FlashSetting", N_("Flash Setting"), N_("Flash setting"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0009, "FlashDevice", N_("Flash Device"), N_("Flash device"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x000a, "0x000a", "0x000a", N_("Unknown"), nikon3IfdId, makerTags, unsignedRational, printValue),
+        TagInfo(0x000b, "WhiteBalanceBias", N_("White Balance Bias"), N_("White balance bias"), nikon3IfdId, makerTags, signedShort, printValue),
+        TagInfo(0x000c, "ColorBalance1", N_("Color Balance 1"), N_("Color balance settings 1"), nikon3IfdId, makerTags, unsignedRational, printValue),
+        TagInfo(0x000d, "ProgramShift", N_("Program Shift"), N_("Program shift"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x000e, "ExposureDiff", N_("Exposure Difference"), N_("Exposure difference"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x000f, "ISOSelection", N_("ISO Selection"), N_("ISO selection"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0010, "DataDump", N_("Data Dump"), N_("Data dump"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0011, "Preview", N_("Pointer to a preview image"), N_("Offset to an IFD containing a preview image"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0012, "FlashComp", N_("Flash Comp"), N_("Flash compensation setting"), nikon3IfdId, makerTags, undefined, EXV_PRINT_TAG(nikonFlashComp)),
+        TagInfo(0x0013, "ISOSettings", N_("ISO Settings"), N_("ISO setting"), nikon3IfdId, makerTags, unsignedShort, print0x0002), // use 0x0002 print fct
+        TagInfo(0x0016, "ImageBoundary", N_("Image Boundary"), N_("Image boundary"), nikon3IfdId, makerTags, unsignedShort, printValue),
+        TagInfo(0x0017, "0x0017", "0x0017", N_("Unknown"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0018, "FlashBracketComp", N_("Flash Bracket Comp"), N_("Flash bracket compensation applied"), nikon3IfdId, makerTags, undefined, EXV_PRINT_TAG(nikonFlashComp)), // use 0x0012 print fct
+        TagInfo(0x0019, "ExposureBracketComp", N_("Exposure Bracket Comp"), N_("AE bracket compensation applied"), nikon3IfdId, makerTags, signedRational, printValue),
+        TagInfo(0x001a, "ImageProcessing", N_("Image Processing"), N_("Image processing"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x001b, "CropHiSpeed", N_("Crop High Speed"), N_("Crop high speed"), nikon3IfdId, makerTags, unsignedShort, printValue),
+        TagInfo(0x001d, "SerialNumber", N_("Serial Number"), N_("Serial Number"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x001e, "ColorSpace", N_("Color Space"), N_("Color space"), nikon3IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonColorSpace)),
+        TagInfo(0x001f, "VRInfo", N_("VR Info"), N_("VR info"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0020, "ImageAuthentication", N_("Image Authentication"), N_("Image authentication"), nikon3IfdId, makerTags, unsignedByte, EXV_PRINT_TAG(nikonOffOn)),
+        TagInfo(0x0022, "ActiveDLighting", N_("ActiveD-Lighting"), N_("ActiveD-lighting"), nikon3IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonOlnh)),
+        TagInfo(0x0023, "PictureControl", N_("Picture Control"), N_(" Picture control"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0024, "WorldTime", N_("World Time"), N_("World time"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0025, "ISOInfo", N_("ISO Info"), N_("ISO info"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x002a, "VignetteControl", N_("Vignette Control"), N_("Vignette control"), nikon3IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonOlnh)),
+        TagInfo(0x0080, "ImageAdjustment", N_("Image Adjustment"), N_("Image adjustment setting"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0081, "ToneComp", N_("Tone Compensation"), N_("Tone compensation"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0082, "AuxiliaryLens", N_("Auxiliary Lens"), N_("Auxiliary lens (adapter)"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0083, "LensType", N_("Lens Type"), N_("Lens type"), nikon3IfdId, makerTags, unsignedByte, print0x0083),
+        TagInfo(0x0084, "Lens", N_("Lens"), N_("Lens"), nikon3IfdId, makerTags, unsignedRational, print0x0084),
+        TagInfo(0x0085, "FocusDistance", N_("Focus Distance"), N_("Manual focus distance"), nikon3IfdId, makerTags, unsignedRational, print0x0085),
+        TagInfo(0x0086, "DigitalZoom", N_("Digital Zoom"), N_("Digital zoom setting"), nikon3IfdId, makerTags, unsignedRational, print0x0086),
+        TagInfo(0x0087, "FlashMode", N_("Flash Mode"), N_("Mode of flash used"), nikon3IfdId, makerTags, unsignedByte, EXV_PRINT_TAG(nikonFlashMode)),
+        TagInfo(0x0088, "AFFocusPos", N_("AF Focus Position"), N_("AF focus position information"), nikon3IfdId, makerTags, undefined, print0x0088),
+        TagInfo(0x0089, "ShootingMode", N_("Shooting Mode"), N_("Shooting mode"), nikon3IfdId, makerTags, unsignedShort, print0x0089),
+        TagInfo(0x008a, "AutoBracketRelease", N_("Auto Bracket Release"), N_("Auto bracket release"), nikon3IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonAutoBracketRelease)),
+        TagInfo(0x008b, "LensFStops", N_("Lens FStops"), N_("Lens FStops"), nikon3IfdId, makerTags, undefined, print0x008b),
+        TagInfo(0x008c, "ToneCurve", N_("Tone Curve"), N_("Tone curve"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x008d, "ColorMode", N_("Color Mode"), N_("Color mode"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x008f, "SceneMode", N_("Scene Mode"), N_("Scene mode"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0090, "LightSource", N_("Light Source"), N_("Light source"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0091, "ShotInfo", "Shot Info", N_("Shot info"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0092, "HueAdjustment", N_("Hue Adjustment"), N_("Hue adjustment"), nikon3IfdId, makerTags, signedShort, printValue),
+        TagInfo(0x0093, "NEFCompression", N_("NEF Compression"), N_("NEF compression"), nikon3IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonNefCompression)),
+        TagInfo(0x0094, "Saturation", N_("Saturation"), N_("Saturation"), nikon3IfdId, makerTags, signedShort, printValue),
+        TagInfo(0x0095, "NoiseReduction", N_("Noise Reduction"), N_("Noise reduction"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x0096, "CompressionCurve", N_("Compression Curve"), N_("Compression curve"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0097, "ColorBalance2", N_("Color Balance 2"), N_("Color balance settings 2"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0098, "LensData", N_("Lens Data"), N_("Lens data settings"), nikon3IfdId, makerTags, undefined, print0x0098),
+        TagInfo(0x0099, "RawImageCenter", N_("Raw Image Center"), N_("Raw image center"), nikon3IfdId, makerTags, unsignedShort, printValue),
+        TagInfo(0x009a, "SensorPixelSize", N_("Sensor Pixel Size"), N_("Sensor pixel size"), nikon3IfdId, makerTags, unsignedRational, print0x009a),
+        TagInfo(0x009b, "0x009b", "0x009b", N_("Unknown"), nikon3IfdId, makerTags, unsignedShort, printValue),
+        TagInfo(0x009c, "SceneAssist", N_("Scene Assist"), N_("Scene assist"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x009e, "RetouchHistory", N_("Retouch History"), N_("Retouch history"), nikon3IfdId, makerTags, unsignedShort, print0x009e),
+        TagInfo(0x009f, "0x009f", "0x009f", N_("Unknown"), nikon3IfdId, makerTags, signedShort, printValue),
+        TagInfo(0x00a0, "SerialNO", N_("Serial NO"), N_("Camera serial number, usually starts with \"NO= \""), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x00a2, "ImageDataSize", N_("Image Data Size"), N_("Image data size"), nikon3IfdId, makerTags, unsignedLong, printValue),
+        TagInfo(0x00a3, "0x00a3", "0x00a3", N_("Unknown"), nikon3IfdId, makerTags, unsignedByte, printValue),
+        TagInfo(0x00a5, "ImageCount", N_("Image Count"), N_("Image count"), nikon3IfdId, makerTags, unsignedLong, printValue),
+        TagInfo(0x00a6, "DeleteImageCount", N_("Delete Image Count"), N_("Delete image count"), nikon3IfdId, makerTags, unsignedLong, printValue),
+        TagInfo(0x00a7, "ShutterCount", N_("Shutter Count"), N_("Number of shots taken by camera"), nikon3IfdId, makerTags, unsignedLong, printValue),
+        TagInfo(0x00a8, "FlashInfo", "Flash Info", N_("Flash info"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x00a9, "ImageOptimization", N_("Image Optimization"), N_("Image optimization"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x00aa, "Saturation", N_("Saturation"), N_("Saturation"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x00ab, "VariProgram", N_("Program Variation"), N_("Program variation"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x00ac, "ImageStabilization", N_("Image Stabilization"), N_("Image stabilization"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x00ad, "AFResponse", N_("AF Response"), N_("AF response"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x00b0, "MultiExposure", "Multi Exposure", N_("Multi exposure"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x00b1, "HighISONoiseReduction", N_("High ISO Noise Reduction"), N_("High ISO Noise Reduction"), nikon3IfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonHighISONoiseReduction)),
+        TagInfo(0x00b3, "ToningEffect", "Toning Effect", N_("Toning effect"), nikon3IfdId, makerTags, asciiString, printValue),
+        TagInfo(0x00b7, "AFInfo", "AF Info", N_("AF info"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x00b8, "FileInfo", "File Info", N_("File info"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0e00, "PrintIM", N_("Print IM"), N_("PrintIM information"), nikon3IfdId, makerTags, undefined, printValue),
         // TODO: Add Capture Data decoding implementation.
-        TagInfo(0x0e01, "CaptureData", N_("Capture Data"),
-                N_("Capture data"),
-                nikon3IfdId, makerTags, undefined, printValue),
-
-        TagInfo(0x0e09, "CaptureVersion", N_("Capture Version"),
-                N_("Capture version"),
-                nikon3IfdId, makerTags, asciiString, printValue),
-
+        TagInfo(0x0e01, "CaptureData", N_("Capture Data"), N_("Capture data"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0e09, "CaptureVersion", N_("Capture Version"), N_("Capture version"), nikon3IfdId, makerTags, asciiString, printValue), 
         // TODO: Add Capture Offsets decoding implementation.
-        TagInfo(0x0e0e, "CaptureOffsets", N_("Capture Offsets"),
-                N_("Capture offsets"),
-                nikon3IfdId, makerTags, undefined, printValue),
-
+        TagInfo(0x0e0e, "CaptureOffsets", N_("Capture Offsets"), N_("Capture offsets"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0e10, "ScanIFD", "Scan IFD", N_("Scan IFD"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0e1d, "CCProfile", "CC Profile", N_("CC profile"), nikon3IfdId, makerTags, undefined, printValue),
+        TagInfo(0x0e1e, "CaptureOutput", "Capture Output", N_("Capture output"), nikon3IfdId, makerTags, undefined, printValue),
         // End of list marker
-        TagInfo(0xffff, "(UnknownNikon3MnTag)", "(UnknownNikon3MnTag)",
-                N_("Unknown Nikon3MakerNote tag"),
-                nikon3IfdId, makerTags, invalidTypeId, printValue)
+        TagInfo(0xffff, "(UnknownNikon3MnTag)", "(UnknownNikon3MnTag)", N_("Unknown Nikon3MakerNote tag"), nikon3IfdId, makerTags, invalidTypeId, printValue)
     };
 
     const TagInfo* Nikon3MakerNote::tagList()
@@ -912,6 +830,36 @@ namespace Exiv2 {
         return os;
     }
 
+    std::ostream& Nikon3MakerNote::print0x0089(std::ostream& os,
+                                               const Value& value,
+                                               const ExifData* metadata)
+    {
+        if (value.count() != 1 || value.typeId() != unsignedShort) {
+            return os << "(" << value << ")";
+        }
+        long l = value.toLong(0);
+        if (l == 0) return os << _("Single-frame");
+        if (!(l & 0x87)) os << _("Single-frame") << ", ";
+        bool d70 = false;
+        if (metadata) {
+            ExifKey key("Exif.Image.Model");
+            ExifData::const_iterator pos = metadata->findKey(key);
+            if (pos != metadata->end() && pos->count() != 0) {
+                std::string model = pos->toString();
+                if (model.find("D70") != std::string::npos) {
+                    d70 = true;
+                }
+            }
+        }
+        if (d70) {
+            EXV_PRINT_TAG_BITMASK(nikonShootingModeD70)(os, value, 0);
+        }
+        else {
+            EXV_PRINT_TAG_BITMASK(nikonShootingMode)(os, value, 0);
+        }
+        return os;
+    }
+
     std::ostream& Nikon3MakerNote::print0x008b(std::ostream& os,
                                                const Value& value,
                                                const ExifData*)
@@ -934,10 +882,10 @@ namespace Exiv2 {
     {
 #ifdef EXV_HAVE_LENSDATA
 //#-----------------------------------------
-//# List of AF F-Mount lenses - version 3.82
+//# List of AF F-Mount lenses - version 3.98
 //#-----------------------------------------
 //#
-//# created by Robert Rottmerhusen 2005 - 2008
+//# created by Robert Rottmerhusen 2005 - 2009
 //# http://www.rottmerhusen.com (lens_id@rottmerhusen.com)
 //#
 //# with great help of Hiroshi Kamisaka (many new lenses)
@@ -984,6 +932,7 @@ fmountlens[] = {
 {0x14,0x48,0x60,0x80,0x24,0x24,0x0B,0x00, "Nikon", "AF Zoom-Nikkor 80-200mm f/2.8 ED"},
 {0x15,0x4C,0x62,0x62,0x14,0x14,0x0C,0x00, "Nikon", "AF Nikkor 85mm f/1.8"},
 //#16
+{0x17,0x3C,0xA0,0xA0,0x30,0x30,0x0F,0x00, "Nikon", "Nikkor 500mm f/4 P ED IF"},
 {0x17,0x3C,0xA0,0xA0,0x30,0x30,0x11,0x00, "Nikon", "Nikkor 500mm f/4 P ED IF"},
 {0x18,0x40,0x44,0x72,0x2C,0x34,0x0E,0x00, "Nikon", "AF Zoom-Nikkor 35-135mm f/3.5-4.5 N"},
 //#19
@@ -1033,7 +982,7 @@ fmountlens[] = {
 {0x41,0x48,0x7c,0x7c,0x24,0x24,0x43,0x02, "Nikon", "AF Nikkor 180mm f/2.8D IF-ED"},
 {0x42,0x54,0x44,0x44,0x18,0x18,0x44,0x02, "Nikon", "AF Nikkor 35mm f/2D"},
 {0x43,0x54,0x50,0x50,0x0C,0x0C,0x46,0x02, "Nikon", "AF Nikkor 50mm f/1.4D"},
-{0x44,0x44,0x60,0x80,0x34,0x3C,0x47,0x02, "Nikon", "AF Nikkor 80-200mm f/4.5-5.6D"},
+{0x44,0x44,0x60,0x80,0x34,0x3C,0x47,0x02, "Nikon", "AF Zoom-Nikkor 80-200mm f/4.5-5.6D"},
 {0x45,0x40,0x3C,0x60,0x2C,0x3C,0x48,0x02, "Nikon", "AF Zoom-Nikkor 28-80mm F/3.5-5.6D"},
 {0x46,0x3C,0x44,0x60,0x30,0x3C,0x49,0x02, "Nikon", "AF Zoom-Nikkor 35-80mm f/4-5.6D N"},
 {0x47,0x42,0x37,0x50,0x2A,0x34,0x4A,0x02, "Nikon", "AF Zoom-Nikkor 24-50mm f/3.3-4.5D"},
@@ -1049,9 +998,10 @@ fmountlens[] = {
 {0x4D,0x40,0x3C,0x80,0x2C,0x3C,0x62,0x02, "Nikon", "AF Zoom-Nikkor 28-200mm f/3.5-5.6D IF"},
 {0x4E,0x48,0x72,0x72,0x18,0x18,0x51,0x02, "Nikon", "AF DC-Nikkor 135mm f/2D"},
 {0x4F,0x40,0x37,0x5C,0x2C,0x3C,0x53,0x06, "Nikon", "IX-Nikkor 24-70mm f/3.5-5.6"},
-//#50
+{0x50,0x48,0x56,0x7C,0x30,0x3C,0x54,0x06, "Nikon", "IX-Nikkor 60-180mm f/4-5.6"},
 //#51
 //#52
+{0x53,0x48,0x60,0x80,0x24,0x24,0x57,0x02, "Nikon", "AF Zoom-Nikkor 80-200mm f/2.8D ED"},
 {0x53,0x48,0x60,0x80,0x24,0x24,0x60,0x02, "Nikon", "AF Zoom-Nikkor 80-200mm f/2.8D ED"},
 {0x54,0x44,0x5C,0x7C,0x34,0x3C,0x58,0x02, "Nikon", "AF Zoom-Micro Nikkor 70-180mm f/4.5-5.6D ED"},
 //#55
@@ -1100,12 +1050,12 @@ fmountlens[] = {
 {0x80,0x48,0x1A,0x1A,0x24,0x24,0x85,0x06, "Nikon", "AF DX Fisheye-Nikkor 10.5mm f/2.8G ED"},
 {0x81,0x54,0x80,0x80,0x18,0x18,0x86,0x0E, "Nikon", "AF-S VR Nikkor 200mm f/2G IF-ED"},
 {0x82,0x48,0x8E,0x8E,0x24,0x24,0x87,0x0E, "Nikon", "AF-S VR Nikkor 300mm f/2.8G IF-ED"},
-//#83
-//#84
-//#85
+//#83                
+//#84                
+//#85                 
 //#86
 //#87
-//#88
+//#88                
 {0x89,0x3C,0x53,0x80,0x30,0x3C,0x8B,0x06, "Nikon", "AF-S DX Zoom-Nikkor 55-200mm f/4-5.6G ED"},
 {0x8A,0x54,0x6A,0x6A,0x24,0x24,0x8C,0x0E, "Nikon", "AF-S VR Micro-Nikkor 105mm f/2.8G IF-ED"},
 {0x8B,0x40,0x2D,0x80,0x2C,0x3C,0xFD,0x0E, "Nikon", "AF-S DX VR Zoom-Nikkor 18-200mm f/3.5-5.6G IF-ED"},
@@ -1132,7 +1082,7 @@ fmountlens[] = {
 {0x9D,0x54,0x62,0x62,0x24,0x24,0x9F,0x02, "Nikon", "PC-E Micro Nikkor 85mm f/2.8D"},
 {0x9D,0x00,0x62,0x62,0x24,0x24,0x9F,0x06, "Nikon", "PC-E Micro Nikkor 85mm f/2.8D"},
 {0x9E,0x40,0x2D,0x6A,0x2C,0x3C,0xA0,0x0E, "Nikon", "AF-S DX VR Zoom-Nikkor 18-105mm f/3.5-5.6G ED"},
-//#9F                A1
+{0x9F,0x58,0x44,0x44,0x14,0x14,0xA1,0x06, "Nikon", "AF-S DX Nikkor 35mm f/1.8G"},
 {0xA0,0x54,0x50,0x50,0x0C,0x0C,0xA2,0x06, "Nikon", "AF-S Nikkor 50mm f/1.4G"},
 //#
 //#------------------------------------------------------------------------------------------------
@@ -1147,6 +1097,7 @@ fmountlens[] = {
 {0x48,0x48,0x24,0x24,0x24,0x24,0x4B,0x02, "Sigma", "14mm F2.8 EX Aspherical HSM"},
 {0x26,0x48,0x27,0x27,0x24,0x24,0x1C,0x02, "Sigma", "15mm F2.8 EX Diagonal Fisheye"},
 {0x26,0x58,0x31,0x31,0x14,0x14,0x1C,0x02, "Sigma", "20mm F1.8 EX DG Aspherical RF"},
+{0xE1,0x58,0x37,0x37,0x14,0x14,0x1C,0x02, "Sigma", "24mm F1.8 EX DG Aspherical MACRO"},
 {0x26,0x58,0x37,0x37,0x14,0x14,0x1C,0x02, "Sigma", "24mm F1.8 EX DG Aspherical MACRO"},
 {0x02,0x46,0x37,0x37,0x25,0x25,0x02,0x00, "Sigma", "24mm F2.8 Macro"},
 {0x26,0x58,0x3C,0x3C,0x14,0x14,0x1C,0x02, "Sigma", "28mm F1.8 EX DG DF"},
@@ -1171,8 +1122,9 @@ fmountlens[] = {
 //#
 {0x48,0x3C,0x19,0x31,0x30,0x3C,0x4B,0x06, "Sigma", "10-20mm F4-5.6 EX DC HSM"},
 {0xF9,0x3C,0x19,0x31,0x30,0x3C,0x4B,0x06, "Sigma", "10-20mm F4-5.6 EX DC HSM"},
-{0x48,0x38,0x1F,0x37,0x34,0x3C,0x4B,0x06, "Sigma", "12-24mm F4.5-5.6 EX Aspherical DG HSM"},
-{0x26,0x40,0x27,0x3F,0x2C,0x34,0x1C,0x02, "Sigma", "15-30mm F3.5-4.5 EX Aspherical DG DF"},
+{0xF0,0x38,0x1F,0x37,0x34,0x3C,0x4B,0x06, "Sigma", "12-24mm F4.5-5.6 EX DG Aspherical HSM"},
+{0x48,0x38,0x1F,0x37,0x34,0x3C,0x4B,0x06, "Sigma", "12-24mm F4.5-5.6 EX DG Aspherical HSM"},
+{0x26,0x40,0x27,0x3F,0x2C,0x34,0x1C,0x02, "Sigma", "15-30mm F3.5-4.5 EX DG Aspherical DF"},
 {0x48,0x48,0x2B,0x44,0x24,0x30,0x4B,0x06, "Sigma", "17-35mm F2.8-4 EX DG  Aspherical HSM"},
 {0x26,0x54,0x2B,0x44,0x24,0x30,0x1C,0x02, "Sigma", "17-35mm F2.8-4 EX Aspherical"},
 {0x7A,0x47,0x2B,0x5C,0x24,0x34,0x4B,0x06, "Sigma", "17-70mm F2.8-4.5 DC Macro Asp. IF HSM"},
@@ -1205,8 +1157,10 @@ fmountlens[] = {
 {0x26,0x3E,0x3C,0x6A,0x2E,0x3C,0x1C,0x02, "Sigma", "28-105mm F3.8-5.6 UC-III Aspherical IF"},
 {0x26,0x40,0x3C,0x80,0x2C,0x3C,0x1C,0x02, "Sigma", "28-200mm F3.5-5.6 Compact Aspherical Hyperzoom Macro"},
 {0x26,0x40,0x3C,0x80,0x2B,0x3C,0x1C,0x02, "Sigma", "28-200mm F3.5-5.6 Compact Aspherical Hyperzoom Macro"},
+{0x26,0x3D,0x3C,0x80,0x2F,0x3D,0x1C,0x02, "Sigma", "28-300mm F3.8-5.6 Asphrical"},
 {0x26,0x41,0x3C,0x8E,0x2C,0x40,0x1C,0x02, "Sigma", "28-300mm F3.5-6.3 DG Macro"},
 {0x26,0x40,0x3C,0x8E,0x2C,0x40,0x1C,0x02, "Sigma", "28-300mm F3.5-6.3 Macro"},
+{0x02,0x3B,0x44,0x61,0x30,0x3D,0x02,0x00, "Sigma", "35-80mm F4-5.6"},
 {0x02,0x40,0x44,0x73,0x2B,0x36,0x02,0x00, "Sigma", "35-135mm F3.5-4.5 a"},
 {0x7A,0x47,0x50,0x76,0x24,0x24,0x4B,0x06, "Sigma", "50-150mm F2.8 EX APO DC HSM"},
 {0xFD,0x47,0x50,0x76,0x24,0x24,0x4B,0x06, "Sigma", "50-150mm F2.8 EX APO DC HSM II"},
@@ -1225,6 +1179,7 @@ fmountlens[] = {
 {0x77,0x44,0x61,0x98,0x34,0x3C,0x7B,0x0E, "Sigma", "80-400mm f4.5-5.6 EX OS"},
 {0x48,0x48,0x68,0x8E,0x30,0x30,0x4B,0x02, "Sigma", "APO 100-300mm F4 EX IF HSM"},
 {0x48,0x54,0x6F,0x8E,0x24,0x24,0x4B,0x02, "Sigma", "APO 120-300mm F2.8 EX DG HSM"},
+{0x7A,0x54,0x6E,0x8E,0x24,0x24,0x4B,0x02, "Sigma", "APO 120-300mm F2.8 EX DG HSM"},
 {0xCF,0x38,0x6E,0x98,0x34,0x3C,0x4B,0x0E, "Sigma", "APO 120-400mm F4.5-5.6 DG OS HSM"},
 {0x26,0x44,0x73,0x98,0x34,0x3C,0x1C,0x02, "Sigma", "135-400mm F4.5-5.6 APO Aspherical"},
 {0xCE,0x34,0x76,0xA0,0x38,0x40,0x4B,0x0E, "Sigma", "APO 150-500 mm F5-6.3 DG OS HSM"},
@@ -1236,10 +1191,13 @@ fmountlens[] = {
 //# Tamron lenses by focal length, first fixed then zoom lenses
 //#------------------------------------------------------------------------------------------------
 //#
-//#"1E 5D 64 64 20 20 13" "00" "Tamron" "SP AF 90mm F/2.5 (52E)";
+//#                                     SP AF 14mm F/2.8 Aspherical [IF] (69E)
+{0x1E,0x5D,0x64,0x64,0x20,0x20,0x13,0x00, "Tamron", "SP AF 90mm F/2.5 (52E)"},
+//#                                     SP AF 90mm F/2.5 (152E)
 {0x32,0x53,0x64,0x64,0x24,0x24,0x35,0x02, "Tamron", "SP AF 90mm F/2.8 Di Macro 1:1 (272E)"},
 {0xF8,0x55,0x64,0x64,0x24,0x24,0x84,0x06, "Tamron", "SP AF 90mm F/2.8 Di MACRO 1:1"},
-{0x00,0x4C,0x7C,0x7C,0x2C,0x2C,0x00,0x02, "Tamron", "SP AF 180mm F3.5 Di Model B01"},
+{0x00,0x4C,0x7C,0x7C,0x2C,0x2C,0x00,0x02, "Tamron", "SP AF 180mm F/3.5 Di Model B01"},
+//#                                     SP AF 300mm F/2.8 LD-IF (60E)
 //#
 {0xF6,0x3F,0x18,0x37,0x2C,0x34,0x84,0x06, "Tamron", "SP AF 10-24mm F/3.5-4.5 Di II LD Aspherical (IF)"},
 {0x00,0x36,0x1C,0x2D,0x34,0x3C,0x00,0x06, "Tamron", "SP AF 11-18mm F/4.5-5.6 Di II LD Aspherical (IF)"},
@@ -1248,6 +1206,7 @@ fmountlens[] = {
 {0x00,0x54,0x2B,0x50,0x24,0x24,0x00,0x06, "Tamron", "SP AF 17-50mm F/2.8 XR Di II LD Aspherical [IF] (A16NII)"},
 {0x00,0x3F,0x2D,0x80,0x2B,0x40,0x00,0x06, "Tamron", "AF 18-200mm F/3.5-6.3 XR Di II LD Aspherical (IF)"},
 {0x00,0x3F,0x2D,0x80,0x2C,0x40,0x00,0x06, "Tamron", "AF 18-200mm F/3.5-6.3 XR Di II LD Aspherical (IF) Macro"},
+{0x00,0x40,0x2D,0x80,0x2C,0x40,0x00,0x06, "Tamron", "AF 18-200mm F/3.5-6.3 XR Di II LD Aspherical (IF) Macro"},
 {0x00,0x40,0x2D,0x88,0x2C,0x40,0x62,0x06, "Tamron", "AF 18-250mm F/3.5-6.3 Di II LD Aspherical (IF) Macro"},
 {0x00,0x40,0x2D,0x88,0x2C,0x40,0x00,0x06, "Tamron", "AF 18-250mm F/3.5-6.3 Di II LD Aspherical (IF) Macro (A18NII)"},
 {0xF5,0x40,0x2C,0x8A,0x2C,0x40,0x40,0x0E, "Tamron", "AF 18-270mm F/3.5-6.3 Di II VC LD Aspherical [IF] Macro"},
@@ -1289,6 +1248,7 @@ fmountlens[] = {
 //#"7A 3C 1F 37 30 30 7E" "06" "Tokina" "AT-X 124 AF PRO DX II / 12-24mm f/4";
 {0x00,0x48,0x29,0x50,0x24,0x24,0x00,0x06, "Tokina", "AT-X 165 PRO DX / 16-50mm f/2.8"},
 //#"2F 48 30 44 24 24 29" "02" "Tokina" "AT-X 235 AF PRO / 20-35mm f/2.8";
+//#"2F 40 30 44 2C 34 29" "02" "Tokina" "AF235 II / 20-35mm f/3.5-4.5";
 //#                            "Tokina" "AT-X 270 AF PRO II / 28-70mm f/2.6-2.8"
 {0x25,0x48,0x3C,0x5C,0x24,0x24,0x1B,0x02, "Tokina", "AT-X 287 AF PRO SV / 28-70mm f/2.8"},
 {0x07,0x48,0x3C,0x5C,0x24,0x24,0x03,0x00, "Tokina", "AT-X AF 28-70mm f/2.8"},
@@ -1306,14 +1266,15 @@ fmountlens[] = {
 {0x00,0x54,0x56,0x56,0x30,0x30,0x00,0x00, "Coastal Optical Systems", "60mm 1:4 UV-VIS-IR Macro Apo"},
 {0x00,0x54,0x48,0x48,0x18,0x18,0x00,0x00, "Voigtlander", "Ultron SL2 40mm F/2 SL II Aspherical"},
 {0x00,0x54,0x55,0x55,0x0C,0x0C,0x00,0x00, "Voigtlander", "Nokton SL2 58mm F/1.4 SL II"},
-{0x07,0x3E,0x30,0x43,0x2D,0x35,0x03,0x00, "Soligor", "AF Zoom 19-35mm 1:3.5-4.5"},
+{0x07,0x3E,0x30,0x43,0x2D,0x35,0x03,0x00, "Soligor", "AF Zoom 19-35mm 1:3.5-4.5 MC"},
 {0x03,0x43,0x5C,0x81,0x35,0x35,0x02,0x00, "Soligor", "AF C/D Zoom UMCS 70-210mm 1:4.5"},
-{0x07,0x36,0x3D,0x5F,0x2C,0x3C,0x03,0x00, "Cosina", "AF Zoom 28-80mm F/3.5-5.6 MC Macro"},
-{0x12,0x36,0x5C,0x81,0x35,0x3D,0x09,0x00, "Cosina", "AF Zoom 70-210mm F/4.5-5.6 MC Macro"},
-{0x06,0x3F,0x68,0x68,0x2C,0x2C,0x06,0x00, "Cosina", "AF 100mm F/3.5 Macro"},
-{0x2F,0x40,0x30,0x44,0x2C,0x34,0x29,0x02, "Unknown", "20-35mm F/3.5-4.5D"},
-{0x1E,0x5D,0x64,0x64,0x20,0x20,0x13,0x00, "Unknown", "90mm F/2.5"},
-{0x12,0x3B,0x68,0x8D,0x3D,0x43,0x09,0x02, "Unknown", "100-290mm F5.6-6.7"},
+{0x12,0x4A,0x5C,0x81,0x31,0x3D,0x09,0x00, "Soligor", "AF C/D Auto Zoom+Macro 70-210mm 1:4-5.6 UMCS"},
+{0x06,0x3F,0x68,0x68,0x2C,0x2C,0x06,0x00, "Cosina", "AF 100mm F3.5 Macro"},
+{0x07,0x36,0x3D,0x5F,0x2C,0x3C,0x03,0x00, "Cosina", "AF Zoom 28-80mm F3.5-5.6 MC Macro"},
+{0x07,0x46,0x3D,0x6A,0x25,0x2F,0x03,0x00, "Cosina", "AF Zoom 28-105mm F2.8-3.8 MC"},
+{0x12,0x36,0x5C,0x81,0x35,0x3D,0x09,0x00, "Cosina", "AF Zoom 70-210mm F4.5-5.6 MC Macro"},
+{0x12,0x39,0x5C,0x8E,0x34,0x3D,0x08,0x02, "Cosina", "AF Zoom 70-300mm F4.5-5.6 MC Macro"},
+{0x12,0x3B,0x68,0x8D,0x3D,0x43,0x09,0x02, "Cosina", "AF Zoom 100-300mm F5.6-6.7 MC Macro"},
 //#
 {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01, "Manual Lens", "No CPU"},
 //#
@@ -1334,13 +1295,22 @@ fmountlens[] = {
             idx = 11;
         }
         else if (   0 == memcmp(lens.pData_, "0201", 4)
-                 || 0 == memcmp(lens.pData_, "0202", 4)) {
+                 || 0 == memcmp(lens.pData_, "0202", 4)
+                 || 0 == memcmp(lens.pData_, "0203", 4)) {
             if (metadata) {
                 // The decrypt algorithm requires access to serial number
                 // and shutter count tags
                 decryptNikonData(lens.pData_ + 4, lens.size_ - 4, *metadata);
+                idx = 11;
             }
-            idx = 11;
+        }
+        else if (0 == memcmp(lens.pData_, "0204", 4)) {
+            if (metadata) {
+                // The decrypt algorithm requires access to serial number
+                // and shutter count tags
+                decryptNikonData(lens.pData_ + 4, lens.size_ - 4, *metadata);
+                idx = 12;
+            }
         }
         if (idx == 0 || lens.size_ < idx + 7) {
             // Unknown version or not enough data
@@ -1365,6 +1335,42 @@ fmountlens[] = {
 #endif // EXV_HAVE_LENSDATA
     }
 
+    std::ostream& Nikon3MakerNote::print0x009a(std::ostream& os,
+                                               const Value& value,
+                                               const ExifData*)
+    {
+        if (value.count() != 2 || value.typeId() != unsignedRational) {
+            return os << value;
+        }
+        float f1 = value.toFloat(0);
+        float f2 = value.toFloat(1);
+        return os << f1 << " x " << f2 << " um";
+    }
+
+    std::ostream& Nikon3MakerNote::print0x009e(std::ostream& os,
+                                               const Value& value,
+                                               const ExifData*)
+    {
+        if (value.count() != 10 || value.typeId() != unsignedShort) {
+            return os << value;
+        }
+        std::string s;
+        bool trim = true;
+        for (int i = 9; i >= 0; --i) {
+            long l = value.toLong(i);
+            if (i > 0 && l == 0 && trim) continue;
+            if (l != 0) trim = false;
+            std::string d = s.empty() ? "" : "; ";
+            const TagDetails* td = find(nikonRetouchHistory, l);
+            if (td) {
+                s = std::string(exvGettext(td->label_)) + d + s;
+            }
+            else {
+                s = std::string(_("Unknown")) + std::string(" (") + toString(l) + std::string(")") + d + s;
+            }
+        }
+        return os << s;
+    }
 }                                       // namespace Exiv2
 
 // *****************************************************************************

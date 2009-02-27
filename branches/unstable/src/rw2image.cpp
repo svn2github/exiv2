@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -39,7 +39,10 @@ EXIV2_RCSID("@(#) $Id$")
 
 #include "rw2image.hpp"
 #include "rw2image_int.hpp"
+#include "tiffcomposite_int.hpp"
+#include "tiffimage_int.hpp"
 #include "image.hpp"
+#include "preview.hpp"
 #include "error.hpp"
 #include "futils.hpp"
 
@@ -61,7 +64,8 @@ namespace Exiv2 {
 
     int Rw2Image::pixelWidth() const
     {
-        ExifData::const_iterator imageWidth = exifData_.findKey(Exiv2::ExifKey("Exif.Image.0x0007"));
+        ExifData::const_iterator imageWidth =
+            exifData_.findKey(Exiv2::ExifKey("Exif.PanasonicRaw.SensorWidth"));
         if (imageWidth != exifData_.end() && imageWidth->count() > 0) {
             return imageWidth->toLong();
         }
@@ -70,7 +74,8 @@ namespace Exiv2 {
 
     int Rw2Image::pixelHeight() const
     {
-        ExifData::const_iterator imageHeight = exifData_.findKey(Exiv2::ExifKey("Exif.Image.0x0006"));
+        ExifData::const_iterator imageHeight =
+            exifData_.findKey(Exiv2::ExifKey("Exif.PanasonicRaw.SensorHeight"));
         if (imageHeight != exifData_.end() && imageHeight->count() > 0) {
             return imageHeight->toLong();
         }
@@ -116,6 +121,90 @@ namespace Exiv2 {
                                          io_->mmap(),
                                          io_->size());
         setByteOrder(bo);
+
+        // A lot more metadata is hidden in the embedded preview image
+        // Todo: This should go into the Rw2Parser, but for that it needs the Image
+        PreviewManager loader(*this);
+        PreviewPropertiesList list = loader.getPreviewProperties();
+        // Todo: What if there are more preview images?
+        if (list.size() > 1) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Warning: RW2 image contains more than one preview. None used.\n";
+#endif
+        }
+        if (list.size() != 1) return;
+        ExifData exifData;
+        PreviewImage preview = loader.getPreviewImage(*list.begin());
+        Image::AutoPtr image = ImageFactory::open(preview.pData(), preview.size());
+        if (image.get() == 0) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Warning: Failed to open RW2 preview image.\n";
+#endif
+            return;
+        }
+        image->readMetadata();
+        ExifData& prevData = image->exifData();
+        if (!prevData.empty()) {
+            // Filter duplicate tags
+            for (ExifData::const_iterator pos = exifData_.begin(); pos != exifData_.end(); ++pos) {
+                if (pos->ifdId() == panaRawIfdId) continue;
+                ExifData::iterator dup = prevData.findKey(ExifKey(pos->key()));
+                if (dup != prevData.end()) {
+#ifdef DEBUG
+                    std::cerr << "Filtering duplicate tag " << pos->key()
+                              << " (values '" << pos->value()
+                              << "' and '" << dup->value() << "')\n";
+#endif              
+                    prevData.erase(dup);
+                }
+            }
+        }
+        // Remove tags not applicable for raw images
+        static const char* filteredTags[] = {
+            "Exif.Photo.ComponentsConfiguration",
+            "Exif.Photo.CompressedBitsPerPixel",
+            "Exif.Panasonic.ColorEffect",
+            "Exif.Panasonic.Contrast",
+            "Exif.Panasonic.NoiseReduction",
+            "Exif.Panasonic.ColorMode",
+            "Exif.Panasonic.OpticalZoomMode",
+            "Exif.Panasonic.Contrast",
+            "Exif.Panasonic.Saturation",
+            "Exif.Panasonic.Sharpness",
+            "Exif.Panasonic.FilmMode",
+            "Exif.Panasonic.SceneMode",
+            "Exif.Panasonic.WBRedLevel",
+            "Exif.Panasonic.WBGreenLevel",
+            "Exif.Panasonic.WBBlueLevel",
+            "Exif.Photo.ColorSpace",
+            "Exif.Photo.PixelXDimension",
+            "Exif.Photo.PixelYDimension",
+            "Exif.Photo.SceneType",
+            "Exif.Photo.CustomRendered",
+            "Exif.Photo.DigitalZoomRatio",
+            "Exif.Photo.SceneCaptureType",
+            "Exif.Photo.GainControl",
+            "Exif.Photo.Contrast",
+            "Exif.Photo.Saturation",
+            "Exif.Photo.Sharpness",
+            "Exif.Image.PrintImageMatching",
+            "Exif.Image.YCbCrPositioning"
+        };
+        for (unsigned int i = 0; i < EXV_COUNTOF(filteredTags); ++i) {
+            ExifData::iterator pos = prevData.findKey(ExifKey(filteredTags[i]));
+            if (pos != prevData.end()) {
+#ifdef DEBUG
+                std::cerr << "Exif tag " << pos->key() << " removed\n";
+#endif
+                prevData.erase(pos);
+            }
+        }
+
+        // Add the remaining tags
+        for (ExifData::const_iterator pos = prevData.begin(); pos != prevData.end(); ++pos) {
+            exifData_.add(*pos);
+        }
+
     } // Rw2Image::readMetadata
 
     void Rw2Image::writeMetadata()
@@ -138,7 +227,7 @@ namespace Exiv2 {
                                         xmpData,
                                         pData,
                                         size,
-                                        TiffCreator::create,
+                                        Tag::pana,
                                         TiffMapping::findDecoder,
                                         &rw2Header);
     }

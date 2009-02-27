@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -426,9 +426,9 @@ namespace Exiv2 {
           each existing component.
         */
         void add(
-            TiffComponent*     pRootDir,
-            TiffComponent*     pSourceDir,
-            TiffCompFactoryFct createFct
+            TiffComponent* pRootDir,
+            TiffComponent* pSourceDir,
+            uint32_t       root
         );
         //! Set the dirty flag and end of traversing signal.
         void setDirty(bool flag =true);
@@ -481,8 +481,8 @@ namespace Exiv2 {
     private:
         // DATA
         ExifData exifData_;          //!< Copy of the Exif data to encode
-        IptcData iptcData_;          //!< Copy of the IPTC data to encode
-        XmpData  xmpData_;           //!< Copy of the XMP data to encode
+        const IptcData& iptcData_;   //!< IPTC data to encode, just a reference
+        const XmpData&  xmpData_;    //!< XMP data to encode, just a reference
         bool del_;                   //!< Indicates if Exif data entries should be deleted after encoding
         TiffComponent* pRoot_;       //!< Root element of the composite
         TiffComponent* pSourceTree_; //!< Parsed source tree for reference
@@ -510,11 +510,9 @@ namespace Exiv2 {
         //@{
         //! Constructor.
         TiffRwState(ByteOrder byteOrder,
-                    uint32_t baseOffset,
-                    TiffCompFactoryFct createFct =0)
+                    uint32_t  baseOffset)
             : byteOrder_(byteOrder),
-              baseOffset_(baseOffset),
-              createFct_(createFct) {}
+              baseOffset_(baseOffset) {}
         //@}
 
         //! @name Accessors
@@ -536,21 +534,11 @@ namespace Exiv2 {
           to the basis for such makernote offsets.
          */
         uint32_t           baseOffset() const { return baseOffset_; }
-        /*!
-          @brief Return the factory function to create new TIFF components.
-
-          Different create functions may use different lookup tables, so that
-          makernotes can independently use their own factory function and lookup
-          table, which can be defined together with the makernote
-          implementation.
-         */
-        TiffCompFactoryFct createFct()  const { return createFct_; }
         //@}
 
     private:
         ByteOrder byteOrder_;
         const uint32_t baseOffset_;
-        TiffCompFactoryFct createFct_;
     }; // TiffRwState
 
     /*!
@@ -625,9 +613,6 @@ namespace Exiv2 {
         ByteOrder byteOrder() const;
         //! Return the base offset. See class TiffRwState for details
         uint32_t baseOffset() const;
-        //! Create a TIFF component for \em extendedTag and group
-        std::auto_ptr<TiffComponent> create(uint32_t extendedTag,
-                                            uint16_t group) const;
         //@}
 
     private:

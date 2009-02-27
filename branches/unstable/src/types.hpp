@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -149,7 +149,8 @@ namespace Exiv2 {
                  olympusFe1IfdId, olympusFe2IfdId, olympusFe3IfdId, olympusFe4IfdId,
                  olympusFe5IfdId, olympusFe6IfdId, olympusFe7IfdId, olympusFe8IfdId,
                  olympusFe9IfdId, olympusRiIfdId,
-                 panasonicIfdId, pentaxIfdId, sigmaIfdId, sonyIfdId,
+                 panasonicIfdId, panaRawIfdId,
+                 pentaxIfdId, sigmaIfdId, sonyIfdId,
                  lastIfdId };
 
     //! Container for binary data

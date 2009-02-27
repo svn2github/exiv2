@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -25,6 +25,8 @@
   @version $Rev$
   @author  Marco Piovanelli, Ovolab (marco)
            <a href="mailto:marco.piovanelli@pobox.com">marco.piovanelli@pobox.com</a>
+           Michael Ulbrich
+           <a href="mailto:mul@rentapacs.de">mul@rentapacs.de</a>
   @date    05-Mar-2007, marco: created
  */
 #ifndef PSDIMAGE_HPP_
@@ -127,6 +129,14 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         EXV_DLLLOCAL void processResourceBlock(uint16_t resourceId, uint32_t resourceSize);
+        /*!
+          @brief Provides the main implementation of writeMetadata() by
+                writing all buffered metadata to the provided BasicIo.
+          @param oIo BasicIo instance to write to (a temporary location).
+
+          @return 4 if opening or writing to the associated BasicIo fails
+         */
+        EXV_DLLLOCAL void doWriteMetadata(BasicIo& oIo);
         //@}
 
     }; // class PsdImage

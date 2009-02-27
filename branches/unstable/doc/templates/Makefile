@@ -1,6 +1,6 @@
 # ************************************************************* -*- Makefile -*-
 #
-# Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+# Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
 #
 # This Makefile is part of the Exiv2 distribution.
 #
@@ -52,7 +52,7 @@ TABLES = Exif \
          Nikon1 Nikon2 Nikon3 \
          Olympus OlympusCs OlympusEq OlympusRd OlympusRd2 \
          OlympusIp OlympusFi OlympusFe1 OlympusRi \
-	 Panasonic \
+	 Panasonic PanasonicRaw \
          Pentax \
          Sigma \
          Sony

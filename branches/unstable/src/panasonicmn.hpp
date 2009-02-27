@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -55,6 +55,8 @@ namespace Exiv2 {
     public:
         //! Return read-only list of built-in Panasonic tags
         static const TagInfo* tagList();
+        //! Return read-only list of built-in Panasonic RAW image tags (IFD0)
+        static const TagInfo* tagListRaw();
 
         //! @name Print functions for Panasonic %MakerNote tags
         //@{
@@ -65,8 +67,10 @@ namespace Exiv2 {
         //@}
 
     private:
-        //! Tag information
+        //! Makernote tag list
         static const TagInfo tagInfo_[];
+        //! Taglist for IFD0 of Panasonic RAW images
+        static const TagInfo tagInfoRaw_[];
 
     }; // class PanasonicMakerNote
 

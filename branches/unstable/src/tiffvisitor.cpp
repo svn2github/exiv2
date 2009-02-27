@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -56,10 +56,10 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 namespace {
     //! Unary predicate that matches an Exifdatum with a given group and index.
-    class FindExifdatum {
+    class FindExifdatum2 {
     public:
         //! Constructor, initializes the object with the group and index to look for.
-        FindExifdatum(uint16_t group, int idx)
+        FindExifdatum2(uint16_t group, int idx)
             : groupName_(Exiv2::Internal::tiffGroupName(group)), idx_(idx) {}
         //! Returns true if group and index match.
         bool operator()(const Exiv2::Exifdatum& md) const
@@ -71,7 +71,7 @@ namespace {
         const char* groupName_;
         int idx_;
 
-    }; // class FindExifdatum
+    }; // class FindExifdatum2
 }
 
 // *****************************************************************************
@@ -640,7 +640,7 @@ namespace Exiv2 {
                     // Try to find exact match (in case of duplicate tags)
                     ExifData::iterator pos2 =
                         std::find_if(exifData_.begin(), exifData_.end(),
-                                     FindExifdatum(object->group(), object->idx()));
+                                     FindExifdatum2(object->group(), object->idx()));
                     if (pos2 != exifData_.end() && pos2->key() == key.key()) {
                         ed = &(*pos2);
                         pos = pos2; // make sure we delete the correct tag below
@@ -873,9 +873,9 @@ namespace Exiv2 {
     }
 
     void TiffEncoder::add(
-        TiffComponent*     pRootDir,
-        TiffComponent*     pSourceDir,
-        TiffCompFactoryFct createFct
+        TiffComponent* pRootDir,
+        TiffComponent* pSourceDir,
+        uint32_t       root
     )
     {
         assert(pRootDir != 0);
@@ -894,12 +894,8 @@ namespace Exiv2 {
             if (group == Group::mn) continue;
 
             // Assumption is that the corresponding TIFF entry doesn't exist
-
-            // Todo: getPath depends on the Creator class, not the createFct
-            //       how to get it through to here???
-
             TiffPath tiffPath;
-            TiffCreator::getPath(tiffPath, i->tag(), group);
+            TiffCreator::getPath(tiffPath, i->tag(), group, root);
             TiffComponent* tc = pRootDir->addPath(i->tag(), tiffPath);
             TiffEntryBase* object = dynamic_cast<TiffEntryBase*>(tc);
 #ifdef DEBUG
@@ -1067,8 +1063,6 @@ namespace Exiv2 {
     {
         if (state.get() != 0) {
             if (pOrigState_ != pState_) delete pState_;
-            // 0 for create function indicates 'no change'
-            if (state->createFct_ == 0) state->createFct_ = pState_->createFct_;
             // invalidByteOrder indicates 'no change'
             if (state->byteOrder_ == invalidByteOrder) state->byteOrder_ = pState_->byteOrder_;
             pState_ = state.release();
@@ -1085,14 +1079,6 @@ namespace Exiv2 {
     {
         assert(pState_);
         return pState_->baseOffset_;
-    }
-
-    TiffComponent::AutoPtr TiffReader::create(uint32_t extendedTag,
-                                              uint16_t group) const
-    {
-        assert(pState_);
-        assert(pState_->createFct_);
-        return pState_->createFct_(extendedTag, group);
     }
 
     void TiffReader::readDataEntryBase(TiffDataEntryBase* object)
@@ -1195,7 +1181,7 @@ namespace Exiv2 {
                 return;
             }
             uint16_t tag = getUShort(p, byteOrder());
-            TiffComponent::AutoPtr tc = create(tag, object->group());
+            TiffComponent::AutoPtr tc = TiffCreator::create(tag, object->group());
             // The assertion typically fails if a component is not configured in
             // the TIFF structure table
             assert(tc.get());
@@ -1216,7 +1202,7 @@ namespace Exiv2 {
             TiffComponent::AutoPtr tc(0);
             uint32_t next = getLong(p, byteOrder());
             if (next) {
-                tc = create(Tag::next, object->group());
+                tc = TiffCreator::create(Tag::next, object->group());
 #ifndef SUPPRESS_WARNINGS
                 if (tc.get() == 0) {
                     std::cerr << "Warning: "
@@ -1447,7 +1433,7 @@ namespace Exiv2 {
         const uint16_t sz = static_cast<uint16_t>(object->size_ / object->elSize());
         for (uint16_t i = 0; i < sz; ++i) {
             uint16_t tag = i;
-            TiffComponent::AutoPtr tc = create(tag, object->elGroup());
+            TiffComponent::AutoPtr tc = TiffCreator::create(tag, object->elGroup());
             assert(tc.get());
             tc->setStart(object->pData() + i * object->elSize());
             object->addChild(tc);

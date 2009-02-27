@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2008 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2009 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -39,6 +39,7 @@ EXIV2_RCSID("@(#) $Id$")
 
 #include "orfimage.hpp"
 #include "orfimage_int.hpp"
+#include "tiffcomposite_int.hpp"
 #include "tiffimage_int.hpp"
 #include "image.hpp"
 #include "basicio.hpp"
@@ -141,7 +142,7 @@ namespace Exiv2 {
                                         xmpData,
                                         pData,
                                         size,
-                                        TiffCreator::create,
+                                        Tag::root,
                                         TiffMapping::findDecoder,
                                         &orfHeader);
     }
