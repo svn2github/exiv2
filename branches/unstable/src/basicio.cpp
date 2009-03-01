@@ -71,7 +71,7 @@ namespace Exiv2 {
 
     FileIo::FileIo(const std::string& path)
         : path_(path), fp_(0), opMode_(opSeek),
-          pMappedArea_(0), mappedLength_(0), isMalloced_(false)
+          pMappedArea_(0), mappedLength_(0), isMalloced_(false), isWriteable_(false)
     {
     }
 
@@ -89,23 +89,36 @@ namespace Exiv2 {
                 throw Error(2, path_, strError(), "munmap");
             }
 #else
+            if (isWriteable_) {
+                write(pMappedArea_, mappedLength_);
+            }
             if (isMalloced_) {
                 delete[] pMappedArea_;
                 isMalloced_ = false;
             }
 #endif
         }
+        if (isWriteable_) {
+            if (fp_ != 0) switchMode(opRead);
+            isWriteable_ = false;
+        }
         pMappedArea_ = 0;
         mappedLength_ = 0;
     }
 
-    const byte* FileIo::mmap()
+    byte* FileIo::mmap(bool isWriteable)
     {
         assert(fp_ != 0);
         munmap();
         mappedLength_ = size();
+        isWriteable_ = isWriteable;
 #if defined EXV_HAVE_MMAP && defined EXV_HAVE_MUNMAP
-        void* rc = ::mmap(0, mappedLength_, PROT_READ, MAP_SHARED, fileno(fp_), 0);
+        int prot = PROT_READ;
+        if (isWriteable_) { 
+            prot |= PROT_WRITE;
+            if (switchMode(opWrite) != 0) return 0;
+        }
+        void* rc = ::mmap(0, mappedLength_, prot, MAP_SHARED, fileno(fp_), 0);
         if (MAP_FAILED == rc) {
             throw Error(2, path_, strError(), "mmap");
         }

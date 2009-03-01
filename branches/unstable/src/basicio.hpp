@@ -173,17 +173,18 @@ namespace Exiv2 {
         virtual int seek(long offset, Position pos) = 0;
         /*!
           @brief Direct access to the IO data. For files, this is done by
-                 mapping the file into the process's address space; for
-                 memory blocks, this allows direct access to the memory
-                 block.
-
-          Todo: This is currently only for read access.
+                 mapping the file into the process's address space; for memory
+                 blocks, this allows direct access to the memory block.
+          @param isWriteable Set to true if the mapped area should be writeable
+                 (default is false).
+          @return A pointer to the mapped area.
          */
-        virtual const byte* mmap() =0;
+        virtual byte* mmap(bool isWriteable =false) =0;
         /*!
-          @brief Remove a mapping established with mmap().
+          @brief Remove a mapping established with mmap(). If the mapped area
+                 is writeable, this ensures that changes are written back.
          */
-        virtual void  munmap() =0;
+        virtual void munmap() =0;
         //@}
 
         //! @name Accessors
@@ -409,12 +410,21 @@ namespace Exiv2 {
          */
         virtual int seek(long offset, Position pos);
         /*!
-          @brief Map the file into the process's address space. The file must
-                 be open before mmap() is called.
-          @note  The returned pointer is valid only as long as the MemIo object
-                 is in scope.
+          @brief Map the file into the process's address space. The file must be
+                 open before mmap() is called. If the mapped area is writeable,
+                 changes may not be written back to the underlying file until
+                 munmap() is called. The pointer is valid only as long as the
+                 MemIo object is in scope.
+          @param isWriteable Set to true if the mapped area should be writeable
+                 (default is false).
+          @return A pointer to the mapped area.
          */
-        virtual const byte* mmap();
+        virtual byte* mmap(bool isWriteable =false);
+        /*!
+          @brief Remove a mapping established with mmap(). If the mapped area is
+                 writeable, this ensures that changes are written back to the
+                 underlying file.
+         */
         virtual void  munmap();
         //@}
 
@@ -472,6 +482,7 @@ namespace Exiv2 {
         byte* pMappedArea_;
         size_t mappedLength_;
         bool isMalloced_;               //!< Is the mapped area allocated?
+        bool isWriteable_;              //!< Can the mapped area be written to?
 
         // METHODS
         /*!
@@ -617,14 +628,14 @@ namespace Exiv2 {
         virtual int seek(long offset, Position pos);
         /*!
           @brief Allow direct access to the underlying data buffer. The buffer
-                 is not protected against write access except for the const
-                 specifier.
+                 is not protected against write access in any way, the argument
+                 is ignored.
           @note  The application must ensure that the memory pointed to by the
                  returned pointer remains valid and allocated as long as the
                  MemIo object is in scope.
          */
-        virtual const byte* mmap() { return data_; }
-        virtual void  munmap() {}
+        virtual byte* mmap(bool /*isWriteable*/) { return data_; }
+        virtual void munmap() {}
         //@}
 
         //! @name Accessors
