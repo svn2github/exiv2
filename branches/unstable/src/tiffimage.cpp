@@ -134,21 +134,17 @@ namespace Exiv2 {
 #ifdef DEBUG
         std::cerr << "Writing TIFF file " << io_->path() << "\n";
 #endif
-        // Read existing image
         ByteOrder bo = byteOrder();
-        DataBuf buf;
+        byte* pData = 0;
+        long size = 0;
+        IoCloser closer(*io_);
         if (io_->open() == 0) {
-            IoCloser closer(*io_);
             // Ensure that this is the correct image type
             if (isTiffType(*io_, false)) {
-                // Read the image into a memory buffer
-                buf.alloc(io_->size());
-                io_->read(buf.pData_, buf.size_);
-                if (io_->error() || io_->eof()) {
-                    buf.reset();
-                }
+                pData = io_->mmap(true);
+                size = io_->size();
                 TiffHeader tiffHeader;
-                if (0 == tiffHeader.read(buf.pData_, 8)) {
+                if (0 == tiffHeader.read(pData, 8)) {
                     bo = tiffHeader.byteOrder();
                 }
             }
@@ -159,25 +155,21 @@ namespace Exiv2 {
         setByteOrder(bo);
         Blob blob;
         WriteMethod wm = TiffParser::encode(blob,
-                                            buf.pData_,
-                                            buf.size_,
+                                            pData,
+                                            size,
                                             bo,
                                             exifData_,
                                             iptcData_,
                                             xmpData_);
-        // Write updated or new buffer to file
-        BasicIo::AutoPtr tempIo(io_->temporary()); // may throw
-        assert(tempIo.get() != 0);
-        if (wm == wmNonIntrusive) {
-            // Buffer may be modified but size is unchanged, write buffer back
-            tempIo->write(buf.pData_, buf.size_);
+
+        // Todo: What if the blob is empty??
+
+        if (wm == wmIntrusive && blob.size() > 0) {
+            BasicIo::AutoPtr tempIo(io_->temporary()); // may throw
+            assert(tempIo.get() != 0);
+            tempIo->write(&blob[0], static_cast<long>(blob.size()));
+            io_->transfer(*tempIo); // may throw
         }
-        else {
-            // Size of the buffer changed, write from blob
-            tempIo->write((blob.size() > 0 ? &blob[0] : 0), static_cast<long>(blob.size()));
-        }
-        io_->close();
-        io_->transfer(*tempIo); // may throw
 
     } // TiffImage::writeMetadata
 
