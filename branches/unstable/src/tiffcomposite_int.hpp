@@ -1200,6 +1200,185 @@ namespace Exiv2 {
 
     }; // class TiffArrayElement
 
+    //! Defines one tag in a binary array
+    // Todo: multiple tags in one byte - mask
+    // Todo: There cannot be any gaps in the definition! see addElement()
+    struct ArrayDef {
+        //! Get the size in bytes of a tag.
+        uint32_t size(uint16_t tag, uint16_t group) const;
+        // DATA
+        uint32_t idx_;             //!< Tag number, index in bytes from the start
+        TiffType tiffType_;        //!< TIFF type of the element
+        uint32_t count_;           //!< Number of components
+    };
+
+    //! Additional configuration for a binary array.
+    struct ArrayCfg {
+        //DATA
+        uint32_t    group_;        //!< Group for the elements
+        ByteOrder   byteOrder_;    //!< Byte order, invalidByteOrder to inherit
+        bool        hasHeader_;    //!< If true, first tag is the header
+        TiffType    sizeElement_;  //!< Type of the size element, 0 if none needed
+        bool        isEncrypted_;  //!< Encryption flag
+    };
+
+    /*!
+      @brief Composite to model an array of different tags. The tag types as well
+             as other aspects of the array are configurable. The elements of this
+             component are of type TiffBinaryElement.
+     */
+    class TiffBinaryArray : public TiffEntryBase {
+    public:
+        //! @name Creators
+        //@{
+        //! Constructor
+        TiffBinaryArray(uint16_t tag,
+                        uint16_t group,
+                        const ArrayCfg* arrayCfg,
+                        const ArrayDef* arrayDef,
+                        int defSize);
+        //! Virtual destructor
+        virtual ~TiffBinaryArray();
+        //@}
+
+        //! @name Manipulators
+        //@{
+        //! Add an element to the binary array, return the size of the element
+        uint32_t addElement(uint32_t idx, const ArrayDef* def);
+        //@}
+
+        //! @name Accessors
+        //@{
+        //! Return a pointer to the configuration
+        const ArrayCfg* cfg() const { return arrayCfg_; }
+        //! Return a pointer to the definition
+        const ArrayDef* def() const { return arrayDef_; }
+        //! Return the number of elements in the definition
+        int defSize() const { return defSize_; } 
+        //@}
+
+    protected:
+        //! @name Manipulators
+        //@{
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
+        virtual void doAccept(TiffVisitor& visitor);
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
+        //@}
+
+        //! @name Accessors
+        //@{
+        //! Implements count(). Todo: Document it!
+        virtual uint32_t doCount() const;
+        //@}
+
+        //! @name Write support (Manipulators)
+        //@{
+        /*!
+          @brief Implements write(). Todo: Document it!
+         */
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
+                                 uint32_t  dataIdx,
+                                 uint32_t& imageIdx);
+        //@}
+
+        //! @name Write support (Accessors)
+        //@{
+        // Using doWriteData from base class
+        // Using doWriteImage from base class
+        /*!
+          @brief Implements size(). Todo: Document it!
+         */
+        virtual uint32_t doSize() const;
+        // Using doSizeData from base class
+        // Using doSizeImage from base class
+        //@}
+
+    private:
+        // DATA
+        const ArrayCfg* arrayCfg_; //!< Pointer to the array configuration
+        const ArrayDef* arrayDef_; //!< Pointer to the array definition
+        const int defSize_;        //!< Size of the array definition array
+        Components elements_;      //!< List of elements in this composite
+    }; // class TiffBinaryArray
+
+    /*!
+      @brief Element of a TiffBinaryArray.
+     */
+    class TiffBinaryElement : public TiffEntryBase {
+    public:
+        //! @name Creators
+        //@{
+        //! Constructor
+        TiffBinaryElement(uint16_t tag,
+                          uint16_t group);
+        //! Virtual destructor.
+        virtual ~TiffBinaryElement() {}
+        //@}
+
+        //! @name Accessors
+        //@{
+        void setElDef(const ArrayDef* def) { elDef_ = def; }
+        void setElByteOrder(ByteOrder byteOrder) { elByteOrder_ = byteOrder; }
+        //@}
+
+        //! @name Accessors
+        //@{
+        const ArrayDef* elDef()       const { return elDef_; }
+        ByteOrder       elByteOrder() const { return elByteOrder_; }
+        //@}
+
+    protected:
+        //! @name Manipulators
+        //@{
+        virtual void doAccept(TiffVisitor& visitor);
+        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
+        //@}
+
+        //! @name Accessors
+        //@{
+        /*!
+          @brief Implements count(). Returns the count from the element definition.
+         */
+        virtual uint32_t doCount() const;
+        //@}
+
+        //! @name Write support (Manipulators)
+        //@{
+        /*!
+          @brief Implements write(). Todo: Document it!
+         */
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
+                                 uint32_t  dataIdx,
+                                 uint32_t& imageIdx);
+        //@}
+
+        //! @name Write support (Accessors)
+        //@{
+        // Using doWriteData from base class
+        // Using doWriteImage from base class
+        /*!
+          @brief Implements size(). Returns count * type-size, both taken from
+                 the element definition.
+         */
+        virtual uint32_t doSize() const;
+        // Using doSizeData from base class
+        // Using doSizeImage from base class
+        //@}
+
+    private:
+        // DATA
+        const ArrayDef* elDef_;  //!< Pointer to the array element definition
+        ByteOrder elByteOrder_;  //!< Byte order to read/write the element
+
+    }; // class TiffBinaryElement
+
 // *****************************************************************************
 // template, inline and free functions
 
@@ -1220,6 +1399,9 @@ namespace Exiv2 {
 
     //! Function to create and initialize a new TIFF makernote entry
     TiffComponent::AutoPtr newTiffMnEntry(uint16_t tag, uint16_t group);
+
+    //! Function to create and initialize a new binary array element
+    TiffComponent::AutoPtr newTiffBinaryElement(uint16_t tag, uint16_t group);
 
     //! Function to create and initialize a new TIFF directory
     template<uint16_t newGroup>
@@ -1255,6 +1437,14 @@ namespace Exiv2 {
     TiffComponent::AutoPtr newTiffArrayElement(uint16_t tag, uint16_t group)
     {
         return newTiffArrayElement<tiffType, invalidByteOrder>(tag, group);
+    }
+
+    //! Function to create and initialize a new binary array entry
+        template<const ArrayCfg* arrayCfg, int N, const ArrayDef (&arrayDef)[N]>
+    TiffComponent::AutoPtr newTiffBinaryArray(uint16_t tag, uint16_t group)
+    {
+        return TiffComponent::AutoPtr(
+            new TiffBinaryArray(tag, group, arrayCfg, arrayDef, N));
     }
 
     //! Function to create and initialize a new TIFF entry for a thumbnail (data)

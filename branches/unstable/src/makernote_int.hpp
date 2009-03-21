@@ -86,6 +86,7 @@ namespace Exiv2 {
         const uint16_t olympfe8  = 296; //!< Olympus FE 8 tags
         const uint16_t olympfe9  = 297; //!< Olympus FE 9 tags
         const uint16_t olympri   = 298; //!< Olympus raw info tags
+        const uint16_t nikonwt   = 299; //!< Nikon World Time tags
     }
 
 // *****************************************************************************

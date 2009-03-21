@@ -110,6 +110,8 @@ namespace Exiv2 {
     public:
         //! Return read-only list of built-in Nikon3 tags
         static const TagInfo* tagList();
+        //! Return read-only list of built-in World time tags
+        static const TagInfo* tagListWt();
 
         //! @name Print functions for Nikon3 %MakerNote tags
         //@{
@@ -142,6 +144,8 @@ namespace Exiv2 {
     private:
         //! Tag information
         static const TagInfo tagInfo_[];
+        //! World Time tag information
+        static const TagInfo tagInfoWt_[];
 
     }; // class Nikon3MakerNote
 

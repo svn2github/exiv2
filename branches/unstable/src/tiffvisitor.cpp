@@ -163,6 +163,16 @@ namespace Exiv2 {
         findObject(object);
     }
 
+    void TiffFinder::visitBinaryArray(TiffBinaryArray* object)
+    {
+        findObject(object);
+    }
+
+    void TiffFinder::visitBinaryElement(TiffBinaryElement* object)
+    {
+        findObject(object);
+    }
+
     TiffDecoder::TiffDecoder(
         ExifData&            exifData,
         IptcData&            iptcData,
@@ -379,6 +389,16 @@ namespace Exiv2 {
     }
 
     void TiffDecoder::visitArrayElement(TiffArrayElement* object)
+    {
+        decodeTiffEntry(object);
+    }
+
+    void TiffDecoder::visitBinaryArray(TiffBinaryArray* /*object*/)
+    {
+        // Nothing to do
+    }
+
+    void TiffDecoder::visitBinaryElement(TiffBinaryElement* object)
     {
         decodeTiffEntry(object);
     }
@@ -621,6 +641,20 @@ namespace Exiv2 {
         encodeTiffComponent(object);
     }
 
+    void TiffEncoder::visitBinaryArray(TiffBinaryArray* /*object*/)
+    {
+        // Nothing to do
+    }
+
+    void TiffEncoder::visitBinaryElement(TiffBinaryElement* object)
+    {
+        // Temporarily overwrite byteorder according to that of the binary element
+        ByteOrder boOrig = byteOrder_;
+        if (object->elByteOrder() != invalidByteOrder) byteOrder_ = object->elByteOrder();
+        encodeTiffComponent(object);
+        byteOrder_ = boOrig;
+    }
+
     void TiffEncoder::encodeTiffComponent(
               TiffEntryBase* object,
         const Exifdatum*     datum
@@ -688,6 +722,16 @@ namespace Exiv2 {
     {
         encodeOffsetEntry(object, datum);
     } // TiffEncoder::encodeArrayEntry
+
+    void TiffEncoder::encodeBinaryArray(TiffBinaryArray* object, const Exifdatum* datum)
+    {
+        encodeOffsetEntry(object, datum);
+    } // TiffEncoder::encodeBinaryArray
+
+    void TiffEncoder::encodeBinaryElement(TiffBinaryElement* object, const Exifdatum* datum)
+    {
+        encodeTiffEntryBase(object, datum);
+    } // TiffEncoder::encodeArrayElement
 
     void TiffEncoder::encodeDataEntry(TiffDataEntry* object, const Exifdatum* datum)
     {
@@ -1031,6 +1075,22 @@ namespace Exiv2 {
     {
         printTiffEntry(object, prefix());
     } // TiffPrinter::visitArrayElement
+
+    void TiffPrinter::visitBinaryArray(TiffBinaryArray* object)
+    {
+        os_ << prefix() << _("Binary Array") << " " << tiffGroupName(object->group())
+            << " " << _("tag") << " 0x" << std::setw(4) << std::setfill('0')
+            << std::hex << std::right << object->tag() << " " << _("with")
+            << " " << std::dec << object->count() << " ";
+        if (object->count() > 1) os_ << _("elements");
+        else os_ << _("element");
+        os_ << "\n";
+    } // TiffPrinter::visitBinaryArray
+
+    void TiffPrinter::visitBinaryElement(TiffBinaryElement* object)
+    {
+        printTiffEntry(object, prefix());
+    } // TiffPrinter::visitBinaryElement
 
     TiffReader::TiffReader(const byte*    pData,
                            uint32_t       size,
@@ -1442,7 +1502,6 @@ namespace Exiv2 {
                 i += 2;
             }
         }
-
     } // TiffReader::visitArrayEntry
 
     void TiffReader::visitArrayElement(TiffArrayElement* object)
@@ -1481,5 +1540,60 @@ namespace Exiv2 {
         object->setCount(1);
 
     } // TiffReader::visitArrayElement
+
+    void TiffReader::visitBinaryArray(TiffBinaryArray* object)
+    {
+        assert(object != 0);
+
+        readTiffEntry(object);
+        if (object->size_ == 0) return;
+        
+        // Todo: add the "canon hack"
+
+        uint32_t idx = 0;
+        const ArrayDef* def = 0;
+        for (int ci = 0; ci < object->defSize() && idx < object->TiffEntryBase::doSize(); ++ci) {
+            def = object->def() + ci;
+            assert(idx == def->idx_); // Check the array def if this fails
+            idx += object->addElement(idx, def);
+        }
+        assert(def != 0);
+        // Continue with last tag definition while there is data left
+        while (idx < object->TiffEntryBase::doSize()) {
+            // idx is different from def->idx_ here
+            idx += object->addElement(idx, def);
+        }
+    } // TiffReader::visitBinaryArray
+
+    void TiffReader::visitBinaryElement(TiffBinaryElement* object)
+    {
+        byte* pData   = object->start();
+        uint32_t size = object->TiffEntryBase::doSize();
+        assert(pData >= pData_);
+
+        if (pData + size > pLast_) {
+#ifndef SUPPRESS_WARNINGS
+            std::cerr << "Error: Binary element in "
+                      << "directory " << tiffGroupName(object->group())
+                      << ", entry 0x" << std::setw(4)
+                      << std::setfill('0') << std::hex << object->tag()
+                      << " requests access to memory beyond the data buffer; "
+                      << "skipping element.\n";
+#endif
+            return;
+        }
+
+        ByteOrder bo = object->elByteOrder();
+        if (bo == invalidByteOrder) bo = byteOrder();
+        TypeId typeId = toTypeId(object->elDef()->tiffType_, object->tag(), object->group());
+        Value::AutoPtr v = Value::create(typeId);
+        assert(v.get());
+        v->read(pData, size, bo);
+
+        object->setValue(v);
+        object->setOffset(0);
+        object->setIdx(nextIdx(object->group()));
+
+    } // TiffReader::visitBinaryElement
 
 }}                                      // namespace Internal, Exiv2

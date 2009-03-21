@@ -261,6 +261,21 @@ namespace Exiv2 {
 namespace Exiv2 {
     namespace Internal {
 
+    //! Nikon World Time binary array - configuration
+    extern const ArrayCfg nikonWtCfg = {
+        Group::nikonwt,   // Group for the elements
+        invalidByteOrder, // Use byte order from parent 
+        false,            // No header
+        0,                // No size element
+        false             // Not encrypted
+    };
+    //! Nikon World Time binary array - definition
+    extern const ArrayDef nikonWtDef[] = {
+        { 0, unsignedShort, 1 },
+        { 2, unsignedByte,  1 },
+        { 3, unsignedByte,  1 }
+    };
+
     /* 
       This table lists for each group in a tree, its parent group and tag.
       Root identifies the root of a TIFF tree, as there is a need for multiple
@@ -313,6 +328,7 @@ namespace Exiv2 {
         { Tag::root, Group::nikon2mn,  Group::exif,      0x927c    },
         { Tag::root, Group::nikon3mn,  Group::exif,      0x927c    },
         { Tag::root, Group::nikonpv,   Group::nikon3mn,  0x0011    },
+        { Tag::root, Group::nikonwt,   Group::nikon3mn,  0x0024    },
         { Tag::root, Group::panamn,    Group::exif,      0x927c    },
         { Tag::root, Group::pentaxmn,  Group::exif,      0x927c    },
         { Tag::root, Group::sigmamn,   Group::exif,      0x927c    },
@@ -521,7 +537,7 @@ namespace Exiv2 {
         {    0x000f, Group::canonmn,   newTiffArrayEntry<Group::canoncf, ttUnsignedShort, true>  },
         {    0x0012, Group::canonmn,   newTiffArrayEntry<Group::canonpi, ttUnsignedShort, false>  },
         { Tag::next, Group::canonmn,   newTiffDirectory<Group::ignr>             },
-        {  Tag::all, Group::canonmn,   newTiffEntry  },
+        {  Tag::all, Group::canonmn,   newTiffEntry                              },
 
         // Canon makernote composite tags
         {  Tag::all, Group::canoncs,   newTiffArrayElement<ttUnsignedShort>      },
@@ -541,13 +557,17 @@ namespace Exiv2 {
         // Nikon3 makernote
         { Tag::next, Group::nikon3mn,  newTiffDirectory<Group::ignr>             },
         {    0x0011, Group::nikon3mn,  newTiffSubIfd<Group::nikonpv>             },
-        {  Tag::all, Group::nikon3mn,  newTiffEntry  },
+        {    0x0024, Group::nikon3mn,  newTiffBinaryArray<&nikonWtCfg, EXV_COUNTOF(nikonWtDef), nikonWtDef> },
+        {  Tag::all, Group::nikon3mn,  newTiffEntry                              },
 
         // Nikon3 makernote preview subdir
         {    0x0201, Group::nikonpv,   newTiffThumbData<0x0202, Group::nikonpv>  },
         {    0x0202, Group::nikonpv,   newTiffThumbSize<0x0201, Group::nikonpv>  },
         { Tag::next, Group::nikonpv,   newTiffDirectory<Group::ignr>             },
         {  Tag::all, Group::nikonpv,   newTiffEntry                              },
+
+        // Nikon3 world time
+        {  Tag::all, Group::nikonwt,   newTiffBinaryElement                      },
 
         // Panasonic makernote
         { Tag::next, Group::panamn,    newTiffDirectory<Group::ignr>             },

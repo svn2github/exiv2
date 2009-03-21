@@ -137,6 +137,10 @@ namespace Exiv2 {
         virtual void visitArrayEntry(TiffArrayEntry* object) =0;
         //! Operation to perform for an array element
         virtual void visitArrayElement(TiffArrayElement* object) =0;
+        //! Operation to perform for a binary array
+        virtual void visitBinaryArray(TiffBinaryArray* object) =0;
+        //! Operation to perform for an element of a binary array
+        virtual void visitBinaryElement(TiffBinaryElement* object) =0;
         //@}
 
         //! @name Accessors
@@ -186,6 +190,10 @@ namespace Exiv2 {
         virtual void visitArrayEntry(TiffArrayEntry* object);
         //! Find tag and group in an array element
         virtual void visitArrayElement(TiffArrayElement* object);
+        //! Find tag and group in a binary array
+        virtual void visitBinaryArray(TiffBinaryArray* object);
+        //! Find tag and group in an element of a binary array
+        virtual void visitBinaryElement(TiffBinaryElement* object);
 
         //! Check if \em object matches \em tag and \em group
         void findObject(TiffComponent* object);
@@ -256,6 +264,10 @@ namespace Exiv2 {
         virtual void visitArrayEntry(TiffArrayEntry* object);
         //! Decode an array element
         virtual void visitArrayElement(TiffArrayElement* object);
+        //! Decode a binary array
+        virtual void visitBinaryArray(TiffBinaryArray* object);
+        //! Decode an element of a binary array
+        virtual void visitBinaryElement(TiffBinaryElement* object);
 
         //! Entry function, determines how to decode each tag
         void decodeTiffEntry(const TiffEntryBase* object);
@@ -359,6 +371,10 @@ namespace Exiv2 {
         virtual void visitArrayEntry(TiffArrayEntry* object);
         //! Encode an array element
         virtual void visitArrayElement(TiffArrayElement* object);
+        //! Encode a binary array
+        virtual void visitBinaryArray(TiffBinaryArray* object);
+        //! Encode an element of a binary array
+        virtual void visitBinaryElement(TiffBinaryElement* object);
 
         /*!
           @brief Top level encoder function. Determines how to encode each TIFF
@@ -384,6 +400,10 @@ namespace Exiv2 {
             const Exifdatum*     datum =0
         );
 
+        //! Callback encoder function for an element of a binary array.
+        void encodeBinaryElement(TiffBinaryElement* object, const Exifdatum* datum);
+        //! Callback encoder function for a binary array.
+        void encodeBinaryArray(TiffBinaryArray* object, const Exifdatum* datum);
         //! Callback encoder function for an array element.
         void encodeArrayElement(TiffArrayElement* object, const Exifdatum* datum);
         //! Callback encoder function for an array entry.
@@ -592,6 +612,10 @@ namespace Exiv2 {
         virtual void visitArrayEntry(TiffArrayEntry* object);
         //! Read an array element from the data buffer
         virtual void visitArrayElement(TiffArrayElement* object);
+        //! Read a binary array from the data buffer
+        virtual void visitBinaryArray(TiffBinaryArray* object);
+        //! Read an element of a binary array from the data buffer
+        virtual void visitBinaryElement(TiffBinaryElement* object);
 
         //! Read a standard TIFF entry from the data buffer
         void readTiffEntry(TiffEntryBase* object);
@@ -672,6 +696,10 @@ namespace Exiv2 {
         virtual void visitArrayEntry(TiffArrayEntry* object);
         //! Print an array element
         virtual void visitArrayElement(TiffArrayElement* object);
+        //! Print a binary array
+        virtual void visitBinaryArray(TiffBinaryArray* object);
+        //! Print an element of a binary array
+        virtual void visitBinaryElement(TiffBinaryElement* object);
 
         //! Increment the indent by one level
         void incIndent();

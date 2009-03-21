@@ -627,6 +627,33 @@ namespace Exiv2 {
         return tagInfo_;
     }
 
+    //! YesNo, used for DaylightSavings, tag index 2
+    extern const TagDetails nikonYesNo[] = {
+        { 0, N_("No")    },
+        { 1, N_("Yes")   }
+    };
+
+    //! DateDisplayFormat, tag index 3
+    extern const TagDetails nikonDateDisplayFormat[] = {
+        { 0, N_("Y/M/D") },
+        { 1, N_("M/D/Y") },
+        { 2, N_("D/M/Y") }
+    };
+
+    // Nikon3 World Time Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoWt_[] = {
+        TagInfo(0, "Timezone", N_("Timezone"), N_("Timezone"), nikonWtIfdId, makerTags, unsignedShort, printValue),
+        TagInfo(2, "DaylightSavings", N_("Daylight Savings"), N_("Daylight savings"), nikonWtIfdId, makerTags, unsignedByte, EXV_PRINT_TAG(nikonYesNo)),
+        TagInfo(3, "DateDisplayFormat", N_("Date Display Format"), N_("Date display format"), nikonWtIfdId, makerTags, unsignedByte, EXV_PRINT_TAG(nikonDateDisplayFormat)),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonWtTag)", "(UnknownNikonWtTag)", N_("Unknown Nikon World Time Tag"), nikonWtIfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListWt()
+    {
+        return tagInfoWt_;
+    }
+
     std::ostream& Nikon3MakerNote::print0x0002(std::ostream& os,
                                                const Value& value,
                                                const ExifData*)
