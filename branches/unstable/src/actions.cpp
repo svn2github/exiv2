@@ -48,6 +48,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "utils.hpp"
 #include "types.hpp"
 #include "exif.hpp"
+#include "easyaccess.hpp"
 #include "canonmn.hpp"
 #include "iptc.hpp"
 #include "xmp.hpp"
@@ -126,6 +127,12 @@ namespace {
                  const std::string& target,
                  int targetType,
                  bool preserve);
+
+    /*!
+      @brief Test to distinguish between Exif and other tags in TIFF-like files.
+             Only Exif tags are copyed, deleted, added.
+     */
+    bool isExifTag(const Exiv2::Exifdatum& ed);
 
     /*!
       @brief Rename a file according to a timestamp value.
@@ -318,23 +325,8 @@ namespace Action {
         // Flash
         printTag(exifData, "Exif.Photo.Flash", _("Flash"));
 
-        // Todo: Flash bias, flash energy
-        // Todo: Implement this for other cameras
-        done = false;
-        printLabel(_("Flash bias"));
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.CanonSi.FlashBias");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Panasonic.FlashBias");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Olympus.FlashBias");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.OlympusCs.FlashExposureComp");
-        }
-        std::cout << std::endl;
+        // Flash bias
+        printTag(exifData, Exiv2::flashBias, _("Flash bias"));
 
         // Actual focal length and 35 mm equivalent
         // Todo: Calculate 35 mm equivalent a la jhead
@@ -365,139 +357,19 @@ namespace Action {
         std::cout << std::endl;
 
         // ISO speed
-        // from ISOSpeedRatings or the Makernote
-        printLabel(_("ISO speed"));
-        done = false;
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Photo.ISOSpeedRatings");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.CanonSi.ISOSpeed");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Nikon1.ISOSpeed");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Nikon2.ISOSpeed");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Nikon3.ISOSpeed");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCsNew.ISOSpeed");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCsOld.ISOSpeed");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCs5D.ISOSpeed");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCs7D.ISOSpeed");
-        }
-        std::cout << std::endl;
+        printTag(exifData, Exiv2::isoSpeed, _("ISO speed"));
 
         // Exposure mode
-        // From ExposureProgram or Canon Makernote
-        printLabel(_("Exposure mode"));
-        done = false;
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Photo.ExposureProgram");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.CanonCs.ExposureProgram");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCs7D.ExposureMode");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCs5D.ExposureMode");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCsNew.ExposureMode");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCsOld.ExposureMode");
-        }
-        std::cout << std::endl;
+        printTag(exifData, Exiv2::exposureMode, _("Exposure mode"));
 
         // Metering mode
         printTag(exifData, "Exif.Photo.MeteringMode", _("Metering mode"));
 
         // Macro mode
-        // Todo: Implement this for other cameras
-        printLabel(_("Macro mode"));
-        done = false;
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.CanonCs.Macro");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Fujifilm.Macro");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Olympus.Macro");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.OlympusCs.MacroMode");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Panasonic.Macro");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCsNew.MacroMode");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCsOld.MacroMode");
-        }
-        std::cout << std::endl;
+        printTag(exifData, Exiv2::macroMode, _("Macro mode"));
 
         // Image quality setting (compression)
-        // Todo: Implement this for other cameras
-        printLabel(_("Image quality"));
-        done = false;
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.CanonCs.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Fujifilm.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Sigma.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Nikon1.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Nikon2.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Nikon3.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Olympus.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.OlympusCs.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Panasonic.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Minolta.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCsNew.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCsOld.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCs5D.Quality");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCs7D.Quality");
-        }
-        std::cout << std::endl;
+        printTag(exifData, Exiv2::imageQuality, _("Image quality"));
 
         // Exif Resolution
         printLabel(_("Exif Resolution"));
@@ -523,52 +395,7 @@ namespace Action {
         std::cout << std::endl;
 
         // White balance
-        // Todo: Implement this for other cameras
-        printLabel(_("White balance"));
-        done = false;
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.CanonSi.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Fujifilm.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Sigma.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Nikon1.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Nikon2.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Nikon3.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Olympus.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.OlympusCs.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Panasonic.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCs5D.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCs7D.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCsNew.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.MinoltaCsOld.WhiteBalance");
-        }
-        if (!done) {
-            done = 0 != printTag(exifData, "Exif.Photo.WhiteBalance");
-        }
-        std::cout << std::endl;
+        printTag(exifData, Exiv2::whiteBalance, _("White balance"));
 
         // Thumbnail
         printLabel(_("Thumbnail"));
@@ -619,6 +446,23 @@ namespace Action {
         }
         Exiv2::ExifKey ek(key);
         Exiv2::ExifData::const_iterator md = exifData.findKey(ek);
+        if (md != exifData.end()) {
+            md->write(std::cout, &exifData);
+            rc = 1;
+        }
+        if (!label.empty()) std::cout << std::endl;
+        return rc;
+    } // Print::printTag
+
+    int Print::printTag(const Exiv2::ExifData& exifData,
+                        EasyAccessFct easyAccessFct,
+                        const std::string& label) const
+    {
+        int rc = 0;
+        if (!label.empty()) {
+            printLabel(label);
+        }
+        Exiv2::ExifData::const_iterator md = easyAccessFct(exifData);
         if (md != exifData.end()) {
             md->write(std::cout, &exifData);
             rc = 1;
@@ -1008,7 +852,13 @@ namespace Action {
         if (Params::instance().verbose_ && image->exifData().count() > 0) {
             std::cout << _("Erasing Exif data from the file") << std::endl;
         }
-        image->clearExifData();
+        if (0 == strcmp(image->mimeType().c_str(), "image/tiff")) {
+            Exiv2::ExifData& ed = image->exifData();
+            ed.erase(std::remove_if(ed.begin(), ed.end(), isExifTag), ed.end());
+        }
+        else {
+            image->clearExifData();
+        }
         return 0;
     }
 
@@ -1863,7 +1713,22 @@ namespace {
                 std::cout << _("Writing Exif data from") << " " << source
                           << " " << _("to") << " " << target << std::endl;
             }
-            targetImage->setExifData(sourceImage->exifData());
+            if (0 == strcmp(targetImage->mimeType().c_str(), "image/tiff")) {
+                Exiv2::ExifData& ted = targetImage->exifData();
+                if (!preserve) {
+                    targetImage->readMetadata();
+                    ted.erase(std::remove_if(ted.begin(), ted.end(), isExifTag), ted.end());
+                }
+                const Exiv2::ExifData& sed = sourceImage->exifData();
+                for (Exiv2::ExifData::const_iterator pos = sed.begin(); pos != sed.end(); ++pos) {
+                    if (isExifTag(*pos)) {
+                        ted[pos->key()] = pos->value();
+                    }
+                }
+            }
+            else {
+                targetImage->setExifData(sourceImage->exifData());
+            }
         }
         if (   Params::instance().target_ & Params::ctIptc
             && !sourceImage->iptcData().empty()) {
@@ -1900,6 +1765,74 @@ namespace {
 
         return 0;
     } // metacopy
+
+    // Defined outside of the function so that Exiv2::find() can see it
+    struct String {
+        const char* s_;
+        bool operator==(const char* s) const {
+            return 0 == strcmp(s_, s);
+        }
+    };
+
+    bool isExifTag(const Exiv2::Exifdatum& ed)
+    {
+        // A somewhat random list of IFD0 tags which are considered as "Exif tags"
+        static const String exifTags[] = {
+            { "Exif.Image.ProcessingSoftware"      },
+            { "Exif.Image.DocumentName"            },
+            { "Exif.Image.ImageDescription"        },
+            { "Exif.Image.Make"                    },
+            { "Exif.Image.Model"                   },
+            { "Exif.Image.Software"                },
+            { "Exif.Image.DateTime"                },
+            { "Exif.Image.HostComputer"            },
+            { "Exif.Image.Artist"                  },
+            { "Exif.Image.XMLPacket"               },
+            { "Exif.Image.Rating"                  },
+            { "Exif.Image.RatingPercent"           },
+            { "Exif.Image.CFARepeatPatternDim"     },
+            { "Exif.Image.CFAPattern"              },
+            { "Exif.Image.BatteryLevel"            },
+            { "Exif.Image.IPTCNAA"                 },
+            { "Exif.Image.Copyright"               },
+            { "Exif.Image.ImageResources"          },
+            { "Exif.Image.ExifTag"                 },
+            { "Exif.Image.InterColorProfile"       },
+            { "Exif.Image.GPSTag"                  },
+            { "Exif.Image.XPTitle"                 },
+            { "Exif.Image.XPComment"               },
+            { "Exif.Image.XPAuthor"                },
+            { "Exif.Image.XPKeywords"              },
+            { "Exif.Image.XPSubject"               },
+            { "Exif.Image.PrintImageMatching"      },
+            { "Exif.Image.UniqueCameraModel"       },
+            { "Exif.Image.LocalizedCameraModel"    },
+            { "Exif.Image.CFAPlaneColor"           },
+            { "Exif.Image.CFALayout"               },
+            { "Exif.Image.CameraSerialNumber"      },
+            { "Exif.Image.LensInfo"                },
+            { "Exif.Image.OriginalRawFileName"     },
+            { "Exif.Image.ActiveArea"              },
+            { "Exif.Image.MaskedAreas"             },
+            { "Exif.Image.AsShotICCProfile"        },
+            { "Exif.Image.AsShotPreProfileMatrix"  },
+            { "Exif.Image.CurrentICCProfile"       },
+            { "Exif.Image.CurrentPreProfileMatrix" }
+        };
+
+        static const Exiv2::IfdId exifIfds[] = {
+            Exiv2::exifIfdId,
+            Exiv2::gpsIfdId,
+            Exiv2::iopIfdId
+        };
+
+        if (   0 != Exiv2::find(exifIfds, ed.ifdId())
+            || Exiv2::ExifTags::isMakerIfd(ed.ifdId())
+            || 0 != Exiv2::find(exifTags, ed.key().c_str())) {
+            return true;
+        }
+        return false;
+    } // isExifTag
 
     int renameFile(std::string& newPath, const struct tm* tm)
     {

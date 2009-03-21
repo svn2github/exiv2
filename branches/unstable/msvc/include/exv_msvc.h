@@ -10,9 +10,6 @@
  */
 
 /* Todo: The PACKAGE_* defines should be generated */
-#ifdef EXV_HAVE_DLL
-#include "exv_conf.h"
-#else
 
 #ifdef _MSC_VER
 
@@ -58,20 +55,6 @@ typedef int pid_t;
 #define HAVE_LIBZ 1
 
 #if HAVE_LIBZ
-  #define EXV_HAVE_LIBZ
-  #if     EXV_HAVE_DLL
-    #ifdef   _DEBUG
-      #pragma comment(lib,"../../../zlib-1.2.3/projects/visualc6/Win32_DLL_Debug/zlib1d.lib")
-    #else
-      #pragma comment(lib,"../../../zlib-1.2.3/projects/visualc6/Win32_DLL_Release/zlib1.lib")
-    #endif
-  #else
-    #ifdef   _DEBUG
-      #pragma comment(lib,"../../../zlib-1.2.3/projects/visualc6/Win32_LIB_Debug/zlibd.lib")
-    #else
-      #pragma comment(lib,"../../../zlib-1.2.3/projects/visualc6/Win32_LIB_Release/zlib.lib")
-    #endif
-  #endif
   #define EXV_HAVE_LIBZ
   // assist VC7.1 to compile vsnprintf
   #if (_MSC_VER < 1400) && !defined(vsnprintf)
@@ -129,5 +112,3 @@ typedef int pid_t;
 #endif
 
 #endif /* _MSC_VER */
-
-#endif /* EXV_HAVE_DLL */
