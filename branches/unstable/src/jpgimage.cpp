@@ -486,6 +486,7 @@ namespace Exiv2 {
         int count = 0;
         int search = 0;
         int insertPos = 0;
+        int comPos = 0;
         int skipApp1Exif = -1;
         int skipApp1Xmp = -1;
         int skipApp13Ps3 = -1;
@@ -503,7 +504,7 @@ namespace Exiv2 {
         // First find segments of interest. Normally app0 is first and we want
         // to insert after it. But if app0 comes after com, app1 and app13 then
         // don't bother.
-        while (marker != sos_ && marker != eoi_ && search < 4) {
+        while (marker != sos_ && marker != eoi_ && search < 5) {
             // Read size and signature (ok if this hits EOF)
             bufRead = io_->read(buf.pData_, bufMinSize);
             if (io_->error()) throw Error(20);
@@ -556,11 +557,37 @@ namespace Exiv2 {
                 if (size < 2) throw Error(22);
                 if (io_->seek(size-bufRead, BasicIo::cur)) throw Error(22);
             }
+            // As in jpeg-6b/wrjpgcom.c:
+            // We will insert the new comment marker just before SOFn.
+            // This (a) causes the new comment to appear after, rather than before,
+            // existing comments; and (b) ensures that comments come after any JFIF
+            // or JFXX markers, as required by the JFIF specification.
+            if (   comPos == 0
+                && (   marker == sof0_
+                    || marker == sof1_
+                    || marker == sof2_
+                    || marker == sof3_
+                    || marker == sof5_
+                    || marker == sof6_
+                    || marker == sof7_
+                    || marker == sof9_
+                    || marker == sof10_
+                    || marker == sof11_
+                    || marker == sof13_
+                    || marker == sof14_
+                    || marker == sof15_)) {
+                comPos = count;
+                ++search;
+            }
             marker = advanceToMarker();
             if (marker < 0) throw Error(22);
             ++count;
         }
-
+        if (comPos == 0) {
+            if (marker == eoi_) comPos = count;
+            else comPos = insertPos;
+            ++search;
+        }
         if (exifData_.count() > 0) ++search;
         if (writeXmpFromPacket() == false && xmpData_.count() > 0) ++search;
         if (writeXmpFromPacket() == true && xmpPacket_.size() > 0) ++search;
@@ -586,21 +613,8 @@ namespace Exiv2 {
 
             if (insertPos == count) {
                 byte tmpBuf[64];
-                if (!comment_.empty()) {
-                    // Write COM marker, size of comment, and string
-                    tmpBuf[0] = 0xff;
-                    tmpBuf[1] = com_;
-
-                    if (comment_.length() + 3 > 0xffff) throw Error(37, "JPEG comment");
-                    us2Data(tmpBuf + 2, static_cast<uint16_t>(comment_.length() + 3), bigEndian);
-
-                    if (outIo.write(tmpBuf, 4) != 4) throw Error(21);
-                    if (outIo.write((byte*)comment_.data(), (long)comment_.length())
-                        != (long)comment_.length()) throw Error(21);
-                    if (outIo.putb(0)==EOF) throw Error(21);
-                    if (outIo.error()) throw Error(21);
-                    --search;
-                }
+                // Write Exif data first so that - if there is no app0 - we
+                // create "Exif images" according to the Exif standard.
                 if (exifData_.count() > 0) {
                     Blob blob;
                     ByteOrder bo = byteOrder();
@@ -685,6 +699,25 @@ namespace Exiv2 {
                         --search;
                     }
                 }
+            }
+            if (comPos == count) {
+                if (!comment_.empty()) {
+                    byte tmpBuf[4];
+                    // Write COM marker, size of comment, and string
+                    tmpBuf[0] = 0xff;
+                    tmpBuf[1] = com_;
+
+                    if (comment_.length() + 3 > 0xffff) throw Error(37, "JPEG comment");
+                    us2Data(tmpBuf + 2, static_cast<uint16_t>(comment_.length() + 3), bigEndian);
+
+                    if (outIo.write(tmpBuf, 4) != 4) throw Error(21);
+                    if (outIo.write((byte*)comment_.data(), (long)comment_.length())
+                        != (long)comment_.length()) throw Error(21);
+                    if (outIo.putb(0)==EOF) throw Error(21);
+                    if (outIo.error()) throw Error(21);
+                    --search;
+                }
+                --search;
             }
             if (marker == eoi_) {
                 break;

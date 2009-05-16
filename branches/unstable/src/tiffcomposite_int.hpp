@@ -816,7 +816,6 @@ namespace Exiv2 {
      */
     class TiffDirectory : public TiffComponent {
         friend class TiffEncoder;
-        friend class TiffPrinter;
     public:
         //! @name Creators
         //@{
@@ -1005,7 +1004,6 @@ namespace Exiv2 {
         friend class TiffReader;
         friend class TiffDecoder;
         friend class TiffEncoder;
-        friend class TiffPrinter;
     public:
         //! @name Creators
         //@{

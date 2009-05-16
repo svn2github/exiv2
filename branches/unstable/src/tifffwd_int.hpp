@@ -64,7 +64,6 @@ namespace Exiv2 {
     class TiffDecoder;
     class TiffEncoder;
     class TiffReader;
-    class TiffPrinter;
 
     class TiffRwState;
     class TiffPathItem;

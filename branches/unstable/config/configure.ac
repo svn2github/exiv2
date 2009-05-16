@@ -2,9 +2,9 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(exiv2, 0.18, ahuggel@gmx.net)
+AC_INIT(exiv2, 0.18.1, ahuggel@gmx.net)
 # See http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
-EXIV2_LTVERSION=7:0:2
+EXIV2_LTVERSION=8:0:3
 PACKAGE=$PACKAGE_NAME
 VERSION=$PACKAGE_VERSION
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
@@ -31,6 +31,13 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
+AC_CANONICAL_HOST
+# Add flag for DLL on Windows
+case "$host_os" in
+*mingw* | *cygwin*)
+    LDFLAGS="$LDFLAGS -no-undefined"
+    ;;
+esac
 
 # ---------------------------------------------------------------------------
 # i18n support
