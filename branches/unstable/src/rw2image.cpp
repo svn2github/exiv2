@@ -62,6 +62,11 @@ namespace Exiv2 {
     {
     } // Rw2Image::Rw2Image
 
+    std::string Rw2Image::mimeType() const
+    {
+        return "image/x-raw";
+    }
+
     int Rw2Image::pixelWidth() const
     {
         ExifData::const_iterator imageWidth =

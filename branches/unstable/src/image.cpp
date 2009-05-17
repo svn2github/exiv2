@@ -144,6 +144,10 @@ namespace Exiv2 {
     {
     }
 
+    Image::~Image()
+    {
+    }
+
     void Image::clearMetadata()
     {
         clearExifData();
@@ -151,6 +155,26 @@ namespace Exiv2 {
         clearXmpPacket();
         clearXmpData();
         clearComment();
+    }
+
+    ExifData& Image::exifData()
+    {
+        return exifData_;
+    }
+
+    IptcData& Image::iptcData()
+    {
+        return iptcData_;
+    }
+
+    XmpData& Image::xmpData()
+    {
+        return xmpData_;
+    }
+
+    std::string& Image::xmpPacket()
+    {
+        return xmpPacket_;
     }
 
     void Image::setMetadata(const Image& image)
@@ -226,6 +250,56 @@ namespace Exiv2 {
     void Image::setByteOrder(ByteOrder byteOrder)
     {
         byteOrder_ = byteOrder;
+    }
+
+    ByteOrder Image::byteOrder() const
+    {
+        return byteOrder_;
+    }
+
+    int Image::pixelWidth() const
+    {
+        return pixelWidth_;
+    }
+
+    int Image::pixelHeight() const
+    {
+        return pixelHeight_;
+    }
+
+    const ExifData& Image::exifData() const
+    {
+        return exifData_;
+    }
+
+    const IptcData& Image::iptcData() const
+    {
+        return iptcData_;
+    }
+
+    const XmpData& Image::xmpData() const
+    {
+        return xmpData_;
+    }
+
+    std::string Image::comment() const
+    {
+        return comment_;
+    }
+
+    const std::string& Image::xmpPacket() const
+    {
+        return xmpPacket_;
+    }
+
+    BasicIo& Image::io() const
+    {
+        return *io_;
+    }
+
+    bool Image::writeXmpFromPacket() const
+    {
+        return writeXmpFromPacket_;
     }
 
     bool Image::good() const

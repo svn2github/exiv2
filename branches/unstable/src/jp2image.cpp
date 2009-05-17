@@ -104,6 +104,11 @@ namespace Exiv2
     {
     } // Jp2Image::Jp2Image
 
+    std::string Jp2Image::mimeType() const
+    {
+        return "image/jp2";
+    }
+
     void Jp2Image::setComment(const std::string& /*comment*/)
     {
         // Todo: implement me!

@@ -152,6 +152,16 @@ namespace Exiv2 {
         return toString();
     }
 
+    long Value::sizeDataArea() const
+    {
+        return 0;
+    }
+
+    DataBuf Value::dataArea() const
+    {
+        return DataBuf(0, 0);
+    };
+
     DataValue::DataValue(TypeId typeId) : Value(typeId)
     {
     }
@@ -165,6 +175,11 @@ namespace Exiv2 {
 
     DataValue::~DataValue()
     {
+    }
+
+    long DataValue::count() const
+    {
+        return size();
     }
 
     int DataValue::read(const byte* buf, long len, ByteOrder /*byteOrder*/)
@@ -240,6 +255,26 @@ namespace Exiv2 {
         return Rational(value_[n], 1);
     }
 
+    StringValueBase::StringValueBase(TypeId typeId)
+        : Value(typeId)
+    {
+    }
+
+    StringValueBase::StringValueBase(TypeId typeId, const std::string& buf)
+        : Value(typeId)
+    {
+        read(buf);
+    }
+
+    StringValueBase::StringValueBase(const StringValueBase& rhs)
+        : Value(rhs), value_(rhs.value_)
+    {
+    }
+
+    StringValueBase::~StringValueBase()
+    {
+    }
+
     StringValueBase& StringValueBase::operator=(const StringValueBase& rhs)
     {
         if (this == &rhs) return *this;
@@ -271,6 +306,11 @@ namespace Exiv2 {
             );
     }
 
+    long StringValueBase::count() const
+    {
+        return size();
+    }
+
     long StringValueBase::size() const
     {
         return static_cast<long>(value_.size());
@@ -299,9 +339,37 @@ namespace Exiv2 {
         return Rational(value_[n], 1);
     }
 
+    StringValue::StringValue()
+        : StringValueBase(string)
+    {
+    }
+
+    StringValue::StringValue(const std::string& buf)
+        : StringValueBase(string, buf)
+    {
+    }
+
+    StringValue::~StringValue()
+    {
+    }
+
     StringValue* StringValue::clone_() const
     {
         return new StringValue(*this);
+    }
+
+    AsciiValue::AsciiValue()
+        : StringValueBase(asciiString)
+    {
+    }
+
+    AsciiValue::AsciiValue(const std::string& buf)
+        : StringValueBase(asciiString, buf)
+    {
+    }
+
+    AsciiValue::~AsciiValue()
+    {
     }
 
     int AsciiValue::read(const std::string& buf)
@@ -370,10 +438,19 @@ namespace Exiv2 {
                invalidCharsetId : charsetTable_[i].charsetId_;
     }
 
+    CommentValue::CommentValue()
+        : StringValueBase(Exiv2::undefined)
+    {
+    }
+
     CommentValue::CommentValue(const std::string& comment)
         : StringValueBase(Exiv2::undefined)
     {
         read(comment);
+    }
+
+    CommentValue::~CommentValue()
+    {
     }
 
     int CommentValue::read(const std::string& comment)
@@ -772,6 +849,10 @@ namespace Exiv2 {
         date_.day = day;
     }
 
+    DateValue::~DateValue()
+    {
+    }
+
     int DateValue::read(const byte* buf, long len, ByteOrder /*byteOrder*/)
     {
         // Hard coded to read Iptc style dates
@@ -834,6 +915,16 @@ namespace Exiv2 {
         return 8;
     }
 
+    const DateValue::Date& DateValue::getDate() const
+    {
+        return date_;
+    }
+
+    long DateValue::count() const
+    {
+        return size();
+    }
+
     long DateValue::size() const
     {
         return 8;
@@ -865,6 +956,16 @@ namespace Exiv2 {
         return l;
     }
 
+    float DateValue::toFloat(long n) const
+    {
+        return static_cast<float>(toLong(n));
+    }
+
+    Rational DateValue::toRational(long n) const
+    {
+        return Rational(toLong(n), 1);
+    }
+
     TimeValue::TimeValue()
         : Value(time)
     {
@@ -880,6 +981,10 @@ namespace Exiv2 {
         time_.second = second;
         time_.tzHour = tzHour;
         time_.tzMinute = tzMinute;
+    }
+
+    TimeValue::~TimeValue()
+    {
     }
 
     int TimeValue::read(const byte* buf, long len, ByteOrder /*byteOrder*/)
@@ -985,6 +1090,16 @@ namespace Exiv2 {
         return 11;
     }
 
+    const TimeValue::Time& TimeValue::getTime() const
+    {
+        return time_;
+    }
+
+    long TimeValue::count() const
+    {
+        return size();
+    }
+
     long TimeValue::size() const
     {
         return 11;
@@ -1019,6 +1134,16 @@ namespace Exiv2 {
         }
         ok_ = true;
         return result;
+    }
+
+    float TimeValue::toFloat(long n) const
+    {
+        return static_cast<float>(toLong(n));
+    }
+
+    Rational TimeValue::toRational(long n) const
+    {
+        return Rational(toLong(n), 1);
     }
 
 }                                       // namespace Exiv2

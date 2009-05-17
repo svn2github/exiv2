@@ -84,6 +84,11 @@ namespace Exiv2 {
     {
     } // TiffImage::TiffImage
 
+    std::string TiffImage::mimeType() const
+    {
+        return "image/tiff";
+    }
+
     int TiffImage::pixelWidth() const
     {
         ExifData::const_iterator imageWidth = exifData_.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth"));

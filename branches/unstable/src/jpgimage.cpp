@@ -780,6 +780,11 @@ namespace Exiv2 {
     {
     }
 
+    std::string JpegImage::mimeType() const
+    {
+        return "image/jpeg";
+    }
+
     int JpegImage::writeHeader(BasicIo& outIo) const
     {
         // Jpeg header
@@ -825,6 +830,11 @@ namespace Exiv2 {
     ExvImage::ExvImage(BasicIo::AutoPtr io, bool create)
         : JpegBase(ImageType::exv, io, create, blank_, sizeof(blank_))
     {
+    }
+
+    std::string ExvImage::mimeType() const
+    {
+        return "image/x-exv";
     }
 
     int ExvImage::writeHeader(BasicIo& outIo) const

@@ -149,37 +149,26 @@ namespace Exiv2 {
           @return Return -1 if the %Exifdatum does not have a value yet or the
                   value has no data area, else 0.
          */
-        int setDataArea(const byte* buf, long len)
-            { return value_.get() == 0 ? -1 : value_->setDataArea(buf, len); }
+        int setDataArea(const byte* buf, long len);
         //@}
 
         //! @name Accessors
         //@{
         //! Return the key of the %Exifdatum.
-        std::string key() const
-            { return key_.get() == 0 ? "" : key_->key(); }
-        const char* familyName() const
-            { return key_.get() == 0 ? "" : key_->familyName(); }
-        std::string groupName() const
-            { return key_.get() == 0 ? "" : key_->groupName(); }
-        std::string tagName() const
-            { return key_.get() == 0 ? "" : key_->tagName(); }
-        std::string tagLabel() const
-            { return key_.get() == 0 ? "" : key_->tagLabel(); }
-        uint16_t tag() const
-            { return key_.get() == 0 ? 0xffff : key_->tag(); }
+        std::string key() const;
+        const char* familyName() const;
+        std::string groupName() const;
+        std::string tagName() const;
+        std::string tagLabel() const;
+        uint16_t tag() const;
         //! Return the IFD id
-        IfdId ifdId() const
-            { return key_.get() == 0 ? ifdIdNotSet : key_->ifdId(); }
+        IfdId ifdId() const;
         //! Return the name of the IFD
-        const char* ifdName() const
-            { return key_.get() == 0 ? "" : key_->ifdName(); }
+        const char* ifdName() const;
         //! Return the related image item (deprecated)
-        std::string ifdItem() const
-            { return key_.get() == 0 ? "" : key_->ifdItem(); }
+        std::string ifdItem() const;
         //! Return the index (unique id of this key within the original IFD)
-        int idx() const
-            { return key_.get() == 0 ? 0 : key_->idx(); }
+        int idx() const;
         /*!
           @brief Write value to a data buffer and return the number
                  of bytes written.
@@ -191,41 +180,28 @@ namespace Exiv2 {
           @param byteOrder Applicable byte order (little or big endian).
           @return Number of characters written.
         */
-        long copy(byte* buf, ByteOrder byteOrder) const
-            { return value_.get() == 0 ? 0 : value_->copy(buf, byteOrder); }
+        long copy(byte* buf, ByteOrder byteOrder) const;
         std::ostream& write(std::ostream& os, const ExifData* pMetadata =0) const;
         //! Return the type id of the value
-        TypeId typeId() const
-            { return value_.get() == 0 ? invalidTypeId : value_->typeId(); }
+        TypeId typeId() const;
         //! Return the name of the type
-        const char* typeName() const
-            { return TypeInfo::typeName(typeId()); }
+        const char* typeName() const;
         //! Return the size in bytes of one component of this type
-        long typeSize() const
-            { return TypeInfo::typeSize(typeId()); }
+        long typeSize() const;
         //! Return the number of components in the value
-        long count() const
-            { return value_.get() == 0 ? 0 : value_->count(); }
+        long count() const;
         //! Return the size of the value in bytes
-        long size() const
-            { return value_.get() == 0 ? 0 : value_->size(); }
+        long size() const;
         //! Return the value as a string.
-        std::string toString() const
-            { return value_.get() == 0 ? "" : value_->toString(); }
-        std::string toString(long n) const
-            { return value_.get() == 0 ? "" : value_->toString(n); }
-        long toLong(long n =0) const
-            { return value_.get() == 0 ? -1 : value_->toLong(n); }
-        float toFloat(long n =0) const
-            { return value_.get() == 0 ? -1 : value_->toFloat(n); }
-        Rational toRational(long n =0) const
-            { return value_.get() == 0 ? Rational(-1, 1) : value_->toRational(n); }
-        Value::AutoPtr getValue() const
-            { return value_.get() == 0 ? Value::AutoPtr(0) : value_->clone(); }
+        std::string toString() const;
+        std::string toString(long n) const;
+        long toLong(long n =0) const;
+        float toFloat(long n =0) const;
+        Rational toRational(long n =0) const;
+        Value::AutoPtr getValue() const;
         const Value& value() const;
         //! Return the size of the data area.
-        long sizeDataArea() const
-            { return value_.get() == 0 ? 0 : value_->sizeDataArea(); }
+        long sizeDataArea() const;
         /*!
           @brief Return a copy of the data area of the value. The caller owns
                  this copy and %DataBuf ensures that it will be deleted.
@@ -238,8 +214,7 @@ namespace Exiv2 {
                   %DataBuf if the value does not have a data area assigned or the
                   value is not set.
          */
-        DataBuf dataArea() const
-            { return value_.get() == 0 ? DataBuf(0, 0) : value_->dataArea(); }
+        DataBuf dataArea() const;
         //@}
 
     private:

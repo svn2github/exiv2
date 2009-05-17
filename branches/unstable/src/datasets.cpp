@@ -622,6 +622,46 @@ namespace Exiv2 {
         return *this;
     }
 
+    std::string IptcKey::key() const
+    {
+        return key_;
+    }
+
+    const char* IptcKey::familyName() const
+    {
+        return familyName_;
+    }
+
+    std::string IptcKey::groupName() const
+    {
+        return recordName();
+    }
+
+    std::string IptcKey::tagName() const
+    {
+        return IptcDataSets::dataSetName(tag_, record_);
+    }
+
+    std::string IptcKey::tagLabel() const
+    {
+        return IptcDataSets::dataSetTitle(tag_, record_);
+    }
+
+    uint16_t IptcKey::tag() const
+    {
+        return tag_;
+    }
+
+    std::string IptcKey::recordName() const
+    {
+        return IptcDataSets::recordName(record_);
+    }
+
+    uint16_t IptcKey::record() const
+    {
+        return record_;
+    }
+
     IptcKey::AutoPtr IptcKey::clone() const
     {
         return AutoPtr(clone_());

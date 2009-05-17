@@ -1886,6 +1886,21 @@ namespace Exiv2 {
         idx_ = idx;
     }
 
+    std::string ExifKey::key() const
+    {
+        return key_;
+    }
+
+    const char* ExifKey::familyName() const
+    {
+        return familyName_;
+    }
+
+    std::string ExifKey::groupName() const
+    {
+        return ifdItem();
+    }
+
     std::string ExifKey::tagName() const
     {
         return ExifTags::tagName(tag_, ifdId_);
@@ -1894,6 +1909,11 @@ namespace Exiv2 {
     std::string ExifKey::tagLabel() const 	
     {
         return ExifTags::tagLabel(tag_, ifdId_);
+    }
+
+    uint16_t ExifKey::tag() const
+    {
+        return tag_;
     }
 
     ExifKey::AutoPtr ExifKey::clone() const

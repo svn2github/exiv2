@@ -294,6 +294,131 @@ namespace Exiv2 {
         return value_->read(value);
     }
 
+    int Exifdatum::setDataArea(const byte* buf, long len)
+    {
+        return value_.get() == 0 ? -1 : value_->setDataArea(buf, len);
+    }
+
+    std::string Exifdatum::key() const
+    {
+        return key_.get() == 0 ? "" : key_->key();
+    }
+    
+    const char* Exifdatum::familyName() const
+    {
+        return key_.get() == 0 ? "" : key_->familyName();
+    }
+
+    std::string Exifdatum::groupName() const
+    {
+        return key_.get() == 0 ? "" : key_->groupName();
+    }
+
+    std::string Exifdatum::tagName() const
+    {
+        return key_.get() == 0 ? "" : key_->tagName();
+    }
+
+    std::string Exifdatum::tagLabel() const
+    {
+        return key_.get() == 0 ? "" : key_->tagLabel();
+    }
+
+    uint16_t Exifdatum::tag() const
+    {
+        return key_.get() == 0 ? 0xffff : key_->tag();
+    }
+
+    IfdId Exifdatum::ifdId() const
+    {
+        return key_.get() == 0 ? ifdIdNotSet : key_->ifdId();
+    }
+
+    const char* Exifdatum::ifdName() const
+    {
+        return key_.get() == 0 ? "" : key_->ifdName();
+    }
+
+    std::string Exifdatum::ifdItem() const
+    {
+        return key_.get() == 0 ? "" : key_->ifdItem();
+    }
+
+    int Exifdatum::idx() const
+    {
+        return key_.get() == 0 ? 0 : key_->idx();
+    }
+
+    long Exifdatum::copy(byte* buf, ByteOrder byteOrder) const
+    {
+        return value_.get() == 0 ? 0 : value_->copy(buf, byteOrder);
+    }
+
+    TypeId Exifdatum::typeId() const
+    {
+        return value_.get() == 0 ? invalidTypeId : value_->typeId();
+    }
+
+    const char* Exifdatum::typeName() const
+    {
+        return TypeInfo::typeName(typeId());
+    }
+
+    long Exifdatum::typeSize() const
+    {
+        return TypeInfo::typeSize(typeId());
+    }
+
+    long Exifdatum::count() const
+    {
+        return value_.get() == 0 ? 0 : value_->count();
+    }
+
+    long Exifdatum::size() const
+    {
+        return value_.get() == 0 ? 0 : value_->size();
+    }
+
+    std::string Exifdatum::toString() const
+    {
+        return value_.get() == 0 ? "" : value_->toString();
+    }
+
+    std::string Exifdatum::toString(long n) const
+    {
+        return value_.get() == 0 ? "" : value_->toString(n);
+    }
+
+    long Exifdatum::toLong(long n) const
+    {
+        return value_.get() == 0 ? -1 : value_->toLong(n);
+    }
+
+    float Exifdatum::toFloat(long n) const
+    {
+        return value_.get() == 0 ? -1 : value_->toFloat(n);
+    }
+
+    Rational Exifdatum::toRational(long n) const
+    {
+        return value_.get() == 0 ? Rational(-1, 1) : value_->toRational(n);
+    }
+
+    Value::AutoPtr Exifdatum::getValue() const
+    {
+        return value_.get() == 0 ? Value::AutoPtr(0) : value_->clone();
+    }
+
+    long Exifdatum::sizeDataArea() const
+    {
+        return value_.get() == 0 ? 0 : value_->sizeDataArea();
+    }
+
+    DataBuf Exifdatum::dataArea() const
+    {
+        return value_.get() == 0 ? DataBuf(0, 0) : value_->dataArea();
+    }
+
     ExifThumbC::ExifThumbC(const ExifData& exifData)
         : exifData_(exifData)
     {

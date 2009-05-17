@@ -69,6 +69,10 @@ EXIV2_RCSID("@(#) $Id$")
 // class member definitions
 namespace Exiv2 {
 
+    BasicIo::~BasicIo()
+    {
+    }
+
     FileIo::FileIo(const std::string& path)
         : path_(path), fp_(0), opMode_(opSeek),
           pMappedArea_(0), mappedLength_(0), isMalloced_(false), isWriteable_(false)
@@ -552,6 +556,15 @@ namespace Exiv2 {
         idx_ = newIdx;
         eof_ = false;
         return 0;
+    }
+
+    byte* MemIo::mmap(bool /*isWriteable*/)
+    {
+        return data_;
+    }
+
+    void MemIo::munmap()
+    {
     }
 
     long MemIo::tell() const

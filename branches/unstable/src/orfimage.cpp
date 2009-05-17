@@ -63,6 +63,11 @@ namespace Exiv2 {
     {
     } // OrfImage::OrfImage
 
+    std::string OrfImage::mimeType() const
+    {
+        return "image/x-olympus-orf";
+    }
+
     int OrfImage::pixelWidth() const
     {
         ExifData::const_iterator imageWidth = exifData_.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth"));

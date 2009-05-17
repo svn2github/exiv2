@@ -63,7 +63,7 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Destructor
-        virtual ~BasicIo() {}
+        virtual ~BasicIo();
         //@}
 
         //! @name Manipulators
@@ -634,8 +634,8 @@ namespace Exiv2 {
                  returned pointer remains valid and allocated as long as the
                  MemIo object is in scope.
          */
-        virtual byte* mmap(bool /*isWriteable*/) { return data_; }
-        virtual void munmap() {}
+        virtual byte* mmap(bool /*isWriteable*/);
+        virtual void munmap();
         //@}
 
         //! @name Accessors

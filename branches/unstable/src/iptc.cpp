@@ -106,9 +106,109 @@ namespace Exiv2 {
     {
     }
 
+    long Iptcdatum::copy(byte* buf, ByteOrder byteOrder) const
+    {
+        return value_.get() == 0 ? 0 : value_->copy(buf, byteOrder);
+    }
+
     std::ostream& Iptcdatum::write(std::ostream& os, const ExifData*) const
     {
         return os << value();
+    }
+
+    std::string Iptcdatum::key() const
+    {
+        return key_.get() == 0 ? "" : key_->key();
+    }
+
+    std::string Iptcdatum::recordName() const
+    {
+        return key_.get() == 0 ? "" : key_->recordName();
+    }
+
+    uint16_t Iptcdatum::record() const
+    {
+        return key_.get() == 0 ? 0 : key_->record();
+    }
+    
+    const char* Iptcdatum::familyName() const
+    {
+        return key_.get() == 0 ? "" : key_->familyName();
+    }
+
+    std::string Iptcdatum::groupName() const
+    {
+        return key_.get() == 0 ? "" : key_->groupName();
+    }
+
+    std::string Iptcdatum::tagName() const
+    {
+        return key_.get() == 0 ? "" : key_->tagName();
+    }
+
+    std::string Iptcdatum::tagLabel() const
+    {
+        return key_.get() == 0 ? "" : key_->tagLabel();
+    }
+
+    uint16_t Iptcdatum::tag() const
+    {
+        return key_.get() == 0 ? 0 : key_->tag();
+    }
+
+    TypeId Iptcdatum::typeId() const
+    {
+        return value_.get() == 0 ? invalidTypeId : value_->typeId();
+    }
+
+    const char* Iptcdatum::typeName() const
+    {
+        return TypeInfo::typeName(typeId());
+    }
+
+    long Iptcdatum::typeSize() const
+    {
+        return TypeInfo::typeSize(typeId());
+    }
+
+    long Iptcdatum::count() const
+    {
+        return value_.get() == 0 ? 0 : value_->count();
+    }
+
+    long Iptcdatum::size() const
+    {
+        return value_.get() == 0 ? 0 : value_->size();
+    }
+
+    std::string Iptcdatum::toString() const
+    {
+        return value_.get() == 0 ? "" : value_->toString();
+    }
+
+    std::string Iptcdatum::toString(long n) const
+    {
+        return value_.get() == 0 ? "" : value_->toString(n);
+    }
+
+    long Iptcdatum::toLong(long n) const
+    {
+        return value_.get() == 0 ? -1 : value_->toLong(n);
+    }
+
+    float Iptcdatum::toFloat(long n) const
+    {
+        return value_.get() == 0 ? -1 : value_->toFloat(n);
+    }
+
+    Rational Iptcdatum::toRational(long n) const
+    {
+        return value_.get() == 0 ? Rational(-1, 1) : value_->toRational(n);
+    }
+
+    Value::AutoPtr Iptcdatum::getValue() const
+    {
+        return value_.get() == 0 ? Value::AutoPtr(0) : value_->clone();
     }
 
     const Value& Iptcdatum::value() const

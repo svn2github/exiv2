@@ -57,6 +57,11 @@ namespace Exiv2 {
     {
     } // TgaImage::TgaImage
 
+    std::string TgaImage::mimeType() const
+    {
+        return "image/targa";
+    }
+
     void TgaImage::setExifData(const ExifData& /*exifData*/)
     {
         // Todo: implement me!

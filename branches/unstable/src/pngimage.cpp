@@ -69,6 +69,11 @@ namespace Exiv2 {
     {
     } // PngImage::PngImage
 
+    std::string PngImage::mimeType() const
+    {
+        return "image/png";
+    }
+
     void PngImage::readMetadata()
     {
 #ifdef DEBUG

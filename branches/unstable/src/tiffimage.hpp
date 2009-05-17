@@ -89,7 +89,7 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
-        std::string mimeType() const { return "image/tiff"; }
+        std::string mimeType() const;
         int pixelWidth() const;
         int pixelHeight() const;
         //@}

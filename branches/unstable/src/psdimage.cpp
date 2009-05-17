@@ -137,6 +137,11 @@ namespace Exiv2 {
     {
     } // PsdImage::PsdImage
 
+    std::string PsdImage::mimeType() const
+    {
+        return "image/x-photoshop";
+    }
+
     void PsdImage::setComment(const std::string& /*comment*/)
     {
         // not supported

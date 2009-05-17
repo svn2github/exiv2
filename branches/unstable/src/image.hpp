@@ -84,7 +84,7 @@ namespace Exiv2 {
               uint16_t         supportedMetadata,
               BasicIo::AutoPtr io);
         //! Virtual Destructor
-        virtual ~Image() {}
+        virtual ~Image();
         //@}
 
         //! @name Manipulators
@@ -224,7 +224,7 @@ namespace Exiv2 {
 
           @return modifiable ExifData instance containing Exif values
          */
-        virtual ExifData& exifData() { return exifData_; }
+        virtual ExifData& exifData();
         /*!
           @brief Returns an IptcData instance containing currently buffered
               IPTC data.
@@ -236,7 +236,7 @@ namespace Exiv2 {
 
           @return modifiable IptcData instance containing IPTC values
          */
-        virtual IptcData& iptcData() { return iptcData_; }
+        virtual IptcData& iptcData();
         /*!
           @brief Returns an XmpData instance containing currently buffered
               XMP data.
@@ -248,11 +248,11 @@ namespace Exiv2 {
 
           @return modifiable XmpData instance containing XMP values
          */
-        virtual XmpData& xmpData() { return xmpData_; }
+        virtual XmpData& xmpData();
         /*!
           @brief Return a modifiable reference to the raw XMP packet.
          */
-        virtual std::string& xmpPacket() { return xmpPacket_; }
+        virtual std::string& xmpPacket();
         /*!
           @brief Determine the source when writing XMP.
 
@@ -286,7 +286,7 @@ namespace Exiv2 {
           @brief Return the byte order in which the Exif metadata of the image is
                  encoded. Initially, it is not set (\em invalidByteOrder).
          */
-        ByteOrder byteOrder() const { return byteOrder_; }
+        ByteOrder byteOrder() const;
         /*!
           @brief Check if the Image instance is valid. Use after object
               construction.
@@ -307,11 +307,11 @@ namespace Exiv2 {
         /*!
           @brief Return the pixel width of the image.
          */
-        virtual int pixelWidth() const { return pixelWidth_; }
+        virtual int pixelWidth() const;
         /*!
           @brief Return the pixel height of the image.
          */
-        virtual int pixelHeight() const { return pixelHeight_; }
+        virtual int pixelHeight() const;
         /*!
           @brief Returns an ExifData instance containing currently buffered
               Exif data.
@@ -323,7 +323,7 @@ namespace Exiv2 {
 
           @return read only ExifData instance containing Exif values
          */
-        virtual const ExifData& exifData() const { return exifData_; }
+        virtual const ExifData& exifData() const;
         /*!
           @brief Returns an IptcData instance containing currently buffered
               IPTC data.
@@ -335,7 +335,7 @@ namespace Exiv2 {
 
           @return modifiable IptcData instance containing IPTC values
          */
-        virtual const IptcData& iptcData() const { return iptcData_; }
+        virtual const IptcData& iptcData() const;
         /*!
           @brief Returns an XmpData instance containing currently buffered
               XMP data.
@@ -347,15 +347,15 @@ namespace Exiv2 {
 
           @return modifiable XmpData instance containing XMP values
          */
-        virtual const XmpData& xmpData() const { return xmpData_; }
+        virtual const XmpData& xmpData() const;
         /*!
           @brief Return a copy of the image comment. May be an empty string.
          */
-        virtual std::string comment() const { return comment_; }
+        virtual std::string comment() const;
         /*!
           @brief Return the raw XMP packet as a string.
          */
-        virtual const std::string& xmpPacket() const { return xmpPacket_; }
+        virtual const std::string& xmpPacket() const;
         /*!
           @brief Return a reference to the BasicIo instance being used for Io.
 
@@ -370,7 +370,7 @@ namespace Exiv2 {
              Image class will not see those changes until the readMetadata()
              method is called.
          */
-        virtual BasicIo& io() const { return *io_; }
+        virtual BasicIo& io() const;
         /*!
           @brief Returns the access mode, i.e., the metadata functions, which
              this image supports for the metadata type \em metadataId.
@@ -384,7 +384,7 @@ namespace Exiv2 {
          */
         bool supportsMetadata(MetadataId metadataId) const;
         //! Return the flag indicating the source when writing XMP metadata.
-        bool writeXmpFromPacket() const { return writeXmpFromPacket_; }
+        bool writeXmpFromPacket() const;
         //@}
 
     protected:
