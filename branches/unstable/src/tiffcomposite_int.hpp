@@ -152,7 +152,7 @@ namespace Exiv2 {
         //! Constructor
         TiffComponent(uint16_t tag, uint16_t group);
         //! Virtual destructor.
-        virtual ~TiffComponent() {}
+        virtual ~TiffComponent();
         //@}
 
         //! @name Manipulators
@@ -276,7 +276,7 @@ namespace Exiv2 {
          */
         // Todo: This is only implemented in TiffEntryBase. It is needed here so that
         //       we can sort components by tag and idx. Something is not quite right.
-        virtual int idx()        const { return 0; }
+        virtual int idx() const;
         //@}
 
     protected:
@@ -428,7 +428,7 @@ namespace Exiv2 {
         /*!
           @brief Return the unique id of the entry in the image
          */
-        virtual int idx()        const { return idx_; }
+        virtual int idx()        const;
         /*!
           @brief Return a pointer to the binary representation of the
                  value of this component.
@@ -532,7 +532,7 @@ namespace Exiv2 {
         //! Constructor
         TiffEntry(uint16_t tag, uint16_t group) : TiffEntryBase(tag, group) {}
         //! Virtual destructor.
-        virtual ~TiffEntry() {}
+        virtual ~TiffEntry();
         //@}
 
     protected:
@@ -561,7 +561,7 @@ namespace Exiv2 {
             : TiffEntryBase(tag, group),
               szTag_(szTag), szGroup_(szGroup) {}
         //! Virtual destructor.
-        virtual ~TiffDataEntryBase() {}
+        virtual ~TiffDataEntryBase();
         //@}
 
         //! @name Manipulators
@@ -617,7 +617,7 @@ namespace Exiv2 {
             : TiffDataEntryBase(tag, group, szTag, szGroup),
               pDataArea_(0), sizeDataArea_(0) {}
         //! Virtual destructor.
-        virtual ~TiffDataEntry() {}
+        virtual ~TiffDataEntry();
         //@}
 
         //! @name Manipulators
@@ -701,7 +701,7 @@ namespace Exiv2 {
         TiffImageEntry(uint16_t tag, uint16_t group, uint16_t szTag, uint16_t szGroup)
             : TiffDataEntryBase(tag, group, szTag, szGroup) {}
         //! Virtual destructor.
-        virtual ~TiffImageEntry() {}
+        virtual ~TiffImageEntry();
         //@}
 
         //! @name Manipulators
@@ -785,7 +785,7 @@ namespace Exiv2 {
         TiffSizeEntry(uint16_t tag, uint16_t group, uint16_t dtTag, uint16_t dtGroup)
             : TiffEntryBase(tag, group), dtTag_(dtTag), dtGroup_(dtGroup) {}
         //! Virtual destructor.
-        virtual ~TiffSizeEntry() {}
+        virtual ~TiffSizeEntry();
         //@}
 
         //! @name Accessors
@@ -1155,7 +1155,7 @@ namespace Exiv2 {
               elTiffType_(elTiffType),
               elByteOrder_(elByteOrder) {}
         //! Virtual destructor.
-        virtual ~TiffArrayElement() {}
+        virtual ~TiffArrayElement();
         //@}
 
         //! @name Accessors
@@ -1314,7 +1314,7 @@ namespace Exiv2 {
         TiffBinaryElement(uint16_t tag,
                           uint16_t group);
         //! Virtual destructor.
-        virtual ~TiffBinaryElement() {}
+        virtual ~TiffBinaryElement();
         //@}
 
         //! @name Accessors

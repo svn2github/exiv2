@@ -170,7 +170,7 @@ namespace Exiv2 {
         //! @name Creators
         //@{
         //! Virtual destructor.
-        virtual ~MnHeader() {}
+        virtual ~MnHeader();
         //@}
         //! @name Manipulators
         //@{
@@ -190,19 +190,19 @@ namespace Exiv2 {
           @brief Return the offset to the start of the Makernote IFD from
                  the start of the Makernote (= the start of the header).
          */
-        virtual uint32_t ifdOffset() const { return 0; }
+        virtual uint32_t ifdOffset() const;
         /*!
           @brief Return the byte order for the makernote. If the return value is
                  invalidByteOrder, this means that the byte order of the the
                  image should be used for the makernote.
          */
-        virtual ByteOrder byteOrder() const { return invalidByteOrder; }
+        virtual ByteOrder byteOrder() const;
         /*!
           @brief Return the base offset for the makernote IFD entries relative
                  to the start of the TIFF header. \em mnOffset is the offset
                  to the makernote from the start of the TIFF header.
          */
-        virtual uint32_t baseOffset(uint32_t /*mnOffset*/) const { return 0; }
+        virtual uint32_t baseOffset(uint32_t /*mnOffset*/) const;
         //@}
 
     }; // class MnHeader
@@ -362,7 +362,7 @@ namespace Exiv2 {
         //! Default constructor
         OlympusMnHeader();
         //! Virtual destructor.
-        virtual ~OlympusMnHeader() {}
+        virtual ~OlympusMnHeader();
         //@}
         //! @name Manipulators
         //@{
@@ -372,9 +372,9 @@ namespace Exiv2 {
         //@}
         //! @name Accessors
         //@{
-        virtual uint32_t size()      const { return header_.size_; }
+        virtual uint32_t size() const;
         virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
-        virtual uint32_t ifdOffset() const { return size_; }
+        virtual uint32_t ifdOffset() const;
         //@}
 
     private:
@@ -392,7 +392,7 @@ namespace Exiv2 {
         //! Default constructor
         Olympus2MnHeader();
         //! Virtual destructor.
-        virtual ~Olympus2MnHeader() {}
+        virtual ~Olympus2MnHeader();
         //@}
         //! @name Manipulators
         //@{
@@ -402,10 +402,10 @@ namespace Exiv2 {
         //@}
         //! @name Accessors
         //@{
-        virtual uint32_t size()      const { return header_.size_; }
+        virtual uint32_t size() const;
         virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
-        virtual uint32_t ifdOffset() const { return size_; }
-        virtual uint32_t baseOffset(uint32_t mnOffset) const { return mnOffset; }
+        virtual uint32_t ifdOffset() const;
+        virtual uint32_t baseOffset(uint32_t mnOffset) const;
         //@}
 
     private:
@@ -423,7 +423,7 @@ namespace Exiv2 {
         //! Default constructor
         FujiMnHeader();
         //! Virtual destructor.
-        virtual ~FujiMnHeader() {}
+        virtual ~FujiMnHeader();
         //@}
         //! @name Manipulators
         //@{
@@ -433,11 +433,11 @@ namespace Exiv2 {
         //@}
         //! @name Accessors
         //@{
-        virtual uint32_t  size()      const { return header_.size_; }
+        virtual uint32_t  size() const;
         virtual uint32_t  write(Blob& blob, ByteOrder byteOrder) const;
-        virtual uint32_t  ifdOffset() const { return start_; }
-        virtual ByteOrder byteOrder() const { return byteOrder_; }
-        virtual uint32_t  baseOffset(uint32_t mnOffset) const { return mnOffset; }
+        virtual uint32_t  ifdOffset() const;
+        virtual ByteOrder byteOrder() const;
+        virtual uint32_t  baseOffset(uint32_t mnOffset) const;
         //@}
 
     private:
@@ -457,7 +457,7 @@ namespace Exiv2 {
         //! Default constructor
         Nikon2MnHeader();
         //! Virtual destructor.
-        virtual ~Nikon2MnHeader() {}
+        virtual ~Nikon2MnHeader();
         //@}
         //! @name Manipulators
         //@{
@@ -467,9 +467,9 @@ namespace Exiv2 {
         //@}
         //! @name Accessors
         //@{
-        virtual uint32_t size()      const { return size_; }
+        virtual uint32_t size() const;
         virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
-        virtual uint32_t ifdOffset() const { return start_; }
+        virtual uint32_t ifdOffset() const;
         //@}
 
     private:
@@ -488,7 +488,7 @@ namespace Exiv2 {
         //! Default constructor
         Nikon3MnHeader();
         //! Virtual destructor.
-        virtual ~Nikon3MnHeader() {}
+        virtual ~Nikon3MnHeader();
         //@}
         //! @name Manipulators
         //@{
@@ -498,11 +498,11 @@ namespace Exiv2 {
         //@}
         //! @name Accessors
         //@{
-        virtual uint32_t  size()      const { return size_; }
+        virtual uint32_t  size()      const;
         virtual uint32_t  write(Blob& blob, ByteOrder byteOrder) const;
-        virtual uint32_t  ifdOffset() const { return start_; }
-        virtual ByteOrder byteOrder() const { return byteOrder_; }
-        virtual uint32_t  baseOffset(uint32_t mnOffset) const { return mnOffset + 10; }
+        virtual uint32_t  ifdOffset() const;
+        virtual ByteOrder byteOrder() const;
+        virtual uint32_t  baseOffset(uint32_t mnOffset) const;
         //@}
 
     private:
@@ -522,7 +522,7 @@ namespace Exiv2 {
         //! Default constructor
         PanasonicMnHeader();
         //! Virtual destructor.
-        virtual ~PanasonicMnHeader() {}
+        virtual ~PanasonicMnHeader();
         //@}
         //! @name Manipulators
         //@{
@@ -532,9 +532,9 @@ namespace Exiv2 {
         //@}
         //! @name Accessors
         //@{
-        virtual uint32_t size()      const { return size_; }
+        virtual uint32_t size() const;
         virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
-        virtual uint32_t ifdOffset() const { return start_; }
+        virtual uint32_t ifdOffset() const;
         //@}
 
     private:
@@ -553,7 +553,7 @@ namespace Exiv2 {
         //! Default constructor
         PentaxMnHeader();
         //! Virtual destructor.
-        virtual ~PentaxMnHeader() {}
+        virtual ~PentaxMnHeader();
         //@}
         //! @name Manipulators
         //@{
@@ -563,9 +563,9 @@ namespace Exiv2 {
         //@}
         //! @name Accessors
         //@{
-        virtual uint32_t size()      const { return header_.size_; }
+        virtual uint32_t size() const;
         virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
-        virtual uint32_t ifdOffset() const { return size_; }
+        virtual uint32_t ifdOffset() const;
         //@}
 
     private:
@@ -583,7 +583,7 @@ namespace Exiv2 {
         //! Default constructor
         SigmaMnHeader();
         //! Virtual destructor.
-        virtual ~SigmaMnHeader() {}
+        virtual ~SigmaMnHeader();
         //@}
         //! @name Manipulators
         //@{
@@ -593,9 +593,9 @@ namespace Exiv2 {
         //@}
         //! @name Accessors
         //@{
-        virtual uint32_t size()      const { return size_; }
+        virtual uint32_t size() const;
         virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
-        virtual uint32_t ifdOffset() const { return start_; }
+        virtual uint32_t ifdOffset() const;
         //@}
 
     private:
@@ -615,7 +615,7 @@ namespace Exiv2 {
         //! Default constructor
         SonyMnHeader();
         //! Virtual destructor.
-        virtual ~SonyMnHeader() {}
+        virtual ~SonyMnHeader();
         //@}
         //! @name Manipulators
         //@{
@@ -625,9 +625,9 @@ namespace Exiv2 {
         //@}
         //! @name Accessors
         //@{
-        virtual uint32_t size()      const { return size_; }
+        virtual uint32_t size() const;
         virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
-        virtual uint32_t ifdOffset() const { return start_; }
+        virtual uint32_t ifdOffset() const;
         //@}
 
     private:

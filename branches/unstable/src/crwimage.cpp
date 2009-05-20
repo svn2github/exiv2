@@ -343,6 +343,10 @@ namespace Exiv2 {
         if (isAllocated_) delete[] pData_;
     }
 
+    CiffEntry::~CiffEntry()
+    {
+    }
+
     CiffDirectory::~CiffDirectory()
     {
         Components::iterator b = components_.begin();

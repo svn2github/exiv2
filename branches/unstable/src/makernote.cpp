@@ -250,6 +250,25 @@ namespace Exiv2 {
         return ifd_.sizeImage();
     } // TiffIfdMakernote::doSizeImage
 
+    MnHeader::~MnHeader()
+    {
+    }
+
+    uint32_t MnHeader::ifdOffset() const
+    {
+        return 0;
+    }
+
+    ByteOrder MnHeader::byteOrder() const
+    {
+        return invalidByteOrder;
+    }
+
+    uint32_t MnHeader::baseOffset(uint32_t /*mnOffset*/) const
+    {
+        return 0;
+    }
+
     const byte OlympusMnHeader::signature_[] = {
         'O', 'L', 'Y', 'M', 'P', 0x00, 0x01, 0x00
     };
@@ -258,6 +277,20 @@ namespace Exiv2 {
     OlympusMnHeader::OlympusMnHeader()
     {
         read(signature_, size_, invalidByteOrder);
+    }
+
+    OlympusMnHeader::~OlympusMnHeader()
+    {
+    }
+
+    uint32_t OlympusMnHeader::size() const
+    {
+        return header_.size_;
+    }
+
+    uint32_t OlympusMnHeader::ifdOffset() const
+    {
+        return size_;
     }
 
     bool OlympusMnHeader::read(const byte* pData,
@@ -294,6 +327,25 @@ namespace Exiv2 {
         read(signature_, size_, invalidByteOrder);
     }
 
+    Olympus2MnHeader::~Olympus2MnHeader()
+    {
+    }
+    
+    uint32_t Olympus2MnHeader::size() const
+    {
+        return header_.size_;
+    }
+
+    uint32_t Olympus2MnHeader::ifdOffset() const
+    {
+        return size_;
+    }
+
+    uint32_t Olympus2MnHeader::baseOffset(uint32_t mnOffset) const
+    {
+        return mnOffset;
+    }
+
     bool Olympus2MnHeader::read(const byte* pData,
                                 uint32_t size,
                                 ByteOrder /*byteOrder*/)
@@ -327,6 +379,30 @@ namespace Exiv2 {
     FujiMnHeader::FujiMnHeader()
     {
         read(signature_, size_, byteOrder_);
+    }
+
+    FujiMnHeader::~FujiMnHeader()
+    {
+    }
+
+    uint32_t FujiMnHeader::size() const
+    {
+        return header_.size_;
+    }
+
+    uint32_t FujiMnHeader::ifdOffset() const
+    {
+        return start_;
+    }
+
+    ByteOrder FujiMnHeader::byteOrder() const
+    {
+        return byteOrder_;
+    }
+
+    uint32_t FujiMnHeader::baseOffset(uint32_t mnOffset) const
+    {
+        return mnOffset;
     }
 
     bool FujiMnHeader::read(const byte* pData,
@@ -368,6 +444,20 @@ namespace Exiv2 {
         read(signature_, size_, invalidByteOrder);
     }
 
+    Nikon2MnHeader::~Nikon2MnHeader()
+    {
+    }
+
+    uint32_t Nikon2MnHeader::size() const
+    {
+        return size_;
+    }
+
+    uint32_t Nikon2MnHeader::ifdOffset() const
+    {
+        return start_;
+    }
+
     bool Nikon2MnHeader::read(const byte* pData,
                               uint32_t    size,
                               ByteOrder   /*byteOrder*/)
@@ -399,6 +489,30 @@ namespace Exiv2 {
     Nikon3MnHeader::Nikon3MnHeader()
     {
         read(signature_, size_, invalidByteOrder);
+    }
+
+    Nikon3MnHeader::~Nikon3MnHeader()
+    {
+    }
+
+    uint32_t Nikon3MnHeader::size() const
+    {
+        return size_;
+    }
+
+    uint32_t Nikon3MnHeader::ifdOffset() const
+    {
+        return start_;
+    }
+
+    ByteOrder Nikon3MnHeader::byteOrder() const
+    {
+        return byteOrder_;
+    }
+
+    uint32_t Nikon3MnHeader::baseOffset(uint32_t mnOffset) const
+    {
+        return mnOffset + 10;
     }
 
     bool Nikon3MnHeader::read(const byte* pData,
@@ -436,6 +550,20 @@ namespace Exiv2 {
         read(signature_, size_, invalidByteOrder);
     }
 
+    PanasonicMnHeader::~PanasonicMnHeader()
+    {
+    }
+
+    uint32_t PanasonicMnHeader::size() const
+    {
+        return size_;
+    }
+
+    uint32_t PanasonicMnHeader::ifdOffset() const
+    {
+        return start_;
+    }
+
     bool PanasonicMnHeader::read(const byte* pData,
                                  uint32_t    size,
                                  ByteOrder   /*byteOrder*/)
@@ -466,6 +594,20 @@ namespace Exiv2 {
     PentaxMnHeader::PentaxMnHeader()
     {
         read(signature_, size_, invalidByteOrder);
+    }
+
+    PentaxMnHeader::~PentaxMnHeader()
+    {
+    }
+
+    uint32_t PentaxMnHeader::size() const
+    {
+        return header_.size_;
+    }
+
+    uint32_t PentaxMnHeader::ifdOffset() const
+    {
+        return size_;
     }
 
     bool PentaxMnHeader::read(const byte* pData,
@@ -504,6 +646,20 @@ namespace Exiv2 {
         read(signature1_, size_, invalidByteOrder);
     }
 
+    SigmaMnHeader::~SigmaMnHeader()
+    {
+    }
+
+    uint32_t SigmaMnHeader::size() const
+    {
+        return size_;
+    }
+
+    uint32_t SigmaMnHeader::ifdOffset() const
+    {
+        return start_;
+    }
+
     bool SigmaMnHeader::read(const byte* pData,
                              uint32_t    size,
                              ByteOrder   /*byteOrder*/)
@@ -535,6 +691,20 @@ namespace Exiv2 {
     SonyMnHeader::SonyMnHeader()
     {
         read(signature_, size_, invalidByteOrder);
+    }
+
+    SonyMnHeader::~SonyMnHeader()
+    {
+    }
+
+    uint32_t SonyMnHeader::size() const
+    {
+        return size_;
+    }
+
+    uint32_t SonyMnHeader::ifdOffset() const
+    {
+        return start_;
     }
 
     bool SonyMnHeader::read(const byte* pData,

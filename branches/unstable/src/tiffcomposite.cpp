@@ -218,6 +218,10 @@ namespace Exiv2 {
     {
     }
 
+    TiffComponent::~TiffComponent()
+    {
+    }
+
     TiffDirectory::~TiffDirectory()
     {
         for (Components::iterator i = components_.begin(); i != components_.end(); ++i) {
@@ -241,6 +245,26 @@ namespace Exiv2 {
         delete pValue_;
     } // TiffEntryBase::~TiffEntryBase
 
+    TiffEntry::~TiffEntry()
+    {
+    }
+
+    TiffDataEntryBase::~TiffDataEntryBase()
+    {
+    }
+
+    TiffDataEntry::~TiffDataEntry()
+    {
+    }
+
+    TiffImageEntry::~TiffImageEntry()
+    {
+    }
+
+    TiffSizeEntry::~TiffSizeEntry()
+    {
+    }
+
     TiffMnEntry::~TiffMnEntry()
     {
         delete mn_;
@@ -253,12 +277,30 @@ namespace Exiv2 {
         }
     } // TiffArrayEntry::~TiffArrayEntry
 
+    TiffArrayElement::~TiffArrayElement()
+    {
+    }
+
     TiffBinaryArray::~TiffBinaryArray()
     {
         for (Components::iterator i = elements_.begin(); i != elements_.end(); ++i) {
             delete *i;
         }
     } // TiffBinaryArray::~TiffBinaryArray
+
+    TiffBinaryElement::~TiffBinaryElement()
+    {
+    }
+
+    int TiffComponent::idx() const
+    {
+        return 0;
+    }
+
+    int TiffEntryBase::idx() const
+    {
+        return idx_;
+    }
 
     void TiffEntryBase::allocData(uint32_t len)
     {

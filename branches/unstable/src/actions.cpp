@@ -167,6 +167,10 @@ namespace {
 // class member definitions
 namespace Action {
 
+    Task::~Task()
+    {
+    }
+
     Task::AutoPtr Task::clone() const
     {
         return AutoPtr(clone_());
@@ -225,6 +229,10 @@ namespace Action {
         }
         return Task::AutoPtr(0);
     } // TaskFactory::create
+
+    Print::~Print()
+    {
+    }
 
     int Print::run(const std::string& path)
     try {
@@ -699,6 +707,10 @@ namespace Action {
         return new Print(*this);
     }
 
+    Rename::~Rename()
+    {
+    }
+
     int Rename::run(const std::string& path)
     {
     try {
@@ -782,6 +794,10 @@ namespace Action {
     Rename* Rename::clone_() const
     {
         return new Rename(*this);
+    }
+
+    Erase::~Erase()
+    {
     }
 
     int Erase::run(const std::string& path)
@@ -898,6 +914,10 @@ namespace Action {
     Erase* Erase::clone_() const
     {
         return new Erase(*this);
+    }
+
+    Extract::~Extract()
+    {
     }
 
     int Extract::run(const std::string& path)
@@ -1038,6 +1058,10 @@ namespace Action {
         return new Extract(*this);
     }
 
+    Insert::~Insert()
+    {
+    }
+
     int Insert::run(const std::string& path)
     try {
         if (!Exiv2::fileExists(path, true)) {
@@ -1135,6 +1159,10 @@ namespace Action {
     Insert* Insert::clone_() const
     {
         return new Insert(*this);
+    }
+
+    Modify::~Modify()
+    {
     }
 
     int Modify::run(const std::string& path)
@@ -1372,6 +1400,10 @@ namespace Action {
         return new Modify(*this);
     }
 
+    Adjust::~Adjust()
+    {
+    }
+
     int Adjust::run(const std::string& path)
     try {
         adjustment_      = Params::instance().adjustment_;
@@ -1507,6 +1539,10 @@ namespace Action {
         md->setValue(timeStr);
         return 0;
     } // Adjust::adjustDateTime
+
+    FixIso::~FixIso()
+    {
+    }
 
     int FixIso::run(const std::string& path)
     {

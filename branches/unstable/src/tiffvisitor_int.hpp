@@ -88,7 +88,7 @@ namespace Exiv2 {
         //! Default constructor. Initialises all stop/go flags to true.
         TiffVisitor();
         //! Virtual destructor
-        virtual ~TiffVisitor() {}
+        virtual ~TiffVisitor();
         //@}
 
         //! @name Manipulators
@@ -119,12 +119,12 @@ namespace Exiv2 {
           @brief Operation to perform for a TIFF directory, after all components
                  and before the next entry is processed.
          */
-        virtual void visitDirectoryNext(TiffDirectory* /*object*/) {}
+        virtual void visitDirectoryNext(TiffDirectory* object);
         /*!
           @brief Operation to perform for a TIFF directory, at the end of the
                  processing.
          */
-        virtual void visitDirectoryEnd(TiffDirectory* /*object*/) {}
+        virtual void visitDirectoryEnd(TiffDirectory* object);
         //! Operation to perform for a TIFF sub-IFD
         virtual void visitSubIfd(TiffSubIfd* object) =0;
         //! Operation to perform for the makernote component
@@ -132,7 +132,7 @@ namespace Exiv2 {
         //! Operation to perform for an IFD makernote
         virtual void visitIfdMakernote(TiffIfdMakernote* object) =0;
         //! Operation to perform after processing an IFD makernote
-        virtual void visitIfdMakernoteEnd(TiffIfdMakernote* /*object*/) {}
+        virtual void visitIfdMakernoteEnd(TiffIfdMakernote* object);
         //! Operation to perform for an array entry (as found in Canon makernotes)
         virtual void visitArrayEntry(TiffArrayEntry* object) =0;
         //! Operation to perform for an array element
@@ -165,7 +165,7 @@ namespace Exiv2 {
         TiffFinder(uint16_t tag, uint16_t group)
             : tag_(tag), group_(group), tiffComponent_(0) {}
         //! Virtual destructor
-        virtual ~TiffFinder() {}
+        virtual ~TiffFinder();
         //@}
 
         //! @name Manipulators
@@ -239,7 +239,7 @@ namespace Exiv2 {
             FindDecoderFct       findDecoderFct
         );
         //! Virtual destructor
-        virtual ~TiffDecoder() {}
+        virtual ~TiffDecoder();
         //@}
 
         //! @name Manipulators
@@ -342,7 +342,7 @@ namespace Exiv2 {
                   FindEncoderFct findEncoderFct
         );
         //! Virtual destructor
-        virtual ~TiffEncoder() {}
+        virtual ~TiffEncoder();
         //@}
 
         //! @name Manipulators

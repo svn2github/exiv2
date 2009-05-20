@@ -86,6 +86,10 @@ namespace Exiv2 {
         }
     }
 
+    TiffVisitor::~TiffVisitor()
+    {
+    }
+
     void TiffVisitor::setGo(GoEvent event, bool go)
     {
         assert(event >= 0 && event < events_);
@@ -98,11 +102,27 @@ namespace Exiv2 {
         return go_[event];
     }
 
+    void TiffVisitor::visitDirectoryNext(TiffDirectory* /*object*/)
+    {
+    }
+
+    void TiffVisitor::visitDirectoryEnd(TiffDirectory* /*object*/)
+    {
+    }
+
+    void TiffVisitor::visitIfdMakernoteEnd(TiffIfdMakernote* /*object*/)
+    {
+    }
+
     void TiffFinder::init(uint16_t tag, uint16_t group)
     {
         tag_ = tag;
         group_ = group;
         tiffComponent_ = 0;
+    }
+
+    TiffFinder::~TiffFinder()
+    {
     }
 
     void TiffFinder::findObject(TiffComponent* object)
@@ -200,6 +220,10 @@ namespace Exiv2 {
         if (te && te->pValue()) {
             make_ = te->pValue()->toString();
         }
+    }
+
+    TiffDecoder::~TiffDecoder()
+    {
     }
 
     void TiffDecoder::visitEntry(TiffEntry* object)
@@ -442,6 +466,10 @@ namespace Exiv2 {
                 make_ = te->pValue()->toString();
             }
         }
+    }
+
+    TiffEncoder::~TiffEncoder()
+    {
     }
 
     void TiffEncoder::encodeIptc()
