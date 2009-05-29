@@ -81,7 +81,6 @@ namespace Exiv2 {
 
     FileIo::~FileIo()
     {
-        munmap();
         close();
     }
 
@@ -385,9 +384,7 @@ namespace Exiv2 {
 
     int FileIo::open(const std::string& mode)
     {
-        if (fp_ != 0) {
-            std::fclose(fp_);
-        }
+		close();
 
         openMode_ = mode;
         opMode_ = opSeek;
@@ -403,6 +400,7 @@ namespace Exiv2 {
 
     int FileIo::close()
     {
+        munmap();
         if (fp_ != 0) {
             std::fclose(fp_);
             fp_= 0;
