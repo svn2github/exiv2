@@ -197,7 +197,15 @@ namespace Exiv2 {
         // Reopen the file
         long offset = std::ftell(fp_);
         if (offset == -1) return -1;
-        if (open("r+b") != 0) return 1;
+        // 'Manual' open("r+b") to avoid munmap() which calls switchMode() again
+        if (fp_ != 0) {
+            std::fclose(fp_);
+            fp_= 0;
+        }
+        openMode_ = "r+b";
+        opMode_ = opSeek;
+        fp_ = std::fopen(path_.c_str(), openMode_.c_str());
+        if (!fp_) return 1;
         return std::fseek(fp_, offset, SEEK_SET);
     }
 
