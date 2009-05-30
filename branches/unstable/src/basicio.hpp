@@ -178,13 +178,16 @@ namespace Exiv2 {
           @param isWriteable Set to true if the mapped area should be writeable
                  (default is false).
           @return A pointer to the mapped area.
+          @throw Error In case of failure.
          */
         virtual byte* mmap(bool isWriteable =false) =0;
         /*!
           @brief Remove a mapping established with mmap(). If the mapped area
                  is writeable, this ensures that changes are written back.
+          @return 0 if successful;<BR>
+                  Nonzero if failure;
          */
-        virtual void munmap() =0;
+        virtual int munmap() =0;
         //@}
 
         //! @name Accessors
@@ -414,18 +417,21 @@ namespace Exiv2 {
                  open before mmap() is called. If the mapped area is writeable,
                  changes may not be written back to the underlying file until
                  munmap() is called. The pointer is valid only as long as the
-                 MemIo object is in scope.
+                 FileIo object exists.
           @param isWriteable Set to true if the mapped area should be writeable
                  (default is false).
           @return A pointer to the mapped area.
+          @throw Error In case of failure.
          */
         virtual byte* mmap(bool isWriteable =false);
         /*!
           @brief Remove a mapping established with mmap(). If the mapped area is
                  writeable, this ensures that changes are written back to the
                  underlying file.
+          @return 0 if successful;<BR>
+                  Nonzero if failure;
          */
-        virtual void  munmap();
+        virtual int munmap();
         //@}
 
         //! @name Accessors
@@ -632,10 +638,10 @@ namespace Exiv2 {
                  is ignored.
           @note  The application must ensure that the memory pointed to by the
                  returned pointer remains valid and allocated as long as the
-                 MemIo object is in scope.
+                 MemIo object exists.
          */
         virtual byte* mmap(bool /*isWriteable*/);
-        virtual void munmap();
+        virtual int munmap();
         //@}
 
         //! @name Accessors
@@ -690,10 +696,18 @@ namespace Exiv2 {
 // *****************************************************************************
 // template, inline and free functions
 
-    //! Read file \em path into a DataBuf, which is returned.
+    /*!
+      @brief Read file \em path into a DataBuf, which is returned.
+      @return Buffer containing the file.
+      @throw Error In case of failure.
+     */
     EXIV2API DataBuf readFile(const std::string& path);
 
-    //! Write DataBuf \em buf to file \em path. Return the number of bytes written.
+    /*!
+      @brief Write DataBuf \em buf to file \em path.
+      @return Return the number of bytes written.
+      @throw Error In case of failure.
+     */
     EXIV2API long writeFile(const DataBuf& buf, const std::string& path);
 
 }                                       // namespace Exiv2

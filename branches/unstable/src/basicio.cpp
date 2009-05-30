@@ -84,12 +84,13 @@ namespace Exiv2 {
         close();
     }
 
-    void FileIo::munmap()
+    int FileIo::munmap()
     {
+        int rc = 0;
         if (pMappedArea_ != 0) {
 #if defined EXV_HAVE_MMAP && defined EXV_HAVE_MUNMAP
             if (::munmap(pMappedArea_, mappedLength_) != 0) {
-                throw Error(2, path_, strError(), "munmap");
+                rc = 1;
             }
 #else
             if (isWriteable_) {
@@ -107,17 +108,20 @@ namespace Exiv2 {
         }
         pMappedArea_ = 0;
         mappedLength_ = 0;
+        return rc;
     }
 
     byte* FileIo::mmap(bool isWriteable)
     {
         assert(fp_ != 0);
-        munmap();
+        if (munmap() != 0) {
+            throw Error(2, path_, strError(), "munmap");
+        }
         mappedLength_ = size();
         isWriteable_ = isWriteable;
 #if defined EXV_HAVE_MMAP && defined EXV_HAVE_MUNMAP
         int prot = PROT_READ;
-        if (isWriteable_) { 
+        if (isWriteable_) {
             prot |= PROT_WRITE;
             if (switchMode(opWrite) != 0) return 0;
         }
@@ -197,7 +201,7 @@ namespace Exiv2 {
         // Reopen the file
         long offset = std::ftell(fp_);
         if (offset == -1) return -1;
-        // 'Manual' open("r+b") to avoid munmap() which calls switchMode() again
+        // 'Manual' open("r+b") to avoid munmap()
         if (fp_ != 0) {
             std::fclose(fp_);
             fp_= 0;
@@ -392,8 +396,7 @@ namespace Exiv2 {
 
     int FileIo::open(const std::string& mode)
     {
-		close();
-
+        close();
         openMode_ = mode;
         opMode_ = opSeek;
         fp_ = std::fopen(path_.c_str(), mode.c_str());
@@ -408,12 +411,13 @@ namespace Exiv2 {
 
     int FileIo::close()
     {
-        munmap();
+        int rc = 0;
+        if (munmap() != 0) rc = 2;
         if (fp_ != 0) {
-            std::fclose(fp_);
+            if (std::fclose(fp_) != 0) rc |= 1;
             fp_= 0;
         }
-        return 0;
+        return rc;
     }
 
     DataBuf FileIo::read(long rcount)
@@ -596,8 +600,9 @@ namespace Exiv2 {
         return data_;
     }
 
-    void MemIo::munmap()
+    int MemIo::munmap()
     {
+        return 0;
     }
 
     long MemIo::tell() const
