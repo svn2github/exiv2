@@ -74,7 +74,7 @@ How to build and test exiv2 (with/without organize.exe)
     This will build all the necessary libraries and all the test programs.
     At the end of building, you should see the beautiful output:
 
-    ========== Build: 92 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+    ========== Build: 96 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
     
     The build takes 6 minutes on my iMac with a 2.8GHz Duo Core Intel Processor
     and 4GBytes of Ram. (VS 2005 and VS 2008)
@@ -235,7 +235,7 @@ OR (if you prefer to build from source)
 
     This time when you should see:
     
-    ========== Build: 96 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+    ========== Build: 100 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
 
     Congratulations.
 
