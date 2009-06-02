@@ -1202,6 +1202,8 @@ namespace Exiv2 {
     // Todo: multiple tags in one byte - mask
     // Todo: There cannot be any gaps in the definition! see addElement()
     struct ArrayDef {
+        //! Comparison with idx
+        bool operator==(uint32_t idx) const { return idx_ == idx; }
         //! Get the size in bytes of a tag.
         uint32_t size(uint16_t tag, uint16_t group) const;
         // DATA
@@ -1219,7 +1221,9 @@ namespace Exiv2 {
         uint16_t    tagStep_;      //!< Tag is calculated as idx/tagStep_; usually 1
         bool        hasHeader_;    //!< If true, first tag is the header
         bool        hasSize_;      //!< If true, first tag is the size element
+        bool        hasFillers_;   //!< If true, write all defined tags
         bool        isEncrypted_;  //!< Encryption flag
+        ArrayDef    elDefaultDef_; //!< Default element
     };
 
     /*!

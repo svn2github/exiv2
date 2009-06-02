@@ -1495,22 +1495,16 @@ namespace Exiv2 {
 
         readTiffEntry(object);
         if (object->size_ == 0) return;
-        
-        // Todo: add the "canon hack"
 
-        uint32_t idx = 0;
-        const ArrayDef* def = 0;
-        for (int ci = 0; ci < object->defSize() && idx < object->TiffEntryBase::doSize(); ++ci) {
-            def = object->def() + ci;
-            assert(idx == def->idx_); // Check the array def if this fails
-            idx += object->addElement(idx, def);
+        const ArrayDef* defs = object->def();
+
+        for (uint32_t idx = 0; idx < object->TiffEntryBase::doSize(); ) {
+            const ArrayDef* def = std::find(defs, defs + object->defSize(), idx);
+            if (def == defs + object->defSize()) def = &object->cfg()->elDefaultDef_;
+            assert(def != 0);
+            idx += object->addElement(idx, def); // idx may be different from def->idx_
         }
-        assert(def != 0);
-        // Continue with last tag definition while there is data left
-        while (idx < object->TiffEntryBase::doSize()) {
-            // idx is different from def->idx_ here
-            idx += object->addElement(idx, def);
-        }
+
     } // TiffReader::visitBinaryArray
 
     void TiffReader::visitBinaryElement(TiffBinaryElement* object)

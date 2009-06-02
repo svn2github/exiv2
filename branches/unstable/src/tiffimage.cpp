@@ -277,11 +277,13 @@ namespace Exiv2 {
         2,                // One tag every two bytes
         false,            // No header
         true,             // With size element
-        false             // Not encrypted
+        false,            // No fillers
+        false,            // Not encrypted
+        { 0, ttUnsignedShort, 1 }
     };
     //! Canon Camera Settings binary array - definition
     extern const ArrayDef canonCsDef[] = {
-        { 0, ttUnsignedShort, 1 }
+        { 46, ttUnsignedShort, 3 } // Exif.CanonCs.Lens
     };
 
     //! Nikon World Time binary array - configuration
@@ -292,7 +294,9 @@ namespace Exiv2 {
         1,                // One tag per byte
         false,            // No header
         false,            // No size element
-        false             // Not encrypted
+        true,             // Write all tags
+        false,            // Not encrypted
+        { 0, ttUnsignedByte,  1 }
     };
     //! Nikon World Time binary array - definition
     extern const ArrayDef nikonWtDef[] = {

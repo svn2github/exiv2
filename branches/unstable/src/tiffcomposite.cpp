@@ -1293,9 +1293,11 @@ namespace Exiv2 {
             idx += fillGap(blob, idx, newIdx);
             idx += (*i)->write(blob, byteOrder, offset + newIdx, valueIdx, dataIdx, imageIdx);
         }
-        // Add fillers if necessary
-        const ArrayDef* lastDef = def() + defSize() - 1;
-        idx += fillGap(blob, idx, lastDef->idx_ + lastDef->size(lastDef->idx_, cfg()->group_));
+        if (cfg()->hasFillers_) {
+            const ArrayDef* lastDef = def() + defSize() - 1;
+            uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep_);
+            idx += fillGap(blob, idx, lastDef->idx_ + lastDef->size(lastTag, cfg()->group_));
+        }
         if (cfg()->isEncrypted_) {
             // Todo: encrypt, skip header
         }
@@ -1557,8 +1559,11 @@ namespace Exiv2 {
             idx = std::max(idx, static_cast<uint32_t>((*i)->tag() * cfg()->tagStep_));
             idx += (*i)->size();
         }
-        const ArrayDef* lastDef = def() + defSize() - 1;
-        idx = std::max(idx, lastDef->idx_ + lastDef->size(lastDef->idx_, cfg()->group_));
+        if (cfg()->hasFillers_) {
+            const ArrayDef* lastDef = def() + defSize() - 1;
+            uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep_);
+            idx = std::max(idx, lastDef->idx_ + lastDef->size(lastTag, cfg()->group_));
+        }
         return idx;
 
     } // TiffBinaryArray::doSize
