@@ -263,22 +263,42 @@ namespace Exiv2 {
 
 }                                       // namespace Exiv2
 
+// Shortcut for the newTiffBinaryArray template.
+#define EXV_BINARY_ARRAY(arrayCfg, arrayDef) (newTiffBinaryArray<&arrayCfg, EXV_COUNTOF(arrayDef), arrayDef>)
+
 namespace Exiv2 {
     namespace Internal {
+
+    //! Canon Camera Settings binary array - configuration
+    extern const ArrayCfg canonCsCfg = {
+        Group::canoncs,   // Group for the elements
+        invalidByteOrder, // Use byte order from parent 
+        ttUnsignedShort,  // Type for array entry and size element
+        2,                // One tag every two bytes
+        false,            // No header
+        true,             // With size element
+        false             // Not encrypted
+    };
+    //! Canon Camera Settings binary array - definition
+    extern const ArrayDef canonCsDef[] = {
+        { 0, ttUnsignedShort, 1 }
+    };
 
     //! Nikon World Time binary array - configuration
     extern const ArrayCfg nikonWtCfg = {
         Group::nikonwt,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
+        ttUndefined,      // Type for array entry
+        1,                // One tag per byte
         false,            // No header
-        0,                // No size element
+        false,            // No size element
         false             // Not encrypted
     };
     //! Nikon World Time binary array - definition
     extern const ArrayDef nikonWtDef[] = {
-        { 0, unsignedShort, 1 },
-        { 2, unsignedByte,  1 },
-        { 3, unsignedByte,  1 }
+        { 0, ttUnsignedShort, 1 },
+        { 2, ttUnsignedByte,  1 },
+        { 3, ttUnsignedByte,  1 }
     };
 
     /* 
@@ -536,7 +556,7 @@ namespace Exiv2 {
         {  Tag::all, Group::fujimn,    newTiffEntry                              },
 
         // Canon makernote
-        {    0x0001, Group::canonmn,   newTiffArrayEntry<Group::canoncs, ttUnsignedShort, true>  },
+        {    0x0001, Group::canonmn,   EXV_BINARY_ARRAY(canonCsCfg, canonCsDef)  },
         {    0x0004, Group::canonmn,   newTiffArrayEntry<Group::canonsi, ttUnsignedShort, true>  },
         {    0x0005, Group::canonmn,   newTiffArrayEntry<Group::canonpa, ttUnsignedShort, false>  },
         {    0x000f, Group::canonmn,   newTiffArrayEntry<Group::canoncf, ttUnsignedShort, true>  },
@@ -545,7 +565,7 @@ namespace Exiv2 {
         {  Tag::all, Group::canonmn,   newTiffEntry                              },
 
         // Canon makernote composite tags
-        {  Tag::all, Group::canoncs,   newTiffArrayElement<ttUnsignedShort>      },
+        {  Tag::all, Group::canoncs,   newTiffBinaryElement                      },
         {  Tag::all, Group::canonsi,   newTiffArrayElement<ttUnsignedShort>      },
         {  Tag::all, Group::canonpa,   newTiffArrayElement<ttUnsignedShort>      },
         {  Tag::all, Group::canoncf,   newTiffArrayElement<ttUnsignedShort>      },
@@ -562,7 +582,7 @@ namespace Exiv2 {
         // Nikon3 makernote
         { Tag::next, Group::nikon3mn,  newTiffDirectory<Group::ignr>             },
         {    0x0011, Group::nikon3mn,  newTiffSubIfd<Group::nikonpv>             },
-        {    0x0024, Group::nikon3mn,  newTiffBinaryArray<&nikonWtCfg, EXV_COUNTOF(nikonWtDef), nikonWtDef> },
+        {    0x0024, Group::nikon3mn,  EXV_BINARY_ARRAY(nikonWtCfg, nikonWtDef)  },
         {  Tag::all, Group::nikon3mn,  newTiffEntry                              },
 
         // Nikon3 makernote preview subdir

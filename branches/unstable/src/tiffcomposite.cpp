@@ -52,7 +52,7 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 namespace {
     //! Add \em tobe - \em curr 0x00 filler bytes if necessary
-    void fillGap(Exiv2::Blob& blob, uint32_t curr, uint32_t tobe);
+    uint32_t fillGap(Exiv2::Blob& blob, uint32_t curr, uint32_t tobe);
 }
 
 // *****************************************************************************
@@ -205,7 +205,7 @@ namespace Exiv2 {
                                      const ArrayCfg* arrayCfg,
                                      const ArrayDef* arrayDef,
                                      int defSize)
-        : TiffEntryBase(tag, group),
+        : TiffEntryBase(tag, group, arrayCfg->elTiffType_),
           arrayCfg_(arrayCfg),
           arrayDef_(arrayDef),
           defSize_(defSize)
@@ -472,7 +472,7 @@ namespace Exiv2 {
     {
         assert(def != 0);
 
-        uint16_t tag = static_cast<uint16_t>(idx);
+        uint16_t tag = static_cast<uint16_t>(idx) / cfg()->tagStep_;
         int32_t sz = std::min(def->size(tag, cfg()->group_), TiffEntryBase::doSize() - idx);
         TiffComponent::AutoPtr tc = TiffCreator::create(tag, cfg()->group_);
         TiffBinaryElement* tp = dynamic_cast<TiffBinaryElement*>(tc.get());
@@ -1266,25 +1266,36 @@ namespace Exiv2 {
         // Todo: Support encryption
 
         if (cfg()->byteOrder_ != invalidByteOrder) byteOrder = cfg()->byteOrder_;
-        uint32_t idx = 0;
-
-        // Some array entries need to have the size in the first element
-        if (cfg()->sizeElement_ != 0) {
-            // Todo: add size element
-        }
-
         // Tags must be sorted in ascending order
         std::sort(elements_.begin(), elements_.end(), cmpTagLt);
-
+        uint32_t idx = 0;
+        // Some array entries need to have the size in the first element
+        if (cfg()->hasSize_) {
+            byte buf[4];
+            long elSize = TypeInfo::typeSize(toTypeId(cfg()->elTiffType_, 0, cfg()->group_));
+            switch (elSize) {
+            case 2:
+                idx += us2Data(buf, size(), byteOrder);
+                break;
+            case 4:
+                idx += ul2Data(buf, size(), byteOrder);
+                break;
+            default:
+                assert(false);
+            }
+            append(blob, buf, elSize);
+        }
         // write all tags of the array (assumes that there are no duplicates)
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
-            fillGap(blob, idx, (*i)->tag());
-            idx += (*i)->write(blob, byteOrder, offset + (*i)->tag(), valueIdx, dataIdx, imageIdx);
+            // Skip the manufactured tag, if it exists
+            if (cfg()->hasSize_ && (*i)->tag() == 0) continue;
+            uint32_t newIdx = (*i)->tag() * cfg()->tagStep_;
+            idx += fillGap(blob, idx, newIdx);
+            idx += (*i)->write(blob, byteOrder, offset + newIdx, valueIdx, dataIdx, imageIdx);
         }
         // Add fillers if necessary
         const ArrayDef* lastDef = def() + defSize() - 1;
-        fillGap(blob, idx, lastDef->idx_ + lastDef->size(lastDef->idx_, cfg()->group_));
-
+        idx += fillGap(blob, idx, lastDef->idx_ + lastDef->size(lastDef->idx_, cfg()->group_));
         if (cfg()->isEncrypted_) {
             // Todo: encrypt, skip header
         }
@@ -1543,7 +1554,7 @@ namespace Exiv2 {
 
         uint32_t idx = 0;
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
-            idx = std::max(idx, static_cast<uint32_t>((*i)->tag()));
+            idx = std::max(idx, static_cast<uint32_t>((*i)->tag() * cfg()->tagStep_));
             idx += (*i)->size();
         }
         const ArrayDef* lastDef = def() + defSize() - 1;
@@ -1695,12 +1706,15 @@ namespace Exiv2 {
 // *****************************************************************************
 // local definitions
 namespace {
-    void fillGap(Exiv2::Blob& blob, uint32_t curr, uint32_t tobe)
+    uint32_t fillGap(Exiv2::Blob& blob, uint32_t curr, uint32_t tobe)
     {
         if (curr < tobe) {
             Exiv2::DataBuf buf(tobe - curr);
             memset(buf.pData_, 0x0, buf.size_);
             Exiv2::append(blob, buf.pData_, buf.size_);
+            return tobe - curr;
         }
+        return 0;
+
     } // fillGap
 }

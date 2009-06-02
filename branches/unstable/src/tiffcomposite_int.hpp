@@ -1205,7 +1205,7 @@ namespace Exiv2 {
         //! Get the size in bytes of a tag.
         uint32_t size(uint16_t tag, uint16_t group) const;
         // DATA
-        uint32_t idx_;             //!< Tag number, index in bytes from the start
+        uint32_t idx_;             //!< Index in bytes from the start
         TiffType tiffType_;        //!< TIFF type of the element
         uint32_t count_;           //!< Number of components
     };
@@ -1215,8 +1215,10 @@ namespace Exiv2 {
         //DATA
         uint32_t    group_;        //!< Group for the elements
         ByteOrder   byteOrder_;    //!< Byte order, invalidByteOrder to inherit
+        TiffType    elTiffType_;   //!< Type for the array entry and the size element, if any
+        uint16_t    tagStep_;      //!< Tag is calculated as idx/tagStep_; usually 1
         bool        hasHeader_;    //!< If true, first tag is the header
-        TiffType    sizeElement_;  //!< Type of the size element, 0 if none needed
+        bool        hasSize_;      //!< If true, first tag is the size element
         bool        isEncrypted_;  //!< Encryption flag
     };
 
