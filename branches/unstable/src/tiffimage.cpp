@@ -263,8 +263,9 @@ namespace Exiv2 {
 
 }                                       // namespace Exiv2
 
-// Shortcut for the newTiffBinaryArray template.
+// Shortcuts for the newTiffBinaryArray templates.
 #define EXV_BINARY_ARRAY(arrayCfg, arrayDef) (newTiffBinaryArray<&arrayCfg, EXV_COUNTOF(arrayDef), arrayDef>)
+#define EXV_BINARY_ARRAY_SIMPLE(arrayCfg) (newTiffBinaryArray<&arrayCfg>)
 
 namespace Exiv2 {
     namespace Internal {
@@ -284,6 +285,19 @@ namespace Exiv2 {
     //! Canon Camera Settings binary array - definition
     extern const ArrayDef canonCsDef[] = {
         { 46, ttUnsignedShort, 3 } // Exif.CanonCs.Lens
+    };
+
+    //! Canon Shot Info binary array - configuration
+    extern const ArrayCfg canonSiCfg = {
+        Group::canonsi,   // Group for the elements
+        invalidByteOrder, // Use byte order from parent 
+        ttUnsignedShort,  // Type for array entry and size element
+        2,                // One tag every two bytes
+        false,            // No header
+        true,             // With size element
+        false,            // No fillers
+        false,            // Not encrypted
+        { 0, ttUnsignedShort, 1 }
     };
 
     //! Nikon World Time binary array - configuration
@@ -561,7 +575,7 @@ namespace Exiv2 {
 
         // Canon makernote
         {    0x0001, Group::canonmn,   EXV_BINARY_ARRAY(canonCsCfg, canonCsDef)  },
-        {    0x0004, Group::canonmn,   newTiffArrayEntry<Group::canonsi, ttUnsignedShort, true>  },
+        {    0x0004, Group::canonmn,   EXV_BINARY_ARRAY_SIMPLE(canonSiCfg)       },
         {    0x0005, Group::canonmn,   newTiffArrayEntry<Group::canonpa, ttUnsignedShort, false>  },
         {    0x000f, Group::canonmn,   newTiffArrayEntry<Group::canoncf, ttUnsignedShort, true>  },
         {    0x0012, Group::canonmn,   newTiffArrayEntry<Group::canonpi, ttUnsignedShort, false>  },
@@ -570,7 +584,7 @@ namespace Exiv2 {
 
         // Canon makernote composite tags
         {  Tag::all, Group::canoncs,   newTiffBinaryElement                      },
-        {  Tag::all, Group::canonsi,   newTiffArrayElement<ttUnsignedShort>      },
+        {  Tag::all, Group::canonsi,   newTiffBinaryElement                      },
         {  Tag::all, Group::canonpa,   newTiffArrayElement<ttUnsignedShort>      },
         {  Tag::all, Group::canoncf,   newTiffArrayElement<ttUnsignedShort>      },
         {  Tag::all, Group::canonpi,   newTiffArrayElement<ttUnsignedShort>      },

@@ -1497,11 +1497,12 @@ namespace Exiv2 {
         if (object->size_ == 0) return;
 
         const ArrayDef* defs = object->def();
-
+        const ArrayDef* def = &object->cfg()->elDefaultDef_;
         for (uint32_t idx = 0; idx < object->TiffEntryBase::doSize(); ) {
-            const ArrayDef* def = std::find(defs, defs + object->defSize(), idx);
-            if (def == defs + object->defSize()) def = &object->cfg()->elDefaultDef_;
-            assert(def != 0);
+            if (defs) {
+                def = std::find(defs, defs + object->defSize(), idx);
+                if (def == defs + object->defSize()) def = &object->cfg()->elDefaultDef_;
+            }
             idx += object->addElement(idx, def); // idx may be different from def->idx_
         }
 

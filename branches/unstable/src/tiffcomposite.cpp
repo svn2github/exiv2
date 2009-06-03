@@ -210,6 +210,7 @@ namespace Exiv2 {
           arrayDef_(arrayDef),
           defSize_(defSize)
     {
+        assert(arrayCfg != 0);
     }
 
     TiffBinaryElement::TiffBinaryElement(uint16_t tag,
@@ -1293,7 +1294,7 @@ namespace Exiv2 {
             idx += fillGap(blob, idx, newIdx);
             idx += (*i)->write(blob, byteOrder, offset + newIdx, valueIdx, dataIdx, imageIdx);
         }
-        if (cfg()->hasFillers_) {
+        if (cfg()->hasFillers_ && def()) {
             const ArrayDef* lastDef = def() + defSize() - 1;
             uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep_);
             idx += fillGap(blob, idx, lastDef->idx_ + lastDef->size(lastTag, cfg()->group_));
@@ -1559,7 +1560,7 @@ namespace Exiv2 {
             idx = std::max(idx, static_cast<uint32_t>((*i)->tag() * cfg()->tagStep_));
             idx += (*i)->size();
         }
-        if (cfg()->hasFillers_) {
+        if (cfg()->hasFillers_ && def()) {
             const ArrayDef* lastDef = def() + defSize() - 1;
             uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep_);
             idx = std::max(idx, lastDef->idx_ + lastDef->size(lastTag, cfg()->group_));

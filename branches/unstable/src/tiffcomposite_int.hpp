@@ -1303,9 +1303,9 @@ namespace Exiv2 {
 
     private:
         // DATA
-        const ArrayCfg* arrayCfg_; //!< Pointer to the array configuration
-        const ArrayDef* arrayDef_; //!< Pointer to the array definition
-        const int defSize_;        //!< Size of the array definition array
+        const ArrayCfg* arrayCfg_; //!< Pointer to the array configuration (must not be 0)
+        const ArrayDef* arrayDef_; //!< Pointer to the array definition (may be 0)
+        const int defSize_;        //!< Size of the array definition array (may be 0)
         Components elements_;      //!< List of elements in this composite
     }; // class TiffBinaryArray
 
@@ -1444,11 +1444,19 @@ namespace Exiv2 {
     }
 
     //! Function to create and initialize a new binary array entry
-        template<const ArrayCfg* arrayCfg, int N, const ArrayDef (&arrayDef)[N]>
+    template<const ArrayCfg* arrayCfg, int N, const ArrayDef (&arrayDef)[N]>
     TiffComponent::AutoPtr newTiffBinaryArray(uint16_t tag, uint16_t group)
     {
         return TiffComponent::AutoPtr(
             new TiffBinaryArray(tag, group, arrayCfg, arrayDef, N));
+    }
+
+    //! Function to create and initialize a new simple binary array entry
+    template<const ArrayCfg* arrayCfg>
+    TiffComponent::AutoPtr newTiffBinaryArray(uint16_t tag, uint16_t group)
+    {
+        return TiffComponent::AutoPtr(
+            new TiffBinaryArray(tag, group, arrayCfg, 0, 0));
     }
 
     //! Function to create and initialize a new TIFF entry for a thumbnail (data)
