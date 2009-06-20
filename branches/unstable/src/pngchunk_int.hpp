@@ -71,15 +71,6 @@ namespace Exiv2 {
             zTXt_Chunk = 1,
             iTXt_Chunk = 2
         };
-        /*!
-          @brief Metadata Chunk types.
-        */
-        enum MetadataType {
-            exif_Data    = 0,
-            iptc_Data    = 1,
-            xmp_Data     = 2,
-            comment_Data = 3
-        };
 
     public:
         /*!
@@ -115,14 +106,15 @@ namespace Exiv2 {
         static DataBuf keyTXTChunk(const DataBuf& data, bool stripHeader=false);
 
         /*!
-          @brief Return a complete PNG chunk data compressed or not as buffer. Data returned is formated
-                 accordingly with metadata \em type to host passed by \em metadata.
+          @brief Return a complete PNG chunk data compressed or not as buffer.
+                 Data returned is formated accordingly with metadata \em type
+                 to host passed by \em metadata.
 
           @param metadata    metadata buffer.
           @param type        metadata type.
-          @param compress    compress or not metadata.
         */
-        static DataBuf makeMetadataChunk(const DataBuf& metadata, MetadataType type, bool compress);
+        static std::string makeMetadataChunk(const std::string& metadata,
+                                                   MetadataId   type);
 
     private:
         /*!
@@ -148,23 +140,29 @@ namespace Exiv2 {
 
         /*!
           @brief Return a compressed (zTXt) or uncompressed (tEXt) PNG ASCII text chunk
-                 (header + key + flags + data + CRC) as data buffer.
+                 (length + chunk type + chunk data + CRC) as a string.
 
-          @param key         PNG Chunk key.
-          @param data        PNG Chunk raw data.
-          @param compress    Compress or not PNG Chunk data.
+          @param keyword  Keyword for the PNG text chunk
+          @param text     Text to be recorded in the PNG chunk.
+          @param compress Flag indicating whether to compress the PNG chunk data.
+
+          @return String containing the PNG chunk
         */
-        static DataBuf makeAsciiTxtChunk(const DataBuf& key, const DataBuf& data, bool compress);
+        static std::string makeAsciiTxtChunk(const std::string& keyword,
+                                             const std::string& text,
+                                             bool               compress);
 
         /*!
-          @brief Return a compressed or uncompressed (iTXt) PNG UTF8 text chunk
-                 (header + key + flags + data + CRC) as data buffer.
+          @brief Return a compressed or uncompressed (iTXt) PNG international text chunk
+                 (length + chunk type + chunk data + CRC) as a string.
 
-          @param key         PNG Chunk key.
-          @param data        PNG Chunk raw data.
-          @param compress    Compress or not PNG Chunk data.
+          @param keyword  Keyword for the PNG international text chunk
+          @param text     Text to be recorded in the PNG chunk.
+          @param compress Flag indicating whether to compress the PNG chunk data.
         */
-        static DataBuf makeUtf8TxtChunk(const DataBuf& key, const DataBuf& data, bool compress);
+        static std::string makeUtf8TxtChunk(const std::string& keyword,
+                                            const std::string& text,
+                                            bool               compress);
 
         /*!
           @brief Wrapper around zlib to uncompress a PNG chunk content.
@@ -176,9 +174,7 @@ namespace Exiv2 {
         /*!
           @brief Wrapper around zlib to compress a PNG chunk content.
          */
-        static void zlibCompress(const byte*  text,
-                                 unsigned int textSize,
-                                 DataBuf&     arr);
+        static std::string zlibCompress(const std::string& text);
 
         /*!
           @brief Decode from ImageMagick raw text profile which host encoded Exif/Iptc/Xmp metadata byte array.
@@ -186,23 +182,11 @@ namespace Exiv2 {
         static DataBuf readRawProfile(const DataBuf& text);
 
         /*!
-          @brief Encode to ImageMagick raw text profile which host encoded Exif/Iptc/Xmp metadata byte array.
+          @brief Encode to ImageMagick raw text profile, which host encoded
+                 Exif/IPTC/XMP metadata byte arrays.
          */
-        static DataBuf writeRawProfile(const DataBuf& profile_data, const DataBuf& profile_type);
-
-        static size_t copyString(char* destination,
-                                 const char* source,
-                                 const size_t length);
-
-        static long formatString(char*        string,
-                                 const size_t length,
-                                 const char*  format,
-                                 ...);
-
-        static long formatStringList(char *string,
-                                     const size_t length,
-                                     const char *format,
-                                     va_list operands);
+        static std::string writeRawProfile(const std::string& profileData,
+                                           const char*        profileType);
 
     }; // class PngChunk
 

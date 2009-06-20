@@ -46,17 +46,20 @@ extern "C" {
 
 #include "pngchunk_int.hpp"
 #include "tiffimage.hpp"
+#include "jpgimage.hpp"
 #include "exif.hpp"
 #include "iptc.hpp"
 #include "image.hpp"
 #include "error.hpp"
 
 // + standard includes
+#include <sstream>
+#include <iomanip>
 #include <string>
 #include <cstring>
 #include <iostream>
 #include <cassert>
-#include <cstdarg>
+#include <cstdio>
 
 /*
 
@@ -279,14 +282,52 @@ namespace Exiv2 {
 
         // We look if an ImageMagick IPTC raw profile exist.
 
-        if ( memcmp("Raw profile type iptc", key, 21) == 0 &&
-             pImage->iptcData().empty())
-        {
-            DataBuf iptcData = readRawProfile(arr);
-            long length      = iptcData.size_;
+        if (   memcmp("Raw profile type iptc", key, 21) == 0
+            && pImage->iptcData().empty()) {
+            DataBuf psData = readRawProfile(arr);
+            if (psData.size_ > 0) {
+                Blob iptcBlob;
+                const byte *record = 0;
+                uint32_t sizeIptc = 0;
+                uint32_t sizeHdr = 0;
 
-            if (length > 0)
-                IptcParser::decode(pImage->iptcData(), iptcData.pData_, length);
+                const byte* pEnd = psData.pData_ + psData.size_;
+                const byte* pCur = psData.pData_;
+                while (   pCur < pEnd
+                       && 0 == Photoshop::locateIptcIrb(pCur,
+                                                        static_cast<long>(pEnd - pCur),
+                                                        &record,
+                                                        &sizeHdr,
+                                                        &sizeIptc)) {
+                    if (sizeIptc) {
+#ifdef DEBUG
+                        std::cerr << "Found IPTC IRB, size = " << sizeIptc << "\n";
+#endif
+                        append(iptcBlob, record + sizeHdr, sizeIptc);
+                    }
+                    pCur = record + sizeHdr + sizeIptc;
+                    pCur += (sizeIptc & 1);
+                }
+                if (   iptcBlob.size() > 0
+                    && IptcParser::decode(pImage->iptcData(),
+                                          &iptcBlob[0],
+                                          static_cast<uint32_t>(iptcBlob.size()))) {
+#ifndef SUPPRESS_WARNINGS
+                    std::cerr << "Warning: Failed to decode IPTC metadata.\n";
+#endif
+                    pImage->clearIptcData();
+                }
+                // If there is no IRB, try to decode the complete chunk data
+                if (   iptcBlob.empty()
+                    && IptcParser::decode(pImage->iptcData(),
+                                          psData.pData_,
+                                          psData.size_)) {
+#ifndef SUPPRESS_WARNINGS
+                    std::cerr << "Warning: Failed to decode IPTC metadata.\n";
+#endif
+                    pImage->clearIptcData();
+                }
+            } // if (psData.size_ > 0)
         }
 
         // We look if an ImageMagick XMP raw profile exist.
@@ -357,46 +398,32 @@ namespace Exiv2 {
 
     } // PngChunk::parseChunkContent
 
-    DataBuf PngChunk::makeMetadataChunk(const DataBuf& metadata, MetadataType type, bool compress)
+    std::string PngChunk::makeMetadataChunk(const std::string& metadata,
+                                                  MetadataId   type)
     {
-        if (type == comment_Data)
-        {
-            DataBuf key(11);
-            memcpy(key.pData_, "Description", 11);
-            DataBuf rawData = makeUtf8TxtChunk(key, metadata, compress);
-            return rawData;
-        }
-        else if (type == exif_Data)
-        {
-            DataBuf tmp(4);
-            memcpy(tmp.pData_, "exif", 4);
-            DataBuf rawProfile = writeRawProfile(metadata, tmp);
-            DataBuf key(17 + tmp.size_);
-            memcpy(key.pData_,      "Raw profile type ", 17);
-            memcpy(key.pData_ + 17, tmp.pData_, tmp.size_);
-            DataBuf rawData = makeAsciiTxtChunk(key, rawProfile, compress);
-            return rawData;
-        }
-        else if (type == iptc_Data)
-        {
-            DataBuf tmp(4);
-            memcpy(tmp.pData_, "iptc", 4);
-            DataBuf rawProfile = writeRawProfile(metadata, tmp);
-            DataBuf key(17 + tmp.size_);
-            memcpy(key.pData_,      "Raw profile type ", 17);
-            memcpy(key.pData_ + 17, tmp.pData_, tmp.size_);
-            DataBuf rawData = makeAsciiTxtChunk(key, rawProfile, compress);
-            return rawData;
-        }
-        else if (type == xmp_Data)
-        {
-            DataBuf key(17);
-            memcpy(key.pData_, "XML:com.adobe.xmp", 17);
-            DataBuf rawData = makeUtf8TxtChunk(key, metadata, compress);
-            return rawData;
-        }
+        std::string chunk;
+        std::string rawProfile;
 
-        return DataBuf();
+        switch (type) {
+        case mdComment:
+            chunk = makeUtf8TxtChunk("Description", metadata, true);
+            break;
+        case mdExif:
+            rawProfile = writeRawProfile(metadata, "exif");
+            chunk = makeAsciiTxtChunk("Raw profile type exif", rawProfile, true);
+            break;
+        case mdIptc:
+            rawProfile = writeRawProfile(metadata, "iptc");
+            chunk = makeAsciiTxtChunk("Raw profile type iptc", rawProfile, true);
+            break;
+        case mdXmp:
+            chunk = makeUtf8TxtChunk("XML:com.adobe.xmp", metadata, false);
+            break;
+        case mdNone:
+            assert(false);
+	}
+
+        return chunk;
 
     } // PngChunk::makeMetadataChunk
 
@@ -443,165 +470,115 @@ namespace Exiv2 {
 
     } // PngChunk::zlibUncompress
 
-    void PngChunk::zlibCompress(const byte*  text,
-                                unsigned int textSize,
-                                DataBuf&     arr)
+    std::string PngChunk::zlibCompress(const std::string& text)
     {
-        uLongf compressedLen = textSize * 2; // just a starting point
+        uLongf compressedLen = text.size() * 2; // just a starting point
         int zlibResult;
 
-        do
-        {
+        DataBuf arr;
+        do {
             arr.alloc(compressedLen);
             zlibResult = compress2((Bytef*)arr.pData_, &compressedLen,
-                                   text, textSize, Z_BEST_COMPRESSION);
+                                   (const Bytef*)text.data(), text.size(),
+                                   Z_BEST_COMPRESSION);
 
-            if (zlibResult == Z_OK)
-            {
-                // then it is all OK
-                arr.alloc(compressedLen);
-            }
-            else if (zlibResult == Z_BUF_ERROR)
-            {
-                // the compressedArray needs to be larger
+            switch (zlibResult) {
+            case Z_OK:
+                assert((uLongf)arr.size_ >= compressedLen);
+                arr.size_ = compressedLen;
+                break;
+            case Z_BUF_ERROR:
+                // The compressed array needs to be larger
 #ifdef DEBUG
                 std::cout << "Exiv2::PngChunk::parsePngChunk: doubling size for compression.\n";
 #endif
                 compressedLen *= 2;
-
-                // DoS protection. can't be bigger than 64k
-                if ( compressedLen > 131072 )
-                    break;
-            }
-            else
-            {
-                // something bad happened
+                // DoS protection. Cap max compressed size
+                if ( compressedLen > 131072 ) throw Error(14);
+                break;
+            default:
+                // Something bad happened
                 throw Error(14);
             }
-        }
-        while (zlibResult == Z_BUF_ERROR);
+        } while (zlibResult == Z_BUF_ERROR);
 
-        if (zlibResult != Z_OK)
-            throw Error(14);
+        return std::string((const char*)arr.pData_, arr.size_);
 
     } // PngChunk::zlibCompress
 
-    DataBuf PngChunk::makeAsciiTxtChunk(const DataBuf& key, const DataBuf& data, bool compress)
+    std::string PngChunk::makeAsciiTxtChunk(const std::string& keyword,
+                                            const std::string& text,
+                                            bool               compress)
     {
-        DataBuf type(4);
-        DataBuf data4crc;
-        DataBuf chunkData;
-        byte    chunkDataSize[4];
-        byte    chunkCRC[4];
+        // Chunk structure: length (4 bytes) + chunk type + chunk data + CRC (4 bytes)
+        // Length is the size of the chunk data
+        // CRC is calculated on chunk type + chunk data
 
-        if (compress)
-        {
-            // Compressed text chunk using ZLib.
-            // Data format    : key ("zTXt") + 0x00 + compression type (0x00) + compressed data
-            // Chunk structure: data lenght (4 bytes) + chunk type (4 bytes) + compressed data + CRC (4 bytes)
+        // Compressed text chunk using zlib.
+        // Chunk data format : keyword + 0x00 + compression method (0x00) + compressed text
 
-            memcpy(type.pData_, "zTXt", 4);
+        // Not Compressed text chunk.
+        // Chunk data format : keyword + 0x00 + text
 
-            DataBuf compressedData;
-            zlibCompress(data.pData_, data.size_, compressedData);
-
-            data4crc.alloc(key.size_ + 1 + 1 + compressedData.size_);
-            memcpy(data4crc.pData_,                 key.pData_,            key.size_);
-            memcpy(data4crc.pData_ + key.size_,     "\0\0",                 2);
-            memcpy(data4crc.pData_ + key.size_ + 2, compressedData.pData_, compressedData.size_);
-
-            uLong crc = crc32(0L, Z_NULL, 0);
-            crc       = crc32(crc, data4crc.pData_, data4crc.size_);
-
-            ul2Data(chunkCRC, crc, Exiv2::bigEndian);
-            ul2Data(chunkDataSize, data4crc.size_, Exiv2::bigEndian);
-
-            chunkData.alloc(4 + type.size_ + data4crc.size_ + 4);
-            memcpy(chunkData.pData_,                                   chunkDataSize,   4);
-            memcpy(chunkData.pData_ + 4,                               type.pData_,     type.size_);
-            memcpy(chunkData.pData_ + 4 + type.size_,                  data4crc.pData_, data4crc.size_);
-            memcpy(chunkData.pData_ + 4 + type.size_ + data4crc.size_, chunkCRC,        4);
+        // Build chunk data, determine chunk type
+        std::string chunkData = keyword + '\0';
+        std::string chunkType;
+        if (compress) {
+            chunkData += '\0' + zlibCompress(text);
+            chunkType = "zTXt";
         }
-        else
-        {
-            // Not Compressed text chunk.
-            // Data Format    : key ("tEXt") + 0x00 + data
-            // Chunk Structure: data lenght (4 bytes) + chunk type (4 bytes) + data + CRC (4 bytes)
-
-            memcpy(type.pData_, "tEXt", 4);
-
-            data4crc.alloc(key.size_ + 1 + data.size_);
-            memcpy(data4crc.pData_,                 key.pData_,  key.size_);
-            memcpy(data4crc.pData_ + key.size_,     "\0",        1);
-            memcpy(data4crc.pData_ + key.size_ + 1, data.pData_, data.size_);
-
-            uLong crc = crc32(0L, Z_NULL, 0);
-            crc       = crc32(crc, data4crc.pData_, data4crc.size_);
-
-            ul2Data(chunkCRC, crc, Exiv2::bigEndian);
-            ul2Data(chunkDataSize, data4crc.size_, Exiv2::bigEndian);
-
-            chunkData.alloc(4 + type.size_ + data4crc.size_ + 4);
-            memcpy(chunkData.pData_,                                   chunkDataSize,   4);
-            memcpy(chunkData.pData_ + 4,                               type.pData_,     type.size_);
-            memcpy(chunkData.pData_ + 4 + type.size_,                  data4crc.pData_, data4crc.size_);
-            memcpy(chunkData.pData_ + 4 + type.size_ + data4crc.size_, chunkCRC,        4);
+        else {
+            chunkData += text;
+            chunkType = "tEXt";
         }
-
-        return chunkData;
+        // Determine length of the chunk data
+        byte length[4];
+        ul2Data(length, chunkData.size(), bigEndian);
+        // Calculate CRC on chunk type and chunk data
+        std::string crcData = chunkType + chunkData;
+        uLong tmp = crc32(0L, Z_NULL, 0);
+        tmp       = crc32(tmp, (const Bytef*)crcData.data(), crcData.size());
+        byte crc[4];
+        ul2Data(crc, tmp, bigEndian);
+        // Assemble the chunk
+        return std::string((const char*)length, 4) + chunkType + chunkData + std::string((const char*)crc, 4);
 
     } // PngChunk::makeAsciiTxtChunk
 
-    DataBuf PngChunk::makeUtf8TxtChunk(const DataBuf& key, const DataBuf& data, bool compress)
+    std::string PngChunk::makeUtf8TxtChunk(const std::string& keyword,
+                                           const std::string& text,
+                                           bool               compress)
     {
-        DataBuf type(4);
-        DataBuf textData;        // text compressed or not.
-        DataBuf data4crc;
-        DataBuf chunkData;
-        byte    chunkDataSize[4];
-        byte    chunkCRC[4];
+        // Chunk structure: length (4 bytes) + chunk type + chunk data + CRC (4 bytes)
+        // Length is the size of the chunk data
+        // CRC is calculated on chunk type + chunk data
 
-        // Compressed text chunk using ZLib.
-        // Data format    : key ("iTXt") + 0x00 + compression flag (0x00: uncompressed - 0x01: compressed) +
-        //                  compression method (0x00) + language id (null) + 0x00 +
-        //                  translated key (null) + 0x00 + text (compressed or not)
-        // Chunk structure: data lenght (4 bytes) + chunk type (4 bytes) + data + CRC (4 bytes)
+        // Chunk data format : keyword + 0x00 + compression flag (0x00: uncompressed - 0x01: compressed)
+        //                     + compression method (0x00: zlib format) + language tag (null) + 0x00
+        //                     + translated keyword (null) + 0x00 + text (compressed or not)
 
-        memcpy(type.pData_, "iTXt", 4);
-
-        if (compress)
-        {
-            const unsigned char flags[] = {0x00, 0x01, 0x00, 0x00, 0x00};
-
-            zlibCompress(data.pData_, data.size_, textData);
-            data4crc.alloc(key.size_ + 5 + textData.size_);
-            memcpy(data4crc.pData_, key.pData_, key.size_);
-            memcpy(data4crc.pData_ + key.size_, flags, 5);
+        // Build chunk data, determine chunk type
+        std::string chunkData = keyword;
+        if (compress) {
+            static const char flags[] = { 0x00, 0x01, 0x00, 0x00, 0x00 };
+            chunkData += std::string(flags, 5) + zlibCompress(text);
         }
-        else
-        {
-            const unsigned char flags[] = {0x00, 0x00, 0x00, 0x00, 0x00};
-
-            textData = DataBuf(data.pData_, data.size_);
-            data4crc.alloc(key.size_ + 5 + textData.size_);
-            memcpy(data4crc.pData_, key.pData_, key.size_);
-            memcpy(data4crc.pData_ + key.size_, flags, 5);
+        else {
+            static const char flags[] = { 0x00, 0x00, 0x00, 0x00, 0x00 };
+            chunkData += std::string(flags, 5) + text;
         }
-        memcpy(data4crc.pData_ + key.size_ + 5, textData.pData_, textData.size_);
-
-        uLong crc = crc32(0L, Z_NULL, 0);
-        crc       = crc32(crc, data4crc.pData_, data4crc.size_);
-
-        ul2Data(chunkCRC, crc, Exiv2::bigEndian);
-        ul2Data(chunkDataSize, data4crc.size_, Exiv2::bigEndian);
-
-        chunkData.alloc(4 + type.size_ + data4crc.size_ + 4);
-        memcpy(chunkData.pData_,                                   chunkDataSize,   4);
-        memcpy(chunkData.pData_ + 4,                               type.pData_,     type.size_);
-        memcpy(chunkData.pData_ + 4 + type.size_,                  data4crc.pData_, data4crc.size_);
-        memcpy(chunkData.pData_ + 4 + type.size_ + data4crc.size_, chunkCRC,        4);
-
-        return chunkData;
+        // Determine length of the chunk data
+        byte length[4];
+        ul2Data(length, chunkData.size(), bigEndian);
+        // Calculate CRC on chunk type and chunk data
+        std::string chunkType = "iTXt";
+        std::string crcData = chunkType + chunkData;
+        uLong tmp = crc32(0L, Z_NULL, 0);
+        tmp       = crc32(tmp, (const Bytef*)crcData.data(), crcData.size());
+        byte crc[4];
+        ul2Data(crc, tmp, bigEndian);
+        // Assemble the chunk
+        return std::string((const char*)length, 4) + chunkType + chunkData + std::string((const char*)crc, 4);
 
     } // PngChunk::makeUtf8TxtChunk
 
@@ -690,134 +667,23 @@ namespace Exiv2 {
 
     } // PngChunk::readRawProfile
 
-    DataBuf PngChunk::writeRawProfile(const DataBuf& profile_data, const DataBuf& profile_type)
+    std::string PngChunk::writeRawProfile(const std::string& profileData,
+                                          const char*        profileType)
     {
-        register long  i;
+        static byte hex[16] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
-        char          *sp=0;
-        char          *dp=0;
-        char          *text=0;
-
-        unsigned int   allocated_length, description_length, text_length;
-
-        unsigned char  hex[16] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
-
-        DataBuf        formatedData;
-
-        description_length = profile_type.size_;
-        allocated_length   = profile_data.size_*2 + (profile_data.size_ >> 5) + 20 + description_length;
-
-        text = new char[allocated_length];
-
-        sp = (char*)profile_data.pData_;
-        dp = text;
-        *dp++='\n';
-
-        copyString(dp, (const char *)profile_type.pData_, allocated_length);
-
-        dp += description_length;
-        *dp++='\n';
-
-        formatString(dp, allocated_length - strlen(text), "%8lu ", profile_data.size_);
-
-        dp += 8;
-
-        for (i=0; i < (long)profile_data.size_; i++)
-        {
-            if (i%36 == 0)
-                *dp++='\n';
-
-            *(dp++)=(char) hex[((*sp >> 4) & 0x0f)];
-            *(dp++)=(char) hex[((*sp++)    & 0x0f)];
+        std::ostringstream oss;
+        oss << '\n' << profileType << '\n' << std::setw(8) << profileData.size();
+        const char* sp = profileData.data();
+        for (std::string::size_type i = 0; i < profileData.size(); ++i) {
+            if (i % 36 == 0) oss << '\n';
+            oss << hex[((*sp >> 4) & 0x0f)];
+            oss << hex[((*sp++) & 0x0f)];
         }
-
-        *dp++='\n';
-        *dp='\0';
-
-        text_length = (unsigned int)(dp-text);
-
-        if (text_length <= allocated_length)
-        {
-            formatedData.alloc(text_length);
-            memcpy(formatedData.pData_, text, text_length);
-        }
-
-        delete [] text;
-        return formatedData;
+        oss << '\n';
+        return oss.str();
 
     } // PngChunk::writeRawProfile
-
-    size_t PngChunk::copyString(char* destination,
-                                const char* source,
-                                const size_t length)
-    {
-        register char       *q;
-
-        register const char *p;
-
-        register size_t      i;
-
-        if ( !destination || !source || length == 0 )
-            return 0;
-
-        p = source;
-        q = destination;
-        i = length;
-
-        if ((i != 0) && (--i != 0))
-        {
-            do
-            {
-                if ((*q++=(*p++)) == '\0')
-                    break;
-            }
-            while (--i != 0);
-        }
-
-        if (i == 0)
-        {
-            if (length != 0)
-                *q='\0';
-
-            do
-            {
-            }
-            while (*p++ != '\0');
-        }
-
-        return((size_t) (p-source-1));
-
-    } // PngChunk::copyString
-
-    long PngChunk::formatString(char*        string,
-                                const size_t length,
-                                const char*  format,
-                                ...)
-    {
-        long n;
-
-        va_list operands;
-
-        va_start(operands,format);
-        n = (long) formatStringList(string, length, format, operands);
-        va_end(operands);
-        return(n);
-
-    } // PngChunk::formatString
-
-    long PngChunk::formatStringList(char*        string,
-                                    const size_t length,
-                                    const char*  format,
-                                    va_list      operands)
-    {
-        int n = vsnprintf(string, length, format, operands);
-
-        if (n < 0)
-            string[length-1] = '\0';
-
-        return((long) n);
-
-    } // PngChunk::formatStringList
 
 }}                                      // namespace Internal, Exiv2
 #endif // ifdef EXV_HAVE_LIBZ

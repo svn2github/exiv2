@@ -19,24 +19,23 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*!
-  @file    jp2image.hpp
-  @brief   JPEG-2000 image, implemented using the following references:
-           <a href="http://jpeg.org/public/fcd15444-6.pdf">ISO/IEC JTC 1/SC 29/WG1 N2401: JPEG 2000 Part 6 FCD 15444-6</a><br>
+  @file    pgfimage.hpp
+  @brief   PGF image, implemented using the following references:
+           <a href="http://www.libpgf.org/uploads/media/PGF_stamm_wscg02.pdf">PGF specification</a> from libpgf web site<br>
   @version $Rev$
+  @author  Andreas Huggel (ahu)
+           <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @author  Gilles Caulier (cgilles)
            <a href="mailto:caulier dot gilles at gmail dot com">caulier dot gilles at gmail dot com</a>
-  @author  Marco Piovanelli, Ovolab (marco)
-           <a href="mailto:marco.piovanelli@pobox.com">marco.piovanelli@pobox.com</a>
-  @date    12-Mar-2007, marco: created
+  @date    16-Jun-09, gc: submitted
  */
-#ifndef JP2IMAGE_HPP_
-#define JP2IMAGE_HPP_
+#ifndef PGFIMAGE_HPP_
+#define PGFIMAGE_HPP_
 
 // *****************************************************************************
 // included header files
-#include "exif.hpp"
-#include "iptc.hpp"
 #include "image.hpp"
+#include "basicio.hpp"
 #include "types.hpp"
 
 // + standard includes
@@ -50,24 +49,26 @@ namespace Exiv2
 // *****************************************************************************
 // class definitions
 
-    // Add JPEG-2000 to the supported image formats
+    // Add PGF to the supported image formats
     namespace ImageType
     {
-        const int jp2 = 15;                     //!< JPEG-2000 image type
+        const int pgf = 17;          //!< PGF image type (see class PgfImage)
     }
 
     /*!
-      @brief Class to access JPEG-2000 images.
+      @brief Class to access PGF images. Exif and IPTC metadata are supported
+          directly.
      */
-    class EXIV2API Jp2Image : public Image {
+    class EXIV2API PgfImage : public Image {
     public:
         //! @name Creators
         //@{
         /*!
-          @brief Constructor to open a JPEG-2000 image. Since the
-              constructor can not return a result, callers should check the
-              good() method after object construction to determine success
-              or failure.
+          @brief Constructor that can either open an existing PGF image or create
+              a new image from scratch. If a new image is to be created, any
+              existing data is overwritten. Since the constructor can not return
+              a result, callers should check the good() method after object
+              construction to determine success or failure.
           @param io An auto-pointer that owns a BasicIo instance used for
               reading and writing image metadata. \b Important: The constructor
               takes ownership of the passed in BasicIo instance through the
@@ -77,32 +78,27 @@ namespace Exiv2
           @param create Specifies if an existing image should be read (false)
               or if a new file should be created (true).
          */
-        Jp2Image(BasicIo::AutoPtr io, bool create);
+        PgfImage(BasicIo::AutoPtr io, bool create);
         //@}
 
         //! @name Manipulators
         //@{
         void readMetadata();
         void writeMetadata();
-        /*!
-          @brief Todo: Not supported yet(?). Calling this function will throw
-              an instance of Error(32).
-         */
-        void setComment(const std::string& comment);
         //@}
 
         //! @name Accessors
         //@{
-        std::string mimeType() const;
+        std::string mimeType() const { return "image/pgf"; }
         //@}
 
     private:
-        //! @name NOT Implemented
+        //! @name NOT implemented
         //@{
         //! Copy constructor
-        Jp2Image(const Jp2Image& rhs);
+        PgfImage(const PgfImage& rhs);
         //! Assignment operator
-        Jp2Image& operator=(const Jp2Image& rhs);
+        PgfImage& operator=(const PgfImage& rhs);
         /*!
           @brief Provides the main implementation of writeMetadata() by
                 writing all buffered metadata to the provided BasicIo.
@@ -111,9 +107,15 @@ namespace Exiv2
           @return 4 if opening or writing to the associated BasicIo fails
          */
         EXV_DLLLOCAL void doWriteMetadata(BasicIo& oIo);
+        //! Read Magick number. Only version >= 6 is supported.
+        byte readPgfMagicNumber(BasicIo& iIo);
+        //! Read PGF Header size encoded in 32 bits integer.
+        uint32_t readPgfHeaderSize(BasicIo& iIo);
+        //! Read header structure.
+        DataBuf readPgfHeaderStructure(BasicIo& iIo, int* width, int* height);
         //@}
 
-    }; // class Jp2Image
+    }; // class PgfImage
 
 // *****************************************************************************
 // template, inline and free functions
@@ -121,15 +123,15 @@ namespace Exiv2
     // These could be static private functions on Image subclasses but then
     // ImageFactory needs to be made a friend.
     /*!
-      @brief Create a new Jp2Image instance and return an auto-pointer to it.
+      @brief Create a new PgfImage instance and return an auto-pointer to it.
              Caller owns the returned object and the auto-pointer ensures that
              it will be deleted.
      */
-    EXIV2API Image::AutoPtr newJp2Instance(BasicIo::AutoPtr io, bool create);
+    EXIV2API Image::AutoPtr newPgfInstance(BasicIo::AutoPtr io, bool create);
 
-    //! Check if the file iIo is a JPEG-2000 image.
-    EXIV2API bool isJp2Type(BasicIo& iIo, bool advance);
+    //! Check if the file iIo is a PGF image.
+    EXIV2API bool isPgfType(BasicIo& iIo, bool advance);
 
 }                                       // namespace Exiv2
 
-#endif                                  // #ifndef JP2IMAGE_HPP_
+#endif                                  // #ifndef PGFIMAGE_HPP_
