@@ -265,7 +265,7 @@ namespace Exiv2 {
 
 // Shortcuts for the newTiffBinaryArray templates.
 #define EXV_BINARY_ARRAY(arrayCfg, arrayDef) (newTiffBinaryArray<&arrayCfg, EXV_COUNTOF(arrayDef), arrayDef>)
-#define EXV_BINARY_ARRAY_SIMPLE(arrayCfg) (newTiffBinaryArray<&arrayCfg>)
+#define EXV_SIMPLE_BINARY_ARRAY(arrayCfg) (newTiffBinaryArray<&arrayCfg>)
 
 namespace Exiv2 {
     namespace Internal {
@@ -295,6 +295,45 @@ namespace Exiv2 {
         2,                // One tag every two bytes
         false,            // No header
         true,             // With size element
+        false,            // No fillers
+        false,            // Not encrypted
+        { 0, ttUnsignedShort, 1 }
+    };
+
+    //! Canon Panorama binary array - configuration
+    extern const ArrayCfg canonPaCfg = {
+        Group::canonpa,   // Group for the elements
+        invalidByteOrder, // Use byte order from parent 
+        ttUnsignedShort,  // Type for array entry and size element
+        2,                // One tag every two bytes
+        false,            // No header
+        false,            // No size element
+        false,            // No fillers
+        false,            // Not encrypted
+        { 0, ttUnsignedShort, 1 }
+    };
+
+    //! Canon Custom Function binary array - configuration
+    extern const ArrayCfg canonCfCfg = {
+        Group::canoncf,   // Group for the elements
+        invalidByteOrder, // Use byte order from parent 
+        ttUnsignedShort,  // Type for array entry and size element
+        2,                // One tag every two bytes
+        false,            // No header
+        true,             // With size element
+        false,            // No fillers
+        false,            // Not encrypted
+        { 0, ttUnsignedShort, 1 }
+    };
+
+    //! Canon Picture Info binary array - configuration
+    extern const ArrayCfg canonPiCfg = {
+        Group::canonpi,   // Group for the elements
+        invalidByteOrder, // Use byte order from parent 
+        ttUnsignedShort,  // Type for array entry and size element
+        2,                // One tag every two bytes
+        false,            // No header
+        false,            // No size element
         false,            // No fillers
         false,            // Not encrypted
         { 0, ttUnsignedShort, 1 }
@@ -575,19 +614,19 @@ namespace Exiv2 {
 
         // Canon makernote
         {    0x0001, Group::canonmn,   EXV_BINARY_ARRAY(canonCsCfg, canonCsDef)  },
-        {    0x0004, Group::canonmn,   EXV_BINARY_ARRAY_SIMPLE(canonSiCfg)       },
-        {    0x0005, Group::canonmn,   newTiffArrayEntry<Group::canonpa, ttUnsignedShort, false>  },
-        {    0x000f, Group::canonmn,   newTiffArrayEntry<Group::canoncf, ttUnsignedShort, true>  },
-        {    0x0012, Group::canonmn,   newTiffArrayEntry<Group::canonpi, ttUnsignedShort, false>  },
+        {    0x0004, Group::canonmn,   EXV_SIMPLE_BINARY_ARRAY(canonSiCfg)       },
+        {    0x0005, Group::canonmn,   EXV_SIMPLE_BINARY_ARRAY(canonPaCfg)       },
+        {    0x000f, Group::canonmn,   EXV_SIMPLE_BINARY_ARRAY(canonCfCfg)       },
+        {    0x0012, Group::canonmn,   EXV_SIMPLE_BINARY_ARRAY(canonPiCfg)       },
         { Tag::next, Group::canonmn,   newTiffDirectory<Group::ignr>             },
         {  Tag::all, Group::canonmn,   newTiffEntry                              },
 
         // Canon makernote composite tags
         {  Tag::all, Group::canoncs,   newTiffBinaryElement                      },
         {  Tag::all, Group::canonsi,   newTiffBinaryElement                      },
-        {  Tag::all, Group::canonpa,   newTiffArrayElement<ttUnsignedShort>      },
-        {  Tag::all, Group::canoncf,   newTiffArrayElement<ttUnsignedShort>      },
-        {  Tag::all, Group::canonpi,   newTiffArrayElement<ttUnsignedShort>      },
+        {  Tag::all, Group::canonpa,   newTiffBinaryElement                      },
+        {  Tag::all, Group::canoncf,   newTiffBinaryElement                      },
+        {  Tag::all, Group::canonpi,   newTiffBinaryElement                      },
 
         // Nikon1 makernote
         { Tag::next, Group::nikon1mn,  newTiffDirectory<Group::ignr>             },
