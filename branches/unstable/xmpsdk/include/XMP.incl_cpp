@@ -50,7 +50,6 @@
     #include "client-glue/TXMPMeta.incl_cpp"
     #include "client-glue/TXMPIterator.incl_cpp"
     #include "client-glue/TXMPUtils.incl_cpp"
-
     template class TXMPMeta <TXMP_STRING_TYPE>;
     template class TXMPIterator <TXMP_STRING_TYPE>;
     template class TXMPUtils <TXMP_STRING_TYPE>;

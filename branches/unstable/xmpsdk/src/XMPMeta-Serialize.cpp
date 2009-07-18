@@ -1,5 +1,5 @@
 // =================================================================================================
-// Copyright 2002-2007 Adobe Systems Incorporated
+// Copyright 2002-2008 Adobe Systems Incorporated
 // All Rights Reserved.
 //
 // NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the terms
@@ -1092,10 +1092,12 @@ SerializeAsRDF ( const XMPMeta & xmpObj,
 	}
 
 	// Write the xmpmeta element's start tag.
-	for ( level = baseIndent; level > 0; --level ) headStr += indentStr;
-	headStr += kRDF_XMPMetaStart;
-	headStr += kXMPCore_VersionMessage "\">";
-	headStr += newline;
+	if ( ! (options & kXMP_OmitXMPMetaElement) ) {
+		for ( level = baseIndent; level > 0; --level ) headStr += indentStr;
+		headStr += kRDF_XMPMetaStart;
+		headStr += kXMPCore_VersionMessage "\">";
+		headStr += newline;
+	}
 
 	// Write the rdf:RDF start tag.
 	for ( level = baseIndent+1; level > 0; --level ) headStr += indentStr;
@@ -1127,9 +1129,11 @@ SerializeAsRDF ( const XMPMeta & xmpObj,
 	headStr += newline;
 
 	// Write the xmpmeta end tag.
-	for ( level = baseIndent; level > 0; --level ) headStr += indentStr;
-	headStr += kRDF_XMPMetaEnd;
-	headStr += newline;
+	if ( ! (options & kXMP_OmitXMPMetaElement) ) {
+		for ( level = baseIndent; level > 0; --level ) headStr += indentStr;
+		headStr += kRDF_XMPMetaEnd;
+		headStr += newline;
+	}
 	
 	// Write the packet trailer PI into the tail string as UTF-8.
 	tailStr.erase();

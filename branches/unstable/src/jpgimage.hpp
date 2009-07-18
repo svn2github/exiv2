@@ -26,6 +26,10 @@
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @author  Brad Schick (brad)
            <a href="mailto:brad@robotbattle.com">brad@robotbattle.com</a>
+  @author  Volker Grabsch (vog)
+           <a href="mailto:vog@notjusthosting.com">vog@notjusthosting.com</a>
+  @author  Michael Ulbrich (mul)
+           <a href="mailto:mul@rentapacs.de">mul@rentapacs.de</a>
   @date    15-Jan-05, brad: split out from image.cpp
  */
 #ifndef JPGIMAGE_HPP_
@@ -63,6 +67,16 @@ namespace Exiv2 {
         static const char     bimId_[]; //!< %Photoshop marker
         static const uint16_t iptc_;    //!< %Photoshop IPTC marker
 
+        /*!
+          @brief Validates all IRBs
+
+          @param pPsData        Existing IRB buffer
+          @param sizePsData     Size of the IRB buffer, may be 0
+          @return true  if all IRBs are valid;<BR>
+                  false otherwise
+        */
+        static bool valid(const byte* pPsData,
+                          long        sizePsData);
         /*!
           @brief Locates the data for a %Photoshop tag in a %Photoshop formated memory
               buffer. Operates on raw data to simplify reuse.

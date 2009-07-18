@@ -162,16 +162,6 @@ cd ..\..\exiv2lib
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-				Description="create the bin (delivery) directorie"
-				CommandLine="mkdir &quot;$(SolutionDir)\bin\DebugDLL\&quot;
-copy/y ..\..\..\expat-2.0.1\win32\bin\Debug\libexpat.dll &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;
-copy/y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\$(TargetFileName)&quot;
-copy/y &quot;$(TargetDir)\*.dll&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;
-copy/y &quot;$(TargetDir)\*.lib&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;
-
-"/>
-			<Tool
 				Name="VCPreBuildEventTool"
 				Description="copy expat and zlib dlls"
 				CommandLine="if exist ..\include\exiv2 goto :jail
@@ -199,6 +189,11 @@ copy/y ..\..\..\zlib-1.2.3\projects\visualc6\Win32_DLL_Debug\zlib1d.dll $(OutDir
 				Name="VCManagedWrapperGeneratorTool"/>
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="create the bin (delivery) directorie"
+				CommandLine="mkdir &quot;$(SolutionDir)\bin\DebugDLL\&quot;&#x0D;&#x0A;copy/y ..\..\..\expat-2.0.1\win32\bin\Debug\libexpat.dll &quot;$(SolutionDir)bin\$(ConfigurationName)&quot;&#x0D;&#x0A;copy/y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\$(TargetFileName)&quot;&#x0D;&#x0A;copy/y &quot;$(TargetDir)\*.dll&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;&#x0D;&#x0A;copy/y &quot;$(TargetDir)\*.lib&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
+			/>
 		</Configuration>
 		<Configuration
 			Name="ReleaseDLL|Win32"
@@ -234,15 +229,6 @@ copy/y ..\..\..\zlib-1.2.3\projects\visualc6\Win32_DLL_Debug\zlib1d.dll $(OutDir
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-				Description="create the bin (delivery) directory"
-				CommandLine="mkdir &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;
-copy/y ..\..\..\expat-2.0.1\win32\bin\Release\libexpat.dll &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;
-copy/y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\$(TargetFileName)&quot;
-copy/y &quot;$(TargetDir)\*.dll&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;
-copy/y &quot;$(TargetDir)\*.lib&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;
-"/>
-			<Tool
 				Name="VCPreBuildEventTool"
 				Description="copy expat and zlib dlls"
 				CommandLine="if exist ..\include\exiv2 goto :jail
@@ -271,6 +257,11 @@ copy/y ..\..\..\zlib-1.2.3\projects\visualc6\Win32_DLL_Release\zlib1.dll $(OutDi
 				Name="VCManagedWrapperGeneratorTool"/>
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				Description="create the bin (delivery) directory"
+				CommandLine="mkdir &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;&#x0D;&#x0A;copy/y ..\..\..\expat-2.0.1\win32\bin\Release\libexpat.dll &quot;$(SolutionDir)bin\$(ConfigurationName)&quot;&#x0D;&#x0A;copy/y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\$(TargetFileName)&quot;&#x0D;&#x0A;copy/y &quot;$(TargetDir)\*.dll&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;&#x0D;&#x0A;copy/y &quot;$(TargetDir)\*.lib&quot; &quot;$(SolutionDir)\bin\$(ConfigurationName)\&quot;&#x0D;&#x0A;"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
