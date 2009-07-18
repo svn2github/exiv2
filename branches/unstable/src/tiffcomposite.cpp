@@ -188,18 +188,6 @@ namespace Exiv2 {
     {
     }
 
-    TiffArrayEntry::TiffArrayEntry(uint16_t tag,
-                                   uint16_t group,
-                                   uint16_t elGroup,
-                                   TiffType elTiffType,
-                                   bool     addSizeElement)
-        : TiffEntryBase(tag, group, elTiffType),
-          elSize_(static_cast<uint16_t>(TypeInfo::typeSize(toTypeId(elTiffType, 0, elGroup)))),
-          elGroup_(elGroup),
-          addSizeElement_(addSizeElement)
-    {
-    }
-
     TiffBinaryArray::TiffBinaryArray(uint16_t tag,
                                      uint16_t group,
                                      const ArrayCfg* arrayCfg,
@@ -270,17 +258,6 @@ namespace Exiv2 {
     {
         delete mn_;
     } // TiffMnEntry::~TiffMnEntry
-
-    TiffArrayEntry::~TiffArrayEntry()
-    {
-        for (Components::iterator i = elements_.begin(); i != elements_.end(); ++i) {
-            delete *i;
-        }
-    } // TiffArrayEntry::~TiffArrayEntry
-
-    TiffArrayElement::~TiffArrayElement()
-    {
-    }
 
     TiffBinaryArray::~TiffBinaryArray()
     {
@@ -580,33 +557,6 @@ namespace Exiv2 {
         return mn_->addPath(tag, tiffPath);
     } // TiffMnEntry::doAddPath
 
-    TiffComponent* TiffArrayEntry::doAddPath(uint16_t tag, TiffPath& tiffPath)
-    {
-        assert(tiffPath.size() > 1);
-        tiffPath.pop();
-        const TiffPathItem tpi = tiffPath.top();
-        TiffComponent* tc = 0;
-        // To allow duplicate entries, we only check if the new component already
-        // exists if there is still at least one composite tag on the stack
-        if (tiffPath.size() > 1) {
-            for (Components::iterator i = elements_.begin(); i != elements_.end(); ++i) {
-                if ((*i)->tag() == tpi.tag() && (*i)->group() == tpi.group()) {
-                    tc = *i;
-                    break;
-                }
-            }
-        }
-        if (tc == 0) {
-            TiffComponent::AutoPtr atc = TiffCreator::create(tpi.extendedTag(), tpi.group());
-            assert(atc.get() != 0);
-
-            assert(tpi.extendedTag() != Tag::next);
-            tc = addChild(atc);
-            setCount(static_cast<uint32_t>(elements_.size()));
-        }
-        return tc->addPath(tag, tiffPath);
-    } // TiffArrayEntry::doAddPath
-
     TiffComponent* TiffBinaryArray::doAddPath(uint16_t tag, TiffPath& tiffPath)
     {
         assert(tiffPath.size() > 1);
@@ -663,13 +613,6 @@ namespace Exiv2 {
         }
         return tc;
     } // TiffMnEntry::doAddChild
-
-    TiffComponent* TiffArrayEntry::doAddChild(TiffComponent::AutoPtr tiffComponent)
-    {
-        TiffComponent* tc = tiffComponent.release();
-        elements_.push_back(tc);
-        return tc;
-    } // TiffArrayEntry::doAddChild
 
     TiffComponent* TiffBinaryArray::doAddChild(TiffComponent::AutoPtr tiffComponent)
     {
@@ -759,15 +702,6 @@ namespace Exiv2 {
 
     } // TiffMnEntry::doAccept
 
-    void TiffArrayEntry::doAccept(TiffVisitor& visitor)
-    {
-        visitor.visitArrayEntry(this);
-        for (Components::const_iterator i = elements_.begin();
-             visitor.go(TiffVisitor::geTraverse) && i != elements_.end(); ++i) {
-            (*i)->accept(visitor);
-        }
-    } // TiffArrayEntry::doAccept
-
     void TiffBinaryArray::doAccept(TiffVisitor& visitor)
     {
         visitor.visitBinaryArray(this);
@@ -776,11 +710,6 @@ namespace Exiv2 {
             (*i)->accept(visitor);
         }
     } // TiffBinaryArray::doAccept
-
-    void TiffArrayElement::doAccept(TiffVisitor& visitor)
-    {
-        visitor.visitArrayElement(this);
-    } // TiffArrayElement::doAccept
 
     void TiffBinaryElement::doAccept(TiffVisitor& visitor)
     {
@@ -792,20 +721,10 @@ namespace Exiv2 {
         doEncode(encoder, datum);
     } // TiffComponent::encode
 
-    void TiffArrayElement::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
-    {
-        encoder.encodeArrayElement(this, datum);
-    } // TiffArrayElement::doEncode
-
     void TiffBinaryElement::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
     {
         encoder.encodeBinaryElement(this, datum);
     } // TiffBinaryElement::doEncode
-
-    void TiffArrayEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
-    {
-        encoder.encodeArrayEntry(this, datum);
-    } // TiffArrayEntry::doEncode
 
     void TiffBinaryArray::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
     {
@@ -866,19 +785,6 @@ namespace Exiv2 {
         // Makernote in bytes
         assert(tiffType() == ttUndefined);
         return mn_->size();
-    }
-
-    uint32_t TiffArrayEntry::doCount() const
-    {
-        if (elements_.empty()) return 0;
-
-        uint16_t maxTag = 0;
-        for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
-            uint32_t mt = (*i)->tag();
-            if ((*i)->count() > 1) mt += (*i)->count() - 1;
-            if (mt > maxTag) maxTag = mt;
-        }
-        return maxTag + 1;
     }
 
     uint32_t TiffBinaryArray::doCount() const
@@ -1185,78 +1091,6 @@ namespace Exiv2 {
         return mn_->write(blob, byteOrder, offset + valueIdx, uint32_t(-1), uint32_t(-1), imageIdx);
     } // TiffMnEntry::doWrite
 
-    uint32_t TiffArrayEntry::doWrite(Blob&     blob,
-                                     ByteOrder byteOrder,
-                                     int32_t   offset,
-                                     uint32_t  valueIdx,
-                                     uint32_t  dataIdx,
-                                     uint32_t& imageIdx)
-    {
-        const uint32_t cnt = count();
-        if (cnt == 0) return 0;
-
-        uint32_t idx = 0;
-        int32_t nextTag = 0;
-
-        // Some array entries need to have the size in the first element
-        if (addSizeElement_) {
-            byte buf[4];
-            switch (elSize_) {
-            case 2:
-                idx += us2Data(buf, size(), byteOrder);
-                break;
-            case 4:
-                idx += ul2Data(buf, size(), byteOrder);
-                break;
-            default:
-                assert(false);
-            }
-            append(blob, buf, elSize_);
-            nextTag = 1;
-        }
-
-        // Tags must be sorted in ascending order
-        std::sort(elements_.begin(), elements_.end(), cmpTagLt);
-
-        uint32_t seq = 0;
-        for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
-            // Skip deleted entries at the end of the array
-            if (seq++ > cnt) break;
-            // Skip the manufactured tag, if it exists
-            if (addSizeElement_ && (*i)->tag() == 0x0000) continue;
-            // Fill gaps. Repeated tags will cause an exception
-            int32_t gap = ((*i)->tag() - nextTag) * elSize_;
-            if (gap < 0) throw Error(50, (*i)->tag());
-            if (gap > 0) {
-                blob.insert(blob.end(), gap, 0);
-                idx += gap;
-            }
-            idx += (*i)->write(blob, byteOrder, offset + idx, valueIdx, dataIdx, imageIdx);
-            nextTag = (*i)->tag() + 1;
-            if ((*i)->count() > 1) nextTag += (*i)->count() - 1;
-        }
-        return idx;
-    } // TiffArrayEntry::doWrite
-
-    uint32_t TiffArrayElement::doWrite(Blob&     blob,
-                                       ByteOrder byteOrder,
-                                       int32_t   /*offset*/,
-                                       uint32_t  /*valueIdx*/,
-                                       uint32_t  /*dataIdx*/,
-                                       uint32_t& /*imageIdx*/)
-    {
-        Value const* pv = pValue();
-        if (!pv || pv->count() == 0) return 0;
-        if (toTiffType(pv->typeId()) != elTiffType_) {
-            throw Error(51, tag());
-        }
-        DataBuf buf(pv->size());
-        if (elByteOrder_ != invalidByteOrder) byteOrder = elByteOrder_;
-        pv->copy(buf.pData_, byteOrder);
-        append(blob, buf.pData_, buf.size_);
-        return buf.size_;
-    } // TiffArrayElement::doWrite
-
     uint32_t TiffBinaryArray::doWrite(Blob&     blob,
                                       ByteOrder byteOrder,
                                       int32_t   offset,
@@ -1545,11 +1379,6 @@ namespace Exiv2 {
         }
         return mn_->size();
     } // TiffMnEntry::doSize
-
-    uint32_t TiffArrayEntry::doSize() const
-    {
-        return count() * elSize_;
-    } // TiffArrayEntry::doSize
 
     uint32_t TiffBinaryArray::doSize() const
     {

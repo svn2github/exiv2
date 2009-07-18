@@ -54,8 +54,8 @@ namespace Exiv2 {
     class TiffDirectory;
     class TiffSubIfd;
     class TiffMnEntry;
-    class TiffArrayEntry;
-    class TiffArrayElement;
+    class TiffBinaryArray;
+    class TiffBinaryElement;
 
     class TiffIfdMakernote;
 

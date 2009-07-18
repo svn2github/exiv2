@@ -182,16 +182,6 @@ namespace Exiv2 {
         findObject(object);
     }
 
-    void TiffFinder::visitArrayEntry(TiffArrayEntry* object)
-    {
-        findObject(object);
-    }
-
-    void TiffFinder::visitArrayElement(TiffArrayElement* object)
-    {
-        findObject(object);
-    }
-
     void TiffFinder::visitBinaryArray(TiffBinaryArray* object)
     {
         findObject(object);
@@ -415,16 +405,6 @@ namespace Exiv2 {
         exifData_.add(key, object->pValue());
 
     } // TiffDecoder::decodeTiffEntry
-
-    void TiffDecoder::visitArrayEntry(TiffArrayEntry* /*object*/)
-    {
-        // Nothing to do
-    }
-
-    void TiffDecoder::visitArrayElement(TiffArrayElement* object)
-    {
-        decodeTiffEntry(object);
-    }
 
     void TiffDecoder::visitBinaryArray(TiffBinaryArray* /*object*/)
     {
@@ -687,16 +667,6 @@ namespace Exiv2 {
 
     } // TiffEncoder::visitIfdMakernoteEnd
 
-    void TiffEncoder::visitArrayEntry(TiffArrayEntry* /*object*/)
-    {
-        // Nothing to do
-    }
-
-    void TiffEncoder::visitArrayElement(TiffArrayElement* object)
-    {
-        encodeTiffComponent(object);
-    }
-
     void TiffEncoder::visitBinaryArray(TiffBinaryArray* /*object*/)
     {
         // Nothing to do
@@ -768,16 +738,6 @@ namespace Exiv2 {
         std::cerr << "\n";
 #endif
     } // TiffEncoder::encodeTiffComponent
-
-    void TiffEncoder::encodeArrayElement(TiffArrayElement* object, const Exifdatum* datum)
-    {
-        encodeTiffEntryBase(object, datum);
-    } // TiffEncoder::encodeArrayElement
-
-    void TiffEncoder::encodeArrayEntry(TiffArrayEntry* object, const Exifdatum* datum)
-    {
-        encodeOffsetEntry(object, datum);
-    } // TiffEncoder::encodeArrayEntry
 
     void TiffEncoder::encodeBinaryArray(TiffBinaryArray* object, const Exifdatum* datum)
     {
@@ -964,13 +924,6 @@ namespace Exiv2 {
         }
 
     } // TiffEncoder::encodeOffsetEntry
-
-    void TiffEncoder::encodeBigEndianEntry(TiffEntryBase* object, const Exifdatum* datum)
-    {
-        byteOrder_ = bigEndian;
-        encodeTiffEntryBase(object, datum);
-        byteOrder_ = origByteOrder_;
-    }
 
     void TiffEncoder::add(
         TiffComponent* pRootDir,
@@ -1431,63 +1384,6 @@ namespace Exiv2 {
         object->setIdx(nextIdx(object->group()));
 
     } // TiffReader::readTiffEntry
-
-    void TiffReader::visitArrayEntry(TiffArrayEntry* object)
-    {
-        assert(object != 0);
-
-        readTiffEntry(object);
-        // Todo: size here is that of the data area
-        const uint16_t sz = static_cast<uint16_t>(object->size_ / object->elSize());
-        for (uint16_t i = 0; i < sz; ++i) {
-            uint16_t tag = i;
-            TiffComponent::AutoPtr tc = TiffCreator::create(tag, object->elGroup());
-            assert(tc.get());
-            tc->setStart(object->pData() + i * object->elSize());
-            object->addChild(tc);
-            // Hack: Exif.CanonCs.Lens has 3 components
-            if (object->elGroup() == Group::canoncs && tag == 0x0017) {
-                i += 2;
-            }
-        }
-    } // TiffReader::visitArrayEntry
-
-    void TiffReader::visitArrayElement(TiffArrayElement* object)
-    {
-        assert(object != 0);
-
-        TypeId typeId = toTypeId(object->elTiffType(), object->tag(), object->group());
-        uint32_t size = TypeInfo::typeSize(typeId);
-        // Hack: Exif.CanonCs.Lens has 3 components
-        if (object->group() == Group::canoncs && object->tag() == 0x0017) {
-            size *= 3;
-        }
-        byte* pData   = object->start();
-        assert(pData >= pData_);
-
-        if (pData + size > pLast_) {
-#ifndef SUPPRESS_WARNINGS
-            std::cerr << "Error: Array element in group "
-                      << tiffGroupName(object->group())
-                      << "requests access to memory beyond the data buffer. "
-                      << "Skipping element.\n";
-#endif
-            return;
-        }
-
-        ByteOrder bo = object->elByteOrder();
-        if (bo == invalidByteOrder) bo = byteOrder();
-        Value::AutoPtr v = Value::create(typeId);
-        assert(v.get());
-        v->read(pData, size, bo);
-
-        object->setValue(v);
-        object->setData(pData, size);
-        object->setOffset(0);
-        object->setIdx(nextIdx(object->group()));
-        object->setCount(1);
-
-    } // TiffReader::visitArrayElement
 
     void TiffReader::visitBinaryArray(TiffBinaryArray* object)
     {

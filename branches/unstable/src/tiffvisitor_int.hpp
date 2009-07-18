@@ -133,10 +133,6 @@ namespace Exiv2 {
         virtual void visitIfdMakernote(TiffIfdMakernote* object) =0;
         //! Operation to perform after processing an IFD makernote
         virtual void visitIfdMakernoteEnd(TiffIfdMakernote* object);
-        //! Operation to perform for an array entry (as found in Canon makernotes)
-        virtual void visitArrayEntry(TiffArrayEntry* object) =0;
-        //! Operation to perform for an array element
-        virtual void visitArrayElement(TiffArrayElement* object) =0;
         //! Operation to perform for a binary array
         virtual void visitBinaryArray(TiffBinaryArray* object) =0;
         //! Operation to perform for an element of a binary array
@@ -186,10 +182,6 @@ namespace Exiv2 {
         virtual void visitMnEntry(TiffMnEntry* object);
         //! Find tag and group in an IFD makernote
         virtual void visitIfdMakernote(TiffIfdMakernote* object);
-        //! Find tag and group in an array entry component
-        virtual void visitArrayEntry(TiffArrayEntry* object);
-        //! Find tag and group in an array element
-        virtual void visitArrayElement(TiffArrayElement* object);
         //! Find tag and group in a binary array
         virtual void visitBinaryArray(TiffBinaryArray* object);
         //! Find tag and group in an element of a binary array
@@ -260,10 +252,6 @@ namespace Exiv2 {
         virtual void visitMnEntry(TiffMnEntry* object);
         //! Decode an IFD makernote
         virtual void visitIfdMakernote(TiffIfdMakernote* object);
-        //! Decode an array entry component
-        virtual void visitArrayEntry(TiffArrayEntry* object);
-        //! Decode an array element
-        virtual void visitArrayElement(TiffArrayElement* object);
         //! Decode a binary array
         virtual void visitBinaryArray(TiffBinaryArray* object);
         //! Decode an element of a binary array
@@ -367,10 +355,6 @@ namespace Exiv2 {
         virtual void visitIfdMakernote(TiffIfdMakernote* object);
         //! Reset encoder to its original state, undo makernote specific settings
         virtual void visitIfdMakernoteEnd(TiffIfdMakernote* object);
-        //! Encode an array entry component
-        virtual void visitArrayEntry(TiffArrayEntry* object);
-        //! Encode an array element
-        virtual void visitArrayElement(TiffArrayElement* object);
         //! Encode a binary array
         virtual void visitBinaryArray(TiffBinaryArray* object);
         //! Encode an element of a binary array
@@ -404,10 +388,6 @@ namespace Exiv2 {
         void encodeBinaryElement(TiffBinaryElement* object, const Exifdatum* datum);
         //! Callback encoder function for a binary array.
         void encodeBinaryArray(TiffBinaryArray* object, const Exifdatum* datum);
-        //! Callback encoder function for an array element.
-        void encodeArrayElement(TiffArrayElement* object, const Exifdatum* datum);
-        //! Callback encoder function for an array entry.
-        void encodeArrayEntry(TiffArrayEntry* object, const Exifdatum* datum);
         //! Callback encoder function for a data entry.
         void encodeDataEntry(TiffDataEntry* object, const Exifdatum* datum);
         //! Callback encoder function for a standard TIFF entry
@@ -431,8 +411,6 @@ namespace Exiv2 {
 
         //! Special encoder function to encode IPTC data to an IPTCNAA or Photoshop ImageResources tag.
         void encodeIptc(TiffEntryBase* object, const Exifdatum* datum);
-        //! Special encoder function for a standard TIFF entry using big endian byte order.
-        void encodeBigEndianEntry(TiffEntryBase* object, const Exifdatum* datum);
         /*!
           @brief Add metadata from image to the TIFF composite.
 
@@ -608,10 +586,6 @@ namespace Exiv2 {
         virtual void visitIfdMakernote(TiffIfdMakernote* object);
         //! Reset reader to its original state, undo makernote specific settings
         virtual void visitIfdMakernoteEnd(TiffIfdMakernote* object);
-        //! Read an array entry component from the data buffer
-        virtual void visitArrayEntry(TiffArrayEntry* object);
-        //! Read an array element from the data buffer
-        virtual void visitArrayElement(TiffArrayElement* object);
         //! Read a binary array from the data buffer
         virtual void visitBinaryArray(TiffBinaryArray* object);
         //! Read an element of a binary array from the data buffer
