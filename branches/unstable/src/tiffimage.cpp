@@ -358,6 +358,67 @@ namespace Exiv2 {
         { 3, ttUnsignedByte,  1 }
     };
 
+    //! Minolta Camera Settings (old) binary array - configuration
+    extern const ArrayCfg minoCsoCfg = {
+        Group::minocso,   // Group for the elements
+        bigEndian,        // Big endian
+        ttUndefined,      // Type for array entry and size element
+        4,                // One tag every four bytes
+        false,            // No header
+        false,            // No size element
+        false,            // No fillers
+        false,            // Not encrypted
+        { 0, ttUnsignedLong, 1 }
+    };
+
+    //! Minolta Camera Settings (new) binary array - configuration
+    extern const ArrayCfg minoCsnCfg = {
+        Group::minocsn,   // Group for the elements
+        bigEndian,        // Big endian
+        ttUndefined,      // Type for array entry and size element
+        4,                // One tag every four bytes
+        false,            // No header
+        false,            // No size element
+        false,            // No fillers
+        false,            // Not encrypted
+        { 0, ttUnsignedLong, 1 }
+    };
+
+    //! Minolta 7D Camera Settings binary array - configuration
+    extern const ArrayCfg minoCs7Cfg = {
+        Group::minocs7,   // Group for the elements
+        bigEndian,        // Big endian
+        ttUndefined,      // Type for array entry and size element
+        2,                // One tag every two bytes
+        false,            // No header
+        false,            // No size element
+        false,            // No fillers
+        false,            // Not encrypted
+        { 0, ttUnsignedShort, 1 }
+    };
+    //! Minolta 7D Camera Settings binary array - definition
+    extern const ArrayDef minoCs7Def[] = {
+        {  60, ttSignedShort, 1 }, // Exif.MinoltaCs7D.ExposureCompensation
+        { 126, ttSignedShort, 1 }  // Exif.MinoltaCs7D.ColorTemperature
+    };
+
+    //! Minolta 5D Camera Settings binary array - configuration
+    extern const ArrayCfg minoCs5Cfg = {
+        Group::minocs5,   // Group for the elements
+        bigEndian,        // Big endian
+        ttUndefined,      // Type for array entry and size element
+        2,                // One tag every two bytes
+        false,            // No header
+        false,            // No size element
+        false,            // No fillers
+        false,            // Not encrypted
+        { 0, ttUnsignedShort, 1 }
+    };
+    //! Minolta 5D Camera Settings binary array - definition
+    extern const ArrayDef minoCs5Def[] = {
+        { 146, ttSignedShort, 1 } // Exif.MinoltaCs5D.ColorTemperature
+    };
+
     /* 
       This table lists for each group in a tree, its parent group and tag.
       Root identifies the root of a TIFF tree, as there is a need for multiple
@@ -531,14 +592,14 @@ namespace Exiv2 {
 
         // Olympus makernote - some Olympus cameras use Minolta structures
         // Todo: Adding such tags will not work (maybe result in a Minolta makernote), need separate groups
-        {    0x0001, Group::olymp1mn,  newTiffArrayEntry<Group::minocso, ttUnsignedLong, false>  },
-        {    0x0003, Group::olymp1mn,  newTiffArrayEntry<Group::minocsn, ttUnsignedLong, false>  },
+        {    0x0001, Group::olymp1mn,  EXV_SIMPLE_BINARY_ARRAY(minoCsoCfg)       },
+        {    0x0003, Group::olymp1mn,  EXV_SIMPLE_BINARY_ARRAY(minoCsnCfg)       },
         { Tag::next, Group::olymp1mn,  newTiffDirectory<Group::ignr>             },
         {  Tag::all, Group::olymp1mn,  newTiffEntry                              },
 
         // Olympus2 makernote
-        {    0x0001, Group::olymp2mn,  newTiffArrayEntry<Group::minocso, ttUnsignedLong, false>  },
-        {    0x0003, Group::olymp2mn,  newTiffArrayEntry<Group::minocsn, ttUnsignedLong, false>  },
+        {    0x0001, Group::olymp2mn,  EXV_SIMPLE_BINARY_ARRAY(minoCsoCfg)       },
+        {    0x0003, Group::olymp2mn,  EXV_SIMPLE_BINARY_ARRAY(minoCsnCfg)       },
         {    0x2010, Group::olymp2mn,  newTiffSubIfd<Group::olympeq>             },
         {    0x2020, Group::olymp2mn,  newTiffSubIfd<Group::olympcs>             },
         {    0x2030, Group::olymp2mn,  newTiffSubIfd<Group::olymprd>             },
@@ -674,20 +735,20 @@ namespace Exiv2 {
         {  Tag::all, Group::sony2mn,   newTiffEntry                              },
 
         // Minolta makernote
-        {    0x0001, Group::minoltamn, newTiffArrayEntry<Group::minocso, ttUnsignedLong, false>   },
-        {    0x0003, Group::minoltamn, newTiffArrayEntry<Group::minocsn, ttUnsignedLong, false>   },
-        {    0x0004, Group::minoltamn, newTiffArrayEntry<Group::minocs7, ttUnsignedShort, false>  },
+        {    0x0001, Group::minoltamn, EXV_SIMPLE_BINARY_ARRAY(minoCsoCfg)       },
+        {    0x0003, Group::minoltamn, EXV_SIMPLE_BINARY_ARRAY(minoCsnCfg)       },
+        {    0x0004, Group::minoltamn, EXV_BINARY_ARRAY(minoCs7Cfg, minoCs7Def)  },
         {    0x0088, Group::minoltamn, newTiffThumbData<0x0089, Group::minoltamn>},
         {    0x0089, Group::minoltamn, newTiffThumbSize<0x0088, Group::minoltamn>},
-        {    0x0114, Group::minoltamn, newTiffArrayEntry<Group::minocs5, ttUnsignedShort, false>  },
+        {    0x0114, Group::minoltamn, EXV_BINARY_ARRAY(minoCs5Cfg, minoCs5Def)  },
         { Tag::next, Group::minoltamn, newTiffDirectory<Group::ignr>             },
         {  Tag::all, Group::minoltamn, newTiffEntry                              },
 
         // Minolta makernote composite tags
-        {  Tag::all, Group::minocso,   newTiffArrayElement<ttUnsignedLong,  bigEndian>  },
-        {  Tag::all, Group::minocsn,   newTiffArrayElement<ttUnsignedLong,  bigEndian>  },
-        {  Tag::all, Group::minocs7,   newTiffArrayElement<ttUnsignedShort, bigEndian>  },
-        {  Tag::all, Group::minocs5,   newTiffArrayElement<ttUnsignedShort, bigEndian>  },
+        {  Tag::all, Group::minocso,   newTiffBinaryElement                      },
+        {  Tag::all, Group::minocsn,   newTiffBinaryElement                      },
+        {  Tag::all, Group::minocs7,   newTiffBinaryElement                      },
+        {  Tag::all, Group::minocs5,   newTiffBinaryElement                      },
 
         // -----------------------------------------------------------------------
         // Root directory of Panasonic RAW images
@@ -712,12 +773,7 @@ namespace Exiv2 {
         { "*",       Tag::all, Group::ignr,    0, 0 }, // Do not decode tags with group == Group::ignr
         { "*",         0x02bc, Group::ifd0,    &TiffDecoder::decodeXmp,          0 /*done before the tree is traversed*/ },
         { "*",         0x83bb, Group::ifd0,    &TiffDecoder::decodeIptc,         0 /*done before the tree is traversed*/ },
-        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,         0 /*done before the tree is traversed*/ },
-        // Minolta makernote entries which need to be encoded in big endian byte order
-        { "*",       Tag::all, Group::minocso, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
-        { "*",       Tag::all, Group::minocsn, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
-        { "*",       Tag::all, Group::minocs7, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry },
-        { "*",       Tag::all, Group::minocs5, &TiffDecoder::decodeStdTiffEntry, &TiffEncoder::encodeBigEndianEntry }
+        { "*",         0x8649, Group::ifd0,    &TiffDecoder::decodeIptc,         0 /*done before the tree is traversed*/ }
     };
 
     DecoderFct TiffMapping::findDecoder(const std::string& make,
