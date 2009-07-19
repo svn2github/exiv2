@@ -353,7 +353,7 @@ namespace Exiv2 {
     };
     //! Nikon World Time binary array - definition
     extern const ArrayDef nikonWtDef[] = {
-        { 0, ttUnsignedShort, 1 },
+        { 0, ttSignedShort,   1 },
         { 2, ttUnsignedByte,  1 },
         { 3, ttUnsignedByte,  1 }
     };

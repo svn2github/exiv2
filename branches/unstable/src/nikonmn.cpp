@@ -643,7 +643,7 @@ namespace Exiv2 {
 
     // Nikon3 World Time Tag Info
     const TagInfo Nikon3MakerNote::tagInfoWt_[] = {
-        TagInfo(0, "Timezone", N_("Timezone"), N_("Timezone"), nikonWtIfdId, makerTags, unsignedShort, printValue),
+        TagInfo(0, "Timezone", N_("Timezone"), N_("Timezone"), nikonWtIfdId, makerTags, signedShort, printValue),
         TagInfo(2, "DaylightSavings", N_("Daylight Savings"), N_("Daylight savings"), nikonWtIfdId, makerTags, unsignedByte, EXV_PRINT_TAG(nikonYesNo)),
         TagInfo(3, "DateDisplayFormat", N_("Date Display Format"), N_("Date display format"), nikonWtIfdId, makerTags, unsignedByte, EXV_PRINT_TAG(nikonDateDisplayFormat)),
         // End of list marker
