@@ -49,6 +49,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include <iomanip>
 #include <cassert>
 #include <cstring>
+#include <cmath>
 
 // *****************************************************************************
 namespace {
@@ -652,6 +653,46 @@ namespace Exiv2 {
     const TagInfo* Nikon3MakerNote::tagListWt()
     {
         return tagInfoWt_;
+    }
+
+    //! ISOExpansion, tag index 4 and 10
+    extern const TagDetails nikonIsoExpansion[] = {
+        { 0x000, N_("Off")    },
+        { 0x101, N_("Hi 0.3") },
+        { 0x102, N_("Hi 0.5") },
+        { 0x103, N_("Hi 0.7") },
+        { 0x104, N_("Hi 1.0") },
+        { 0x105, N_("Hi 1.3") },
+        { 0x106, N_("Hi 1.5") },
+        { 0x107, N_("Hi 1.7") },
+        { 0x108, N_("Hi 2.0") },
+        { 0x201, N_("Lo 0.3") },
+        { 0x202, N_("Lo 0.5") },
+        { 0x203, N_("Lo 0.7") },
+        { 0x204, N_("Lo 1.0") }
+    };
+
+    // Nikon3 ISO Info Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoIi_[] = {
+        TagInfo( 0, "ISO", N_("ISO"), N_("ISO"), nikonIiIfdId, makerTags, unsignedByte, printIiIso),
+        TagInfo( 4, "ISOExpansion", N_("ISO Expansion"), N_("ISO expansion"), nikonIiIfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonIsoExpansion)),
+        TagInfo( 6, "ISO2", N_("ISO 2"), N_("ISO 2"), nikonIiIfdId, makerTags, unsignedByte, printIiIso),
+        TagInfo(10, "ISOExpansion2", N_("ISO Expansion 2"), N_("ISO expansion 2"), nikonIiIfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonIsoExpansion)),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonWtTag)", "(UnknownNikonWtTag)", N_("Unknown Nikon World Time Tag"), nikonWtIfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListIi()
+    {
+        return tagInfoIi_;
+    }
+
+    std::ostream& Nikon3MakerNote::printIiIso(std::ostream& os,
+                                              const Value& value,
+                                              const ExifData*)
+    {
+        double v = 100 * exp((value.toLong() / 12.0 - 5) * log(2));
+        return os << static_cast<int>(v + 0.5);
     }
 
     std::ostream& Nikon3MakerNote::print0x0002(std::ostream& os,

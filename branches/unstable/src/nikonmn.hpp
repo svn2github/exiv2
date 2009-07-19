@@ -112,6 +112,8 @@ namespace Exiv2 {
         static const TagInfo* tagList();
         //! Return read-only list of built-in World time tags
         static const TagInfo* tagListWt();
+        //! Return read-only list of built-in ISO info tags
+        static const TagInfo* tagListIi();
 
         //! @name Print functions for Nikon3 %MakerNote tags
         //@{
@@ -139,6 +141,8 @@ namespace Exiv2 {
         static std::ostream& print0x009a(std::ostream& os, const Value& value, const ExifData*);
         //! Print retouch history
         static std::ostream& print0x009e(std::ostream& os, const Value& value, const ExifData*);
+        //! Print Exif.NikonIi.ISO(2)
+        static std::ostream& printIiIso(std::ostream& os, const Value& value, const ExifData*);
         //@}
 
     private:
@@ -146,6 +150,8 @@ namespace Exiv2 {
         static const TagInfo tagInfo_[];
         //! World Time tag information
         static const TagInfo tagInfoWt_[];
+        //! ISO info tag information
+        static const TagInfo tagInfoIi_[];
 
     }; // class Nikon3MakerNote
 

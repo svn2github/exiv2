@@ -129,7 +129,8 @@ namespace Exiv2 {
         { 296, "OlympusFe8"   },
         { 297, "OlympusFe9"   },
         { 298, "OlympusRi"    },
-        { 299, "NikonWt"      }
+        { 299, "NikonWt"      },
+        { 300, "NikonIi"      }
     };
 
     bool TiffGroupInfo::operator==(const uint16_t& group) const

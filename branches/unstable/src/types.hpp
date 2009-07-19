@@ -144,6 +144,7 @@ namespace Exiv2 {
                  minoltaIfdId, minoltaCs5DIfdId, minoltaCs7DIfdId,
                  minoltaCsOldIfdId, minoltaCsNewIfdId,
                  nikon1IfdId, nikon2IfdId, nikon3IfdId, nikonPvIfdId, nikonWtIfdId,
+                 nikonIiIfdId,
                  olympusIfdId, olympus2IfdId, olympusCsIfdId, olympusEqIfdId,
                  olympusRdIfdId, olympusRd2IfdId, olympusIpIfdId, olympusFiIfdId,
                  olympusFe1IfdId, olympusFe2IfdId, olympusFe3IfdId, olympusFe4IfdId,

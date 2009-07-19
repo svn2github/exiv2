@@ -358,6 +358,25 @@ namespace Exiv2 {
         { 3, ttUnsignedByte,  1 }
     };
 
+    //! Nikon ISO info binary array - configuration
+    extern const ArrayCfg nikonIiCfg = {
+        Group::nikonii,   // Group for the elements
+        bigEndian,        // Byte order
+        ttUndefined,      // Type for array entry
+        1,                // One tag per byte
+        false,            // No header
+        false,            // No size element
+        true,             // Write all tags
+        false,            // Not encrypted
+        { 0, ttUnsignedByte,  1 }
+    };
+    //! Nikon ISO info binary array - definition
+    extern const ArrayDef nikonIiDef[] = {
+        {  4, ttUnsignedShort, 1 },
+        { 10, ttUnsignedShort, 1 },
+        { 13, ttUnsignedByte,  1 }  // The array contains 14 bytes
+    };
+
     //! Minolta Camera Settings (old) binary array - configuration
     extern const ArrayCfg minoCsoCfg = {
         Group::minocso,   // Group for the elements
@@ -472,6 +491,7 @@ namespace Exiv2 {
         { Tag::root, Group::nikon3mn,  Group::exif,      0x927c    },
         { Tag::root, Group::nikonpv,   Group::nikon3mn,  0x0011    },
         { Tag::root, Group::nikonwt,   Group::nikon3mn,  0x0024    },
+        { Tag::root, Group::nikonii,   Group::nikon3mn,  0x0025    },
         { Tag::root, Group::panamn,    Group::exif,      0x927c    },
         { Tag::root, Group::pentaxmn,  Group::exif,      0x927c    },
         { Tag::root, Group::sigmamn,   Group::exif,      0x927c    },
@@ -701,6 +721,7 @@ namespace Exiv2 {
         { Tag::next, Group::nikon3mn,  newTiffDirectory<Group::ignr>             },
         {    0x0011, Group::nikon3mn,  newTiffSubIfd<Group::nikonpv>             },
         {    0x0024, Group::nikon3mn,  EXV_BINARY_ARRAY(nikonWtCfg, nikonWtDef)  },
+        {    0x0025, Group::nikon3mn,  EXV_BINARY_ARRAY(nikonIiCfg, nikonIiDef)  },
         {  Tag::all, Group::nikon3mn,  newTiffEntry                              },
 
         // Nikon3 makernote preview subdir
@@ -711,6 +732,9 @@ namespace Exiv2 {
 
         // Nikon3 world time
         {  Tag::all, Group::nikonwt,   newTiffBinaryElement                      },
+
+        // Nikon3 ISO info
+        {  Tag::all, Group::nikonii,   newTiffBinaryElement                      },
 
         // Panasonic makernote
         { Tag::next, Group::panamn,    newTiffDirectory<Group::ignr>             },
