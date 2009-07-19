@@ -84,6 +84,8 @@ namespace Exiv2 {
             "Exif.Nikon1.ISOSpeed",
             "Exif.Nikon2.ISOSpeed",
             "Exif.Nikon3.ISOSpeed",
+            "Exif.NikonIi.ISO",
+            "Exif.NikonIi.ISO2",
             "Exif.MinoltaCsNew.ISOSpeed",
             "Exif.MinoltaCsOld.ISOSpeed",
             "Exif.MinoltaCs5D.ISOSpeed",
@@ -91,7 +93,20 @@ namespace Exiv2 {
             "Exif.Pentax.ISO",
             "Exif.Olympus.ISOSpeed"
         };
-        return findMetadatum(ed, keys, EXV_COUNTOF(keys));
+
+        // Find the first ISO value which is not "0"
+        const int cnt = EXV_COUNTOF(keys);
+        ExifData::const_iterator md = ed.end();
+        for (int idx = 0;;) {
+            md = findMetadatum(ed, keys + idx, cnt - idx);
+            if (md == ed.end()) break;
+            std::ostringstream os;
+            md->write(os, &ed);
+            if (strcmp(os.str().c_str(), "0") != 0) break;
+            while (strcmp(keys[idx++], md->key().c_str()) != 0 && idx < cnt) {}
+        }
+
+        return md;
     }
 
     ExifData::const_iterator flashBias(const ExifData& ed)
