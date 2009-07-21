@@ -97,13 +97,16 @@ namespace Exiv2 {
         // Find the first ISO value which is not "0"
         const int cnt = EXV_COUNTOF(keys);
         ExifData::const_iterator md = ed.end();
-        for (int idx = 0;;) {
+        for (int idx = 0; idx < cnt; ) {
             md = findMetadatum(ed, keys + idx, cnt - idx);
             if (md == ed.end()) break;
             std::ostringstream os;
             md->write(os, &ed);
-            if (strcmp(os.str().c_str(), "0") != 0) break;
+            bool ok = false;
+            long v = parseLong(os.str(), ok);
+            if (ok && v != 0) break;
             while (strcmp(keys[idx++], md->key().c_str()) != 0 && idx < cnt) {}
+            md = ed.end();
         }
 
         return md;
