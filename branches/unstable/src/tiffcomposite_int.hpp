@@ -1078,11 +1078,15 @@ namespace Exiv2 {
 
     //! Additional configuration for a binary array.
     struct ArrayCfg {
+        /*!
+          @brief Return the size of the default tag, which is used
+                 to calculate tag numbers as idx/tagStep
+         */
+        uint32_t tagStep() const { return elDefaultDef_.size(0, group_); }
         //DATA
         uint32_t    group_;        //!< Group for the elements
         ByteOrder   byteOrder_;    //!< Byte order, invalidByteOrder to inherit
         TiffType    elTiffType_;   //!< Type for the array entry and the size element, if any
-        uint16_t    tagStep_;      //!< Tag is calculated as idx/tagStep_; usually 1
         bool        hasHeader_;    //!< If true, first tag is the header
         bool        hasSize_;      //!< If true, first tag is the size element
         bool        hasFillers_;   //!< If true, write all defined tags

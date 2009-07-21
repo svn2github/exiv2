@@ -275,7 +275,6 @@ namespace Exiv2 {
         Group::canoncs,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUnsignedShort,  // Type for array entry and size element
-        2,                // One tag every two bytes
         false,            // No header
         true,             // With size element
         false,            // No fillers
@@ -292,7 +291,6 @@ namespace Exiv2 {
         Group::canonsi,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUnsignedShort,  // Type for array entry and size element
-        2,                // One tag every two bytes
         false,            // No header
         true,             // With size element
         false,            // No fillers
@@ -305,7 +303,6 @@ namespace Exiv2 {
         Group::canonpa,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUnsignedShort,  // Type for array entry and size element
-        2,                // One tag every two bytes
         false,            // No header
         false,            // No size element
         false,            // No fillers
@@ -318,7 +315,6 @@ namespace Exiv2 {
         Group::canoncf,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUnsignedShort,  // Type for array entry and size element
-        2,                // One tag every two bytes
         false,            // No header
         true,             // With size element
         false,            // No fillers
@@ -331,7 +327,6 @@ namespace Exiv2 {
         Group::canonpi,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUnsignedShort,  // Type for array entry and size element
-        2,                // One tag every two bytes
         false,            // No header
         false,            // No size element
         false,            // No fillers
@@ -344,7 +339,6 @@ namespace Exiv2 {
         Group::nikonwt,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUndefined,      // Type for array entry
-        1,                // One tag per byte
         false,            // No header
         false,            // No size element
         true,             // Write all tags
@@ -363,7 +357,6 @@ namespace Exiv2 {
         Group::nikonii,   // Group for the elements
         bigEndian,        // Byte order
         ttUndefined,      // Type for array entry
-        1,                // One tag per byte
         false,            // No header
         false,            // No size element
         true,             // Write all tags
@@ -382,7 +375,6 @@ namespace Exiv2 {
         Group::minocso,   // Group for the elements
         bigEndian,        // Big endian
         ttUndefined,      // Type for array entry and size element
-        4,                // One tag every four bytes
         false,            // No header
         false,            // No size element
         false,            // No fillers
@@ -395,7 +387,6 @@ namespace Exiv2 {
         Group::minocsn,   // Group for the elements
         bigEndian,        // Big endian
         ttUndefined,      // Type for array entry and size element
-        4,                // One tag every four bytes
         false,            // No header
         false,            // No size element
         false,            // No fillers
@@ -408,7 +399,6 @@ namespace Exiv2 {
         Group::minocs7,   // Group for the elements
         bigEndian,        // Big endian
         ttUndefined,      // Type for array entry and size element
-        2,                // One tag every two bytes
         false,            // No header
         false,            // No size element
         false,            // No fillers
@@ -426,7 +416,6 @@ namespace Exiv2 {
         Group::minocs5,   // Group for the elements
         bigEndian,        // Big endian
         ttUndefined,      // Type for array entry and size element
-        2,                // One tag every two bytes
         false,            // No header
         false,            // No size element
         false,            // No fillers

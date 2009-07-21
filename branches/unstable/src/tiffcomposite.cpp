@@ -451,7 +451,7 @@ namespace Exiv2 {
     {
         assert(def != 0);
 
-        uint16_t tag = static_cast<uint16_t>(idx) / cfg()->tagStep_;
+        uint16_t tag = static_cast<uint16_t>(idx / cfg()->tagStep());
         int32_t sz = std::min(def->size(tag, cfg()->group_), TiffEntryBase::doSize() - idx);
         TiffComponent::AutoPtr tc = TiffCreator::create(tag, cfg()->group_);
         TiffBinaryElement* tp = dynamic_cast<TiffBinaryElement*>(tc.get());
@@ -1125,13 +1125,13 @@ namespace Exiv2 {
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
             // Skip the manufactured tag, if it exists
             if (cfg()->hasSize_ && (*i)->tag() == 0) continue;
-            uint32_t newIdx = (*i)->tag() * cfg()->tagStep_;
+            uint32_t newIdx = (*i)->tag() * cfg()->tagStep();
             idx += fillGap(blob, idx, newIdx);
             idx += (*i)->write(blob, byteOrder, offset + newIdx, valueIdx, dataIdx, imageIdx);
         }
         if (cfg()->hasFillers_ && def()) {
             const ArrayDef* lastDef = def() + defSize() - 1;
-            uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep_);
+            uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep());
             idx += fillGap(blob, idx, lastDef->idx_ + lastDef->size(lastTag, cfg()->group_));
         }
         if (cfg()->isEncrypted_) {
@@ -1387,12 +1387,12 @@ namespace Exiv2 {
 
         uint32_t idx = 0;
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
-            idx = std::max(idx, static_cast<uint32_t>((*i)->tag() * cfg()->tagStep_));
+            idx = std::max(idx, (*i)->tag() * cfg()->tagStep());
             idx += (*i)->size();
         }
         if (cfg()->hasFillers_ && def()) {
             const ArrayDef* lastDef = def() + defSize() - 1;
-            uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep_);
+            uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep());
             idx = std::max(idx, lastDef->idx_ + lastDef->size(lastTag, cfg()->group_));
         }
         return idx;
