@@ -1062,6 +1062,9 @@ namespace Exiv2 {
 
     }; // class TiffMnEntry
 
+    //! Function pointer type for a crypt function used for binary arrays.
+    typedef int (*CryptFct)(byte*, uint32_t, TiffComponent* const);
+
     //! Defines one tag in a binary array
     // Todo: multiple tags in one byte - mask
     // Todo: There cannot be any gaps in the definition! see addElement()
@@ -1087,10 +1090,9 @@ namespace Exiv2 {
         uint32_t    group_;        //!< Group for the elements
         ByteOrder   byteOrder_;    //!< Byte order, invalidByteOrder to inherit
         TiffType    elTiffType_;   //!< Type for the array entry and the size element, if any
-        bool        hasHeader_;    //!< If true, first tag is the header
+        CryptFct    cryptFct_;     //!< Crypt function, 0 if not used
         bool        hasSize_;      //!< If true, first tag is the size element
         bool        hasFillers_;   //!< If true, write all defined tags
-        bool        isEncrypted_;  //!< Encryption flag
         ArrayDef    elDefaultDef_; //!< Default element
     };
 

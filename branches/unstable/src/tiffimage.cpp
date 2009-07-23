@@ -270,15 +270,17 @@ namespace Exiv2 {
 namespace Exiv2 {
     namespace Internal {
 
+    //! Constant for non-encrypted binary arrays
+    const CryptFct notEncrypted = 0;
+
     //! Canon Camera Settings binary array - configuration
     extern const ArrayCfg canonCsCfg = {
         Group::canoncs,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUnsignedShort,  // Type for array entry and size element
-        false,            // No header
+        notEncrypted,     // Not encrypted
         true,             // With size element
         false,            // No fillers
-        false,            // Not encrypted
         { 0, ttUnsignedShort, 1 }
     };
     //! Canon Camera Settings binary array - definition
@@ -291,10 +293,9 @@ namespace Exiv2 {
         Group::canonsi,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUnsignedShort,  // Type for array entry and size element
-        false,            // No header
+        notEncrypted,     // Not encrypted
         true,             // With size element
         false,            // No fillers
-        false,            // Not encrypted
         { 0, ttUnsignedShort, 1 }
     };
 
@@ -303,10 +304,9 @@ namespace Exiv2 {
         Group::canonpa,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUnsignedShort,  // Type for array entry and size element
-        false,            // No header
+        notEncrypted,     // Not encrypted
         false,            // No size element
         false,            // No fillers
-        false,            // Not encrypted
         { 0, ttUnsignedShort, 1 }
     };
 
@@ -315,10 +315,9 @@ namespace Exiv2 {
         Group::canoncf,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUnsignedShort,  // Type for array entry and size element
-        false,            // No header
+        notEncrypted,     // Not encrypted
         true,             // With size element
         false,            // No fillers
-        false,            // Not encrypted
         { 0, ttUnsignedShort, 1 }
     };
 
@@ -327,10 +326,9 @@ namespace Exiv2 {
         Group::canonpi,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUnsignedShort,  // Type for array entry and size element
-        false,            // No header
+        notEncrypted,     // Not encrypted
         false,            // No size element
         false,            // No fillers
-        false,            // Not encrypted
         { 0, ttUnsignedShort, 1 }
     };
 
@@ -339,10 +337,9 @@ namespace Exiv2 {
         Group::nikonwt,   // Group for the elements
         invalidByteOrder, // Use byte order from parent 
         ttUndefined,      // Type for array entry
-        false,            // No header
+        notEncrypted,     // Not encrypted
         false,            // No size element
         true,             // Write all tags
-        false,            // Not encrypted
         { 0, ttUnsignedByte,  1 }
     };
     //! Nikon World Time binary array - definition
@@ -357,10 +354,9 @@ namespace Exiv2 {
         Group::nikonii,   // Group for the elements
         bigEndian,        // Byte order
         ttUndefined,      // Type for array entry
-        false,            // No header
+        notEncrypted,     // Not encrypted
         false,            // No size element
         true,             // Write all tags
-        false,            // Not encrypted
         { 0, ttUnsignedByte,  1 }
     };
     //! Nikon ISO info binary array - definition
@@ -375,10 +371,9 @@ namespace Exiv2 {
         Group::minocso,   // Group for the elements
         bigEndian,        // Big endian
         ttUndefined,      // Type for array entry and size element
-        false,            // No header
+        notEncrypted,     // Not encrypted
         false,            // No size element
         false,            // No fillers
-        false,            // Not encrypted
         { 0, ttUnsignedLong, 1 }
     };
 
@@ -387,10 +382,9 @@ namespace Exiv2 {
         Group::minocsn,   // Group for the elements
         bigEndian,        // Big endian
         ttUndefined,      // Type for array entry and size element
-        false,            // No header
+        notEncrypted,     // Not encrypted
         false,            // No size element
         false,            // No fillers
-        false,            // Not encrypted
         { 0, ttUnsignedLong, 1 }
     };
 
@@ -399,10 +393,9 @@ namespace Exiv2 {
         Group::minocs7,   // Group for the elements
         bigEndian,        // Big endian
         ttUndefined,      // Type for array entry and size element
-        false,            // No header
+        notEncrypted,     // Not encrypted
         false,            // No size element
         false,            // No fillers
-        false,            // Not encrypted
         { 0, ttUnsignedShort, 1 }
     };
     //! Minolta 7D Camera Settings binary array - definition
@@ -416,10 +409,9 @@ namespace Exiv2 {
         Group::minocs5,   // Group for the elements
         bigEndian,        // Big endian
         ttUndefined,      // Type for array entry and size element
-        false,            // No header
+        notEncrypted,     // Not encrypted
         false,            // No size element
         false,            // No fillers
-        false,            // Not encrypted
         { 0, ttUnsignedShort, 1 }
     };
     //! Minolta 5D Camera Settings binary array - definition

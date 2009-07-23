@@ -1134,7 +1134,7 @@ namespace Exiv2 {
             uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep());
             idx += fillGap(blob, idx, lastDef->idx_ + lastDef->size(lastTag, cfg()->group_));
         }
-        if (cfg()->isEncrypted_) {
+        if (cfg()->cryptFct_) {
             // Todo: encrypt, skip header
         }
 
