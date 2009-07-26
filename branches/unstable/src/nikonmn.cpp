@@ -586,7 +586,7 @@ namespace Exiv2 {
         TagInfo(0x0095, "NoiseReduction", N_("Noise Reduction"), N_("Noise reduction"), nikon3IfdId, makerTags, asciiString, printValue),
         TagInfo(0x0096, "CompressionCurve", N_("Compression Curve"), N_("Compression curve"), nikon3IfdId, makerTags, undefined, printValue),
         TagInfo(0x0097, "ColorBalance2", N_("Color Balance 2"), N_("Color balance settings 2"), nikon3IfdId, makerTags, undefined, printValue),
-        TagInfo(0x0098, "LensData", N_("Lens Data"), N_("Lens data settings"), nikon3IfdId, makerTags, undefined, print0x0098),
+        TagInfo(0x0098, "LensData", N_("Lens Data"), N_("Lens data settings"), nikon3IfdId, makerTags, undefined, printValue), //print0x0098),
         TagInfo(0x0099, "RawImageCenter", N_("Raw Image Center"), N_("Raw image center"), nikon3IfdId, makerTags, unsignedShort, printValue),
         TagInfo(0x009a, "SensorPixelSize", N_("Sensor Pixel Size"), N_("Sensor pixel size"), nikon3IfdId, makerTags, unsignedRational, print0x009a),
         TagInfo(0x009b, "0x009b", "0x009b", N_("Unknown"), nikon3IfdId, makerTags, unsignedShort, printValue),
@@ -679,12 +679,51 @@ namespace Exiv2 {
         TagInfo( 6, "ISO2", N_("ISO 2"), N_("ISO 2"), nikonIiIfdId, makerTags, unsignedByte, printIiIso),
         TagInfo(10, "ISOExpansion2", N_("ISO Expansion 2"), N_("ISO expansion 2"), nikonIiIfdId, makerTags, unsignedShort, EXV_PRINT_TAG(nikonIsoExpansion)),
         // End of list marker
-        TagInfo(0xffff, "(UnknownNikonWtTag)", "(UnknownNikonWtTag)", N_("Unknown Nikon World Time Tag"), nikonWtIfdId, makerTags, invalidTypeId, printValue)
+        TagInfo(0xffff, "(UnknownNikonIiTag)", "(UnknownNikonIiTag)", N_("Unknown Nikon Iso Info Tag"), nikonIiIfdId, makerTags, invalidTypeId, printValue)
     };
 
     const TagInfo* Nikon3MakerNote::tagListIi()
     {
         return tagInfoIi_;
+    }
+
+    // Nikon3 Lens Data 1 Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoLd1_[] = {
+        TagInfo( 0, "Version", N_("Version"), N_("Version"), nikonLd1IfdId, makerTags, undefined, printExifVersion),
+        TagInfo( 6, "LensIDNumber", N_("Lens ID Number"), N_("Lens ID number"), nikonLd1IfdId, makerTags, unsignedByte, printValue),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonLd1Tag)", "(UnknownNikonLd1Tag)", N_("Unknown Nikon Lens Data 1 Tag"), nikonLd1IfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListLd1()
+    {
+        return tagInfoLd1_;
+    }
+
+    // Nikon3 Lens Data 2 Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoLd2_[] = {
+        TagInfo( 0, "Version", N_("Version"), N_("Version"), nikonLd2IfdId, makerTags, undefined, printExifVersion),
+        TagInfo( 4, "ExitPupilPosition", N_("Exit Pupil Position"), N_("Exit pupil position"), nikonLd2IfdId, makerTags, unsignedByte, printValue),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonLd2Tag)", "(UnknownNikonLd2Tag)", N_("Unknown Nikon Lens Data 2 Tag"), nikonLd2IfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListLd2()
+    {
+        return tagInfoLd2_;
+    }
+
+    // Nikon3 Lens Data 3 Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoLd3_[] = {
+        TagInfo( 0, "Version", N_("Version"), N_("Version"), nikonLd3IfdId, makerTags, undefined, printExifVersion),
+        TagInfo( 4, "ExitPupilPosition", N_("Exit Pupil Position"), N_("Exit pupil position"), nikonLd3IfdId, makerTags, unsignedByte, printValue),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonLd3Tag)", "(UnknownNikonLd3Tag)", N_("Unknown Nikon Lens Data 3 Tag"), nikonLd3IfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListLd3()
+    {
+        return tagInfoLd3_;
     }
 
     std::ostream& Nikon3MakerNote::printIiIso(std::ostream& os,

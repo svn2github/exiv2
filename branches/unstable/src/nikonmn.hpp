@@ -114,6 +114,12 @@ namespace Exiv2 {
         static const TagInfo* tagListWt();
         //! Return read-only list of built-in ISO info tags
         static const TagInfo* tagListIi();
+        //! Return read-only list of built-in Lens Data 1 tags
+        static const TagInfo* tagListLd1();
+        //! Return read-only list of built-in Lens Data 2 tags
+        static const TagInfo* tagListLd2();
+        //! Return read-only list of built-in Lens Data 3 tags
+        static const TagInfo* tagListLd3();
 
         //! @name Print functions for Nikon3 %MakerNote tags
         //@{
@@ -152,6 +158,12 @@ namespace Exiv2 {
         static const TagInfo tagInfoWt_[];
         //! ISO info tag information
         static const TagInfo tagInfoIi_[];
+        //! Lens Data 1 tag information
+        static const TagInfo tagInfoLd1_[];
+        //! Lens Data 2 tag information
+        static const TagInfo tagInfoLd2_[];
+        //! Lens Data 3 tag information
+        static const TagInfo tagInfoLd3_[];
 
     }; // class Nikon3MakerNote
 

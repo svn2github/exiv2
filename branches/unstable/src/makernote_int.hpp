@@ -88,6 +88,9 @@ namespace Exiv2 {
         const uint16_t olympri   = 298; //!< Olympus raw info tags
         const uint16_t nikonwt   = 299; //!< Nikon World Time tags
         const uint16_t nikonii   = 300; //!< Nikon ISO Info tags
+        const uint16_t nikonld1  = 301; //!< Nikon Lens Data 1 tags
+        const uint16_t nikonld2  = 302; //!< Nikon Lens Data 2 tags
+        const uint16_t nikonld3  = 303; //!< Nikon Lens Data 3 tags
     }
 
 // *****************************************************************************
@@ -772,6 +775,14 @@ namespace Exiv2 {
     TiffComponent* newSony2Mn2(uint16_t tag,
                                uint16_t group,
                                uint16_t mnGroup);
+
+    /*!
+      @brief Function to determine which Nikon Lens Data cfg + def to use
+
+      @param pRoot Pointer to the root element of the composite
+      @return Index into the corresponding array set.
+     */
+    int selectNikonLd(TiffBinaryArray* const object, TiffComponent* const pRoot);
 
 }}                                      // namespace Internal, Exiv2
 

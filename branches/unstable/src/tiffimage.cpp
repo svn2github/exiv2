@@ -266,12 +266,16 @@ namespace Exiv2 {
 // Shortcuts for the newTiffBinaryArray templates.
 #define EXV_BINARY_ARRAY(arrayCfg, arrayDef) (newTiffBinaryArray<&arrayCfg, EXV_COUNTOF(arrayDef), arrayDef>)
 #define EXV_SIMPLE_BINARY_ARRAY(arrayCfg) (newTiffBinaryArray<&arrayCfg>)
+#define EXV_COMPLEX_BINARY_ARRAY(arraySet, cfgSelFct) (newTiffBinaryArray2<arraySet, cfgSelFct>)
 
 namespace Exiv2 {
     namespace Internal {
 
     //! Constant for non-encrypted binary arrays
     const CryptFct notEncrypted = 0;
+
+    // Todo: Replace with the real thing
+    const CryptFct nikonCrypt = 0;
 
     //! Canon Camera Settings binary array - configuration
     extern const ArrayCfg canonCsCfg = {
@@ -364,6 +368,47 @@ namespace Exiv2 {
         {  4, ttUnsignedShort, 1 },
         { 10, ttUnsignedShort, 1 },
         { 13, ttUnsignedByte,  1 }  // The array contains 14 bytes
+    };
+
+    //! Nikon Lens Data binary array - configuration 1
+    extern const ArrayCfg nikonLd1Cfg = {
+        Group::nikonld1,  // Group for the elements
+        invalidByteOrder, // Use byte order from parent
+        ttUndefined,      // Type for array entry
+        notEncrypted,     // Encryption function
+        false,            // No size element
+        true,             // Write all tags
+        { 0, ttUnsignedByte,  1 }
+    };
+    //! Nikon Lens Data binary array - configuration 2
+    extern const ArrayCfg nikonLd2Cfg = {
+        Group::nikonld2,  // Group for the elements
+        invalidByteOrder, // Use byte order from parent
+        ttUndefined,      // Type for array entry
+        nikonCrypt,       // Encryption function
+        false,            // No size element
+        true,             // Write all tags
+        { 0, ttUnsignedByte,  1 }
+    };
+    //! Nikon Lens Data binary array - configuration 3
+    extern const ArrayCfg nikonLd3Cfg = {
+        Group::nikonld3,  // Group for the elements
+        invalidByteOrder, // Use byte order from parent
+        ttUndefined,      // Type for array entry
+        nikonCrypt,       // Encryption function
+        false,            // No size element
+        true,             // Write all tags
+        { 0, ttUnsignedByte,  1 }
+    };
+    //! Nikon Lens Data binary array - definition
+    extern const ArrayDef nikonLdDef[] = {
+        { 0, ttUndefined, 4 } // LensDataVersion
+    };
+    //! Nikon Lens Data configurations and definitions
+    extern const ArraySet nikonLdSet[] = {
+        { nikonLd1Cfg, nikonLdDef, 1 },
+        { nikonLd2Cfg, nikonLdDef, 1 },
+        { nikonLd3Cfg, nikonLdDef, 1 }
     };
 
     //! Minolta Camera Settings (old) binary array - configuration
@@ -473,6 +518,9 @@ namespace Exiv2 {
         { Tag::root, Group::nikonpv,   Group::nikon3mn,  0x0011    },
         { Tag::root, Group::nikonwt,   Group::nikon3mn,  0x0024    },
         { Tag::root, Group::nikonii,   Group::nikon3mn,  0x0025    },
+        { Tag::root, Group::nikonld1,  Group::nikon3mn,  0x0098    },
+        { Tag::root, Group::nikonld2,  Group::nikon3mn,  0x0098    },
+        { Tag::root, Group::nikonld3,  Group::nikon3mn,  0x0098    },
         { Tag::root, Group::panamn,    Group::exif,      0x927c    },
         { Tag::root, Group::pentaxmn,  Group::exif,      0x927c    },
         { Tag::root, Group::sigmamn,   Group::exif,      0x927c    },
@@ -703,6 +751,7 @@ namespace Exiv2 {
         {    0x0011, Group::nikon3mn,  newTiffSubIfd<Group::nikonpv>             },
         {    0x0024, Group::nikon3mn,  EXV_BINARY_ARRAY(nikonWtCfg, nikonWtDef)  },
         {    0x0025, Group::nikon3mn,  EXV_BINARY_ARRAY(nikonIiCfg, nikonIiDef)  },
+        {    0x0098, Group::nikon3mn,  EXV_COMPLEX_BINARY_ARRAY(nikonLdSet, selectNikonLd) },
         {  Tag::all, Group::nikon3mn,  newTiffEntry                              },
 
         // Nikon3 makernote preview subdir
@@ -716,6 +765,11 @@ namespace Exiv2 {
 
         // Nikon3 ISO info
         {  Tag::all, Group::nikonii,   newTiffBinaryElement                      },
+
+        // Nikon3 lens data
+        {  Tag::all, Group::nikonld1,  newTiffBinaryElement                      },
+        {  Tag::all, Group::nikonld2,  newTiffBinaryElement                      },
+        {  Tag::all, Group::nikonld3,  newTiffBinaryElement                      },
 
         // Panasonic makernote
         { Tag::next, Group::panamn,    newTiffDirectory<Group::ignr>             },

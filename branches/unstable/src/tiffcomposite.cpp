@@ -130,7 +130,10 @@ namespace Exiv2 {
         { 297, "OlympusFe9"   },
         { 298, "OlympusRi"    },
         { 299, "NikonWt"      },
-        { 300, "NikonIi"      }
+        { 300, "NikonIi"      },
+        { 301, "NikonLd1"     },
+        { 302, "NikonLd2"     },
+        { 303, "NikonLd3"     }
     };
 
     bool TiffGroupInfo::operator==(const uint16_t& group) const
@@ -195,11 +198,29 @@ namespace Exiv2 {
                                      const ArrayDef* arrayDef,
                                      int defSize)
         : TiffEntryBase(tag, group, arrayCfg->elTiffType_),
+          cfgSelFct_(0),
+          arraySet_(0),
           arrayCfg_(arrayCfg),
           arrayDef_(arrayDef),
           defSize_(defSize)
     {
         assert(arrayCfg != 0);
+    }
+
+    TiffBinaryArray::TiffBinaryArray(uint16_t tag,
+                                     uint16_t group,
+                                     const ArraySet* arraySet,
+                                     CfgSelFct cfgSelFct)
+        : TiffEntryBase(tag, group), // Todo: Does it make a difference that there is no type?
+          cfgSelFct_(cfgSelFct),
+          arraySet_(arraySet),
+          arrayCfg_(0),
+          arrayDef_(0),
+          defSize_(0)
+    {
+        // We'll figure out the correct cfg later
+        assert(cfgSelFct != 0);
+        assert(arraySet_ != 0);
     }
 
     TiffBinaryElement::TiffBinaryElement(uint16_t tag,
@@ -447,6 +468,21 @@ namespace Exiv2 {
         return count_ * TypeInfo::typeSize(typeId);
     }
 
+    bool TiffBinaryArray::initialize(TiffComponent* const pRoot)
+    {
+        if (cfgSelFct_ == 0) return true; // Not a complex array
+
+        assert(arrayCfg_ == 0); // Make sure we're calling this only once
+
+        int idx = cfgSelFct_(this, pRoot);
+        if (idx > -1) {
+            arrayCfg_ = &arraySet_[idx].cfg_;
+            arrayDef_ = arraySet_[idx].def_;
+            defSize_  = arraySet_[idx].defSize_;
+        }
+        return idx > -1;
+    }
+
     uint32_t TiffBinaryArray::addElement(uint32_t idx, const ArrayDef* def)
     {
         assert(def != 0);
@@ -455,6 +491,8 @@ namespace Exiv2 {
         int32_t sz = std::min(def->size(tag, cfg()->group_), TiffEntryBase::doSize() - idx);
         TiffComponent::AutoPtr tc = TiffCreator::create(tag, cfg()->group_);
         TiffBinaryElement* tp = dynamic_cast<TiffBinaryElement*>(tc.get());
+        // The assertion typically fails if a component is not configured in
+        // the TIFF structure table
         assert(tp);
         tp->setStart(pData() + idx);
         tp->setData(const_cast<byte*>(pData() + idx), sz);
@@ -478,7 +516,7 @@ namespace Exiv2 {
         TiffComponent* tc = 0;
         // Try to use an existing component if there is still at least one
         // composite tag on the stack or the tag to add is the MakerNote tag.
-        // This is used to prevent duplicate entries. SubIFDs also, but the > 1
+        // This is used to prevent duplicate entries. Sub-IFDs also, but the > 1
         // condition takes care of them, see below.
         if (   tiffPath.size() > 1
             || (tpi.extendedTag() == 0x927c && tpi.group() == Group::exif)) {
@@ -498,7 +536,7 @@ namespace Exiv2 {
             TiffComponent::AutoPtr atc = TiffCreator::create(tpi.extendedTag(), tpi.group());
             assert(atc.get() != 0);
 
-            // Prevent dangling subIFD tags: Do not add a subIFD component without children.
+            // Prevent dangling sub-IFD tags: Do not add a sub-IFD component without children.
             // Todo: How to check before creating the component?
             if (tiffPath.size() == 1 && dynamic_cast<TiffSubIfd*>(atc.get()) != 0) return 0;
 

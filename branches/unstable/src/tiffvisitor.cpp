@@ -397,7 +397,7 @@ namespace Exiv2 {
 
     void TiffDecoder::decodeStdTiffEntry(const TiffEntryBase* object)
     {
-        assert(object !=0);
+        assert(object != 0);
         // Todo: ExifKey should have an appropriate c'tor, it should not be
         //       necessary to use groupName here
         ExifKey key(object->tag(), tiffGroupName(object->group()));
@@ -406,9 +406,11 @@ namespace Exiv2 {
 
     } // TiffDecoder::decodeTiffEntry
 
-    void TiffDecoder::visitBinaryArray(TiffBinaryArray* /*object*/)
+    void TiffDecoder::visitBinaryArray(TiffBinaryArray* object)
     {
-        // Nothing to do
+        if (object->cfg() == 0) {
+            decodeTiffEntry(object);
+        }
     }
 
     void TiffDecoder::visitBinaryElement(TiffBinaryElement* object)
@@ -1391,7 +1393,7 @@ namespace Exiv2 {
 
         readTiffEntry(object);
         if (object->size_ == 0) return;
-
+        if (!object->initialize(pRoot_)) return;
         const ArrayDef* defs = object->def();
         const ArrayDef* def = &object->cfg()->elDefaultDef_;
         for (uint32_t idx = 0; idx < object->TiffEntryBase::doSize(); ) {

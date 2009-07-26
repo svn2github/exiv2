@@ -947,4 +947,38 @@ namespace Exiv2 {
         return new TiffIfdMakernote(tag, group, mnGroup, 0, true);
     }
 
+    //! Structure for a Nikon version and corresponding index into the Exiv2 array set
+    struct VersionIdx {
+        //! Comparison operator for version
+        bool operator==(const char* ver) const { return 0 == strcmp(ver, ver_); }
+
+        const char* ver_; //!< Version
+        int idx_;         //!< Index
+    };
+
+    //! Array mapping the Nikon version to an index into the Exiv2 array set
+    extern const VersionIdx versionIdx[] = {
+        { "0100", 0 },
+        { "0101", 1 },
+        { "0201", 1 },
+        { "0202", 1 },
+        { "0203", 1 },
+        { "0204", 2 },
+    };
+
+    int selectNikonLd(TiffBinaryArray* const object, TiffComponent* const /*pRoot*/)
+    {
+        assert(object != 0);
+
+        // Todo: Test if this calls the right method...
+        if (object->TiffEntryBase::doSize() < 4) return -1;
+        char ver[5];
+        memcpy(ver, object->pData(), 4);
+        ver[4] = 0x00;
+        const VersionIdx* ptr = find(versionIdx, ver);
+        if (ptr == 0) return -1;
+
+        return ptr->idx_;
+    }
+
 }}                                      // namespace Internal, Exiv2

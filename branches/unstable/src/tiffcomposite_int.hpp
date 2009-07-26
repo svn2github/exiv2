@@ -379,6 +379,7 @@ namespace Exiv2 {
     class TiffEntryBase : public TiffComponent {
         friend class TiffReader;
         friend class TiffEncoder;
+        friend int selectNikonLd(TiffBinaryArray* const, TiffComponent* const);
     public:
         //! @name Creators
         //@{
@@ -1065,9 +1066,18 @@ namespace Exiv2 {
     //! Function pointer type for a crypt function used for binary arrays.
     typedef int (*CryptFct)(byte*, uint32_t, TiffComponent* const);
 
+    /*!
+      @brief Function pointer type for a function to determine which cfg + def
+             of a corresponding array set to use.
+
+      @param pRoot Pointer to the root element of the composite.
+      @return Index into the corresponding array set.
+     */
+    typedef int (*CfgSelFct)(TiffBinaryArray* const object, TiffComponent* const pRoot);
+
     //! Defines one tag in a binary array
     // Todo: multiple tags in one byte - mask
-    // Todo: There cannot be any gaps in the definition! see addElement()
+    // Todo: There cannot be any gaps in the definition! see addElement() CHECK: IS THAT STILL TRUE???
     struct ArrayDef {
         //! Comparison with idx
         bool operator==(uint32_t idx) const { return idx_ == idx; }
@@ -1096,6 +1106,13 @@ namespace Exiv2 {
         ArrayDef    elDefaultDef_; //!< Default element
     };
 
+    //! Combination of array configuration and definition for arrays
+    struct ArraySet {
+        const ArrayCfg  cfg_;      //!< Binary array configuration
+        const ArrayDef* def_;      //!< Binary array definition array
+        const int       defSize_;  //!< Size of the array definition array
+    };
+
     /*!
       @brief Composite to model an array of different tags. The tag types as well
              as other aspects of the array are configurable. The elements of this
@@ -1111,6 +1128,11 @@ namespace Exiv2 {
                         const ArrayCfg* arrayCfg,
                         const ArrayDef* arrayDef,
                         int defSize);
+        //! Constructor for a complex binary array
+        TiffBinaryArray(uint16_t tag,
+                        uint16_t group,
+                        const ArraySet* arraySet,
+                        CfgSelFct cfgSelFct);
         //! Virtual destructor
         virtual ~TiffBinaryArray();
         //@}
@@ -1119,6 +1141,11 @@ namespace Exiv2 {
         //@{
         //! Add an element to the binary array, return the size of the element
         uint32_t addElement(uint32_t idx, const ArrayDef* def);
+        /*!
+          @brief Setup cfg and def for the component, in case of a complex binary array.
+                 Else do nothing. Return true if the initialization succeeded, else false.
+         */
+        bool initialize(TiffComponent* const pRoot);
         //@}
 
         //! @name Accessors
@@ -1173,10 +1200,12 @@ namespace Exiv2 {
 
     private:
         // DATA
-        const ArrayCfg* arrayCfg_; //!< Pointer to the array configuration (must not be 0)
-        const ArrayDef* arrayDef_; //!< Pointer to the array definition (may be 0)
-        const int defSize_;        //!< Size of the array definition array (may be 0)
-        Components elements_;      //!< List of elements in this composite
+        const CfgSelFct cfgSelFct_; //!< Pointer to a function to determine which cfg to use (may be 0)
+        const ArraySet* arraySet_;  //!< Pointer to the array set, if any (may be 0)
+        const ArrayCfg* arrayCfg_;  //!< Pointer to the array configuration (must not be 0)
+        const ArrayDef* arrayDef_;  //!< Pointer to the array definition (may be 0)
+        int defSize_;               //!< Size of the array definition array (may be 0)
+        Components elements_;       //!< List of elements in this composite
     }; // class TiffBinaryArray
 
     /*!
@@ -1305,6 +1334,14 @@ namespace Exiv2 {
     {
         return TiffComponent::AutoPtr(
             new TiffBinaryArray(tag, group, arrayCfg, 0, 0));
+    }
+
+    //! Function to create and initialize a new complex binary array entry
+    template<const ArraySet* arraySet, CfgSelFct cfgSelFct>
+    TiffComponent::AutoPtr newTiffBinaryArray2(uint16_t tag, uint16_t group)
+    {
+        return TiffComponent::AutoPtr(
+            new TiffBinaryArray(tag, group, arraySet, cfgSelFct));
     }
 
     //! Function to create and initialize a new TIFF entry for a thumbnail (data)
