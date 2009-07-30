@@ -970,7 +970,6 @@ namespace Exiv2 {
     {
         assert(object != 0);
 
-        // Todo: Test if this calls the right method...
         if (object->TiffEntryBase::doSize() < 4) return -1;
         char ver[5];
         memcpy(ver, object->pData(), 4);
