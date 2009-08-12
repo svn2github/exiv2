@@ -274,9 +274,6 @@ namespace Exiv2 {
     //! Constant for non-encrypted binary arrays
     const CryptFct notEncrypted = 0;
 
-    // Todo: Replace with the real thing
-    const CryptFct nikonCrypt = 0;
-
     //! Canon Camera Settings binary array - configuration
     extern const ArrayCfg canonCsCfg = {
         Group::canoncs,   // Group for the elements
@@ -1030,6 +1027,7 @@ namespace Exiv2 {
                 new TiffRwState(pHeader->byteOrder(), 0));
             TiffReader reader(pData, size, rootDir.get(), state);
             rootDir->accept(reader);
+            reader.postProcess();
         }
         return rootDir;
 

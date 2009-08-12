@@ -141,8 +141,6 @@ namespace Exiv2 {
         static std::ostream& print0x0089(std::ostream& os, const Value& value, const ExifData* metadata);
         //! Print number of lens stops
         static std::ostream& print0x008b(std::ostream& os, const Value& value, const ExifData*);
-        //! Print number of lens data
-        static std::ostream& print0x0098(std::ostream& os, const Value& value, const ExifData*);
 
         //! Print lens name
         static std::ostream& printLensId(std::ostream& os, const Value& value, const ExifData* metadata, const std::string& group);

@@ -43,6 +43,7 @@
 #include <cassert>
 #include <map>
 #include <set>
+#include <vector>
 
 // *****************************************************************************
 // namespace extensions
@@ -603,8 +604,19 @@ namespace Exiv2 {
         bool circularReference(const byte* start, uint16_t group);
         //! Return the next idx sequence number for \em group
         int nextIdx(uint16_t group);
-        //@}
 
+        /*!
+          @brief Read deferred components.
+
+          This function is called after the TIFF composite is read by passing a
+          TiffReader to the accept() function of the root component. It reads
+          all components for which reading was deferred during that pass.  This
+          is usually done to make sure that all other components are accessible
+          at the time the deferred components are processed.
+         */
+        void postProcess();
+        //@}
+ 
         //! @name Accessors
         //@{
         //! Return the byte order.
@@ -616,6 +628,7 @@ namespace Exiv2 {
     private:
         typedef std::map<const byte*, uint16_t> DirList;
         typedef std::map<uint16_t, int> IdxSeq;
+        typedef std::vector<TiffComponent*> PostList;
 
         // DATA
         const byte*          pData_;      //!< Pointer to the memory buffer
@@ -626,6 +639,8 @@ namespace Exiv2 {
         TiffRwState*         pOrigState_; //!< State class as set in the c'tor
         DirList              dirList_;    //!< List of IFD pointers and their groups
         IdxSeq               idxSeq_;     //!< Sequences for group, used for the entry's idx
+        PostList             postList_;   //!< List of components with deferred reading
+        bool                 postProc_;   //!< True in postProcessList()
 
     }; // class TiffReader
 

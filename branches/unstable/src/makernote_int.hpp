@@ -784,6 +784,9 @@ namespace Exiv2 {
      */
     int selectNikonLd(TiffBinaryArray* const object, TiffComponent* const pRoot);
 
+    //! Decrypt Nikon data
+    DataBuf nikonCrypt(const byte* pData, uint32_t size, TiffComponent* const pRoot);
+
 }}                                      // namespace Internal, Exiv2
 
 #endif                                  // #ifndef MAKERNOTE_INT_HPP_

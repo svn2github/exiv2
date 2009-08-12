@@ -128,6 +128,7 @@ namespace Exiv2 {
         tag_ = tag;
         group_ = group;
         tiffComponent_ = 0;
+        setGo(geTraverse, true);
     }
 
     TiffFinder::~TiffFinder()
@@ -1004,7 +1005,8 @@ namespace Exiv2 {
           pLast_(pData + size),
           pRoot_(pRoot),
           pState_(state.release()),
-          pOrigState_(pState_)
+          pOrigState_(pState_),
+          postProc_(false)
     {
         assert(pData_);
         assert(size_ > 0);
@@ -1103,6 +1105,15 @@ namespace Exiv2 {
     int TiffReader::nextIdx(uint16_t group)
     {
         return ++idxSeq_[group];
+    }
+
+    void TiffReader::postProcess()
+    {
+        postProc_ = true;
+        for (PostList::const_iterator pos = postList_.begin(); pos != postList_.end(); ++pos) {
+            (*pos)->accept(*this);
+        }
+        postProc_ = false;
     }
 
     void TiffReader::visitDirectory(TiffDirectory* object)
@@ -1391,11 +1402,27 @@ namespace Exiv2 {
     {
         assert(object != 0);
 
-        readTiffEntry(object);
-        if (object->size_ == 0) return;
+        if (!postProc_) {
+            // Defer reading children until after all other components are read, but
+            // since state (offset) is not set during post-processing, read entry here
+            readTiffEntry(object);
+            postList_.push_back(object);
+            return;
+        }
+
+        if (object->TiffEntryBase::doSize() == 0) return;
         if (!object->initialize(pRoot_)) return;
         const ArrayDef* defs = object->def();
         const ArrayDef* def = &object->cfg()->elDefaultDef_;
+
+        const CryptFct cryptFct = object->cfg()->cryptFct_;
+        if (cryptFct != 0) {
+            const byte* pData = object->pData();
+            int32_t size = object->TiffEntryBase::doSize();
+            DataBuf buf = cryptFct(pData, size, pRoot_);
+            if (buf.size_ > 0) object->setData(buf);
+        }
+
         for (uint32_t idx = 0; idx < object->TiffEntryBase::doSize(); ) {
             if (defs) {
                 def = std::find(defs, defs + object->defSize(), idx);
@@ -1411,19 +1438,6 @@ namespace Exiv2 {
         byte* pData   = object->start();
         uint32_t size = object->TiffEntryBase::doSize();
         assert(pData >= pData_);
-
-        if (pData + size > pLast_) {
-#ifndef SUPPRESS_WARNINGS
-            std::cerr << "Error: Binary element in "
-                      << "directory " << tiffGroupName(object->group())
-                      << ", entry 0x" << std::setw(4)
-                      << std::setfill('0') << std::hex << object->tag()
-                      << " requests access to memory beyond the data buffer; "
-                      << "skipping element.\n";
-#endif
-            return;
-        }
-
         ByteOrder bo = object->elByteOrder();
         if (bo == invalidByteOrder) bo = byteOrder();
         TypeId typeId = toTypeId(object->elDef()->tiffType_, object->tag(), object->group());

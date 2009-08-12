@@ -401,9 +401,11 @@ namespace Exiv2 {
         void encode(TiffEncoder& encoder, const Exifdatum* datum);
         //! Set the offset
         void setOffset(int32_t offset) { offset_ = offset; }
-        //! Set pointer and size of the entry's data.
+        //! Set pointer and size of the entry's data (not taking ownership of the data).
         void setData(byte* pData, int32_t size);
-        /*!
+        //! Set the entry's data buffer, taking ownership of the data buffer passed in.
+        void setData(DataBuf buf);
+         /*!
           @brief Update the value. Takes ownership of the pointer passed in.
 
           Update binary value data and call setValue().
@@ -501,12 +503,6 @@ namespace Exiv2 {
                                     ByteOrder byteOrder);
 
     private:
-        //! @name Manipulators
-        //@{
-        //! Allocate \em len bytes for the binary representation of the value.
-        void allocData(uint32_t len);
-        //@}
-
         // DATA
         TiffType tiffType_;   //!< Field TIFF type
         uint32_t count_;      //!< The number of values of the indicated type
@@ -1064,7 +1060,7 @@ namespace Exiv2 {
     }; // class TiffMnEntry
 
     //! Function pointer type for a crypt function used for binary arrays.
-    typedef int (*CryptFct)(byte*, uint32_t, TiffComponent* const);
+    typedef DataBuf (*CryptFct)(const byte*, uint32_t, TiffComponent* const);
 
     /*!
       @brief Function pointer type for a function to determine which cfg + def

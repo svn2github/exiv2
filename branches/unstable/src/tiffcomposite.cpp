@@ -302,18 +302,18 @@ namespace Exiv2 {
         return idx_;
     }
 
-    void TiffEntryBase::allocData(uint32_t len)
+    void TiffEntryBase::setData(DataBuf buf)
+    {
+        std::pair<byte*, long> p = buf.release();
+        setData(p.first, p.second);
+        isMalloced_ = true;        
+    }
+
+    void TiffEntryBase::setData(byte* pData, int32_t size)
     {
         if (isMalloced_) {
             delete[] pData_;
         }
-        pData_ = new byte[len];
-        size_ = len;
-        isMalloced_ = true;
-    } // TiffEntryBase::allocData
-
-    void TiffEntryBase::setData(byte* pData, int32_t size)
-    {
         pData_ = pData;
         size_  = size;
         if (pData_ == 0) size_ = 0;
@@ -324,7 +324,7 @@ namespace Exiv2 {
         if (value.get() == 0) return;
         uint32_t newSize = value->size();
         if (newSize > size_) {
-            allocData(newSize);
+            setData(DataBuf(newSize));
         }
         memset(pData_, 0x0, size_);
         size_ = value->copy(pData_, byteOrder);
