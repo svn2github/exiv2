@@ -192,6 +192,19 @@ namespace Exiv2 {
     {
     }
 
+    TiffIfdMakernote::TiffIfdMakernote(uint16_t  tag,
+                                       uint16_t  group,
+                                       uint16_t  mnGroup,
+                                       MnHeader* pHeader,
+                                       bool      hasNext)
+        : TiffComponent(tag, group),
+          pHeader_(pHeader),
+          ifd_(tag, mnGroup, hasNext),
+          mnOffset_(0),
+          imageByteOrder_(invalidByteOrder)
+    {
+    }
+
     TiffBinaryArray::TiffBinaryArray(uint16_t tag,
                                      uint16_t group,
                                      const ArrayCfg* arrayCfg,
@@ -280,6 +293,11 @@ namespace Exiv2 {
     {
         delete mn_;
     } // TiffMnEntry::~TiffMnEntry
+
+    TiffIfdMakernote::~TiffIfdMakernote()
+    {
+        delete pHeader_;
+    }
 
     TiffBinaryArray::~TiffBinaryArray()
     {
@@ -462,6 +480,57 @@ namespace Exiv2 {
         }
     } // TiffImageEntry::setStrips
 
+    uint32_t TiffIfdMakernote::ifdOffset() const
+    {
+        if (!pHeader_) return 0;
+        return pHeader_->ifdOffset();
+    }
+
+    ByteOrder TiffIfdMakernote::byteOrder() const
+    {
+        assert(imageByteOrder_ != invalidByteOrder);
+        if (!pHeader_ || pHeader_->byteOrder() == invalidByteOrder) {
+            return imageByteOrder_;
+        }
+        return pHeader_->byteOrder();
+    }
+
+    uint32_t TiffIfdMakernote::mnOffset() const
+    {
+        return mnOffset_;
+    }
+
+    uint32_t TiffIfdMakernote::baseOffset() const
+    {
+        if (!pHeader_) return 0;
+        return pHeader_->baseOffset(mnOffset_);
+    }
+
+    bool TiffIfdMakernote::readHeader(const byte* pData,
+                                      uint32_t    size,
+                                      ByteOrder   byteOrder)
+    {
+        if (!pHeader_) return true;
+        return pHeader_->read(pData, size, byteOrder);
+    }
+
+    void TiffIfdMakernote::setByteOrder(ByteOrder byteOrder)
+    {
+        if (pHeader_) pHeader_->setByteOrder(byteOrder);
+    }
+
+    uint32_t TiffIfdMakernote::sizeHeader() const
+    {
+        if (!pHeader_) return 0;
+        return pHeader_->size();
+    }
+
+    uint32_t TiffIfdMakernote::writeHeader(Blob& blob, ByteOrder byteOrder) const
+    {
+        if (!pHeader_) return 0;
+        return pHeader_->write(blob, byteOrder);
+    }
+
     uint32_t ArrayDef::size(uint16_t tag, uint16_t group) const
     {
         TypeId typeId = toTypeId(tiffType_, tag, group);
@@ -596,6 +665,11 @@ namespace Exiv2 {
         return mn_->addPath(tag, tiffPath);
     } // TiffMnEntry::doAddPath
 
+    TiffComponent* TiffIfdMakernote::doAddPath(uint16_t tag, TiffPath& tiffPath)
+    {
+        return ifd_.addPath(tag, tiffPath);
+    }
+
     TiffComponent* TiffBinaryArray::doAddPath(uint16_t tag, TiffPath& tiffPath)
     {
         assert(tiffPath.size() > 1);
@@ -653,6 +727,11 @@ namespace Exiv2 {
         return tc;
     } // TiffMnEntry::doAddChild
 
+    TiffComponent* TiffIfdMakernote::doAddChild(TiffComponent::AutoPtr tiffComponent)
+    {
+        return ifd_.addChild(tiffComponent);
+    }
+
     TiffComponent* TiffBinaryArray::doAddChild(TiffComponent::AutoPtr tiffComponent)
     {
         TiffComponent* tc = tiffComponent.release();
@@ -683,6 +762,11 @@ namespace Exiv2 {
         }
         return tc;
     } // TiffMnEntry::doAddNext
+
+    TiffComponent* TiffIfdMakernote::doAddNext(TiffComponent::AutoPtr tiffComponent)
+    {
+        return ifd_.addNext(tiffComponent);
+    }
 
     void TiffComponent::accept(TiffVisitor& visitor)
     {
@@ -740,6 +824,14 @@ namespace Exiv2 {
         }
 
     } // TiffMnEntry::doAccept
+
+    void TiffIfdMakernote::doAccept(TiffVisitor& visitor)
+    {
+        if (visitor.go(TiffVisitor::geTraverse)) visitor.visitIfdMakernote(this);
+        if (visitor.go(TiffVisitor::geKnownMakernote)) ifd_.accept(visitor);
+        if (   visitor.go(TiffVisitor::geKnownMakernote)
+            && visitor.go(TiffVisitor::geTraverse)) visitor.visitIfdMakernoteEnd(this);
+    }
 
     void TiffBinaryArray::doAccept(TiffVisitor& visitor)
     {
@@ -825,6 +917,11 @@ namespace Exiv2 {
         assert(tiffType() == ttUndefined);
         return mn_->size();
     }
+
+    uint32_t TiffIfdMakernote::doCount() const
+    {
+        return ifd_.count();
+    } // TiffIfdMakernote::doCount
 
     uint32_t TiffBinaryArray::doCount() const
     {
@@ -1130,6 +1227,23 @@ namespace Exiv2 {
         return mn_->write(blob, byteOrder, offset + valueIdx, uint32_t(-1), uint32_t(-1), imageIdx);
     } // TiffMnEntry::doWrite
 
+    uint32_t TiffIfdMakernote::doWrite(Blob&     blob,
+                                       ByteOrder byteOrder,
+                                       int32_t   offset,
+                                       uint32_t  /*valueIdx*/,
+                                       uint32_t  /*dataIdx*/,
+                                       uint32_t& imageIdx)
+    {
+        mnOffset_ = offset;
+        setImageByteOrder(byteOrder);
+        uint32_t len = writeHeader(blob, this->byteOrder());
+        len += ifd_.write(blob, this->byteOrder(),
+                          offset - baseOffset() + len,
+                          uint32_t(-1), uint32_t(-1),
+                          imageIdx);
+        return len;
+    } // TiffIfdMakernote::doWrite
+
     uint32_t TiffBinaryArray::doWrite(Blob&     blob,
                                       ByteOrder byteOrder,
                                       int32_t   offset,
@@ -1273,6 +1387,16 @@ namespace Exiv2 {
         return len + align;
     } // TiffSubIfd::doWriteData
 
+    uint32_t TiffIfdMakernote::doWriteData(Blob&     /*blob*/,
+                                           ByteOrder /*byteOrder*/,
+                                           int32_t   /*offset*/,
+                                           uint32_t  /*dataIdx*/,
+                                           uint32_t& /*imageIdx*/) const
+    {
+        assert(false);
+        return 0;
+    } // TiffIfdMakernote::doWriteData
+
     uint32_t TiffComponent::writeImage(Blob&     blob,
                                        ByteOrder byteOrder) const
     {
@@ -1317,6 +1441,16 @@ namespace Exiv2 {
         }
         return len;
     } // TiffSubIfd::doWriteImage
+
+    uint32_t TiffIfdMakernote::doWriteImage(Blob&     blob,
+                                            ByteOrder byteOrder) const
+    {
+        if (this->byteOrder() != invalidByteOrder) {
+            byteOrder = this->byteOrder();
+        }
+        uint32_t len = ifd_.writeImage(blob, byteOrder);
+        return len;
+    } // TiffIfdMakernote::doWriteImage
 
     uint32_t TiffImageEntry::doWriteImage(Blob&     blob,
                                           ByteOrder /*byteOrder*/) const
@@ -1419,6 +1553,11 @@ namespace Exiv2 {
         return mn_->size();
     } // TiffMnEntry::doSize
 
+    uint32_t TiffIfdMakernote::doSize() const
+    {
+        return sizeHeader() + ifd_.size();
+    } // TiffIfdMakernote::doSize
+
     uint32_t TiffBinaryArray::doSize() const
     {
         if (elements_.empty()) return 0;
@@ -1484,6 +1623,12 @@ namespace Exiv2 {
         return len;
     } // TiffSubIfd::doSizeData
 
+    uint32_t TiffIfdMakernote::doSizeData() const
+    {
+        assert(false);
+        return 0;
+    } // TiffIfdMakernote::doSizeData
+
     uint32_t TiffComponent::sizeImage() const
     {
         return doSizeImage();
@@ -1509,6 +1654,11 @@ namespace Exiv2 {
         }
         return len;
     } // TiffSubIfd::doSizeImage
+
+    uint32_t TiffIfdMakernote::doSizeImage() const
+    {
+        return ifd_.sizeImage();
+    } // TiffIfdMakernote::doSizeImage
 
     uint32_t TiffEntryBase::doSizeImage() const
     {

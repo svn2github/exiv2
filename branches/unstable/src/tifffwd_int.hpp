@@ -58,6 +58,7 @@ namespace Exiv2 {
     class TiffBinaryElement;
 
     class TiffIfdMakernote;
+    class MnHeader;
 
     class TiffVisitor;
     class TiffFinder;

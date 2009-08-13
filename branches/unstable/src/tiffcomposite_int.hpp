@@ -1059,6 +1059,156 @@ namespace Exiv2 {
 
     }; // class TiffMnEntry
 
+    /*!
+      @brief Tiff IFD Makernote. This is a concrete class suitable for all
+             IFD makernotes.
+
+             Contains a makernote header (which can be 0) and an IFD and
+             implements child mgmt functions to deal with the IFD entries. The
+             various makernote weirdnesses are taken care of in the makernote
+             header (and possibly in special purpose IFD entries).
+     */
+    class TiffIfdMakernote : public TiffComponent {
+        friend class TiffReader;
+    public:
+        //! @name Creators
+        //@{
+        //! Default constructor
+        TiffIfdMakernote(uint16_t  tag,
+                         uint16_t  group,
+                         uint16_t  mnGroup,
+                         MnHeader* pHeader,
+                         bool      hasNext =true);
+        //! Virtual destructor
+        virtual ~TiffIfdMakernote();
+        //@}
+
+        //! @name Manipulators
+        //@{
+        /*!
+          @brief Read the header from a data buffer, return true if successful.
+
+          The default implementation simply returns true.
+         */
+        bool readHeader(const byte* pData, uint32_t size, ByteOrder byteOrder);
+        /*!
+          @brief Set the byte order for the makernote.
+         */
+        void setByteOrder(ByteOrder byteOrder);
+        /*!
+          @brief Set the byte order used for the image.
+         */
+        void setImageByteOrder(ByteOrder byteOrder) { imageByteOrder_ = byteOrder; }
+        //@}
+
+        //! @name Accessors
+        //@{
+        //! Return the size of the header in bytes.
+        uint32_t sizeHeader() const;
+        //! Write the header to a data buffer, return the number of bytes written.
+        uint32_t writeHeader(Blob& blob, ByteOrder byteOrder) const;
+        /*!
+          @brief Return the offset to the makernote from the start of the
+                 TIFF header.
+        */
+        uint32_t mnOffset() const;
+        /*!
+          @brief Return the offset to the start of the Makernote IFD from
+                 the start of the Makernote.
+                 Returns 0 if there is no header.
+         */
+        uint32_t ifdOffset() const;
+        /*!
+          @brief Return the byte order for the makernote. Requires the image
+                 byte order to be set (setImageByteOrder()).  Returns the byte
+                 order for the image if there is no header or the byte order for
+                 the header is \c invalidByteOrder.
+         */
+        ByteOrder byteOrder() const;
+        /*!
+          @brief Return the byte order used for the image.
+         */
+        ByteOrder imageByteOrder() const { return imageByteOrder_; }
+        /*!
+          @brief Return the base offset for use with the makernote IFD entries
+                 relative to the start of the TIFF header.
+                 Returns 0 if there is no header.
+         */
+        uint32_t baseOffset() const;
+        //@}
+
+    protected:
+        //! @name Manipulators
+        //@{
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
+        virtual TiffComponent* doAddNext(TiffComponent::AutoPtr tiffComponent);
+        virtual void doAccept(TiffVisitor& visitor);
+        //@}
+
+        //! @name Write support (Manipulators)
+        //@{
+        /*!
+          @brief Implements write(). Write the Makernote header, TIFF directory,
+                 values and additional data to the blob, return the number of
+                 bytes written.
+         */
+        virtual uint32_t doWrite(Blob&     blob,
+                                 ByteOrder byteOrder,
+                                 int32_t   offset,
+                                 uint32_t  valueIdx,
+                                 uint32_t  dataIdx,
+                                 uint32_t& imageIdx);
+        //@}
+        //! @name Write support (Accessors)
+        //@{
+        /*!
+          @brief This class does not really implement writeData(), it only has
+                 write(). This method must not be called; it commits suicide.
+         */
+        virtual uint32_t doWriteData(Blob&     blob,
+                                     ByteOrder byteOrder,
+                                     int32_t   offset,
+                                     uint32_t  dataIdx,
+                                     uint32_t& imageIdx) const;
+        /*!
+          @brief Implements writeImage(). Write the image data of the IFD of
+                 the Makernote. Return the number of bytes written.
+         */
+        virtual uint32_t doWriteImage(Blob&     blob,
+                                      ByteOrder byteOrder) const;
+        /*!
+          @brief Implements size(). Return the size of the Makernote header,
+                 TIFF directory, values and additional data.
+         */
+        virtual uint32_t doSize() const;
+        /*!
+          @brief Implements count(). Return the number of entries in the IFD
+                 of the Makernote. Does not count entries which are marked as
+                 deleted.
+         */
+        virtual uint32_t doCount() const;
+        /*!
+          @brief This class does not really implement sizeData(), it only has
+                 size(). This method must not be called; it commits suicide.
+         */
+        virtual uint32_t doSizeData() const;
+        /*!
+          @brief Implements sizeImage(). Return the total image data size of the
+                 makernote IFD.
+         */
+        virtual uint32_t doSizeImage() const;
+        //@}
+
+    private:
+        // DATA
+        MnHeader*     pHeader_;                 //!< Makernote header
+        TiffDirectory ifd_;                     //!< Makernote IFD
+        uint32_t      mnOffset_;                //!< Makernote offset
+        ByteOrder     imageByteOrder_;          //!< Byte order for the image
+
+    }; // class TiffIfdMakernote
+
     //! Function pointer type for a crypt function used for binary arrays.
     typedef DataBuf (*CryptFct)(const byte*, uint32_t, TiffComponent* const);
 
