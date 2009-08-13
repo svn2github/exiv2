@@ -215,7 +215,9 @@ namespace Exiv2 {
           arraySet_(0),
           arrayCfg_(arrayCfg),
           arrayDef_(arrayDef),
-          defSize_(defSize)
+          defSize_(defSize),
+          origData_(0),
+          origSize_(0)
     {
         assert(arrayCfg != 0);
     }
@@ -229,7 +231,9 @@ namespace Exiv2 {
           arraySet_(arraySet),
           arrayCfg_(0),
           arrayDef_(0),
-          defSize_(0)
+          defSize_(0),
+          origData_(0),
+          origSize_(0)
     {
         // We'll figure out the correct cfg later
         assert(cfgSelFct != 0);
@@ -541,8 +545,6 @@ namespace Exiv2 {
     {
         if (cfgSelFct_ == 0) return true; // Not a complex array
 
-        assert(arrayCfg_ == 0); // Make sure we're calling this only once
-
         int idx = cfgSelFct_(this, pRoot);
         if (idx > -1) {
             arrayCfg_ = &arraySet_[idx].cfg_;
@@ -550,6 +552,21 @@ namespace Exiv2 {
             defSize_  = arraySet_[idx].defSize_;
         }
         return idx > -1;
+    }
+
+    void TiffBinaryArray::iniOrigDataBuf()
+    {
+        origData_ = const_cast<byte*>(pData());
+        origSize_ = TiffEntryBase::doSize();
+    }
+
+    bool TiffBinaryArray::updOrigDataBuf(const byte* pData, uint32_t size)
+    {
+        assert(pData != 0);
+
+        if (origSize_ != size) return false;
+        memcpy(origData_, pData, origSize_);
+        return true;
     }
 
     uint32_t TiffBinaryArray::addElement(uint32_t idx, const ArrayDef* def)
@@ -840,6 +857,7 @@ namespace Exiv2 {
              visitor.go(TiffVisitor::geTraverse) && i != elements_.end(); ++i) {
             (*i)->accept(visitor);
         }
+        if (visitor.go(TiffVisitor::geTraverse)) visitor.visitBinaryArrayEnd(this);
     } // TiffBinaryArray::doAccept
 
     void TiffBinaryElement::doAccept(TiffVisitor& visitor)

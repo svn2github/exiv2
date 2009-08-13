@@ -123,6 +123,10 @@ namespace Exiv2 {
     {
     }
 
+    void TiffVisitor::visitBinaryArrayEnd(TiffBinaryArray* /*object*/)
+    {
+    }
+
     void TiffFinder::init(uint16_t tag, uint16_t group)
     {
         tag_ = tag;
@@ -673,6 +677,29 @@ namespace Exiv2 {
     void TiffEncoder::visitBinaryArray(TiffBinaryArray* /*object*/)
     {
         // Nothing to do
+    }
+
+    void TiffEncoder::visitBinaryArrayEnd(TiffBinaryArray* object)
+    {
+        assert(object != 0);
+
+        int32_t size = object->TiffEntryBase::doSize();
+        if (size == 0) return;
+        if (!object->initialize(pRoot_)) return;
+
+        // Re-encrypt buffer if necessary
+        const CryptFct cryptFct = object->cfg()->cryptFct_;
+        if (cryptFct != 0) {
+            const byte* pData = object->pData();
+            DataBuf buf = cryptFct(pData, size, pRoot_);
+            if (buf.size_ > 0) {
+                pData = buf.pData_;
+                size = buf.size_;
+            }
+            if (!object->updOrigDataBuf(pData, size)) {
+                setDirty();
+            }
+        }
     }
 
     void TiffEncoder::visitBinaryElement(TiffBinaryElement* object)
@@ -1406,6 +1433,7 @@ namespace Exiv2 {
             // Defer reading children until after all other components are read, but
             // since state (offset) is not set during post-processing, read entry here
             readTiffEntry(object);
+            object->iniOrigDataBuf();
             postList_.push_back(object);
             return;
         }

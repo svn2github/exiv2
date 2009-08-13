@@ -1292,6 +1292,10 @@ namespace Exiv2 {
                  Else do nothing. Return true if the initialization succeeded, else false.
          */
         bool initialize(TiffComponent* const pRoot);
+        //! Initialize the original data buffer and its size from the base entry.
+        void iniOrigDataBuf();
+        //! Update the original data buffer and its size, return true if successful.
+        bool updOrigDataBuf(const byte* pData, uint32_t size);
         //@}
 
         //! @name Accessors
@@ -1301,7 +1305,7 @@ namespace Exiv2 {
         //! Return a pointer to the definition
         const ArrayDef* def() const { return arrayDef_; }
         //! Return the number of elements in the definition
-        int defSize() const { return defSize_; } 
+        int defSize() const { return defSize_; }
         //@}
 
     protected:
@@ -1352,6 +1356,8 @@ namespace Exiv2 {
         const ArrayDef* arrayDef_;  //!< Pointer to the array definition (may be 0)
         int defSize_;               //!< Size of the array definition array (may be 0)
         Components elements_;       //!< List of elements in this composite
+        byte* origData_;            //!< Pointer to the original data buffer (unencrypted)
+        uint32_t origSize_;         //!< Size of the original data buffer
     }; // class TiffBinaryArray
 
     /*!

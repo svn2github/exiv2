@@ -136,6 +136,11 @@ namespace Exiv2 {
         virtual void visitIfdMakernoteEnd(TiffIfdMakernote* object);
         //! Operation to perform for a binary array
         virtual void visitBinaryArray(TiffBinaryArray* object) =0;
+        /*!
+          @brief Operation to perform for a TIFF binary array, at the end
+                 of the processing.
+         */
+        virtual void visitBinaryArrayEnd(TiffBinaryArray* object);
         //! Operation to perform for an element of a binary array
         virtual void visitBinaryElement(TiffBinaryElement* object) =0;
         //@}
@@ -358,6 +363,8 @@ namespace Exiv2 {
         virtual void visitIfdMakernoteEnd(TiffIfdMakernote* object);
         //! Encode a binary array
         virtual void visitBinaryArray(TiffBinaryArray* object);
+        //! Re-encrypt binary array if necessary 
+        virtual void visitBinaryArrayEnd(TiffBinaryArray* object);
         //! Encode an element of a binary array
         virtual void visitBinaryElement(TiffBinaryElement* object);
 
