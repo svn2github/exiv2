@@ -1278,6 +1278,7 @@ namespace Exiv2 {
         TiffBinaryArray(uint16_t tag,
                         uint16_t group,
                         const ArraySet* arraySet,
+                        int setSize,
                         CfgSelFct cfgSelFct);
         //! Virtual destructor
         virtual ~TiffBinaryArray();
@@ -1290,6 +1291,24 @@ namespace Exiv2 {
         /*!
           @brief Setup cfg and def for the component, in case of a complex binary array.
                  Else do nothing. Return true if the initialization succeeded, else false.
+
+          This version of initialize() is used during intrusive writing. It determines the
+          correct settings based on the \em group passed in (which is the group of the first
+          tag that is added to the array). It doesn't require cfgSelFct_.
+
+          @param group Group to setup the binary array for.
+          @return true if the initialization succeeded, else false.
+         */
+        bool initialize(uint16_t group);
+        /*!
+          @brief Setup cfg and def for the component, in case of a complex binary array.
+                 Else do nothing. Return true if the initialization succeeded, else false.
+
+          This version of initialize() is used for reading and non-intrusive writing. It
+          calls cfgSelFct_ to determine the correct settings.
+
+          @param pRoot Pointer to the root component of the TIFF tree.
+          @return true if the initialization succeeded, else false.
          */
         bool initialize(TiffComponent* const pRoot);
         //! Initialize the original data buffer and its size from the base entry.
@@ -1355,6 +1374,7 @@ namespace Exiv2 {
         const ArrayCfg* arrayCfg_;  //!< Pointer to the array configuration (must not be 0)
         const ArrayDef* arrayDef_;  //!< Pointer to the array definition (may be 0)
         int defSize_;               //!< Size of the array definition array (may be 0)
+        int setSize_;               //!< Size of the array set (may be 0)
         Components elements_;       //!< List of elements in this composite
         byte* origData_;            //!< Pointer to the original data buffer (unencrypted)
         uint32_t origSize_;         //!< Size of the original data buffer
@@ -1489,11 +1509,11 @@ namespace Exiv2 {
     }
 
     //! Function to create and initialize a new complex binary array entry
-    template<const ArraySet* arraySet, CfgSelFct cfgSelFct>
+    template<const ArraySet* arraySet, int N, CfgSelFct cfgSelFct>
     TiffComponent::AutoPtr newTiffBinaryArray2(uint16_t tag, uint16_t group)
     {
         return TiffComponent::AutoPtr(
-            new TiffBinaryArray(tag, group, arraySet, cfgSelFct));
+            new TiffBinaryArray(tag, group, arraySet, N, cfgSelFct));
     }
 
     //! Function to create and initialize a new TIFF entry for a thumbnail (data)

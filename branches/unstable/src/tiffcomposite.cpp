@@ -216,6 +216,7 @@ namespace Exiv2 {
           arrayCfg_(arrayCfg),
           arrayDef_(arrayDef),
           defSize_(defSize),
+          setSize_(0),
           origData_(0),
           origSize_(0)
     {
@@ -225,6 +226,7 @@ namespace Exiv2 {
     TiffBinaryArray::TiffBinaryArray(uint16_t tag,
                                      uint16_t group,
                                      const ArraySet* arraySet,
+                                     int setSize,
                                      CfgSelFct cfgSelFct)
         : TiffEntryBase(tag, group), // Todo: Does it make a difference that there is no type?
           cfgSelFct_(cfgSelFct),
@@ -232,6 +234,7 @@ namespace Exiv2 {
           arrayCfg_(0),
           arrayDef_(0),
           defSize_(0),
+          setSize_(setSize),
           origData_(0),
           origSize_(0)
     {
@@ -541,6 +544,21 @@ namespace Exiv2 {
         return count_ * TypeInfo::typeSize(typeId);
     }
 
+    bool TiffBinaryArray::initialize(uint16_t group)
+    {
+        if (arrayCfg_ != 0) return true; // Not a complex array or already initialized
+
+        for (int idx = 0; idx < setSize_; ++idx) {
+            if (arraySet_[idx].cfg_.group_ == group) {
+                arrayCfg_ = &arraySet_[idx].cfg_;
+                arrayDef_ = arraySet_[idx].def_;
+                defSize_  = arraySet_[idx].defSize_;
+                return true;
+            }
+        }
+        return false;
+    }
+
     bool TiffBinaryArray::initialize(TiffComponent* const pRoot)
     {
         if (cfgSelFct_ == 0) return true; // Not a complex array
@@ -692,6 +710,8 @@ namespace Exiv2 {
         assert(tiffPath.size() > 1);
         tiffPath.pop();
         const TiffPathItem tpi = tiffPath.top();
+        // Initialize the binary array (if it is a complex array)
+        initialize(tpi.group());
         TiffComponent* tc = 0;
         // Todo: Duplicates are not allowed!
         // To allow duplicate entries, we only check if the new component already
