@@ -1243,7 +1243,7 @@ namespace Exiv2 {
          */
         uint32_t tagStep() const { return elDefaultDef_.size(0, group_); }
         //DATA
-        uint32_t    group_;        //!< Group for the elements
+        uint16_t    group_;        //!< Group for the elements
         ByteOrder   byteOrder_;    //!< Byte order, invalidByteOrder to inherit
         TiffType    elTiffType_;   //!< Type for the array entry and the size element, if any
         CryptFct    cryptFct_;     //!< Crypt function, 0 if not used
