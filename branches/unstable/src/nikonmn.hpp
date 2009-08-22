@@ -114,6 +114,18 @@ namespace Exiv2 {
         static const TagInfo* tagListWt();
         //! Return read-only list of built-in ISO info tags
         static const TagInfo* tagListIi();
+        //! Return read-only list of built-in Color Balance 1 tags
+        static const TagInfo* tagListCb1();
+        //! Return read-only list of built-in Color Balance 2 tags
+        static const TagInfo* tagListCb2();
+        //! Return read-only list of built-in Color Balance 2a tags
+        static const TagInfo* tagListCb2a();
+        //! Return read-only list of built-in Color Balance 2b tags
+        static const TagInfo* tagListCb2b();
+        //! Return read-only list of built-in Color Balance 3 tags
+        static const TagInfo* tagListCb3();
+        //! Return read-only list of built-in Color Balance 4 tags
+        static const TagInfo* tagListCb4();
         //! Return read-only list of built-in Lens Data 1 tags
         static const TagInfo* tagListLd1();
         //! Return read-only list of built-in Lens Data 2 tags
@@ -163,6 +175,18 @@ namespace Exiv2 {
         static const TagInfo tagInfoWt_[];
         //! ISO info tag information
         static const TagInfo tagInfoIi_[];
+        //! Color Balance 1 tag information
+        static const TagInfo tagInfoCb1_[];
+        //! Color Balance 2 tag information
+        static const TagInfo tagInfoCb2_[];
+        //! Color Balance 2a tag information
+        static const TagInfo tagInfoCb2a_[];
+        //! Color Balance 2b tag information
+        static const TagInfo tagInfoCb2b_[];
+        //! Color Balance 3 tag information
+        static const TagInfo tagInfoCb3_[];
+        //! Color Balance 4 tag information
+        static const TagInfo tagInfoCb4_[];
         //! Lens Data 1 tag information
         static const TagInfo tagInfoLd1_[];
         //! Lens Data 2 tag information

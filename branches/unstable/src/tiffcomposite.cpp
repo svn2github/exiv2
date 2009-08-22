@@ -133,7 +133,13 @@ namespace Exiv2 {
         { 300, "NikonIi"      },
         { 301, "NikonLd1"     },
         { 302, "NikonLd2"     },
-        { 303, "NikonLd3"     }
+        { 303, "NikonLd3"     },
+        { 304, "NikonCb1"     },
+        { 305, "NikonCb2"     },
+        { 306, "NikonCb2a"    },
+        { 307, "NikonCb2b"    },
+        { 308, "NikonCb3"     },
+        { 309, "NikonCb4"     }
     };
 
     bool TiffGroupInfo::operator==(const uint16_t& group) const
@@ -565,7 +571,7 @@ namespace Exiv2 {
     {
         if (cfgSelFct_ == 0) return true; // Not a complex array
 
-        int idx = cfgSelFct_(this, pRoot);
+        int idx = cfgSelFct_(tag(), pData(), TiffEntryBase::doSize(), pRoot);
         if (idx > -1) {
             arrayCfg_ = &arraySet_[idx].cfg_;
             arrayDef_ = arraySet_[idx].def_;
@@ -598,7 +604,7 @@ namespace Exiv2 {
         TiffComponent::AutoPtr tc = TiffCreator::create(tag, cfg()->group_);
         TiffBinaryElement* tp = dynamic_cast<TiffBinaryElement*>(tc.get());
         // The assertion typically fails if a component is not configured in
-        // the TIFF structure table
+        // the TIFF structure table (TiffCreator::tiffTreeStruct_)
         assert(tp);
         tp->setStart(pData() + idx);
         tp->setData(const_cast<byte*>(pData() + idx), sz);
@@ -1343,7 +1349,7 @@ namespace Exiv2 {
         }
         DataBuf buf;
         if (cfg()->cryptFct_) {
-            buf = cfg()->cryptFct_(&array[0], static_cast<uint32_t>(array.size()), pRoot_);
+            buf = cfg()->cryptFct_(tag(), &array[0], static_cast<uint32_t>(array.size()), pRoot_);
         }
         if (buf.size_ > 0) {
             append(blob, buf.pData_, buf.size_);

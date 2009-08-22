@@ -47,6 +47,12 @@ EXIV2_RCSID("@(#) $Id$")
 #include <cstring>
 
 // *****************************************************************************
+namespace {
+    //! Nikon en/decryption function
+    void ncrypt(Exiv2::byte* pData, uint32_t size, uint32_t count, uint32_t serial);
+}
+
+// *****************************************************************************
 // class member definitions
 namespace Exiv2 {
     namespace Internal {
@@ -797,39 +803,137 @@ namespace Exiv2 {
         return new TiffIfdMakernote(tag, group, mnGroup, 0, true);
     }
 
-    //! Structure for a Nikon version and corresponding index into the Exiv2 array set
-    struct VersionIdx {
-        //! Comparison operator for version
-        bool operator==(const char* ver) const { return 0 == strcmp(ver, ver_); }
+    //! Structure for an index into the array set of complex binary arrays.
+    struct NikonArrayIdx {
+        //! Key for comparisons
+        struct Key {
+            //! Constructor
+            Key(uint16_t tag, const char* ver) : tag_(tag), ver_(ver) {}
+            uint16_t    tag_; //!< Tag number
+            const char* ver_; //!< Version string
+        };
+        //! Comparison operator for a key
+        bool operator==(const Key& key) const
+            { return key.tag_ == tag_ && 0 == strncmp(key.ver_, ver_, 4); }
 
-        const char* ver_; //!< Version
-        int idx_;         //!< Index
-        bool crypt_;      //!< Encrypted?
+        uint16_t    tag_;   //!< Tag number of the binary array
+        const char* ver_;   //!< Version string
+        int         idx_;   //!< Index into the array set
     };
 
-    //! Array mapping the Nikon version to an index into the Exiv2 array set
-    extern const VersionIdx versionIdx[] = {
-        { "0100", 0, false },
-        { "0101", 1, false },
-        { "0201", 1, true  },
-        { "0202", 1, true  },
-        { "0203", 1, true  },
-        { "0204", 2, true  },
+    //! Nikon binary array version lookup table
+    extern const NikonArrayIdx nikonArrayIdx[] = {
+        // NikonCb
+        { 0x0097, "0100", 0 },
+        { 0x0097, "0102", 1 },
+        { 0x0097, "0103", 4 },
+        { 0x0097, "0204", 3 },
+        { 0x0097, "0205", 2 },
+        { 0x0097, "0206", 3 },
+        { 0x0097, "0207", 3 },
+        { 0x0097, "0208", 3 },
+        { 0x0097, "0209", 5 },
+        // NikonLd
+        { 0x0098, "0100", 0 },
+        { 0x0098, "0101", 1 },
+        { 0x0098, "0201", 1 },
+        { 0x0098, "0202", 1 },
+        { 0x0098, "0203", 1 },
+        { 0x0098, "0204", 2 }
     };
 
-    //! Helper function to identify the version of the object
-    const VersionIdx* findVersionIdx(const byte* pData, uint32_t size)
+    int nikonSelector(uint16_t tag, const byte* pData, uint32_t size, TiffComponent* const /*pRoot*/)
     {
-        if (size < 4) return 0;
-        char ver[5];
-        memcpy(ver, pData, 4);
-        ver[4] = 0x00;
-        return find(versionIdx, ver);
+        if (size < 4) return -1;
+        const NikonArrayIdx* aix = find(nikonArrayIdx, NikonArrayIdx::Key(tag, reinterpret_cast<const char*>(pData)));
+        return aix == 0 ? -1 : aix->idx_;
     }
 
-    void ncrypt(byte* pData, uint32_t size, uint32_t count, uint32_t serial)
+    /*!
+      @brief Structure for info about an encrypted complex binary array.
+     */
+    struct NikonCryptInfo {
+        //! Key for comparisons
+        struct Key {
+            //! Constructor
+            Key(uint16_t tag, const char* ver) : tag_(tag), ver_(ver) {}
+            uint16_t    tag_; //!< Tag number
+            const char* ver_; //!< Version string
+        };
+        //! Comparison operator for a key
+        bool operator==(const Key& key) const
+            { return key.tag_ == tag_ && 0 == strncmp(key.ver_, ver_, 4); }
+        uint16_t    tag_;   //!< Tag number of the binary array
+        const char* ver_;   //!< Version string
+        uint32_t    start_; //!< Start of the encrypted data
+    };
+
+    //! Info about encrypted complex arrays. Non-encrypted arrays are not listed here.
+    extern const NikonCryptInfo nikonCryptInfo[] = {
+        // NikonCb
+        { 0x0097, "0204", 284 },
+        { 0x0097, "0205",   4 },
+        { 0x0097, "0206", 284 },
+        { 0x0097, "0207", 284 },
+        { 0x0097, "0208", 284 },
+        { 0x0097, "0209", 284 },
+        // NikonLd
+        { 0x0098, "0201",   4 },
+        { 0x0098, "0202",   4 },
+        { 0x0098, "0203",   4 },
+        { 0x0098, "0204",   4 }
+    };
+
+    DataBuf nikonCrypt(uint16_t tag, const byte* pData, uint32_t size, TiffComponent* const pRoot)
     {
-        static const byte xlat[2][256] = {
+        DataBuf buf;
+
+        if (size < 4) return buf;
+        const NikonCryptInfo* nci = find(nikonCryptInfo, NikonCryptInfo::Key(tag, reinterpret_cast<const char*>(pData)));
+        if (nci == 0 || size <= nci->start_) return buf;
+
+        // Find Exif.Nikon3.ShutterCount
+        TiffFinder finder(0x00a7, Group::nikon3mn);
+        pRoot->accept(finder);
+        TiffEntryBase* te = dynamic_cast<TiffEntryBase*>(finder.result());
+        if (!te || !te->pValue() || te->pValue()->count() == 0) return buf;
+        uint32_t count = static_cast<uint32_t>(te->pValue()->toLong());
+
+        // Find Exif.Nikon3.SerialNumber
+        finder.init(0x001d, Group::nikon3mn);
+        pRoot->accept(finder);
+        te = dynamic_cast<TiffEntryBase*>(finder.result());
+        if (!te || !te->pValue() || te->pValue()->count() == 0) return buf;
+        bool ok(false);
+        uint32_t serial = stringTo<uint32_t>(te->pValue()->toString(), ok);
+        if (!ok) {
+            // Find Exif.Image.Model
+            finder.init(0x0110, Group::ifd0);
+            pRoot->accept(finder);
+            te = dynamic_cast<TiffEntryBase*>(finder.result());
+            if (!te || !te->pValue() || te->pValue()->count() == 0) return buf;
+            std::string model = te->pValue()->toString();
+            if (model.find("D50") != std::string::npos) {
+                serial = 0x22;
+            }
+            else {
+                serial = 0x60;
+            }
+        }
+        buf.alloc(size);
+        memcpy(buf.pData_, pData, buf.size_);
+        ncrypt(buf.pData_ + nci->start_, buf.size_ - nci->start_, count, serial);
+        return buf;
+    }
+
+}}                                      // namespace Internal, Exiv2
+
+// *****************************************************************************
+// local definitions
+namespace {
+    void ncrypt(Exiv2::byte* pData, uint32_t size, uint32_t count, uint32_t serial)
+    {
+        static const Exiv2::byte xlat[2][256] = {
             { 0xc1,0xbf,0x6d,0x0d,0x59,0xc5,0x13,0x9d,0x83,0x61,0x6b,0x4f,0xc7,0x7f,0x3d,0x3d,
               0x53,0x59,0xe3,0xc7,0xe9,0x2f,0x95,0xa7,0x95,0x1f,0xdf,0x7f,0x2b,0x29,0xc7,0x0d,
               0xdf,0x07,0xef,0x71,0x89,0x3d,0x13,0x3d,0x3b,0x13,0xfb,0x0d,0x89,0xc1,0x65,0x1f,
@@ -863,65 +967,16 @@ namespace Exiv2 {
               0x3b,0x2d,0xeb,0x25,0x49,0xfa,0xa3,0xaa,0x39,0xa7,0xc5,0xa7,0x50,0x11,0x36,0xfb,
               0xc6,0x67,0x4a,0xf5,0xa5,0x12,0x65,0x7e,0xb0,0xdf,0xaf,0x4e,0xb3,0x61,0x7f,0x2f }
         };
-        byte key = 0;
+        Exiv2::byte key = 0;
         for (int i = 0; i < 4; ++i) {
             key ^= (count >> (i*8)) & 0xff;
         }
-        byte ci = xlat[0][serial & 0xff];
-        byte cj = xlat[1][key];
-        byte ck = 0x60;
+        Exiv2::byte ci = xlat[0][serial & 0xff];
+        Exiv2::byte cj = xlat[1][key];
+        Exiv2::byte ck = 0x60;
         for (uint32_t i = 0; i < size; ++i) {
             cj += ci * ck++;
             pData[i] ^= cj;
         }
     }
-
-    int selectNikonLd(TiffBinaryArray* const object, TiffComponent* const /*pRoot*/)
-    {
-        assert(object != 0);
-
-        const VersionIdx* ptr = findVersionIdx(object->pData(), object->TiffEntryBase::doSize());
-        return ptr == 0 ? -1 : ptr->idx_;
-    }
-
-    DataBuf nikonCrypt(const byte* pData, uint32_t size, TiffComponent* const pRoot)
-    {
-        DataBuf buf;
-        const VersionIdx* ptr = findVersionIdx(pData, size);
-        if (ptr == 0 || ptr->crypt_ == false) return buf;
-
-        // Find Exif.Nikon3.ShutterCount
-        TiffFinder finder(0x00a7, Group::nikon3mn);
-        pRoot->accept(finder);
-        TiffEntryBase* te = dynamic_cast<TiffEntryBase*>(finder.result());
-        if (!te || !te->pValue() || te->pValue()->count() == 0) return buf;
-        uint32_t count = static_cast<uint32_t>(te->pValue()->toLong());
-
-        // Find Exif.Nikon3.SerialNumber
-        finder.init(0x001d, Group::nikon3mn);
-        pRoot->accept(finder);
-        te = dynamic_cast<TiffEntryBase*>(finder.result());
-        if (!te || !te->pValue() || te->pValue()->count() == 0) return buf;
-        bool ok(false);
-        uint32_t serial = stringTo<uint32_t>(te->pValue()->toString(), ok);
-        if (!ok) {
-            // Find Exif.Image.Model
-            finder.init(0x0110, Group::ifd0);
-            pRoot->accept(finder);
-            te = dynamic_cast<TiffEntryBase*>(finder.result());
-            if (!te || !te->pValue() || te->pValue()->count() == 0) return buf;
-            std::string model = te->pValue()->toString();
-            if (model.find("D50") != std::string::npos) {
-                serial = 0x22;
-            }
-            else {
-                serial = 0x60;
-            }
-        }
-        buf.alloc(size);
-        memcpy(buf.pData_, pData, buf.size_);
-        ncrypt(buf.pData_ + 4, buf.size_ - 4, count, serial);
-        return buf;
-    }
-
-}}                                      // namespace Internal, Exiv2
+}

@@ -667,6 +667,84 @@ namespace Exiv2 {
         return tagInfoIi_;
     }
 
+    // Nikon3 Color Balance 1 Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoCb1_[] = {
+        TagInfo( 0, "Version", N_("Version"), N_("Version"), nikonCb1IfdId, makerTags, undefined, printExifVersion),
+        TagInfo(36, "WB_RBGGLevels", N_("WB RBGG Levels"), N_("WB RBGG levels"), nikonCb1IfdId, makerTags, unsignedShort, printValue),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonCb1Tag)", "(UnknownNikonCb1Tag)", N_("Unknown Nikon Color Balance 1 Tag"), nikonCb1IfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListCb1()
+    {
+        return tagInfoCb1_;
+    }
+
+    // Nikon3 Color Balance 2 Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoCb2_[] = {
+        TagInfo( 0, "Version", N_("Version"), N_("Version"), nikonCb2IfdId, makerTags, undefined, printExifVersion),
+        TagInfo( 5, "WB_RGGBLevels", N_("WB RGGB Levels"), N_("WB RGGB levels"), nikonCb2IfdId, makerTags, unsignedShort, printValue),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonCb2Tag)", "(UnknownNikonCb2Tag)", N_("Unknown Nikon Color Balance 2 Tag"), nikonCb2IfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListCb2()
+    {
+        return tagInfoCb2_;
+    }
+
+    // Nikon3 Color Balance 2a Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoCb2a_[] = {
+        TagInfo( 0, "Version", N_("Version"), N_("Version"), nikonCb2aIfdId, makerTags, undefined, printExifVersion),
+        TagInfo( 9, "WB_RGGBLevels", N_("WB RGGB Levels"), N_("WB RGGB levels"), nikonCb2aIfdId, makerTags, unsignedShort, printValue),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonCb2aTag)", "(UnknownNikonCb2aTag)", N_("Unknown Nikon Color Balance 2a Tag"), nikonCb2aIfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListCb2a()
+    {
+        return tagInfoCb2a_;
+    }
+
+    // Nikon3 Color Balance 2b Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoCb2b_[] = {
+        TagInfo(  0, "Version", N_("Version"), N_("Version"), nikonCb2bIfdId, makerTags, undefined, printExifVersion),
+        TagInfo(145, "WB_RGGBLevels", N_("WB RGGB Levels"), N_("WB RGGB levels"), nikonCb2bIfdId, makerTags, unsignedShort, printValue),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonCb2bTag)", "(UnknownNikonCb2bTag)", N_("Unknown Nikon Color Balance 2b Tag"), nikonCb2bIfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListCb2b()
+    {
+        return tagInfoCb2b_;
+    }
+
+    // Nikon3 Color Balance 3 Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoCb3_[] = {
+        TagInfo( 0, "Version", N_("Version"), N_("Version"), nikonCb3IfdId, makerTags, undefined, printExifVersion),
+        TagInfo(10, "WB_RGBGLevels", N_("WB RGBG Levels"), N_("WB RGBG levels"), nikonCb3IfdId, makerTags, unsignedShort, printValue),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonCb3Tag)", "(UnknownNikonCb3Tag)", N_("Unknown Nikon Color Balance 3 Tag"), nikonCb3IfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListCb3()
+    {
+        return tagInfoCb3_;
+    }
+
+    // Nikon3 Color Balance 4 Tag Info
+    const TagInfo Nikon3MakerNote::tagInfoCb4_[] = {
+        TagInfo(  0, "Version", N_("Version"), N_("Version"), nikonCb4IfdId, makerTags, undefined, printExifVersion),
+        TagInfo(147, "WB_GRBGLevels", N_("WB GRBG Levels"), N_("WB GRBG levels"), nikonCb4IfdId, makerTags, unsignedShort, printValue),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownNikonCb4Tag)", "(UnknownNikonCb4Tag)", N_("Unknown Nikon Color Balance 4 Tag"), nikonCb4IfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* Nikon3MakerNote::tagListCb4()
+    {
+        return tagInfoCb4_;
+    }
+
     // Nikon3 Lens Data 1 Tag Info
     const TagInfo Nikon3MakerNote::tagInfoLd1_[] = {
         TagInfo( 0, "Version", N_("Version"), N_("Version"), nikonLd1IfdId, makerTags, undefined, printExifVersion),

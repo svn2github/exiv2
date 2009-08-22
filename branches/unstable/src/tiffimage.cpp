@@ -432,6 +432,106 @@ namespace Exiv2 {
         { nikonLd3Cfg, nikonLdDef, 1 }
     };
 
+    //! Nikon Color Balance binary array - configuration 1
+    extern const ArrayCfg nikonCb1Cfg = {
+        Group::nikoncb1,  // Group for the elements
+        invalidByteOrder, // Use byte order from parent
+        ttUndefined,      // Type for array entry
+        notEncrypted,     // Encryption function
+        false,            // No size element
+        true,             // Write all tags
+        { 0, ttUnsignedShort, 1 }
+    };
+    //! Nikon Color Balance binary array - configuration 2
+    extern const ArrayCfg nikonCb2Cfg = {
+        Group::nikoncb2,  // Group for the elements
+        invalidByteOrder, // Use byte order from parent
+        ttUndefined,      // Type for array entry
+        nikonCrypt,       // Encryption function
+        false,            // No size element
+        true,             // Write all tags
+        { 0, ttUnsignedShort, 1 }
+    };
+    //! Nikon Color Balance binary array - configuration 2a
+    extern const ArrayCfg nikonCb2aCfg = {
+        Group::nikoncb2a, // Group for the elements
+        invalidByteOrder, // Use byte order from parent
+        ttUndefined,      // Type for array entry
+        nikonCrypt,       // Encryption function
+        false,            // No size element
+        true,             // Write all tags
+        { 0, ttUnsignedShort, 1 }
+    };
+    //! Nikon Color Balance binary array - configuration 2b
+    extern const ArrayCfg nikonCb2bCfg = {
+        Group::nikoncb2b, // Group for the elements
+        invalidByteOrder, // Use byte order from parent
+        ttUndefined,      // Type for array entry
+        nikonCrypt,       // Encryption function
+        false,            // No size element
+        true,             // Write all tags
+        { 0, ttUnsignedShort, 1 }
+    };
+    //! Nikon Color Balance binary array - configuration 3
+    extern const ArrayCfg nikonCb3Cfg = {
+        Group::nikoncb3,  // Group for the elements
+        invalidByteOrder, // Use byte order from parent
+        ttUndefined,      // Type for array entry
+        notEncrypted,     // Encryption function
+        false,            // No size element
+        true,             // Write all tags
+        { 0, ttUnsignedShort, 1 }
+    };
+    //! Nikon Color Balance binary array - configuration 4
+    extern const ArrayCfg nikonCb4Cfg = {
+        Group::nikoncb4,  // Group for the elements
+        invalidByteOrder, // Use byte order from parent
+        ttUndefined,      // Type for array entry
+        nikonCrypt,       // Encryption function
+        false,            // No size element
+        true,             // Write all tags
+        { 0, ttUnsignedShort, 1 }
+    };
+    //! Nikon Color Balance binary array - definition 1
+    extern const ArrayDef nikonCb1Def[] = {
+        {  0, ttUndefined,     4 }, // LensDataVersion
+        { 72, ttUnsignedShort, 4 }  // Color balance levels
+    };
+    //! Nikon Color Balance binary array - definition 2
+    extern const ArrayDef nikonCb2Def[] = {
+        {  0, ttUndefined,     4 }, // LensDataVersion
+        { 10, ttUnsignedShort, 4 }  // Color balance levels
+    };
+    //! Nikon Color Balance binary array - definition 2a
+    extern const ArrayDef nikonCb2aDef[] = {
+        {  0, ttUndefined,     4 }, // LensDataVersion
+        { 18, ttUnsignedShort, 4 }  // Color balance levels
+    };
+    //! Nikon Color Balance binary array - definition 2b
+    extern const ArrayDef nikonCb2bDef[] = {
+        {  0, ttUndefined,     4 }, // LensDataVersion
+        {290, ttUnsignedShort, 4 }  // Color balance levels
+    };
+    //! Nikon Color Balance binary array - definition 3
+    extern const ArrayDef nikonCb3Def[] = {
+        {  0, ttUndefined,     4 }, // LensDataVersion
+        { 20, ttUnsignedShort, 4 }  // Color balance levels
+    };
+    //! Nikon Color Balance binary array - definition 4
+    extern const ArrayDef nikonCb4Def[] = {
+        {  0, ttUndefined,     4 }, // LensDataVersion
+        {294, ttUnsignedShort, 4 }  // Color balance levels
+    };
+    //! Nikon Color Balance configurations and definitions
+    extern const ArraySet nikonCbSet[] = {
+        { nikonCb1Cfg,  nikonCb1Def,  2 },
+        { nikonCb2Cfg,  nikonCb2Def,  2 },
+        { nikonCb2aCfg, nikonCb2aDef, 2 },
+        { nikonCb2bCfg, nikonCb2bDef, 2 },
+        { nikonCb3Cfg,  nikonCb3Def,  2 },
+        { nikonCb4Cfg,  nikonCb4Def,  2 }
+    };
+
     //! Minolta Camera Settings (old) binary array - configuration
     extern const ArrayCfg minoCsoCfg = {
         Group::minocso,   // Group for the elements
@@ -539,6 +639,12 @@ namespace Exiv2 {
         { Tag::root, Group::nikonpv,   Group::nikon3mn,  0x0011    },
         { Tag::root, Group::nikonwt,   Group::nikon3mn,  0x0024    },
         { Tag::root, Group::nikonii,   Group::nikon3mn,  0x0025    },
+        { Tag::root, Group::nikoncb1,  Group::nikon3mn,  0x0097    },
+        { Tag::root, Group::nikoncb2,  Group::nikon3mn,  0x0097    },
+        { Tag::root, Group::nikoncb2a, Group::nikon3mn,  0x0097    },
+        { Tag::root, Group::nikoncb2b, Group::nikon3mn,  0x0097    },
+        { Tag::root, Group::nikoncb3,  Group::nikon3mn,  0x0097    },
+        { Tag::root, Group::nikoncb4,  Group::nikon3mn,  0x0097    },
         { Tag::root, Group::nikonld1,  Group::nikon3mn,  0x0098    },
         { Tag::root, Group::nikonld2,  Group::nikon3mn,  0x0098    },
         { Tag::root, Group::nikonld3,  Group::nikon3mn,  0x0098    },
@@ -772,7 +878,8 @@ namespace Exiv2 {
         {    0x0011, Group::nikon3mn,  newTiffSubIfd<Group::nikonpv>             },
         {    0x0024, Group::nikon3mn,  EXV_BINARY_ARRAY(nikonWtCfg, nikonWtDef)  },
         {    0x0025, Group::nikon3mn,  EXV_BINARY_ARRAY(nikonIiCfg, nikonIiDef)  },
-        {    0x0098, Group::nikon3mn,  EXV_COMPLEX_BINARY_ARRAY(nikonLdSet, selectNikonLd) },
+        {    0x0097, Group::nikon3mn,  EXV_COMPLEX_BINARY_ARRAY(nikonCbSet, nikonSelector) },
+        {    0x0098, Group::nikon3mn,  EXV_COMPLEX_BINARY_ARRAY(nikonLdSet, nikonSelector) },
         {  Tag::all, Group::nikon3mn,  newTiffEntry                              },
 
         // Nikon3 makernote preview subdir
@@ -786,6 +893,14 @@ namespace Exiv2 {
 
         // Nikon3 ISO info
         {  Tag::all, Group::nikonii,   newTiffBinaryElement                      },
+
+        // Nikon3 color balance
+        {  Tag::all, Group::nikoncb1,  newTiffBinaryElement                      },
+        {  Tag::all, Group::nikoncb2,  newTiffBinaryElement                      },
+        {  Tag::all, Group::nikoncb2a, newTiffBinaryElement                      },
+        {  Tag::all, Group::nikoncb2b, newTiffBinaryElement                      },
+        {  Tag::all, Group::nikoncb3,  newTiffBinaryElement                      },
+        {  Tag::all, Group::nikoncb4,  newTiffBinaryElement                      },
 
         // Nikon3 lens data
         {  Tag::all, Group::nikonld1,  newTiffBinaryElement                      },

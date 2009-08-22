@@ -691,7 +691,7 @@ namespace Exiv2 {
         const CryptFct cryptFct = object->cfg()->cryptFct_;
         if (cryptFct != 0) {
             const byte* pData = object->pData();
-            DataBuf buf = cryptFct(pData, size, pRoot_);
+            DataBuf buf = cryptFct(object->tag(), pData, size, pRoot_);
             if (buf.size_ > 0) {
                 pData = buf.pData_;
                 size = buf.size_;
@@ -1447,7 +1447,7 @@ namespace Exiv2 {
         if (cryptFct != 0) {
             const byte* pData = object->pData();
             int32_t size = object->TiffEntryBase::doSize();
-            DataBuf buf = cryptFct(pData, size, pRoot_);
+            DataBuf buf = cryptFct(object->tag(), pData, size, pRoot_);
             if (buf.size_ > 0) object->setData(buf);
         }
 

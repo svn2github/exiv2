@@ -1209,17 +1209,14 @@ namespace Exiv2 {
 
     }; // class TiffIfdMakernote
 
-    //! Function pointer type for a crypt function used for binary arrays.
-    typedef DataBuf (*CryptFct)(const byte*, uint32_t, TiffComponent* const);
-
     /*!
       @brief Function pointer type for a function to determine which cfg + def
              of a corresponding array set to use.
-
-      @param pRoot Pointer to the root element of the composite.
-      @return Index into the corresponding array set.
      */
-    typedef int (*CfgSelFct)(TiffBinaryArray* const object, TiffComponent* const pRoot);
+    typedef int (*CfgSelFct)(uint16_t, const byte*, uint32_t, TiffComponent* const);
+
+    //! Function pointer type for a crypt function used for binary arrays.
+    typedef DataBuf (*CryptFct)(uint16_t, const byte*, uint32_t, TiffComponent* const);
 
     //! Defines one tag in a binary array
     // Todo: multiple tags in one byte - mask

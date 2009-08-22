@@ -21,7 +21,9 @@
 /*!
   @file    makernote_int.hpp
   @brief   Makernote factory and registry, IFD makernote header, and camera
-           vendor specific makernote implementations.
+           vendor specific makernote implementations.<BR>References:<BR>
+  [1] <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/">ExifTool</a> by Phil Harvey<BR>
+  [2] <a href="http://www.cybercom.net/~dcoffin/dcraw/">Decoding raw digital photos in Linux</a> by Dave Coffin
   @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
@@ -91,6 +93,12 @@ namespace Exiv2 {
         const uint16_t nikonld1  = 301; //!< Nikon Lens Data 1 tags
         const uint16_t nikonld2  = 302; //!< Nikon Lens Data 2 tags
         const uint16_t nikonld3  = 303; //!< Nikon Lens Data 3 tags
+        const uint16_t nikoncb1  = 304; //!< Nikon Color Balance 1 Tags
+        const uint16_t nikoncb2  = 305; //!< Nikon Color Balance 2 Tags
+        const uint16_t nikoncb2a = 306; //!< Nikon Color Balance 2 Tags
+        const uint16_t nikoncb2b = 307; //!< Nikon Color Balance 2 Tags
+        const uint16_t nikoncb3  = 308; //!< Nikon Color Balance 3 Tags
+        const uint16_t nikoncb4  = 309; //!< Nikon Color Balance 4 Tags
     }
 
 // *****************************************************************************
@@ -627,29 +635,33 @@ namespace Exiv2 {
                                uint16_t mnGroup);
 
     /*!
-      @brief Function to determine which Nikon Lens Data cfg + def to use
+      @brief Function to select cfg + def of a Nikon complex binary array.
 
-      \em object is a pointer to the TIFF binary array object in question.
-      \em pRoot is a pointer to the root element of the composite.
-      Return an index into the corresponding array set.
+      @param tag Tag number of the binary array
+      @param pData Pointer to the raw array data.
+      @param size Size of the array data.
+      @param pRoot Pointer to the root component of the TIFF tree.
+      @return An index into the array set, -1 if no match was found.
      */
-    int selectNikonLd(TiffBinaryArray* const object, TiffComponent* const pRoot);
+    int nikonSelector(uint16_t tag, const byte* pData, uint32_t size, TiffComponent* const pRoot);
 
     /*!
-      @brief Decrypt Nikon data.
+      @brief Encrypt and decrypt Nikon data.
 
-      Checks the version of the Nikon data array and decrypts it if needed.
+      Checks the version of the Nikon data array and en/decrypts (portions of) it as
+      needed. (The Nikon encryption algorithm is symmetric.)
 
       @note This function requires access to other components of the composite, it
             should only be called after all other components are read.
 
-      @param pData Pointer to the start of the data to decrypt.
+      @param tag Tag number of the binary array
+      @param pData Pointer to the start of the data to en/decrypt.
       @param size Size of the data buffer.
       @param pRoot Pointer to the root element of the composite.
-      @return Decrypted data. Ownership of the memory is passed to the caller.
+      @return En/decrypted data. Ownership of the memory is passed to the caller.
               The buffer may be empty in case no decryption was needed.
      */
-    DataBuf nikonCrypt(const byte* pData, uint32_t size, TiffComponent* const pRoot);
+    DataBuf nikonCrypt(uint16_t tag, const byte* pData, uint32_t size, TiffComponent* const pRoot);
 
 }}                                      // namespace Internal, Exiv2
 
