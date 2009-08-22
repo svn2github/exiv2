@@ -753,7 +753,34 @@ Exif.Nikon3.ShotInfo                          0x0091 Makernote    Undefined 465 
 Exif.Nikon3.HueAdjustment                     0x0092 Makernote    SShort      1 0
 Exif.Nikon3.NoiseReduction                    0x0095 Makernote    Ascii       5 OFF 
 Exif.Nikon3.ColorBalance2                     0x0097 Makernote    Undefined 140 48 49 48 51 1 0 1 0 1 0 1 0 0 0 0 0 0 0 0 0 2 4 1 0 1 163 1 0 0 0 1 8 1 0 0 0 0 0 0 112 0 12 0 24 0 3 1 140 255 109 0 7 255 216 1 90 255 206 255 251 255 222 1 39 255 255 255 255 255 255 128 0 0 0 0 0 0 0 0 0 10 0 0 0 2 128 0 0 3 0 0 0 2 128 0 0 0 0 16 16 0 255 0 255 0 77 0 150 0 29 255 204 255 186 0 122 0 127 255 150 255 235 0 0 5 0 0 8 108 18 223 51 5 89 1 63 240 240 0 26 
-Exif.Nikon3.LensData                          0x0098 Makernote    Undefined  31 48 49 48 49 23 52 7 0 161 109 80 127 64 45 92 44 52 132 52 23 100 32 99 0 0 0 21 5 0 2 2 
+Exif.NikonLd2.Version                         0x0000 Makernote    Undefined   4 48 49 48 49 
+Exif.NikonLd2.ExitPupilPosition               0x0004 Makernote    Byte        1 23 
+Exif.NikonLd2.AFAperture                      0x0005 Makernote    Byte        1 52 
+Exif.NikonLd2.0x0006                          0x0006 Makernote    Byte        1 7 
+Exif.NikonLd2.0x0007                          0x0007 Makernote    Byte        1 0 
+Exif.NikonLd2.FocusPosition                   0x0008 Makernote    Byte        1 161 
+Exif.NikonLd2.FocusDistance                   0x0009 Makernote    Byte        1 109 
+Exif.NikonLd2.FocalLength                     0x000a Makernote    Byte        1 80 
+Exif.NikonLd2.LensIDNumber                    0x000b Makernote    Byte        1 127 
+Exif.NikonLd2.LensFStops                      0x000c Makernote    Byte        1 64 
+Exif.NikonLd2.MinFocalLength                  0x000d Makernote    Byte        1 45 
+Exif.NikonLd2.MaxFocalLength                  0x000e Makernote    Byte        1 92 
+Exif.NikonLd2.MaxApertureAtMinFocal           0x000f Makernote    Byte        1 44 
+Exif.NikonLd2.MaxApertureAtMaxFocal           0x0010 Makernote    Byte        1 52 
+Exif.NikonLd2.MCUVersion                      0x0011 Makernote    Byte        1 132 
+Exif.NikonLd2.EffectiveMaxAperture            0x0012 Makernote    Byte        1 52 
+Exif.NikonLd2.0x0013                          0x0013 Makernote    Byte        1 23 
+Exif.NikonLd2.0x0014                          0x0014 Makernote    Byte        1 100 
+Exif.NikonLd2.0x0015                          0x0015 Makernote    Byte        1 32 
+Exif.NikonLd2.0x0016                          0x0016 Makernote    Byte        1 99 
+Exif.NikonLd2.0x0017                          0x0017 Makernote    Byte        1 0 
+Exif.NikonLd2.0x0018                          0x0018 Makernote    Byte        1 0 
+Exif.NikonLd2.0x0019                          0x0019 Makernote    Byte        1 0 
+Exif.NikonLd2.0x001a                          0x001a Makernote    Byte        1 21 
+Exif.NikonLd2.0x001b                          0x001b Makernote    Byte        1 5 
+Exif.NikonLd2.0x001c                          0x001c Makernote    Byte        1 0 
+Exif.NikonLd2.0x001d                          0x001d Makernote    Byte        1 2 
+Exif.NikonLd2.0x001e                          0x001e Makernote    Byte        1 2 
 Exif.Nikon3.SensorPixelSize                   0x009a Makernote    Rational    2 78/10 78/10
 Exif.Nikon3.SerialNO                          0x00a0 Makernote    Ascii      21 NO= 100005e5        
 Exif.Nikon3.ImageDataSize                     0x00a2 Makernote    Long        1 2929656
@@ -868,7 +895,34 @@ Exif.Nikon3.ShotInfo                          0x0091 Makernote    Undefined 465 
 Exif.Nikon3.HueAdjustment                     0x0092 Makernote    SShort      1 0
 Exif.Nikon3.NoiseReduction                    0x0095 Makernote    Ascii       5 OFF 
 Exif.Nikon3.ColorBalance2                     0x0097 Makernote    Undefined 140 48 49 48 51 1 0 1 0 1 0 1 0 0 0 0 0 0 0 0 0 2 4 1 0 1 163 1 0 0 0 1 8 1 0 0 0 0 0 0 112 0 12 0 24 0 3 1 140 255 109 0 7 255 216 1 90 255 206 255 251 255 222 1 39 255 255 255 255 255 255 128 0 0 0 0 0 0 0 0 0 10 0 0 0 2 128 0 0 3 0 0 0 2 128 0 0 0 0 16 16 0 255 0 255 0 77 0 150 0 29 255 204 255 186 0 122 0 127 255 150 255 235 0 0 5 0 0 8 108 18 223 51 5 89 1 63 240 240 0 26 
-Exif.Nikon3.LensData                          0x0098 Makernote    Undefined  31 48 49 48 49 23 52 7 0 161 109 80 127 64 45 92 44 52 132 52 23 100 32 99 0 0 0 21 5 0 2 2 
+Exif.NikonLd2.Version                         0x0000 Makernote    Undefined   4 48 49 48 49 
+Exif.NikonLd2.ExitPupilPosition               0x0004 Makernote    Byte        1 23 
+Exif.NikonLd2.AFAperture                      0x0005 Makernote    Byte        1 52 
+Exif.NikonLd2.0x0006                          0x0006 Makernote    Byte        1 7 
+Exif.NikonLd2.0x0007                          0x0007 Makernote    Byte        1 0 
+Exif.NikonLd2.FocusPosition                   0x0008 Makernote    Byte        1 161 
+Exif.NikonLd2.FocusDistance                   0x0009 Makernote    Byte        1 109 
+Exif.NikonLd2.FocalLength                     0x000a Makernote    Byte        1 80 
+Exif.NikonLd2.LensIDNumber                    0x000b Makernote    Byte        1 127 
+Exif.NikonLd2.LensFStops                      0x000c Makernote    Byte        1 64 
+Exif.NikonLd2.MinFocalLength                  0x000d Makernote    Byte        1 45 
+Exif.NikonLd2.MaxFocalLength                  0x000e Makernote    Byte        1 92 
+Exif.NikonLd2.MaxApertureAtMinFocal           0x000f Makernote    Byte        1 44 
+Exif.NikonLd2.MaxApertureAtMaxFocal           0x0010 Makernote    Byte        1 52 
+Exif.NikonLd2.MCUVersion                      0x0011 Makernote    Byte        1 132 
+Exif.NikonLd2.EffectiveMaxAperture            0x0012 Makernote    Byte        1 52 
+Exif.NikonLd2.0x0013                          0x0013 Makernote    Byte        1 23 
+Exif.NikonLd2.0x0014                          0x0014 Makernote    Byte        1 100 
+Exif.NikonLd2.0x0015                          0x0015 Makernote    Byte        1 32 
+Exif.NikonLd2.0x0016                          0x0016 Makernote    Byte        1 99 
+Exif.NikonLd2.0x0017                          0x0017 Makernote    Byte        1 0 
+Exif.NikonLd2.0x0018                          0x0018 Makernote    Byte        1 0 
+Exif.NikonLd2.0x0019                          0x0019 Makernote    Byte        1 0 
+Exif.NikonLd2.0x001a                          0x001a Makernote    Byte        1 21 
+Exif.NikonLd2.0x001b                          0x001b Makernote    Byte        1 5 
+Exif.NikonLd2.0x001c                          0x001c Makernote    Byte        1 0 
+Exif.NikonLd2.0x001d                          0x001d Makernote    Byte        1 2 
+Exif.NikonLd2.0x001e                          0x001e Makernote    Byte        1 2 
 Exif.Nikon3.SensorPixelSize                   0x009a Makernote    Rational    2 78/10 78/10
 Exif.Nikon3.SerialNO                          0x00a0 Makernote    Ascii      21 NO= 100005e5        
 Exif.Nikon3.ImageDataSize                     0x00a2 Makernote    Long        1 2929656
@@ -984,7 +1038,34 @@ Exif.Nikon3.ShotInfo                          0x0091 Makernote    Undefined 465 
 Exif.Nikon3.HueAdjustment                     0x0092 Makernote    SShort      1 0
 Exif.Nikon3.NoiseReduction                    0x0095 Makernote    Ascii       5 OFF 
 Exif.Nikon3.ColorBalance2                     0x0097 Makernote    Undefined 140 48 49 48 51 1 0 1 0 1 0 1 0 0 0 0 0 0 0 0 0 2 4 1 0 1 163 1 0 0 0 1 8 1 0 0 0 0 0 0 112 0 12 0 24 0 3 1 140 255 109 0 7 255 216 1 90 255 206 255 251 255 222 1 39 255 255 255 255 255 255 128 0 0 0 0 0 0 0 0 0 10 0 0 0 2 128 0 0 3 0 0 0 2 128 0 0 0 0 16 16 0 255 0 255 0 77 0 150 0 29 255 204 255 186 0 122 0 127 255 150 255 235 0 0 5 0 0 8 108 18 223 51 5 89 1 63 240 240 0 26 
-Exif.Nikon3.LensData                          0x0098 Makernote    Undefined  31 48 49 48 49 23 52 7 0 161 109 80 127 64 45 92 44 52 132 52 23 100 32 99 0 0 0 21 5 0 2 2 
+Exif.NikonLd2.Version                         0x0000 Makernote    Undefined   4 48 49 48 49 
+Exif.NikonLd2.ExitPupilPosition               0x0004 Makernote    Byte        1 23 
+Exif.NikonLd2.AFAperture                      0x0005 Makernote    Byte        1 52 
+Exif.NikonLd2.0x0006                          0x0006 Makernote    Byte        1 7 
+Exif.NikonLd2.0x0007                          0x0007 Makernote    Byte        1 0 
+Exif.NikonLd2.FocusPosition                   0x0008 Makernote    Byte        1 161 
+Exif.NikonLd2.FocusDistance                   0x0009 Makernote    Byte        1 109 
+Exif.NikonLd2.FocalLength                     0x000a Makernote    Byte        1 80 
+Exif.NikonLd2.LensIDNumber                    0x000b Makernote    Byte        1 127 
+Exif.NikonLd2.LensFStops                      0x000c Makernote    Byte        1 64 
+Exif.NikonLd2.MinFocalLength                  0x000d Makernote    Byte        1 45 
+Exif.NikonLd2.MaxFocalLength                  0x000e Makernote    Byte        1 92 
+Exif.NikonLd2.MaxApertureAtMinFocal           0x000f Makernote    Byte        1 44 
+Exif.NikonLd2.MaxApertureAtMaxFocal           0x0010 Makernote    Byte        1 52 
+Exif.NikonLd2.MCUVersion                      0x0011 Makernote    Byte        1 132 
+Exif.NikonLd2.EffectiveMaxAperture            0x0012 Makernote    Byte        1 52 
+Exif.NikonLd2.0x0013                          0x0013 Makernote    Byte        1 23 
+Exif.NikonLd2.0x0014                          0x0014 Makernote    Byte        1 100 
+Exif.NikonLd2.0x0015                          0x0015 Makernote    Byte        1 32 
+Exif.NikonLd2.0x0016                          0x0016 Makernote    Byte        1 99 
+Exif.NikonLd2.0x0017                          0x0017 Makernote    Byte        1 0 
+Exif.NikonLd2.0x0018                          0x0018 Makernote    Byte        1 0 
+Exif.NikonLd2.0x0019                          0x0019 Makernote    Byte        1 0 
+Exif.NikonLd2.0x001a                          0x001a Makernote    Byte        1 21 
+Exif.NikonLd2.0x001b                          0x001b Makernote    Byte        1 5 
+Exif.NikonLd2.0x001c                          0x001c Makernote    Byte        1 0 
+Exif.NikonLd2.0x001d                          0x001d Makernote    Byte        1 2 
+Exif.NikonLd2.0x001e                          0x001e Makernote    Byte        1 2 
 Exif.Nikon3.SensorPixelSize                   0x009a Makernote    Rational    2 78/10 78/10
 Exif.Nikon3.SerialNO                          0x00a0 Makernote    Ascii      21 NO= 100005e5        
 Exif.Nikon3.ImageDataSize                     0x00a2 Makernote    Long        1 2929656
@@ -1100,7 +1181,34 @@ Exif.Nikon3.ShotInfo                          0x0091 Makernote    Undefined 465 
 Exif.Nikon3.HueAdjustment                     0x0092 Makernote    SShort      1 0
 Exif.Nikon3.NoiseReduction                    0x0095 Makernote    Ascii       5 OFF 
 Exif.Nikon3.ColorBalance2                     0x0097 Makernote    Undefined 140 48 49 48 51 1 0 1 0 1 0 1 0 0 0 0 0 0 0 0 0 2 4 1 0 1 163 1 0 0 0 1 8 1 0 0 0 0 0 0 112 0 12 0 24 0 3 1 140 255 109 0 7 255 216 1 90 255 206 255 251 255 222 1 39 255 255 255 255 255 255 128 0 0 0 0 0 0 0 0 0 10 0 0 0 2 128 0 0 3 0 0 0 2 128 0 0 0 0 16 16 0 255 0 255 0 77 0 150 0 29 255 204 255 186 0 122 0 127 255 150 255 235 0 0 5 0 0 8 108 18 223 51 5 89 1 63 240 240 0 26 
-Exif.Nikon3.LensData                          0x0098 Makernote    Undefined  31 48 49 48 49 23 52 7 0 161 109 80 127 64 45 92 44 52 132 52 23 100 32 99 0 0 0 21 5 0 2 2 
+Exif.NikonLd2.Version                         0x0000 Makernote    Undefined   4 48 49 48 49 
+Exif.NikonLd2.ExitPupilPosition               0x0004 Makernote    Byte        1 23 
+Exif.NikonLd2.AFAperture                      0x0005 Makernote    Byte        1 52 
+Exif.NikonLd2.0x0006                          0x0006 Makernote    Byte        1 7 
+Exif.NikonLd2.0x0007                          0x0007 Makernote    Byte        1 0 
+Exif.NikonLd2.FocusPosition                   0x0008 Makernote    Byte        1 161 
+Exif.NikonLd2.FocusDistance                   0x0009 Makernote    Byte        1 109 
+Exif.NikonLd2.FocalLength                     0x000a Makernote    Byte        1 80 
+Exif.NikonLd2.LensIDNumber                    0x000b Makernote    Byte        1 127 
+Exif.NikonLd2.LensFStops                      0x000c Makernote    Byte        1 64 
+Exif.NikonLd2.MinFocalLength                  0x000d Makernote    Byte        1 45 
+Exif.NikonLd2.MaxFocalLength                  0x000e Makernote    Byte        1 92 
+Exif.NikonLd2.MaxApertureAtMinFocal           0x000f Makernote    Byte        1 44 
+Exif.NikonLd2.MaxApertureAtMaxFocal           0x0010 Makernote    Byte        1 52 
+Exif.NikonLd2.MCUVersion                      0x0011 Makernote    Byte        1 132 
+Exif.NikonLd2.EffectiveMaxAperture            0x0012 Makernote    Byte        1 52 
+Exif.NikonLd2.0x0013                          0x0013 Makernote    Byte        1 23 
+Exif.NikonLd2.0x0014                          0x0014 Makernote    Byte        1 100 
+Exif.NikonLd2.0x0015                          0x0015 Makernote    Byte        1 32 
+Exif.NikonLd2.0x0016                          0x0016 Makernote    Byte        1 99 
+Exif.NikonLd2.0x0017                          0x0017 Makernote    Byte        1 0 
+Exif.NikonLd2.0x0018                          0x0018 Makernote    Byte        1 0 
+Exif.NikonLd2.0x0019                          0x0019 Makernote    Byte        1 0 
+Exif.NikonLd2.0x001a                          0x001a Makernote    Byte        1 21 
+Exif.NikonLd2.0x001b                          0x001b Makernote    Byte        1 5 
+Exif.NikonLd2.0x001c                          0x001c Makernote    Byte        1 0 
+Exif.NikonLd2.0x001d                          0x001d Makernote    Byte        1 2 
+Exif.NikonLd2.0x001e                          0x001e Makernote    Byte        1 2 
 Exif.Nikon3.SensorPixelSize                   0x009a Makernote    Rational    2 78/10 78/10
 Exif.Nikon3.SerialNO                          0x00a0 Makernote    Ascii      21 NO= 100005e5        
 Exif.Nikon3.ImageDataSize                     0x00a2 Makernote    Long        1 2929656

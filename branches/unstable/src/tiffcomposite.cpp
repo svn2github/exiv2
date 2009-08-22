@@ -218,7 +218,8 @@ namespace Exiv2 {
           defSize_(defSize),
           setSize_(0),
           origData_(0),
-          origSize_(0)
+          origSize_(0),
+          pRoot_(0)
     {
         assert(arrayCfg != 0);
     }
@@ -236,7 +237,8 @@ namespace Exiv2 {
           defSize_(0),
           setSize_(setSize),
           origData_(0),
-          origSize_(0)
+          origSize_(0),
+          pRoot_(0)
     {
         // We'll figure out the correct cfg later
         assert(cfgSelFct != 0);
@@ -606,12 +608,17 @@ namespace Exiv2 {
         return sz;
     } // TiffBinaryArray::addElement
 
-    TiffComponent* TiffComponent::addPath(uint16_t tag, TiffPath& tiffPath)
+    TiffComponent* TiffComponent::addPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot)
     {
-        return doAddPath(tag, tiffPath);
+        return doAddPath(tag, tiffPath, pRoot);
     } // TiffComponent::addPath
 
-    TiffComponent* TiffDirectory::doAddPath(uint16_t tag, TiffPath& tiffPath)
+    TiffComponent* TiffComponent::doAddPath(uint16_t  /*tag*/, TiffPath& /*tiffPath*/, TiffComponent* const /*pRoot*/)
+    {
+        return this;
+    } // TiffComponent::doAddPath
+
+    TiffComponent* TiffDirectory::doAddPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot)
     {
         assert(tiffPath.size() > 1);
         tiffPath.pop();
@@ -651,10 +658,10 @@ namespace Exiv2 {
                 tc = this->addChild(atc);
             }
         }
-        return tc->addPath(tag, tiffPath);
+        return tc->addPath(tag, tiffPath, pRoot);
     } // TiffDirectory::doAddPath
 
-    TiffComponent* TiffSubIfd::doAddPath(uint16_t tag, TiffPath& tiffPath)
+    TiffComponent* TiffSubIfd::doAddPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot)
     {
         assert(!tiffPath.empty());
         const TiffPathItem tpi1 = tiffPath.top();
@@ -678,10 +685,10 @@ namespace Exiv2 {
             tc = addChild(atc);
             setCount(static_cast<uint32_t>(ifds_.size()));
         }
-        return tc->addPath(tag, tiffPath);
+        return tc->addPath(tag, tiffPath, pRoot);
     } // TiffSubIfd::doAddPath
 
-    TiffComponent* TiffMnEntry::doAddPath(uint16_t tag, TiffPath& tiffPath)
+    TiffComponent* TiffMnEntry::doAddPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot)
     {
         assert(!tiffPath.empty());
         const TiffPathItem tpi1 = tiffPath.top();
@@ -697,20 +704,21 @@ namespace Exiv2 {
             mn_ = TiffMnCreator::create(tpi1.tag(), tpi1.group(), mnGroup_);
             assert(mn_);
         }
-        return mn_->addPath(tag, tiffPath);
+        return mn_->addPath(tag, tiffPath, pRoot);
     } // TiffMnEntry::doAddPath
 
-    TiffComponent* TiffIfdMakernote::doAddPath(uint16_t tag, TiffPath& tiffPath)
+    TiffComponent* TiffIfdMakernote::doAddPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot)
     {
-        return ifd_.addPath(tag, tiffPath);
+        return ifd_.addPath(tag, tiffPath, pRoot);
     }
 
-    TiffComponent* TiffBinaryArray::doAddPath(uint16_t tag, TiffPath& tiffPath)
+    TiffComponent* TiffBinaryArray::doAddPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot)
     {
         assert(tiffPath.size() > 1);
         tiffPath.pop();
         const TiffPathItem tpi = tiffPath.top();
         // Initialize the binary array (if it is a complex array)
+        pRoot_ = pRoot;
         initialize(tpi.group());
         TiffComponent* tc = 0;
         // Todo: Duplicates are not allowed!
@@ -732,13 +740,18 @@ namespace Exiv2 {
             tc = addChild(atc);
             setCount(static_cast<uint32_t>(elements_.size()));
         }
-        return tc->addPath(tag, tiffPath);
+        return tc->addPath(tag, tiffPath, pRoot);
     } // TiffBinaryArray::doAddPath
 
     TiffComponent* TiffComponent::addChild(TiffComponent::AutoPtr tiffComponent)
     {
         return doAddChild(tiffComponent);
     } // TiffComponent::addChild
+
+    TiffComponent* TiffComponent::doAddChild(AutoPtr /*tiffComponent*/)
+    {
+        return 0;
+    } // TiffComponent::doAddChild
 
     TiffComponent* TiffDirectory::doAddChild(TiffComponent::AutoPtr tiffComponent)
     {
@@ -780,6 +793,11 @@ namespace Exiv2 {
     {
         return doAddNext(tiffComponent);
     } // TiffComponent::addNext
+
+    TiffComponent* TiffComponent::doAddNext(AutoPtr /*tiffComponent*/)
+    {
+        return 0;
+    } // TiffComponent::doAddNext
 
     TiffComponent* TiffDirectory::doAddNext(TiffComponent::AutoPtr tiffComponent)
     {
@@ -1289,12 +1307,11 @@ namespace Exiv2 {
                                       uint32_t  dataIdx,
                                       uint32_t& imageIdx)
     {
-        // Todo: Support encryption
-
         if (cfg()->byteOrder_ != invalidByteOrder) byteOrder = cfg()->byteOrder_;
         // Tags must be sorted in ascending order
         std::sort(elements_.begin(), elements_.end(), cmpTagLt);
         uint32_t idx = 0;
+        Blob array;
         // Some array entries need to have the size in the first element
         if (cfg()->hasSize_) {
             byte buf[4];
@@ -1309,23 +1326,30 @@ namespace Exiv2 {
             default:
                 assert(false);
             }
-            append(blob, buf, elSize);
+            append(array, buf, elSize);
         }
-        // write all tags of the array (assumes that there are no duplicates)
+        // write all tags of the array (Todo: assumes that there are no duplicates, need check)
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
             // Skip the manufactured tag, if it exists
             if (cfg()->hasSize_ && (*i)->tag() == 0) continue;
             uint32_t newIdx = (*i)->tag() * cfg()->tagStep();
-            idx += fillGap(blob, idx, newIdx);
-            idx += (*i)->write(blob, byteOrder, offset + newIdx, valueIdx, dataIdx, imageIdx);
+            idx += fillGap(array, idx, newIdx);
+            idx += (*i)->write(array, byteOrder, offset + newIdx, valueIdx, dataIdx, imageIdx);
         }
         if (cfg()->hasFillers_ && def()) {
             const ArrayDef* lastDef = def() + defSize() - 1;
             uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep());
-            idx += fillGap(blob, idx, lastDef->idx_ + lastDef->size(lastTag, cfg()->group_));
+            idx += fillGap(array, idx, lastDef->idx_ + lastDef->size(lastTag, cfg()->group_));
         }
+        DataBuf buf;
         if (cfg()->cryptFct_) {
-            // Todo: encrypt, skip header
+            buf = cfg()->cryptFct_(&array[0], static_cast<uint32_t>(array.size()), pRoot_);
+        }
+        if (buf.size_ > 0) {
+            append(blob, buf.pData_, buf.size_);
+        }
+        else {
+            append(blob, &array[0], static_cast<uint32_t>(array.size()));
         }
 
         return idx;

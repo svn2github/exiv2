@@ -629,9 +629,9 @@ namespace Exiv2 {
     /*!
       @brief Function to determine which Nikon Lens Data cfg + def to use
 
-      @param object Pointer to the TIFF binary array object in question.
-      @param pRoot Pointer to the root element of the composite.
-      @return Index into the corresponding array set.
+      \em object is a pointer to the TIFF binary array object in question.
+      \em pRoot is a pointer to the root element of the composite.
+      Return an index into the corresponding array set.
      */
     int selectNikonLd(TiffBinaryArray* const object, TiffComponent* const pRoot);
 

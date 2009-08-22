@@ -985,7 +985,7 @@ namespace Exiv2 {
             // Assumption is that the corresponding TIFF entry doesn't exist
             TiffPath tiffPath;
             TiffCreator::getPath(tiffPath, i->tag(), group, root);
-            TiffComponent* tc = pRootDir->addPath(i->tag(), tiffPath);
+            TiffComponent* tc = pRootDir->addPath(i->tag(), tiffPath, pRootDir);
             TiffEntryBase* object = dynamic_cast<TiffEntryBase*>(tc);
 #ifdef DEBUG
             if (object == 0) {

@@ -163,10 +163,11 @@ namespace Exiv2 {
 
           @param tag      The tag of the new entry
           @param tiffPath A path from the TIFF root element to a TIFF entry.
+          @param pRoot    Pointer to the root component of the TIFF composite.
 
           @return A pointer to the newly added TIFF entry.
          */
-        TiffComponent* addPath(uint16_t tag, TiffPath& tiffPath);
+        TiffComponent* addPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot);
         /*!
           @brief Add a child to the component. Default is to do nothing.
           @param tiffComponent Auto pointer to the component to add.
@@ -283,12 +284,11 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         //! Implements addPath(). The default implementation does nothing.
-        virtual TiffComponent* doAddPath(uint16_t  /*tag*/,
-                                         TiffPath& /*tiffPath*/) { return this; }
+        virtual TiffComponent* doAddPath(uint16_t  tag, TiffPath& tiffPath, TiffComponent* const pRoot);
         //! Implements addChild(). The default implementation does nothing.
-        virtual TiffComponent* doAddChild(AutoPtr /*tiffComponent*/) { return 0; }
+        virtual TiffComponent* doAddChild(AutoPtr tiffComponent);
         //! Implements addNext(). The default implementation does nothing.
-        virtual TiffComponent* doAddNext(AutoPtr /*tiffComponent*/) { return 0; }
+        virtual TiffComponent* doAddNext(AutoPtr tiffComponent);
         //! Implements accept().
         virtual void doAccept(TiffVisitor& visitor) =0;
         //@}
@@ -832,7 +832,7 @@ namespace Exiv2 {
     protected:
         //! @name Manipulators
         //@{
-        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot);
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual TiffComponent* doAddNext(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
@@ -935,7 +935,7 @@ namespace Exiv2 {
     protected:
         //! @name Manipulators
         //@{
-        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot);
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
         virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
@@ -1013,7 +1013,7 @@ namespace Exiv2 {
     protected:
         //! @name Manipulators
         //@{
-        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot);
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual TiffComponent* doAddNext(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
@@ -1140,7 +1140,7 @@ namespace Exiv2 {
     protected:
         //! @name Manipulators
         //@{
-        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot);
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual TiffComponent* doAddNext(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
@@ -1330,7 +1330,7 @@ namespace Exiv2 {
     protected:
         //! @name Manipulators
         //@{
-        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath);
+        virtual TiffComponent* doAddPath(uint16_t tag, TiffPath& tiffPath, TiffComponent* const pRoot);
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
         virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
@@ -1378,6 +1378,7 @@ namespace Exiv2 {
         Components elements_;       //!< List of elements in this composite
         byte* origData_;            //!< Pointer to the original data buffer (unencrypted)
         uint32_t origSize_;         //!< Size of the original data buffer
+        TiffComponent* pRoot_;      //!< Pointer to the root component of the TIFF tree. (Only used for intrusive writing.)
     }; // class TiffBinaryArray
 
     /*!
