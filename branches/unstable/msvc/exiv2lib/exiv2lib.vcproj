@@ -353,6 +353,9 @@ copy/y ..\..\..\zlib-1.2.3\projects\visualc6\Win32_DLL_Release\zlib1.dll $(OutDi
 				RelativePath="..\..\src\pentaxmn.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\pgfimage.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\pngchunk.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -500,6 +503,9 @@ copy/y ..\..\..\zlib-1.2.3\projects\visualc6\Win32_DLL_Release\zlib1.dll $(OutDi
 			</File>
 			<File
 				RelativePath="..\..\src\pentaxmn.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\pgfimage.hpp">
 			</File>
 			<File
 				RelativePath="..\..\src\pngimage.hpp">
