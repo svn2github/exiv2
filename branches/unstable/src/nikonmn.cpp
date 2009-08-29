@@ -818,7 +818,7 @@ namespace Exiv2 {
                                               const Value& value,
                                               const ExifData*)
     {
-        double v = 100 * exp((value.toLong() / 12.0 - 5) * log(2));
+        double v = 100 * exp((value.toLong() / 12.0 - 5) * log(2.0));
         return os << static_cast<int>(v + 0.5);
     }
 
