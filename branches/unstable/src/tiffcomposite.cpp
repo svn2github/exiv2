@@ -1349,12 +1349,14 @@ namespace Exiv2 {
         }
         DataBuf buf;
         if (cfg()->cryptFct_) {
+            assert(array.size() > 0);
             buf = cfg()->cryptFct_(tag(), &array[0], static_cast<uint32_t>(array.size()), pRoot_);
         }
         if (buf.size_ > 0) {
             append(blob, buf.pData_, buf.size_);
         }
         else {
+            assert(array.size() > 0);
             append(blob, &array[0], static_cast<uint32_t>(array.size()));
         }
 
