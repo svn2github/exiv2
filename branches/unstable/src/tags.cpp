@@ -53,6 +53,10 @@ EXIV2_RCSID("@(#) $Id$")
 # include <iconv.h>
 #endif
 
+#if defined WIN32 && !defined __CYGWIN__
+# include <windows.h>
+#endif
+
 // *****************************************************************************
 // local declarations
 namespace {
@@ -2138,11 +2142,33 @@ namespace Exiv2 {
         if (!go) {
             os << value;
         }
-#else // !(EXV_HAVE_ICONV && EXV_HAVE_PRINTUCS2)
-        os << value;
-#endif // EXV_HAVE_ICONV && EXV_HAVE_PRINTUCS2
         return os;
-
+#elif defined WIN32 && !defined __CYGWIN__ // !(EXV_HAVE_ICONV && EXV_HAVE_PRINTUCS2)
+        // in Windows the WideCharToMultiByte function can be used
+        if (value.typeId() == unsignedByte) {
+            DataBuf ib(value.size());
+            value.copy(ib.pData_, invalidByteOrder);
+            int out_size = WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<LPWSTR>(ib.pData_),
+                                               ib.size_ / sizeof(WCHAR), NULL, 0, NULL, NULL);
+            if (out_size >= 0) {
+                DataBuf ob(out_size + 4);
+                ob.pData_[0] = 0xef; // Byte
+                ob.pData_[1] = 0xbb; // Order
+                ob.pData_[2] = 0xbf; // Mark
+                WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<LPWSTR>(ib.pData_),
+                                    ib.size_ / sizeof(WCHAR), reinterpret_cast<char*>(ob.pData_) + 3,
+                                    ob.size_ - 3, NULL, NULL);
+                os << std::string(reinterpret_cast<char*>(ob.pData_) + 3);
+            }
+            else {
+                os << value;
+            }
+        }
+        return os;
+#else
+        os << value;
+        return os;
+#endif // EXV_HAVE_ICONV && EXV_HAVE_PRINTUCS2
     } // printUcs2
 
     std::ostream& printExifUnit(std::ostream& os, const Value& value, const ExifData* metadata)
