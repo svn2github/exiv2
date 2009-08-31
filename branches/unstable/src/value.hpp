@@ -1538,7 +1538,7 @@ namespace Exiv2 {
     std::string ValueType<T>::toString(long n) const
     {
         ok_ = true;
-        return Exiv2::toString(value_[n]);
+        return Exiv2::toString<T>(value_[n]);
     }
 
     // Default implementation

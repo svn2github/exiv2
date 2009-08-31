@@ -288,7 +288,7 @@ namespace Exiv2 {
         { mdExif, "Exif.Image.Compression",               "Xmp.tiff.Compression",               &Converter::cnvExifValue, &Converter::cnvXmpValue },
         { mdExif, "Exif.Image.PhotometricInterpretation", "Xmp.tiff.PhotometricInterpretation", &Converter::cnvExifValue, &Converter::cnvXmpValue },
         { mdExif, "Exif.Image.Orientation",               "Xmp.tiff.Orientation",               &Converter::cnvExifValue, &Converter::cnvXmpValue },
-        { mdExif, "Exif.Image.SamplesPerPixel",           "Xmp.tiff.SamplesPerPixe",            &Converter::cnvExifValue, &Converter::cnvXmpValue },
+        { mdExif, "Exif.Image.SamplesPerPixel",           "Xmp.tiff.SamplesPerPixel",           &Converter::cnvExifValue, &Converter::cnvXmpValue },
         { mdExif, "Exif.Image.PlanarConfiguration",       "Xmp.tiff.PlanarConfiguration",       &Converter::cnvExifValue, &Converter::cnvXmpValue },
         { mdExif, "Exif.Image.YCbCrSubSampling",          "Xmp.tiff.YCbCrSubSampling",          &Converter::cnvExifValue, &Converter::cnvXmpValue },
         { mdExif, "Exif.Image.YCbCrPositioning",          "Xmp.tiff.YCbCrPositioning",          &Converter::cnvExifValue, &Converter::cnvXmpValue },
