@@ -2151,14 +2151,11 @@ namespace Exiv2 {
             int out_size = WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<LPWSTR>(ib.pData_),
                                                ib.size_ / sizeof(WCHAR), NULL, 0, NULL, NULL);
             if (out_size >= 0) {
-                DataBuf ob(out_size + 4);
-                ob.pData_[0] = 0xef; // Byte
-                ob.pData_[1] = 0xbb; // Order
-                ob.pData_[2] = 0xbf; // Mark
+                DataBuf ob(out_size + 1);
                 WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<LPWSTR>(ib.pData_),
-                                    ib.size_ / sizeof(WCHAR), reinterpret_cast<char*>(ob.pData_) + 3,
-                                    ob.size_ - 3, NULL, NULL);
-                os << std::string(reinterpret_cast<char*>(ob.pData_) + 3);
+                                    ib.size_ / sizeof(WCHAR), reinterpret_cast<char*>(ob.pData_),
+                                    ob.size_, NULL, NULL);
+                os << std::string(reinterpret_cast<char*>(ob.pData_));
             }
             else {
                 os << value;
