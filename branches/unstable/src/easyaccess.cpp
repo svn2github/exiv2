@@ -218,4 +218,66 @@ namespace Exiv2 {
         return findMetadatum(ed, keys, EXV_COUNTOF(keys));
     }
 
+    ExifData::const_iterator saturation(const ExifData& ed)
+    {
+        static const char* keys[] = {
+            "Exif.Photo.Saturation",
+            "Exif.CanonCs.Saturation",
+            "Exif.MinoltaCsNew.Saturation",
+            "Exif.MinoltaCsOld.Saturation",
+            "Exif.MinoltaCs7D.Saturation",
+            "Exif.MinoltaCs5D.Saturation",
+            "Exif.Fujifilm.Color",
+            "Exif.Nikon3.Saturation",
+            "Exif.Panasonic.Saturation",
+            "Exif.Pentax.Saturation",
+            "Exif.Sigma.Saturation"
+        };
+        return findMetadatum(ed, keys, EXV_COUNTOF(keys));
+    }
+
+    ExifData::const_iterator sharpness(const ExifData& ed)
+    {
+        static const char* keys[] = {
+            "Exif.Photo.Sharpness",
+            "Exif.CanonCs.Sharpness",
+            "Exif.Fujifilm.Sharpness",
+            "Exif.MinoltaCsNew.Sharpness",
+            "Exif.MinoltaCsOld.Sharpness",
+            "Exif.MinoltaCs7D.Sharpness",
+            "Exif.MinoltaCs5D.Sharpness",
+            "Exif.Olympus.SharpnessFactor",
+            "Exif.Panasonic.Sharpness",
+            "Exif.Pentax.Sharpness",
+            "Exif.Sigma.Sharpness"
+        };
+        return findMetadatum(ed, keys, EXV_COUNTOF(keys));
+    }
+
+    ExifData::const_iterator contrast(const ExifData& ed)
+    {
+        static const char* keys[] = {
+            "Exif.Photo.Contrast",
+            "Exif.CanonCs.Contrast",
+            "Exif.Fujifilm.Tone",
+            "Exif.MinoltaCsNew.Contrast",
+            "Exif.MinoltaCsOld.Contrast",
+            "Exif.MinoltaCs7D.Contrast",
+            "Exif.MinoltaCs5D.Contrast",
+            "Exif.Olympus.Contrast",
+            "Exif.Panasonic.Contrast",
+            "Exif.Pentax.Contrast",
+            "Exif.Sigma.Contrast"
+        };
+        return findMetadatum(ed, keys, EXV_COUNTOF(keys));
+    }
+
+    ExifData::const_iterator sceneCaptureType(const ExifData& ed)
+    {
+        static const char* keys[] = {
+            "Exif.Photo.SceneCaptureType",
+            "Exif.Olympus.SpecialMode"
+        };
+        return findMetadatum(ed, keys, EXV_COUNTOF(keys));
+    }
 }                                       // namespace Exiv2
