@@ -361,6 +361,14 @@ namespace Exiv2 {
         return getType(fileIo);
     }
 
+#ifdef EXV_UNICODE_PATH
+    int ImageFactory::getType(const std::wstring& wpath)
+    {
+        FileIo fileIo(wpath);
+        return getType(fileIo);
+    }
+
+#endif
     int ImageFactory::getType(const byte* data, long size)
     {
         MemIo memIo(data, size);
@@ -387,6 +395,16 @@ namespace Exiv2 {
         return image;
     }
 
+#ifdef EXV_UNICODE_PATH
+    Image::AutoPtr ImageFactory::open(const std::wstring& wpath)
+    {
+        BasicIo::AutoPtr io(new FileIo(wpath));
+        Image::AutoPtr image = open(io); // may throw
+        if (image.get() == 0) throw Error(11, wpath);
+        return image;
+    }
+
+#endif
     Image::AutoPtr ImageFactory::open(const byte* data, long size)
     {
         BasicIo::AutoPtr io(new MemIo(data, size));
@@ -423,6 +441,23 @@ namespace Exiv2 {
         return image;
     }
 
+#ifdef EXV_UNICODE_PATH
+    Image::AutoPtr ImageFactory::create(int type,
+                                        const std::wstring& wpath)
+    {
+        std::auto_ptr<FileIo> fileIo(new FileIo(wpath));
+        // Create or overwrite the file, then close it
+        if (fileIo->open("w+b") != 0) {
+            throw Error(10, wpath, "w+b", strError());
+        }
+        fileIo->close();
+        BasicIo::AutoPtr io(fileIo);
+        Image::AutoPtr image = create(type, io);
+        if (image.get() == 0) throw Error(13, type);
+        return image;
+    }
+
+#endif
     Image::AutoPtr ImageFactory::create(int type)
     {
         BasicIo::AutoPtr io(new MemIo);

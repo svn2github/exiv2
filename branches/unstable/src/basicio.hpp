@@ -216,6 +216,13 @@ namespace Exiv2 {
               available.
          */
         virtual std::string path() const =0;
+#ifdef EXV_UNICODE_PATH
+        /*!
+          @brief Like path() but returns a unicode path in an std::wstring.
+          @note This function is only available on Windows.
+         */
+        virtual std::wstring wpath() const =0;
+#endif
         /*!
           @brief Returns a temporary data storage location. This is often
               needed to rewrite an IO source.
@@ -290,6 +297,14 @@ namespace Exiv2 {
           @param path The full path of a file
          */
         FileIo(const std::string& path);
+#ifdef EXV_UNICODE_PATH
+        /*!
+          @brief Like FileIo(const std::string& path) but accepts a
+              unicode path in an std::wstring.
+          @note This constructor is only available on Windows.
+         */
+        FileIo(const std::wstring& wpath);
+#endif
         //! Destructor. Flushes and closes an open file.
         virtual ~FileIo();
         //@}
@@ -457,6 +472,13 @@ namespace Exiv2 {
         virtual bool eof() const;
         //! Returns the path of the file
         virtual std::string path() const;
+#ifdef EXV_UNICODE_PATH
+        /*
+          @brief Like path() but returns the unicode path of the file in an std::wstring.
+          @note This function is only available on Windows.
+         */
+        virtual std::wstring wpath() const;
+#endif
         /*!
           @brief Returns a temporary data storage location. The actual type
               returned depends upon the size of the file represented a FileIo
@@ -478,9 +500,15 @@ namespace Exiv2 {
 
         // Enumeration
         enum OpMode { opRead, opWrite, opSeek };
-
+#ifdef EXV_UNICODE_PATH
+        enum WpMode { wpStandard, wpUnicode };
+#endif
         // DATA
         std::string path_;
+#ifdef EXV_UNICODE_PATH
+        std::wstring wpath_;
+        WpMode wpMode_;
+#endif
         std::string openMode_;
         FILE *fp_;
         OpMode opMode_;
@@ -490,6 +518,14 @@ namespace Exiv2 {
         bool isMalloced_;               //!< Is the mapped area allocated?
         bool isWriteable_;              //!< Can the mapped area be written to?
 
+        // TYPES
+        //! Simple struct stat wrapper for internal use
+        struct StructStat {
+            StructStat() : st_mode(0), st_size(0) {}
+            mode_t st_mode; //!< Permissions
+            off_t  st_size; //!< Size
+        };
+
         // METHODS
         /*!
           @brief Switch to a new access mode, reopening the file if needed.
@@ -498,6 +534,8 @@ namespace Exiv2 {
           @return 0 if successful
          */
         EXV_DLLLOCAL int switchMode(OpMode opMode);
+        //! stat wrapper for internal use
+        EXV_DLLLOCAL int stat(StructStat& buf) const;
 
     }; // class FileIo
 
@@ -665,6 +703,13 @@ namespace Exiv2 {
         virtual bool eof() const;
         //! Returns a dummy path, indicating that memory access is used
         virtual std::string path() const;
+#ifdef EXV_UNICODE_PATH
+        /*
+          @brief Like path() but returns a unicode dummy path in an std::wstring.
+          @note This function is only available on Windows.
+         */
+        virtual std::wstring wpath() const;
+#endif
         /*!
           @brief Returns a temporary data storage location. Currently returns
               an empty MemIo object, but callers should not rely on this
@@ -702,13 +747,27 @@ namespace Exiv2 {
       @throw Error In case of failure.
      */
     EXIV2API DataBuf readFile(const std::string& path);
-
+#ifdef EXV_UNICODE_PATH
+    /*!
+      @brief Like readFile() but accepts a unicode path in an std::wstring.
+      @note This function is only available on Windows.
+     */
+    EXIV2API DataBuf readFile(const std::wstring& wpath);
+#endif
     /*!
       @brief Write DataBuf \em buf to file \em path.
       @return Return the number of bytes written.
       @throw Error In case of failure.
      */
     EXIV2API long writeFile(const DataBuf& buf, const std::string& path);
+#ifdef EXV_UNICODE_PATH
+    /*!
+      @brief Like writeFile() but accepts a unicode path in an std::wstring.
+      @note This function is only available on Windows.
+     */
+    EXIV2API long writeFile(const DataBuf& buf, const std::wstring& wpath);
+
+#endif
 
 }                                       // namespace Exiv2
 

@@ -52,6 +52,11 @@
 # include <stdint.h>
 #endif
 
+// MSVC macro to convert a string to a wide string
+#ifdef EXV_UNICODE_PATH
+# define EXV_WIDEN(t) L ## t
+#endif
+
 // MSVC doesn't provide C99 types, but it has MS specific variants
 #ifdef _MSC_VER
 typedef unsigned __int8  uint8_t;
@@ -349,6 +354,13 @@ namespace Exiv2 {
      */
     EXIV2API const char* exvGettext(const char* str);
 
+#ifdef EXV_UNICODE_PATH
+    //! Convert an std::string s to a unicode string returned as a std::wstring.
+    EXIV2API std::wstring s2ws(const std::string& s);
+    //! Convert a unicode std::wstring s to an std::string.
+    EXIV2API std::string ws2s(const std::wstring& s);
+
+#endif
     /*!
       @brief Return a \em long set to the value represented by \em s.
 

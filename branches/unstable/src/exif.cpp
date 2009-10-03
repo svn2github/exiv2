@@ -117,6 +117,13 @@ namespace {
                  (".tif", ".jpg").
          */
         virtual const char* extension() const =0;
+#ifdef EXV_UNICODE_PATH
+        /*!
+          @brief Like extension() but returns the extension in a wchar_t.
+          @note This function is only available on Windows.
+         */
+        virtual const wchar_t* wextension() const =0;
+#endif
         //@}
 
     }; // class Thumbnail
@@ -138,6 +145,9 @@ namespace {
         Exiv2::DataBuf copy(const Exiv2::ExifData& exifData) const;
         const char* mimeType() const;
         const char* extension() const;
+#ifdef EXV_UNICODE_PATH
+        const wchar_t* wextension() const;
+#endif
         //@}
 
     }; // class TiffThumbnail
@@ -159,6 +169,9 @@ namespace {
         Exiv2::DataBuf copy(const Exiv2::ExifData& exifData) const;
         const char* mimeType() const;
         const char* extension() const;
+#ifdef EXV_UNICODE_PATH
+        const wchar_t* wextension() const;
+#endif
         //@}
 
     }; // class JpegThumbnail
@@ -441,6 +454,18 @@ namespace Exiv2 {
         return Exiv2::writeFile(buf, name);
     }
 
+#ifdef EXV_UNICODE_PATH
+    long ExifThumbC::writeFile(const std::wstring& wpath) const
+    {
+        Thumbnail::AutoPtr thumbnail = Thumbnail::create(exifData_);
+        if (thumbnail.get() == 0) return 0;
+        std::wstring name = wpath + thumbnail->wextension();
+        DataBuf buf(thumbnail->copy(exifData_));
+        if (buf.size_ == 0) return 0;
+        return Exiv2::writeFile(buf, name);
+    }
+
+#endif
     const char* ExifThumbC::mimeType() const
     {
         Thumbnail::AutoPtr thumbnail = Thumbnail::create(exifData_);
@@ -455,6 +480,15 @@ namespace Exiv2 {
         return thumbnail->extension();
     }
 
+#ifdef EXV_UNICODE_PATH
+    const wchar_t* ExifThumbC::wextension() const
+    {
+        Thumbnail::AutoPtr thumbnail = Thumbnail::create(exifData_);
+        if (thumbnail.get() == 0) return EXV_WIDEN("");
+        return thumbnail->wextension();
+    }
+
+#endif
     ExifThumb::ExifThumb(ExifData& exifData)
         : ExifThumbC(exifData), exifData_(exifData)
     {
@@ -471,6 +505,19 @@ namespace Exiv2 {
         setJpegThumbnail(thumb.pData_, thumb.size_, xres, yres, unit);
     }
 
+#ifdef EXV_UNICODE_PATH
+    void ExifThumb::setJpegThumbnail(
+        const std::wstring& wpath,
+              URational     xres,
+              URational     yres,
+              uint16_t      unit
+    )
+    {
+        DataBuf thumb = readFile(wpath); // may throw
+        setJpegThumbnail(thumb.pData_, thumb.size_, xres, yres, unit);
+    }
+
+#endif
     void ExifThumb::setJpegThumbnail(
         const byte*     buf,
               long      size,
@@ -491,6 +538,14 @@ namespace Exiv2 {
         setJpegThumbnail(thumb.pData_, thumb.size_);
     }
 
+#ifdef EXV_UNICODE_PATH
+    void ExifThumb::setJpegThumbnail(const std::wstring& wpath)
+    {
+        DataBuf thumb = readFile(wpath); // may throw
+        setJpegThumbnail(thumb.pData_, thumb.size_);
+    }
+
+#endif
     void ExifThumb::setJpegThumbnail(const byte* buf, long size)
     {
         exifData_["Exif.Thumbnail.Compression"] = uint16_t(6);
@@ -807,6 +862,13 @@ namespace {
         return ".tif";
     }
 
+#ifdef EXV_UNICODE_PATH
+    const wchar_t* TiffThumbnail::wextension() const
+    {
+        return EXV_WIDEN(".tif");
+    }
+
+#endif
     Exiv2::DataBuf TiffThumbnail::copy(const Exiv2::ExifData& exifData) const
     {
         Exiv2::ExifData thumb;
@@ -835,6 +897,13 @@ namespace {
         return ".jpg";
     }
 
+#ifdef EXV_UNICODE_PATH
+    const wchar_t* JpegThumbnail::wextension() const
+    {
+        return EXV_WIDEN(".jpg");
+    }
+
+#endif
     Exiv2::DataBuf JpegThumbnail::copy(const Exiv2::ExifData& exifData) const
     {
         Exiv2::ExifKey key("Exif.Thumbnail.JPEGInterchangeFormat");
