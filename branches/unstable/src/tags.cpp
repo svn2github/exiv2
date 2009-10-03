@@ -2132,7 +2132,7 @@ namespace Exiv2 {
                 go = false;
             }
             if (go) {
-                // Todo: What if outbytesleft == 0
+                if (outptr > outbuf && *(outptr-1) == '\0') outptr--;
                 os << std::string(outbuf, outptr-outbuf);
             }
         }
