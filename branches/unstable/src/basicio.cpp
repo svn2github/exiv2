@@ -88,7 +88,6 @@ namespace Exiv2 {
         : wpath_(wpath),
           wpMode_(wpUnicode),
           fp_(0), opMode_(opSeek),
-          wpMode_(wpUnicode),
           pMappedArea_(0), mappedLength_(0), isMalloced_(false), isWriteable_(false)
     {
     }
@@ -161,7 +160,7 @@ namespace Exiv2 {
         int ret = 0;
 #ifdef EXV_UNICODE_PATH
         if (wpMode_ == wpUnicode) {
-            struct _stat64i32 st;
+            struct _stat st;
             ret = ::_wstat(wpath_.c_str(), &st);
             if (0 == ret) {
                 buf.st_size = st.st_size;
@@ -324,7 +323,7 @@ namespace Exiv2 {
 #ifdef EXV_UNICODE_PATH
             wchar_t* wpf = 0;
             if (wpMode_ == wpUnicode) {
-                wpf = const_cast<wchar_t*>(path_.c_str());
+                wpf = const_cast<wchar_t*>(wpath_.c_str());
             }
             else
 #endif
@@ -365,7 +364,7 @@ namespace Exiv2 {
             }
 #else // EXV_HAVE_LSTAT
             StructStat buf1;
-            if (stat(&buf1) == -1) {
+            if (stat(buf1) == -1) {
                 statOk = false;
             }
             origStMode = buf1.st_mode;
@@ -378,11 +377,11 @@ namespace Exiv2 {
                     throw Error(2, wpf, strError(), "::_wremove");
                 }
                 if (::_wrename(fileIo->wpath_.c_str(), wpf) == -1) {
-                    throw Error(17, fileIo->wpath_, wpf, strError());
+                    throw Error(17, ws2s(fileIo->wpath_), wpf, strError());
                 }
                 ::_wremove(fileIo->wpath_.c_str());
                 // Check permissions of new file
-                struct _stat64i32 buf2;
+                struct _stat buf2;
                 if (statOk && ::_wstat(wpf, &buf2) == -1) {
                     statOk = false;
 #ifndef SUPPRESS_WARNINGS
@@ -837,16 +836,16 @@ namespace Exiv2 {
     {
         FileIo file(wpath);
         if (file.open("rb") != 0) {
-            throw Error(10, wpath, "rb", strError());
+            throw Error(10, ws2s(wpath), "rb", strError());
         }
-        struct _stat64i32 st;
+        struct _stat st;
         if (0 != ::_wstat(wpath.c_str(), &st)) {
-            throw Error(2, wpath, strError(), "::_wstat");
+            throw Error(2, ws2s(wpath), strError(), "::_wstat");
         }
         DataBuf buf(st.st_size);
         long len = file.read(buf.pData_, buf.size_);
         if (len != buf.size_) {
-            throw Error(2, wpath, strError(), "FileIo::read");
+            throw Error(2, ws2s(wpath), strError(), "FileIo::read");
         }
         return buf;
     }
@@ -866,7 +865,7 @@ namespace Exiv2 {
     {
         FileIo file(wpath);
         if (file.open("wb") != 0) {
-            throw Error(10, wpath, "wb", strError());
+            throw Error(10, ws2s(wpath), "wb", strError());
         }
         return file.write(buf.pData_, buf.size_);
     }

@@ -78,7 +78,7 @@ namespace Exiv2 {
 #ifdef EXV_UNICODE_PATH
     bool fileExists(const std::wstring& wpath, bool ct)
     {
-        struct _stat64i32 buf;
+        struct _stat buf;
         int ret = _wstat(wpath.c_str(), &buf);
         if (0 != ret)                    return false;
         if (ct && !S_ISREG(buf.st_mode)) return false;

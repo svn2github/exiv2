@@ -37,6 +37,13 @@
 #include <string>
 #include <memory>
 #include <cstdio>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+// MSVC doesn't provide mode_t
+#ifdef _MSC_VER
+typedef unsigned short mode_t;
+#endif
 
 // *****************************************************************************
 // namespace extensions
