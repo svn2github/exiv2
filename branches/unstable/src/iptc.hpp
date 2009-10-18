@@ -269,6 +269,10 @@ namespace Exiv2 {
           @brief Return the exact size of all contained IPTC metadata
          */
         long size() const;
+        /*!
+          @brief Return the metadata charset name or 0
+         */
+        const char *detectCharset() const;
         //@}
 
     private:

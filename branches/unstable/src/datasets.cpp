@@ -141,7 +141,7 @@ namespace Exiv2 {
                 "invocation or designation of coded character sets. The control functions follow "
                 "the ISO 2022 standard and may consist of the escape control "
                 "character and one or more graphic characters."),
-                false, false, 0, 32, Exiv2::undefined, IptcDataSets::envelope, ""),
+                false, false, 0, 32, Exiv2::string, IptcDataSets::envelope, ""),
         DataSet(IptcDataSets::UNO, "UNO", N_("Unique Name Object"),
                 N_("This tag provide a globally unique "
                 "identification for objects as specified in the IIM, independent of "
