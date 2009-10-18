@@ -376,6 +376,7 @@ namespace Exiv2 {
         {   6, "Sigma 18-50mm f/3.5-5.6 DC"                                 }, // 1
         {   6, "Sigma 18-125mm f/3.5-5.6 DC IF ASP"                         }, // 2
         {   6, "Tokina AF193-2 19-35mm f/3.5-4.5"                           }, // 3
+        {   6, "Sigma 28-80mm f/3.5-5.6 II Macro"                           }, // 4
         {   7, "Canon EF 100-300mm f/5.6L"                                  },
         {   8, "Canon EF 100-300mm f/5.6"                                   }, // 0
         {   8, "Sigma 70-300mm f/4-5.6 DG Macro"                            }, // 1
