@@ -405,7 +405,7 @@ namespace Exiv2 {
         { mdIptc, "Iptc.Application2.Category",           "Xmp.photoshop.Category",             &Converter::cnvIptcValue, &Converter::cnvXmpValueToIptc },
         { mdIptc, "Iptc.Application2.SuppCategory",       "Xmp.photoshop.SupplementalCategory", &Converter::cnvIptcValue, &Converter::cnvXmpValueToIptc },
         { mdIptc, "Iptc.Application2.Keywords",           "Xmp.dc.subject",                     &Converter::cnvIptcValue, &Converter::cnvXmpValueToIptc },
-        { mdIptc, "Iptc.Application2.LocationName",       "Xmp.iptc.Location",                  &Converter::cnvIptcValue, &Converter::cnvXmpValueToIptc },
+        { mdIptc, "Iptc.Application2.SubLocation",        "Xmp.iptc.Location",                  &Converter::cnvIptcValue, &Converter::cnvXmpValueToIptc },
         { mdIptc, "Iptc.Application2.SpecialInstructions","Xmp.photoshop.Instruction",          &Converter::cnvIptcValue, &Converter::cnvXmpValueToIptc },
         { mdIptc, "Iptc.Application2.DateCreated",        "Xmp.photoshop.DateCreated",          &Converter::cnvIptcValue, &Converter::cnvXmpValueToIptc },
         { mdIptc, "Iptc.Application2.Byline",             "Xmp.dc.creator",                     &Converter::cnvIptcValue, &Converter::cnvXmpValueToIptc },
@@ -604,6 +604,7 @@ namespace Exiv2 {
 
             snprintf(buf, sizeof(buf), "%.9f", dsec);
             buf[sizeof(buf) - 1] = 0;
+            buf[1] = '.'; // some locales use ','
             subsec = buf + 1;
 
             Exiv2::ExifData::iterator datePos = exifData_->findKey(ExifKey("Exif.GPSInfo.GPSDateStamp"));
