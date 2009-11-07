@@ -642,10 +642,15 @@ namespace Exiv2 {
         }
 
         if (subsecTag) {
-            Exiv2::ExifData::iterator subsec_pos = exifData_->findKey(ExifKey(subsecTag));
+            ExifData::iterator subsec_pos = exifData_->findKey(ExifKey(subsecTag));
             if (   subsec_pos != exifData_->end()
-                && !subsec_pos->toString().empty()) {
-                subsec = std::string(".") + subsec_pos->toString();
+                && subsec_pos->typeId() == asciiString) {
+                std::string ss = subsec_pos->toString();
+                if (!ss.empty()) {
+                    bool ok = false;
+                    stringTo<long>(ss, ok);
+                    if (ok) subsec = std::string(".") + ss;
+                }
             }
             if (erase_) exifData_->erase(subsec_pos);
         }
