@@ -70,6 +70,8 @@ namespace Exiv2 {
     class TiffPathItem;
     struct TiffMappingInfo;
 
+    class IoWrapper;
+
 // *****************************************************************************
 // type definitions
 

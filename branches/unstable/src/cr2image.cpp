@@ -241,10 +241,10 @@ namespace Exiv2 {
         return true;
     } // Cr2Header::read
 
-    uint32_t Cr2Header::write(Blob& blob) const
+    DataBuf Cr2Header::write() const
     {
         // Todo: Implement me!
-        return 0;
+        return DataBuf();
     }
 
 }}                                      // namespace Internal, Exiv2

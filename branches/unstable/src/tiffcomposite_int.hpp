@@ -31,7 +31,7 @@
 
 // *****************************************************************************
 // included header files
-#include "image.hpp"                            // for Blob
+#include "value.hpp"
 #include "tifffwd_int.hpp"
 #include "types.hpp"
 
@@ -44,6 +44,9 @@
 // *****************************************************************************
 // namespace extensions
 namespace Exiv2 {
+
+    class BasicIo;
+
     namespace Internal {
 
 // *****************************************************************************
@@ -133,6 +136,45 @@ namespace Exiv2 {
     }; // class TiffPathItem
 
     /*!
+      @brief Simple IO wrapper to ensure that the header is only written if there is
+             any other data at all.
+
+      The wrapper is initialized with an IO reference and a pointer to a TIFF header.
+      Subsequently the wrapper is used by all TIFF write methods. It takes care that
+      the TIFF header is written to the IO first before any other output and only if
+      there is any other data.
+     */
+    class IoWrapper {
+    public:
+        /*!
+          brief Constructor.
+
+          The IO wrapper owns neither of the objects passed in so the caller is
+          responsible to keep them alive.
+         */
+        IoWrapper(BasicIo& io, const byte* pHeader, long size);
+        /*!
+          @brief Wraps the corresponding BasicIo::write() method.
+
+          Writes the TIFF header to the IO, if it hasn't been written yet, followed
+          by the data passed in the arguments.
+         */
+        long write(const byte* pData, long wcount);
+        /*!
+          @brief Wraps the corresponding BasicIo::putb() method.
+
+          Writes the TIFF header to the IO, if it hasn't been written yet, followed
+          by the data passed in the argument.
+         */
+        int putb(byte data);
+    private:
+        BasicIo& io_;              //! Reference for the IO instance.
+        const byte* pHeader_;      //! Pointer to the header data.
+        long size_;                //! Size of the header data.
+        bool wroteHeader_;         //! Indicates if the header has been written.
+    }; // class IoWrapper
+
+    /*!
       @brief Interface class for components of a TIFF directory hierarchy
              (Composite pattern).  Both TIFF directories as well as entries
              implement this interface.  A component can be uniquely identified
@@ -211,18 +253,18 @@ namespace Exiv2 {
         /*!
           @brief Write a TiffComponent to a binary image.
 
-          @param blob       Binary image to append the TiffComponent to.
+          @param ioWrapper  IO wrapper to which the TiffComponent is written.
           @param byteOrder  Applicable byte order (little or big endian).
           @param offset     Offset from the start of the image (TIFF header) to
                             the component.
           @param valueIdx   Index of the component to be written relative to offset.
           @param dataIdx    Index of the data area of the component relative to offset.
           @param imageIdx   Index of the image data area relative to offset.
-          @return           Number of bytes written to the blob including all
+          @return           Number of bytes written to the IO wrapper including all
                             nested components.
           @throw            Error If the component cannot be written.
          */
-        uint32_t write(Blob&     blob,
+        uint32_t write(IoWrapper& ioWrapper,
                        ByteOrder byteOrder,
                        int32_t   offset,
                        uint32_t  valueIdx,
@@ -237,7 +279,7 @@ namespace Exiv2 {
                  Return the number of bytes written. Components derived from
                  TiffEntryBase implement this method if needed.
          */
-        uint32_t writeData(Blob&     blob,
+        uint32_t writeData(IoWrapper& ioWrapper,
                            ByteOrder byteOrder,
                            int32_t   offset,
                            uint32_t  dataIdx,
@@ -247,7 +289,7 @@ namespace Exiv2 {
                  Return the number of bytes written. TIFF components implement
                  this method if needed.
          */
-        uint32_t writeImage(Blob&     blob,
+        uint32_t writeImage(IoWrapper& ioWrapper,
                             ByteOrder byteOrder) const;
         /*!
           @brief Return the size in bytes of the IFD value of this component
@@ -296,7 +338,7 @@ namespace Exiv2 {
         //! @name Write support (Manipulators)
         //@{
         //! Implements write().
-        virtual uint32_t doWrite(Blob&     blob,
+        virtual uint32_t doWrite(IoWrapper& ioWrapper,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
@@ -307,13 +349,13 @@ namespace Exiv2 {
         //! @name Write support (Accessors)
         //@{
         //! Implements writeData().
-        virtual uint32_t doWriteData(Blob&     blob,
+        virtual uint32_t doWriteData(IoWrapper& ioWrapper,
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
                                      uint32_t& imageIdx) const =0;
         //! Implements writeImage().
-        virtual uint32_t doWriteImage(Blob&     blob,
+        virtual uint32_t doWriteImage(IoWrapper& ioWrapper,
                                       ByteOrder byteOrder) const =0;
         //! Implements size().
         virtual uint32_t doSize() const =0;
@@ -461,10 +503,10 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Implements write(). Write the value of a standard TIFF entry to
-                 the \em blob, return the number of bytes written. Only the \em
-                 blob and \em byteOrder arguments are used.
+                 the \em ioWrapper, return the number of bytes written. Only the
+                 \em ioWrapper and \em byteOrder arguments are used.
          */
-        virtual uint32_t doWrite(Blob&     blob,
+        virtual uint32_t doWrite(IoWrapper& ioWrapper,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
@@ -477,7 +519,7 @@ namespace Exiv2 {
           @brief Implements writeData(). Standard TIFF entries have no data:
                  write nothing and return 0.
          */
-        virtual uint32_t doWriteData(Blob&     blob,
+        virtual uint32_t doWriteData(IoWrapper& ioWrapper,
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
@@ -486,7 +528,7 @@ namespace Exiv2 {
           @brief Implements writeImage(). Standard TIFF entries have no image data:
                  write nothing and return 0.
          */
-        virtual uint32_t doWriteImage(Blob&     blob,
+        virtual uint32_t doWriteImage(IoWrapper& ioWrapper,
                                       ByteOrder byteOrder) const;
         //! Implements size(). Return the size of a standard TIFF entry
         virtual uint32_t doSize() const;
@@ -636,7 +678,7 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Implements write(). Write pointers into the data area to the
-                 \em blob, relative to the offsets in the value. Return the
+                 \em ioWrapper, relative to the offsets in the value. Return the
                  number of bytes written. The \em valueIdx argument is not used.
 
           The number of components in the value determines how many offsets are
@@ -645,7 +687,7 @@ namespace Exiv2 {
           on write. The type of the value can only be signed or unsigned short or
           long.
          */
-        virtual uint32_t doWrite(Blob&     blob,
+        virtual uint32_t doWrite(IoWrapper& ioWrapper,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
@@ -655,10 +697,10 @@ namespace Exiv2 {
         //! @name Write support (Accessors)
         //@{
         /*!
-          @brief Implements writeData(). Write the data area to the blob. Return
-                 the number of bytes written.
+          @brief Implements writeData(). Write the data area to the \em ioWrapper.
+                 Return the number of bytes written.
          */
-        virtual uint32_t doWriteData(Blob&     blob,
+        virtual uint32_t doWriteData(IoWrapper& ioWrapper,
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
@@ -720,10 +762,10 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Implements write(). Write pointers into the image data area to the
-                 \em blob. Return the number of bytes written. The \em valueIdx
+                 \em ioWrapper. Return the number of bytes written. The \em valueIdx
                  and \em dataIdx  arguments are not used.
          */
-        virtual uint32_t doWrite(Blob&     blob,
+        virtual uint32_t doWrite(IoWrapper& ioWrapper,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
@@ -733,23 +775,23 @@ namespace Exiv2 {
         //! @name Write support (Accessors)
         //@{
         /*!
-          @brief Implements writeData(). Write the image data area to the blob.
+          @brief Implements writeData(). Write the image data area to the \em ioWrapper.
                  Return the number of bytes written.
 
           This function writes the image data to the data area of the current
           directory. It is used for TIFF image entries in the makernote (large 
           preview images) so that the image data remains in the makernote IFD.
          */
-        virtual uint32_t doWriteData(Blob&     blob,
+        virtual uint32_t doWriteData(IoWrapper& ioWrapper,
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
                                      uint32_t& imageIdx) const;
         /*!
-          @brief Implements writeImage(). Write the image data area to the blob.
+          @brief Implements writeImage(). Write the image data area to the \em ioWrapper.
                  Return the number of bytes written.
          */
-        virtual uint32_t doWriteImage(Blob&     blob,
+        virtual uint32_t doWriteImage(IoWrapper& ioWrapper,
                                       ByteOrder byteOrder) const;
         //! Implements size(). Return the size of the strip pointers.
         virtual uint32_t doSize() const;
@@ -842,10 +884,10 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Implements write(). Write the TIFF directory, values and
-                 additional data, including the next-IFD, if any, to the blob,
-                 return the number of bytes written.
+                 additional data, including the next-IFD, if any, to the
+                 \em ioWrapper, return the number of bytes written.
          */
-        virtual uint32_t doWrite(Blob&     blob,
+        virtual uint32_t doWrite(IoWrapper& ioWrapper,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
@@ -858,18 +900,18 @@ namespace Exiv2 {
           @brief This class does not really implement writeData(), it only has
                  write(). This method must not be called; it commits suicide.
          */
-        virtual uint32_t doWriteData(Blob&     blob,
+        virtual uint32_t doWriteData(IoWrapper& ioWrapper,
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
                                      uint32_t& imageIdx) const;
         /*!
           @brief Implements writeImage(). Write the image data of the TIFF
-                 directory to the blob by forwarding the call to each component
-                 as well as the next-IFD, if there is any. Return the number of
-                 bytes written.
+                 directory to the \em ioWrapper by forwarding the call to each
+                 component as well as the next-IFD, if there is any. Return the
+                 number of bytes written.
          */
-        virtual uint32_t doWriteImage(Blob&     blob,
+        virtual uint32_t doWriteImage(IoWrapper& ioWrapper,
                                       ByteOrder byteOrder) const;
         /*!
           @brief Implements size(). Return the size of the TIFF directory,
@@ -897,7 +939,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         //! Write a binary directory entry for a TIFF component.
-        uint32_t writeDirEntry(Blob&          blob,
+        uint32_t writeDirEntry(IoWrapper&     ioWrapper,
                                ByteOrder      byteOrder,
                                int32_t        offset,
                                TiffComponent* pTiffComponent,
@@ -944,11 +986,11 @@ namespace Exiv2 {
         //! @name Write support (Manipulators)
         //@{
         /*!
-          @brief Implements write(). Write the sub-IFD pointers to the \em blob,
+          @brief Implements write(). Write the sub-IFD pointers to the \em ioWrapper,
                  return the number of bytes written. The \em valueIdx and
                  \em imageIdx arguments are not used.
          */
-        virtual uint32_t doWrite(Blob&     blob,
+        virtual uint32_t doWrite(IoWrapper& ioWrapper,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
@@ -958,19 +1000,19 @@ namespace Exiv2 {
         //! @name Write support (Accessors)
         //@{
         /*!
-          @brief Implements writeData(). Write the sub-IFDs to the blob. Return
-                 the number of bytes written.
+          @brief Implements writeData(). Write the sub-IFDs to the \em ioWrapper.
+                 Return the number of bytes written.
          */
-        virtual uint32_t doWriteData(Blob&     blob,
+        virtual uint32_t doWriteData(IoWrapper& ioWrapper,
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
                                      uint32_t& imageIdx) const;
         /*!
           @brief Implements writeImage(). Write the image data of each sub-IFD to
-                 the blob. Return the number of bytes written.
+                 the \em ioWrapper. Return the number of bytes written.
          */
-        virtual uint32_t doWriteImage(Blob&     blob,
+        virtual uint32_t doWriteImage(IoWrapper& ioWrapper,
                                       ByteOrder byteOrder) const;
         //! Implements size(). Return the size of the sub-Ifd pointers.
         uint32_t doSize() const;
@@ -1032,7 +1074,7 @@ namespace Exiv2 {
           @brief Implements write() by forwarding the call to the actual
                  concrete Makernote, if there is one.
          */
-        virtual uint32_t doWrite(Blob&     blob,
+        virtual uint32_t doWrite(IoWrapper& ioWrapper,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
@@ -1106,7 +1148,7 @@ namespace Exiv2 {
         //! Return the size of the header in bytes.
         uint32_t sizeHeader() const;
         //! Write the header to a data buffer, return the number of bytes written.
-        uint32_t writeHeader(Blob& blob, ByteOrder byteOrder) const;
+        uint32_t writeHeader(IoWrapper& ioWrapper, ByteOrder byteOrder) const;
         /*!
           @brief Return the offset to the makernote from the start of the
                  TIFF header.
@@ -1150,10 +1192,10 @@ namespace Exiv2 {
         //@{
         /*!
           @brief Implements write(). Write the Makernote header, TIFF directory,
-                 values and additional data to the blob, return the number of
-                 bytes written.
+                 values and additional data to the \em ioWrapper, return the
+                 number of bytes written.
          */
-        virtual uint32_t doWrite(Blob&     blob,
+        virtual uint32_t doWrite(IoWrapper& ioWrapper,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
@@ -1166,7 +1208,7 @@ namespace Exiv2 {
           @brief This class does not really implement writeData(), it only has
                  write(). This method must not be called; it commits suicide.
          */
-        virtual uint32_t doWriteData(Blob&     blob,
+        virtual uint32_t doWriteData(IoWrapper& ioWrapper,
                                      ByteOrder byteOrder,
                                      int32_t   offset,
                                      uint32_t  dataIdx,
@@ -1175,7 +1217,7 @@ namespace Exiv2 {
           @brief Implements writeImage(). Write the image data of the IFD of
                  the Makernote. Return the number of bytes written.
          */
-        virtual uint32_t doWriteImage(Blob&     blob,
+        virtual uint32_t doWriteImage(IoWrapper& ioWrapper,
                                       ByteOrder byteOrder) const;
         /*!
           @brief Implements size(). Return the size of the Makernote header,
@@ -1344,7 +1386,7 @@ namespace Exiv2 {
         /*!
           @brief Implements write(). Todo: Document it!
          */
-        virtual uint32_t doWrite(Blob&     blob,
+        virtual uint32_t doWrite(IoWrapper& ioWrapper,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,
@@ -1424,7 +1466,7 @@ namespace Exiv2 {
         /*!
           @brief Implements write(). Todo: Document it!
          */
-        virtual uint32_t doWrite(Blob&     blob,
+        virtual uint32_t doWrite(IoWrapper& ioWrapper,
                                  ByteOrder byteOrder,
                                  int32_t   offset,
                                  uint32_t  valueIdx,

@@ -200,8 +200,8 @@ namespace Exiv2 {
         //! Return the size of the header (in bytes).
         virtual uint32_t size() const =0;
         //! Write the header to a data buffer, return the number of bytes written.
-        virtual uint32_t write(Blob&     blob,
-                               ByteOrder byteOrder) const =0;
+        virtual uint32_t write(IoWrapper& ioWrapper,
+                               ByteOrder  byteOrder) const =0;
         /*!
           @brief Return the offset to the start of the Makernote IFD from
                  the start of the Makernote (= the start of the header).
@@ -242,7 +242,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size() const;
-        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
+        virtual uint32_t write(IoWrapper& ioWrapper, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const;
         //@}
 
@@ -272,7 +272,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size() const;
-        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
+        virtual uint32_t write(IoWrapper& ioWrapper, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const;
         virtual uint32_t baseOffset(uint32_t mnOffset) const;
         //@}
@@ -304,7 +304,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t  size() const;
-        virtual uint32_t  write(Blob& blob, ByteOrder byteOrder) const;
+        virtual uint32_t  write(IoWrapper& ioWrapper, ByteOrder byteOrder) const;
         virtual uint32_t  ifdOffset() const;
         virtual ByteOrder byteOrder() const;
         virtual uint32_t  baseOffset(uint32_t mnOffset) const;
@@ -338,7 +338,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size() const;
-        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
+        virtual uint32_t write(IoWrapper& ioWrapper, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const;
         //@}
 
@@ -370,7 +370,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t  size()      const;
-        virtual uint32_t  write(Blob& blob, ByteOrder byteOrder) const;
+        virtual uint32_t  write(IoWrapper& ioWrapper, ByteOrder byteOrder) const;
         virtual uint32_t  ifdOffset() const;
         virtual ByteOrder byteOrder() const;
         virtual uint32_t  baseOffset(uint32_t mnOffset) const;
@@ -404,7 +404,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size() const;
-        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
+        virtual uint32_t write(IoWrapper& ioWrapper, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const;
         //@}
 
@@ -435,7 +435,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size() const;
-        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
+        virtual uint32_t write(IoWrapper& ioWrapper, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const;
         //@}
 
@@ -465,7 +465,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size() const;
-        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
+        virtual uint32_t write(IoWrapper& ioWrapper, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const;
         //@}
 
@@ -497,7 +497,7 @@ namespace Exiv2 {
         //! @name Accessors
         //@{
         virtual uint32_t size() const;
-        virtual uint32_t write(Blob& blob, ByteOrder byteOrder) const;
+        virtual uint32_t write(IoWrapper& ioWrapper, ByteOrder byteOrder) const;
         virtual uint32_t ifdOffset() const;
         //@}
 

@@ -237,10 +237,10 @@ namespace Exiv2 {
         return true;
     } // OrfHeader::read
 
-    uint32_t OrfHeader::write(Blob& blob) const
+    DataBuf OrfHeader::write() const
     {
         // Todo: Implement me!
-        return 0;
+        return DataBuf();
     }
 
 }}                                      // namespace Internal, Exiv2

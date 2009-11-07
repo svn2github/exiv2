@@ -182,24 +182,7 @@ namespace Exiv2 {
             bo = littleEndian;
         }
         setByteOrder(bo);
-        Blob blob;
-        WriteMethod wm = TiffParser::encode(blob,
-                                            pData,
-                                            size,
-                                            bo,
-                                            exifData_,
-                                            iptcData_,
-                                            xmpData_);
-
-        // Todo: What if the blob is empty??
-
-        if (wm == wmIntrusive && blob.size() > 0) {
-            BasicIo::AutoPtr tempIo(io_->temporary()); // may throw
-            assert(tempIo.get() != 0);
-            tempIo->write(&blob[0], static_cast<long>(blob.size()));
-            io_->transfer(*tempIo); // may throw
-        }
-
+        TiffParser::encode(*io_, pData, size, bo, exifData_, iptcData_, xmpData_); // may throw
     } // TiffImage::writeMetadata
 
     ByteOrder TiffParser::decode(
@@ -220,7 +203,7 @@ namespace Exiv2 {
     } // TiffParser::decode
 
     WriteMethod TiffParser::encode(
-              Blob&     blob,
+              BasicIo&  io,
         const byte*     pData,
               uint32_t  size,
               ByteOrder byteOrder,
@@ -247,7 +230,7 @@ namespace Exiv2 {
         }
 
         std::auto_ptr<TiffHeaderBase> header(new TiffHeader(byteOrder));
-        return TiffParserWorker::encode(blob,
+        return TiffParserWorker::encode(io,
                                         pData,
                                         size,
                                         ed,
@@ -1099,7 +1082,7 @@ namespace Exiv2 {
     } // TiffParserWorker::decode
 
     WriteMethod TiffParserWorker::encode(
-              Blob&              blob,
+              BasicIo&           io,
         const byte*              pData,
               uint32_t           size,
         const ExifData&          exifData,
@@ -1119,7 +1102,6 @@ namespace Exiv2 {
          */
         assert(pHeader);
         assert(pHeader->byteOrder() != invalidByteOrder);
-        blob.clear();
         WriteMethod writeMethod = wmIntrusive;
         TiffComponent::AutoPtr createdTree;
         TiffComponent::AutoPtr parsedTree = parse(pData, size, root, pHeader);
@@ -1145,11 +1127,18 @@ namespace Exiv2 {
             // Add entries from metadata to composite
             encoder.add(createdTree.get(), parsedTree.get(), root);
             // Write binary representation from the composite tree
-            uint32_t offset = pHeader->write(blob);
+            DataBuf header = pHeader->write();
+            BasicIo::AutoPtr tempIo(io.temporary()); // may throw
+            assert(tempIo.get() != 0);
+            IoWrapper ioWrapper(*tempIo, header.pData_, header.size_);
             uint32_t imageIdx(uint32_t(-1));
-            uint32_t len = createdTree->write(blob, pHeader->byteOrder(), offset, uint32_t(-1), uint32_t(-1), imageIdx);
-            // Avoid writing just the header if there is no IFD data
-            if (len == 0) blob.clear();
+            createdTree->write(ioWrapper,
+                               pHeader->byteOrder(),
+                               header.size_,
+                               uint32_t(-1),
+                               uint32_t(-1),
+                               imageIdx);
+            io.transfer(*tempIo); // may throw
 #ifdef DEBUG
             std::cerr << "Intrusive writing\n";
 #endif
@@ -1220,26 +1209,25 @@ namespace Exiv2 {
         return true;
     } // TiffHeaderBase::read
 
-    uint32_t TiffHeaderBase::write(Blob& blob) const
+    DataBuf TiffHeaderBase::write() const
     {
-        byte buf[8];
+        DataBuf buf(8);
         switch (byteOrder_) {
         case littleEndian:
-            buf[0] = 0x49;
-            buf[1] = 0x49;
+            buf.pData_[0] = 0x49;
+            buf.pData_[1] = 0x49;
             break;
         case bigEndian:
-            buf[0] = 0x4d;
-            buf[1] = 0x4d;
+            buf.pData_[0] = 0x4d;
+            buf.pData_[1] = 0x4d;
             break;
         case invalidByteOrder:
             assert(false);
             break;
         }
-        us2Data(buf + 2, tag_, byteOrder_);
-        ul2Data(buf + 4, 0x00000008, byteOrder_);
-        append(blob, buf, 8);
-        return 8;
+        us2Data(buf.pData_ + 2, tag_, byteOrder_);
+        ul2Data(buf.pData_ + 4, 0x00000008, byteOrder_);
+        return buf;
     }
 
     void TiffHeaderBase::print(std::ostream& os, const std::string& prefix) const

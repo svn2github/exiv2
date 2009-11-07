@@ -278,10 +278,10 @@ namespace Exiv2 {
     {
     }
 
-    uint32_t Rw2Header::write(Blob& blob) const
+    DataBuf Rw2Header::write() const
     {
         // Todo: Implement me!
-        return 0;
+        return DataBuf();
     }
 
 }}                                      // namespace Internal, Exiv2

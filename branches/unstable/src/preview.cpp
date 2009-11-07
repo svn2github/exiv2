@@ -646,11 +646,11 @@ namespace {
         }
 
         // write new image
-        Blob blob;
+        MemIo mio;
         const IptcData emptyIptc;
         const XmpData  emptyXmp;
-        TiffParser::encode(blob, 0, 0, Exiv2::littleEndian, preview, emptyIptc, emptyXmp);
-        return DataBuf((blob.size() > 0 ? &blob[0] : 0), static_cast<long>(blob.size()));
+        TiffParser::encode(mio, 0, 0, Exiv2::littleEndian, preview, emptyIptc, emptyXmp);
+        return DataBuf(mio.mmap(), mio.size());
     }
 
 }                                       // namespace

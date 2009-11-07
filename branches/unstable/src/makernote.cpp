@@ -188,10 +188,10 @@ namespace Exiv2 {
         return true;
     } // OlympusMnHeader::read
 
-    uint32_t OlympusMnHeader::write(Blob&     blob,
+    uint32_t OlympusMnHeader::write(IoWrapper& ioWrapper,
                                     ByteOrder /*byteOrder*/) const
     {
-        append(blob, signature_, size_);
+        ioWrapper.write(signature_, size_);
         return size_;
     } // OlympusMnHeader::write
 
@@ -241,10 +241,10 @@ namespace Exiv2 {
         return true;
     } // Olympus2MnHeader::read
 
-    uint32_t Olympus2MnHeader::write(Blob&     blob,
+    uint32_t Olympus2MnHeader::write(IoWrapper& ioWrapper,
                                     ByteOrder /*byteOrder*/) const
     {
-        append(blob, signature_, size_);
+        ioWrapper.write(signature_, size_);
         return size_;
     } // Olympus2MnHeader::write
 
@@ -305,10 +305,10 @@ namespace Exiv2 {
         return true;
     } // FujiMnHeader::read
 
-    uint32_t FujiMnHeader::write(Blob&     blob,
+    uint32_t FujiMnHeader::write(IoWrapper& ioWrapper,
                                  ByteOrder /*byteOrder*/) const
     {
-        append(blob, signature_, size_);
+        ioWrapper.write(signature_, size_);
         return size_;
     } // FujiMnHeader::write
 
@@ -351,10 +351,10 @@ namespace Exiv2 {
 
     } // Nikon2MnHeader::read
 
-    uint32_t Nikon2MnHeader::write(Blob&     blob,
+    uint32_t Nikon2MnHeader::write(IoWrapper& ioWrapper,
                                    ByteOrder /*byteOrder*/) const
     {
-        append(blob, signature_, size_);
+        ioWrapper.write(signature_, size_);
         return size_;
     } // Nikon2MnHeader::write
 
@@ -414,16 +414,18 @@ namespace Exiv2 {
 
     } // Nikon3MnHeader::read
 
-    uint32_t Nikon3MnHeader::write(Blob&     blob,
+    uint32_t Nikon3MnHeader::write(IoWrapper& ioWrapper,
                                    ByteOrder byteOrder) const
     {
         assert(buf_.size_ >= 10);
 
-        append(blob, buf_.pData_, 10);
+        ioWrapper.write(buf_.pData_, 10);
         // Todo: This removes any gap between the header and
         // makernote IFD. The gap should be copied too.
         TiffHeader th(byteOrder);
-        return 10 + th.write(blob);
+        DataBuf buf = th.write();
+        ioWrapper.write(buf.pData_, buf.size_);
+        return 10 + buf.size_;
     } // Nikon3MnHeader::write
 
     void Nikon3MnHeader::setByteOrder(ByteOrder byteOrder)
@@ -470,10 +472,10 @@ namespace Exiv2 {
 
     } // PanasonicMnHeader::read
 
-    uint32_t PanasonicMnHeader::write(Blob&     blob,
+    uint32_t PanasonicMnHeader::write(IoWrapper& ioWrapper,
                                       ByteOrder /*byteOrder*/) const
     {
-        append(blob, signature_, size_);
+        ioWrapper.write(signature_, size_);
         return size_;
     } // PanasonicMnHeader::write
 
@@ -517,10 +519,10 @@ namespace Exiv2 {
         return true;
     } // PentaxMnHeader::read
 
-    uint32_t PentaxMnHeader::write(Blob&     blob,
+    uint32_t PentaxMnHeader::write(IoWrapper& ioWrapper,
                                    ByteOrder /*byteOrder*/) const
     {
-        append(blob, signature_, size_);
+        ioWrapper.write(signature_, size_);
         return size_;
     } // PentaxMnHeader::write
 
@@ -567,10 +569,10 @@ namespace Exiv2 {
 
     } // SigmaMnHeader::read
 
-    uint32_t SigmaMnHeader::write(Blob&     blob,
+    uint32_t SigmaMnHeader::write(IoWrapper& ioWrapper,
                                   ByteOrder /*byteOrder*/) const
     {
-        append(blob, signature1_, size_);
+        ioWrapper.write(signature1_, size_);
         return size_;
     } // SigmaMnHeader::write
 
@@ -613,10 +615,10 @@ namespace Exiv2 {
 
     } // SonyMnHeader::read
 
-    uint32_t SonyMnHeader::write(Blob&     blob,
+    uint32_t SonyMnHeader::write(IoWrapper& ioWrapper,
                                  ByteOrder /*byteOrder*/) const
     {
-        append(blob, signature_, size_);
+        ioWrapper.write(signature_, size_);
         return size_;
     } // SonyMnHeader::write
 

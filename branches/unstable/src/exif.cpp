@@ -703,8 +703,9 @@ namespace Exiv2 {
         const XmpData  emptyXmp;
 
         // Encode and check if the result fits into a JPEG Exif APP1 segment
+        MemIo mio1;
         std::auto_ptr<TiffHeaderBase> header(new TiffHeader(byteOrder));
-        WriteMethod wm = TiffParserWorker::encode(blob,
+        WriteMethod wm = TiffParserWorker::encode(mio1,
                                                   pData,
                                                   size,
                                                   ed,
@@ -713,10 +714,12 @@ namespace Exiv2 {
                                                   Tag::root,
                                                   TiffMapping::findEncoder,
                                                   header.get());
-        if (blob.size() <= 65527) return wm;
+        if (mio1.size() <= 65527) {
+            append(blob, mio1.mmap(), mio1.size());
+            return wm;
+        }
 
         // If it doesn't fit, remove additional tags
-        blob.clear();
 
         // Delete preview tags if the preview is larger than 32kB.
         // Todo: Enhance preview classes to be able to write and delete previews and use that instead.
@@ -798,7 +801,8 @@ namespace Exiv2 {
         }
 
         // Encode the remaining Exif tags again, don't care if it fits this time
-        wm = TiffParserWorker::encode(blob,
+        MemIo mio2;
+        wm = TiffParserWorker::encode(mio2,
                                       pData,
                                       size,
                                       ed,
@@ -807,10 +811,10 @@ namespace Exiv2 {
                                       Tag::root,
                                       TiffMapping::findEncoder,
                                       header.get());
-
+        append(blob, mio2.mmap(), mio2.size());
 #ifdef DEBUG
         if (wm == wmIntrusive) {
-            std::cerr << "SIZE OF EXIF DATA IS " << std::dec << blob.size() << " BYTES\n";
+            std::cerr << "SIZE OF EXIF DATA IS " << std::dec << io.size() << " BYTES\n";
         }
         else {
             std::cerr << "SIZE DOESN'T MATTER, NON-INTRUSIVE WRITING USED\n";
@@ -880,11 +884,11 @@ namespace {
             }
         }
 
-        Exiv2::Blob blob;
+        Exiv2::MemIo io;
         const Exiv2::IptcData emptyIptc;
         const Exiv2::XmpData  emptyXmp;
-        Exiv2::TiffParser::encode(blob, 0, 0, Exiv2::littleEndian, thumb, emptyIptc, emptyXmp);
-        return Exiv2::DataBuf((blob.size() > 0 ? &blob[0] : 0), static_cast<long>(blob.size()));
+        Exiv2::TiffParser::encode(io, 0, 0, Exiv2::littleEndian, thumb, emptyIptc, emptyXmp);
+        return io.read(io.size());
     }
 
     const char* JpegThumbnail::mimeType() const
