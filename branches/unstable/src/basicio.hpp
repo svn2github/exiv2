@@ -685,7 +685,7 @@ namespace Exiv2 {
                  returned pointer remains valid and allocated as long as the
                  MemIo object exists.
          */
-        virtual byte* mmap(bool /*isWriteable*/);
+        virtual byte* mmap(bool /*isWriteable*/ =false);
         virtual int munmap();
         //@}
 
