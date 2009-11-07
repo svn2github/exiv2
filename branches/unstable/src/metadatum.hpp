@@ -274,15 +274,9 @@ namespace Exiv2 {
           This method is provided mostly for convenient and versatile output of
           the value which can (to some extent) be formatted through standard
           stream manipulators.  Do not attempt to write to the value through
-          this reference.
-
-          <b>Example:</b> <br>
-          @code
-          ExifData::const_iterator i = exifData.findKey(key);
-          if (i != exifData.end()) {
-              std::cout << i->key() << " " << std::hex << i->value() << "\n";
-          }
-          @endcode
+          this reference. An Error is thrown if the value is not set; as an
+          alternative to catching it, one can use count() to check if there
+          is any data before calling this method.
 
           @return A constant reference to the value.
           @throw Error if the value is not set.
