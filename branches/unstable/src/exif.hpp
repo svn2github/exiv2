@@ -613,8 +613,7 @@ namespace Exiv2 {
           This is just an inline wrapper for
           ExifParser::encode(blob, 0, 0, byteOrder, exifData).
 
-          @param blob      Container for the binary Exif data if "intrusive"
-                           writing is necessary. Empty otherwise.
+          @param blob      Container for the binary Exif data.
           @param byteOrder Byte order to use.
           @param exifData  Exif metadata container.
         */
