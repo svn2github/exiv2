@@ -44,10 +44,6 @@ set( HAVE_LENSDATA ${EXIV2_ENABLE_LENSDATA} )
 include_directories( ${CMAKE_INCLUDE_PATH} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/xmpsdk/include )
 link_directories( ${CMAKE_LIBRARY_PATH} )
 set( CMAKE_REQUIRED_INCLUDES ${CMAKE_INCLUDE_PATH} )
-set( CMAKE_REQUIRED_LIBRARIES ${ICONV_LIBRARIES} )
-
-find_library( ICONV_LIBRARIES iconv )
-find_library( LIBINTL_LIBRARIES libintl )
 
 if( EXIV2_ENABLE_PNG )
     find_package( ZLIB )
@@ -85,6 +81,14 @@ if( EXIV2_ENABLE_COMMERCIAL )
     add_definitions( -DEXV_COMMERCIAL_VERSION )
 endif( EXIV2_ENABLE_COMMERCIAL )
 
+find_package(Iconv)
+if( ICONV_TEST )
+    set( HAVE_ICONV 1 )
+endif( ICONV_TEST )
+if( ICONV_ACCEPTS_CONST_INPUT )
+    set( ICONV_CONST "const" )
+endif( ICONV_ACCEPTS_CONST_INPUT )
+
 # checking for Header files
 check_include_file( "inttypes.h" HAVE_INTTYPES_H )
 check_include_file( "libintl.h" HAVE_LIBINTL_H )
@@ -106,7 +110,6 @@ check_include_file( "process.h" HAVE_PROCESS_H )
 
 check_function_exists( alarm HAVE_ALARM )
 check_function_exists( gmtime_r HAVE_GMTIME_R )
-check_function_exists( iconv HAVE_ICONV )
 check_function_exists( malloc HAVE_MALLOC )
 check_function_exists( memset HAVE_MEMSET )
 check_function_exists( mmap HAVE_MMAP )
@@ -159,70 +162,53 @@ int main() {
 return 0;
 }" TIME_WITH_SYS_TIME )
 
-# check if the second argument is const char**
-check_c_source_compiles( "#include <iconv.h>
-int main() {
-const char ** in;
-char * out;
-size_t t;
-iconv_t cd;
-iconv (cd, in, &t, &out, &t);
-return 0;
-}" CONST_ICONV )
-
-if( CONST_ICONV )
-    set( EXV_ICONV_CONST "const" )
-else( CONST_ICONV )
-    set( EXV_ICONV_CONST "const" )
-endif( CONST_ICONV )
-
 # for msvc define to int in exv_conf.h
 if( NOT MSVC )
     set( HAVE_PID_T TRUE )
 endif( NOT MSVC )
 
 set( EXV_SYMBOLS
-HAVE_INTTYPES_H
-HAVE_LIBINTL_H
-HAVE_MALLOC_H
-HAVE_MEMORY_H
-HAVE_ICONV_H
-HAVE_STDBOOL_H
-HAVE_STDINT_H
-HAVE_STDLIB_H
-HAVE_STRING_H
-HAVE_STRINGS_H
-HAVE_UNISTD_H
-HAVE_WCHAR_H
-HAVE_SYS_STAT_H
-HAVE_SYS_TIME_H
-HAVE_SYS_TYPES_H
-HAVE_SYS_MMAN_H
-HAVE_PROCESS_H
+ENABLE_NLS
 HAVE_ALARM
+HAVE_DECL_STRERROR_R
 HAVE_GMTIME_R
 HAVE_ICONV
+HAVE_ICONV_H
+HAVE_INTTYPES_H
+HAVE_LENSDATA
+HAVE_LIBINTL_H
+HAVE_LIBZ
+HAVE_MALLOC_H
+HAVE_MEMORY_H
 HAVE_MEMSET
 HAVE_MMAP
 HAVE_MUNMAP
+HAVE_PRINTUCS2
+HAVE_PROCESS_H
 HAVE_REALLOC
+HAVE_STDBOOL_H
+HAVE_STDINT_H
+HAVE_STDLIB_H
 HAVE_STRCHR
 HAVE_STRCHR_R
 HAVE_STRERROR
 HAVE_STRERROR_R
+HAVE_STRINGS_H
+HAVE_STRING_H
 HAVE_STRTOL
+HAVE_SYS_MMAN_H
+HAVE_SYS_STAT_H
+HAVE_SYS_TIME_H
+HAVE_SYS_TYPES_H
 HAVE_TIMEGM
+HAVE_UNISTD_H
 HAVE_VPRINTF
-
-HAVE__BOOL
-HAVE_LENSDATA
-EXIV2_ENABLE_NLS
-HAVE_DECL_STRERROR_R
-HAVE_PRINTUCS2
-HAVE_LIBZ
+HAVE_WCHAR_H
 HAVE_XMP_TOOLKIT
-PACKAGE_BUGREPORT
+HAVE__BOOL
+ICONV_CONST
 PACKAGE
+PACKAGE_BUGREPORT
 PACKAGE_NAME
 PACKAGE_STRING
 PACKAGE_TARNAME

@@ -47,6 +47,7 @@ set( LIBEXIV2_HDR   basicio.hpp
                     cr2image.hpp
                     crwimage.hpp
                     datasets.hpp
+		    easyaccess.hpp
                     error.hpp
                     exif.hpp
                     fujimn.hpp
@@ -65,6 +66,7 @@ set( LIBEXIV2_HDR   basicio.hpp
                     orfimage.hpp
                     panasonicmn.hpp
                     pentaxmn.hpp
+		    pgfimage.hpp
                     pngimage.hpp
 		    preview.hpp
                     properties.hpp
@@ -92,6 +94,7 @@ set( LIBEXIV2_SRC   basicio.cpp
                     crwedit.cpp
                     crwimage.cpp
                     datasets.cpp
+		    easyaccess.cpp
                     error.cpp
                     exif.cpp
                     futils.cpp
@@ -108,8 +111,9 @@ set( LIBEXIV2_SRC   basicio.cpp
                     nikonmn.cpp
                     olympusmn.cpp
                     orfimage.cpp
-                    pentaxmn.cpp
                     panasonicmn.cpp
+                    pentaxmn.cpp
+                    pgfimage.cpp
 		    preview.cpp
                     properties.cpp
                     psdimage.cpp
@@ -127,8 +131,6 @@ set( LIBEXIV2_SRC   basicio.cpp
                     version.cpp
                     xmp.cpp
                     xmpsidecar.cpp )
-#                   crwparse.cpp
-#                   tiffparse.cpp
 
 # Add source files of simple applications to this list
 set( TAGLIST_SRC    taglist.cpp )
@@ -186,6 +188,8 @@ endif( EXIV2_ENABLE_PNG )
 if( EXIV2_ENABLE_NLS )
     target_link_libraries( exiv2 ${LIBINTL_LIBRARIES} )
 endif( EXIV2_ENABLE_NLS )
+
+#### target_link_libraries( exiv2 ${LIBICONV_LIBRARIES} )
 
 install( TARGETS exiv2 ${INSTALL_TARGET_STANDARD_ARGS} )
 
