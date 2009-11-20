@@ -188,8 +188,10 @@ endif( EXIV2_ENABLE_PNG )
 if( EXIV2_ENABLE_NLS )
     target_link_libraries( exiv2 ${LIBINTL_LIBRARIES} )
 endif( EXIV2_ENABLE_NLS )
-
-#### target_link_libraries( exiv2 ${LIBICONV_LIBRARIES} )
+if( ICONV_TEST )
+    target_link_libraries( exiv2 ${ICONV_LIBRARIES} )
+    message ( "----------------> ICONV_LIBRARIES : " ${ICONV_LIBRARIES} )
+endif( ICONV_TEST )
 
 install( TARGETS exiv2 ${INSTALL_TARGET_STANDARD_ARGS} )
 
