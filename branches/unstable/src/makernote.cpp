@@ -175,10 +175,7 @@ namespace Exiv2 {
                                uint32_t size,
                                ByteOrder /*byteOrder*/)
     {
-        assert (pData != 0);
-
-        if (size < size_) return false;
-
+        if (!pData || size < size_) return false;
         header_.alloc(size_);
         std::memcpy(header_.pData_, pData, header_.size_);
         if (   static_cast<uint32_t>(header_.size_) < size_
@@ -228,10 +225,7 @@ namespace Exiv2 {
                                 uint32_t size,
                                 ByteOrder /*byteOrder*/)
     {
-        assert (pData != 0);
-
-        if (size < size_) return false;
-
+        if (!pData || size < size_) return false;
         header_.alloc(size_);
         std::memcpy(header_.pData_, pData, header_.size_);
         if (   static_cast<uint32_t>(header_.size_) < size_
@@ -287,17 +281,12 @@ namespace Exiv2 {
                             uint32_t size,
                             ByteOrder /*byteOrder*/)
     {
-        assert (pData != 0);
-
-        if (size < size_) return false;
-
+        if (!pData || size < size_) return false;
         header_.alloc(size_);
         std::memcpy(header_.pData_, pData, header_.size_);
-
         // Read offset to the IFD relative to the start of the makernote
         // from the header. Note that we ignore the byteOrder argument
         start_ = getULong(header_.pData_ + 8, byteOrder_);
-
         if (   static_cast<uint32_t>(header_.size_) < size_
             || 0 != memcmp(header_.pData_, signature_, 8)) {
             return false;
@@ -340,15 +329,12 @@ namespace Exiv2 {
                               uint32_t    size,
                               ByteOrder   /*byteOrder*/)
     {
-        assert (pData != 0);
-
-        if (size < size_) return false;
+        if (!pData || size < size_) return false;
         if (0 != memcmp(pData, signature_, 6)) return false;
         buf_.alloc(size_);
         std::memcpy(buf_.pData_, pData, buf_.size_);
         start_ = size_;
         return true;
-
     } // Nikon2MnHeader::read
 
     uint32_t Nikon2MnHeader::write(IoWrapper& ioWrapper,
@@ -400,9 +386,7 @@ namespace Exiv2 {
                               uint32_t    size,
                               ByteOrder   /*byteOrder*/)
     {
-        assert (pData != 0);
-
-        if (size < size_) return false;
+        if (!pData || size < size_) return false;
         if (0 != memcmp(pData, signature_, 6)) return false;
         buf_.alloc(size_);
         std::memcpy(buf_.pData_, pData, buf_.size_);
@@ -411,7 +395,6 @@ namespace Exiv2 {
         byteOrder_ = th.byteOrder();
         start_ = 10 + th.offset();
         return true;
-
     } // Nikon3MnHeader::read
 
     uint32_t Nikon3MnHeader::write(IoWrapper& ioWrapper,
@@ -461,15 +444,12 @@ namespace Exiv2 {
                                  uint32_t    size,
                                  ByteOrder   /*byteOrder*/)
     {
-        assert (pData != 0);
-
-        if (size < size_) return false;
+        if (!pData || size < size_) return false;
         if (0 != memcmp(pData, signature_, 9)) return false;
         buf_.alloc(size_);
         std::memcpy(buf_.pData_, pData, buf_.size_);
         start_ = size_;
         return true;
-
     } // PanasonicMnHeader::read
 
     uint32_t PanasonicMnHeader::write(IoWrapper& ioWrapper,
@@ -507,9 +487,7 @@ namespace Exiv2 {
                               uint32_t size,
                               ByteOrder /*byteOrder*/)
     {
-        assert (pData != 0);
-
-        if (size < size_) return false;
+        if (!pData || size < size_) return false;
         header_.alloc(size_);
         std::memcpy(header_.pData_, pData, header_.size_);
         if (   static_cast<uint32_t>(header_.size_) < size_
@@ -557,16 +535,13 @@ namespace Exiv2 {
                              uint32_t    size,
                              ByteOrder   /*byteOrder*/)
     {
-        assert (pData != 0);
-
-        if (size < size_) return false;
+        if (!pData || size < size_) return false;
         if (   0 != memcmp(pData, signature1_, 8)
             && 0 != memcmp(pData, signature2_, 8)) return false;
         buf_.alloc(size_);
         std::memcpy(buf_.pData_, pData, buf_.size_);
         start_ = size_;
         return true;
-
     } // SigmaMnHeader::read
 
     uint32_t SigmaMnHeader::write(IoWrapper& ioWrapper,
@@ -604,15 +579,12 @@ namespace Exiv2 {
                             uint32_t    size,
                             ByteOrder   /*byteOrder*/)
     {
-        assert (pData != 0);
-
-        if (size < size_) return false;
+        if (!pData || size < size_) return false;
         if (0 != memcmp(pData, signature_, size_)) return false;
         buf_.alloc(size_);
         std::memcpy(buf_.pData_, pData, buf_.size_);
         start_ = size_;
         return true;
-
     } // SonyMnHeader::read
 
     uint32_t SonyMnHeader::write(IoWrapper& ioWrapper,
