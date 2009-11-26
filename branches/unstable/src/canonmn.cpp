@@ -19,12 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
  */
 /*
-  File   : canonmn.cpp
-  Version: $Rev$
-  Authors: Andreas Huggel (ahu) <ahuggel@gmx.net>
-           David Cannings (dc) <david@edeca.net>
-  Credits: EXIF MakerNote of Canon by David Burren <http://www.burren.cx/david/canon.html>
-           Canon makernote tags by Phil Harvey <http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Canon.html>
+  File:      canonmn.cpp
+  Version:   $Rev$
+  Author(s): Andreas Huggel (ahu) <ahuggel@gmx.net>
+             David Cannings (dc) <david@edeca.net>
+             Andi Clemens (ac) <andi.clemens@gmx.net>
  */
 // *****************************************************************************
 #include "rcsid.hpp"
@@ -171,7 +170,7 @@ namespace Exiv2 {
         TagInfo(0x0005, "Panorama", N_("Panorama"), N_("Panorama"), canonIfdId, makerTags, unsignedShort, printValue),
         TagInfo(0x0006, "ImageType", N_("Image Type"), N_("Image type"), canonIfdId, makerTags, asciiString, printValue),
         TagInfo(0x0007, "FirmwareVersion", N_("Firmware Version"), N_("Firmware version"), canonIfdId, makerTags, asciiString, printValue),
-        TagInfo(0x0008, "ImageNumber", N_("Image Number"), N_("Image number"), canonIfdId, makerTags, unsignedLong, print0x0008),
+        TagInfo(0x0008, "FileNumber", N_("File Number"), N_("File number"), canonIfdId, makerTags, unsignedLong, print0x0008),
         TagInfo(0x0009, "OwnerName", N_("Owner Name"), N_("Owner Name"), canonIfdId, makerTags, asciiString, printValue),
         TagInfo(0x000c, "SerialNumber", N_("Serial Number"), N_("Camera serial number"), canonIfdId, makerTags, unsignedLong, print0x000c),
         TagInfo(0x000d, "0x000d", "0x000d", N_("Unknown"), canonIfdId, makerTags, unsignedShort, printValue),
@@ -936,18 +935,18 @@ namespace Exiv2 {
 
     // Canon File Info Tag
     const TagInfo CanonMakerNote::tagInfoFi_[] = {
-        TagInfo(0x0001, "FileNumber", N_("File Number"), N_("File Number"), canonFiIfdId, makerTags, unsignedLong,  print0x0008),
-        TagInfo(0x0003, "BracketMode", N_("Bracket Mode"), N_("Bracket Mode"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonBracketMode)),
-        TagInfo(0x0004, "BracketValue", N_("Bracket Value"), N_("Bracket Value"), canonFiIfdId, makerTags, signedShort,  printValue),
+        TagInfo(0x0001, "FileNumber", N_("File Number"), N_("File Number"), canonFiIfdId, makerTags, unsignedLong, printFiFileNumber),
+        TagInfo(0x0003, "BracketMode", N_("Bracket Mode"), N_("Bracket Mode"), canonFiIfdId, makerTags, signedShort, EXV_PRINT_TAG(canonBracketMode)),
+        TagInfo(0x0004, "BracketValue", N_("Bracket Value"), N_("Bracket Value"), canonFiIfdId, makerTags, signedShort, printValue),
         TagInfo(0x0005, "BracketShotNumber", N_("Bracket Shot Number"), N_("Bracket Shot Number"), canonFiIfdId, makerTags, signedShort,  printValue),
-        TagInfo(0x0006, "RawJpgQuality", N_("Raw Jpg Quality"), N_("Raw Jpg Quality"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonCsQuality)),
-        TagInfo(0x0007, "RawJpgSize", N_("Raw Jpg Size"), N_("Raw Jpg Size"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonRawJpgSize)),
-        TagInfo(0x0008, "NoiseReduction", N_("Noise Reduction"), N_("Noise Reduction"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonNoiseReduction)),
-        TagInfo(0x0009, "WBBracketMode", N_("WB Bracket Mode"), N_("WB Bracket Mode"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonWBBracketMode)),
-        TagInfo(0x000c, "WBBracketValueAB", N_("WB Bracket Value AB"), N_("WB Bracket Value AB"), canonFiIfdId, makerTags, signedShort,  printValue),
-        TagInfo(0x000d, "WBBracketValueGM", N_("WB Bracket Value GM"), N_("WB Bracket Value GM"), canonFiIfdId, makerTags, signedShort,  printValue),
-        TagInfo(0x000e, "FilterEffect", N_("Filter Effect"), N_("Filter Effect"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonFilterEffect)),
-        TagInfo(0x000f, "ToningEffect", N_("Toning Effect"), N_("Toning Effect"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonToningEffect)),
+        TagInfo(0x0006, "RawJpgQuality", N_("Raw Jpg Quality"), N_("Raw Jpg Quality"), canonFiIfdId, makerTags, signedShort, EXV_PRINT_TAG(canonCsQuality)),
+        TagInfo(0x0007, "RawJpgSize", N_("Raw Jpg Size"), N_("Raw Jpg Size"), canonFiIfdId, makerTags, signedShort, EXV_PRINT_TAG(canonRawJpgSize)),
+        TagInfo(0x0008, "NoiseReduction", N_("Noise Reduction"), N_("Noise Reduction"), canonFiIfdId, makerTags, signedShort, EXV_PRINT_TAG(canonNoiseReduction)),
+        TagInfo(0x0009, "WBBracketMode", N_("WB Bracket Mode"), N_("WB Bracket Mode"), canonFiIfdId, makerTags, signedShort, EXV_PRINT_TAG(canonWBBracketMode)),
+        TagInfo(0x000c, "WBBracketValueAB", N_("WB Bracket Value AB"), N_("WB Bracket Value AB"), canonFiIfdId, makerTags, signedShort, printValue),
+        TagInfo(0x000d, "WBBracketValueGM", N_("WB Bracket Value GM"), N_("WB Bracket Value GM"), canonFiIfdId, makerTags, signedShort, printValue),
+        TagInfo(0x000e, "FilterEffect", N_("Filter Effect"), N_("Filter Effect"), canonFiIfdId, makerTags, signedShort, EXV_PRINT_TAG(canonFilterEffect)),
+        TagInfo(0x000f, "ToningEffect", N_("Toning Effect"), N_("Toning Effect"), canonFiIfdId, makerTags, signedShort, EXV_PRINT_TAG(canonToningEffect)),
         // End of list marker
         TagInfo(0xffff, "(UnknownCanonFiTag)", "(UnknownCanonFiTag)", N_("Unknown Canon File Info tag"), canonFiIfdId, makerTags, invalidTypeId, printValue)
     };
@@ -955,6 +954,40 @@ namespace Exiv2 {
     const TagInfo* CanonMakerNote::tagListFi()
     {
         return tagInfoFi_;
+    }
+
+    std::ostream& CanonMakerNote::printFiFileNumber(std::ostream& os,
+                                                    const Value& value,
+                                                    const ExifData* metadata)
+    {
+        if (!metadata || value.typeId() != unsignedLong) return os << "(" << value << ")";
+        ExifData::const_iterator pos = metadata->findKey(ExifKey("Exif.Image.Model"));
+        if (pos == metadata->end()) return os << "(" << value << ")";
+
+        // Ported from Exiftool
+        std::string model = pos->toString();
+        if (   model.find("20D") != std::string::npos
+            || model.find("350D") != std::string::npos
+            || model.substr(model.size() - 8, 8) == "REBEL XT"
+            || model.find("Kiss Digital N") != std::string::npos) {
+            uint32_t val = value.toLong();
+            uint32_t dn = (val & 0xffc0) >> 6;
+            uint32_t fn = ((val >> 16) & 0xff) + ((val & 0x3f) << 8);
+            return os << std::dec << dn << "-" << std::setw(4) << std::setfill('0') << fn;
+        }
+        if (   model.find("30D") != std::string::npos
+            || model.find("400D") != std::string::npos
+            || model.find("REBEL XTi") != std::string::npos
+            || model.find("Kiss Digital X") != std::string::npos
+            || model.find("K236") != std::string::npos) {
+            uint32_t val = value.toLong();
+            uint32_t dn = (val & 0xffc00) >> 10;
+            while (dn < 100) dn += 0x40;
+            uint32_t fn = ((val & 0x3ff) << 4) + ((val >> 20) & 0x0f);
+            return os << std::dec << dn << "-" << std::setw(4) << std::setfill('0') << fn;
+        }
+
+        return os << "(" << value << ")";
     }
 
     std::ostream& CanonMakerNote::printFocalLength(std::ostream& os,

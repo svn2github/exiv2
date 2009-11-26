@@ -26,6 +26,7 @@
   @version $Rev$
   @author  <a href="mailto:ahuggel@gmx.net">Andreas Huggel (ahu)</a><br>
            <a href="mailto:david@edeca.net">David Cannings (dc)</a>
+           <a href="mailto:andi.clemens@gmx.net">Andi Clemens (ac)</a>
   @date    18-Feb-04, ahu: created<BR>
            07-Mar-04, ahu: isolated as a separate component<BR>
            12-Aug-06,  dc: started updating all tags
@@ -74,6 +75,8 @@ namespace Exiv2 {
 
         //! @name Print functions for Canon %MakerNote tags
         //@{
+        //! Print the FileInfo FileNumber
+        static std::ostream& printFiFileNumber(std::ostream& os, const Value& value, const ExifData* metadata);
         //! Print the focal length
         static std::ostream& printFocalLength(std::ostream& os, const Value& value, const ExifData*);
         //! Print the image number
