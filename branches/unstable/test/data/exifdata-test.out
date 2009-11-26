@@ -263,7 +263,7 @@ Exif.Canon.0x0000                             0x0000 Makernote    Short       6 
 Exif.Canon.0x0000                             0x0000 Makernote    Short       4 0 0 0 0
 Exif.Canon.ImageType                          0x0006 Makernote    Ascii      32 IMG:PowerShot S40 JPEG
 Exif.Canon.FirmwareVersion                    0x0007 Makernote    Ascii      24 Firmware Version 1.10
-Exif.Canon.ImageNumber                        0x0008 Makernote    Long        1 1171771
+Exif.Canon.FileNumber                         0x0008 Makernote    Long        1 1171771
 Exif.Canon.OwnerName                          0x0009 Makernote    Ascii      32 Andreas Huggel
 Exif.Canon.ModelID                            0x0010 Makernote    Long        1 17891328
 Exif.Canon.0x000d                             0x000d Makernote    Short      21 42 3 32769 378 32769 0 0 0 259 2 0 10 0 0 0 57 198 5 0 0 0
@@ -392,7 +392,7 @@ Exif.Canon.0x0000                             0x0000 Makernote    Short       6 
 Exif.Canon.0x0000                             0x0000 Makernote    Short       4 0 0 0 0
 Exif.Canon.ImageType                          0x0006 Makernote    Ascii      32 IMG:PowerShot S40 JPEG
 Exif.Canon.FirmwareVersion                    0x0007 Makernote    Ascii      24 Firmware Version 1.10
-Exif.Canon.ImageNumber                        0x0008 Makernote    Long        1 1171771
+Exif.Canon.FileNumber                         0x0008 Makernote    Long        1 1171771
 Exif.Canon.OwnerName                          0x0009 Makernote    Ascii      32 Andreas Huggel
 Exif.Canon.ModelID                            0x0010 Makernote    Long        1 17891328
 Exif.Canon.0x000d                             0x000d Makernote    Short      21 42 3 32769 378 32769 0 0 0 259 2 0 10 0 0 0 57 198 5 0 0 0
@@ -522,7 +522,7 @@ Exif.Canon.0x0000                             0x0000 Makernote    Short       6 
 Exif.Canon.0x0000                             0x0000 Makernote    Short       4 0 0 0 0
 Exif.Canon.ImageType                          0x0006 Makernote    Ascii      32 IMG:PowerShot S40 JPEG
 Exif.Canon.FirmwareVersion                    0x0007 Makernote    Ascii      24 Firmware Version 1.10
-Exif.Canon.ImageNumber                        0x0008 Makernote    Long        1 1171771
+Exif.Canon.FileNumber                         0x0008 Makernote    Long        1 1171771
 Exif.Canon.OwnerName                          0x0009 Makernote    Ascii      32 Andreas Huggel
 Exif.Canon.ModelID                            0x0010 Makernote    Long        1 17891328
 Exif.Canon.0x000d                             0x000d Makernote    Short      21 42 3 32769 378 32769 0 0 0 259 2 0 10 0 0 0 57 198 5 0 0 0
@@ -652,7 +652,7 @@ Exif.Canon.0x0000                             0x0000 Makernote    Short       6 
 Exif.Canon.0x0000                             0x0000 Makernote    Short       4 0 0 0 0
 Exif.Canon.ImageType                          0x0006 Makernote    Ascii      32 IMG:PowerShot S40 JPEG
 Exif.Canon.FirmwareVersion                    0x0007 Makernote    Ascii      24 Firmware Version 1.10
-Exif.Canon.ImageNumber                        0x0008 Makernote    Long        1 1171771
+Exif.Canon.FileNumber                         0x0008 Makernote    Long        1 1171771
 Exif.Canon.OwnerName                          0x0009 Makernote    Ascii      32 Andreas Huggel
 Exif.Canon.ModelID                            0x0010 Makernote    Long        1 17891328
 Exif.Canon.0x000d                             0x000d Makernote    Short      21 42 3 32769 378 32769 0 0 0 259 2 0 10 0 0 0 57 198 5 0 0 0

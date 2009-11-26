@@ -344,7 +344,7 @@ namespace Exiv2 {
     extern const ArrayCfg canonFiCfg = {
         Group::canonfi,   // Group for the elements
         invalidByteOrder, // Use byte order from parent
-        ttSignedShort,    // Type for array entry and size element
+        ttUnsignedShort,  // Type for array entry and size element
         notEncrypted,     // Not encrypted
         true,             // Has a size element
         false,            // No fillers
@@ -645,6 +645,7 @@ namespace Exiv2 {
         { Tag::root, Group::canonpa,   Group::canonmn,   0x0005    },
         { Tag::root, Group::canoncf,   Group::canonmn,   0x000f    },
         { Tag::root, Group::canonpi,   Group::canonmn,   0x0012    },
+        { Tag::root, Group::canonfi,   Group::canonmn,   0x0093    },
         { Tag::root, Group::nikon1mn,  Group::exif,      0x927c    },
         { Tag::root, Group::nikon2mn,  Group::exif,      0x927c    },
         { Tag::root, Group::nikon3mn,  Group::exif,      0x927c    },
