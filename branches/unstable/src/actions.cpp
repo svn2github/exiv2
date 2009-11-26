@@ -301,7 +301,7 @@ namespace Action {
 
         // Image number
         // Todo: Image number for cameras other than Canon
-        printTag(exifData, "Exif.Canon.ImageNumber", _("Image number"));
+        printTag(exifData, "Exif.Canon.FileNumber", _("Image number"));
 
         // Exposure time
         // From ExposureTime, failing that, try ShutterSpeedValue
