@@ -144,7 +144,7 @@ namespace Exiv2 {
                  subImage1Id, subImage2Id, subImage3Id, subImage4Id,
                  mnIfdId,
                  canonIfdId, canonCsIfdId, canonSiIfdId, canonCfIfdId,
-                 canonPiIfdId, canonPaIfdId,
+                 canonPiIfdId, canonPaIfdId, canonFiIfdId,
                  fujiIfdId,
                  minoltaIfdId, minoltaCs5DIfdId, minoltaCs7DIfdId,
                  minoltaCsOldIfdId, minoltaCsNewIfdId,

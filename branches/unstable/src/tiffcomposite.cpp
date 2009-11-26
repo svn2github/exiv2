@@ -139,7 +139,8 @@ namespace Exiv2 {
         { 306, "NikonCb2a"    },
         { 307, "NikonCb2b"    },
         { 308, "NikonCb3"     },
-        { 309, "NikonCb4"     }
+        { 309, "NikonCb4"     },
+        { 310, "CanonFi"      }
     };
 
     bool TiffGroupInfo::operator==(const uint16_t& group) const
@@ -363,7 +364,7 @@ namespace Exiv2 {
     {
         std::pair<byte*, long> p = buf.release();
         setData(p.first, p.second);
-        isMalloced_ = true;        
+        isMalloced_ = true;
     }
 
     void TiffEntryBase::setData(byte* pData, int32_t size)

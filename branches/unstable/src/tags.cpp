@@ -112,6 +112,7 @@ namespace Exiv2 {
         { canonSiIfdId,      "Makernote", "CanonSi",      CanonMakerNote::tagListSi      },
         { canonCfIfdId,      "Makernote", "CanonCf",      CanonMakerNote::tagListCf      },
         { canonPiIfdId,      "Makernote", "CanonPi",      CanonMakerNote::tagListPi      },
+        { canonFiIfdId,      "Makernote", "CanonFi",      CanonMakerNote::tagListFi      },
         { canonPaIfdId,      "Makernote", "CanonPa",      CanonMakerNote::tagListPa      },
         { fujiIfdId,         "Makernote", "Fujifilm",     FujiMakerNote::tagList         },
         { minoltaIfdId,      "Makernote", "Minolta",      MinoltaMakerNote::tagList      },
@@ -1249,7 +1250,7 @@ namespace Exiv2 {
                 "data or a restart marker. This tag should not exist in an "
                 "uncompressed file. Since data padding is unnecessary in the vertical "
                 "direction, the number of lines recorded in this valid image height tag "
-	        "will in fact be the same as that recorded in the SOF."),
+                "will in fact be the same as that recorded in the SOF."),
                 exifIfdId, imgConfig, unsignedLong, printValue),
         TagInfo(0xa004, "RelatedSoundFile", N_("Related Sound File"),
                 N_("This tag is used to record the name of an audio file related "
@@ -1926,8 +1927,8 @@ namespace Exiv2 {
         return ExifTags::tagName(tag_, ifdId_);
     }
 
-    std::string ExifKey::tagLabel() const 	
-    {
+    std::string ExifKey::tagLabel() const
+            {
         return ExifTags::tagLabel(tag_, ifdId_);
     }
 
@@ -2597,7 +2598,7 @@ namespace Exiv2 {
             return os << value;
         }
 
-	std::string stringValue = value.toString();
+        std::string stringValue = value.toString();
         if (stringValue[19] == 'Z') {
             stringValue = stringValue.substr(0, 19);
         }

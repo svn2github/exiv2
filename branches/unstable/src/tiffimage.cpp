@@ -284,7 +284,7 @@ namespace Exiv2 {
     //! Canon Camera Settings binary array - configuration
     extern const ArrayCfg canonCsCfg = {
         Group::canoncs,   // Group for the elements
-        invalidByteOrder, // Use byte order from parent 
+        invalidByteOrder, // Use byte order from parent
         ttUnsignedShort,  // Type for array entry and size element
         notEncrypted,     // Not encrypted
         true,             // With size element
@@ -299,7 +299,7 @@ namespace Exiv2 {
     //! Canon Shot Info binary array - configuration
     extern const ArrayCfg canonSiCfg = {
         Group::canonsi,   // Group for the elements
-        invalidByteOrder, // Use byte order from parent 
+        invalidByteOrder, // Use byte order from parent
         ttUnsignedShort,  // Type for array entry and size element
         notEncrypted,     // Not encrypted
         true,             // With size element
@@ -310,7 +310,7 @@ namespace Exiv2 {
     //! Canon Panorama binary array - configuration
     extern const ArrayCfg canonPaCfg = {
         Group::canonpa,   // Group for the elements
-        invalidByteOrder, // Use byte order from parent 
+        invalidByteOrder, // Use byte order from parent
         ttUnsignedShort,  // Type for array entry and size element
         notEncrypted,     // Not encrypted
         false,            // No size element
@@ -321,7 +321,7 @@ namespace Exiv2 {
     //! Canon Custom Function binary array - configuration
     extern const ArrayCfg canonCfCfg = {
         Group::canoncf,   // Group for the elements
-        invalidByteOrder, // Use byte order from parent 
+        invalidByteOrder, // Use byte order from parent
         ttUnsignedShort,  // Type for array entry and size element
         notEncrypted,     // Not encrypted
         true,             // With size element
@@ -332,7 +332,7 @@ namespace Exiv2 {
     //! Canon Picture Info binary array - configuration
     extern const ArrayCfg canonPiCfg = {
         Group::canonpi,   // Group for the elements
-        invalidByteOrder, // Use byte order from parent 
+        invalidByteOrder, // Use byte order from parent
         ttUnsignedShort,  // Type for array entry and size element
         notEncrypted,     // Not encrypted
         false,            // No size element
@@ -340,10 +340,25 @@ namespace Exiv2 {
         { 0, ttUnsignedShort, 1 }
     };
 
+    //! Canon File Info binary array - configuration
+    extern const ArrayCfg canonFiCfg = {
+        Group::canonfi,   // Group for the elements
+        invalidByteOrder, // Use byte order from parent
+        ttSignedShort,    // Type for array entry and size element
+        notEncrypted,     // Not encrypted
+        true,             // Has a size element
+        false,            // No fillers
+        { 0, ttSignedShort, 1 }
+    };
+    //! Canon File Info binary array - definition
+    extern const ArrayDef canonFiDef[] = {
+        { 2, ttUnsignedLong, 1 }
+    };
+
     //! Nikon World Time binary array - configuration
     extern const ArrayCfg nikonWtCfg = {
         Group::nikonwt,   // Group for the elements
-        invalidByteOrder, // Use byte order from parent 
+        invalidByteOrder, // Use byte order from parent
         ttUndefined,      // Type for array entry
         notEncrypted,     // Not encrypted
         false,            // No size element
@@ -582,7 +597,7 @@ namespace Exiv2 {
         { 146, ttSignedShort, 1 } // Exif.MinoltaCs5D.ColorTemperature
     };
 
-    /* 
+    /*
       This table lists for each group in a tree, its parent group and tag.
       Root identifies the root of a TIFF tree, as there is a need for multiple
       trees. Groups are the nodes of a TIFF tree. A group is an IFD or any
@@ -592,8 +607,8 @@ namespace Exiv2 {
       path, i.e., a list of groups and tags, from the root to that group (tag).
     */
     const TiffTreeStruct TiffCreator::tiffTreeStruct_[] = {
-        // root      group             parent group      parent tag 
-        //---------  ----------------- ----------------- ---------- 
+        // root      group             parent group      parent tag
+        //---------  ----------------- ----------------- ----------
         { Tag::root, Group::none,      Group::none,      Tag::root },
         { Tag::root, Group::ifd0,      Group::none,      Tag::root },
         { Tag::root, Group::subimg1,   Group::ifd0,      0x014a    },
@@ -852,6 +867,7 @@ namespace Exiv2 {
         {    0x0005, Group::canonmn,   EXV_SIMPLE_BINARY_ARRAY(canonPaCfg)       },
         {    0x000f, Group::canonmn,   EXV_SIMPLE_BINARY_ARRAY(canonCfCfg)       },
         {    0x0012, Group::canonmn,   EXV_SIMPLE_BINARY_ARRAY(canonPiCfg)       },
+        {    0x0093, Group::canonmn,   EXV_BINARY_ARRAY(canonFiCfg, canonFiDef)  },
         { Tag::next, Group::canonmn,   newTiffDirectory<Group::ignr>             },
         {  Tag::all, Group::canonmn,   newTiffEntry                              },
 
@@ -861,6 +877,7 @@ namespace Exiv2 {
         {  Tag::all, Group::canonpa,   newTiffBinaryElement                      },
         {  Tag::all, Group::canoncf,   newTiffBinaryElement                      },
         {  Tag::all, Group::canonpi,   newTiffBinaryElement                      },
+        {  Tag::all, Group::canonfi,   newTiffBinaryElement                      },
 
         // Nikon1 makernote
         { Tag::next, Group::nikon1mn,  newTiffDirectory<Group::ignr>             },
@@ -946,7 +963,7 @@ namespace Exiv2 {
         // Root directory of Panasonic RAW images
         { Tag::pana, Group::none,      newTiffDirectory<Group::panaraw>          },
 
-        // IFD0 of Panasonic RAW images 
+        // IFD0 of Panasonic RAW images
         {    0x8769, Group::panaraw,   newTiffSubIfd<Group::exif>                },
         {    0x8825, Group::panaraw,   newTiffSubIfd<Group::gps>                 },
 //        {    0x0111, Group::panaraw,   newTiffImageData<0x0117, Group::panaraw>  },

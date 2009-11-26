@@ -199,11 +199,12 @@ namespace Exiv2 {
 
     //! Quality, tag 0x0003
     extern const TagDetails canonCsQuality[] = {
-        { 1, N_("Economy")   },
-        { 2, N_("Normal")    },
-        { 3, N_("Fine")      },
-        { 4, N_("RAW")       },
-        { 5, N_("Superfine") }
+        { 1,   N_("Economy")      },
+        { 2,   N_("Normal")       },
+        { 3,   N_("Fine")         },
+        { 4,   N_("RAW")          },
+        { 5,   N_("Superfine")    },
+        { 130, N_("Normal Movie") }
     };
 
     //! FlashMode, tag 0x0004
@@ -874,6 +875,86 @@ namespace Exiv2 {
     const TagInfo* CanonMakerNote::tagListPi()
     {
         return tagInfoPi_;
+    }
+
+    //! BracketMode, tag 0x0003
+    extern const TagDetails canonBracketMode[] = {
+        { 0, N_("Off") },
+        { 1, N_("AEB") },
+        { 2, N_("FEB") },
+        { 3, N_("ISO") },
+        { 4, N_("WB")  }
+    };
+
+    //! RawJpgSize, tag 0x0007
+    extern const TagDetails canonRawJpgSize[] = {
+        { 0,   N_("Large")        },
+        { 1,   N_("Medium")       },
+        { 2,   N_("Small")        },
+        { 5,   N_("Medium 1")     },
+        { 6,   N_("Medium 2")     },
+        { 7,   N_("Medium 3")     },
+        { 8,   N_("Postcard")     },
+        { 9,   N_("Widescreen")   },
+        { 129, N_("Medium Movie") },
+        { 130, N_("Small Movie")  }
+    };
+
+    //! NoiseReduction, tag 0x0008
+    extern const TagDetails canonNoiseReduction[] = {
+        { 0, N_("Off")  },
+        { 1, N_("On 1") },
+        { 2, N_("On 2") },
+        { 3, N_("On")   },
+        { 4, N_("Auto") }
+    };
+
+    //! WBBracketMode, tag 0x0009
+    extern const TagDetails canonWBBracketMode[] = {
+        { 0, N_("Off")           },
+        { 1, N_("On (shift AB)") },
+        { 2, N_("On (shift GM)") }
+    };
+
+    //! FilterEffect, tag 0x000e
+    extern const TagDetails canonFilterEffect[] = {
+        { 0, N_("None")   },
+        { 1, N_("Yellow") },
+        { 2, N_("Orange") },
+        { 3, N_("Red")    },
+        { 4, N_("Green")  }
+    };
+
+    //! ToningEffect, tag 0x000e
+    extern const TagDetails canonToningEffect[] = {
+        { 0, N_("None")   },
+        { 1, N_("Sepia")  },
+        { 2, N_("Blue")   },
+        { 3, N_("Purple") },
+        { 4, N_("Green")  }
+    };
+
+    // Canon File Info Tag
+    const TagInfo CanonMakerNote::tagInfoFi_[] = {
+        TagInfo(0x0001, "FileNumber", N_("File Number"), N_("File Number"), canonFiIfdId, makerTags, unsignedLong,  print0x0008),
+        TagInfo(0x0003, "BracketMode", N_("Bracket Mode"), N_("Bracket Mode"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonBracketMode)),
+        TagInfo(0x0004, "BracketValue", N_("Bracket Value"), N_("Bracket Value"), canonFiIfdId, makerTags, signedShort,  printValue),
+        TagInfo(0x0005, "BracketShotNumber", N_("Bracket Shot Number"), N_("Bracket Shot Number"), canonFiIfdId, makerTags, signedShort,  printValue),
+        TagInfo(0x0006, "RawJpgQuality", N_("Raw Jpg Quality"), N_("Raw Jpg Quality"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonCsQuality)),
+        TagInfo(0x0007, "RawJpgSize", N_("Raw Jpg Size"), N_("Raw Jpg Size"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonRawJpgSize)),
+        TagInfo(0x0008, "NoiseReduction", N_("Noise Reduction"), N_("Noise Reduction"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonNoiseReduction)),
+        TagInfo(0x0009, "WBBracketMode", N_("WB Bracket Mode"), N_("WB Bracket Mode"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonWBBracketMode)),
+        TagInfo(0x000c, "WBBracketValueAB", N_("WB Bracket Value AB"), N_("WB Bracket Value AB"), canonFiIfdId, makerTags, signedShort,  printValue),
+        TagInfo(0x000d, "WBBracketValueGM", N_("WB Bracket Value GM"), N_("WB Bracket Value GM"), canonFiIfdId, makerTags, signedShort,  printValue),
+        TagInfo(0x000e, "FilterEffect", N_("Filter Effect"), N_("Filter Effect"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonFilterEffect)),
+        TagInfo(0x000f, "ToningEffect", N_("Toning Effect"), N_("Toning Effect"), canonFiIfdId, makerTags, signedShort,  EXV_PRINT_TAG(canonToningEffect)),
+        // End of list marker
+        TagInfo(0xffff, "(UnknownCanonFiTag)", "(UnknownCanonFiTag)", N_("Unknown Canon File Info tag"), canonFiIfdId, makerTags, invalidTypeId, printValue)
+    };
+
+    const TagInfo* CanonMakerNote::tagListFi()
+    {
+        return tagInfoFi_;
     }
 
     std::ostream& CanonMakerNote::printFocalLength(std::ostream& os,

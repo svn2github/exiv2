@@ -99,6 +99,7 @@ namespace Exiv2 {
         const uint16_t nikoncb2b = 307; //!< Nikon Color Balance 2 Tags
         const uint16_t nikoncb3  = 308; //!< Nikon Color Balance 3 Tags
         const uint16_t nikoncb4  = 309; //!< Nikon Color Balance 4 Tags
+        const uint16_t canonfi   = 310; //!< Canon File Info
     }
 
 // *****************************************************************************
