@@ -1,0 +1,2312 @@
+# translation of Exiv2.po to Finnish
+#
+# Copyright (C) 2006-2007 Andreas Huggel <ahuggel@gmx.net>
+# This file is distributed under the same license as the Exiv2 package.
+#
+# , 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: Exiv2\n"
+"Report-Msgid-Bugs-To: ahuggel@gmx.net\n"
+"POT-Creation-Date: 2010-04-23 08:17+0200\n"
+"PO-Revision-Date: 2009-04-12 16:06+0000\n"
+"Last-Translator: Mikael Lammentausta\n"
+"Language-Team:  <fi@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 0.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/exiv2.cpp:237
+msgid ""
+"\n"
+"Actions:\n"
+msgstr ""
+
+#: src/exiv2.cpp:255
+msgid ""
+"\n"
+"Options:\n"
+msgstr ""
+
+#: src/exiv2.cpp:318
+msgid "             :basename:   - original filename without extension\n"
+msgstr ""
+
+#: src/exiv2.cpp:319
+msgid ""
+"             :dirname:    - name of the directory holding the original file\n"
+msgstr ""
+
+#: src/exiv2.cpp:320
+msgid "             :parentname: - name of parent directory\n"
+msgstr ""
+
+#: src/exiv2.cpp:285
+msgid "             E : include Exif tags in the list\n"
+msgstr ""
+
+#: src/exiv2.cpp:286
+msgid "             I : IPTC datasets\n"
+msgstr ""
+
+#: src/exiv2.cpp:287
+msgid "             X : XMP properties\n"
+msgstr ""
+
+#: src/exiv2.cpp:300
+msgid "             a : all supported metadata (the default)\n"
+msgstr ""
+
+#: src/exiv2.cpp:276
+msgid ""
+"             a : print Exif, IPTC and XMP metadata (shortcut for -Pkyct)\n"
+msgstr ""
+
+#: src/exiv2.cpp:282 src/exiv2.cpp:305
+msgid "             c : JPEG comment\n"
+msgstr ""
+
+#: src/exiv2.cpp:294
+msgid "             c : number of components (count)\n"
+msgstr ""
+
+#: src/exiv2.cpp:301
+msgid "             e : Exif section\n"
+msgstr ""
+
+#: src/exiv2.cpp:289
+msgid "             g : group name\n"
+msgstr ""
+
+#: src/exiv2.cpp:279
+msgid "             h : hexdump of the Exif data (-PExgnycsh)\n"
+msgstr ""
+
+#: src/exiv2.cpp:298
+msgid "             h : hexdump of the data\n"
+msgstr ""
+
+#: src/exiv2.cpp:303
+msgid "             i : IPTC data\n"
+msgstr ""
+
+#: src/exiv2.cpp:280
+msgid "             i : IPTC data values (-PIkyct)\n"
+msgstr ""
+
+#: src/exiv2.cpp:290
+msgid "             k : key\n"
+msgstr ""
+
+#: src/exiv2.cpp:291
+msgid "             l : tag label\n"
+msgstr ""
+
+#: src/exiv2.cpp:292
+msgid "             n : tag name\n"
+msgstr ""
+
+#: src/exiv2.cpp:283
+msgid "             p : list available previews\n"
+msgstr ""
+
+#: src/exiv2.cpp:275
+msgid "             s : print a summary of the Exif metadata (the default)\n"
+msgstr ""
+
+#: src/exiv2.cpp:295
+msgid "             s : size in bytes\n"
+msgstr ""
+
+#: src/exiv2.cpp:302
+msgid "             t : Exif thumbnail only\n"
+msgstr ""
+
+#: src/exiv2.cpp:277
+msgid "             t : interpreted (translated) Exif data (-PEkyct)\n"
+msgstr ""
+
+#: src/exiv2.cpp:297
+msgid "             t : interpreted (translated) data\n"
+msgstr ""
+
+#: src/exiv2.cpp:278
+msgid "             v : plain Exif data values (-PExgnycv)\n"
+msgstr ""
+
+#: src/exiv2.cpp:296
+msgid "             v : plain data value\n"
+msgstr ""
+
+#: src/exiv2.cpp:304
+msgid "             x : XMP packet\n"
+msgstr ""
+
+#: src/exiv2.cpp:281
+msgid "             x : XMP properties (-PXkyct)\n"
+msgstr ""
+
+#: src/exiv2.cpp:288
+msgid "             x : print a column with the tag number\n"
+msgstr ""
+
+#: src/exiv2.cpp:293
+msgid "             y : type\n"
+msgstr ""
+
+#: src/exiv2.cpp:321
+msgid "           Default filename format is "
+msgstr ""
+
+#: src/exiv2.cpp:273
+msgid "   -D day  Day adjustment with the 'adjust' action.\n"
+msgstr ""
+
+#: src/exiv2.cpp:268
+msgid "   -F      Do not prompt before renaming files (Force).\n"
+msgstr ""
+
+#: src/exiv2.cpp:326
+msgid ""
+"   -M cmd  Command line for the modify action. The format for the\n"
+"           commands is the same as that of the lines of a command file.\n"
+msgstr ""
+
+#: src/exiv2.cpp:272
+msgid "   -O mon  Month adjustment with the 'adjust' action.\n"
+msgstr ""
+
+#: src/exiv2.cpp:284
+msgid ""
+"   -P flgs Print flags for fine control of tag lists ('print' action):\n"
+msgstr ""
+
+#: src/exiv2.cpp:329
+msgid ""
+"   -S .suf Use suffix .suf for source files for insert command.\n"
+"\n"
+msgstr ""
+
+#: src/exiv2.cpp:265
+msgid ""
+"   -T      Only set the file timestamp in 'rename' action, do not rename\n"
+"           the file (overrides -k).\n"
+msgstr ""
+
+#: src/exiv2.cpp:257
+msgid "   -V      Show the program version and exit.\n"
+msgstr ""
+
+#: src/exiv2.cpp:271
+msgid "   -Y yrs  Year adjustment with the 'adjust' action.\n"
+msgstr ""
+
+#: src/exiv2.cpp:269
+msgid ""
+"   -a time Time adjustment in the format [-]HH[:MM[:SS]]. This option\n"
+"           is only used with the 'adjust' action.\n"
+msgstr ""
+
+#: src/exiv2.cpp:259
+msgid "   -b      Show large binary values.\n"
+msgstr ""
+
+#: src/exiv2.cpp:323
+msgid "   -c txt  JPEG comment string to set in the image.\n"
+msgstr ""
+
+#: src/exiv2.cpp:299
+msgid ""
+"   -d tgt  Delete target(s) for the 'delete' action. Possible targets are:\n"
+msgstr ""
+
+#: src/exiv2.cpp:311
+msgid ""
+"   -e tgt  Extract target(s) for the 'extract' action. Possible targets\n"
+"           are the same as those for the -d option, plus a target to "
+"extract\n"
+"           preview images and a modifier to generate an XMP sidecar file:\n"
+"             p[<n>[,<m> ...]] : Extract preview images.\n"
+"             X : Extract metadata to an XMP sidecar file <file>.xmp\n"
+msgstr ""
+
+#: src/exiv2.cpp:267
+msgid "   -f      Do not prompt before overwriting existing files (force).\n"
+msgstr ""
+
+#: src/exiv2.cpp:261
+msgid "   -g key  Only output info for this key (grep).\n"
+msgstr ""
+
+#: src/exiv2.cpp:256
+msgid "   -h      Display this help and exit.\n"
+msgstr ""
+
+#: src/exiv2.cpp:306
+msgid ""
+"   -i tgt  Insert target(s) for the 'insert' action. Possible targets are\n"
+"           the same as those for the -d option, plus a modifier:\n"
+"             X : Insert metadata from an XMP sidecar file <file>.xmp\n"
+"           Only JPEG thumbnails can be inserted, they need to be named\n"
+"           <file>-thumb.jpg\n"
+msgstr ""
+
+#: src/exiv2.cpp:263
+msgid "   -k      Preserve file timestamps (keep).\n"
+msgstr ""
+
+#: src/exiv2.cpp:328
+msgid ""
+"   -l dir  Location (directory) for files to be inserted from or extracted "
+"to.\n"
+msgstr ""
+
+#: src/exiv2.cpp:324
+msgid ""
+"   -m file Command file for the modify action. The format for commands is\n"
+"           set|add|del <key> [[<type>] <value>].\n"
+msgstr ""
+
+#: src/exiv2.cpp:262
+msgid "   -n enc  Charset to use to decode UNICODE Exif user comments.\n"
+msgstr ""
+
+#: src/exiv2.cpp:274
+msgid "   -p mode Print mode for the 'print' action. Possible modes are:\n"
+msgstr ""
+
+#: src/exiv2.cpp:316
+msgid ""
+"   -r fmt  Filename format for the 'rename' action. The format string\n"
+"           follows strftime(3). The following keywords are supported:\n"
+msgstr ""
+
+#: src/exiv2.cpp:264
+msgid ""
+"   -t      Also set the file timestamp in 'rename' action (overrides -k).\n"
+msgstr ""
+
+#: src/exiv2.cpp:260
+msgid "   -u      Show unknown tags.\n"
+msgstr ""
+
+#: src/exiv2.cpp:258
+msgid "   -v      Be verbose during the program run.\n"
+msgstr ""
+
+#: src/exiv2.cpp:238
+msgid ""
+"  ad | adjust   Adjust Exif timestamps by the given time. This action\n"
+"                requires at least one of the -a, -Y, -O or -D options.\n"
+msgstr ""
+
+#: src/exiv2.cpp:244
+msgid ""
+"  ex | extract  Extract metadata to *.exv, *.xmp and thumbnail image files.\n"
+msgstr ""
+
+#: src/exiv2.cpp:253
+msgid ""
+"  fc | fixcom   Convert the UNICODE Exif user comment to UCS-2. Its current\n"
+"                character encoding can be specified with the -n option.\n"
+msgstr ""
+
+#: src/exiv2.cpp:251
+msgid ""
+"  fi | fixiso   Copy ISO setting from the Nikon Makernote to the regular\n"
+"                Exif tag.\n"
+msgstr ""
+
+#: src/exiv2.cpp:242
+msgid ""
+"  in | insert   Insert metadata from corresponding *.exv files.\n"
+"                Use option -S to change the suffix of the input files.\n"
+msgstr ""
+
+#: src/exiv2.cpp:248
+msgid ""
+"  mo | modify   Apply commands to modify (add, set, delete) the Exif and\n"
+"                IPTC metadata of image files or set the JPEG comment.\n"
+"                Requires option -c, -m or -M.\n"
+msgstr ""
+
+#: src/exiv2.cpp:245
+msgid ""
+"  mv | rename   Rename files and/or set file timestamps according to the\n"
+"                Exif create timestamp. The filename format can be set with\n"
+"                -r format, timestamp options are controlled with -t and -T.\n"
+msgstr ""
+
+#: src/exiv2.cpp:240
+msgid "  pr | print    Print image metadata.\n"
+msgstr ""
+
+#: src/exiv2.cpp:241
+msgid "  rm | delete   Delete image metadata from the files.\n"
+msgstr ""
+
+#: src/panasonicmn.cpp:320
+msgid " EV"
+msgstr ""
+
+#: src/actions.cpp:690 src/actions.cpp:715 src/actions.cpp:736
+msgid "(Binary value suppressed)"
+msgstr ""
+
+#: src/exiv2.cpp:1003
+msgid "-M option"
+msgstr ""
+
+#: src/exiv2.cpp:818
+msgid "-S option can only be used with insert action\n"
+msgstr ""
+
+#: src/exiv2.cpp:828
+msgid "-T option can only be used with rename action\n"
+msgstr ""
+
+#: src/exiv2.cpp:813
+msgid "-l option can only be used with extract or insert actions\n"
+msgstr ""
+
+#: src/exiv2.cpp:823
+msgid "-t option can only be used with rename action\n"
+msgstr ""
+
+#: src/panasonicmn.cpp:303
+msgid "1-area"
+msgstr ""
+
+#: src/panasonicmn.cpp:304
+msgid "1-area (high speed)"
+msgstr ""
+
+#: src/panasonicmn.cpp:305
+msgid "3-area (auto)"
+msgstr ""
+
+#: src/panasonicmn.cpp:307
+msgid "3-area (center)"
+msgstr ""
+
+#: src/panasonicmn.cpp:306
+msgid "3-area (left)"
+msgstr ""
+
+#: src/panasonicmn.cpp:308
+msgid "3-area (right)"
+msgstr ""
+
+#: src/olympusmn.cpp:1124
+msgid "3000 Kelvin"
+msgstr ""
+
+#: src/actions.cpp:342
+msgid "35 mm equivalent"
+msgstr ""
+
+#: src/olympusmn.cpp:1125
+msgid "3700 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:1126
+msgid "4000 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:1127
+msgid "4500 Kelvin"
+msgstr ""
+
+#: src/panasonicmn.cpp:302
+msgid "5-area"
+msgstr ""
+
+#: src/olympusmn.cpp:1128
+msgid "5500 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:1129
+msgid "6500 Kelvin"
+msgstr ""
+
+#: src/olympusmn.cpp:1130
+msgid "7500 Kelvin"
+msgstr ""
+
+#: src/sigmamn.cpp:167
+msgid "8-Segment"
+msgstr ""
+
+#: src/exiv2.cpp:674
+msgid "Action adjust is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:692
+msgid "Action delete is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:703
+msgid "Action extract is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:750
+msgid "Action fixcom is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:741
+msgid "Action fixiso is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:714
+msgid "Action insert is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:732
+msgid "Action modify is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:683
+msgid "Action print is not compatible with the given options\n"
+msgstr ""
+
+#: src/exiv2.cpp:723
+msgid "Action rename is not compatible with the given options\n"
+msgstr ""
+
+#: src/actions.cpp:1334
+msgid "Add"
+msgstr "Lisää"
+
+#: src/exiv2.cpp:783
+msgid "Adjust action requires at least one -a, -Y, -O or -D option\n"
+msgstr ""
+
+#: src/actions.cpp:1564
+msgid "Adjusting"
+msgstr ""
+
+#: src/nikonmn.cpp:1359
+#, fuzzy
+msgid "All 11 Points"
+msgstr "AF-piste"
+
+#: src/exiv2.cpp:774
+msgid "An action must be specified\n"
+msgstr ""
+
+#: src/actions.cpp:316
+msgid "Aperture"
+msgstr "Aukko"
+
+#: src/sigmamn.cpp:152
+msgid "Aperture priority"
+msgstr ""
+
+#: src/exiv2.cpp:793
+msgid "At least one file is required\n"
+msgstr ""
+
+#: src/olympusmn.cpp:1112 src/olympusmn.cpp:1118 src/olympusmn.cpp:1119
+msgid "Auto"
+msgstr ""
+
+#: src/olympusmn.cpp:1031
+msgid "Auto-Override"
+msgstr ""
+
+#: src/sigmamn.cpp:165
+msgid "Average"
+msgstr ""
+
+#: src/olympusmn.cpp:1082
+msgid "Bottom to top"
+msgstr ""
+
+#: src/actions.cpp:271 src/actions.cpp:423 src/actions.cpp:1071
+msgid "Bytes"
+msgstr "tavua"
+
+#: src/actions.cpp:289
+msgid "Camera make"
+msgstr "Kameran merkki"
+
+#: src/actions.cpp:292
+msgid "Camera model"
+msgstr "Kameran malli"
+
+#: src/actions.cpp:1615
+msgid "Can't adjust timestamp by"
+msgstr ""
+
+#: src/sigmamn.cpp:166
+msgid "Center"
+msgstr ""
+
+#: src/nikonmn.cpp:1299
+msgid "Closest subject"
+msgstr ""
+
+#: src/nikonmn.cpp:279 src/nikonmn.cpp:1154
+msgid "Continuous autofocus"
+msgstr ""
+
+#: src/pentaxmn.cpp:770
+msgid "Contrast"
+msgstr "Kontrasti"
+
+#: src/actions.cpp:429
+msgid "Copyright"
+msgstr "Omistusoikeus"
+
+#: src/exiv2.cpp:209
+msgid "Copyright (C) 2004-2010 Andreas Huggel.\n"
+msgstr ""
+
+#: src/actions.cpp:1934
+msgid "Could not write metadata to file"
+msgstr ""
+
+#: src/actions.cpp:1442
+msgid "Del"
+msgstr "Poista"
+
+#: src/tags.cpp:2752 src/tags.cpp:2753 src/tags.cpp:2761
+msgid "Digital zoom not used"
+msgstr ""
+
+#: src/nikonmn.cpp:1298
+msgid "Dynamic area"
+msgstr ""
+
+#: src/nikonmn.cpp:1302
+msgid "Dynamic area (wide)"
+msgstr ""
+
+#: src/actions.cpp:962
+msgid "Erasing Exif data from the file"
+msgstr "Poistetaan exif-tiedot"
+
+#: src/actions.cpp:971
+msgid "Erasing IPTC data from the file"
+msgstr "Poistetaan iptc-tiedot"
+
+#: src/actions.cpp:980
+msgid "Erasing JPEG comment from the file"
+msgstr "Poistetaan jpef-kommentti"
+
+#: src/actions.cpp:989
+msgid "Erasing XMP data from the file"
+msgstr "Poistetaan xmp-tiedot"
+
+#: src/actions.cpp:954
+msgid "Erasing thumbnail data"
+msgstr "Poistetaan näytekuva"
+
+#: src/exiv2.cpp:461
+msgid "Error parsing"
+msgstr ""
+
+#: src/exiv2.cpp:806
+msgid "Error parsing -M option arguments\n"
+msgstr ""
+
+#: src/exiv2.cpp:432
+msgid "Error parsing -a option argument"
+msgstr ""
+
+#: src/exiv2.cpp:799
+msgid "Error parsing -m option arguments\n"
+msgstr ""
+
+#: src/actions.cpp:378
+msgid "Exif Resolution"
+msgstr ""
+
+#: src/actions.cpp:432
+msgid "Exif comment"
+msgstr "Exif-kommentti"
+
+#: src/actions.cpp:1077
+msgid "Exif data doesn't contain a thumbnail\n"
+msgstr ""
+
+#: src/actions.cpp:326
+msgid "Exposure bias"
+msgstr "Valotuksen korjaus"
+
+#: src/actions.cpp:366
+msgid "Exposure mode"
+msgstr "Valotustila"
+
+#: src/actions.cpp:304
+msgid "Exposure time"
+msgstr "Valotusaika"
+
+#: src/exiv2.cpp:967
+msgid "Failed to open command file for reading\n"
+msgstr ""
+
+#: src/actions.cpp:254 src/actions.cpp:488 src/actions.cpp:750
+#: src/actions.cpp:767 src/actions.cpp:812 src/actions.cpp:902
+#: src/actions.cpp:1045 src/actions.cpp:1087 src/actions.cpp:1156
+#: src/actions.cpp:1198 src/actions.cpp:1203 src/actions.cpp:1223
+#: src/actions.cpp:1228 src/actions.cpp:1260 src/actions.cpp:1503
+#: src/actions.cpp:1639 src/actions.cpp:1704 src/actions.cpp:1876
+msgid "Failed to open the file\n"
+msgstr "Tiedoston avaus epäonnistui\n"
+
+#: src/actions.cpp:848 src/actions.cpp:1605
+msgid "Failed to parse timestamp"
+msgstr "Aikaleiman lukeminen epäonnistui"
+
+#: src/actions.cpp:1357 src/actions.cpp:1431
+msgid "Failed to read"
+msgstr "Lukuvirhe"
+
+#: src/actions.cpp:2033
+msgid "Failed to rename"
+msgstr ""
+
+#: src/olympusmn.cpp:1067
+msgid "Fast"
+msgstr ""
+
+#: src/actions.cpp:1993 src/exiv2.cpp:168
+msgid "File"
+msgstr ""
+
+#: src/actions.cpp:264
+msgid "File name"
+msgstr "Tiedostonimi"
+
+#: src/actions.cpp:270
+msgid "File size"
+msgstr "Tiedoston koko"
+
+#: src/actions.cpp:1960
+msgid "Filename format yields empty filename for the file"
+msgstr ""
+
+#: src/actions.cpp:329
+msgid "Flash"
+msgstr "Salama"
+
+#: src/actions.cpp:332
+msgid "Flash bias"
+msgstr "Salamavalotuksen korjaus"
+
+#: src/actions.cpp:337
+msgid "Focal length"
+msgstr "Polttoväli"
+
+#: src/actions.cpp:1731
+msgid "Found Exif user comment with unexpected value type"
+msgstr ""
+
+#: src/nikonmn.cpp:1300
+msgid "Group dynamic-AF"
+msgstr ""
+
+#: src/crwimage.cpp:663
+msgid "Header, offset"
+msgstr ""
+
+#: src/olympusmn.cpp:1052
+msgid "High"
+msgstr ""
+
+#: src/olympusmn.cpp:1025
+msgid "High Key"
+msgstr ""
+
+#: src/actions.cpp:363
+msgid "ISO speed"
+msgstr "ISO-herkkyys"
+
+#: src/exiv2.cpp:401 src/exiv2.cpp:454
+msgid "Ignoring surplus option"
+msgstr ""
+
+#: src/exiv2.cpp:546
+msgid "Ignoring surplus option -P"
+msgstr ""
+
+#: src/exiv2.cpp:426
+msgid "Ignoring surplus option -a"
+msgstr ""
+
+#: src/exiv2.cpp:502
+msgid "Ignoring surplus option -p"
+msgstr ""
+
+#: src/actions.cpp:1061
+msgid "Image does not contain an Exif thumbnail\n"
+msgstr ""
+
+#: src/actions.cpp:1107 src/actions.cpp:1133
+msgid "Image does not have preview"
+msgstr ""
+
+#: src/actions.cpp:842
+msgid "Image file creation timestamp not set in the file"
+msgstr "Kuvan luontipäiväystä ei ole asetettu"
+
+#: src/actions.cpp:299
+msgid "Image number"
+msgstr "Kuvan numero"
+
+#: src/actions.cpp:375
+msgid "Image quality"
+msgstr "Kuvan laatu"
+
+#: src/actions.cpp:279
+msgid "Image size"
+msgstr "Kuvan koko"
+
+#: src/actions.cpp:295
+msgid "Image timestamp"
+msgstr "Kuvan aikaleima"
+
+#: src/tags.cpp:2658 src/tags.cpp:2659 src/tags.cpp:2667
+msgid "Infinity"
+msgstr ""
+
+#: src/exiv2.cpp:1031
+msgid "Invalid command"
+msgstr ""
+
+#: src/exiv2.cpp:1024 src/exiv2.cpp:1083 src/exiv2.cpp:1093
+msgid "Invalid command line"
+msgstr ""
+
+#: src/actions.cpp:561 src/exiv2.cpp:1064
+msgid "Invalid key"
+msgstr ""
+
+#: src/exiv2.cpp:935
+msgid "Invalid preview number"
+msgstr ""
+
+#: src/actions.cpp:757
+msgid "JPEG comment"
+msgstr "Jpeg-kommentti"
+
+#: src/olympusmn.cpp:1080
+msgid "Left to right"
+msgstr ""
+
+#: src/olympusmn.cpp:1050
+msgid "Low"
+msgstr ""
+
+#: src/olympusmn.cpp:1023
+msgid "Low Key"
+msgstr ""
+
+#: src/actions.cpp:275
+msgid "MIME type"
+msgstr "Mime-tyyppi"
+
+#: src/actions.cpp:372
+msgid "Macro mode"
+msgstr "Makrotila"
+
+#: src/exiv2.cpp:231
+msgid "Manipulate the Exif metadata of images.\n"
+msgstr ""
+
+#: src/sigmamn.cpp:154
+msgid "Manual"
+msgstr "Manuaalinen"
+
+#: src/actions.cpp:369
+msgid "Metering mode"
+msgstr "Mittaustapa"
+
+#: src/exiv2.cpp:789
+msgid "Modify action requires at least one -c, -m or -M option\n"
+msgstr ""
+
+#: src/actions.cpp:835
+msgid "Neither tag"
+msgstr ""
+
+#: src/actions.cpp:1738
+msgid "No Exif UNICODE user comment found"
+msgstr ""
+
+#: src/actions.cpp:284 src/actions.cpp:526 src/actions.cpp:577
+#: src/actions.cpp:825 src/actions.cpp:1054 src/actions.cpp:1516
+#: src/actions.cpp:1652 src/actions.cpp:1717
+msgid "No Exif data found in the file\n"
+msgstr "Kuvasta ei löytynyt exif-tietoja\n"
+
+#: src/actions.cpp:1723
+#, fuzzy
+msgid "No Exif user comment found"
+msgstr "Exif-kommentti"
+
+#: src/actions.cpp:540 src/actions.cpp:590
+msgid "No IPTC data found in the file\n"
+msgstr "Kuvasta ei löytynyt iptc-tietoja\n"
+
+#: src/actions.cpp:554 src/actions.cpp:603
+msgid "No XMP data found in the file\n"
+msgstr "Kuvasta ei löytynyt xmp-tietoja\n"
+
+#: src/pentaxmn.cpp:752
+msgid "No extended bracketing"
+msgstr ""
+
+#: src/actions.cpp:414 src/actions.cpp:419 src/olympusmn.cpp:1097
+msgid "None"
+msgstr "Ei käytössä"
+
+#: src/olympusmn.cpp:1024 src/olympusmn.cpp:1066
+msgid "Normal"
+msgstr "Normaali"
+
+#: src/nikonmn.cpp:313 src/nikonmn.cpp:494 src/nikonmn.cpp:1254
+msgid "Not used"
+msgstr ""
+
+#: src/olympusmn.cpp:1049
+msgid "Off"
+msgstr "Pois"
+
+#: src/olympusmn.cpp:1136
+msgid "One-touch"
+msgstr ""
+
+#: src/exiv2.cpp:364 src/exiv2.cpp:410 src/exiv2.cpp:469 src/exiv2.cpp:656
+msgid "Option"
+msgstr ""
+
+#: src/exiv2.cpp:550
+msgid "Option -P is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:439
+msgid "Option -a is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:577
+msgid "Option -d is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:605
+msgid "Option -e is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:633
+msgid "Option -i is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:506
+msgid "Option -p is not compatible with a previous option\n"
+msgstr ""
+
+#: src/actions.cpp:2055
+msgid "Overwrite"
+msgstr ""
+
+#: src/olympusmn.cpp:1068
+msgid "Panorama"
+msgstr "Panoraama"
+
+#: src/actions.cpp:782
+msgid "Preview"
+msgstr "Esikatselu"
+
+#: src/sigmamn.cpp:151
+msgid "Program"
+msgstr "Ohjelma"
+
+#: src/actions.cpp:1474
+msgid "Reg "
+msgstr ""
+
+#: src/actions.cpp:2022
+msgid "Renaming file to"
+msgstr ""
+
+#: src/olympusmn.cpp:1081
+msgid "Right to left"
+msgstr ""
+
+#: src/pentaxmn.cpp:764
+msgid "Saturation"
+msgstr "Värikylläisyys"
+
+#: src/olympusmn.cpp:1074
+msgid "Sequence number"
+msgstr ""
+
+#: src/actions.cpp:1370
+msgid "Set"
+msgstr "Aseta"
+
+#: src/actions.cpp:1667
+msgid "Setting Exif ISO value to"
+msgstr ""
+
+#: src/actions.cpp:1744
+#, fuzzy
+msgid "Setting Exif UNICODE user comment to"
+msgstr "Talletetaan jpeg-kommenttia"
+
+#: src/actions.cpp:1293
+msgid "Setting JPEG comment"
+msgstr "Talletetaan jpeg-kommenttia"
+
+#: src/pentaxmn.cpp:767
+msgid "Sharpness"
+msgstr "Terävyys"
+
+#: src/sigmamn.cpp:153
+msgid "Shutter priority"
+msgstr ""
+
+#: src/nikonmn.cpp:1297
+msgid "Single area"
+msgstr ""
+
+#: src/nikonmn.cpp:1301
+msgid "Single area (wide)"
+msgstr ""
+
+#: src/nikonmn.cpp:280 src/nikonmn.cpp:1155
+msgid "Single autofocus"
+msgstr ""
+
+#: src/nikonmn.cpp:1374 src/nikonmn.cpp:1375
+msgid "Single-frame"
+msgstr ""
+
+#: src/panasonicmn.cpp:301
+msgid "Spot focussing"
+msgstr ""
+
+#: src/panasonicmn.cpp:300
+msgid "Spot mode off or 3-area (high speed)"
+msgstr ""
+
+#: src/panasonicmn.cpp:299
+msgid "Spot mode on"
+msgstr ""
+
+#: src/olympusmn.cpp:1051
+msgid "Standard"
+msgstr ""
+
+#: src/actions.cpp:1659
+msgid "Standard Exif ISO tag exists; not modified\n"
+msgstr ""
+
+#: src/actions.cpp:352
+msgid "Subject distance"
+msgstr "Kohteen etäisyys"
+
+#: src/tiffimage.cpp:1618 src/tiffimage.cpp:1639 src/tiffimage.cpp:1743
+msgid "TIFF header, offset"
+msgstr ""
+
+#: src/actions.cpp:1969
+msgid "This file already has the correct name"
+msgstr ""
+
+#: src/exiv2.cpp:216
+msgid ""
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+msgstr ""
+
+#: src/exiv2.cpp:211
+msgid ""
+"This program is free software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License\n"
+"as published by the Free Software Foundation; either version 2\n"
+"of the License, or (at your option) any later version.\n"
+msgstr ""
+
+#: src/actions.cpp:410
+msgid "Thumbnail"
+msgstr "Näytekuva"
+
+#: src/actions.cpp:1558
+msgid "Timestamp of metadatum with key"
+msgstr ""
+
+#: src/olympusmn.cpp:1083
+msgid "Top to bottom"
+msgstr ""
+
+#: src/nikonmn.cpp:291 src/nikonmn.cpp:1232 src/nikonmn.cpp:2111
+#: src/tags.cpp:2655 src/tags.cpp:2768 src/tags.cpp:2656 src/tags.cpp:2769
+#: src/tags.cpp:2664 src/tags.cpp:2777
+msgid "Unknown"
+msgstr "Tuntematon"
+
+#: src/pentaxmn.cpp:773
+msgid "Unknown "
+msgstr ""
+
+#: src/exiv2.cpp:908
+msgid "Unrecognized "
+msgstr ""
+
+#: src/exiv2.cpp:369
+msgid "Unrecognized option"
+msgstr ""
+
+#: src/exiv2.cpp:537
+msgid "Unrecognized print item"
+msgstr ""
+
+#: src/exiv2.cpp:494
+msgid "Unrecognized print mode"
+msgstr ""
+
+#: src/actions.cpp:860
+msgid "Updating timestamp to"
+msgstr "Päivitetään aikaleima:"
+
+#: src/exiv2.cpp:229
+msgid "Usage:"
+msgstr ""
+
+#: src/olympusmn.cpp:1030
+msgid "User-Selected"
+msgstr ""
+
+#: src/pentaxmn.cpp:758
+msgid "WB-BA"
+msgstr ""
+
+#: src/pentaxmn.cpp:761
+msgid "WB-GM"
+msgstr ""
+
+#: src/actions.cpp:1356 src/actions.cpp:1430
+msgid "Warning"
+msgstr "Varoitus"
+
+#: src/actions.cpp:407
+msgid "White balance"
+msgstr "Valkotasapaino"
+
+#: src/actions.cpp:1899
+msgid "Writing Exif data from"
+msgstr ""
+
+#: src/actions.cpp:1907
+msgid "Writing IPTC data from"
+msgstr ""
+
+#: src/actions.cpp:1924
+msgid "Writing JPEG comment from"
+msgstr ""
+
+#: src/actions.cpp:1915
+msgid "Writing XMP data from"
+msgstr ""
+
+#: src/actions.cpp:1122
+msgid "Writing preview"
+msgstr ""
+
+#: src/actions.cpp:1070
+msgid "Writing thumbnail"
+msgstr "Tallennetaan näytekuvaa"
+
+#: src/exiv2.cpp:221
+msgid ""
+"You should have received a copy of the GNU General Public\n"
+"License along with this program; if not, write to the Free\n"
+"Software Foundation, Inc., 51 Franklin Street, Fifth Floor,\n"
+"Boston, MA 02110-1301 USA\n"
+msgstr ""
+
+#: src/exiv2.cpp:230
+msgid ""
+"[ options ] [ action ] file ...\n"
+"\n"
+msgstr ""
+
+#: src/tiffimage.cpp:1624 src/tiffimage.cpp:1645 src/tiffimage.cpp:1749
+msgid "big endian encoded"
+msgstr ""
+
+#: src/actions.cpp:1564
+msgid "by"
+msgstr ""
+
+#: src/actions.cpp:788 src/actions.cpp:1128
+msgid "bytes"
+msgstr "tavua"
+
+#: src/actions.cpp:1593
+msgid "day"
+msgstr "päivä"
+
+#: src/actions.cpp:1590
+msgid "days"
+msgstr "päivää"
+
+#: src/crwimage.cpp:682
+msgid "dir"
+msgstr ""
+
+#: src/actions.cpp:1994
+msgid "exists. [O]verwrite, [r]ename or [s]kip?"
+msgstr ""
+
+#: src/actions.cpp:837
+msgid "found in the file"
+msgstr ""
+
+#: src/exiv2.cpp:375
+msgid "getopt returned unexpected character code"
+msgstr ""
+
+#: src/nikonmn.cpp:353
+msgid "guess"
+msgstr ""
+
+#: src/actions.cpp:849
+msgid "in the file"
+msgstr "tiedostossa"
+
+#: src/exiv2.cpp:411 src/exiv2.cpp:471 src/exiv2.cpp:657
+msgid "is not compatible with a previous option\n"
+msgstr ""
+
+#: src/exiv2.cpp:980
+msgid "line"
+msgstr ""
+
+#: src/tiffimage.cpp:1623 src/tiffimage.cpp:1644 src/tiffimage.cpp:1748
+msgid "little endian encoded"
+msgstr ""
+
+#: src/actions.cpp:1582
+msgid "month"
+msgstr "kuukausi"
+
+#: src/actions.cpp:1579
+msgid "months"
+msgstr "kuukautta"
+
+#: src/nikonmn.cpp:1323
+msgid "none"
+msgstr ""
+
+#: src/actions.cpp:836
+msgid "nor"
+msgstr ""
+
+#: src/actions.cpp:1559
+msgid "not set\n"
+msgstr ""
+
+#: src/crwimage.cpp:686
+msgid "offset"
+msgstr ""
+
+#: src/exiv2.cpp:463
+msgid "option argument"
+msgstr ""
+
+#: src/actions.cpp:786 src/actions.cpp:1126
+msgid "pixels"
+msgstr "pikseliä"
+
+#: src/exiv2.cpp:365
+msgid "requires an argument\n"
+msgstr ""
+
+#: src/actions.cpp:1599
+msgid "s"
+msgstr ""
+
+#: src/crwimage.cpp:685
+msgid "size"
+msgstr ""
+
+#: src/crwimage.cpp:680
+msgid "tag"
+msgstr ""
+
+#: src/exiv2.cpp:909
+msgid "target"
+msgstr ""
+
+#: src/actions.cpp:1624 src/actions.cpp:1900 src/actions.cpp:1908
+#: src/actions.cpp:1916 src/actions.cpp:1925 src/actions.cpp:2034
+msgid "to"
+msgstr ""
+
+#: src/actions.cpp:1071 src/actions.cpp:1129
+msgid "to file"
+msgstr "tiedostoon"
+
+#: src/crwimage.cpp:684
+msgid "type"
+msgstr ""
+
+#: src/actions.cpp:2024
+msgid "updating timestamp"
+msgstr ""
+
+#: src/nikonmn.cpp:1333
+msgid "used"
+msgstr ""
+
+#: src/actions.cpp:1359 src/actions.cpp:1433
+msgid "value"
+msgstr "arvo"
+
+#: src/actions.cpp:1571
+msgid "year"
+msgstr "vuosi"
+
+#: src/actions.cpp:1568 src/actions.cpp:1617
+msgid "years"
+msgstr "vuotta"
+
+#~ msgid "PowerShot A30"
+#~ msgstr "PowerShot A30"
+
+#~ msgid "PowerShot S300 / Digital IXUS 300 / IXY Digital 300"
+#~ msgstr "PowerShot S300 / Digital IXUS 300 / IXY Digital 300"
+
+#~ msgid "PowerShot A20"
+#~ msgstr "PowerShot A20"
+
+#~ msgid "PowerShot A10"
+#~ msgstr "PowerShot A10"
+
+#~ msgid "PowerShot S110 / Digital IXUS v / IXY Digital 200"
+#~ msgstr "PowerShot S110 / Digital IXUS v / IXY Digital 200"
+
+#~ msgid "PowerShot G2"
+#~ msgstr "PowerShot G2"
+
+#~ msgid "PowerShot S40"
+#~ msgstr "PowerShot S40"
+
+#~ msgid "PowerShot S30"
+#~ msgstr "PowerShot S30"
+
+#~ msgid "PowerShot A40"
+#~ msgstr "PowerShot A40"
+
+#~ msgid "EOS D30"
+#~ msgstr "EOS D30"
+
+#~ msgid "PowerShot A100"
+#~ msgstr "PowerShot A100"
+
+#~ msgid "PowerShot S200 / Digital IXUS v2 / IXY Digital 200a"
+#~ msgstr "PowerShot S200 / Digital IXUS v2 / IXY Digital 200a"
+
+#~ msgid "PowerShot A200"
+#~ msgstr "PowerShot A200"
+
+#~ msgid "PowerShot S330 / Digital IXUS 330 / IXY Digital 300a"
+#~ msgstr "PowerShot S330 / Digital IXUS 330 / IXY Digital 300a"
+
+#~ msgid "PowerShot G3"
+#~ msgstr "PowerShot G3"
+
+#~ msgid "PowerShot S45"
+#~ msgstr "PowerShot S45"
+
+#~ msgid "PowerShot SD100 / Digital IXUS II / IXY Digital 30"
+#~ msgstr "PowerShot SD100 / Digital IXUS II / IXY Digital 30"
+
+#~ msgid "PowerShot S230 / Digital IXUS v3 / IXY Digital 320"
+#~ msgstr "PowerShot S230 / Digital IXUS v3 / IXY Digital 320"
+
+#~ msgid "PowerShot A70"
+#~ msgstr "PowerShot A70"
+
+#~ msgid "PowerShot A60"
+#~ msgstr "PowerShot A60"
+
+#~ msgid "PowerShot S400 / Digital IXUS 400 / IXY Digital 400"
+#~ msgstr "PowerShot S400 / Digital IXUS 400 / IXY Digital 400"
+
+#~ msgid "PowerShot G5"
+#~ msgstr "PowerShot G5"
+
+#~ msgid "PowerShot A300"
+#~ msgstr "PowerShot A300"
+
+#~ msgid "PowerShot S50"
+#~ msgstr "PowerShot S50"
+
+#~ msgid "PowerShot A80"
+#~ msgstr "PowerShot A80"
+
+#~ msgid "PowerShot SD10 / Digital IXUS i / IXY Digital L"
+#~ msgstr "PowerShot SD10 / Digital IXUS i / IXY Digital L"
+
+#~ msgid "PowerShot S1 IS"
+#~ msgstr "PowerShot S1 IS"
+
+#~ msgid "PowerShot Pro1"
+#~ msgstr "PowerShot Pro1"
+
+#~ msgid "PowerShot S70"
+#~ msgstr "PowerShot S70"
+
+#~ msgid "PowerShot S60"
+#~ msgstr "PowerShot S60"
+
+#~ msgid "PowerShot G6"
+#~ msgstr "PowerShot G6"
+
+#~ msgid "PowerShot S500 / Digital IXUS 500 / IXY Digital 500"
+#~ msgstr "PowerShot S500 / Digital IXUS 500 / IXY Digital 500"
+
+#~ msgid "PowerShot A75"
+#~ msgstr "PowerShot A75"
+
+#~ msgid "PowerShot SD110 / Digital IXUS IIs / IXY Digital 30a"
+#~ msgstr "PowerShot SD110 / Digital IXUS IIs / IXY Digital 30a"
+
+#~ msgid "PowerShot A400"
+#~ msgstr "PowerShot A400"
+
+#~ msgid "PowerShot A310"
+#~ msgstr "PowerShot A310"
+
+#~ msgid "PowerShot A85"
+#~ msgstr "PowerShot A85"
+
+#~ msgid "PowerShot S410 / Digital IXUS 430 / IXY Digital 450"
+#~ msgstr "PowerShot S410 / Digital IXUS 430 / IXY Digital 450"
+
+#~ msgid "PowerShot A95"
+#~ msgstr "PowerShot A95"
+
+#~ msgid "PowerShot SD300 / Digital IXUS 40 / IXY Digital 50"
+#~ msgstr "PowerShot SD300 / Digital IXUS 40 / IXY Digital 50"
+
+#~ msgid "PowerShot SD200 / Digital IXUS 30 / IXY Digital 40"
+#~ msgstr "PowerShot SD200 / Digital IXUS 30 / IXY Digital 40"
+
+#~ msgid "PowerShot A520"
+#~ msgstr "PowerShot A520"
+
+#~ msgid "PowerShot A510"
+#~ msgstr "PowerShot A510"
+
+#~ msgid "PowerShot SD20 / Digital IXUS i5 / IXY Digital L2"
+#~ msgstr "PowerShot SD20 / Digital IXUS i5 / IXY Digital L2"
+
+#~ msgid "PowerShot S2 IS"
+#~ msgstr "PowerShot S2 IS"
+
+#~ msgid "PowerShot SD430 / IXUS Wireless / IXY Wireless"
+#~ msgstr "PowerShot SD430 / IXUS Wireless / IXY Wireless"
+
+#~ msgid "PowerShot SD500 / Digital IXUS 700 / IXY Digital 600"
+#~ msgstr "PowerShot SD500 / Digital IXUS 700 / IXY Digital 600"
+
+#~ msgid "EOS D60"
+#~ msgstr "EOS D60"
+
+#~ msgid "PowerShot SD30 / Digital IXUS i zoom / IXY Digital L3"
+#~ msgstr "PowerShot SD30 / Digital IXUS i zoom / IXY Digital L3"
+
+#~ msgid "PowerShot A430"
+#~ msgstr "PowerShot A430"
+
+#~ msgid "PowerShot A410"
+#~ msgstr "PowerShot A410"
+
+#~ msgid "PowerShot S80"
+#~ msgstr "PowerShot S80"
+
+#~ msgid "PowerShot A620"
+#~ msgstr "PowerShot A620"
+
+#~ msgid "PowerShot A610"
+#~ msgstr "PowerShot A610"
+
+#~ msgid "PowerShot SD630 / Digital IXUS 65 / IXY Digital 80"
+#~ msgstr "PowerShot SD630 / Digital IXUS 65 / IXY Digital 80"
+
+#~ msgid "PowerShot SD450 / Digital IXUS 55 / IXY Digital 60"
+#~ msgstr "PowerShot SD450 / Digital IXUS 55 / IXY Digital 60"
+
+#~ msgid "PowerShot TX1"
+#~ msgstr "PowerShot TX1"
+
+#~ msgid "PowerShot SD400 / Digital IXUS 50 / IXY Digital 55"
+#~ msgstr "PowerShot SD400 / Digital IXUS 50 / IXY Digital 55"
+
+#~ msgid "PowerShot A420"
+#~ msgstr "PowerShot A420"
+
+#~ msgid "PowerShot SD900 / Digital IXUS 900 Ti / IXY Digital 1000"
+#~ msgstr "PowerShot SD900 / Digital IXUS 900 Ti / IXY Digital 1000"
+
+#~ msgid "PowerShot SD550 / Digital IXUS 750 / IXY Digital 700"
+#~ msgstr "PowerShot SD550 / Digital IXUS 750 / IXY Digital 700"
+
+#~ msgid "PowerShot A700"
+#~ msgstr "PowerShot A700"
+
+#~ msgid "PowerShot SD700 IS / Digital IXUS 800 IS / IXY Digital 800 IS"
+#~ msgstr "PowerShot SD700 IS / Digital IXUS 800 IS / IXY Digital 800 IS"
+
+#~ msgid "PowerShot S3 IS"
+#~ msgstr "PowerShot S3 IS"
+
+#~ msgid "PowerShot A540"
+#~ msgstr "PowerShot A540"
+
+#~ msgid "PowerShot SD600 / Digital IXUS 60 / IXY Digital 70"
+#~ msgstr "PowerShot SD600 / Digital IXUS 60 / IXY Digital 70"
+
+#~ msgid "PowerShot G7"
+#~ msgstr "PowerShot G7"
+
+#~ msgid "PowerShot A530"
+#~ msgstr "PowerShot A530"
+
+#~ msgid "PowerShot SD800 IS / Digital IXUS 850 IS / IXY Digital 900 IS"
+#~ msgstr "PowerShot SD800 IS / Digital IXUS 850 IS / IXY Digital 900 IS"
+
+#~ msgid "PowerShot SD40 / Digital IXUS i7 / IXY Digital L4"
+#~ msgstr "PowerShot SD40 / Digital IXUS i7 / IXY Digital L4"
+
+#~ msgid "PowerShot A710 IS"
+#~ msgstr "PowerShot A710 IS"
+
+#~ msgid "PowerShot A640"
+#~ msgstr "PowerShot A640"
+
+#~ msgid "PowerShot A630"
+#~ msgstr "PowerShot A630"
+
+#~ msgid "PowerShot S5 IS"
+#~ msgstr "PowerShot S5 IS"
+
+#~ msgid "PowerShot A460"
+#~ msgstr "PowerShot A460"
+
+#~ msgid "PowerShot SD850 IS / Digital IXUS 950 IS"
+#~ msgstr "PowerShot SD850 IS / Digital IXUS 950 IS"
+
+#~ msgid "PowerShot A570 IS"
+#~ msgstr "PowerShot A570 IS"
+
+#~ msgid "PowerShot A560"
+#~ msgstr "PowerShot A560"
+
+#~ msgid "PowerShot SD750 / Digital IXUS 75 / IXY Digital 90"
+#~ msgstr "PowerShot SD750 / Digital IXUS 75 / IXY Digital 90"
+
+#~ msgid "PowerShot SD1000 / Digital IXUS 70 / IXY Digital 10"
+#~ msgstr "PowerShot SD1000 / Digital IXUS 70 / IXY Digital 10"
+
+#~ msgid "PowerShot A550"
+#~ msgstr "PowerShot A550"
+
+#~ msgid "PowerShot A450"
+#~ msgstr "PowerShot A450"
+
+#~ msgid "PowerShot Pro90 IS"
+#~ msgstr "PowerShot Pro90 IS"
+
+#~ msgid "PowerShot G1"
+#~ msgstr "PowerShot G1"
+
+#~ msgid "PowerShot S100 / Digital IXUS / IXY Digital"
+#~ msgstr "PowerShot S100 / Digital IXUS / IXY Digital"
+
+#~ msgid "HV10"
+#~ msgstr "HV10"
+
+#~ msgid "iVIS DC50"
+#~ msgstr "iVIS DC50"
+
+#~ msgid "iVIS HV20"
+#~ msgstr "iVIS HV20"
+
+#~ msgid "EOS-1D"
+#~ msgstr "EOS-1D"
+
+#~ msgid "EOS-1DS"
+#~ msgstr "EOS-1DS"
+
+#~ msgid "EOS 10D"
+#~ msgstr "EOS 10D"
+
+#~ msgid "EOS-1D Mark III"
+#~ msgstr "EOS-1D Mark III"
+
+#~ msgid "EOS Digital Rebel / 300D / Kiss Digital"
+#~ msgstr "EOS Digital Rebel / 300D / Kiss Digital"
+
+#~ msgid "EOS-1D Mark II"
+#~ msgstr "EOS-1D Mark II"
+
+#~ msgid "EOS 20D"
+#~ msgstr "EOS 20D"
+
+#~ msgid "EOS-1Ds Mark II"
+#~ msgstr "EOS-1Ds Mark II"
+
+#~ msgid "EOS Digital Rebel XT / 350D / Kiss Digital N"
+#~ msgstr "EOS Digital Rebel XT / 350D / Kiss Digital N"
+
+#~ msgid "EOS 5D"
+#~ msgstr "EOS 5D"
+
+#~ msgid "EOS-1D Mark II N"
+#~ msgstr "EOS-1D Mark II N"
+
+#~ msgid "EOS 30D"
+#~ msgstr "EOS 30D"
+
+#~ msgid "EOS Digital Rebel XTi / 400D / Kiss Digital X"
+#~ msgstr "EOS Digital Rebel XTi / 400D / Kiss Digital X"
+
+#~ msgid "Camera Settings"
+#~ msgstr "Kameran asetukset"
+
+#~ msgid "Focal Length"
+#~ msgstr "Polttoväli"
+
+#~ msgid "Image Type"
+#~ msgstr "Kuvan tyyppi"
+
+#~ msgid "Image type"
+#~ msgstr "Kuvan tyyppi"
+
+#~ msgid "Firmware Version"
+#~ msgstr "Firmwaren versio"
+
+#~ msgid "Firmware version"
+#~ msgstr "Firmwaren versio"
+
+#, fuzzy
+#~ msgid "File Number"
+#~ msgstr "F-luku"
+
+#, fuzzy
+#~ msgid "File number"
+#~ msgstr "Tiedostonimi"
+
+#~ msgid "Owner Name"
+#~ msgstr "Omistajan nimi"
+
+#~ msgid "Serial Number"
+#~ msgstr "Sarjanumero"
+
+#~ msgid "Camera serial number"
+#~ msgstr "Kameran sarjanumero"
+
+#~ msgid "Model ID"
+#~ msgstr "Mallin ID"
+
+#~ msgid "Picture Info"
+#~ msgstr "Kuvan tiedot"
+
+#~ msgid "Picture info"
+#~ msgstr "Kuvan tiedot"
+
+#~ msgid "White balance table"
+#~ msgstr " "
+
+#~ msgid "On"
+#~ msgstr "Päällä"
+
+#, fuzzy
+#~ msgid "Normal Movie"
+#~ msgstr "Normaali"
+
+#~ msgid "External"
+#~ msgstr "Ulkoinen"
+
+#~ msgid "One shot AF"
+#~ msgstr "Kertatarkennus, AF"
+
+#~ msgid "AI servo AF"
+#~ msgstr "Jatkuva tarkennus, AF"
+
+#~ msgid "AI focus AF"
+#~ msgstr "Vaihtuva tarkennus, AF"
+
+#~ msgid "Manual focus"
+#~ msgstr "Käsintarkennus, MF"
+
+#~ msgid "Large"
+#~ msgstr "Suuri"
+
+#~ msgid "Medium"
+#~ msgstr "Keskikokoinen"
+
+#~ msgid "Small"
+#~ msgstr "Pieni"
+
+#~ msgid "Full auto"
+#~ msgstr "Täysautomatiikka"
+
+#~ msgid "Landscape"
+#~ msgstr "Maisemakuva"
+
+#~ msgid "Sepia"
+#~ msgstr "Seepia"
+
+#~ msgid "Portrait"
+#~ msgstr "Muotokuva"
+
+#~ msgid "Sports"
+#~ msgstr "Urheilukuva"
+
+#~ msgid "Macro / close-up"
+#~ msgstr "Lähikuva"
+
+#~ msgid "Black & white"
+#~ msgstr "Mustavalko"
+
+#~ msgid "Neutral"
+#~ msgstr "Neutraali"
+
+#~ msgid "Digital macro"
+#~ msgstr "Digitaalinen makro"
+
+#~ msgid "n/a"
+#~ msgstr "–"
+
+#~ msgid "Default"
+#~ msgstr "Oletus"
+
+#~ msgid "Spot"
+#~ msgstr "Piste"
+
+#~ msgid "Evaluative"
+#~ msgstr "Arvioiva"
+
+#~ msgid "Partial"
+#~ msgstr "Osa-alue"
+
+#~ msgid "Center weighted"
+#~ msgstr "Keskustaa painottava"
+
+#~ msgid "Not known"
+#~ msgstr "Ei tiedossa"
+
+#~ msgid "Macro"
+#~ msgstr "Makro"
+
+#~ msgid "None (MF)"
+#~ msgstr "Ei mitään (MF)"
+
+#~ msgid "Auto-selected"
+#~ msgstr "Automaattinen"
+
+#~ msgid "Auto AF point selection"
+#~ msgstr "Automaattinen AF-pisteen valinta"
+
+#~ msgid "Easy shooting (Auto)"
+#~ msgstr "Täysautomaatti"
+
+#~ msgid "Program (P)"
+#~ msgstr "Ohjelmoitu AE (P)"
+
+#~ msgid "Shutter priority (Tv)"
+#~ msgstr "Valotusajan esivalinta (Tv)"
+
+#~ msgid "Aperture priority (Av)"
+#~ msgstr "Aukon esivalinta (Av)"
+
+#~ msgid "Manual (M)"
+#~ msgstr "Käsisäätöinen valotus (M)"
+
+#~ msgid "A-DEP"
+#~ msgstr "Syväterävyysohjelma AE"
+
+#~ msgid "Did not fire"
+#~ msgstr "Ei välähtänyt"
+
+#~ msgid "Fired"
+#~ msgstr "Välähti"
+
+#~ msgid "External flash"
+#~ msgstr "Ulkoinen salama"
+
+#~ msgid "Internal flash"
+#~ msgstr "Sisäinen salama"
+
+#~ msgid "AE lock"
+#~ msgstr "Valotuksen lukitus"
+
+#~ msgid "Quality"
+#~ msgstr "Kuvanlaatu"
+
+#~ msgid "Flash Mode"
+#~ msgstr "Salaman tila"
+
+#~ msgid "Focus Mode"
+#~ msgstr "Tarkennustapa"
+
+#~ msgid "Image Size"
+#~ msgstr "Kuvan koko"
+
+#~ msgid "Digital Zoom"
+#~ msgstr "Digitaalinen zoom"
+
+#~ msgid "Digital zoom"
+#~ msgstr "Digitaalinen zoom"
+
+#~ msgid "ISO Speed Mode"
+#~ msgstr "ISO-herkkyys"
+
+#~ msgid "Metering Mode"
+#~ msgstr "Mittaustapa"
+
+#~ msgid "AF Point"
+#~ msgstr "AF-piste"
+
+#~ msgid "AF point selected"
+#~ msgstr "Valittu AF-piste"
+
+#~ msgid "Exposure Program"
+#~ msgstr "Kuvaustapa"
+
+#~ msgid "Lens Type"
+#~ msgstr "Linssin tyyppi"
+
+#~ msgid "Lens type"
+#~ msgstr "Linssin tyyppi"
+
+#~ msgid "Lens"
+#~ msgstr "Linssi"
+
+#~ msgid "Image Stabilization"
+#~ msgstr "Kuvan vakautus"
+
+#~ msgid "Image stabilization"
+#~ msgstr "Kuvan vakautus"
+
+#~ msgid "Sunny"
+#~ msgstr "Päivänvalo"
+
+#~ msgid "Cloudy"
+#~ msgstr "Pilvinen"
+
+#~ msgid "Tungsten"
+#~ msgstr "Keinovalo"
+
+#~ msgid "Fluorescent"
+#~ msgstr "Valkoinen loisteputki"
+
+#~ msgid "Black & White"
+#~ msgstr "Mustavalkoinen"
+
+#~ msgid "Shade"
+#~ msgstr "Varjo"
+
+#~ msgid "Manual Temperature (Kelvin)"
+#~ msgstr "Oma asetus (Kelvin)"
+
+#~ msgid "ISO Speed Used"
+#~ msgstr "ISO-herkkyys"
+
+#~ msgid "ISO speed used"
+#~ msgstr "ISO-herkkyys"
+
+#~ msgid "White Balance"
+#~ msgstr "Valkotasapaino"
+
+#~ msgid "AF Point Used"
+#~ msgstr "Käytetty AF-piste"
+
+#~ msgid "AF point used"
+#~ msgstr "Käytetty AF-piste"
+
+#~ msgid "Flash Bias"
+#~ msgstr "Salamavalotuksen korjaus"
+
+#~ msgid "Subject Distance"
+#~ msgstr "Kohteen etäisyys"
+
+#~ msgid "Aperture Value"
+#~ msgstr "Aukko"
+
+#~ msgid "Shutter Speed Value"
+#~ msgstr "Valotusaika"
+
+#~ msgid "Shutter speed"
+#~ msgstr "Valotusaika"
+
+#, fuzzy
+#~ msgid "Medium Movie"
+#~ msgstr "Keskikokoinen"
+
+#, fuzzy
+#~ msgid "Small Movie"
+#~ msgstr "Pieni"
+
+#, fuzzy
+#~ msgid "On 1"
+#~ msgstr "Päällä"
+
+#, fuzzy
+#~ msgid "On 2"
+#~ msgstr "Päällä"
+
+#, fuzzy
+#~ msgid "On (shift AB)"
+#~ msgstr "Kertatarkennus, AF"
+
+#, fuzzy
+#~ msgid "Bracket Mode"
+#~ msgstr "Makrotila"
+
+#, fuzzy
+#~ msgid "Raw Jpg Quality"
+#~ msgstr "Kuvan laatu"
+
+#, fuzzy
+#~ msgid "Raw Jpg Size"
+#~ msgstr "Kuvan koko"
+
+#~ msgid "Keywords"
+#~ msgstr "Avainsanat"
+
+#~ msgid "Program Version"
+#~ msgstr "Ohjelman versio"
+
+#~ msgid "File Source"
+#~ msgstr "Kuvalähde"
+
+#~ msgid "File source"
+#~ msgstr "Kuvalähde"
+
+#~ msgid "Exposure Mode"
+#~ msgstr "Valotustila"
+
+#~ msgid "Exposure Time"
+#~ msgstr "Valotusaika"
+
+#~ msgid "FNumber"
+#~ msgstr "F-luku"
+
+#~ msgid "The F-Number"
+#~ msgstr "F-luku"
+
+#~ msgid "Macro Mode"
+#~ msgstr "Makrotila"
+
+#~ msgid "Image Number"
+#~ msgstr "Kuvan numero"
+
+#~ msgid "Color Space"
+#~ msgstr "Väriavaruus"
+
+#~ msgid "Color space"
+#~ msgstr "Väriavaruus"
+
+#~ msgid "ISO Speed"
+#~ msgstr "ISO-herkkyys"
+
+#, fuzzy
+#~ msgid "Contrast Curve"
+#~ msgstr "Kontrasti"
+
+#, fuzzy
+#~ msgid "Contrast curve"
+#~ msgstr "Kontrasti"
+
+#, fuzzy
+#~ msgid "Color Hue"
+#~ msgstr "Väriavaruus"
+
+#, fuzzy
+#~ msgid "Color hue"
+#~ msgstr "Väriavaruus"
+
+#, fuzzy
+#~ msgid "Color Balance"
+#~ msgstr "Väriavaruus"
+
+#, fuzzy
+#~ msgid "Color balance"
+#~ msgstr "Väriavaruus"
+
+#, fuzzy
+#~ msgid "Default Settings"
+#~ msgstr "Kameran asetukset"
+
+#, fuzzy
+#~ msgid "Full Control"
+#~ msgstr "Täysautomatiikka"
+
+#, fuzzy
+#~ msgid "Toning Saturation"
+#~ msgstr "Värikylläisyys"
+
+#, fuzzy
+#~ msgid "Toning saturation"
+#~ msgstr "Värikylläisyys"
+
+#, fuzzy
+#~ msgid "Hi 1.0"
+#~ msgstr "HV10"
+
+#, fuzzy
+#~ msgid "Far Left"
+#~ msgstr "Polttoväli"
+
+#, fuzzy
+#~ msgid "AF Area Mode"
+#~ msgstr "Salaman tila"
+
+#, fuzzy
+#~ msgid "AF area mode"
+#~ msgstr "Kameran malli"
+
+#, fuzzy
+#~ msgid "AF Points In Focus"
+#~ msgstr "Käytetty AF-piste"
+
+#, fuzzy
+#~ msgid "AF points in focus"
+#~ msgstr "Käytetty AF-piste"
+
+#, fuzzy
+#~ msgid "Flash Level"
+#~ msgstr "Salaman malli"
+
+#, fuzzy
+#~ msgid "Flash level"
+#~ msgstr "Salaman malli"
+
+#, fuzzy
+#~ msgid "AF Fine Tune Adj"
+#~ msgstr "Käytetty AF-piste"
+
+#, fuzzy
+#~ msgid "AF fine tune adj"
+#~ msgstr "Käytetty AF-piste"
+
+#, fuzzy
+#~ msgid "Shutter Count 1"
+#~ msgstr "Valotusajan esivalinta (Tv)"
+
+#, fuzzy
+#~ msgid "Shutter count 1"
+#~ msgstr "Valotusajan esivalinta (Tv)"
+
+#, fuzzy
+#~ msgid "Shutter Count 2"
+#~ msgstr "Valotusajan esivalinta (Tv)"
+
+#, fuzzy
+#~ msgid "Shutter count 2"
+#~ msgstr "Valotusajan esivalinta (Tv)"
+
+#, fuzzy
+#~ msgid "Lens ID Number"
+#~ msgstr "Linssin sarjanumero"
+
+#, fuzzy
+#~ msgid "Lens ID number"
+#~ msgstr "Linssin sarjanumero"
+
+#, fuzzy
+#~ msgid "Lens F-Stops"
+#~ msgstr "Linssin tyyppi"
+
+#, fuzzy
+#~ msgid "Lens F-stops"
+#~ msgstr "Linssin tyyppi"
+
+#, fuzzy
+#~ msgid "MCU Version"
+#~ msgstr "Ohjelman versio"
+
+#, fuzzy
+#~ msgid "AF Aperture"
+#~ msgstr "Aukko"
+
+#, fuzzy
+#~ msgid "AF aperture"
+#~ msgstr "Aukko"
+
+#~ msgid "Thumbnail Image"
+#~ msgstr "Näytekuva"
+
+#~ msgid "Thumbnail image"
+#~ msgstr "Näytekuva"
+
+#~ msgid "Shutter Speed"
+#~ msgstr "Valotusaika"
+
+#~ msgid "ISO speed value"
+#~ msgstr "ISO-herkkyys"
+
+#~ msgid "Aperture value"
+#~ msgstr "Aukko"
+
+#~ msgid "Camera Type"
+#~ msgstr "Kameran tyyppi"
+
+#~ msgid "Camera type"
+#~ msgstr "Kameran tyyppi"
+
+#~ msgid "Lens Serial Number"
+#~ msgstr "Linssin sarjanumero"
+
+#~ msgid "Lens serial number"
+#~ msgstr "Linssin sarjanumero"
+
+#~ msgid "Lens Properties"
+#~ msgstr "Linssin ominaisuudet"
+
+#~ msgid "Lens properties"
+#~ msgstr "Linssin ominaisuudet"
+
+#~ msgid "Flash Type"
+#~ msgstr "Salaman tyyppi"
+
+#~ msgid "Flash type"
+#~ msgstr "Salaman tyyppi"
+
+#~ msgid "Flash Model"
+#~ msgstr "Salaman malli"
+
+#~ msgid "Flash model"
+#~ msgstr "Salaman malli"
+
+#~ msgid "FlashSerialNumber"
+#~ msgstr "Salaman sarjanumero"
+
+#~ msgid "Settings"
+#~ msgstr "Asetukset"
+
+#~ msgid "Manufacturer"
+#~ msgstr "Valmistaja"
+
+#~ msgid "Model"
+#~ msgstr "Malli"
+
+#~ msgid "Auto, Did not fire"
+#~ msgstr "Auto, ei välähtänyt"
+
+#~ msgid "Auto, Did not fire, Red-eye reduction"
+#~ msgstr "Auto, ei välähtänyt, punasilmäisyyden esto"
+
+#~ msgid "Auto, Fired"
+#~ msgstr "Auto, välähti"
+
+#~ msgid "Auto, Fired, Red-eye reduction"
+#~ msgstr "Auto, välähti, punasilmäisyyden esto"
+
+#~ msgid "On, Red-eye reduction"
+#~ msgstr "Päällä, punasilmäisyyden esto"
+
+#~ msgid "On, Wireless"
+#~ msgstr "Päällä, langaton"
+
+#~ msgid "No Flash"
+#~ msgstr "Ei salamaa"
+
+#~ msgid "FocalLength"
+#~ msgstr "Polttoväli"
+
+#~ msgid "Thumbnails"
+#~ msgstr "Näytekuvat"
+
+#~ msgid "Lens Manufacturer"
+#~ msgstr "Linssin valmistaja"
+
+#~ msgid "Lens Manufacturer."
+#~ msgstr "Linssin valmistaja"
+
+#~ msgid "Lens Model"
+#~ msgstr "Linssin malli"
+
+#~ msgid "Lens Model."
+#~ msgstr "Linssin malli"
+
+#~ msgid "Keywords."
+#~ msgstr "Asiasanat"
+
+#~ msgid "inches"
+#~ msgstr "tuumaa"
+
+#~ msgid "cm"
+#~ msgstr "cm"
+
+#~ msgid "Auto Exposure"
+#~ msgstr "Automaattivalotus"
+
+#~ msgid "Compression"
+#~ msgstr "Pakkaus"
+
+#~ msgid "Resolution Unit"
+#~ msgstr "Resoluutioyksikkö"
+
+#~ msgid "Date and Time"
+#~ msgstr "Päiväys ja aika"
+
+#~ msgid "Software"
+#~ msgstr "Ohjelmisto"
+
+#~ msgid "User Comment"
+#~ msgstr "Oma kommentti"
+
+#, fuzzy
+#~ msgid "Model age"
+#~ msgstr "Malli"
+
+#, fuzzy
+#~ msgid "Camera RAW"
+#~ msgstr "Kameran merkki"
+
+#, fuzzy
+#~ msgid "Camera TIFF"
+#~ msgstr "Kameran tyyppi"
+
+#, fuzzy
+#~ msgid "Camera JPEG"
+#~ msgstr "Kameran merkki"
+
+#, fuzzy
+#~ msgid "PLUS Version"
+#~ msgstr "Ohjelman versio"
+
+#, fuzzy
+#~ msgid "Licensee"
+#~ msgstr "Linssi"
+
+#, fuzzy
+#~ msgid "Licensee Name"
+#~ msgstr "Omistajan nimi"
+
+#, fuzzy
+#~ msgid "End User Name"
+#~ msgstr "Omistajan nimi"
+
+#, fuzzy
+#~ msgid "Licensor"
+#~ msgstr "Linssi"
+
+#, fuzzy
+#~ msgid "Licensor Name"
+#~ msgstr "Omistajan nimi"
+
+#, fuzzy
+#~ msgid "Licensor City"
+#~ msgstr "Linssin tyyppi"
+
+#, fuzzy
+#~ msgid "Licensor Telephone number 1."
+#~ msgstr "Linssin sarjanumero"
+
+#, fuzzy
+#~ msgid "Licensor Telephone number 2."
+#~ msgstr "Linssin sarjanumero"
+
+#, fuzzy
+#~ msgid "Licensor Notes"
+#~ msgstr "Linssin ominaisuudet"
+
+#, fuzzy
+#~ msgid "Model Release ID"
+#~ msgstr "Mallin ID"
+
+#, fuzzy
+#~ msgid "Copyright Status"
+#~ msgstr "Omistusoikeus"
+
+#, fuzzy
+#~ msgid "Copyright Owner"
+#~ msgstr "Omistusoikeus"
+
+#, fuzzy
+#~ msgid "Copyright Owner ID"
+#~ msgstr "Omistusoikeus"
+
+#, fuzzy
+#~ msgid "Copyright Owner Name"
+#~ msgstr "Omistajan nimi"
+
+#, fuzzy
+#~ msgid "Image Creator"
+#~ msgstr "Kuvan numero"
+
+#, fuzzy
+#~ msgid "Image Creator Name"
+#~ msgstr "Kuvan aikaleima"
+
+#, fuzzy
+#~ msgid "Image Supplier ID"
+#~ msgstr "Kuvan koko"
+
+#, fuzzy
+#~ msgid "Image Supplier Name"
+#~ msgstr "Kuvan koko"
+
+#, fuzzy
+#~ msgid "Pager"
+#~ msgstr "Suuri"
+
+#, fuzzy
+#~ msgid "Age Unknown"
+#~ msgstr "Tuntematon"
+
+#~ msgid "Date and time"
+#~ msgstr "Päiväys ja aika"
+
+#~ msgid "inch"
+#~ msgstr "tuuma"
+
+#~ msgid "JPEG (old-style)"
+#~ msgstr "Jpeg (vanhahtava)"
+
+#~ msgid "JPEG"
+#~ msgstr "Jpeg"
+
+#~ msgid "ISO Speed Ratings"
+#~ msgstr "ISO-herkkyys"
+
+#, fuzzy
+#~ msgid "Interlace"
+#~ msgstr "Sisäinen salama"
+
+#, fuzzy
+#~ msgid "Shutter speed."
+#~ msgstr "Valotusaika"
+
+#, fuzzy
+#~ msgid "The exposure bias."
+#~ msgstr "Valotuksen korjaus"
+
+#, fuzzy
+#~ msgid "Noise"
+#~ msgstr "Ei käytössä"
+
+#, fuzzy
+#~ msgid "Image History"
+#~ msgstr "Kuvan tyyppi"
+
+#~ msgid "Exposure Bias"
+#~ msgstr "Valotuksen korjaus"
+
+#, fuzzy
+#~ msgid "Auto white balance"
+#~ msgstr "Valkotasapaino"
