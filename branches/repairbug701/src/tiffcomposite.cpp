@@ -1500,7 +1500,8 @@ namespace Exiv2 {
         DataBuf buf(static_cast<long>(ifds_.size()) * 4);
         uint32_t idx = 0;
         // Sort IFDs by group, needed if image data tags were copied first
-        std::sort(ifds_.begin(), ifds_.end(), cmpGroupLt);
+        // Hack: don't sort for now, since we want to manipulate the order of the subdirs
+        //std::sort(ifds_.begin(), ifds_.end(), cmpGroupLt);
         for (Ifds::const_iterator i = ifds_.begin(); i != ifds_.end(); ++i) {
             idx += writeOffset(buf.pData_ + idx, offset + dataIdx, tiffType(), byteOrder);
             dataIdx += (*i)->size();
