@@ -82,6 +82,7 @@ CCSRC =  basicio.cpp           \
 	 iptc.cpp              \
 	 jp2image.cpp          \
 	 jpgimage.cpp          \
+	 key.cpp               \
 	 makernote.cpp         \
 	 metadatum.cpp         \
 	 minoltamn.cpp         \
@@ -121,7 +122,7 @@ endif
 
 # Add source files of simple applications to this list
 # Todo: How can we still support crwedit.cpp, crwparse.cpp
-BINSRC = taglist.cpp
+BINSRC = taglist.cpp key1-test.cpp
 
 # Source files for the Exiv2 application
 EXIV2MAIN = exiv2.cpp

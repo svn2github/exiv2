@@ -46,6 +46,7 @@
 #include "iptc.hpp"
 #include "jp2image.hpp"
 #include "jpgimage.hpp"
+#include "key.hpp"
 #include "metadatum.hpp"
 #include "mrwimage.hpp"
 #include "orfimage.hpp"
