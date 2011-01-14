@@ -43,6 +43,7 @@ SET( LIBEXIV2_PRIVATE_HDR canonmn_int.hpp
                           pngchunk_int.hpp
                           rcsid_int.hpp
                           rw2image_int.hpp
+                          samsungmn_int.hpp
                           sigmamn_int.hpp
                           sonymn_int.hpp
 			  tags_int.hpp
@@ -123,6 +124,7 @@ SET( LIBEXIV2_SRC         basicio.cpp
                           psdimage.cpp
                           rafimage.cpp
                           rw2image.cpp
+                          samsungmn.cpp
                           sigmamn.cpp
                           sonymn.cpp
                           tags.cpp
@@ -172,39 +174,46 @@ IF( MSVC )
 ENDIF( MSVC )
 
 IF( EXIV2_ENABLE_XMP )
-    IF( NOT EXIV2_EXIV2_ENABLE_LIBXMP )
+    IF( NOT EXIV2_ENABLE_LIBXMP )
         SET( LIBEXIV2_SRC ${XMPSRC} ${LIBEXIV2_SRC} )
-    ENDIF( NOT EXIV2_EXIV2_ENABLE_LIBXMP )
+    ENDIF( NOT EXIV2_ENABLE_LIBXMP )
 ENDIF( EXIV2_ENABLE_XMP )
 
 # ******************************************************************************
 # Library
 ADD_LIBRARY( exiv2 ${STATIC_FLAG} ${LIBEXIV2_SRC} )
 
-SET_TARGET_PROPERTIES( exiv2 PROPERTIES VERSION ${GENERIC_LIB_VERSION} 
+SET_TARGET_PROPERTIES( exiv2 PROPERTIES VERSION ${GENERIC_LIB_VERSION}
                                         SOVERSION ${GENERIC_LIB_SOVERSION}
                                         DEFINE_SYMBOL EXV_BUILDING_LIB
+                                        LINK_FLAGS "/LIBPATH:../zlib-1.2.5/$(ConfigurationName)"
                      )
 
-TARGET_LINK_LIBRARIES( exiv2 ${EXPAT_LIBRARIES} )
+TARGET_LINK_LIBRARIES( exiv2 ) # ${EXPAT_LIBRARIES} )
 
-if( EXIV2_EXIV2_ENABLE_LIBXMP )
-    TARGET_LINK_LIBRARIES( exiv2 ${XMPLIB} )
-ENDIF( EXIV2_EXIV2_ENABLE_LIBXMP )
+# IF( MINGW OR UNIX )
+	if( EXIV2_ENABLE_LIBXMP )
+		TARGET_LINK_LIBRARIES( exiv2 ${XMPLIB} )
+	ENDIF( EXIV2_ENABLE_LIBXMP )
 
-IF( EXIV2_ENABLE_PNG )
-    IF( ZLIB_FOUND )
-        TARGET_LINK_LIBRARIES( exiv2 ${ZLIB_LIBRARIES} )
-    ENDIF( ZLIB_FOUND )
-ENDIF( EXIV2_ENABLE_PNG )
+	IF( EXIV2_ENABLE_PNG )
+		IF( ZLIB_FOUND )
+			IF ( MINGW OR UNIX )
+				TARGET_LINK_LIBRARIES( exiv2 ${ZLIB_LIBRARIES} )
+			ELSE ( MSVC )
+				TARGET_LINK_LIBRARIES( exiv2 zlibd )
+			ENDIF( MING OR UNIX)
+		ENDIF( ZLIB_FOUND )
+	ENDIF( EXIV2_ENABLE_PNG )
 
-IF( EXIV2_ENABLE_NLS )
-    TARGET_LINK_LIBRARIES( exiv2 ${LIBINTL_LIBRARIES} )
-ENDIF( EXIV2_ENABLE_NLS )
+	IF( EXIV2_ENABLE_NLS )
+		TARGET_LINK_LIBRARIES( exiv2 ${LIBINTL_LIBRARIES} )
+	ENDIF( EXIV2_ENABLE_NLS )
 
-IF( ICONV_FOUND )
-    TARGET_LINK_LIBRARIES( exiv2 ${ICONV_LIBRARIES} )
-ENDIF( ICONV_FOUND )
+	IF( ICONV_FOUND )
+		TARGET_LINK_LIBRARIES( exiv2 ${ICONV_LIBRARIES} )
+	ENDIF( ICONV_FOUND )
+# ENDIF( MINGW OR UNIX )
 
 INSTALL( TARGETS exiv2 ${INSTALL_TARGET_STANDARD_ARGS} )
 

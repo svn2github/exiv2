@@ -76,7 +76,8 @@ namespace Exiv2 {
             "Exif.Sony1Cs.Rotation",
             "Exif.Sony2Cs.Rotation",
             "Exif.Sony1Cs2.Rotation",
-            "Exif.Sony2Cs2.Rotation"
+            "Exif.Sony2Cs2.Rotation",
+            "Exif.Sony1MltCsA100.Rotation"
         };
         return findMetadatum(ed, keys, EXV_COUNTOF(keys));
     }
@@ -101,8 +102,10 @@ namespace Exiv2 {
             "Exif.Sony2Cs.ISOSetting",
             "Exif.Sony1Cs2.ISOSetting",
             "Exif.Sony2Cs2.ISOSetting",
+            "Exif.Sony1MltCsA100.ISOSetting",
             "Exif.Pentax.ISO",
-            "Exif.Olympus.ISOSpeed"
+            "Exif.Olympus.ISOSpeed",
+            "Exif.Samsung2.ISO"
         };
 
         // Find the first ISO value which is not "0"
@@ -259,7 +262,8 @@ namespace Exiv2 {
             "Exif.Minolta.LensID",
             "Exif.SonyMinolta.LensID",
             "Exif.Sony1.LensID",
-            "Exif.Sony2.LensID"
+            "Exif.Sony2.LensID",
+            "Exif.Samsung2.LensType"
         };
         return findMetadatum(ed, keys, EXV_COUNTOF(keys));
     }
@@ -358,7 +362,8 @@ namespace Exiv2 {
     {
         static const char* keys[] = {
             "Exif.Photo.ExposureTime",
-            "Exif.Image.ExposureTime"
+            "Exif.Image.ExposureTime",
+            "Exif.Samsung2.ExposureTime"
         };
         return findMetadatum(ed, keys, EXV_COUNTOF(keys));
     }
@@ -367,7 +372,8 @@ namespace Exiv2 {
     {
         static const char* keys[] = {
             "Exif.Photo.FNumber",
-            "Exif.Image.FNumber"
+            "Exif.Image.FNumber",
+            "Exif.Samsung2.FNumber"
         };
         return findMetadatum(ed, keys, EXV_COUNTOF(keys));
     }
@@ -397,7 +403,7 @@ namespace Exiv2 {
             "Exif.Nikon3.SerialNumber",
             "Exif.Nikon3.SerialNO",
             "Exif.Fujifilm.SerialNumber",
-            "Exif.Olympus.SerialNumber",
+            "Exif.Olympus.SerialNumber2",
             "Exif.Sigma.SerialNumber"
         };
         return findMetadatum(ed, keys, EXV_COUNTOF(keys));
@@ -413,6 +419,31 @@ namespace Exiv2 {
             "Exif.NikonLd3.FocalLength",
             "Exif.MinoltaCsNew.FocalLength",
             "Exif.Pentax.FocalLength"
+        };
+        return findMetadatum(ed, keys, EXV_COUNTOF(keys));
+    }
+
+    ExifData::const_iterator afPoint(const ExifData& ed)
+    {
+        static const char* keys[] = {
+            "Exif.CanonPi.AFPointsUsed",
+            "Exif.CanonPi.AFPointsUsed20D",
+            "Exif.CanonSi.AFPointUsed",
+            "Exif.CanonCs.AFPoint",
+            "Exif.MinoltaCs7D.AFPoints",
+            "Exif.Nikon1.AFFocusPos",
+            "Exif.NikonAf.AFPoint",
+            "Exif.NikonAf.AFPointsInFocus",
+            "Exif.NikonAf2.AFPointsUsed",
+            "Exif.NikonAf2.PrimaryAFPoint",
+            "Exif.OlympusFi.AFPoint",
+            "Exif.Pentax.AFPoint",
+            "Exif.Pentax.AFPointInFocus",
+            "Exif.Sony1Cs.LocalAFAreaPoint",
+            "Exif.Sony2Cs.LocalAFAreaPoint",
+            "Exif.Sony1Cs2.LocalAFAreaPoint",
+            "Exif.Sony2Cs2.LocalAFAreaPoint",
+            "Exif.Sony1MltCsA100.LocalAFAreaPoint"
         };
         return findMetadatum(ed, keys, EXV_COUNTOF(keys));
     }

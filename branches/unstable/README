@@ -17,8 +17,18 @@ For more information on XMP support in Exiv2, see doc/README-XMP.
 Building and Installing
 =======================
 
-To build Exiv2 with MSVC 7.1 or later on Windows, use the solution file
-msvc\exiv2.sln. See msvc\README-MSVC.txt for details.
+You can build the libraries in the following ways:
+
+1 Linux, Mac, Cygwin, Msys (autoconf tools)
+  - general notes follow
+  - FAQ concerning Cygwin/MSYS and MacOSX http://dev.exiv2.org/projects/exiv2/wiki/FAQ
+  
+2 Microsoft Visual C++
+  - see msvc/README-MSVC.txt (32bit build            VC7.1/2003 and up)
+  - see msvc64/ReadMe.txt    (32bit and 64 bit build VC8/2005   and up)
+
+3 CMake (experimental support for cmake on all platforms)
+  - see README-CMAKE for more information
 
 On UNIX-like systems (including GNU/Linux, Mac OS X, MinGW), use the 
 GNU configure script. Run the following commands from the top directory 
@@ -27,7 +37,7 @@ utility:
 
     $ ./configure
     $ make
-    $ make install
+    $ sudo make install
 
 If you downloaded the source code from the subversion repository, you 
 won't have a configure script. Run 'make config' to generate it and see 
@@ -168,3 +178,5 @@ To do this on Windows, compile the library with the preprocessor
 symbol EXV_COMMERCIAL_VERSION defined in msvc\include\exv_msvc.h.
 On UNIX-like systems, run the configure script with the options
 --enable-commercial --disable-nls --disable-lensdata
+
+

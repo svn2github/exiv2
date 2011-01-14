@@ -114,7 +114,7 @@ namespace Exiv2 {
         ExifTags& operator=(const ExifTags& rhs);
 
     public:
-        //! Return read-only list of build-in groups
+        //! Return read-only list of built-in groups
         static const GroupInfo* groupList();
         //! Return read-only list of built-in \em groupName tags.
         static const TagInfo* tagList(const std::string& groupName);
@@ -173,6 +173,13 @@ namespace Exiv2 {
                  and group name.
          */
         ExifKey(uint16_t tag, const std::string& groupName);
+        /*!
+          @brief Constructor to create an Exif key from a TagInfo instance.
+          @param ti The TagInfo instance
+          @throw Error if the key cannot be constructed from the tag number
+                 and group name.
+         */
+        ExifKey(const TagInfo& ti);
         //! Copy constructor
         ExifKey(const ExifKey& rhs);
         //! Destructor

@@ -101,6 +101,7 @@ CCSRC += preview.cpp           \
 	 psdimage.cpp          \
 	 rafimage.cpp          \
 	 rw2image.cpp          \
+	 samsungmn.cpp         \
 	 sigmamn.cpp           \
 	 pentaxmn.cpp          \
 	 sonymn.cpp            \
@@ -331,3 +332,5 @@ endif
 # This command is intended for maintainers to use; it deletes files
 # that may need special tools to rebuild.
 maintainer-clean: uninstall distclean
+	-$(RM) -r .deps
+	-$(RM) -r .libs

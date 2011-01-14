@@ -80,17 +80,41 @@ namespace Exiv2 {
     using namespace Internal;
 
     TiffImage::TiffImage(BasicIo::AutoPtr io, bool /*create*/)
-        : Image(ImageType::tiff, mdExif | mdIptc, io)
+        : Image(ImageType::tiff, mdExif | mdIptc, io),
+          pixelWidth_(0), pixelHeight_(0)
     {
     } // TiffImage::TiffImage
 
+    struct MimeTypeList {
+        bool operator==(int compression) const { return compression_ == compression; }
+        int compression_;
+        const char* mimeType_;
+    };
+
+    MimeTypeList mimeTypeList[] = {
+        { 32770, "image/x-samsung-srw" },
+        { 34713, "image/x-nikon-nef"   },
+        { 65535, "image/x-pentax-pef"  }
+    };
+
     std::string TiffImage::mimeType() const
     {
-        return "image/tiff";
+        if (!mimeType_.empty()) return mimeType_;
+
+        mimeType_ = std::string("image/tiff");
+        std::string key = "Exif." + primaryGroup() + ".Compression";
+        ExifData::const_iterator md = exifData_.findKey(ExifKey(key));
+        if (md != exifData_.end() && md->count() > 0) {
+            const MimeTypeList* i = find(mimeTypeList, static_cast<int>(md->toLong()));
+            if (i) mimeType_ = std::string(i->mimeType_);
+        }
+        return mimeType_;
     }
 
     std::string TiffImage::primaryGroup() const
     {
+        if (!primaryGroup_.empty()) return primaryGroup_;
+
         static const char* keys[] = {
             "Exif.Image.NewSubfileType",
             "Exif.SubImage1.NewSubfileType",
@@ -104,36 +128,42 @@ namespace Exiv2 {
             "Exif.SubImage9.NewSubfileType"
         };
         // Find the group of the primary image, default to "Image"
-        std::string groupName = "Image";
+        primaryGroup_ = std::string("Image");
         for (unsigned int i = 0; i < EXV_COUNTOF(keys); ++i) {
             ExifData::const_iterator md = exifData_.findKey(ExifKey(keys[i]));
             // Is it the primary image?
             if (md != exifData_.end() && md->count() > 0 && md->toLong() == 0) {
-                groupName = md->groupName();
-                break;
+                // Sometimes there is a JPEG primary image; that's not our first choice
+                primaryGroup_ = md->groupName();
+                std::string key = "Exif." + primaryGroup_ + ".JPEGInterchangeFormat";
+                if (exifData_.findKey(ExifKey(key)) == exifData_.end()) break;
             }
         }
-        return groupName;
+        return primaryGroup_;
     }
 
     int TiffImage::pixelWidth() const
     {
+        if (pixelWidth_ != 0) return pixelWidth_;
+
         ExifKey key(std::string("Exif.") + primaryGroup() + std::string(".ImageWidth"));
         ExifData::const_iterator imageWidth = exifData_.findKey(key);
         if (imageWidth != exifData_.end() && imageWidth->count() > 0) {
-            return imageWidth->toLong();
+            pixelWidth_ = static_cast<int>(imageWidth->toLong());
         }
-        return 0;
+        return pixelWidth_;
     }
 
     int TiffImage::pixelHeight() const
     {
+        if (pixelHeight_ != 0) return pixelHeight_;
+
         ExifKey key(std::string("Exif.") + primaryGroup() + std::string(".ImageLength"));
         ExifData::const_iterator imageHeight = exifData_.findKey(key);
         if (imageHeight != exifData_.end() && imageHeight->count() > 0) {
-            return imageHeight->toLong();
+            pixelHeight_ = imageHeight->toLong();
         }
-        return 0;
+        return pixelHeight_;
     }
 
     void TiffImage::setComment(const std::string& /*comment*/)
@@ -1100,6 +1130,7 @@ namespace Exiv2 {
         { Tag::root, ifd3Id,           ifd2Id,           Tag::next },
         { Tag::root, olympusId,        exifId,           0x927c    },
         { Tag::root, olympus2Id,       exifId,           0x927c    },
+        { Tag::root, subThumb1Id,      ifd1Id,           0x014a    },
         { Tag::root, olympusEqId,      olympus2Id,       0x2010    },
         { Tag::root, olympusCsId,      olympus2Id,       0x2020    },
         { Tag::root, olympusRdId,      olympus2Id,       0x2030    },
@@ -1157,6 +1188,8 @@ namespace Exiv2 {
         { Tag::root, nikonFl3Id,       nikon3Id,         0x00a8    },
         { Tag::root, panasonicId,      exifId,           0x927c    },
         { Tag::root, pentaxId,         exifId,           0x927c    },
+        { Tag::root, samsung2Id,       exifId,           0x927c    },
+        { Tag::root, samsungPvId,      samsung2Id,       0x0035    },
         { Tag::root, sigmaId,          exifId,           0x927c    },
         { Tag::root, sony1Id,          exifId,           0x927c    },
         { Tag::root, sony1CsId,        sony1Id,          0x0114    },
@@ -1321,10 +1354,21 @@ namespace Exiv2 {
         {    0x0117, ifd1Id,           newTiffThumbSize<0x0111, ifd1Id>          },
         {    0x0144, ifd1Id,           newTiffImageData<0x0145, ifd1Id>          },
         {    0x0145, ifd1Id,           newTiffImageSize<0x0144, ifd1Id>          },
+        {    0x014a, ifd1Id,           newTiffSubIfd<subThumb1Id>                },
         {    0x0201, ifd1Id,           newTiffThumbData<0x0202, ifd1Id>          },
         {    0x0202, ifd1Id,           newTiffThumbSize<0x0201, ifd1Id>          },
         { Tag::next, ifd1Id,           newTiffDirectory<ifd2Id>                  },
         {  Tag::all, ifd1Id,           newTiffEntry                              },
+
+        // Subdir subThumb1
+        {    0x0111, subThumb1Id,      newTiffImageData<0x0117, subThumb1Id>     },
+        {    0x0117, subThumb1Id,      newTiffImageSize<0x0111, subThumb1Id>     },
+        {    0x0144, subThumb1Id,      newTiffImageData<0x0145, subThumb1Id>     },
+        {    0x0145, subThumb1Id,      newTiffImageSize<0x0144, subThumb1Id>     },
+        {    0x0201, subThumb1Id,      newTiffImageData<0x0202, subThumb1Id>     },
+        {    0x0202, subThumb1Id,      newTiffImageSize<0x0201, subThumb1Id>     },
+        { Tag::next, subThumb1Id,      newTiffDirectory<ignoreId>                },
+        {  Tag::all, subThumb1Id,      newTiffEntry                              },
 
         // IFD2 (eg, in Pentax PEF and Canon CR2 files)
         {    0x0111, ifd2Id,           newTiffImageData<0x0117, ifd2Id>          },
@@ -1539,6 +1583,17 @@ namespace Exiv2 {
         {    0x0004, pentaxId,         newTiffThumbData<0x0003, pentaxId>        },
         { Tag::next, pentaxId,         newTiffDirectory<ignoreId>                },
         {  Tag::all, pentaxId,         newTiffEntry                              },
+
+        // Samsung2 makernote
+        {    0x0035, samsung2Id,       newTiffSubIfd<samsungPvId>                },
+        { Tag::next, samsung2Id,       newTiffDirectory<ignoreId>                },
+        {  Tag::all, samsung2Id,       newTiffEntry                              },
+
+        // Samsung2 makernote preview subdir
+        {    0x0201, samsungPvId,      newTiffThumbData<0x0202, samsungPvId>     },
+        {    0x0202, samsungPvId,      newTiffThumbSize<0x0201, samsungPvId>     },
+        { Tag::next, samsungPvId,      newTiffDirectory<ignoreId>                },
+        {  Tag::all, samsungPvId,      newTiffEntry                              },
 
         // Sigma/Foveon makernote
         { Tag::next, sigmaId,          newTiffDirectory<ignoreId>                },

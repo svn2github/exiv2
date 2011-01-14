@@ -168,6 +168,7 @@ namespace Exiv2 {
         { "CaptionsAuthorNames",    N_("Captions Author Names"),     "Lang Alt", langAlt, xmpExternal, N_("The list of all captions author names for each language alternative captions set in standard XMP tags.") },
         { "CaptionsDateTimeStamps", N_("Captions Date Time Stamps"), "Lang Alt", langAlt, xmpExternal, N_("The list of all captions date time stamps for each language alternative captions set in standard XMP tags.") },
         { "ImageHistory",           N_("Image History"),             "Text",     xmpText, xmpExternal, N_("An XML based content to list all action processed on this image with image editor (as crop, rotate, color corrections, adjustements, etc.).") },
+        { "LensCorrectionSettings", N_("Lens Correction Settings"),  "Text",     xmpText, xmpExternal, N_("The list of Lens Correction tools settings used to fix lens distorsion. This include Batch Queue Manager and Image editor tools based on LensFun library.") },
         // End of list marker
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
@@ -1045,6 +1046,17 @@ namespace Exiv2 {
         std::string ns2 = ns;
         if (   ns2.substr(ns2.size() - 1, 1) != "/"
             && ns2.substr(ns2.size() - 1, 1) != "#") ns2 += "/";
+        // Check if there is already a registered namespace with this prefix
+        const XmpNsInfo* xnp = lookupNsRegistry(XmpNsInfo::Prefix(prefix));
+        if (xnp) {
+#ifndef SUPPRESS_WARNINGS
+            if (strcmp(xnp->ns_, ns2.c_str()) != 0) {
+                EXV_WARNING << "Updating namespace URI for " << prefix << " from "
+                            << xnp->ns_ << " to " << ns2 << "\n";
+            }
+#endif
+            unregisterNs(xnp->ns_);
+        }
         // Allocated memory is freed when the namespace is unregistered.
         // Using malloc/free for better system compatibility in case
         // users don't unregister their namespaces explicitely.
@@ -1058,14 +1070,12 @@ namespace Exiv2 {
         xn.xmpPropertyInfo_ = 0;
         xn.desc_ = "";
         nsRegistry_[ns2] = xn;
-        XmpParser::registerNs(ns2, prefix);
     }
 
     void XmpProperties::unregisterNs(const std::string& ns)
     {
         NsRegistry::iterator i = nsRegistry_.find(ns);
         if (i != nsRegistry_.end()) {
-            XmpParser::unregisterNs(ns);
             std::free(const_cast<char*>(i->second.prefix_));
             std::free(const_cast<char*>(i->second.ns_));
             nsRegistry_.erase(i);

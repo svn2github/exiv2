@@ -248,21 +248,24 @@ namespace {
         { 0,                   createLoaderExifDataJpeg, 5 },
         { 0,                   createLoaderExifDataJpeg, 6 },
         { 0,                   createLoaderExifDataJpeg, 7 },
-        { "image/x-raw",       createLoaderExifDataJpeg, 8 },
+        { "image/x-panasonic-rw2", createLoaderExifDataJpeg, 8 },
+        { 0,                   createLoaderExifDataJpeg, 9 },
         { 0,                   createLoaderTiff,         0 },
         { 0,                   createLoaderTiff,         1 },
         { 0,                   createLoaderTiff,         2 },
         { 0,                   createLoaderTiff,         3 },
         { 0,                   createLoaderTiff,         4 },
         { 0,                   createLoaderTiff,         5 },
+        { 0,                   createLoaderTiff,         6 },
         { 0,                   createLoaderExifJpeg,     0 },
         { 0,                   createLoaderExifJpeg,     1 },
         { 0,                   createLoaderExifJpeg,     2 },
         { 0,                   createLoaderExifJpeg,     3 },
         { 0,                   createLoaderExifJpeg,     4 },
         { 0,                   createLoaderExifJpeg,     5 },
-        { "image/x-canon-cr2", createLoaderExifJpeg,     6 },
-        { 0,                   createLoaderExifJpeg,     7 }
+        { 0,                   createLoaderExifJpeg,     6 },
+        { "image/x-canon-cr2", createLoaderExifJpeg,     7 },
+        { 0,                   createLoaderExifJpeg,     8 }
     };
 
     const LoaderExifJpeg::Param LoaderExifJpeg::param_[] = {
@@ -271,9 +274,10 @@ namespace {
         { "Exif.SubImage2.JPEGInterchangeFormat", "Exif.SubImage2.JPEGInterchangeFormatLength", 0 }, // 2
         { "Exif.SubImage3.JPEGInterchangeFormat", "Exif.SubImage3.JPEGInterchangeFormatLength", 0 }, // 3
         { "Exif.SubImage4.JPEGInterchangeFormat", "Exif.SubImage4.JPEGInterchangeFormatLength", 0 }, // 4
-        { "Exif.Image2.JPEGInterchangeFormat",    "Exif.Image2.JPEGInterchangeFormatLength",    0 }, // 5
-        { "Exif.Image.StripOffsets",              "Exif.Image.StripByteCounts",                 0 }, // 6
-        { "Exif.OlympusCs.PreviewImageStart",     "Exif.OlympusCs.PreviewImageLength",          "Exif.MakerNote.Offset"}  // 7
+        { "Exif.SubThumb1.JPEGInterchangeFormat", "Exif.SubThumb1.JPEGInterchangeFormatLength", 0 }, // 5
+        { "Exif.Image2.JPEGInterchangeFormat",    "Exif.Image2.JPEGInterchangeFormatLength",    0 }, // 6
+        { "Exif.Image.StripOffsets",              "Exif.Image.StripByteCounts",                 0 }, // 7
+        { "Exif.OlympusCs.PreviewImageStart",     "Exif.OlympusCs.PreviewImageLength",          "Exif.MakerNote.Offset"}  // 8
     };
 
     const LoaderExifDataJpeg::Param LoaderExifDataJpeg::param_[] = {
@@ -285,7 +289,8 @@ namespace {
         { "Exif.Olympus.ThumbnailImage",             0                                               }, // 5
         { "Exif.Olympus2.ThumbnailImage",            0                                               }, // 6
         { "Exif.Minolta.Thumbnail",                  0                                               }, // 7
-        { "Exif.PanasonicRaw.PreviewImage",          0                                               }  // 8
+        { "Exif.PanasonicRaw.PreviewImage",          0                                               }, // 8
+        { "Exif.SamsungPreview.JPEGInterchangeFormat", "Exif.SamsungPreview.JPEGInterchangeFormatLength" } // 9
     };
 
     const LoaderTiff::Param LoaderTiff::param_[] = {
@@ -294,7 +299,8 @@ namespace {
         { "SubImage2", "Exif.SubImage2.NewSubfileType", "1" },  // 2
         { "SubImage3", "Exif.SubImage3.NewSubfileType", "1" },  // 3
         { "SubImage4", "Exif.SubImage4.NewSubfileType", "1" },  // 4
-        { "Thumbnail", 0,                               0   }   // 5
+        { "SubThumb1", "Exif.SubThumb1.NewSubfileType", "1" },  // 5
+        { "Thumbnail", 0,                               0   }   // 6
     };
 
     Loader::AutoPtr Loader::create(PreviewId id, const Image &image)
@@ -340,13 +346,13 @@ namespace {
     {
         offset_ = 0;
         ExifData::const_iterator pos = image_.exifData().findKey(ExifKey(param_[parIdx].offsetKey_));
-        if (pos != image_.exifData().end()) {
+        if (pos != image_.exifData().end() && pos->count() > 0) {
             offset_ = pos->toLong();
         }
 
         size_ = 0;
         pos = image_.exifData().findKey(ExifKey(param_[parIdx].sizeKey_));
-        if (pos != image_.exifData().end()) {
+        if (pos != image_.exifData().end() && pos->count() > 0) {
             size_ = pos->toLong();
         }
 
@@ -354,7 +360,7 @@ namespace {
 
         if (param_[parIdx].baseOffsetKey_) {
             pos = image_.exifData().findKey(ExifKey(param_[parIdx].baseOffsetKey_));
-            if (pos != image_.exifData().end()) {
+            if (pos != image_.exifData().end() && pos->count() > 0) {
                 offset_ += pos->toLong();
             }
         }
@@ -534,19 +540,19 @@ namespace {
         if (pos == exifData.end()) return;
         if (offsetCount != pos->value().count()) return;
         for (int i = 0; i < offsetCount; i++) {
-            size_ += pos->value().toLong(i);
+            size_ += pos->toLong(i);
         }
 
         if (size_ == 0) return;
 
         pos = exifData.findKey(ExifKey(std::string("Exif.") + group_ + ".ImageWidth"));
-        if (pos != exifData.end()) {
-            width_ = pos->value().toLong();
+        if (pos != exifData.end() && pos->count() > 0) {
+            width_ = pos->toLong();
         }
 
         pos = exifData.findKey(ExifKey(std::string("Exif.") + group_ + ".ImageLength"));
-        if (pos != exifData.end()) {
-            height_ = pos->value().toLong();
+        if (pos != exifData.end() && pos->count() > 0) {
+            height_ = pos->toLong();
         }
 
         if (width_ == 0 || height_ == 0) return;
@@ -625,25 +631,27 @@ namespace {
 
             const Value &sizes = preview["Exif.Image." + sizeTag_].value();
 
-            if (sizes.count() == 1) {
-                // this saves one copying of the buffer
-                uint32_t offset = dataValue.toLong(0);
-                uint32_t size = sizes.toLong(0);
-                if (offset + size <= static_cast<uint32_t>(io.size()))
-                    dataValue.setDataArea(base + offset, size);
-            }
-            else {
-                // FIXME: the buffer is probably copied twice, it should be optimized
-                DataBuf buf(size_);
-                Exiv2::byte* pos = buf.pData_;
-                for (int i = 0; i < sizes.count(); i++) {
-                    uint32_t offset = dataValue.toLong(i);
-                    uint32_t size = sizes.toLong(i);
+            if (sizes.count() == dataValue.count()) {
+                if (sizes.count() == 1) {
+                    // this saves one copying of the buffer
+                    uint32_t offset = dataValue.toLong(0);
+                    uint32_t size = sizes.toLong(0);
                     if (offset + size <= static_cast<uint32_t>(io.size()))
-                        memcpy(pos, base + offset, size);
-                    pos += size;
+                        dataValue.setDataArea(base + offset, size);
                 }
-                dataValue.setDataArea(buf.pData_, buf.size_);
+                else {
+                    // FIXME: the buffer is probably copied twice, it should be optimized
+                    DataBuf buf(size_);
+                    Exiv2::byte* pos = buf.pData_;
+                    for (int i = 0; i < sizes.count(); i++) {
+                        uint32_t offset = dataValue.toLong(i);
+                        uint32_t size = sizes.toLong(i);
+                        if (offset + size <= static_cast<uint32_t>(io.size()))
+                            memcpy(pos, base + offset, size);
+                        pos += size;
+                    }
+                    dataValue.setDataArea(buf.pData_, buf.size_);
+                }
             }
         }
 

@@ -47,6 +47,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "olympusmn_int.hpp"
 #include "panasonicmn_int.hpp"
 #include "pentaxmn_int.hpp"
+#include "samsungmn_int.hpp"
 #include "sigmamn_int.hpp"
 #include "sonymn_int.hpp"
 
@@ -99,6 +100,7 @@ namespace Exiv2 {
         { subImage7Id,     "SubImage7", "SubImage7",    ifdTagList                     },
         { subImage8Id,     "SubImage8", "SubImage8",    ifdTagList                     },
         { subImage9Id,     "SubImage9", "SubImage9",    ifdTagList                     },
+        { subThumb1Id,     "SubThumb1", "SubThumb1",    ifdTagList                     },
         { panaRawId,       "PanaRaw",   "PanasonicRaw", PanasonicMakerNote::tagListRaw },
         { mnId,            "Makernote", "MakerNote",    mnTagList                      },
         { canonId,         "Makernote", "Canon",        CanonMakerNote::tagList        },
@@ -165,6 +167,8 @@ namespace Exiv2 {
         { olympusRiId,     "Makernote", "OlympusRi",    OlympusMakerNote::tagListRi    },
         { panasonicId,     "Makernote", "Panasonic",    PanasonicMakerNote::tagList    },
         { pentaxId,        "Makernote", "Pentax",       PentaxMakerNote::tagList       },
+        { samsung2Id,      "Makernote", "Samsung2",     Samsung2MakerNote::tagList     },
+        { samsungPvId,     "Makernote", "SamsungPreview", ifdTagList                   },
         { sigmaId,         "Makernote", "Sigma",        SigmaMakerNote::tagList        },
         { sony1Id,         "Makernote", "Sony1",        SonyMakerNote::tagList         },
         { sony2Id,         "Makernote", "Sony2",        SonyMakerNote::tagList         },
@@ -257,6 +261,7 @@ namespace Exiv2 {
         {    10, N_("JBIG Color")               },
         { 32766, N_("Next 2-bits RLE")          },
         { 32769, N_("Epson ERF Compressed")     },
+        { 32770, N_("Samsung SRW Compressed")   },
         { 32771, N_("CCITT RLE 1-word")         },
         { 32773, N_("PackBits (Macintosh RLE)") },
         { 32809, N_("Thunderscan RLE")          },
@@ -1956,6 +1961,7 @@ namespace Exiv2 {
         case subImage7Id:
         case subImage8Id:
         case subImage9Id:
+        case subThumb1Id:
         case panaRawId: rc = true; break;
         default:           rc = false; break;
         }
@@ -2815,6 +2821,17 @@ namespace Exiv2 {
         p_->makeKey(tag, ifdId, ti);
     }
 
+    ExifKey::ExifKey(const TagInfo& ti)
+        : p_(new Impl)
+    {
+        IfdId ifdId = static_cast<IfdId>(ti.ifdId_);
+        if (!Internal::isExifIfd(ifdId) && !Internal::isMakerIfd(ifdId)) {
+            throw Error(23, ifdId);
+        }
+        p_->groupName_ = Exiv2::groupName(ifdId);
+        p_->makeKey(ti.tag_, ifdId, &ti);
+    }
+
     ExifKey::ExifKey(const std::string& key)
         : p_(new Impl)
     {
@@ -2912,8 +2929,7 @@ namespace Exiv2 {
 
     std::ostream& operator<<(std::ostream& os, const TagInfo& ti)
     {
-        
-        ExifKey exifKey(ti.tag_, Internal::groupName(static_cast<Internal::IfdId>(ti.ifdId_)));
+        ExifKey exifKey(ti);
         return os << exifKey.tagName() << ",\t"
                   << std::dec << exifKey.tag() << ",\t"
                   << "0x" << std::setw(4) << std::setfill('0')
