@@ -20,7 +20,8 @@
  */
 /*!
   @file    exiv2.hpp
-  @brief   Include all Exiv2 header files.
+  @brief   Include all Exiv2 header files. Include only this header file
+           in your application.
   @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>

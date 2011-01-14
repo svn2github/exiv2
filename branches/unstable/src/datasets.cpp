@@ -35,6 +35,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "error.hpp"
 #include "types.hpp"
 #include "value.hpp"
+#include "key.hpp"
 #include "metadatum.hpp"
 #include "i18n.h"                // NLS support.
 
@@ -589,132 +590,12 @@ namespace Exiv2 {
         }
     } // IptcDataSets::dataSetList
 
-    const char* IptcKey::familyName_ = "Iptc";
-
-    IptcKey::IptcKey(const std::string& key)
-        : key_(key)
-    {
-        decomposeKey();
-    }
-
-    IptcKey::IptcKey(uint16_t tag, uint16_t record)
-        : tag_(tag), record_(record)
-    {
-        makeKey();
-    }
-
-    IptcKey::IptcKey(const IptcKey& rhs)
-        : Key(rhs), tag_(rhs.tag_), record_(rhs.record_), key_(rhs.key_)
-    {
-    }
-
-    IptcKey::~IptcKey()
-    {
-    }
-
-    IptcKey& IptcKey::operator=(const IptcKey& rhs)
-    {
-        if (this == &rhs) return *this;
-        Key::operator=(rhs);
-        tag_ = rhs.tag_;
-        record_ = rhs.record_;
-        key_ = rhs.key_;
-        return *this;
-    }
-
-    std::string IptcKey::key() const
-    {
-        return key_;
-    }
-
-    const char* IptcKey::familyName() const
-    {
-        return familyName_;
-    }
-
-    std::string IptcKey::groupName() const
-    {
-        return recordName();
-    }
-
-    std::string IptcKey::tagName() const
-    {
-        return IptcDataSets::dataSetName(tag_, record_);
-    }
-
-    std::string IptcKey::tagLabel() const
-    {
-        return IptcDataSets::dataSetTitle(tag_, record_);
-    }
-
-    uint16_t IptcKey::tag() const
-    {
-        return tag_;
-    }
-
-    std::string IptcKey::recordName() const
-    {
-        return IptcDataSets::recordName(record_);
-    }
-
-    uint16_t IptcKey::record() const
-    {
-        return record_;
-    }
-
-    IptcKey::AutoPtr IptcKey::clone() const
-    {
-        return AutoPtr(clone_());
-    }
-
-    IptcKey* IptcKey::clone_() const
-    {
-        return new IptcKey(*this);
-    }
-
-    void IptcKey::decomposeKey()
-    {
-        // Get the family name, record name and dataSet name parts of the key
-        std::string::size_type pos1 = key_.find('.');
-        if (pos1 == std::string::npos) throw Error(6, key_);
-        std::string familyName = key_.substr(0, pos1);
-        if (0 != strcmp(familyName.c_str(), familyName_)) {
-            throw Error(6, key_);
-        }
-        std::string::size_type pos0 = pos1 + 1;
-        pos1 = key_.find('.', pos0);
-        if (pos1 == std::string::npos) throw Error(6, key_);
-        std::string recordName = key_.substr(pos0, pos1 - pos0);
-        if (recordName == "") throw Error(6, key_);
-        std::string dataSetName = key_.substr(pos1 + 1);
-        if (dataSetName == "") throw Error(6, key_);
-
-        // Use the parts of the key to find dataSet and recordId
-        uint16_t recId = IptcDataSets::recordId(recordName);
-        uint16_t dataSet = IptcDataSets::dataSet(dataSetName, recId);
-
-        // Possibly translate hex name parts (0xabcd) to real names
-        recordName = IptcDataSets::recordName(recId);
-        dataSetName = IptcDataSets::dataSetName(dataSet, recId);
-
-        tag_ = dataSet;
-        record_ = recId;
-        key_ = familyName + "." + recordName + "." + dataSetName;
-    } // IptcKey::decomposeKey
-
-    void IptcKey::makeKey()
-    {
-        key_ = std::string(familyName_)
-            + "." + IptcDataSets::recordName(record_)
-            + "." + IptcDataSets::dataSetName(tag_, record_);
-    }
-
     // *************************************************************************
     // free functions
 
     std::ostream& operator<<(std::ostream& os, const DataSet& dataSet)
     {
-        IptcKey iptcKey(dataSet.number_, dataSet.recordId_);
+        Key1 iptcKey(dataSet.number_, dataSet.recordId_);
         return os << dataSet.name_ << ", "
                   << std::dec << dataSet.number_ << ", "
                   << "0x" << std::setw(4) << std::setfill('0')

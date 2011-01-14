@@ -33,6 +33,7 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 // included header files
 #include "types.hpp"
+#include "key.hpp"
 #include "exif.hpp"
 #include "iptc.hpp"
 #include "xmp.hpp"
@@ -462,10 +463,10 @@ namespace Exiv2 {
 
     bool Converter::prepareIptcTarget(const char* to, bool force)
     {
-        Exiv2::IptcData::iterator pos = iptcData_->findKey(IptcKey(to));
+        Exiv2::IptcData::iterator pos = iptcData_->findKey(Key1(to));
         if (pos == iptcData_->end()) return true;
         if (!overwrite_ && !force) return false;
-        while ((pos = iptcData_->findKey(IptcKey(to))) != iptcData_->end()) {
+        while ((pos = iptcData_->findKey(Key1(to))) != iptcData_->end()) {
             iptcData_->erase(pos);
         }
         return true;
@@ -1081,7 +1082,7 @@ namespace Exiv2 {
 
     void Converter::cnvIptcValue(const char* from, const char* to)
     {
-        Exiv2::IptcData::iterator pos = iptcData_->findKey(IptcKey(from));
+        Exiv2::IptcData::iterator pos = iptcData_->findKey(Key1(from));
         if (pos == iptcData_->end()) return;
         if (!prepareXmpTarget(to)) return;
         while (pos != iptcData_->end()) {
@@ -1135,7 +1136,7 @@ namespace Exiv2 {
 #endif
                 continue;
             }
-            IptcKey key(to);
+            Key1 key(to);
             Iptcdatum id(key);
             id.setValue(value);
             iptcData_->add(id);

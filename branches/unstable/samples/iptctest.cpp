@@ -99,14 +99,14 @@ void processAdd(const std::string& line, int num, IptcData &iptcData)
     }
 
     std::string key(line.substr(keyStart, keyEnd-keyStart));
-    IptcKey iptcKey(key);
+    Key1 iptcKey(key);
 
     std::string data(line.substr(dataStart));
     // if data starts and ends with quotes, remove them
     if (data.at(0) == '\"' && data.at(data.size()-1) == '\"') {
         data = data.substr(1, data.size()-2);
     }
-    TypeId type = IptcDataSets::dataSetType(iptcKey.tag(), iptcKey.record());
+    TypeId type = IptcDataSets::dataSetType(iptcKey.tag(), iptcKey.group());
     Value::AutoPtr value = Value::create(type);
     value->read(data);
 
@@ -127,7 +127,7 @@ void processRemove(const std::string& line, int num, IptcData &iptcData)
     }
 
     const std::string key( line.substr(keyStart) );
-    IptcKey iptcKey(key);
+    Key1 iptcKey(key);
 
     IptcData::iterator iter = iptcData.findKey(iptcKey);
     if (iter != iptcData.end()) {
@@ -150,14 +150,14 @@ void processModify(const std::string& line, int num, IptcData &iptcData)
     }
 
     std::string key(line.substr(keyStart, keyEnd-keyStart));
-    IptcKey iptcKey(key);
+    Key1 iptcKey(key);
 
     std::string data(line.substr(dataStart));
     // if data starts and ends with quotes, remove them
     if (data.at(0) == '\"' && data.at(data.size()-1) == '\"') {
         data = data.substr(1, data.size()-2);
     }
-    TypeId type = IptcDataSets::dataSetType(iptcKey.tag(), iptcKey.record());
+    TypeId type = IptcDataSets::dataSetType(iptcKey.tag(), iptcKey.group());
     Value::AutoPtr value = Value::create(type);
     value->read(data);
 

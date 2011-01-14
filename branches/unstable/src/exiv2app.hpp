@@ -45,17 +45,15 @@
 
 //! Command identifiers
 enum CmdId { invalidCmdId, add, set, del, reg };
-//! Metadata identifiers
-enum MetadataId { invalidMetadataId, iptc, exif, xmp };
 //! Structure for one parsed modification command
 struct ModifyCmd {
     //! C'tor
     ModifyCmd() :
-        cmdId_(invalidCmdId), metadataId_(invalidMetadataId),
+        cmdId_(invalidCmdId), metadataId_(Exiv2::mdNone),
         typeId_(Exiv2::invalidTypeId), explicitType_(false) {}
     CmdId cmdId_;                               //!< Command identifier
     std::string key_;                           //!< Exiv2 key string
-    MetadataId metadataId_;                     //!< Metadata identifier
+    Exiv2::MetadataId metadataId_;              //!< Metadata identifier
     Exiv2::TypeId typeId_;                      //!< Exiv2 type identifier
     //! Flag to indicate if the type was explicitely specified (true)
     bool explicitType_;

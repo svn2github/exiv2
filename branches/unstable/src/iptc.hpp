@@ -35,6 +35,7 @@
 #include "types.hpp"
 #include "error.hpp"
 #include "value.hpp"
+#include "key.hpp"
 #include "datasets.hpp"
 
 // + standard includes
@@ -53,7 +54,7 @@ namespace Exiv2 {
 // class definitions
 
     /*!
-      @brief An IPTC metadatum ("dataset"), consisting of an IptcKey and a
+      @brief An IPTC metadatum ("dataset"), consisting of a Key1 and a
              Value and methods to manipulate these.
      */
     class EXIV2API Iptcdatum : public Metadatum {
@@ -72,7 +73,7 @@ namespace Exiv2 {
           @throw Error if the key cannot be parsed and converted
                  to a tag number and record id.
          */
-        explicit Iptcdatum(const IptcKey& key,
+        explicit Iptcdatum(const Key1& key,
                            const Value* pValue =0);
         //! Copy constructor
         Iptcdatum(const Iptcdatum& rhs);
@@ -123,11 +124,6 @@ namespace Exiv2 {
          */
         std::string key() const;
         /*!
-           @brief Return the name of the record (deprecated)
-           @return record name
-         */
-        std::string recordName() const;
-        /*!
            @brief Return the record id
            @return record id
          */
@@ -158,8 +154,8 @@ namespace Exiv2 {
 
     private:
         // DATA
-        IptcKey::AutoPtr key_;                  //!< Key
-        Value::AutoPtr   value_;                //!< Value
+        Key1 key_;                            //!< Key
+        Value::AutoPtr value_;                //!< Value
 
     }; // class Iptcdatum
 
@@ -204,7 +200,7 @@ namespace Exiv2 {
           @return 0 if successful;<BR>
                   6 if the dataset already exists and is not repeatable
          */
-        int add(const IptcKey& key, Value* value);
+        int add(const Key1& key, Value* value);
         /*!
           @brief Add a copy of the Iptcdatum to the IPTC metadata. A check
                  for non-repeatable datasets is performed.
@@ -235,7 +231,7 @@ namespace Exiv2 {
           @brief Find the first Iptcdatum with the given key, return an iterator
                  to it.
          */
-        iterator findKey(const IptcKey& key);
+        iterator findKey(const Key1& key);
         /*!
           @brief Find the first Iptcdatum with the given record and dataset it,
                 return a const iterator to it.
@@ -254,7 +250,7 @@ namespace Exiv2 {
           @brief Find the first Iptcdatum with the given key, return a const
                  iterator to it.
          */
-        const_iterator findKey(const IptcKey& key) const;
+        const_iterator findKey(const Key1& key) const;
         /*!
           @brief Find the first Iptcdatum with the given record and dataset
                  number, return a const iterator to it.

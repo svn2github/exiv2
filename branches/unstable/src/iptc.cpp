@@ -88,17 +88,16 @@ namespace {
 // class member definitions
 namespace Exiv2 {
 
-    Iptcdatum::Iptcdatum(const IptcKey& key,
+    Iptcdatum::Iptcdatum(const Key1& key,
                          const Value* pValue)
-        : key_(key.clone())
+        : key_(key)
     {
         if (pValue) value_ = pValue->clone();
     }
 
     Iptcdatum::Iptcdatum(const Iptcdatum& rhs)
-        : Metadatum(rhs)
+        : Metadatum(rhs), key_(rhs.key_)
     {
-        if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
         if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
     }
 
@@ -118,42 +117,37 @@ namespace Exiv2 {
 
     std::string Iptcdatum::key() const
     {
-        return key_.get() == 0 ? "" : key_->key();
-    }
-
-    std::string Iptcdatum::recordName() const
-    {
-        return key_.get() == 0 ? "" : key_->recordName();
+        return key_.key();
     }
 
     uint16_t Iptcdatum::record() const
     {
-        return key_.get() == 0 ? 0 : key_->record();
+        return key_.group();
     }
 
     const char* Iptcdatum::familyName() const
     {
-        return key_.get() == 0 ? "" : key_->familyName();
+        return key_.familyName();
     }
 
     std::string Iptcdatum::groupName() const
     {
-        return key_.get() == 0 ? "" : key_->groupName();
+        return key_.groupName();
     }
 
     std::string Iptcdatum::tagName() const
     {
-        return key_.get() == 0 ? "" : key_->tagName();
+        return key_.tagName();
     }
 
     std::string Iptcdatum::tagLabel() const
     {
-        return key_.get() == 0 ? "" : key_->tagLabel();
+        return key_.tagLabel();
     }
 
     uint16_t Iptcdatum::tag() const
     {
-        return key_.get() == 0 ? 0 : key_->tag();
+        return key_.tag();
     }
 
     TypeId Iptcdatum::typeId() const
@@ -220,11 +214,9 @@ namespace Exiv2 {
     Iptcdatum& Iptcdatum::operator=(const Iptcdatum& rhs)
     {
         if (this == &rhs) return *this;
+
         Metadatum::operator=(rhs);
-
-        key_.reset();
-        if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
-
+        key_ = rhs.key_;
         value_.reset();
         if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
 
@@ -268,7 +260,7 @@ namespace Exiv2 {
 
     Iptcdatum& IptcData::operator[](const std::string& key)
     {
-        IptcKey iptcKey(key);
+        Key1 iptcKey(key);
         iterator pos = findKey(iptcKey);
         if (pos == end()) {
             add(Iptcdatum(iptcKey));
@@ -295,7 +287,7 @@ namespace Exiv2 {
         return newSize;
     } // IptcData::size
 
-    int IptcData::add(const IptcKey& key, Value* value)
+    int IptcData::add(const Key1& key, Value* value)
     {
         return add(Iptcdatum(key, value));
     }
@@ -312,16 +304,16 @@ namespace Exiv2 {
         return 0;
     }
 
-    IptcData::const_iterator IptcData::findKey(const IptcKey& key) const
+    IptcData::const_iterator IptcData::findKey(const Key1& key) const
     {
         return std::find_if(iptcMetadata_.begin(), iptcMetadata_.end(),
-                            FindIptcdatum(key.tag(), key.record()));
+                            FindIptcdatum(key.tag(), key.group()));
     }
 
-    IptcData::iterator IptcData::findKey(const IptcKey& key)
+    IptcData::iterator IptcData::findKey(const Key1& key)
     {
         return std::find_if(iptcMetadata_.begin(), iptcMetadata_.end(),
-                            FindIptcdatum(key.tag(), key.record()));
+                            FindIptcdatum(key.tag(), key.group()));
     }
 
     IptcData::const_iterator IptcData::findId(uint16_t dataset, uint16_t record) const
@@ -353,7 +345,7 @@ namespace Exiv2 {
 
     const char *IptcData::detectCharset() const
     {
-        const_iterator pos = findKey(IptcKey("Iptc.Envelope.CharacterSet"));
+        const_iterator pos = findKey(Key1("Iptc.Envelope.CharacterSet"));
         if (pos != end()) {
             const std::string value = pos->toString();
             if (pos->value().ok()) {
@@ -452,14 +444,14 @@ namespace Exiv2 {
                 if ((rc = readData(iptcData, dataSet, record, pRead, sizeData)) != 0) {
 #ifndef SUPPRESS_WARNINGS
                     EXV_WARNING << "Failed to read IPTC dataset "
-                                << IptcKey(dataSet, record)
+                                << Key1(dataSet, record)
                                 << " (rc = " << rc << "); skipped.\n";
 #endif
                 }
             }
 #ifndef SUPPRESS_WARNINGS
             else {
-                EXV_WARNING << "IPTC dataset " << IptcKey(dataSet, record)
+                EXV_WARNING << "IPTC dataset " << Key1(dataSet, record)
                             << " has invalid size " << sizeData << "; skipped.\n";
             }
 #endif
@@ -521,7 +513,7 @@ namespace {
         value = Exiv2::Value::create(type);
         int rc = value->read(data, sizeData, Exiv2::bigEndian);
         if (0 == rc) {
-            Exiv2::IptcKey key(dataSet, record);
+            Exiv2::Key1 key(dataSet, record);
             iptcData.add(key, value.get());
         }
         else if (1 == rc) {
@@ -529,7 +521,7 @@ namespace {
             value = Exiv2::Value::create(Exiv2::string);
             rc = value->read(data, sizeData, Exiv2::bigEndian);
             if (0 == rc) {
-                Exiv2::IptcKey key(dataSet, record);
+                Exiv2::Key1 key(dataSet, record);
                 iptcData.add(key, value.get());
             }
         }

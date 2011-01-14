@@ -151,7 +151,7 @@ int main()
 
     // -----
 
-    IptcKey ik1("Iptc.Envelope.0x0005");
+    Key1 ik1("Iptc.Envelope.0x0005");
     tc += 1;
     if (ik1.key() != "Iptc.Envelope.Destination") {
         std::cout << "Testcase failed (converted Iptc key)" << std::endl;
@@ -163,14 +163,14 @@ int main()
         rc += 1;
     }
     tc += 1;
-    if (ik1.recordName() != "Envelope") {
+    if (ik1.groupName() != "Envelope") {
         std::cout << "Testcase failed (converted recordName)" << std::endl;
         rc += 1;
     }
 
     // -----
 
-    IptcKey ik2(0xabcd, 0x1234);
+    Key1 ik2(0xabcd, 0x1234);
     tc += 1;
     if (ik2.key() != "Iptc.0x1234.0xabcd") {
         std::cout << "Testcase failed (unknown Iptc key)" << std::endl;
@@ -182,7 +182,7 @@ int main()
         rc += 1;
     }
     tc += 1;
-    if (ik2.recordName() != "0x1234") {
+    if (ik2.groupName() != "0x1234") {
         std::cout << "Testcase failed (converted recordName)" << std::endl;
         rc += 1;
     }

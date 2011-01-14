@@ -1041,32 +1041,34 @@ namespace {
 
         Exiv2::TypeId defaultType = Exiv2::invalidTypeId;
         std::string key(line.substr(keyStart, keyEnd-keyStart));
-        MetadataId metadataId = invalidMetadataId;
+        Exiv2::MetadataId metadataId = Exiv2::mdNone;
         if (cmdId != reg) {
             try {
-                Exiv2::IptcKey iptcKey(key);
-                metadataId = iptc;
+                Exiv2::Key1 iptcKey(key);
+                // Todo: Fix this temp hack when all is unified
+                if (iptcKey.family() != Exiv2::mdIptc) throw Exiv2::Error(6, key);
+                metadataId = iptcKey.family();
                 defaultType = Exiv2::IptcDataSets::dataSetType(iptcKey.tag(),
-                                                               iptcKey.record());
+                                                               iptcKey.group());
             }
             catch (const Exiv2::AnyError&) {}
-            if (metadataId == invalidMetadataId) {
+            if (metadataId == Exiv2::mdNone) {
                 try {
                     Exiv2::ExifKey exifKey(key);
-                    metadataId = exif;
+                    metadataId = Exiv2::mdExif;
                     defaultType = exifKey.defaultTypeId();
                 }
                 catch (const Exiv2::AnyError&) {}
             }
-            if (metadataId == invalidMetadataId) {
+            if (metadataId == Exiv2::mdNone) {
                 try {
                     Exiv2::XmpKey xmpKey(key);
-                    metadataId = xmp;
+                    metadataId = Exiv2::mdXmp;
                     defaultType = Exiv2::XmpProperties::propertyType(xmpKey);
                 }
                 catch (const Exiv2::AnyError&) {}
             }
-            if (metadataId == invalidMetadataId) {
+            if (metadataId == Exiv2::mdNone) {
                 throw Exiv2::Error(1, Exiv2::toString(num)
                                    + ": " + _("Invalid key") + " `" + key + "'");
             }
