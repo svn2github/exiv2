@@ -33,6 +33,7 @@
 // included header files
 #include "metadatum.hpp"
 #include "properties.hpp"
+#include "key.hpp"
 #include "value.hpp"
 #include "types.hpp"
 
@@ -53,7 +54,7 @@ namespace Exiv2 {
 
     /*!
       @brief Information related to an XMP property. An XMP metadatum consists
-             of an XmpKey and a Value and provides methods to manipulate these.
+             of a Key1 and a Value and provides methods to manipulate these.
      */
     class EXIV2API Xmpdatum : public Metadatum {
     public:
@@ -71,7 +72,7 @@ namespace Exiv2 {
           @throw Error if the key cannot be parsed and converted
                  to a known schema namespace prefix and property name.
          */
-        explicit Xmpdatum(const XmpKey& key,
+        explicit Xmpdatum(const Key1& key,
                           const Value* pValue =0);
         //! Copy constructor
         Xmpdatum(const Xmpdatum& rhs);
@@ -199,7 +200,7 @@ namespace Exiv2 {
                  method copies (clones) the value.
           @return 0 if successful.
          */
-        int add(const XmpKey& key, const Value* value);
+        int add(const Key1& key, const Value* value);
         /*!
           @brief Add a copy of the Xmpdatum to the XMP metadata.
           @return 0 if successful.
@@ -225,7 +226,7 @@ namespace Exiv2 {
           @brief Find the first Xmpdatum with the given key, return an iterator
                  to it.
          */
-        iterator findKey(const XmpKey& key);
+        iterator findKey(const Key1& key);
         //@}
 
         //! @name Accessors
@@ -238,7 +239,7 @@ namespace Exiv2 {
           @brief Find the first Xmpdatum with the given key, return a const
                  iterator to it.
          */
-        const_iterator findKey(const XmpKey& key) const;
+        const_iterator findKey(const Key1& key) const;
         //! Return true if there is no XMP metadata
         bool empty() const;
         //! Get the number of metadata entries

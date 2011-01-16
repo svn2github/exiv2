@@ -56,7 +56,7 @@ namespace {
     class FindXmpdatum {
     public:
         //! Constructor, initializes the object with key
-        FindXmpdatum(const Exiv2::XmpKey& key)
+        FindXmpdatum(const Exiv2::Key1& key)
             : key_(key.key()) {}
         /*!
           @brief Returns true if prefix and property of the argument
@@ -99,8 +99,8 @@ namespace {
 #endif // EXV_HAVE_XMP_TOOLKIT
 
     //! Make an XMP key from a schema namespace and property path
-    Exiv2::XmpKey::AutoPtr makeXmpKey(const std::string& schemaNs,
-                                      const std::string& propPath);
+    Exiv2::Key1::AutoPtr makeXmpKey(const std::string& schemaNs,
+                                    const std::string& propPath);
 }
 
 // *****************************************************************************
@@ -109,38 +109,37 @@ namespace Exiv2 {
 
     //! Internal Pimpl structure of class Xmpdatum.
     struct Xmpdatum::Impl {
-        Impl(const XmpKey& key, const Value* pValue);  //!< Constructor
+        Impl(const Key1& key, const Value* pValue);  //!< Constructor
         Impl(const Impl& rhs);                         //!< Copy constructor
         Impl& operator=(const Impl& rhs);              //!< Assignment
 
         // DATA
-        XmpKey::AutoPtr key_;                          //!< Key
+        Key1 key_;                                     //!< Key
         Value::AutoPtr  value_;                        //!< Value
     };
 
-    Xmpdatum::Impl::Impl(const XmpKey& key, const Value* pValue)
-        : key_(key.clone())
+    Xmpdatum::Impl::Impl(const Key1& key, const Value* pValue)
+        : key_(key)
     {
         if (pValue) value_ = pValue->clone();
     }
 
     Xmpdatum::Impl::Impl(const Impl& rhs)
+        : key_(rhs.key_)
     {
-        if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
         if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
     }
 
     Xmpdatum::Impl& Xmpdatum::Impl::operator=(const Impl& rhs)
     {
         if (this == &rhs) return *this;
-        key_.reset();
-        if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
+        key_ = rhs.key_;
         value_.reset();
         if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
         return *this;
     }
 
-    Xmpdatum::Xmpdatum(const XmpKey& key, const Value* pValue)
+    Xmpdatum::Xmpdatum(const Key1& key, const Value* pValue)
         : p_(new Impl(key, pValue))
     {
     }
@@ -165,32 +164,32 @@ namespace Exiv2 {
 
     std::string Xmpdatum::key() const
     {
-        return p_->key_.get() == 0 ? "" : p_->key_->key();
+        return p_->key_.key();
     }
 
     const char* Xmpdatum::familyName() const
     {
-        return p_->key_.get() == 0 ? "" : p_->key_->familyName();
+        return p_->key_.familyName();
     }
 
     std::string Xmpdatum::groupName() const
     {
-        return p_->key_.get() == 0 ? "" : p_->key_->groupName();
+        return p_->key_.groupName();
     }
 
     std::string Xmpdatum::tagName() const
     {
-        return p_->key_.get() == 0 ? "" : p_->key_->tagName();
+        return p_->key_.tagName();
     }
 
     std::string Xmpdatum::tagLabel() const
     {
-        return p_->key_.get() == 0 ? "" : p_->key_->tagLabel();
+        return p_->key_.tagLabel();
     }
 
     uint16_t Xmpdatum::tag() const
     {
-        return p_->key_.get() == 0 ? 0 : p_->key_->tag();
+        return p_->key_.tag();
     }
 
     TypeId Xmpdatum::typeId() const
@@ -286,18 +285,15 @@ namespace Exiv2 {
     int Xmpdatum::setValue(const std::string& value)
     {
         if (p_->value_.get() == 0) {
-            TypeId type = xmpText;
-            if (0 != p_->key_.get()) {
-                type = XmpProperties::propertyType(*p_->key_.get());
-            }
-            p_->value_ = Value::create(type);
+            p_->value_ = Value::create(p_->key_.defaultTypeId());
         }
         return p_->value_->read(value);
     }
 
     Xmpdatum& XmpData::operator[](const std::string& key)
     {
-        XmpKey xmpKey(key);
+        Key1 xmpKey(key);
+        assert(xmpKey.family() == mdXmp);
         iterator pos = findKey(xmpKey);
         if (pos == end()) {
             add(Xmpdatum(xmpKey));
@@ -306,7 +302,7 @@ namespace Exiv2 {
         return *pos;
     }
 
-    int XmpData::add(const XmpKey& key, const Value* value)
+    int XmpData::add(const Key1& key, const Value* value)
     {
         return add(Xmpdatum(key, value));
     }
@@ -317,13 +313,13 @@ namespace Exiv2 {
         return 0;
     }
 
-    XmpData::const_iterator XmpData::findKey(const XmpKey& key) const
+    XmpData::const_iterator XmpData::findKey(const Key1& key) const
     {
         return std::find_if(xmpMetadata_.begin(), xmpMetadata_.end(),
                             FindXmpdatum(key));
     }
 
-    XmpData::iterator XmpData::findKey(const XmpKey& key)
+    XmpData::iterator XmpData::findKey(const Key1& key)
     {
         return std::find_if(xmpMetadata_.begin(), xmpMetadata_.end(),
                             FindXmpdatum(key));
@@ -478,7 +474,7 @@ namespace Exiv2 {
                 }
                 continue;
             }
-            XmpKey::AutoPtr key = makeXmpKey(schemaNs, propPath);
+            Key1::AutoPtr key = makeXmpKey(schemaNs, propPath);
             if (XMP_ArrayIsAltText(opt)) {
                 // Read Lang Alt property
                 LangAltValue::AutoPtr val(new LangAltValue);
@@ -839,8 +835,8 @@ namespace {
 #endif // DEBUG
 #endif // EXV_HAVE_XMP_TOOLKIT
 
-    Exiv2::XmpKey::AutoPtr makeXmpKey(const std::string& schemaNs,
-                                      const std::string& propPath)
+    Exiv2::Key1::AutoPtr makeXmpKey(const std::string& schemaNs,
+                                    const std::string& propPath)
     {
         std::string property;
         std::string::size_type idx = propPath.find(':');
@@ -853,7 +849,7 @@ namespace {
         if (prefix.empty()) {
             throw Exiv2::Error(36, propPath, schemaNs);
         }
-        return Exiv2::XmpKey::AutoPtr(new Exiv2::XmpKey(prefix, property));
+        return Exiv2::Key1::AutoPtr(new Exiv2::Key1(prefix, property));
     } // makeXmpKey
 
 }

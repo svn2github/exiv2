@@ -520,24 +520,21 @@ namespace Exiv2 {
 
     std::string XmpKey1::tagLabel() const
     {
-        // Todo: Implement me! (Requires changes in XmpProperties)
-        return "";
-
-        // const char* pt = XmpProperties::propertyTitle(*this);
-        // if (!pt) return tagName();
-        // return pt;
+        const char* pt = XmpProperties::propertyTitle(prefix_, property_);
+        if (!pt) return tagName();
+        return pt;
     }
 
     std::string XmpKey1::tagDesc() const
     {
-        // Todo: Implement me! (Requires changes in XmpProperties)
-        return "";
+        const char* td = XmpProperties::propertyDesc(prefix_, property_);
+        if (!td) return "";
+        return td;
     }
 
     TypeId XmpKey1::defaultTypeId() const
     {
-        // Todo: Implement me! (Requires changes in XmpProperties)
-        return invalidTypeId;
+        return XmpProperties::propertyType(prefix_, property_);
     }
 
     Key1Impl* XmpKey1::clone() const

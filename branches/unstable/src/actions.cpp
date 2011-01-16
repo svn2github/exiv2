@@ -1297,7 +1297,7 @@ namespace Action {
                 iptcData.add(Exiv2::Key1(modifyCmd.key_), value.get());
             }
             if (modifyCmd.metadataId_ == Exiv2::mdXmp) {
-                xmpData.add(Exiv2::XmpKey(modifyCmd.key_), value.get());
+                xmpData.add(Exiv2::Key1(modifyCmd.key_), value.get());
             }
         }
         else {
@@ -1340,7 +1340,7 @@ namespace Action {
         }
         if (modifyCmd.metadataId_ == Exiv2::mdXmp) {
             Exiv2::XmpData::iterator pos =
-                xmpData.findKey(Exiv2::XmpKey(modifyCmd.key_));
+                xmpData.findKey(Exiv2::Key1(modifyCmd.key_));
             if (pos != xmpData.end()) {
                 metadatum = &(*pos);
             }
@@ -1370,7 +1370,7 @@ namespace Action {
                     iptcData.add(Exiv2::Key1(modifyCmd.key_), value.get());
                 }
                 if (modifyCmd.metadataId_ == Exiv2::mdXmp) {
-                    xmpData.add(Exiv2::XmpKey(modifyCmd.key_), value.get());
+                    xmpData.add(Exiv2::Key1(modifyCmd.key_), value.get());
                 }
             }
         }
@@ -1409,7 +1409,7 @@ namespace Action {
         }
         if (modifyCmd.metadataId_ == Exiv2::mdXmp) {
             Exiv2::XmpData::iterator pos;
-            Exiv2::XmpKey xmpKey = Exiv2::XmpKey(modifyCmd.key_);
+            Exiv2::Key1 xmpKey = Exiv2::Key1(modifyCmd.key_);
             while((pos = xmpData.findKey(xmpKey)) != xmpData.end()) {
                 xmpData.erase(pos);
             }

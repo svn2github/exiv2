@@ -96,7 +96,7 @@ try {
     assert(getv8.ok());
 
     // Deleting an XMP property
-    Exiv2::XmpData::iterator pos = xmpData.findKey(Exiv2::XmpKey("Xmp.dc.eight"));
+    Exiv2::XmpData::iterator pos = xmpData.findKey(Exiv2::Key1("Xmp.dc.eight"));
     if (pos == xmpData.end()) throw Exiv2::Error(1, "Key not found");
     xmpData.erase(pos);
 
@@ -107,20 +107,20 @@ try {
     // Add a simple XMP property in a known namespace    
     Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpText);
     v->read("image/jpeg");
-    xmpData.add(Exiv2::XmpKey("Xmp.dc.format"), v.get());
+    xmpData.add(Exiv2::Key1("Xmp.dc.format"), v.get());
 
     // Add an ordered array of text values.
     v = Exiv2::Value::create(Exiv2::xmpSeq); // or xmpBag or xmpAlt.
     v->read("1) The first creator");         // The sequence in which the array
     v->read("2) The second creator");        // elements are added is their
     v->read("3) And another one");           // order in the array.
-    xmpData.add(Exiv2::XmpKey("Xmp.dc.creator"), v.get());
+    xmpData.add(Exiv2::Key1("Xmp.dc.creator"), v.get());
 
     // Add a language alternative property
     v = Exiv2::Value::create(Exiv2::langAlt);
     v->read("lang=de-DE Hallo, Welt");       // The default doesn't need a 
     v->read("Hello, World");                 // qualifier
-    xmpData.add(Exiv2::XmpKey("Xmp.dc.description"), v.get());
+    xmpData.add(Exiv2::Key1("Xmp.dc.description"), v.get());
 
     // According to the XMP specification, Xmp.tiff.ImageDescription is an
     // alias for Xmp.dc.description. Exiv2 treats an alias just like any
@@ -146,11 +146,11 @@ try {
 
     // Add a structure
     Exiv2::XmpTextValue tv("16");
-    xmpData.add(Exiv2::XmpKey("Xmp.xmpDM.videoFrameSize/stDim:w"), &tv);
+    xmpData.add(Exiv2::Key1("Xmp.xmpDM.videoFrameSize/stDim:w"), &tv);
     tv.read("9");
-    xmpData.add(Exiv2::XmpKey("Xmp.xmpDM.videoFrameSize/stDim:h"), &tv);
+    xmpData.add(Exiv2::Key1("Xmp.xmpDM.videoFrameSize/stDim:h"), &tv);
     tv.read("inch");
-    xmpData.add(Exiv2::XmpKey("Xmp.xmpDM.videoFrameSize/stDim:unit"), &tv);
+    xmpData.add(Exiv2::Key1("Xmp.xmpDM.videoFrameSize/stDim:unit"), &tv);
 
     // Add an element with a qualifier (using the namespace registered above)
     xmpData["Xmp.dc.publisher"] = "James Bond";  // creates an unordered array
@@ -158,23 +158,23 @@ try {
 
     // Add a qualifer to an array element of Xmp.dc.creator (added above)
     tv.read("programmer");
-    xmpData.add(Exiv2::XmpKey("Xmp.dc.creator[2]/?ns:role"), &tv);
+    xmpData.add(Exiv2::Key1("Xmp.dc.creator[2]/?ns:role"), &tv);
 
     // Add an array of structures
     tv.read("");                                         // Clear the value
     tv.setXmpArrayType(Exiv2::XmpValue::xaBag);
-    xmpData.add(Exiv2::XmpKey("Xmp.xmpBJ.JobRef"), &tv); // Set the array type.
+    xmpData.add(Exiv2::Key1("Xmp.xmpBJ.JobRef"), &tv); // Set the array type.
 
     tv.setXmpArrayType(Exiv2::XmpValue::xaNone);
     tv.read("Birthday party");
-    xmpData.add(Exiv2::XmpKey("Xmp.xmpBJ.JobRef[1]/stJob:name"), &tv);
+    xmpData.add(Exiv2::Key1("Xmp.xmpBJ.JobRef[1]/stJob:name"), &tv);
     tv.read("Photographer");
-    xmpData.add(Exiv2::XmpKey("Xmp.xmpBJ.JobRef[1]/stJob:role"), &tv);
+    xmpData.add(Exiv2::Key1("Xmp.xmpBJ.JobRef[1]/stJob:role"), &tv);
 
     tv.read("Wedding ceremony");
-    xmpData.add(Exiv2::XmpKey("Xmp.xmpBJ.JobRef[2]/stJob:name"), &tv);
+    xmpData.add(Exiv2::Key1("Xmp.xmpBJ.JobRef[2]/stJob:name"), &tv);
     tv.read("Best man");
-    xmpData.add(Exiv2::XmpKey("Xmp.xmpBJ.JobRef[2]/stJob:role"), &tv);
+    xmpData.add(Exiv2::Key1("Xmp.xmpBJ.JobRef[2]/stJob:role"), &tv);
 
     // -------------------------------------------------------------------------
     // Output XMP properties

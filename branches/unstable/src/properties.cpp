@@ -45,6 +45,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include <sstream>
 #include <cstring>
 #include <cstdlib>
+#include <cassert>
 
 // *****************************************************************************
 namespace {
@@ -1115,31 +1116,35 @@ namespace Exiv2 {
         return nsInfo(prefix)->ns_;
     }
 
-    const char* XmpProperties::propertyTitle(const XmpKey& key)
+    const char* XmpProperties::propertyTitle(const std::string& prefix,
+                                             const std::string& property)
     {
-        const XmpPropertyInfo* pi = propertyInfo(key);
+        const XmpPropertyInfo* pi = propertyInfo(prefix, property);
         return pi ? pi->title_ : 0;
     }
 
-    const char* XmpProperties::propertyDesc(const XmpKey& key)
+    const char* XmpProperties::propertyDesc(const std::string& prefix,
+                                            const std::string& property)
     {
-        const XmpPropertyInfo* pi = propertyInfo(key);
+        const XmpPropertyInfo* pi = propertyInfo(prefix, property);
         return pi ? pi->desc_ : 0;
     }
 
-    TypeId XmpProperties::propertyType(const XmpKey& key)
+    TypeId XmpProperties::propertyType(const std::string& prefix,
+                                       const std::string& property)
     {
-        const XmpPropertyInfo* pi = propertyInfo(key);
+        const XmpPropertyInfo* pi = propertyInfo(prefix, property);
         return pi ? pi->typeId_ : xmpText;
     }
 
-    const XmpPropertyInfo* XmpProperties::propertyInfo(const XmpKey& key)
+    const XmpPropertyInfo* XmpProperties::propertyInfo(const std::string& prefix,
+                                                       const std::string& property)
     {
-        const XmpPropertyInfo* pl = propertyList(key.groupName());
+        const XmpPropertyInfo* pl = propertyList(prefix);
         if (!pl) return 0;
         const XmpPropertyInfo* pi = 0;
         for (int i = 0; pl[i].name_ != 0; ++i) {
-            if (0 == strcmp(pl[i].name_, key.tagName().c_str())) {
+            if (0 == strcmp(pl[i].name_, property.c_str())) {
                 pi = pl + i;
                 break;
             }
@@ -1189,141 +1194,6 @@ namespace Exiv2 {
         return fct(os, value, 0);
     }
 
-    //! @cond IGNORE
-
-    //! Internal Pimpl structure with private members and data of class XmpKey.
-    struct XmpKey::Impl {
-        Impl() {}                       //!< Default constructor
-        Impl(const std::string& prefix, const std::string& property); //!< Constructor
-
-        /*!
-          @brief Parse and convert the \em key string into property and prefix.
-                 Updates data members if the string can be decomposed, or throws
-                 \em Error.
-
-          @throw Error if the key cannot be decomposed.
-        */
-        void decomposeKey(const std::string& key);
-
-        // DATA
-        static const char* familyName_; //!< "Xmp"
-
-        std::string prefix_;            //!< Prefix
-        std::string property_;          //!< Property name
-    };
-    //! @endcond
-
-    XmpKey::Impl::Impl(const std::string& prefix, const std::string& property)
-    {
-        // Validate prefix
-        if (XmpProperties::ns(prefix).empty()) throw Error(46, prefix);
-
-        property_ = property;
-        prefix_ = prefix;
-    }
-
-    const char* XmpKey::Impl::familyName_ = "Xmp";
-
-    XmpKey::XmpKey(const std::string& key)
-        : p_(new Impl)
-    {
-        p_->decomposeKey(key);
-    }
-
-    XmpKey::XmpKey(const std::string& prefix, const std::string& property)
-        : p_(new Impl(prefix, property))
-    {
-    }
-
-    XmpKey::~XmpKey()
-    {
-        delete p_;
-    }
-
-    XmpKey::XmpKey(const XmpKey& rhs)
-        : Key(rhs), p_(new Impl(*rhs.p_))
-    {
-    }
-
-    XmpKey& XmpKey::operator=(const XmpKey& rhs)
-    {
-        if (this == &rhs) return *this;
-        Key::operator=(rhs);
-        *p_ = *rhs.p_;
-        return *this;
-    }
-
-    XmpKey::AutoPtr XmpKey::clone() const
-    {
-        return AutoPtr(clone_());
-    }
-
-    XmpKey* XmpKey::clone_() const
-    {
-        return new XmpKey(*this);
-    }
-
-    std::string XmpKey::key() const
-    {
-        return std::string(p_->familyName_) + "." + p_->prefix_ + "." + p_->property_;
-    }
-
-    const char* XmpKey::familyName() const
-    {
-        return p_->familyName_;
-    }
-
-    std::string XmpKey::groupName() const
-    {
-        return p_->prefix_;
-    }
-
-    std::string XmpKey::tagName() const
-    {
-        return p_->property_;
-    }
-
-    std::string XmpKey::tagLabel() const
-    {
-        const char* pt = XmpProperties::propertyTitle(*this);
-        if (!pt) return tagName();
-        return pt;
-    }
-
-    uint16_t XmpKey::tag() const
-    {
-        return 0;
-    }
-
-    std::string XmpKey::ns() const
-    {
-        return XmpProperties::ns(p_->prefix_);
-    }
-
-    void XmpKey::Impl::decomposeKey(const std::string& key)
-    {
-        // Get the family name, prefix and property name parts of the key
-        std::string::size_type pos1 = key.find('.');
-        if (pos1 == std::string::npos) throw Error(6, key);
-        std::string familyName = key.substr(0, pos1);
-        if (0 != strcmp(familyName.c_str(), familyName_)) {
-            throw Error(6, key);
-        }
-        std::string::size_type pos0 = pos1 + 1;
-        pos1 = key.find('.', pos0);
-        if (pos1 == std::string::npos) throw Error(6, key);
-        std::string prefix = key.substr(pos0, pos1 - pos0);
-        if (prefix == "") throw Error(6, key);
-        std::string property = key.substr(pos1 + 1);
-        if (property == "") throw Error(6, key);
-
-        // Validate prefix
-        if (XmpProperties::ns(prefix).empty()) throw Error(46, prefix);
-
-        property_ = property;
-        prefix_ = prefix;
-    } // XmpKey::Impl::decomposeKey
-
     // *************************************************************************
     // free functions
     std::ostream& operator<<(std::ostream& os, const XmpPropertyInfo& property)
@@ -1335,6 +1205,5 @@ namespace Exiv2 {
                   << ( property.xmpCategory_ == xmpExternal ? "External" : "Internal" ) << ",\t"
                   << property.desc_                       << "\n";
     }
-    //! @endcond
 
 }                                       // namespace Exiv2

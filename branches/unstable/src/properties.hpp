@@ -50,7 +50,6 @@ namespace Exiv2 {
 
 // *****************************************************************************
 // class declarations
-    class XmpKey;
 
 // *****************************************************************************
 // class definitions
@@ -110,32 +109,37 @@ namespace Exiv2 {
     public:
         /*!
           @brief Return the title (label) of the property.
-          @param key The property key
-          @return The title (label) of the property, 0 if the
-                 key is of an unknown property.
+          @param prefix Prefix
+          @param property Property name
+          @return The title (label) of the property, 0 for an unknown property.
          */
-        static const char* propertyTitle(const XmpKey& key);
+        static const char* propertyTitle(const std::string& prefix,
+                                         const std::string& property);
         /*!
           @brief Return the description of the property.
-          @param key The property key
-          @return The description of the property, 0 if the
-                 key is of an unknown property.
+          @param prefix Prefix
+          @param property Property name
+          @return The description of the property, 0 for an unknown property.
          */
-        static const char* propertyDesc(const XmpKey& key);
+        static const char* propertyDesc(const std::string& prefix,
+                                        const std::string& property);
         /*!
-          @brief Return the type for property \em key. The default
-                 for unknown keys is xmpText.
-          @param key The property key
+          @brief Return the type for property. The default for unknown
+                 properties is xmpText.
+          @param prefix Prefix
+          @param property Property name
           @return The type of the property
          */
-        static TypeId propertyType(const XmpKey& key);
+        static TypeId propertyType(const std::string& prefix,
+                                   const std::string& property);
         /*!
-          @brief Return information for the property for key.
-          @param key The property key
-          @return A pointer to the property information, 0 if the
-                 key is of an unknown property.
+          @brief Return information for the property.
+          @param prefix Prefix
+          @param property Property name
+          @return A pointer to the property information, 0 for an unknown property.
          */
-        static const XmpPropertyInfo* propertyInfo(const XmpKey& key);
+        static const XmpPropertyInfo* propertyInfo(const std::string& prefix,
+                                                   const std::string& property);
         /*!
            @brief Return the namespace name for the schema associated
                   with \em prefix.
@@ -220,79 +224,6 @@ namespace Exiv2 {
         static NsRegistry nsRegistry_;          //! Namespace registry
 
     }; // class XmpProperties
-
-    /*!
-      @brief Concrete keys for XMP metadata.
-     */
-    class EXIV2API XmpKey : public Key {
-    public:
-        //! Shortcut for an %XmpKey auto pointer.
-        typedef std::auto_ptr<XmpKey> AutoPtr;
-
-        //! @name Creators
-        //@{
-        /*!
-          @brief Constructor to create an XMP key from a key string.
-
-          @param key The key string.
-          @throw Error if the first part of the key is not '<b>Xmp</b>' or
-                 the second part of the key cannot be parsed and converted
-                 to a known (i.e., built-in or registered) schema prefix.
-        */
-        explicit XmpKey(const std::string& key);
-        /*!
-          @brief Constructor to create an XMP key from a schema prefix
-                 and a property name.
-
-          @param prefix   Schema prefix name
-          @param property Property name
-
-          @throw Error if the schema prefix is not known.
-        */
-        XmpKey(const std::string& prefix, const std::string& property);
-        //! Copy constructor.
-        XmpKey(const XmpKey& rhs);
-        //! Virtual destructor.
-        virtual ~XmpKey();
-        //@}
-
-        //! @name Manipulators
-        //@{
-        //! Assignment operator.
-        XmpKey& operator=(const XmpKey& rhs);
-        //@}
-
-        //! @name Accessors
-        //@{
-        virtual std::string key() const;
-        virtual const char* familyName() const;
-        /*!
-          @brief Return the name of the group (the second part of the key).
-                 For XMP keys, the group name is the schema prefix name.
-        */
-        virtual std::string groupName() const;
-        virtual std::string tagName() const;
-        virtual std::string tagLabel() const;
-        //! Properties don't have a tag number. Return 0.
-        virtual uint16_t tag() const;
-
-        AutoPtr clone() const;
-
-        // Todo: Should this be removed? What about tagLabel then?
-        //! Return the schema namespace for the prefix of the key
-        std::string ns() const;
-        //@}
-
-    private:
-        //! Internal virtual copy constructor.
-        EXV_DLLLOCAL virtual XmpKey* clone_() const;
-
-    private:
-        // Pimpl idiom
-        struct Impl;
-        Impl* p_;
-
-    }; // class XmpKey
 
 // *****************************************************************************
 // free functions

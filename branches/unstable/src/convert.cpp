@@ -474,7 +474,7 @@ namespace Exiv2 {
 
     bool Converter::prepareXmpTarget(const char* to, bool force)
     {
-        Exiv2::XmpData::iterator pos = xmpData_->findKey(XmpKey(to));
+        Exiv2::XmpData::iterator pos = xmpData_->findKey(Key1(to));
         if (pos == xmpData_->end()) return true;
         if (!overwrite_ && !force) return false;
         xmpData_->erase(pos);
@@ -755,7 +755,7 @@ namespace Exiv2 {
 
     void Converter::cnvXmpValue(const char* from, const char* to)
     {
-        Exiv2::XmpData::iterator pos = xmpData_->findKey(XmpKey(from));
+        Exiv2::XmpData::iterator pos = xmpData_->findKey(Key1(from));
         if (pos == xmpData_->end()) return;
         if (!prepareExifTarget(to)) return;
         std::string value;
@@ -777,7 +777,7 @@ namespace Exiv2 {
     void Converter::cnvXmpComment(const char* from, const char* to)
     {
         if (!prepareExifTarget(to)) return;
-        Exiv2::XmpData::iterator pos = xmpData_->findKey(XmpKey(from));
+        Exiv2::XmpData::iterator pos = xmpData_->findKey(Key1(from));
         if (pos == xmpData_->end()) return;
         std::string value;
         if (!getTextValue(value, pos)) {
@@ -794,7 +794,7 @@ namespace Exiv2 {
     void Converter::cnvXmpArray(const char* from, const char* to)
     {
         if (!prepareExifTarget(to)) return;
-        Exiv2::XmpData::iterator pos = xmpData_->findKey(XmpKey(from));
+        Exiv2::XmpData::iterator pos = xmpData_->findKey(Key1(from));
         if (pos == xmpData_->end()) return;
         std::ostringstream array;
         for (int i = 0; i < pos->count(); ++i) {
@@ -814,7 +814,7 @@ namespace Exiv2 {
 
     void Converter::cnvXmpDate(const char* from, const char* to)
     {
-        Exiv2::XmpData::iterator pos = xmpData_->findKey(XmpKey(from));
+        Exiv2::XmpData::iterator pos = xmpData_->findKey(Key1(from));
         if (pos == xmpData_->end()) return;
         if (!prepareExifTarget(to)) return;
 #ifdef EXV_HAVE_XMP_TOOLKIT
@@ -912,7 +912,7 @@ namespace Exiv2 {
 
     void Converter::cnvXmpVersion(const char* from, const char* to)
     {
-        Exiv2::XmpData::iterator pos = xmpData_->findKey(XmpKey(from));
+        Exiv2::XmpData::iterator pos = xmpData_->findKey(Key1(from));
         if (pos == xmpData_->end()) return;
         if (!prepareExifTarget(to)) return;
         std::string value = pos->toString();
@@ -935,7 +935,7 @@ namespace Exiv2 {
 
     void Converter::cnvXmpGPSVersion(const char* from, const char* to)
     {
-        Exiv2::XmpData::iterator pos = xmpData_->findKey(XmpKey(from));
+        Exiv2::XmpData::iterator pos = xmpData_->findKey(Key1(from));
         if (pos == xmpData_->end()) return;
         if (!prepareExifTarget(to)) return;
         std::string value = pos->toString();
@@ -956,7 +956,7 @@ namespace Exiv2 {
 
     void Converter::cnvXmpFlash(const char* from, const char* to)
     {
-        Exiv2::XmpData::iterator pos = xmpData_->findKey(XmpKey(std::string(from) + "/exif:Fired"));
+        Exiv2::XmpData::iterator pos = xmpData_->findKey(Key1(std::string(from) + "/exif:Fired"));
         if (pos == xmpData_->end()) return;
         if (!prepareExifTarget(to)) return;
         unsigned short value = 0;
@@ -970,7 +970,7 @@ namespace Exiv2 {
                 EXV_WARNING << "Failed to convert " << std::string(from) + "/exif:Fired" << " to " << to << "\n";
 #endif
         }
-        pos = xmpData_->findKey(XmpKey(std::string(from) + "/exif:Return"));
+        pos = xmpData_->findKey(Key1(std::string(from) + "/exif:Return"));
         if (pos != xmpData_->end() && pos->count() > 0) {
             int ret = pos->toLong();
             if (pos->value().ok())
@@ -980,7 +980,7 @@ namespace Exiv2 {
                 EXV_WARNING << "Failed to convert " << std::string(from) + "/exif:Return" << " to " << to << "\n";
 #endif
         }
-        pos = xmpData_->findKey(XmpKey(std::string(from) + "/exif:Mode"));
+        pos = xmpData_->findKey(Key1(std::string(from) + "/exif:Mode"));
         if (pos != xmpData_->end() && pos->count() > 0) {
             int mode = pos->toLong();
             if (pos->value().ok())
@@ -990,7 +990,7 @@ namespace Exiv2 {
                 EXV_WARNING << "Failed to convert " << std::string(from) + "/exif:Mode" << " to " << to << "\n";
 #endif
         }
-        pos = xmpData_->findKey(XmpKey(std::string(from) + "/exif:Function"));
+        pos = xmpData_->findKey(Key1(std::string(from) + "/exif:Function"));
         if (pos != xmpData_->end() && pos->count() > 0) {
             int function = pos->toLong();
             if (pos->value().ok())
@@ -1000,7 +1000,7 @@ namespace Exiv2 {
                 EXV_WARNING << "Failed to convert " << std::string(from) + "/exif:Function" << " to " << to << "\n";
 #endif
         }
-        pos = xmpData_->findKey(XmpKey(std::string(from) + "/exif:RedEyeMode"));
+        pos = xmpData_->findKey(Key1(std::string(from) + "/exif:RedEyeMode"));
         if (pos != xmpData_->end() && pos->count() > 0) {
             int red = pos->toLong();
             if (pos->value().ok())
@@ -1017,7 +1017,7 @@ namespace Exiv2 {
 
     void Converter::cnvXmpGPSCoord(const char* from, const char* to)
     {
-        Exiv2::XmpData::iterator pos = xmpData_->findKey(XmpKey(from));
+        Exiv2::XmpData::iterator pos = xmpData_->findKey(Key1(from));
         if (pos == xmpData_->end()) return;
         if (!prepareExifTarget(to)) return;
         std::string value = pos->toString();
@@ -1108,7 +1108,7 @@ namespace Exiv2 {
 
     void Converter::cnvXmpValueToIptc(const char* from, const char* to)
     {
-        XmpData::iterator pos = xmpData_->findKey(XmpKey(from));
+        XmpData::iterator pos = xmpData_->findKey(Key1(from));
         if (pos == xmpData_->end()) return;
         if (!prepareIptcTarget(to)) return;
 
@@ -1192,8 +1192,8 @@ namespace Exiv2 {
 
     void Converter::syncExifWithXmp()
     {
-        Exiv2::XmpData::iterator td = xmpData_->findKey(XmpKey("Xmp.tiff.NativeDigest"));
-        Exiv2::XmpData::iterator ed = xmpData_->findKey(XmpKey("Xmp.exif.NativeDigest"));
+        Exiv2::XmpData::iterator td = xmpData_->findKey(Key1("Xmp.tiff.NativeDigest"));
+        Exiv2::XmpData::iterator ed = xmpData_->findKey(Key1("Xmp.exif.NativeDigest"));
         if (td != xmpData_->end() && ed != xmpData_->end()) {
             if (td->value().toString() == computeExifDigest(true) &&
                 ed->value().toString() == computeExifDigest(false)) {
