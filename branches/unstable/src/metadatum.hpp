@@ -20,7 +20,7 @@
  */
 /*!
   @file    metadatum.hpp
-  @brief   Provides abstract base classes Metadatum and Key
+  @brief   Provides abstract base class Metadatum
   @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
@@ -29,6 +29,7 @@
   @date    09-Jan-04, ahu: created<BR>
            31-Jul-04, brad: isolated as a component<BR>
            23-Aug-04, ahu: added Key
+           19-Jan-10, ahu: removed Key
  */
 #ifndef METADATUM_HPP_
 #define METADATUM_HPP_
@@ -52,77 +53,6 @@ namespace Exiv2 {
 
 // *****************************************************************************
 // class definitions
-
-    /*!
-      @brief Abstract base class defining the %Key of a metadatum.
-             Keys are used to identify and group metadata.
-    */
-    class EXIV2API Key {
-    public:
-        //! Shortcut for a %Key auto pointer.
-        typedef std::auto_ptr<Key> AutoPtr;
-
-        //! @name Creators
-        //@{
-        //! Destructor
-        virtual ~Key();
-        //@}
-
-        //! @name Accessors
-        //@{
-        /*!
-          @brief Return the key of the metadatum as a string. The key is of the
-                 form 'familyName.groupName.tagName'. Note however that the
-                 key is not necessarily unique, e.g., an ExifData may contain
-                 multiple metadata with the same key.
-         */
-        virtual std::string key() const =0;
-        //! Return an identifier for the type of metadata (the first part of the key)
-        virtual const char* familyName() const =0;
-        //! Return the name of the group (the second part of the key)
-        virtual std::string groupName() const =0;
-        //! Return the name of the tag (which is also the third part of the key)
-        virtual std::string tagName() const =0;
-        //! Return a label for the tag
-        virtual std::string tagLabel() const =0;
-        //! Return the tag number
-        virtual uint16_t tag() const =0;
-        /*!
-          @brief Return an auto-pointer to a copy of itself (deep copy).
-                 The caller owns this copy and the auto-pointer ensures that it
-                 will be deleted.
-         */
-        AutoPtr clone() const;
-        /*!
-          @brief Write the key to an output stream. You do not usually have
-                 to use this function; it is used for the implementation of
-                 the output operator for %Key,
-                 operator<<(std::ostream &os, const Key &key).
-        */
-        std::ostream& write(std::ostream& os) const { return os << key(); }
-        //@}
-
-    protected:
-        //! @name Manipulators
-        //@{
-        /*!
-          @brief Assignment operator. Protected so that it can only be used
-                 by subclasses but not directly.
-         */
-        Key& operator=(const Key& rhs);
-        //@}
-
-    private:
-        //! Internal virtual copy constructor.
-        EXV_DLLLOCAL virtual Key* clone_() const =0;
-
-    }; // class Key
-
-    //! Output operator for Key types
-    inline std::ostream& operator<<(std::ostream& os, const Key& key)
-    {
-        return key.write(os);
-    }
 
     /*!
       @brief Abstract base class defining the interface to access information
