@@ -33,6 +33,7 @@
 // included header files
 #include "metadatum.hpp"
 #include "tags.hpp"
+#include "key.hpp"
 #include "value.hpp"
 #include "types.hpp"
 
@@ -57,7 +58,7 @@ namespace Exiv2 {
 // class definitions
 
     /*!
-      @brief An Exif metadatum, consisting of an ExifKey and a Value and
+      @brief An Exif metadatum, consisting of a Key1 and a Value and
              methods to manipulate these.
      */
     class EXIV2API Exifdatum : public Metadatum {
@@ -72,11 +73,11 @@ namespace Exiv2 {
                  a program can create an 'empty' %Exifdatum with only a key
                  and set the value using setValue().
 
-          @param key %ExifKey.
+          @param key %Exif Key.
           @param pValue Pointer to an %Exifdatum value.
           @throw Error if the key cannot be parsed and converted.
          */
-        explicit Exifdatum(const ExifKey& key, const Value* pValue =0);
+        explicit Exifdatum(const Key1& key, const Value* pValue =0);
         //! Copy constructor
         Exifdatum(const Exifdatum& rhs);
         //! Destructor
@@ -217,7 +218,7 @@ namespace Exiv2 {
 
     private:
         // DATA
-        ExifKey::AutoPtr key_;                  //!< Key
+        Key1 key_;                              //!< Key
         Value::AutoPtr   value_;                //!< Value
 
     }; // class Exifdatum
@@ -459,7 +460,7 @@ namespace Exiv2 {
                  performed, i.e., it is possible to add multiple metadata with
                  the same key.
          */
-        void add(const ExifKey& key, const Value* pValue);
+        void add(const Key1& key, const Value* pValue);
         /*!
           @brief Add a copy of the \em exifdatum to the Exif metadata.  No
                  duplicate checks are performed, i.e., it is possible to add
@@ -498,7 +499,7 @@ namespace Exiv2 {
           @brief Find the first Exifdatum with the given \em key, return an
                  iterator to it.
          */
-        iterator findKey(const ExifKey& key);
+        iterator findKey(const Key1& key);
         //@}
 
         //! @name Accessors
@@ -511,7 +512,7 @@ namespace Exiv2 {
           @brief Find the first Exifdatum with the given \em key, return a const
                  iterator to it.
          */
-        const_iterator findKey(const ExifKey& key) const;
+        const_iterator findKey(const Key1& key) const;
         //! Return true if there is no Exif metadata
         bool empty() const { return count() == 0; }
         //! Get the number of metadata entries

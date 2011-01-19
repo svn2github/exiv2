@@ -103,7 +103,7 @@ namespace Exiv2 {
 
     int CrwImage::pixelWidth() const
     {
-        Exiv2::ExifData::const_iterator widthIter = exifData_.findKey(Exiv2::ExifKey("Exif.Photo.PixelXDimension"));
+        Exiv2::ExifData::const_iterator widthIter = exifData_.findKey(Exiv2::Key1("Exif.Photo.PixelXDimension"));
         if (widthIter != exifData_.end() && widthIter->count() > 0) {
             return widthIter->toLong();
         }
@@ -112,7 +112,7 @@ namespace Exiv2 {
 
     int CrwImage::pixelHeight() const
     {
-        Exiv2::ExifData::const_iterator heightIter = exifData_.findKey(Exiv2::ExifKey("Exif.Photo.PixelYDimension"));
+        Exiv2::ExifData::const_iterator heightIter = exifData_.findKey(Exiv2::Key1("Exif.Photo.PixelYDimension"));
         if (heightIter != exifData_.end() && heightIter->count() > 0) {
             return heightIter->toLong();
         }
@@ -975,7 +975,7 @@ namespace Exiv2 {
         if (ciffComponent.typeId() != asciiString) return;
 
         // Make
-        ExifKey key1("Exif.Image.Make");
+        Key1 key1("Exif.Image.Make");
         Value::AutoPtr value1 = Value::create(ciffComponent.typeId());
         uint32_t i = 0;
         for (;    i < ciffComponent.size()
@@ -986,7 +986,7 @@ namespace Exiv2 {
         image.exifData().add(key1, value1.get());
 
         // Model
-        ExifKey key2("Exif.Image.Model");
+        Key1 key2("Exif.Image.Model");
         Value::AutoPtr value2 = Value::create(ciffComponent.typeId());
         uint32_t j = i;
         for (;    i < ciffComponent.size()
@@ -1022,7 +1022,7 @@ namespace Exiv2 {
         uint16_t c = 1;
         while (uint32_t(c)*2 < ciffComponent.size()) {
             uint16_t n = 1;
-            ExifKey key(c, groupName);
+            Key1 key(c, groupName);
             UShortValue value;
             if (ifdId == canonCsId && c == 23 && ciffComponent.size() > 50) n = 3;
             value.read(ciffComponent.pData() + c*2, n*2, byteOrder);
@@ -1038,13 +1038,13 @@ namespace Exiv2 {
             URational ur = floatToRationalCast(f);
             URationalValue fn;
             fn.value_.push_back(ur);
-            image.exifData().add(ExifKey("Exif.Photo.FNumber"), &fn);
+            image.exifData().add(Key1("Exif.Photo.FNumber"), &fn);
 
             // Exif.Photo.ExposureTime
             ur = exposureTime(canonEv(shutterSpeed));
             URationalValue et;
             et.value_.push_back(ur);
-            image.exifData().add(ExifKey("Exif.Photo.ExposureTime"), &et);
+            image.exifData().add(Key1("Exif.Photo.ExposureTime"), &et);
         }
     } // CrwMap::decodeArray
 
@@ -1072,7 +1072,7 @@ namespace Exiv2 {
             char s[m];
             std::strftime(s, m, "%Y:%m:%d %H:%M:%S", tm);
 
-            ExifKey key(pCrwMapping->tag_, Internal::groupName(pCrwMapping->ifdId_));
+            Key1 key(pCrwMapping->tag_, Internal::groupName(pCrwMapping->ifdId_));
             AsciiValue value;
             value.read(std::string(s));
             image.exifData().add(key, &value);
@@ -1088,12 +1088,12 @@ namespace Exiv2 {
             return decodeBasic(ciffComponent, pCrwMapping, image, byteOrder);
         }
 
-        ExifKey key1("Exif.Photo.PixelXDimension");
+        Key1 key1("Exif.Photo.PixelXDimension");
         ULongValue value1;
         value1.read(ciffComponent.pData(), 4, byteOrder);
         image.exifData().add(key1, &value1);
 
-        ExifKey key2("Exif.Photo.PixelYDimension");
+        Key1 key2("Exif.Photo.PixelYDimension");
         ULongValue value2;
         value2.read(ciffComponent.pData() + 4, 4, byteOrder);
         image.exifData().add(key2, &value2);
@@ -1120,7 +1120,7 @@ namespace Exiv2 {
     {
         assert(pCrwMapping != 0);
         // create a key and value pair
-        ExifKey key(pCrwMapping->tag_, Internal::groupName(pCrwMapping->ifdId_));
+        Key1 key(pCrwMapping->tag_, Internal::groupName(pCrwMapping->ifdId_));
         Value::AutoPtr value;
         if (ciffComponent.typeId() != directory) {
             value = Value::create(ciffComponent.typeId());
@@ -1175,7 +1175,7 @@ namespace Exiv2 {
         assert(pHead != 0);
 
         // Determine the source Exif metadatum
-        ExifKey ek(pCrwMapping->tag_, Internal::groupName(pCrwMapping->ifdId_));
+        Key1 ek(pCrwMapping->tag_, Internal::groupName(pCrwMapping->ifdId_));
         ExifData::const_iterator ed = image.exifData().findKey(ek);
 
         // Set the new value or remove the entry
@@ -1225,8 +1225,8 @@ namespace Exiv2 {
         assert(pCrwMapping != 0);
         assert(pHead != 0);
 
-        const ExifKey k1("Exif.Image.Make");
-        const ExifKey k2("Exif.Image.Model");
+        const Key1 k1("Exif.Image.Make");
+        const Key1 k2("Exif.Image.Model");
         const ExifData::const_iterator ed1 = image.exifData().findKey(k1);
         const ExifData::const_iterator ed2 = image.exifData().findKey(k2);
         const ExifData::const_iterator edEnd = image.exifData().end();
@@ -1283,7 +1283,7 @@ namespace Exiv2 {
         assert(pHead != 0);
 
         time_t t = 0;
-        const ExifKey key(pCrwMapping->tag_, Internal::groupName(pCrwMapping->ifdId_));
+        const Key1 key(pCrwMapping->tag_, Internal::groupName(pCrwMapping->ifdId_));
         const ExifData::const_iterator ed = image.exifData().findKey(key);
         if (ed != image.exifData().end()) {
             struct tm tm;
@@ -1309,9 +1309,9 @@ namespace Exiv2 {
         assert(pCrwMapping != 0);
         assert(pHead != 0);
 
-        const ExifKey kX("Exif.Photo.PixelXDimension");
-        const ExifKey kY("Exif.Photo.PixelYDimension");
-        const ExifKey kO("Exif.Image.Orientation");
+        const Key1 kX("Exif.Photo.PixelXDimension");
+        const Key1 kY("Exif.Photo.PixelYDimension");
+        const Key1 kO("Exif.Image.Orientation");
         const ExifData::const_iterator edX = image.exifData().findKey(kX);
         const ExifData::const_iterator edY = image.exifData().findKey(kY);
         const ExifData::const_iterator edO = image.exifData().findKey(kO);

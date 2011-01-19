@@ -159,7 +159,7 @@ void testCase(const std::string& file1,
               const std::string& key,
               const std::string& value)
 {
-    ExifKey ek(key);
+    Key1 ek(key);
 
     //Open first image
     Image::AutoPtr image1 = ImageFactory::open(file1);

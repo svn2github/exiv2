@@ -38,7 +38,7 @@ try {
     // Set the value to a string
     v->read("1999:12:31 23:59:59");
     // Add the value together with its key to the Exif data container
-    Exiv2::ExifKey key("Exif.Photo.DateTimeOriginal");
+    Exiv2::Key1 key("Exif.Photo.DateTimeOriginal");
     exifData.add(key, v.get());
     std::cout << "Added key \"" << key << "\", value \"" << *v << "\"\n";
 
@@ -50,7 +50,7 @@ try {
     rv->value_.push_back(std::make_pair(2,3));
     rv->value_.push_back(std::make_pair(3,4));
     // Add the key and value pair to the Exif data
-    key = Exiv2::ExifKey("Exif.Image.PrimaryChromaticities");
+    key = Exiv2::Key1("Exif.Image.PrimaryChromaticities");
     exifData.add(key, rv.get());
     std::cout << "Added key \"" << key << "\", value \"" << *rv << "\"\n";
 
@@ -67,7 +67,7 @@ try {
               << "\", new value \"" << tag.value() << "\"\n";
 
     // Alternatively, we can use findKey()
-    key = Exiv2::ExifKey("Exif.Image.PrimaryChromaticities");
+    key = Exiv2::Key1("Exif.Image.PrimaryChromaticities");
     Exiv2::ExifData::iterator pos = exifData.findKey(key);
     if (pos == exifData.end()) throw Exiv2::Error(1, "Key not found");
     // Get a pointer to a copy of the value
@@ -87,7 +87,7 @@ try {
     // Delete metadata from the Exif data container
 
     // Delete the metadatum at iterator position pos
-    key = Exiv2::ExifKey("Exif.Image.PrimaryChromaticities");
+    key = Exiv2::Key1("Exif.Image.PrimaryChromaticities");
     pos = exifData.findKey(key);
     if (pos == exifData.end()) throw Exiv2::Error(1, "Key not found");
     exifData.erase(pos);

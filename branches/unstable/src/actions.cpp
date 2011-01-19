@@ -336,7 +336,7 @@ namespace Action {
         printLabel(_("Focal length"));
         if (1 == printTag(exifData, "Exif.Photo.FocalLength")) {
             md = exifData.findKey(
-                Exiv2::ExifKey("Exif.Photo.FocalLengthIn35mmFilm"));
+                Exiv2::Key1("Exif.Photo.FocalLengthIn35mmFilm"));
             if (md != exifData.end()) {
                 std::cout << " ("<< _("35 mm equivalent") << ": "
                           << md->print(&exifData) << ")";
@@ -382,16 +382,16 @@ namespace Action {
             ydim = image->pixelHeight();
         }
         else {
-            md = exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageWidth"));
+            md = exifData.findKey(Exiv2::Key1("Exif.Image.ImageWidth"));
             if (md == exifData.end()) {
-                md = exifData.findKey(Exiv2::ExifKey("Exif.Photo.PixelXDimension"));
+                md = exifData.findKey(Exiv2::Key1("Exif.Photo.PixelXDimension"));
             }
             if (md != exifData.end() && md->count() > 0) {
                 xdim = md->toLong();
             }
-            md = exifData.findKey(Exiv2::ExifKey("Exif.Image.ImageLength"));
+            md = exifData.findKey(Exiv2::Key1("Exif.Image.ImageLength"));
             if (md == exifData.end()) {
-                md = exifData.findKey(Exiv2::ExifKey("Exif.Photo.PixelYDimension"));
+                md = exifData.findKey(Exiv2::Key1("Exif.Photo.PixelYDimension"));
             }
             if (md != exifData.end() && md->count() > 0) {
                 ydim = md->toLong();
@@ -452,7 +452,7 @@ namespace Action {
         if (!label.empty()) {
             printLabel(label);
         }
-        Exiv2::ExifKey ek(key);
+        Exiv2::Key1 ek(key);
         Exiv2::ExifData::const_iterator md = exifData.findKey(ek);
         if (md != exifData.end()) {
             md->write(std::cout, &exifData);
@@ -773,10 +773,10 @@ namespace Action {
                       << ": " << _("No Exif data found in the file\n");
             return -3;
         }
-        Exiv2::ExifKey key("Exif.Photo.DateTimeOriginal");
+        Exiv2::Key1 key("Exif.Photo.DateTimeOriginal");
         Exiv2::ExifData::iterator md = exifData.findKey(key);
         if (md == exifData.end()) {
-            key = Exiv2::ExifKey("Exif.Image.DateTime");
+            key = Exiv2::Key1("Exif.Image.DateTime");
             md = exifData.findKey(key);
         }
         if (md == exifData.end()) {
@@ -1291,7 +1291,7 @@ namespace Action {
         int rc = value->read(modifyCmd.value_);
         if (0 == rc) {
             if (modifyCmd.metadataId_ == Exiv2::mdExif) {
-                exifData.add(Exiv2::ExifKey(modifyCmd.key_), value.get());
+                exifData.add(Exiv2::Key1(modifyCmd.key_), value.get());
             }
             if (modifyCmd.metadataId_ == Exiv2::mdIptc) {
                 iptcData.add(Exiv2::Key1(modifyCmd.key_), value.get());
@@ -1326,7 +1326,7 @@ namespace Action {
         Exiv2::Metadatum* metadatum = 0;
         if (modifyCmd.metadataId_ == Exiv2::mdExif) {
             Exiv2::ExifData::iterator pos =
-                exifData.findKey(Exiv2::ExifKey(modifyCmd.key_));
+                exifData.findKey(Exiv2::Key1(modifyCmd.key_));
             if (pos != exifData.end()) {
                 metadatum = &(*pos);
             }
@@ -1364,7 +1364,7 @@ namespace Action {
             }
             else {
                 if (modifyCmd.metadataId_ == Exiv2::mdExif) {
-                    exifData.add(Exiv2::ExifKey(modifyCmd.key_), value.get());
+                    exifData.add(Exiv2::Key1(modifyCmd.key_), value.get());
                 }
                 if (modifyCmd.metadataId_ == Exiv2::mdIptc) {
                     iptcData.add(Exiv2::Key1(modifyCmd.key_), value.get());
@@ -1395,7 +1395,7 @@ namespace Action {
         Exiv2::XmpData&  xmpData  = pImage->xmpData();
         if (modifyCmd.metadataId_ == Exiv2::mdExif) {
             Exiv2::ExifData::iterator pos;
-            Exiv2::ExifKey exifKey = Exiv2::ExifKey(modifyCmd.key_);
+            Exiv2::Key1 exifKey = Exiv2::Key1(modifyCmd.key_);
             while((pos = exifData.findKey(exifKey)) != exifData.end()) {
                 exifData.erase(pos);
             }
@@ -1495,7 +1495,7 @@ namespace Action {
                                const std::string& key,
                                const std::string& path) const
     {
-        Exiv2::ExifKey ek(key);
+        Exiv2::Key1 ek(key);
         Exiv2::ExifData::iterator md = exifData.findKey(ek);
         if (md == exifData.end()) {
             // Key not found. That's ok, we do nothing.
@@ -1665,7 +1665,7 @@ namespace Action {
                       << ": " << _("No Exif data found in the file\n");
             return -3;
         }
-        Exiv2::ExifData::iterator pos = exifData.findKey(Exiv2::ExifKey("Exif.Photo.UserComment"));
+        Exiv2::ExifData::iterator pos = exifData.findKey(Exiv2::Key1("Exif.Photo.UserComment"));
         if (pos == exifData.end()) {
             if (Params::instance().verbose_) {
                 std::cout << _("No Exif user comment found") << "\n";

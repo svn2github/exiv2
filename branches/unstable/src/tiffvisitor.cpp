@@ -226,7 +226,7 @@ namespace Exiv2 {
             TiffCreator::getPath(tiffPath, object->tag(), object->group(), root_);
             pRoot_->addPath(object->tag(), tiffPath, pRoot_, clone);
 #ifdef DEBUG
-            ExifKey key(object->tag(), groupName(object->group()));
+            Key1 key(object->tag(), groupName(object->group()));
             std::cerr << "Copied " << key << "\n";
 #endif
         }
@@ -488,7 +488,7 @@ namespace Exiv2 {
     void TiffDecoder::decodeStdTiffEntry(const TiffEntryBase* object)
     {
         assert(object != 0);
-        ExifKey key(object->tag(), groupName(object->group()));
+        Key1 key(object->tag(), groupName(object->group()));
         key.setIdx(object->idx());
         exifData_.add(key, object->pValue());
 
@@ -540,7 +540,7 @@ namespace Exiv2 {
         encodeXmp();
 
         // Find camera make
-        ExifKey key("Exif.Image.Make");
+        Key1 key("Exif.Image.Make");
         ExifData::const_iterator pos = exifData_.findKey(key);
         if (pos != exifData_.end()) {
             make_ = pos->toString();
@@ -566,7 +566,7 @@ namespace Exiv2 {
         // If there is new IPTC data and Exif.Image.ImageResources does
         // not exist, create a new IPTCNAA Exif tag.
         bool del = false;
-        ExifKey iptcNaaKey("Exif.Image.IPTCNAA");
+        Key1 iptcNaaKey("Exif.Image.IPTCNAA");
         ExifData::iterator pos = exifData_.findKey(iptcNaaKey);
         if (pos != exifData_.end()) {
             iptcNaaKey.setIdx(pos->idx());
@@ -574,7 +574,7 @@ namespace Exiv2 {
             del = true;
         }
         DataBuf rawIptc = IptcParser::encode(iptcData_);
-        ExifKey irbKey("Exif.Image.ImageResources");
+        Key1 irbKey("Exif.Image.ImageResources");
         pos = exifData_.findKey(irbKey);
         if (pos != exifData_.end()) {
             irbKey.setIdx(pos->idx());
@@ -614,7 +614,7 @@ namespace Exiv2 {
 
     void TiffEncoder::encodeXmp()
     {
-        ExifKey xmpKey("Exif.Image.XMLPacket");
+        Key1 xmpKey("Exif.Image.XMLPacket");
         // Remove any existing XMP Exif tag
         ExifData::iterator pos = exifData_.findKey(xmpKey);
         if (pos != exifData_.end()) {
@@ -723,7 +723,7 @@ namespace Exiv2 {
         }
         else if (del_) {
             // The makernote is made up of decoded tags, delete binary tag
-            ExifKey key(object->tag(), groupName(object->group()));
+            Key1 key(object->tag(), groupName(object->group()));
             ExifData::iterator pos = exifData_.findKey(key);
             if (pos != exifData_.end()) exifData_.erase(pos);
         }
@@ -733,7 +733,7 @@ namespace Exiv2 {
     {
         assert(object != 0);
 
-        ExifData::iterator pos = exifData_.findKey(ExifKey("Exif.MakerNote.ByteOrder"));
+        ExifData::iterator pos = exifData_.findKey(Key1("Exif.MakerNote.ByteOrder"));
         if (pos != exifData_.end()) {
             // Set Makernote byte order
             ByteOrder bo = stringToByteOrder(pos->toString());
@@ -749,7 +749,7 @@ namespace Exiv2 {
                 "Exif.MakerNote.Offset",
             };
             for (unsigned int i = 0; i < EXV_COUNTOF(synthesizedTags); ++i) {
-                ExifData::iterator pos = exifData_.findKey(ExifKey(synthesizedTags[i]));
+                ExifData::iterator pos = exifData_.findKey(Key1(synthesizedTags[i]));
                 if (pos != exifData_.end()) exifData_.erase(pos);
             }
         }
@@ -825,7 +825,7 @@ namespace Exiv2 {
         const Exifdatum* ed = datum;
         if (ed == 0) {
             // Non-intrusive writing: find matching tag
-            ExifKey key(object->tag(), groupName(object->group()));
+            Key1 key(object->tag(), groupName(object->group()));
             pos = exifData_.findKey(key);
             if (pos != exifData_.end()) {
                 ed = &(*pos);
@@ -892,7 +892,7 @@ namespace Exiv2 {
             if (  object->sizeDataArea_
                 < static_cast<uint32_t>(object->pValue()->sizeDataArea())) {
 #ifdef DEBUG
-                ExifKey key(object->tag(), groupName(object->group()));
+                Key1 key(object->tag(), groupName(object->group()));
                 std::cerr << "DATAAREA GREW     " << key << "\n";
 #endif
                 setDirty();
@@ -900,7 +900,7 @@ namespace Exiv2 {
             else {
                 // Write the new dataarea, fill with 0x0
 #ifdef DEBUG
-                ExifKey key(object->tag(), groupName(object->group()));
+                Key1 key(object->tag(), groupName(object->group()));
                 std::cerr << "Writing data area for " << key << "\n";
 #endif
                 DataBuf buf = object->pValue()->dataArea();
@@ -937,7 +937,7 @@ namespace Exiv2 {
             std::cerr << "\t DATAAREA IS SET (INTRUSIVE WRITING)";
 #endif
             // Set pseudo strips (without a data pointer) from the size tag
-            ExifKey key(object->szTag(), groupName(object->szGroup()));
+            Key1 key(object->szTag(), groupName(object->szGroup()));
             ExifData::const_iterator pos = exifData_.findKey(key);
             const byte* zero = 0;
             if (pos == exifData_.end()) {
@@ -958,7 +958,7 @@ namespace Exiv2 {
                 }
                 if (sizeTotal != sizeDataArea) {
 #ifndef SUPPRESS_WARNINGS
-                    ExifKey key2(object->tag(), groupName(object->group()));
+                    Key1 key2(object->tag(), groupName(object->group()));
                     EXV_ERROR << "Sum of all sizes of " << key
                               << " != data size of " << key2 << ". "
                               << "This results in an invalid image.\n";
@@ -983,7 +983,7 @@ namespace Exiv2 {
             }
 #ifndef SUPPRESS_WARNINGS
             else {
-                ExifKey key2(object->tag(), groupName(object->group()));
+                Key1 key2(object->tag(), groupName(object->group()));
                 EXV_WARNING << "No image data to encode " << key2 << ".\n";
             }
 #endif
@@ -1024,7 +1024,7 @@ namespace Exiv2 {
         }
         object->updateValue(datum->getValue(), byteOrder()); // clones the value
 #ifdef DEBUG
-        ExifKey key(object->tag(), groupName(object->group()));
+        Key1 key(object->tag(), groupName(object->group()));
         std::cerr << "UPDATING DATA     " << key;
         if (tooLarge) {
             std::cerr << "\t\t\t ALLOCATED " << std::dec << object->size_ << " BYTES";
@@ -1042,7 +1042,7 @@ namespace Exiv2 {
             setDirty();
             object->updateValue(datum->getValue(), byteOrder()); // clones the value
 #ifdef DEBUG
-            ExifKey key(object->tag(), groupName(object->group()));
+            Key1 key(object->tag(), groupName(object->group()));
             std::cerr << "UPDATING DATA     " << key;
             std::cerr << "\t\t\t ALLOCATED " << object->size() << " BYTES";
 #endif
@@ -1050,7 +1050,7 @@ namespace Exiv2 {
         else {
             object->setValue(datum->getValue()); // clones the value
 #ifdef DEBUG
-            ExifKey key(object->tag(), groupName(object->group()));
+            Key1 key(object->tag(), groupName(object->group()));
             std::cerr << "NOT UPDATING      " << key;
             std::cerr << "\t\t\t PRESERVE VALUE DATA";
 #endif

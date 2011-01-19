@@ -52,7 +52,7 @@ namespace {
                                            int count)
     {
         for (int i = 0; i < count; ++i) {
-            ExifData::const_iterator pos = ed.findKey(ExifKey(keys[i]));
+            ExifData::const_iterator pos = ed.findKey(Key1(keys[i]));
             if (pos != ed.end()) return pos;
         }
         return ed.end();

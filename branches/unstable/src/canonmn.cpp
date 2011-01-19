@@ -1140,7 +1140,7 @@ namespace Exiv2 {
         if (   !metadata || value.typeId() != unsignedLong
             || value.count() == 0) return os << "(" << value << ")";
 
-        ExifData::const_iterator pos = metadata->findKey(ExifKey("Exif.Image.Model"));
+        ExifData::const_iterator pos = metadata->findKey(Key1("Exif.Image.Model"));
         if (pos == metadata->end()) return os << "(" << value << ")";
 
         // Ported from Exiftool
@@ -1179,7 +1179,7 @@ namespace Exiv2 {
             return os << value;
         }
 
-        ExifKey key("Exif.CanonCs.Lens");
+        Key1 key("Exif.CanonCs.Lens");
         ExifData::const_iterator pos = metadata->findKey(key);
         if (   pos != metadata->end()
             && pos->value().count() >= 3
@@ -1261,7 +1261,7 @@ namespace Exiv2 {
         LensTypeAndFocalLength ltfl;
         ltfl.lensType_ = value.toLong();
 
-        ExifKey key("Exif.CanonCs.Lens");
+        Key1 key("Exif.CanonCs.Lens");
         ExifData::const_iterator pos = metadata->findKey(key);
         if (   pos != metadata->end()
             && pos->value().count() >= 3

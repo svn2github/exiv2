@@ -47,7 +47,7 @@ namespace Exiv2 {
 // *****************************************************************************
 // class declarations
     class ExifData;
-    class ExifKey;
+    class Key1;
     class Value;
     struct TagInfo;
 
@@ -125,9 +125,9 @@ namespace Exiv2 {
         static void taglist(std::ostream& os, const std::string& groupName);
 
         //! Return the name of the section for an Exif \em key.
-        static const char* sectionName(const ExifKey& key);
+        static const char* sectionName(const Key1& key);
         //! Return the default number of components (not bytes!) \em key has. (0=any, -1=count not known)
-        static uint16_t defaultCount(const ExifKey& key);
+        static uint16_t defaultCount(const Key1& key);
         //! Return the name of the IFD for the group.
         static const char* ifdName(const std::string& groupName);
 
@@ -143,89 +143,6 @@ namespace Exiv2 {
         static bool isExifGroup(const std::string& groupName);
 
     }; // class ExifTags
-
-    /*!
-      @brief Concrete keys for Exif metadata and access to Exif tag reference data.
-     */
-    class EXIV2API ExifKey : public Key {
-    public:
-        //! Shortcut for an %ExifKey auto pointer.
-        typedef std::auto_ptr<ExifKey> AutoPtr;
-
-        //! @name Creators
-        //@{
-        /*!
-          @brief Constructor to create an Exif key from a key string.
-
-          @param key The key string.
-          @throw Error if the first part of the key is not '<b>Exif</b>' or
-                 the remainin parts of the key cannot be parsed and
-                 converted to a group name and tag name.
-        */
-        explicit ExifKey(const std::string& key);
-        /*!
-          @brief Constructor to create an Exif key from the tag number and
-                 group name.
-          @param tag The tag value
-          @param groupName The name of the group, i.e., the second part of
-                 the Exif key.
-          @throw Error if the key cannot be constructed from the tag number
-                 and group name.
-         */
-        ExifKey(uint16_t tag, const std::string& groupName);
-        /*!
-          @brief Constructor to create an Exif key from a TagInfo instance.
-          @param ti The TagInfo instance
-          @throw Error if the key cannot be constructed from the tag number
-                 and group name.
-         */
-        ExifKey(const TagInfo& ti);
-        //! Copy constructor
-        ExifKey(const ExifKey& rhs);
-        //! Destructor
-        virtual ~ExifKey();
-        //@}
-
-        //! @name Manipulators
-        //@{
-        /*!
-          @brief Assignment operator.
-         */
-        ExifKey& operator=(const ExifKey& rhs);
-        //! Set the index.
-        void setIdx(int idx);
-        //@}
-
-        //! @name Accessors
-        //@{
-        virtual std::string key() const;
-        virtual const char* familyName() const;
-        virtual std::string groupName() const;
-        //! Return the IFD id as an integer. (Do not use, this is meant for library internal use.)
-        int ifdId() const;
-        virtual std::string tagName() const;
-        virtual uint16_t tag() const;
-        virtual std::string tagLabel() const;
-        //! Return the tag description.
-        std::string tagDesc() const;        // Todo: should be in the base class
-        //! Return the default type id for this tag.
-        TypeId defaultTypeId() const;       // Todo: should be in the base class
-
-        AutoPtr clone() const;
-        //! Return the index (unique id of this key within the original Exif data, 0 if not set)
-        int idx() const;
-        //@}
-
-    private:
-        //! Internal virtual copy constructor.
-        EXV_DLLLOCAL virtual ExifKey* clone_() const;
-
-    private:
-        // Pimpl idiom
-        struct Impl;
-        Impl* p_;
-
-    }; // class ExifKey
 
 // *****************************************************************************
 // free functions

@@ -1043,36 +1043,9 @@ namespace {
         std::string key(line.substr(keyStart, keyEnd-keyStart));
         Exiv2::MetadataId metadataId = Exiv2::mdNone;
         if (cmdId != reg) {
-            try {
-                Exiv2::Key1 iptcKey(key);
-                // Todo: Fix this temp hack when all is unified
-                if (iptcKey.family() != Exiv2::mdIptc) throw Exiv2::Error(6, key);
-                metadataId = iptcKey.family();
-                defaultType = iptcKey.defaultTypeId();
-            }
-            catch (const Exiv2::AnyError&) {}
-            if (metadataId == Exiv2::mdNone) {
-                try {
-                    Exiv2::ExifKey exifKey(key);
-                    metadataId = Exiv2::mdExif;
-                    defaultType = exifKey.defaultTypeId();
-                }
-                catch (const Exiv2::AnyError&) {}
-            }
-            if (metadataId == Exiv2::mdNone) {
-                try {
-                    Exiv2::Key1 xmpKey(key);
-                    // Todo: Fix this temp hack when all is unified
-                    if (xmpKey.family() != Exiv2::mdXmp) throw Exiv2::Error(6, key);
-                    metadataId = xmpKey.family();
-                    defaultType = xmpKey.defaultTypeId();
-                }
-                catch (const Exiv2::AnyError&) {}
-            }
-            if (metadataId == Exiv2::mdNone) {
-                throw Exiv2::Error(1, Exiv2::toString(num)
-                                   + ": " + _("Invalid key") + " `" + key + "'");
-            }
+            Exiv2::Key1 k(key);
+            metadataId = k.family();
+            defaultType = k.defaultTypeId();
         }
         std::string value;
         Exiv2::TypeId type = defaultType;

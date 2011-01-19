@@ -33,6 +33,7 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 // included header files
 #include "types.hpp"
+#include "key.hpp"
 #include "tags.hpp"
 #include "tags_int.hpp"
 #include "error.hpp"
@@ -2646,16 +2647,16 @@ namespace Exiv2 {
         return ii->tagList_();
     } // ExifTags::tagList
 
-    const char* ExifTags::sectionName(const ExifKey& key)
+    const char* ExifTags::sectionName(const Key1& key)
     {
-        const TagInfo* ti = tagInfo(key.tag(), static_cast<Internal::IfdId>(key.ifdId()));
+        const TagInfo* ti = tagInfo(key.tag(), static_cast<Internal::IfdId>(key.group()));
         if (ti == 0) return sectionInfo[unknownTag.sectionId_].name_;
         return sectionInfo[ti->sectionId_].name_;
     }
 
-    uint16_t ExifTags::defaultCount(const ExifKey& key)
+    uint16_t ExifTags::defaultCount(const Key1& key)
     {
-        const TagInfo* ti = tagInfo(key.tag(), static_cast<Internal::IfdId>(key.ifdId()));
+        const TagInfo* ti = tagInfo(key.tag(), static_cast<Internal::IfdId>(key.group()));
         if (ti == 0) return unknownTag.count_;
         return ti->count_;
     }
@@ -2700,236 +2701,12 @@ namespace Exiv2 {
         Internal::taglist(os, ifdId);
     }
 
-    //! %Internal Pimpl structure with private members and data of class ExifKey.
-    struct ExifKey::Impl {
-        //! @name Creators
-        //@{
-        Impl();                         //!< Default constructor
-        //@}
-
-        //! @name Manipulators
-        //@{
-        /*!
-          @brief Set the key corresponding to the \em tag, \em ifdId and \em tagInfo.
-                 The key is of the form '<b>Exif</b>.groupName.tagName'.
-         */
-        void makeKey(uint16_t tag, IfdId ifdId, const TagInfo* tagInfo);
-        /*!
-          @brief Parse and convert the key string into tag and IFD Id.
-                 Updates data members if the string can be decomposed,
-                 or throws \em Error .
-
-          @throw Error if the key cannot be decomposed.
-         */
-        void decomposeKey(const std::string& key);
-        //@}
-
-        //! @name Accessors
-        //@{
-        //! Return the name of the tag
-        std::string tagName() const;
-        //@}
-
-        // DATA
-        static const char* familyName_; //!< "Exif"
-
-        const TagInfo* tagInfo_;        //!< Tag info
-        uint16_t tag_;                  //!< Tag value
-        IfdId ifdId_;                   //!< The IFD associated with this tag
-        int idx_;                       //!< Unique id of the Exif key in the image
-        std::string groupName_;         //!< The group name
-        std::string key_;               //!< %Key
-    };
-
-    const char* ExifKey::Impl::familyName_ = "Exif";
-
-    ExifKey::Impl::Impl()
-        : tagInfo_(0), tag_(0), ifdId_(ifdIdNotSet), idx_(0)
-    {
-    }
-
-    std::string ExifKey::Impl::tagName() const
-    {
-        if (tagInfo_ != 0 && tagInfo_->tag_ != 0xffff) {
-            return tagInfo_->name_;
-        }
-        std::ostringstream os;
-        os << "0x" << std::setw(4) << std::setfill('0') << std::right
-           << std::hex << tag_;
-        return os.str();
-    }
-
-    void ExifKey::Impl::decomposeKey(const std::string& key)
-    {
-        // Get the family name, IFD name and tag name parts of the key
-        std::string::size_type pos1 = key.find('.');
-        if (pos1 == std::string::npos) throw Error(6, key);
-        std::string familyName = key.substr(0, pos1);
-        if (0 != strcmp(familyName.c_str(), familyName_)) {
-            throw Error(6, key);
-        }
-        std::string::size_type pos0 = pos1 + 1;
-        pos1 = key.find('.', pos0);
-        if (pos1 == std::string::npos) throw Error(6, key);
-        std::string groupName = key.substr(pos0, pos1 - pos0);
-        if (groupName.empty()) throw Error(6, key);
-        std::string tn = key.substr(pos1 + 1);
-        if (tn.empty()) throw Error(6, key);
-
-        // Find IfdId
-        IfdId ifdId = groupId(groupName);
-        if (ifdId == ifdIdNotSet) throw Error(6, key);
-        if (!Internal::isExifIfd(ifdId) && !Internal::isMakerIfd(ifdId)) {
-            throw Error(6, key);
-        }
-        // Convert tag
-        uint16_t tag = tagNumber(tn, ifdId);
-        // Get tag info
-        tagInfo_ = tagInfo(tag, ifdId);
-        if (tagInfo_ == 0) throw Error(6, key);
-
-        tag_ = tag;
-        ifdId_ = ifdId;
-        groupName_ = groupName;
-        // tagName() translates hex tag name (0xabcd) to a real tag name if there is one
-        key_ = familyName + "." + groupName + "." + tagName();
-    }
-
-    void ExifKey::Impl::makeKey(uint16_t tag, IfdId ifdId, const TagInfo* tagInfo)
-    {
-        assert(tagInfo != 0);
-
-        tagInfo_ = tagInfo;
-        tag_ = tag;
-        ifdId_ = ifdId;
-        key_ = std::string(familyName_) + "." + groupName_ + "." + tagName();
-    }
-
-    ExifKey::ExifKey(uint16_t tag, const std::string& groupName)
-        : p_(new Impl)
-    {
-        IfdId ifdId = groupId(groupName);
-        // Todo: Test if this condition can be removed
-        if (!Internal::isExifIfd(ifdId) && !Internal::isMakerIfd(ifdId)) {
-            throw Error(23, ifdId);
-        }
-        const TagInfo* ti = tagInfo(tag, ifdId);
-        if (ti == 0) {
-            throw Error(23, ifdId);
-        }
-        p_->groupName_ = groupName;
-        p_->makeKey(tag, ifdId, ti);
-    }
-
-    ExifKey::ExifKey(const TagInfo& ti)
-        : p_(new Impl)
-    {
-        IfdId ifdId = static_cast<IfdId>(ti.ifdId_);
-        if (!Internal::isExifIfd(ifdId) && !Internal::isMakerIfd(ifdId)) {
-            throw Error(23, ifdId);
-        }
-        p_->groupName_ = Exiv2::groupName(ifdId);
-        p_->makeKey(ti.tag_, ifdId, &ti);
-    }
-
-    ExifKey::ExifKey(const std::string& key)
-        : p_(new Impl)
-    {
-        p_->decomposeKey(key);
-    }
-
-    ExifKey::ExifKey(const ExifKey& rhs)
-        : Key(rhs), p_(new Impl(*rhs.p_))
-    {
-    }
-
-    ExifKey::~ExifKey()
-    {
-        delete p_;
-    }
-
-    ExifKey& ExifKey::operator=(const ExifKey& rhs)
-    {
-        if (this == &rhs) return *this;
-        Key::operator=(rhs);
-        *p_ = *rhs.p_;
-        return *this;
-    }
-
-    void ExifKey::setIdx(int idx)
-    {
-        p_->idx_ = idx;
-    }
-
-    std::string ExifKey::key() const
-    {
-        return p_->key_;
-    }
-
-    const char* ExifKey::familyName() const
-    {
-        return p_->familyName_;
-    }
-
-    std::string ExifKey::groupName() const
-    {
-        return p_->groupName_;
-    }
-
-    std::string ExifKey::tagName() const
-    {
-        return p_->tagName();
-    }
-
-    std::string ExifKey::tagLabel() const
-    {
-        if (p_->tagInfo_ == 0 || p_->tagInfo_->tag_ == 0xffff) return "";
-        return _(p_->tagInfo_->title_);
-    }
-
-    std::string ExifKey::tagDesc() const
-    {
-        if (p_->tagInfo_ == 0 || p_->tagInfo_->tag_ == 0xffff) return "";
-        return _(p_->tagInfo_->desc_);
-    }
-
-    TypeId ExifKey::defaultTypeId() const
-    {
-        if (p_->tagInfo_ == 0) return unknownTag.typeId_;
-        return p_->tagInfo_->typeId_;
-    }
-
-    uint16_t ExifKey::tag() const
-    {
-        return p_->tag_;
-    }
-
-    ExifKey::AutoPtr ExifKey::clone() const
-    {
-        return AutoPtr(clone_());
-    }
-
-    ExifKey* ExifKey::clone_() const
-    {
-        return new ExifKey(*this);
-    }
-
-    int ExifKey::ifdId() const
-    {
-        return p_->ifdId_;
-    }
-
-    int ExifKey::idx() const
-    {
-        return p_->idx_;
-    }
-
     // *************************************************************************
     // free functions
 
     std::ostream& operator<<(std::ostream& os, const TagInfo& ti)
     {
-        ExifKey exifKey(ti);
+        Key1 exifKey(ti.tag_, Internal::ifdName(static_cast<Internal::IfdId>(ti.ifdId_)));
         return os << exifKey.tagName() << ",\t"
                   << std::dec << exifKey.tag() << ",\t"
                   << "0x" << std::setw(4) << std::setfill('0')

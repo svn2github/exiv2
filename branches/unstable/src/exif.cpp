@@ -209,8 +209,8 @@ namespace Exiv2 {
         return exifDatum;
     }
 
-    Exifdatum::Exifdatum(const ExifKey& key, const Value* pValue)
-        : key_(key.clone())
+    Exifdatum::Exifdatum(const Key1& key, const Value* pValue)
+        : key_(key)
     {
         if (pValue) value_ = pValue->clone();
     }
@@ -220,9 +220,8 @@ namespace Exiv2 {
     }
 
     Exifdatum::Exifdatum(const Exifdatum& rhs)
-        : Metadatum(rhs)
+        : Metadatum(rhs), key_(rhs.key_)
     {
-        if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
         if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
     }
 
@@ -246,8 +245,7 @@ namespace Exiv2 {
         if (this == &rhs) return *this;
         Metadatum::operator=(rhs);
 
-        key_.reset();
-        if (rhs.key_.get() != 0) key_ = rhs.key_->clone(); // deep copy
+        key_ = rhs.key_;
 
         value_.reset();
         if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
@@ -306,7 +304,7 @@ namespace Exiv2 {
     int Exifdatum::setValue(const std::string& value)
     {
         if (value_.get() == 0) {
-            TypeId type = key_->defaultTypeId();
+            TypeId type = key_.defaultTypeId();
             value_ = Value::create(type);
         }
         return value_->read(value);
@@ -319,47 +317,47 @@ namespace Exiv2 {
 
     std::string Exifdatum::key() const
     {
-        return key_.get() == 0 ? "" : key_->key();
+        return key_.key();
     }
 
     const char* Exifdatum::familyName() const
     {
-        return key_.get() == 0 ? "" : key_->familyName();
+        return key_.familyName();
     }
 
     std::string Exifdatum::groupName() const
     {
-        return key_.get() == 0 ? "" : key_->groupName();
+        return key_.groupName();
     }
 
     std::string Exifdatum::tagName() const
     {
-        return key_.get() == 0 ? "" : key_->tagName();
+        return key_.tagName();
     }
 
     std::string Exifdatum::tagLabel() const
     {
-        return key_.get() == 0 ? "" : key_->tagLabel();
+        return key_.tagLabel();
     }
 
     uint16_t Exifdatum::tag() const
     {
-        return key_.get() == 0 ? 0xffff : key_->tag();
+        return key_.tag();
     }
 
     int Exifdatum::ifdId() const
     {
-        return key_.get() == 0 ? ifdIdNotSet : key_->ifdId();
+        return key_.group();
     }
 
     const char* Exifdatum::ifdName() const
     {
-        return key_.get() == 0 ? "" : Internal::ifdName(static_cast<Internal::IfdId>(key_->ifdId()));
+        return Internal::ifdName(static_cast<Internal::IfdId>(key_.group()));
     }
 
     int Exifdatum::idx() const
     {
-        return key_.get() == 0 ? 0 : key_->idx();
+        return key_.idx();
     }
 
     long Exifdatum::copy(byte* buf, ByteOrder byteOrder) const
@@ -562,7 +560,7 @@ namespace Exiv2 {
 
     Exifdatum& ExifData::operator[](const std::string& key)
     {
-        ExifKey exifKey(key);
+        Key1 exifKey(key);
         iterator pos = findKey(exifKey);
         if (pos == end()) {
             add(Exifdatum(exifKey));
@@ -571,7 +569,7 @@ namespace Exiv2 {
         return *pos;
     }
 
-    void ExifData::add(const ExifKey& key, const Value* pValue)
+    void ExifData::add(const Key1& key, const Value* pValue)
     {
         add(Exifdatum(key, pValue));
     }
@@ -582,13 +580,13 @@ namespace Exiv2 {
         exifMetadata_.push_back(exifdatum);
     }
 
-    ExifData::const_iterator ExifData::findKey(const ExifKey& key) const
+    ExifData::const_iterator ExifData::findKey(const Key1& key) const
     {
         return std::find_if(exifMetadata_.begin(), exifMetadata_.end(),
                             FindExifdatumByKey(key.key()));
     }
 
-    ExifData::iterator ExifData::findKey(const ExifKey& key)
+    ExifData::iterator ExifData::findKey(const Key1& key)
     {
         return std::find_if(exifMetadata_.begin(), exifMetadata_.end(),
                             FindExifdatumByKey(key.key()));
@@ -673,7 +671,7 @@ namespace Exiv2 {
             "Exif.Image.SubIFDs"
         };
         for (unsigned int i = 0; i < EXV_COUNTOF(filteredIfd0Tags); ++i) {
-            ExifData::iterator pos = ed.findKey(ExifKey(filteredIfd0Tags[i]));
+            ExifData::iterator pos = ed.findKey(Key1(filteredIfd0Tags[i]));
             if (pos != ed.end()) {
 #ifdef DEBUG
                 std::cerr << "Warning: Exif tag " << pos->key() << " not encoded\n";
@@ -762,7 +760,7 @@ namespace Exiv2 {
             switch (filteredPvTags[i].ptt_) {
             case pttLen:
                 delTags = false;
-                pos = ed.findKey(ExifKey(filteredPvTags[i].key_));
+                pos = ed.findKey(Key1(filteredPvTags[i].key_));
                 if (pos != ed.end() && sumToLong(*pos) > 32768) {
                     delTags = true;
 #ifndef SUPPRESS_WARNINGS
@@ -773,7 +771,7 @@ namespace Exiv2 {
                 break;
             case pttTag:
                 if (delTags) {
-                    pos = ed.findKey(ExifKey(filteredPvTags[i].key_));
+                    pos = ed.findKey(Key1(filteredPvTags[i].key_));
                     if (pos != ed.end()) {
 #ifndef SUPPRESS_WARNINGS
                         EXV_WARNING << "Exif tag " << pos->key() << " not encoded\n";
@@ -841,7 +839,7 @@ namespace {
     Thumbnail::AutoPtr Thumbnail::create(const Exiv2::ExifData& exifData)
     {
         Thumbnail::AutoPtr thumbnail;
-        const Exiv2::ExifKey k1("Exif.Thumbnail.Compression");
+        const Exiv2::Key1 k1("Exif.Thumbnail.Compression");
         Exiv2::ExifData::const_iterator pos = exifData.findKey(k1);
         if (pos != exifData.end()) {
             if (pos->count() == 0) return thumbnail;
@@ -854,7 +852,7 @@ namespace {
             }
         }
         else {
-            const Exiv2::ExifKey k2("Exif.Thumbnail.JPEGInterchangeFormat");
+            const Exiv2::Key1 k2("Exif.Thumbnail.JPEGInterchangeFormat");
             pos = exifData.findKey(k2);
             if (pos != exifData.end()) {
                 thumbnail = Thumbnail::AutoPtr(new JpegThumbnail);
@@ -887,7 +885,7 @@ namespace {
         for (Exiv2::ExifData::const_iterator i = exifData.begin(); i != exifData.end(); ++i) {
             if (i->groupName() == "Thumbnail") {
                 std::string key = "Exif.Image." + i->tagName();
-                thumb.add(Exiv2::ExifKey(key), &i->value());
+                thumb.add(Exiv2::Key1(key), &i->value());
             }
         }
 
@@ -917,7 +915,7 @@ namespace {
 #endif
     Exiv2::DataBuf JpegThumbnail::copy(const Exiv2::ExifData& exifData) const
     {
-        Exiv2::ExifKey key("Exif.Thumbnail.JPEGInterchangeFormat");
+        Exiv2::Key1 key("Exif.Thumbnail.JPEGInterchangeFormat");
         Exiv2::ExifData::const_iterator format = exifData.findKey(key);
         if (format == exifData.end()) return Exiv2::DataBuf();
         return format->dataArea();

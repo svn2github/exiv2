@@ -43,6 +43,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "tiffimage_int.hpp"
 #include "image.hpp"
 #include "preview.hpp"
+#include "key.hpp"
 #include "error.hpp"
 #include "futils.hpp"
 
@@ -70,7 +71,7 @@ namespace Exiv2 {
     int Rw2Image::pixelWidth() const
     {
         ExifData::const_iterator imageWidth =
-            exifData_.findKey(Exiv2::ExifKey("Exif.PanasonicRaw.SensorWidth"));
+            exifData_.findKey(Exiv2::Key1("Exif.PanasonicRaw.SensorWidth"));
         if (imageWidth != exifData_.end() && imageWidth->count() > 0) {
             return imageWidth->toLong();
         }
@@ -80,7 +81,7 @@ namespace Exiv2 {
     int Rw2Image::pixelHeight() const
     {
         ExifData::const_iterator imageHeight =
-            exifData_.findKey(Exiv2::ExifKey("Exif.PanasonicRaw.SensorHeight"));
+            exifData_.findKey(Exiv2::Key1("Exif.PanasonicRaw.SensorHeight"));
         if (imageHeight != exifData_.end() && imageHeight->count() > 0) {
             return imageHeight->toLong();
         }
@@ -153,7 +154,7 @@ namespace Exiv2 {
             // Filter duplicate tags
             for (ExifData::const_iterator pos = exifData_.begin(); pos != exifData_.end(); ++pos) {
                 if (pos->ifdId() == panaRawId) continue;
-                ExifData::iterator dup = prevData.findKey(ExifKey(pos->key()));
+                ExifData::iterator dup = prevData.findKey(Key1(pos->key()));
                 if (dup != prevData.end()) {
 #ifdef DEBUG
                     std::cerr << "Filtering duplicate tag " << pos->key()
@@ -196,7 +197,7 @@ namespace Exiv2 {
             "Exif.Image.YCbCrPositioning"
         };
         for (unsigned int i = 0; i < EXV_COUNTOF(filteredTags); ++i) {
-            ExifData::iterator pos = prevData.findKey(ExifKey(filteredTags[i]));
+            ExifData::iterator pos = prevData.findKey(Key1(filteredTags[i]));
             if (pos != prevData.end()) {
 #ifdef DEBUG
                 std::cerr << "Exif tag " << pos->key() << " removed\n";

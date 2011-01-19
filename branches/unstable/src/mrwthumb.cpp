@@ -25,7 +25,7 @@ try {
         throw Exiv2::Error(1, error);
     }
 
-    Exiv2::ExifKey key("Exif.Minolta.ThumbnailOffset");
+    Exiv2::Key1 key("Exif.Minolta.ThumbnailOffset");
     Exiv2::ExifData::const_iterator format = exifData.findKey(key);
 
     if (format != exifData.end()) {

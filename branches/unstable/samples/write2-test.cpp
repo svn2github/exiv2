@@ -37,19 +37,19 @@ try {
 
     Exiv2::Value::AutoPtr v1 = Exiv2::Value::create(Exiv2::unsignedShort);
     v1->read("160 161 162 163");
-    ed1.add(Exiv2::ExifKey("Exif.Image.SamplesPerPixel"), v1.get());
+    ed1.add(Exiv2::Key1("Exif.Image.SamplesPerPixel"), v1.get());
 
     Exiv2::Value::AutoPtr v2 = Exiv2::Value::create(Exiv2::signedLong);
     v2->read("-2 -1 0 1");
-    ed1.add(Exiv2::ExifKey("Exif.Image.XResolution"), v2.get());
+    ed1.add(Exiv2::Key1("Exif.Image.XResolution"), v2.get());
 
     Exiv2::Value::AutoPtr v3 = Exiv2::Value::create(Exiv2::signedRational);
     v3->read("-2/3 -1/3 0/3 1/3");
-    ed1.add(Exiv2::ExifKey("Exif.Image.YResolution"), v3.get());
+    ed1.add(Exiv2::Key1("Exif.Image.YResolution"), v3.get());
 
     Exiv2::Value::AutoPtr v4 = Exiv2::Value::create(Exiv2::undefined);
     v4->read("255 254 253 252");
-    ed1.add(Exiv2::ExifKey("Exif.Image.WhitePoint"), v4.get());
+    ed1.add(Exiv2::Key1("Exif.Image.WhitePoint"), v4.get());
 
     write(file, ed1);
     print(file);
@@ -192,7 +192,7 @@ try {
     ed7["Exif.Thumbnail.Artist"] = "Test 7";
     Exiv2::Value::AutoPtr v5 = Exiv2::Value::create(Exiv2::unsignedShort);
     v5->read("160 161 162 163");
-    ed7.add(Exiv2::ExifKey("Exif.Image.SamplesPerPixel"), v5.get());
+    ed7.add(Exiv2::Key1("Exif.Image.SamplesPerPixel"), v5.get());
     write(file, ed7);
     print(file);
 

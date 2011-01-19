@@ -193,7 +193,7 @@ namespace {
         static const Param param_[];
 
         //! Key that points to the Value that contains the JPEG preview in data area
-        ExifKey dataKey_;
+        Key1 dataKey_;
     };
 
     //! Function to create new LoaderExifDataJpeg
@@ -345,13 +345,13 @@ namespace {
         : Loader(id, image)
     {
         offset_ = 0;
-        ExifData::const_iterator pos = image_.exifData().findKey(ExifKey(param_[parIdx].offsetKey_));
+        ExifData::const_iterator pos = image_.exifData().findKey(Key1(param_[parIdx].offsetKey_));
         if (pos != image_.exifData().end() && pos->count() > 0) {
             offset_ = pos->toLong();
         }
 
         size_ = 0;
-        pos = image_.exifData().findKey(ExifKey(param_[parIdx].sizeKey_));
+        pos = image_.exifData().findKey(Key1(param_[parIdx].sizeKey_));
         if (pos != image_.exifData().end() && pos->count() > 0) {
             size_ = pos->toLong();
         }
@@ -359,7 +359,7 @@ namespace {
         if (offset_ == 0 || size_ == 0) return;
 
         if (param_[parIdx].baseOffsetKey_) {
-            pos = image_.exifData().findKey(ExifKey(param_[parIdx].baseOffsetKey_));
+            pos = image_.exifData().findKey(Key1(param_[parIdx].baseOffsetKey_));
             if (pos != image_.exifData().end() && pos->count() > 0) {
                 offset_ += pos->toLong();
             }
@@ -517,26 +517,26 @@ namespace {
 
         // check if the group_ contains a preview image
         if (param_[parIdx].checkTag_) {
-            pos = exifData.findKey(ExifKey(param_[parIdx].checkTag_));
+            pos = exifData.findKey(Key1(param_[parIdx].checkTag_));
             if (pos == exifData.end()) return;
             if (param_[parIdx].checkValue_ && pos->toString() != param_[parIdx].checkValue_) return;
         }
 
-        pos = exifData.findKey(ExifKey(std::string("Exif.") + group_ + ".StripOffsets"));
+        pos = exifData.findKey(Key1(std::string("Exif.") + group_ + ".StripOffsets"));
         if (pos != exifData.end()) {
             offsetTag_ = "StripOffsets";
             sizeTag_ = "StripByteCounts";
             offsetCount = pos->value().count();
         }
         else {
-            pos = exifData.findKey(ExifKey(std::string("Exif.") + group_ + ".TileOffsets"));
+            pos = exifData.findKey(Key1(std::string("Exif.") + group_ + ".TileOffsets"));
             if (pos == exifData.end()) return;
             offsetTag_ = "TileOffsets";
             sizeTag_ = "TileByteCounts";
             offsetCount = pos->value().count();
         }
 
-        pos = exifData.findKey(ExifKey(std::string("Exif.") + group_ + '.' + sizeTag_));
+        pos = exifData.findKey(Key1(std::string("Exif.") + group_ + '.' + sizeTag_));
         if (pos == exifData.end()) return;
         if (offsetCount != pos->value().count()) return;
         for (int i = 0; i < offsetCount; i++) {
@@ -545,12 +545,12 @@ namespace {
 
         if (size_ == 0) return;
 
-        pos = exifData.findKey(ExifKey(std::string("Exif.") + group_ + ".ImageWidth"));
+        pos = exifData.findKey(Key1(std::string("Exif.") + group_ + ".ImageWidth"));
         if (pos != exifData.end() && pos->count() > 0) {
             width_ = pos->toLong();
         }
 
-        pos = exifData.findKey(ExifKey(std::string("Exif.") + group_ + ".ImageLength"));
+        pos = exifData.findKey(Key1(std::string("Exif.") + group_ + ".ImageLength"));
         if (pos != exifData.end() && pos->count() > 0) {
             height_ = pos->toLong();
         }
@@ -612,7 +612,7 @@ namespace {
                     name != "TileOffsets" &&
                     name != "TileByteCounts") continue;
 
-                preview.add(ExifKey("Exif.Image." + pos->tagName()), &pos->value());
+                preview.add(Key1("Exif.Image." + pos->tagName()), &pos->value());
             }
         }
 

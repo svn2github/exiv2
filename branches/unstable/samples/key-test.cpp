@@ -24,7 +24,7 @@ int main()
     int rc = 0;
 
     std::string key("Exif.Iop.InteroperabilityVersion");
-    ExifKey ek(key);
+    Key1 ek(key);
 
     // operator<<
     tc += 1;
@@ -74,7 +74,7 @@ int main()
     // -----
 
     // Copy constructor
-    ExifKey ek2(ek);
+    Key1 ek2(ek);
 
     // operator<<
     tc += 1;
@@ -123,7 +123,7 @@ int main()
 
     // -----
 
-    ExifKey ek4("Exif.Image.0x0110");
+    Key1 ek4("Exif.Image.0x0110");
     tc += 1;
     if (ek4.key() != "Exif.Image.Model") {
         std::cout << "Testcase failed (converted key)" << std::endl;
@@ -137,7 +137,7 @@ int main()
 
     // -----
 
-    ExifKey ek5("Exif.Nikon3.0x0007");
+    Key1 ek5("Exif.Nikon3.0x0007");
     tc += 1;
     if (ek5.key() != "Exif.Nikon3.Focus") {
         std::cout << "Testcase failed (converted key)" << std::endl;
