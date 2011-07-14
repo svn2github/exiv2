@@ -37,6 +37,7 @@
 // *****************************************************************************
 // included header files
 #include "types.hpp"
+#include "key.hpp"
 #include "value.hpp"
 
 // + standard includes
@@ -53,6 +54,174 @@ namespace Exiv2 {
 
 // *****************************************************************************
 // class definitions
+
+    /*!
+      @brief A tag is a metadatum of any metadata family and consists of a Key
+             and a Value and methods to access the information contained in
+             those.
+     */
+    class EXIV2API Tag1 {
+    public:
+        //! @name Creators
+        //@{
+        /*!
+          @brief Constructor for new tags created by an application. The %Tag is
+                 created from a \em key and \em value pair. %Tag copies the \em
+                 key and clones the \em value if one is provided. Alternatively,
+                 a program can create an 'empty' %Tag with only a key and set
+                 the value using setValue().
+
+          @param key %Metadata %Key.
+          @param pValue Pointer to the value of the %Tag.
+          @throw Error if the \em key cannot be parsed and converted.
+         */
+        explicit Tag1(const Key1& key, const Value* pValue =0);
+        //! Copy constructor
+        Tag1(const Tag1& rhs);
+        //! Destructor
+        ~Tag1();
+        //@}
+
+        //! @name Manipulators
+        //@{
+        //! Assignment operator
+        Tag1& operator=(const Tag1& rhs);
+        /*!
+          @brief Set the value. This method copies (clones) the value pointed
+                 to by pValue.
+         */
+        void setValue(const Value* pValue);
+        /*!
+          @brief Set the value to the string buf.
+                 Uses Value::read(const std::string& buf). If the metadatum does
+                 not have a value yet, then one is created. 
+                 Return 0 if the value was read successfully.
+         */
+        int setValue(const std::string& buf);
+        //@}
+
+        //! @name Accessors
+        //@{
+        //! See Key1::key()
+        std::string key() const                 { return key_.key(); }
+        //! See Key1::familyName()
+        const char* familyName() const          { return key_.familyName(); }
+        //! See Key1::family()
+        MetadataId family() const               { return key_.family(); }
+        //! See Key1::groupName()
+        std::string groupName() const           { return key_.groupName(); }
+        //! See Key1::group()
+        int group() const                       { return key_.group(); }
+        //! See Key1::tagName()
+        std::string tagName() const             { return key_.tagName(); }
+        //! See Key1::tag()
+        uint16_t tag() const                    { return key_.tag(); }
+        //! See Key1::tagLabel()
+        std::string tagLabel() const            { return key_.tagLabel(); }
+        //! See Key1::tagDesc()
+        std::string tagDesc() const             { return key_.tagDesc(); }
+        //! See Key1::defaultTypeId()
+        TypeId defaultTypeId() const            { return key_.defaultTypeId(); }
+        //! See Key1::idx()
+        int idx() const                         { return key_.idx(); }
+
+        //! Return invalidTypeId if value is not set, else Value::typeId()
+        TypeId typeId() const                   { return pValue_ == 0 ? invalidTypeId : pValue_->typeId(); }
+        //! See Value::typeName()
+        const char* typeName() const            { return TypeInfo::typeName(typeId()); }
+        //! See Value::typeSize()
+        long typeSize() const                   { return TypeInfo::typeSize(typeId()); }
+        //! Return 0 if value is not set, else Value::count()
+        long count() const                      { return pValue_ == 0 ? 0 : pValue_->count(); }
+        //! Return 0 if value is not set, else Value::size()
+        long size() const                       { return pValue_ == 0 ? 0 : pValue_->size(); }
+        //! Return empty string if value is not set, else Value::toString()
+        std::string toString() const            { return pValue_ == 0 ? "" : pValue_->toString(); }
+        //! Return empty string if value is not set, else Value::toString(long n)
+        std::string toString(long n) const      { return pValue_ == 0 ? "" : pValue_->toString(n); }
+        //! Return 0 if value is not set, else Value::toLong()
+        long toLong(long n =0) const            { return pValue_ == 0 ? 0 : pValue_->toLong(n); }
+        //! Return 0.0 if value is not set, else Value::toFloat()
+        float toFloat(long n =0) const          { return pValue_ == 0 ? 0.0 : pValue_->toFloat(n); }
+        //! Return 0/0 if value is not set, else Value::toRational()
+        Rational toRational(long n =0) const    { return pValue_ == 0 ? Rational(0, 0) : pValue_->toRational(n); }
+        /*!
+          @brief Write value to a data buffer and return the number
+                 of bytes written.
+
+          The user must ensure that the buffer has enough memory. Otherwise
+          the call results in undefined behaviour.
+
+          @param buf Data buffer to write to.
+          @param byteOrder Applicable byte order (little or big endian).
+          @return Number of characters written.
+        */
+        long copy(byte* buf, ByteOrder byteOrder) const;
+        /*!
+          @brief Write the interpreted value to a string.
+
+          Implemented in terms of write(), see there.
+         */
+        std::string print(const ExifData* pMetadata =0) const;
+        /*!
+          @brief Write the interpreted value to an output stream, return
+                 the stream.
+
+          The method takes an optional pointer to a metadata container.
+          Pretty-print functions may use that to refer to other metadata as it
+          is sometimes not sufficient to know only the value of the metadatum
+          that should be interpreted. Thus, it is advisable to always call this
+          method with a pointer to the metadata container if possible.
+
+          This functionality is currently only implemented for Exif tags.
+          The pointer is ignored when used to write IPTC datasets or XMP
+          properties.
+
+          Without the optional metadata pointer, you do not usually have to use
+          this function; it is used for the implementation of the output
+          operator for %Tag, operator<<(std::ostream& os, const Tag1& md).
+
+          See also print(), which prints the interpreted value to a string.
+         */
+        std::ostream& write(std::ostream& os, const ExifData* pMetadata =0) const;
+        /*!
+          @brief Return an auto-pointer to a copy (clone) of the value. The
+                 caller owns this copy and the auto-poiner ensures that it will
+                 be deleted.
+
+          This method is provided for users who need full control over the
+          value. A caller may, e.g., downcast the pointer to the appropriate
+          subclass of Value to make use of the interface of the subclass to set
+          or modify its contents.
+
+          @return An auto-pointer containing a pointer to a copy (clone) of the
+                  value, 0 if the value is not set.
+         */
+        Value::AutoPtr getValue() const         { return pValue_ == 0 ? Value::AutoPtr(0) : pValue_->clone(); }
+        /*!
+          @brief Return a constant pointer to the value.
+
+          This method is provided for convenient and versatile output of the
+          value which can (to some extent) be formatted through standard stream
+          manipulators.  Do not attempt to write to the value through this
+          reference. Return 0 if the value is not set, alternatively, use
+          count() to check if there is any data.
+
+          @return A constant pointer to the value.
+         */
+        const Value* pValue() const             { return pValue_; }
+        //@}
+
+    private:
+        // DATA
+        Key1   key_;                            //!< Key
+        Value* pValue_;                         //!< Value
+
+    }; // class Tag1
+
+
+
+
 
     /*!
       @brief Abstract base class defining the interface to access information
