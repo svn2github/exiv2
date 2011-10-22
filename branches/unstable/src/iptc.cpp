@@ -61,19 +61,19 @@ namespace {
               uint32_t         sizeData
     );
 
-    //! Unary predicate that matches an Iptcdatum with given record and dataset
-    class FindIptcdatum {
+    //! Unary predicate that matches an Tag1 with given record and dataset
+    class FindTag1 {
     public:
         //! Constructor, initializes the object with the record and dataset id
-        FindIptcdatum(uint16_t dataset, uint16_t record)
+        FindTag1(uint16_t dataset, uint16_t record)
             : dataset_(dataset), record_(record) {}
         /*!
           @brief Returns true if the record and dataset id of the argument
-                Iptcdatum is equal to that of the object.
+                Tag1 is equal to that of the object.
         */
-        bool operator()(const Exiv2::Iptcdatum& iptcdatum) const
+        bool operator()(const Exiv2::Tag1& iptcdatum) const
         {
-            return dataset_ == iptcdatum.tag() && record_ == iptcdatum.record();
+            return dataset_ == iptcdatum.tag() && record_ == iptcdatum.group();
         }
 
     private:
@@ -81,189 +81,19 @@ namespace {
         uint16_t dataset_;
         uint16_t record_;
 
-    }; // class FindIptcdatum
+    }; // class FindTag1
 }
 
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
 
-    Iptcdatum::Iptcdatum(const Key1& key,
-                         const Value* pValue)
-        : key_(key)
-    {
-        if (pValue) value_ = pValue->clone();
-    }
-
-    Iptcdatum::Iptcdatum(const Iptcdatum& rhs)
-        : Metadatum(rhs), key_(rhs.key_)
-    {
-        if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
-    }
-
-    Iptcdatum::~Iptcdatum()
-    {
-    }
-
-    long Iptcdatum::copy(byte* buf, ByteOrder byteOrder) const
-    {
-        return value_.get() == 0 ? 0 : value_->copy(buf, byteOrder);
-    }
-
-    std::ostream& Iptcdatum::write(std::ostream& os, const ExifData*) const
-    {
-        return os << value();
-    }
-
-    std::string Iptcdatum::key() const
-    {
-        return key_.key();
-    }
-
-    uint16_t Iptcdatum::record() const
-    {
-        return key_.group();
-    }
-
-    const char* Iptcdatum::familyName() const
-    {
-        return key_.familyName();
-    }
-
-    std::string Iptcdatum::groupName() const
-    {
-        return key_.groupName();
-    }
-
-    std::string Iptcdatum::tagName() const
-    {
-        return key_.tagName();
-    }
-
-    std::string Iptcdatum::tagLabel() const
-    {
-        return key_.tagLabel();
-    }
-
-    uint16_t Iptcdatum::tag() const
-    {
-        return key_.tag();
-    }
-
-    TypeId Iptcdatum::typeId() const
-    {
-        return value_.get() == 0 ? invalidTypeId : value_->typeId();
-    }
-
-    const char* Iptcdatum::typeName() const
-    {
-        return TypeInfo::typeName(typeId());
-    }
-
-    long Iptcdatum::typeSize() const
-    {
-        return TypeInfo::typeSize(typeId());
-    }
-
-    long Iptcdatum::count() const
-    {
-        return value_.get() == 0 ? 0 : value_->count();
-    }
-
-    long Iptcdatum::size() const
-    {
-        return value_.get() == 0 ? 0 : value_->size();
-    }
-
-    std::string Iptcdatum::toString() const
-    {
-        return value_.get() == 0 ? "" : value_->toString();
-    }
-
-    std::string Iptcdatum::toString(long n) const
-    {
-        return value_.get() == 0 ? "" : value_->toString(n);
-    }
-
-    long Iptcdatum::toLong(long n) const
-    {
-        return value_.get() == 0 ? -1 : value_->toLong(n);
-    }
-
-    float Iptcdatum::toFloat(long n) const
-    {
-        return value_.get() == 0 ? -1 : value_->toFloat(n);
-    }
-
-    Rational Iptcdatum::toRational(long n) const
-    {
-        return value_.get() == 0 ? Rational(-1, 1) : value_->toRational(n);
-    }
-
-    Value::AutoPtr Iptcdatum::getValue() const
-    {
-        return value_.get() == 0 ? Value::AutoPtr(0) : value_->clone();
-    }
-
-    const Value& Iptcdatum::value() const
-    {
-        if (value_.get() == 0) throw Error(8);
-        return *value_;
-    }
-
-    Iptcdatum& Iptcdatum::operator=(const Iptcdatum& rhs)
-    {
-        if (this == &rhs) return *this;
-
-        Metadatum::operator=(rhs);
-        key_ = rhs.key_;
-        value_.reset();
-        if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
-
-        return *this;
-    } // Iptcdatum::operator=
-
-    Iptcdatum& Iptcdatum::operator=(const uint16_t& value)
-    {
-        UShortValue::AutoPtr v(new UShortValue);
-        v->value_.push_back(value);
-        value_ = v;
-        return *this;
-    }
-
-    Iptcdatum& Iptcdatum::operator=(const std::string& value)
-    {
-        setValue(value);
-        return *this;
-    }
-
-    Iptcdatum& Iptcdatum::operator=(const Value& value)
-    {
-        setValue(&value);
-        return *this;
-    }
-
-    void Iptcdatum::setValue(const Value* pValue)
-    {
-        value_.reset();
-        if (pValue) value_ = pValue->clone();
-    }
-
-    int Iptcdatum::setValue(const std::string& value)
-    {
-        if (value_.get() == 0) {
-            TypeId type = IptcDataSets::dataSetType(tag(), record());
-            value_ = Value::create(type);
-        }
-        return value_->read(value);
-    }
-
-    Iptcdatum& IptcData::operator[](const std::string& key)
+    Tag1& IptcData::operator[](const std::string& key)
     {
         Key1 iptcKey(key);
         iterator pos = findKey(iptcKey);
         if (pos == end()) {
-            add(Iptcdatum(iptcKey));
+            add(Tag1(iptcKey));
             pos = findKey(iptcKey);
         }
         return *pos;
@@ -289,14 +119,14 @@ namespace Exiv2 {
 
     int IptcData::add(const Key1& key, Value* value)
     {
-        return add(Iptcdatum(key, value));
+        return add(Tag1(key, value));
     }
 
-    int IptcData::add(const Iptcdatum& iptcDatum)
+    int IptcData::add(const Tag1& iptcDatum)
     {
         if (!IptcDataSets::dataSetRepeatable(
-               iptcDatum.tag(), iptcDatum.record()) &&
-               findId(iptcDatum.tag(), iptcDatum.record()) != end()) {
+               iptcDatum.tag(), iptcDatum.group()) &&
+               findId(iptcDatum.tag(), iptcDatum.group()) != end()) {
              return 6;
         }
         // allow duplicates
@@ -307,35 +137,35 @@ namespace Exiv2 {
     IptcData::const_iterator IptcData::findKey(const Key1& key) const
     {
         return std::find_if(iptcMetadata_.begin(), iptcMetadata_.end(),
-                            FindIptcdatum(key.tag(), key.group()));
+                            FindTag1(key.tag(), key.group()));
     }
 
     IptcData::iterator IptcData::findKey(const Key1& key)
     {
         return std::find_if(iptcMetadata_.begin(), iptcMetadata_.end(),
-                            FindIptcdatum(key.tag(), key.group()));
+                            FindTag1(key.tag(), key.group()));
     }
 
     IptcData::const_iterator IptcData::findId(uint16_t dataset, uint16_t record) const
     {
         return std::find_if(iptcMetadata_.begin(), iptcMetadata_.end(),
-                            FindIptcdatum(dataset, record));
+                            FindTag1(dataset, record));
     }
 
     IptcData::iterator IptcData::findId(uint16_t dataset, uint16_t record)
     {
         return std::find_if(iptcMetadata_.begin(), iptcMetadata_.end(),
-                            FindIptcdatum(dataset, record));
+                            FindTag1(dataset, record));
     }
 
     void IptcData::sortByKey()
     {
-        std::sort(iptcMetadata_.begin(), iptcMetadata_.end(), cmpMetadataByKey);
+        std::sort(iptcMetadata_.begin(), iptcMetadata_.end(), cmpTag1ByKey);
     }
 
     void IptcData::sortByTag()
     {
-        std::sort(iptcMetadata_.begin(), iptcMetadata_.end(), cmpMetadataByTag);
+        std::sort(iptcMetadata_.begin(), iptcMetadata_.end(), cmpTag1ByTag);
     }
 
     IptcData::iterator IptcData::erase(IptcData::iterator pos)
@@ -471,7 +301,7 @@ namespace Exiv2 {
         for ( ; iter != end; ++iter) {
             // marker, record Id, dataset num
             *pWrite++ = marker_;
-            *pWrite++ = static_cast<byte>(iter->record());
+            *pWrite++ = static_cast<byte>(iter->group());
             *pWrite++ = static_cast<byte>(iter->tag());
 
             // extended or standard dataset?

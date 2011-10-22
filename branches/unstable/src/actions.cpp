@@ -519,7 +519,7 @@ namespace Action {
             const Exiv2::IptcData& iptcData = image->iptcData();
             for (Exiv2::IptcData::const_iterator md = iptcData.begin();
                  md != iptcData.end(); ++md) {
-                printMetadatum(*md, image);
+                printTag1(*md, image);
             }
             if (iptcData.empty()) {
                 if (Params::instance().verbose_) {
@@ -690,6 +690,143 @@ namespace Action {
         }
         std::cout << std::endl;
     } // Print::printMetadatum
+
+    void Print::printTag1(const Exiv2::Tag1& md, const Exiv2::Image* pImage)
+    {
+        if (!grepTag(md.key())) return;
+
+        if (   Params::instance().unknown_
+            && md.tagName().substr(0, 2) == "0x") {
+            return;
+        }
+        bool const manyFiles = Params::instance().files_.size() > 1;
+        if (manyFiles) {
+            std::cout << std::setfill(' ') << std::left << std::setw(20)
+                      << path_ << "  ";
+        }
+        bool first = true;
+        if (Params::instance().printItems_ & Params::prTag) {
+            if (!first) std::cout << " ";
+            first = false;
+            std::cout << "0x" << std::setw(4) << std::setfill('0')
+                      << std::right << std::hex
+                      << md.tag();
+        }
+        if (Params::instance().printItems_ & Params::prGroup) {
+            if (!first) std::cout << " ";
+            first = false;
+            std::cout << std::setw(12) << std::setfill(' ') << std::left
+                      << md.groupName();
+        }
+        if (Params::instance().printItems_ & Params::prKey) {
+            if (!first) std::cout << " ";
+            first = false;
+            std::cout << std::setfill(' ') << std::left << std::setw(44)
+                      << md.key();
+        }
+        if (Params::instance().printItems_ & Params::prName) {
+            if (!first) std::cout << " ";
+            first = false;
+            std::cout << std::setw(27) << std::setfill(' ') << std::left
+                      << md.tagName();
+        }
+        if (Params::instance().printItems_ & Params::prLabel) {
+            if (!first) std::cout << " ";
+            first = false;
+            std::cout << std::setw(30) << std::setfill(' ') << std::left
+                      << md.tagLabel();
+        }
+        if (Params::instance().printItems_ & Params::prType) {
+            if (!first) std::cout << " ";
+            first = false;
+            std::cout << std::setw(9) << std::setfill(' ') << std::left;
+            const char* tn = md.typeName();
+            if (tn) {
+                std::cout << tn;
+            }
+            else {
+                std::ostringstream os;
+                os << "0x" << std::setw(4) << std::setfill('0') << std::hex << md.typeId();
+                std::cout << os.str();
+            }
+        }
+        if (Params::instance().printItems_ & Params::prCount) {
+            if (!first) std::cout << " ";
+            first = false;
+            std::cout << std::dec << std::setw(3)
+                      << std::setfill(' ') << std::right
+                      << md.count();
+        }
+        if (Params::instance().printItems_ & Params::prSize) {
+            if (!first) std::cout << " ";
+            first = false;
+            std::cout << std::dec << std::setw(3)
+                      << std::setfill(' ') << std::right
+                      << md.size();
+        }
+        if (Params::instance().printItems_ & Params::prValue) {
+            if (!first) std::cout << "  ";
+            first = false;
+            if (   Params::instance().binary_
+                && (   md.typeId() == Exiv2::undefined
+                    || md.typeId() == Exiv2::unsignedByte
+                    || md.typeId() == Exiv2::signedByte)
+                && md.size() > 128) {
+                std::cout << _("(Binary value suppressed)") << std::endl;
+                return;
+            }
+            bool done = false;
+            if (0 == strcmp(md.key().c_str(), "Exif.Photo.UserComment")) {
+                const Exiv2::CommentValue* pcv = dynamic_cast<const Exiv2::CommentValue*>(&md.value());
+                if (pcv) {
+                    Exiv2::CommentValue::CharsetId csId = pcv->charsetId();
+                    if (csId != Exiv2::CommentValue::undefined) {
+                        std::cout << "charset=\"" << Exiv2::CommentValue::CharsetInfo::name(csId) << "\" ";
+                    }
+                    std::cout << pcv->comment(Params::instance().charset_.c_str());
+                    done = true;
+                }
+            }
+            if (!done) std::cout << std::dec << md.value();
+        }
+        if (Params::instance().printItems_ & Params::prTrans) {
+            if (!first) std::cout << "  ";
+            first = false;
+            if (   Params::instance().binary_
+                && (   md.typeId() == Exiv2::undefined
+                    || md.typeId() == Exiv2::unsignedByte
+                    || md.typeId() == Exiv2::signedByte)
+                && md.size() > 128) {
+                std::cout << _("(Binary value suppressed)") << std::endl;
+                return;
+            }
+            bool done = false;
+            if (0 == strcmp(md.key().c_str(), "Exif.Photo.UserComment")) {
+                const Exiv2::CommentValue* pcv = dynamic_cast<const Exiv2::CommentValue*>(&md.value());
+                if (pcv) {
+                    std::cout << pcv->comment(Params::instance().charset_.c_str());
+                    done = true;
+                }
+            }
+            if (!done) std::cout << std::dec << md.print(&pImage->exifData());
+        }
+        if (Params::instance().printItems_ & Params::prHex) {
+            if (!first) std::cout << std::endl;
+            first = false;
+            if (   Params::instance().binary_
+                && (   md.typeId() == Exiv2::undefined
+                    || md.typeId() == Exiv2::unsignedByte
+                    || md.typeId() == Exiv2::signedByte)
+                && md.size() > 128) {
+                std::cout << _("(Binary value suppressed)") << std::endl;
+                return;
+            }
+            Exiv2::DataBuf buf(md.size());
+            md.copy(buf.pData_, pImage->byteOrder());
+            Exiv2::hexdump(std::cout, buf.pData_, buf.size_);
+        }
+        std::cout << std::endl;
+    } // Print::printTag1
 
     int Print::printComment()
     {
@@ -1324,6 +1461,7 @@ namespace Action {
         Exiv2::IptcData& iptcData = pImage->iptcData();
         Exiv2::XmpData&  xmpData  = pImage->xmpData();
         Exiv2::Metadatum* metadatum = 0;
+        Exiv2::Tag1* tag = 0;
         if (modifyCmd.metadataId_ == Exiv2::mdExif) {
             Exiv2::ExifData::iterator pos =
                 exifData.findKey(Exiv2::Key1(modifyCmd.key_));
@@ -1335,7 +1473,7 @@ namespace Action {
             Exiv2::IptcData::iterator pos =
                 iptcData.findKey(Exiv2::Key1(modifyCmd.key_));
             if (pos != iptcData.end()) {
-                metadatum = &(*pos);
+                tag = &(*pos);
             }
         }
         if (modifyCmd.metadataId_ == Exiv2::mdXmp) {
@@ -1352,6 +1490,9 @@ namespace Action {
         if (metadatum) {
             value = metadatum->getValue();
         }
+        if (tag) {
+            value = tag->getValue();
+        }
         if (   value.get() == 0
             || (   modifyCmd.explicitType_
                 && modifyCmd.typeId_ != value->typeId())) {
@@ -1361,6 +1502,9 @@ namespace Action {
         if (0 == rc) {
             if (metadatum) {
                 metadatum->setValue(value.get());
+            }
+            else if (tag) {
+                tag->setValue(value.get());
             }
             else {
                 if (modifyCmd.metadataId_ == Exiv2::mdExif) {

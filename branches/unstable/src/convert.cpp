@@ -1137,7 +1137,7 @@ namespace Exiv2 {
                 continue;
             }
             Key1 key(to);
-            Iptcdatum id(key);
+            Tag1 id(key);
             id.setValue(value);
             iptcData_->add(id);
             added = true;

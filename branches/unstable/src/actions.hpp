@@ -176,6 +176,8 @@ namespace Action {
         int printMetadata(const Exiv2::Image* image);
         //! Print a metadatum in a user defined format
         void printMetadatum(const Exiv2::Metadatum& md, const Exiv2::Image* image);
+        //! Print a tag in a user defined format
+        void printTag1(const Exiv2::Tag1& md, const Exiv2::Image* image);
         //! Print the label for a summary line
         void printLabel(const std::string& label) const;
         /*!

@@ -33,15 +33,107 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 // included header files
 #include "metadatum.hpp"
+#include "error.hpp"
 
 // + standard includes
 #include <iostream>
 #include <iomanip>
 
-
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
+
+    Tag1::Tag1(const Key1& key, const Value* pValue)
+        : key_(key), pValue_(0)
+    {
+        if (pValue) pValue_ = pValue->clone().release();  // deep copy
+    }
+
+    Tag1::Tag1(const Tag1& rhs)
+        : key_(rhs.key_), pValue_(0)
+    {
+        if (rhs.pValue_ != 0) pValue_ = rhs.pValue_->clone().release(); // deep copy
+    }
+
+    Tag1::~Tag1()
+    {
+        delete pValue_;
+    }
+
+    Tag1& Tag1::operator=(const Tag1& rhs)
+    {
+        if (this == &rhs) return *this;
+        Value::AutoPtr p;
+        if (rhs.pValue_) p = rhs.pValue_->clone(); // deep copy
+        key_ = rhs.key_;
+        delete pValue_;
+        pValue_ = p.release();
+        return *this;
+    }
+
+    Tag1& Tag1::operator=(const uint16_t& value)
+    {
+        setValueHelper(value);
+        return *this;
+    }
+
+    Tag1& Tag1::operator=(const std::string& value)
+    {
+        setValue(value);
+        return *this;
+    }
+
+    Tag1& Tag1::operator=(const Value& value)
+    {
+        setValue(&value);
+        return *this;
+    }
+
+    void Tag1::setValue(const Value* pValue)
+    {
+        Value::AutoPtr p;
+        if (pValue) p = pValue->clone();
+        delete pValue_;
+        pValue_ = p.release();
+    }
+
+    int Tag1::setValue(const std::string& buf)
+    {
+        if (pValue_ == 0) {
+            TypeId type = key_.defaultTypeId();
+            pValue_ = Value::create(type).release();
+        }
+        return pValue_->read(buf);
+    }
+
+    std::string Tag1::print(const ExifData* pMetadata) const
+    {
+        std::ostringstream os;
+        write(os, pMetadata);
+        return os.str();
+    }
+
+//---
+    std::ostream& Tag1::write(std::ostream& os, const ExifData* pMetadata) const
+    {
+        // IPTC version - should IPTC also have print functions? Maybe they do now - check later!
+        return os << value();
+/*
+        // Exif version
+        if (value().count() == 0) return os;
+        PrintFct fct = printValue;
+        const TagInfo* ti = Internal::tagInfo(tag(), static_cast<IfdId>(ifdId()));
+        if (ti != 0) fct = ti->printFct_;
+        return fct(os, value(), pMetadata);
+*/
+    }
+
+//---
+    const Value& Tag1::value() const
+    {
+        if (pValue_ == 0) throw Error(8);
+        return *pValue_;
+    }
 
     Metadatum::Metadatum()
     {
@@ -74,6 +166,16 @@ namespace Exiv2 {
 
 
     bool cmpMetadataByKey(const Metadatum& lhs, const Metadatum& rhs)
+    {
+        return lhs.key() < rhs.key();
+    }
+
+    bool cmpTag1ByTag(const Tag1& lhs, const Tag1& rhs)
+    {
+        return lhs.tag() < rhs.tag();
+    }
+
+    bool cmpTag1ByKey(const Tag1& lhs, const Tag1& rhs)
     {
         return lhs.key() < rhs.key();
     }

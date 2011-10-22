@@ -53,114 +53,8 @@ namespace Exiv2 {
 // *****************************************************************************
 // class definitions
 
-    /*!
-      @brief An IPTC metadatum ("dataset"), consisting of a Key1 and a
-             Value and methods to manipulate these.
-     */
-    class EXIV2API Iptcdatum : public Metadatum {
-    public:
-        //! @name Creators
-        //@{
-        /*!
-          @brief Constructor for new tags created by an application. The
-                 %Iptcdatum is created from a key / value pair. %Iptcdatum
-                 copies (clones) the value if one is provided. Alternatively, a
-                 program can create an 'empty' %Iptcdatum with only a key and
-                 set the value using setValue().
-
-          @param key The key of the %Iptcdatum.
-          @param pValue Pointer to a %Iptcdatum value.
-          @throw Error if the key cannot be parsed and converted
-                 to a tag number and record id.
-         */
-        explicit Iptcdatum(const Key1& key,
-                           const Value* pValue =0);
-        //! Copy constructor
-        Iptcdatum(const Iptcdatum& rhs);
-        //! Destructor
-        virtual ~Iptcdatum();
-        //@}
-
-        //! @name Manipulators
-        //@{
-        //! Assignment operator
-        Iptcdatum& operator=(const Iptcdatum& rhs);
-        /*!
-          @brief Assign \em value to the %Iptcdatum. The type of the new Value
-                 is set to UShortValue.
-         */
-        Iptcdatum& operator=(const uint16_t& value);
-        /*!
-          @brief Assign \em value to the %Iptcdatum.
-                 Calls setValue(const std::string&).
-         */
-        Iptcdatum& operator=(const std::string& value);
-        /*!
-          @brief Assign \em value to the %Iptcdatum.
-                 Calls setValue(const Value*).
-         */
-        Iptcdatum& operator=(const Value& value);
-        void setValue(const Value* pValue);
-        /*!
-          @brief Set the value to the string \em value, using
-                 Value::read(const std::string&).
-                 If the %Iptcdatum does not have a Value yet, then a %Value of
-                 the correct type for this %Iptcdatum is created. If that
-                 fails (because of an unknown dataset), a StringValue is
-                 created. Return 0 if the value was read successfully.
-         */
-        int setValue(const std::string& value);
-        //@}
-
-        //! @name Accessors
-        //@{
-        long copy(byte* buf, ByteOrder byteOrder) const;
-        std::ostream& write(std::ostream& os, const ExifData* pMetadata =0) const;
-        /*!
-          @brief Return the key of the Iptcdatum. The key is of the form
-                 '<b>Iptc</b>.recordName.datasetName'. Note however that the key
-                 is not necessarily unique, i.e., an IptcData object may contain
-                 multiple metadata with the same key.
-         */
-        std::string key() const;
-        /*!
-           @brief Return the record id
-           @return record id
-         */
-        uint16_t record() const;
-        const char* familyName() const;
-        std::string groupName() const;
-        /*!
-           @brief Return the name of the tag (aka dataset)
-           @return tag name
-         */
-        std::string tagName() const;
-        std::string tagLabel() const;
-        //! Return the tag (aka dataset) number
-        uint16_t tag() const;
-        TypeId typeId() const;
-        const char* typeName() const;
-        long typeSize() const;
-        long count() const;
-        long size() const;
-        std::string toString() const;
-        std::string toString(long n) const;
-        long toLong(long n =0) const;
-        float toFloat(long n =0) const;
-        Rational toRational(long n =0) const;
-        Value::AutoPtr getValue() const;
-        const Value& value() const;
-        //@}
-
-    private:
-        // DATA
-        Key1 key_;                            //!< Key
-        Value::AutoPtr value_;                //!< Value
-
-    }; // class Iptcdatum
-
     //! Container type to hold all metadata
-    typedef std::vector<Iptcdatum> IptcMetadata;
+    typedef std::vector<Tag1> IptcMetadata;
 
     /*!
       @brief A container for IPTC data. This is a top-level class of
@@ -185,16 +79,16 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         /*!
-          @brief Returns a reference to the %Iptcdatum that is associated with a
+          @brief Returns a reference to the %Tag1 that is associated with a
                  particular \em key. If %IptcData does not already contain such
-                 an %Iptcdatum, operator[] adds object \em Iptcdatum(key).
+                 a %Tag1, operator[] adds object \em Tag1(key).
 
           @note  Since operator[] might insert a new element, it can't be a const
                  member function.
          */
-        Iptcdatum& operator[](const std::string& key);
+        Tag1& operator[](const std::string& key);
         /*!
-          @brief Add an %Iptcdatum from the supplied key and value pair. This
+          @brief Add an %Tag1 from the supplied key and value pair. This
                  method copies (clones) the value. A check for non-repeatable
                  datasets is performed.
           @return 0 if successful;<BR>
@@ -202,21 +96,21 @@ namespace Exiv2 {
          */
         int add(const Key1& key, Value* value);
         /*!
-          @brief Add a copy of the Iptcdatum to the IPTC metadata. A check
+          @brief Add a copy of the Tag1 to the IPTC metadata. A check
                  for non-repeatable datasets is performed.
           @return 0 if successful;<BR>
                  6 if the dataset already exists and is not repeatable;<BR>
          */
-        int add(const Iptcdatum& iptcdatum);
+        int add(const Tag1& iptcdatum);
         /*!
-          @brief Delete the Iptcdatum at iterator position pos, return the
-                 position of the next Iptcdatum. Note that iterators into
+          @brief Delete the Tag1 at iterator position pos, return the
+                 position of the next Tag1. Note that iterators into
                  the metadata, including pos, are potentially invalidated
                  by this call.
          */
         iterator erase(iterator pos);
         /*!
-          @brief Delete all Iptcdatum instances resulting in an empty container.
+          @brief Delete all Tag1 instances resulting in an empty container.
          */
         void clear() { iptcMetadata_.clear(); }
         //! Sort metadata by key
@@ -228,12 +122,12 @@ namespace Exiv2 {
         //! End of the metadata
         iterator end() { return iptcMetadata_.end(); }
         /*!
-          @brief Find the first Iptcdatum with the given key, return an iterator
+          @brief Find the first Tag1 with the given key, return an iterator
                  to it.
          */
         iterator findKey(const Key1& key);
         /*!
-          @brief Find the first Iptcdatum with the given record and dataset it,
+          @brief Find the first Tag1 with the given record and dataset it,
                 return a const iterator to it.
          */
         iterator findId(uint16_t dataset,
@@ -247,12 +141,12 @@ namespace Exiv2 {
         //! End of the metadata
         const_iterator end() const { return iptcMetadata_.end(); }
         /*!
-          @brief Find the first Iptcdatum with the given key, return a const
+          @brief Find the first Tag1 with the given key, return a const
                  iterator to it.
          */
         const_iterator findKey(const Key1& key) const;
         /*!
-          @brief Find the first Iptcdatum with the given record and dataset
+          @brief Find the first Tag1 with the given record and dataset
                  number, return a const iterator to it.
          */
         const_iterator findId(uint16_t dataset,

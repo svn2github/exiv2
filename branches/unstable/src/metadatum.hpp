@@ -86,6 +86,25 @@ namespace Exiv2 {
         //@{
         //! Assignment operator
         Tag1& operator=(const Tag1& rhs);
+
+
+        /*!
+          @brief Assign \em value to the %Tag1. The type of the new Value
+                 is set to UShortValue.
+         */
+        Tag1& operator=(const uint16_t& value);
+        /*!
+          @brief Assign \em value to the %Tag1.
+                 Calls setValue(const std::string&).
+         */
+        Tag1& operator=(const std::string& value);
+        /*!
+          @brief Assign \em value to the %Tag1.
+                 Calls setValue(const Value*).
+         */
+        Tag1& operator=(const Value& value);
+
+
         /*!
           @brief Set the value. This method copies (clones) the value pointed
                  to by pValue.
@@ -156,7 +175,8 @@ namespace Exiv2 {
           @param byteOrder Applicable byte order (little or big endian).
           @return Number of characters written.
         */
-        long copy(byte* buf, ByteOrder byteOrder) const;
+        long copy(byte* buf, ByteOrder byteOrder) const { return pValue_ == 0 ? 0 : pValue_->copy(buf, byteOrder); }
+
         /*!
           @brief Write the interpreted value to a string.
 
@@ -199,18 +219,39 @@ namespace Exiv2 {
          */
         Value::AutoPtr getValue() const         { return pValue_ == 0 ? Value::AutoPtr(0) : pValue_->clone(); }
         /*!
-          @brief Return a constant pointer to the value.
+          @brief Return a constant reference to the value.
 
           This method is provided for convenient and versatile output of the
           value which can (to some extent) be formatted through standard stream
           manipulators.  Do not attempt to write to the value through this
-          reference. Return 0 if the value is not set, alternatively, use
-          count() to check if there is any data.
+          reference. An Error is thrown if the value is not set; as an
+          alternative to catching it, one can use count() to check if there
+          is any data before calling this method.
 
           @return A constant pointer to the value.
+          @throw Error if the value is not set.
          */
-        const Value* pValue() const             { return pValue_; }
+        const Value& value() const;
         //@}
+
+    private:
+        /*!
+          @brief Set the value to \em value. A ValueType\<T\> value is created
+                 and set to \em value. If the metadatum already has a value, it
+                 is replaced.
+
+          This is a helper function, called from Tag1 members. It is meant to
+          be used with T = (u)int16_t, (u)int32_t or (U)Rational.
+        */
+        template<typename T>
+            void setValueHelper(const T& value)
+        {
+            std::auto_ptr<Exiv2::ValueType<T> > v
+                = std::auto_ptr<Exiv2::ValueType<T> >(new Exiv2::ValueType<T>);
+            v->value_.push_back(value);
+            delete pValue_;
+            pValue_ = v.release();
+        }
 
     private:
         // DATA
@@ -219,6 +260,14 @@ namespace Exiv2 {
 
     }; // class Tag1
 
+    /*!
+      @brief Output operator for Tag types, writing the interpreted
+             tag value.
+     */
+    inline std::ostream& operator<<(std::ostream& os, const Tag1& md)
+    {
+        return md.write(os);
+    }
 
 
 
@@ -414,6 +463,17 @@ namespace Exiv2 {
              lhs is less than that of rhs.
      */
     EXIV2API bool cmpMetadataByKey(const Metadatum& lhs, const Metadatum& rhs);
+
+    /*!
+      @brief Compare two tags by their tag number. Return true if the tag number of
+             lhs is less than that of rhs.
+     */
+    EXIV2API bool cmpTag1ByTag(const Tag1& lhs, const Tag1& rhs);
+    /*!
+      @brief Compare two tags by key. Return true if the key of
+             lhs is less than that of rhs.
+     */
+    EXIV2API bool cmpTag1ByKey(const Tag1& lhs, const Tag1& rhs);
 
 }                                       // namespace Exiv2
 
