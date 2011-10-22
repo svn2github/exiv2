@@ -127,9 +127,9 @@ namespace Exiv2 {
 
         //! Return invalidTypeId if value is not set, else Value::typeId()
         TypeId typeId() const                   { return pValue_ == 0 ? invalidTypeId : pValue_->typeId(); }
-        //! See Value::typeName()
+        //! See TypeInfo::typeName()
         const char* typeName() const            { return TypeInfo::typeName(typeId()); }
-        //! See Value::typeSize()
+        //! See TypeInfo::typeSize()
         long typeSize() const                   { return TypeInfo::typeSize(typeId()); }
         //! Return 0 if value is not set, else Value::count()
         long count() const                      { return pValue_ == 0 ? 0 : pValue_->count(); }
