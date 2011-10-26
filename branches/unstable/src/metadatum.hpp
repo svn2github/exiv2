@@ -86,25 +86,33 @@ namespace Exiv2 {
         //@{
         //! Assignment operator
         Tag1& operator=(const Tag1& rhs);
-
-
+        /*!
+          @brief Assign \em value to the %Tag1. Calls setValue(const Value*).
+         */
+        Tag1& operator=(const Value& value);
+        /*!
+          @brief Assign a bool value \em value to the %Tag1. The resulting value is a string "True" or "False". 
+         */
+        Tag1& operator=(const bool& value);
         /*!
           @brief Assign \em value to the %Tag1. The type of the new Value
                  is set to UShortValue.
          */
         Tag1& operator=(const uint16_t& value);
         /*!
-          @brief Assign \em value to the %Tag1.
-                 Calls setValue(const std::string&).
+          @brief Assign an unsigned 16 bit short \em value to the %Tag1.
+         */
+        Tag1& operator=(const char* value);
+        /*!
+          @brief Assign \em value to the %Tag1. Calls operator=(const std::string&).
          */
         Tag1& operator=(const std::string& value);
         /*!
-          @brief Assign \em value to the %Tag1.
-                 Calls setValue(const Value*).
+          @brief Assign a \em value of any type with an output operator to the %Tag1.
+                 Calls operator=(const std::string&).
          */
-        Tag1& operator=(const Value& value);
-
-
+        template<typename T>
+        Tag1& operator=(const T& value);
         /*!
           @brief Set the value. This method copies (clones) the value pointed
                  to by pValue.
@@ -269,8 +277,43 @@ namespace Exiv2 {
         return md.write(os);
     }
 
+    inline Tag1& Tag1::operator=(const char* value)
+    {
+        return Tag1::operator=(std::string(value));
+    }
 
+    inline Tag1& Tag1::operator=(const bool& value)
+    {
+        return operator=(value ? "True" : "False");
+    }
 
+    template<typename T>
+    Tag1& Tag1::operator=(const T& value)
+    {
+        setValue(Exiv2::toString(value));
+        return *this;
+    }
+
+// Todo: The following class should be internal ----------------------
+
+    //! Unary predicate that matches an Xmpdatum by key
+    class FindTag1ByKey {
+    public:
+        //! Constructor, initializes the object with key
+        FindTag1ByKey(const Exiv2::Key1& key)
+            : key_(key.key()) {}
+        /*!
+          @brief Returns \c true if \em tag has the same key as that of this object.
+        */
+        bool operator()(const Exiv2::Tag1& tag) const
+            { return key_ == tag.key(); }
+
+    private:
+        std::string key_;
+
+    }; // class FindTag1ByKey
+
+// -------------------------------------------------------------------
 
     /*!
       @brief Abstract base class defining the interface to access information

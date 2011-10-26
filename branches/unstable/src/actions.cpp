@@ -532,7 +532,7 @@ namespace Action {
             const Exiv2::XmpData& xmpData = image->xmpData();
             for (Exiv2::XmpData::const_iterator md = xmpData.begin();
                  md != xmpData.end(); ++md) {
-                printMetadatum(*md, image);
+                printTag1(*md, image);
             }
             if (xmpData.empty()) {
                 if (Params::instance().verbose_) {
@@ -1480,7 +1480,7 @@ namespace Action {
             Exiv2::XmpData::iterator pos =
                 xmpData.findKey(Exiv2::Key1(modifyCmd.key_));
             if (pos != xmpData.end()) {
-                metadatum = &(*pos);
+                tag = &(*pos);
             }
         }
         // If a type was explicitly requested, use it; else

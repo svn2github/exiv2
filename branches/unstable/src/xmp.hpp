@@ -52,120 +52,8 @@ namespace Exiv2 {
 // *****************************************************************************
 // class definitions
 
-    /*!
-      @brief Information related to an XMP property. An XMP metadatum consists
-             of a Key1 and a Value and provides methods to manipulate these.
-     */
-    class EXIV2API Xmpdatum : public Metadatum {
-    public:
-        //! @name Creators
-        //@{
-        /*!
-          @brief Constructor for new tags created by an application. The
-                 %Xmpdatum is created from a key / value pair. %Xmpdatum
-                 copies (clones) the value if one is provided. Alternatively, a
-                 program can create an 'empty' %Xmpdatum with only a key and
-                 set the value using setValue().
-
-          @param key The key of the %Xmpdatum.
-          @param pValue Pointer to a %Xmpdatum value.
-          @throw Error if the key cannot be parsed and converted
-                 to a known schema namespace prefix and property name.
-         */
-        explicit Xmpdatum(const Key1& key,
-                          const Value* pValue =0);
-        //! Copy constructor
-        Xmpdatum(const Xmpdatum& rhs);
-        //! Destructor
-        virtual ~Xmpdatum();
-        //@}
-
-        //! @name Manipulators
-        //@{
-        //! Assignment operator
-        Xmpdatum& operator=(const Xmpdatum& rhs);
-        /*!
-          @brief Assign std::string \em value to the %Xmpdatum.
-                 Calls setValue(const std::string&).
-         */
-        Xmpdatum& operator=(const std::string& value);
-        /*!
-          @brief Assign const char* \em value to the %Xmpdatum.
-                 Calls operator=(const std::string&).
-         */
-        Xmpdatum& operator=(const char* value);
-        /*!
-          @brief Assign a boolean \em value to the %Xmpdatum.
-                 Translates the value to a string "true" or "false".
-         */
-        Xmpdatum& operator=(const bool& value);
-        /*!
-          @brief Assign a \em value of any type with an output operator
-                 to the %Xmpdatum. Calls operator=(const std::string&).
-         */
-        template<typename T>
-        Xmpdatum& operator=(const T& value);
-        /*!
-          @brief Assign Value \em value to the %Xmpdatum.
-                 Calls setValue(const Value*).
-         */
-        Xmpdatum& operator=(const Value& value);
-        void setValue(const Value* pValue);
-        /*!
-          @brief Set the value to the string \em value. Uses Value::read(const
-                 std::string&).  If the %Xmpdatum does not have a Value yet,
-                 then a %Value of the correct type for this %Xmpdatum is
-                 created. If the key is unknown, a XmpTextValue is used as
-                 default. Return 0 if the value was read successfully.
-         */
-        int setValue(const std::string& value);
-        //@}
-
-        //! @name Accessors
-        //@{
-        //! Not implemented. Calling this method will raise an exception.
-        long copy(byte* buf, ByteOrder byteOrder) const;
-        std::ostream& write(std::ostream& os, const ExifData* pMetadata =0) const;
-        /*!
-          @brief Return the key of the Xmpdatum. The key is of the form
-                 '<b>Xmp</b>.prefix.property'. Note however that the
-                 key is not necessarily unique, i.e., an XmpData object may
-                 contain multiple metadata with the same key.
-         */
-        std::string key() const;
-        const char* familyName() const;
-        //! Return the (preferred) schema namespace prefix.
-        std::string groupName() const;
-        //! Return the property name.
-        std::string tagName() const;
-        std::string tagLabel() const;
-        //! Properties don't have a tag number. Return 0.
-        uint16_t tag() const;
-        TypeId typeId() const;
-        const char* typeName() const;
-        // Todo: Remove this method from the baseclass
-        //! The Exif typeSize doesn't make sense here. Return 0.
-        long typeSize() const;
-        long count() const;
-        long size() const;
-        std::string toString() const;
-        std::string toString(long n) const;
-        long toLong(long n =0) const;
-        float toFloat(long n =0) const;
-        Rational toRational(long n =0) const;
-        Value::AutoPtr getValue() const;
-        const Value& value() const;
-        //@}
-
-    private:
-        // Pimpl idiom
-        struct Impl;
-        Impl* p_;
-
-    }; // class Xmpdatum
-
     //! Container type to hold all metadata
-    typedef std::vector<Xmpdatum> XmpMetadata;
+    typedef std::vector<Tag1> XmpMetadata;
 
     /*!
       @brief A container for XMP data. This is a top-level class of
@@ -187,34 +75,34 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         /*!
-          @brief Returns a reference to the %Xmpdatum that is associated with a
+          @brief Returns a reference to the %Tag1 that is associated with a
                  particular \em key. If %XmpData does not already contain such
-                 an %Xmpdatum, operator[] adds object \em Xmpdatum(key).
+                 an %Tag1, operator[] adds object \em Tag1(key).
 
           @note  Since operator[] might insert a new element, it can't be a const
                  member function.
          */
-        Xmpdatum& operator[](const std::string& key);
+        Tag1& operator[](const std::string& key);
         /*!
-          @brief Add an %Xmpdatum from the supplied key and value pair. This
+          @brief Add an %Tag1 from the supplied key and value pair. This
                  method copies (clones) the value.
           @return 0 if successful.
          */
         int add(const Key1& key, const Value* value);
         /*!
-          @brief Add a copy of the Xmpdatum to the XMP metadata.
+          @brief Add a copy of the Tag1 to the XMP metadata.
           @return 0 if successful.
          */
-        int add(const Xmpdatum& xmpdatum);
+        int add(const Tag1& xmpdatum);
         /*!
-          @brief Delete the Xmpdatum at iterator position pos, return the
-                 position of the next Xmpdatum.
+          @brief Delete the Tag1 at iterator position pos, return the
+                 position of the next Tag1.
 
           @note  Iterators into the metadata, including pos, are potentially
                  invalidated by this call.
          */
         iterator erase(iterator pos);
-        //! Delete all Xmpdatum instances resulting in an empty container.
+        //! Delete all Tag1 instances resulting in an empty container.
         void clear();
         //! Sort metadata by key
         void sortByKey();
@@ -223,7 +111,7 @@ namespace Exiv2 {
         //! End of the metadata
         iterator end();
         /*!
-          @brief Find the first Xmpdatum with the given key, return an iterator
+          @brief Find the first Tag1 with the given key, return an iterator
                  to it.
          */
         iterator findKey(const Key1& key);
@@ -236,7 +124,7 @@ namespace Exiv2 {
         //! End of the metadata
         const_iterator end() const;
         /*!
-          @brief Find the first Xmpdatum with the given key, return a const
+          @brief Find the first Tag1 with the given key, return a const
                  iterator to it.
          */
         const_iterator findKey(const Key1& key) const;
@@ -341,23 +229,6 @@ namespace Exiv2 {
 
 // *****************************************************************************
 // free functions, template and inline definitions
-
-    inline Xmpdatum& Xmpdatum::operator=(const char* value)
-    {
-        return Xmpdatum::operator=(std::string(value));
-    }
-
-    inline Xmpdatum& Xmpdatum::operator=(const bool& value)
-    {
-        return operator=(value ? "True" : "False");
-    }
-
-    template<typename T>
-    Xmpdatum& Xmpdatum::operator=(const T& value)
-    {
-        setValue(Exiv2::toString(value));
-        return *this;
-    }
 
 }                                       // namespace Exiv2
 

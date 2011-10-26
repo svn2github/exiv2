@@ -91,7 +91,7 @@ namespace {
         { 35, N_("No namespace info available for XMP prefix `%1'") }, // %1=prefix
         { 36, N_("No prefix registered for namespace `%2', needed for property path `%1'") }, // %1=namespace
         { 37, N_("Size of %1 JPEG segment is larger than 65535 bytes") }, // %1=type of metadata (Exif, IPTC, JPEG comment)
-        { 38, N_("Unhandled Xmpdatum %1 of type %2") }, // %1=key, %2=value type
+        { 38, N_("Unhandled XMP tag %1 of type %2") }, // %1=key, %2=value type
         { 39, N_("Unhandled XMP node %1 with opt=%2") }, // %1=key, %2=XMP Toolkit option flags
         { 40, N_("XMP Toolkit error %1: %2") }, // %1=XMP_Error::GetID(), %2=XMP_Error::GetErrMsg()
         { 41, N_("Failed to decode Lang Alt property %1 with opt=%2") }, // %1=property path, %3=XMP Toolkit option flags

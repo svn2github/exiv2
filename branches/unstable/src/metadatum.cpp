@@ -34,6 +34,7 @@ EXIV2_RCSID("@(#) $Id$")
 // included header files
 #include "metadatum.hpp"
 #include "error.hpp"
+#include "properties.hpp"
 
 // + standard includes
 #include <iostream>
@@ -73,6 +74,8 @@ namespace Exiv2 {
 
     Tag1& Tag1::operator=(const uint16_t& value)
     {
+        // Todo: Fix ugly hack!
+        if (key_.family() == mdXmp) return operator=(Exiv2::toString(value));
         setValueHelper(value);
         return *this;
     }
@@ -116,8 +119,17 @@ namespace Exiv2 {
 //---
     std::ostream& Tag1::write(std::ostream& os, const ExifData* pMetadata) const
     {
-        // IPTC version - should IPTC also have print functions? Maybe they do now - check later!
-        return os << value();
+        // Todo: remove the #include when this is solved properly
+
+        switch (key_.family()) {
+        case mdIptc:
+            // IPTC version - should IPTC also have print functions? Maybe they do now - check later!
+            return os << value();
+            break;
+        case mdXmp:
+            // XMP version
+            return XmpProperties::printProperty(os, key(), value());
+            break;
 /*
         // Exif version
         if (value().count() == 0) return os;
@@ -126,6 +138,7 @@ namespace Exiv2 {
         if (ti != 0) fct = ti->printFct_;
         return fct(os, value(), pMetadata);
 */
+        }
     }
 
 //---
