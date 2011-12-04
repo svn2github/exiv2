@@ -20,7 +20,7 @@
  */
 /*!
   @file    metadatum.hpp
-  @brief   Provides abstract base class Metadatum
+  @brief   Provides class Tag1, a basic type for a metadatum.
   @version $Rev$
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
@@ -100,7 +100,32 @@ namespace Exiv2 {
          */
         Tag1& operator=(const uint16_t& value);
         /*!
-          @brief Assign an unsigned 16 bit short \em value to the %Tag1.
+          @brief Assign \em value to the %Tag1. The type of the new Value
+                 is set to ULongValue.
+         */
+        Tag1& operator=(const uint32_t& value);
+        /*!
+          @brief Assign \em value to the %Tag1. The type of the new Value
+                 is set to URationalValue.
+         */
+        Tag1& operator=(const URational& value);
+        /*!
+          @brief Assign \em value to the %Tag1. The type of the new Value
+                 is set to ShortValue.
+         */
+        Tag1& operator=(const int16_t& value);
+        /*!
+          @brief Assign \em value to the %Tag1. The type of the new Value
+                 is set to LongValue.
+         */
+        Tag1& operator=(const int32_t& value);
+        /*!
+          @brief Assign \em value to the %Tag1. The type of the new Value
+                 is set to RationalValue.
+         */
+        Tag1& operator=(const Rational& value);
+        /*!
+          @brief Assign \em value to the %Tag1. Calls operator=(const std::string&).
          */
         Tag1& operator=(const char* value);
         /*!
@@ -125,6 +150,20 @@ namespace Exiv2 {
                  Return 0 if the value was read successfully.
          */
         int setValue(const std::string& buf);
+        /*!
+          @brief Set the data area of the value by copying (cloning) the buffer
+                 pointed to by \em buf.
+
+          Values may have a data area, which can contain additional
+          information besides the actual value. This method is used to set such
+          a data area. The data area is used for certain Exif tags.
+
+          @param buf Pointer to the source data area
+          @param len Size of the data area
+          @return Return -1 if the %Tag1 does not have a value or the value has
+                  no data area, else 0.
+         */
+        int setDataArea(const byte* buf, long len);
         //@}
 
         //! @name Accessors
@@ -240,6 +279,21 @@ namespace Exiv2 {
           @throw Error if the value is not set.
          */
         const Value& value() const;
+        //! Return the size of the data area.
+        long sizeDataArea() const               { return pValue_ == 0 ? 0 : pValue_->sizeDataArea(); }
+        /*!
+          @brief Return a copy of the data area of the value. The caller owns
+                 this copy and %DataBuf ensures that it will be deleted.
+
+          Values may have a data area, which can contain additional
+          information besides the actual value. This method is used to access
+          such a data area. The data area is used for certain Exif tags.
+
+          @return A %DataBuf containing a copy of the data area or an empty
+                  %DataBuf if the value does not have a data area assigned or the
+                  value is not set.
+         */
+        DataBuf dataArea() const                { return pValue_ == 0 ? DataBuf(0, 0) : pValue_->dataArea(); }
         //@}
 
     private:
@@ -495,17 +549,6 @@ namespace Exiv2 {
     {
         return md.write(os);
     }
-
-    /*!
-      @brief Compare two metadata by tag. Return true if the tag of metadatum
-             lhs is less than that of rhs.
-     */
-    EXIV2API bool cmpMetadataByTag(const Metadatum& lhs, const Metadatum& rhs);
-    /*!
-      @brief Compare two metadata by key. Return true if the key of metadatum
-             lhs is less than that of rhs.
-     */
-    EXIV2API bool cmpMetadataByKey(const Metadatum& lhs, const Metadatum& rhs);
 
     /*!
       @brief Compare two tags by their tag number. Return true if the tag number of

@@ -34,6 +34,9 @@ EXIV2_RCSID("@(#) $Id$")
 // included header files
 #include "metadatum.hpp"
 #include "error.hpp"
+
+// Todo: added for hacked write() only
+#include "tags_int.hpp"
 #include "properties.hpp"
 
 // + standard includes
@@ -43,6 +46,8 @@ EXIV2_RCSID("@(#) $Id$")
 // *****************************************************************************
 // class member definitions
 namespace Exiv2 {
+
+    using namespace Internal;
 
     Tag1::Tag1(const Key1& key, const Value* pValue)
         : key_(key), pValue_(0)
@@ -80,6 +85,46 @@ namespace Exiv2 {
         return *this;
     }
 
+    Tag1& Tag1::operator=(const uint32_t& value)
+    {
+        // Todo: Fix ugly hack!
+        if (key_.family() == mdXmp) return operator=(Exiv2::toString(value));
+        setValueHelper(value);
+        return *this;
+    }
+
+    Tag1& Tag1::operator=(const URational& value)
+    {
+        // Todo: Fix ugly hack!
+        if (key_.family() == mdXmp) return operator=(Exiv2::toString(value));
+        setValueHelper(value);
+        return *this;
+    }
+
+    Tag1& Tag1::operator=(const int16_t& value)
+    {
+        // Todo: Fix ugly hack!
+        if (key_.family() == mdXmp) return operator=(Exiv2::toString(value));
+        setValueHelper(value);
+        return *this;
+    }
+
+    Tag1& Tag1::operator=(const int32_t& value)
+    {
+        // Todo: Fix ugly hack!
+        if (key_.family() == mdXmp) return operator=(Exiv2::toString(value));
+        setValueHelper(value);
+        return *this;
+    }
+
+    Tag1& Tag1::operator=(const Rational& value)
+    {
+        // Todo: Fix ugly hack!
+        if (key_.family() == mdXmp) return operator=(Exiv2::toString(value));
+        setValueHelper(value);
+        return *this;
+    }
+
     Tag1& Tag1::operator=(const std::string& value)
     {
         setValue(value);
@@ -109,6 +154,11 @@ namespace Exiv2 {
         return pValue_->read(buf);
     }
 
+    int Tag1::setDataArea(const byte* buf, long len)
+    {
+        return pValue_ == 0 ? -1 : pValue_->setDataArea(buf, len);
+    }
+
     std::string Tag1::print(const ExifData* pMetadata) const
     {
         std::ostringstream os;
@@ -130,14 +180,14 @@ namespace Exiv2 {
             // XMP version
             return XmpProperties::printProperty(os, key(), value());
             break;
-/*
-        // Exif version
-        if (value().count() == 0) return os;
-        PrintFct fct = printValue;
-        const TagInfo* ti = Internal::tagInfo(tag(), static_cast<IfdId>(ifdId()));
-        if (ti != 0) fct = ti->printFct_;
-        return fct(os, value(), pMetadata);
-*/
+        case mdExif:
+            // Exif version
+            if (value().count() == 0) return os;
+            PrintFct fct = printValue;
+            const TagInfo* ti = tagInfo(tag(), static_cast<IfdId>(group()));
+            if (ti != 0) fct = ti->printFct_;
+            return fct(os, value(), pMetadata);
+            break;
         }
     }
 
@@ -170,17 +220,6 @@ namespace Exiv2 {
         std::ostringstream os;
         write(os, pMetadata);
         return os.str();
-    }
-
-    bool cmpMetadataByTag(const Metadatum& lhs, const Metadatum& rhs)
-    {
-        return lhs.tag() < rhs.tag();
-    }
-
-
-    bool cmpMetadataByKey(const Metadatum& lhs, const Metadatum& rhs)
-    {
-        return lhs.key() < rhs.key();
     }
 
     bool cmpTag1ByTag(const Tag1& lhs, const Tag1& rhs)

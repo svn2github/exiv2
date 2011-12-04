@@ -1374,7 +1374,7 @@ namespace Exiv2 {
         const ExifData::const_iterator b = exifData.begin();
         const ExifData::const_iterator e = exifData.end();
         for (ExifData::const_iterator i = b; i != e; ++i) {
-            if (i->ifdId() != ifdId) continue;
+            if (i->group() != ifdId) continue;
             const uint16_t s = i->tag()*2 + static_cast<uint16_t>(i->size());
             assert(s <= size);
             if (len < s) len = s;

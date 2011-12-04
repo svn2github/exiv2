@@ -59,7 +59,7 @@ try {
 
     // Since we know that the metadatum exists (or we don't mind creating a new
     // tag if it doesn't), we can simply do this:
-    Exiv2::Exifdatum& tag = exifData["Exif.Photo.DateTimeOriginal"];
+    Exiv2::Tag1& tag = exifData["Exif.Photo.DateTimeOriginal"];
     std::string date = tag.toString();
     date.replace(0, 4, "2000");
     tag.setValue(date);

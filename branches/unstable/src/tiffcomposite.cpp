@@ -958,47 +958,47 @@ namespace Exiv2 {
         visitor.visitBinaryElement(this);
     } // TiffBinaryElement::doAccept
 
-    void TiffEntryBase::encode(TiffEncoder& encoder, const Exifdatum* datum)
+    void TiffEntryBase::encode(TiffEncoder& encoder, const Tag1* datum)
     {
         doEncode(encoder, datum);
     } // TiffComponent::encode
 
-    void TiffBinaryElement::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    void TiffBinaryElement::doEncode(TiffEncoder& encoder, const Tag1* datum)
     {
         encoder.encodeBinaryElement(this, datum);
     } // TiffBinaryElement::doEncode
 
-    void TiffBinaryArray::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    void TiffBinaryArray::doEncode(TiffEncoder& encoder, const Tag1* datum)
     {
         encoder.encodeBinaryArray(this, datum);
     } // TiffBinaryArray::doEncode
 
-    void TiffDataEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    void TiffDataEntry::doEncode(TiffEncoder& encoder, const Tag1* datum)
     {
         encoder.encodeDataEntry(this, datum);
     } // TiffDataEntry::doEncode
 
-    void TiffEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    void TiffEntry::doEncode(TiffEncoder& encoder, const Tag1* datum)
     {
         encoder.encodeTiffEntry(this, datum);
     } // TiffEntry::doEncode
 
-    void TiffImageEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    void TiffImageEntry::doEncode(TiffEncoder& encoder, const Tag1* datum)
     {
         encoder.encodeImageEntry(this, datum);
     } // TiffImageEntry::doEncode
 
-    void TiffMnEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    void TiffMnEntry::doEncode(TiffEncoder& encoder, const Tag1* datum)
     {
         encoder.encodeMnEntry(this, datum);
     } // TiffMnEntry::doEncode
 
-    void TiffSizeEntry::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    void TiffSizeEntry::doEncode(TiffEncoder& encoder, const Tag1* datum)
     {
         encoder.encodeSizeEntry(this, datum);
     } // TiffSizeEntry::doEncode
 
-    void TiffSubIfd::doEncode(TiffEncoder& encoder, const Exifdatum* datum)
+    void TiffSubIfd::doEncode(TiffEncoder& encoder, const Tag1* datum)
     {
         encoder.encodeSubIfd(this, datum);
     } // TiffSubIfd::doEncode

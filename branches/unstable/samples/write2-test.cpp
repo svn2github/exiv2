@@ -227,7 +227,7 @@ void print(const std::string& file)
                   << "0x" << std::setw(4) << std::setfill('0') << std::right
                   << std::hex << i->tag() << " "
                   << std::setw(12) << std::setfill(' ') << std::left
-                  << i->ifdName() << " "
+                  << Exiv2::ExifTags::ifdName(i->groupName()) << " "
                   << std::setw(9) << std::setfill(' ') << std::left
                   << i->typeName() << " "
                   << std::dec << std::setw(3)

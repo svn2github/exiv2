@@ -420,7 +420,7 @@ namespace Exiv2 {
         //! Constructor, initializes the object with the IfdId to look for.
         FindExifdatum(Exiv2::Internal::IfdId ifdId) : ifdId_(ifdId) {}
         //! Returns true if IFD id matches.
-        bool operator()(const Exiv2::Exifdatum& md) const { return ifdId_ == md.ifdId(); }
+        bool operator()(const Exiv2::Tag1& md) const { return ifdId_ == md.group(); }
 
     private:
         Exiv2::Internal::IfdId ifdId_;

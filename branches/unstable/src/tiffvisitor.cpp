@@ -55,14 +55,14 @@ EXIV2_RCSID("@(#) $Id$")
 
 // *****************************************************************************
 namespace {
-    //! Unary predicate that matches an Exifdatum with a given group and index.
-    class FindExifdatum2 {
+    //! Unary predicate that matches a Tag with a given group and index.
+    class FindTag12 {
     public:
         //! Constructor, initializes the object with the group and index to look for.
-        FindExifdatum2(Exiv2::Internal::IfdId group, int idx)
+        FindTag12(Exiv2::Internal::IfdId group, int idx)
             : groupName_(Exiv2::Internal::groupName(group)), idx_(idx) {}
         //! Returns true if group and index match.
-        bool operator()(const Exiv2::Exifdatum& md) const
+        bool operator()(const Exiv2::Tag1& md) const
         {
             return idx_ == md.idx() && 0 == strcmp(md.groupName().c_str(), groupName_);
         }
@@ -71,7 +71,7 @@ namespace {
         const char* groupName_;
         int idx_;
 
-    }; // class FindExifdatum2
+    }; // class FindTag12
 
     Exiv2::ByteOrder stringToByteOrder(const std::string& val)
     {
@@ -592,7 +592,7 @@ namespace Exiv2 {
                 buf = rawIptc; // Note: This resets rawIptc
             }
             value->read(buf.pData_, buf.size_, byteOrder_);
-            Exifdatum iptcDatum(iptcNaaKey, value.get());
+            Tag1 iptcDatum(iptcNaaKey, value.get());
             exifData_.add(iptcDatum);
             pos = exifData_.findKey(irbKey); // needed after add()
         }
@@ -606,7 +606,7 @@ namespace Exiv2 {
             if (irbBuf.size_ != 0) {
                 Value::AutoPtr value = Value::create(unsignedByte);
                 value->read(irbBuf.pData_, irbBuf.size_, invalidByteOrder);
-                Exifdatum iptcDatum(irbKey, value.get());
+                Tag1 iptcDatum(irbKey, value.get());
                 exifData_.add(iptcDatum);
             }
         }
@@ -633,7 +633,7 @@ namespace Exiv2 {
             value->read(reinterpret_cast<const byte*>(&xmpPacket[0]),
                         static_cast<long>(xmpPacket.size()),
                         invalidByteOrder);
-            Exifdatum xmpDatum(xmpKey, value.get());
+            Tag1 xmpDatum(xmpKey, value.get());
             exifData_.add(xmpDatum);
         }
     } // TiffEncoder::encodeXmp
@@ -812,7 +812,7 @@ namespace Exiv2 {
 
     void TiffEncoder::encodeTiffComponent(
               TiffEntryBase* object,
-        const Exifdatum*     datum
+        const Tag1*          datum
     )
     {
         assert(object != 0);
@@ -822,7 +822,7 @@ namespace Exiv2 {
         if (isImageTag(object->tag(), object->group())) return;
 
         ExifData::iterator pos = exifData_.end();
-        const Exifdatum* ed = datum;
+        const Tag1* ed = datum;
         if (ed == 0) {
             // Non-intrusive writing: find matching tag
             Key1 key(object->tag(), groupName(object->group()));
@@ -833,7 +833,7 @@ namespace Exiv2 {
                     // Try to find exact match (in case of duplicate tags)
                     ExifData::iterator pos2 =
                         std::find_if(exifData_.begin(), exifData_.end(),
-                                     FindExifdatum2(object->group(), object->idx()));
+                                     FindTag12(object->group(), object->idx()));
                     if (pos2 != exifData_.end() && pos2->key() == key.key()) {
                         ed = &(*pos2);
                         pos = pos2; // make sure we delete the correct tag below
@@ -872,17 +872,17 @@ namespace Exiv2 {
 #endif
     } // TiffEncoder::encodeTiffComponent
 
-    void TiffEncoder::encodeBinaryArray(TiffBinaryArray* object, const Exifdatum* datum)
+    void TiffEncoder::encodeBinaryArray(TiffBinaryArray* object, const Tag1* datum)
     {
         encodeOffsetEntry(object, datum);
     } // TiffEncoder::encodeBinaryArray
 
-    void TiffEncoder::encodeBinaryElement(TiffBinaryElement* object, const Exifdatum* datum)
+    void TiffEncoder::encodeBinaryElement(TiffBinaryElement* object, const Tag1* datum)
     {
         encodeTiffEntryBase(object, datum);
     } // TiffEncoder::encodeArrayElement
 
-    void TiffEncoder::encodeDataEntry(TiffDataEntry* object, const Exifdatum* datum)
+    void TiffEncoder::encodeDataEntry(TiffDataEntry* object, const Tag1* datum)
     {
         encodeOffsetEntry(object, datum);
 
@@ -914,12 +914,12 @@ namespace Exiv2 {
 
     } // TiffEncoder::encodeDataEntry
 
-    void TiffEncoder::encodeTiffEntry(TiffEntry* object, const Exifdatum* datum)
+    void TiffEncoder::encodeTiffEntry(TiffEntry* object, const Tag1* datum)
     {
         encodeTiffEntryBase(object, datum);
     } // TiffEncoder::encodeTiffEntry
 
-    void TiffEncoder::encodeImageEntry(TiffImageEntry* object, const Exifdatum* datum)
+    void TiffEncoder::encodeImageEntry(TiffImageEntry* object, const Tag1* datum)
     {
         encodeOffsetEntry(object, datum);
 
@@ -991,23 +991,23 @@ namespace Exiv2 {
 
     } // TiffEncoder::encodeImageEntry
 
-    void TiffEncoder::encodeMnEntry(TiffMnEntry* object, const Exifdatum* datum)
+    void TiffEncoder::encodeMnEntry(TiffMnEntry* object, const Tag1* datum)
     {
         // Test is required here as well as in the visit function
         if (!object->mn_) encodeTiffEntryBase(object, datum);
     } // TiffEncoder::encodeMnEntry
 
-    void TiffEncoder::encodeSizeEntry(TiffSizeEntry* object, const Exifdatum* datum)
+    void TiffEncoder::encodeSizeEntry(TiffSizeEntry* object, const Tag1* datum)
     {
         encodeTiffEntryBase(object, datum);
     } // TiffEncoder::encodeSizeEntry
 
-    void TiffEncoder::encodeSubIfd(TiffSubIfd* object, const Exifdatum* datum)
+    void TiffEncoder::encodeSubIfd(TiffSubIfd* object, const Tag1* datum)
     {
         encodeOffsetEntry(object, datum);
     } // TiffEncoder::encodeSubIfd
 
-    void TiffEncoder::encodeTiffEntryBase(TiffEntryBase* object, const Exifdatum* datum)
+    void TiffEncoder::encodeTiffEntryBase(TiffEntryBase* object, const Tag1* datum)
     {
         assert(object != 0);
         assert(datum != 0);
@@ -1032,7 +1032,7 @@ namespace Exiv2 {
 #endif
     } // TiffEncoder::encodeTiffEntryBase
 
-    void TiffEncoder::encodeOffsetEntry(TiffEntryBase* object, const Exifdatum* datum)
+    void TiffEncoder::encodeOffsetEntry(TiffEntryBase* object, const Tag1* datum)
     {
         assert(object != 0);
         assert(datum != 0);

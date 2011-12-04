@@ -153,7 +153,7 @@ namespace Exiv2 {
         if (!prevData.empty()) {
             // Filter duplicate tags
             for (ExifData::const_iterator pos = exifData_.begin(); pos != exifData_.end(); ++pos) {
-                if (pos->ifdId() == panaRawId) continue;
+                if (pos->group() == panaRawId) continue;
                 ExifData::iterator dup = prevData.findKey(Key1(pos->key()));
                 if (dup != prevData.end()) {
 #ifdef DEBUG

@@ -767,7 +767,7 @@ namespace Exiv2 {
         }
         // Todo: Escape non-ASCII characters in XMP text values
         Key1 key(to);
-        Exifdatum ed(key);
+        Tag1 ed(key);
         if (0 == ed.setValue(value)) {
             exifData_->add(ed);
         }

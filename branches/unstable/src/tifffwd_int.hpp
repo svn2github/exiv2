@@ -43,7 +43,7 @@
 // Exiv2 namespace extensions
 namespace Exiv2 {
 
-    class Exifdatum;
+    class Tag1;
 
     namespace Internal {
 
@@ -86,7 +86,7 @@ namespace Exiv2 {
       @brief Function pointer type for a TiffDecoder member function
              to decode a TIFF component.
      */
-    typedef void (TiffEncoder::*EncoderFct)(TiffEntryBase*, const Exifdatum*);
+    typedef void (TiffEncoder::*EncoderFct)(TiffEntryBase*, const Tag1*);
     /*!
       @brief Type for a function pointer for a function to decode a TIFF component.
      */

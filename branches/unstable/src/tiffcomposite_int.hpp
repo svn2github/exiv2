@@ -432,7 +432,7 @@ namespace Exiv2 {
           Implemented as double-dispatch calls back to one of the specific
           encoding functions at the \em encoder.
          */
-        void encode(TiffEncoder& encoder, const Exifdatum* datum);
+        void encode(TiffEncoder& encoder, const Tag1* datum);
         //! Set the offset
         void setOffset(int32_t offset) { offset_ = offset; }
         //! Set pointer and size of the entry's data (not taking ownership of the data).
@@ -485,7 +485,7 @@ namespace Exiv2 {
         //! @name Protected Manipulators
         //@{
         //! Implements encode().
-        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum) =0;
+        virtual void doEncode(TiffEncoder& encoder, const Tag1* datum) =0;
         //! Set the number of components in this entry
         void setCount(uint32_t count) { count_ = count; }
         //! Set the unique id of the entry in the image
@@ -576,7 +576,7 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
-        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
+        virtual void doEncode(TiffEncoder& encoder, const Tag1* datum);
         //@}
 
         //! @name Protected Accessors
@@ -674,7 +674,7 @@ namespace Exiv2 {
         //! @name Protected Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
-        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
+        virtual void doEncode(TiffEncoder& encoder, const Tag1* datum);
         /*!
           @brief Implements write(). Write pointers into the data area to the
                  \em ioWrapper, relative to the offsets in the value. Return the
@@ -756,7 +756,7 @@ namespace Exiv2 {
         //! @name Protected Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
-        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
+        virtual void doEncode(TiffEncoder& encoder, const Tag1* datum);
         /*!
           @brief Implements write(). Write pointers into the image data area to the
                  \em ioWrapper. Return the number of bytes written. The \em valueIdx
@@ -838,7 +838,7 @@ namespace Exiv2 {
         //! @name Protected Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
-        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
+        virtual void doEncode(TiffEncoder& encoder, const Tag1* datum);
         //@}
 
         //! @name Protected Accessors
@@ -1006,7 +1006,7 @@ namespace Exiv2 {
                                          TiffComponent::AutoPtr object);
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
-        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
+        virtual void doEncode(TiffEncoder& encoder, const Tag1* datum);
         /*!
           @brief Implements write(). Write the sub-IFD pointers to the \em ioWrapper,
                  return the number of bytes written. The \em valueIdx and
@@ -1092,7 +1092,7 @@ namespace Exiv2 {
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual TiffComponent* doAddNext(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
-        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
+        virtual void doEncode(TiffEncoder& encoder, const Tag1* datum);
         /*!
           @brief Implements write() by forwarding the call to the actual
                  concrete Makernote, if there is one.
@@ -1436,7 +1436,7 @@ namespace Exiv2 {
          */
         virtual TiffComponent* doAddChild(TiffComponent::AutoPtr tiffComponent);
         virtual void doAccept(TiffVisitor& visitor);
-        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
+        virtual void doEncode(TiffEncoder& encoder, const Tag1* datum);
         /*!
           @brief Implements write(). Todo: Document it!
          */
@@ -1524,7 +1524,7 @@ namespace Exiv2 {
         //! @name Protected Manipulators
         //@{
         virtual void doAccept(TiffVisitor& visitor);
-        virtual void doEncode(TiffEncoder& encoder, const Exifdatum* datum);
+        virtual void doEncode(TiffEncoder& encoder, const Tag1* datum);
         /*!
           @brief Implements write(). Todo: Document it!
          */

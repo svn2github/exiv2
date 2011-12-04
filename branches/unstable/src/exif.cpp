@@ -70,7 +70,7 @@ namespace {
           @brief Returns true if the key of \em exifdatum is equal
                  to that of the object.
         */
-        bool operator()(const Exiv2::Exifdatum& exifdatum) const
+        bool operator()(const Exiv2::Tag1& exifdatum) const
         {
             return key_ == exifdatum.key();
         }
@@ -178,7 +178,7 @@ namespace {
     }; // class JpegThumbnail
 
     //! Helper function to sum all components of the value of a metadatum
-    long sumToLong(const Exiv2::Exifdatum& md);
+    long sumToLong(const Exiv2::Tag1& md);
 
     //! Helper function to delete all tags of a specific IFD from the metadata.
     void eraseIfd(Exiv2::ExifData& ed, Exiv2::Internal::IfdId ifdId);
@@ -190,245 +190,6 @@ namespace {
 namespace Exiv2 {
 
     using namespace Internal;
-
-    /*!
-      @brief Set the value of \em exifDatum to \em value. If the object already
-             has a value, it is replaced. Otherwise a new ValueType\<T\> value
-             is created and set to \em value.
-
-      This is a helper function, called from Exifdatum members. It is meant to
-      be used with T = (u)int16_t, (u)int32_t or (U)Rational. Do not use directly.
-    */
-    template<typename T>
-    Exiv2::Exifdatum& setValue(Exiv2::Exifdatum& exifDatum, const T& value)
-    {
-        std::auto_ptr<Exiv2::ValueType<T> > v
-            = std::auto_ptr<Exiv2::ValueType<T> >(new Exiv2::ValueType<T>);
-        v->value_.push_back(value);
-        exifDatum.value_ = v;
-        return exifDatum;
-    }
-
-    Exifdatum::Exifdatum(const Key1& key, const Value* pValue)
-        : key_(key)
-    {
-        if (pValue) value_ = pValue->clone();
-    }
-
-    Exifdatum::~Exifdatum()
-    {
-    }
-
-    Exifdatum::Exifdatum(const Exifdatum& rhs)
-        : Metadatum(rhs), key_(rhs.key_)
-    {
-        if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
-    }
-
-    std::ostream& Exifdatum::write(std::ostream& os, const ExifData* pMetadata) const
-    {
-        if (value().count() == 0) return os;
-        PrintFct fct = printValue;
-        const TagInfo* ti = Internal::tagInfo(tag(), static_cast<IfdId>(ifdId()));
-        if (ti != 0) fct = ti->printFct_;
-        return fct(os, value(), pMetadata);
-    }
-
-    const Value& Exifdatum::value() const
-    {
-        if (value_.get() == 0) throw Error(8);
-        return *value_;
-    }
-
-    Exifdatum& Exifdatum::operator=(const Exifdatum& rhs)
-    {
-        if (this == &rhs) return *this;
-        Metadatum::operator=(rhs);
-
-        key_ = rhs.key_;
-
-        value_.reset();
-        if (rhs.value_.get() != 0) value_ = rhs.value_->clone(); // deep copy
-
-        return *this;
-    } // Exifdatum::operator=
-
-    Exifdatum& Exifdatum::operator=(const std::string& value)
-    {
-        setValue(value);
-        return *this;
-    }
-
-    Exifdatum& Exifdatum::operator=(const uint16_t& value)
-    {
-        return Exiv2::setValue(*this, value);
-    }
-
-    Exifdatum& Exifdatum::operator=(const uint32_t& value)
-    {
-        return Exiv2::setValue(*this, value);
-    }
-
-    Exifdatum& Exifdatum::operator=(const URational& value)
-    {
-        return Exiv2::setValue(*this, value);
-    }
-
-    Exifdatum& Exifdatum::operator=(const int16_t& value)
-    {
-        return Exiv2::setValue(*this, value);
-    }
-
-    Exifdatum& Exifdatum::operator=(const int32_t& value)
-    {
-        return Exiv2::setValue(*this, value);
-    }
-
-    Exifdatum& Exifdatum::operator=(const Rational& value)
-    {
-        return Exiv2::setValue(*this, value);
-    }
-
-    Exifdatum& Exifdatum::operator=(const Value& value)
-    {
-        setValue(&value);
-        return *this;
-    }
-
-    void Exifdatum::setValue(const Value* pValue)
-    {
-        value_.reset();
-        if (pValue) value_ = pValue->clone();
-    }
-
-    int Exifdatum::setValue(const std::string& value)
-    {
-        if (value_.get() == 0) {
-            TypeId type = key_.defaultTypeId();
-            value_ = Value::create(type);
-        }
-        return value_->read(value);
-    }
-
-    int Exifdatum::setDataArea(const byte* buf, long len)
-    {
-        return value_.get() == 0 ? -1 : value_->setDataArea(buf, len);
-    }
-
-    std::string Exifdatum::key() const
-    {
-        return key_.key();
-    }
-
-    const char* Exifdatum::familyName() const
-    {
-        return key_.familyName();
-    }
-
-    std::string Exifdatum::groupName() const
-    {
-        return key_.groupName();
-    }
-
-    std::string Exifdatum::tagName() const
-    {
-        return key_.tagName();
-    }
-
-    std::string Exifdatum::tagLabel() const
-    {
-        return key_.tagLabel();
-    }
-
-    uint16_t Exifdatum::tag() const
-    {
-        return key_.tag();
-    }
-
-    int Exifdatum::ifdId() const
-    {
-        return key_.group();
-    }
-
-    const char* Exifdatum::ifdName() const
-    {
-        return Internal::ifdName(static_cast<Internal::IfdId>(key_.group()));
-    }
-
-    int Exifdatum::idx() const
-    {
-        return key_.idx();
-    }
-
-    long Exifdatum::copy(byte* buf, ByteOrder byteOrder) const
-    {
-        return value_.get() == 0 ? 0 : value_->copy(buf, byteOrder);
-    }
-
-    TypeId Exifdatum::typeId() const
-    {
-        return value_.get() == 0 ? invalidTypeId : value_->typeId();
-    }
-
-    const char* Exifdatum::typeName() const
-    {
-        return TypeInfo::typeName(typeId());
-    }
-
-    long Exifdatum::typeSize() const
-    {
-        return TypeInfo::typeSize(typeId());
-    }
-
-    long Exifdatum::count() const
-    {
-        return value_.get() == 0 ? 0 : value_->count();
-    }
-
-    long Exifdatum::size() const
-    {
-        return value_.get() == 0 ? 0 : value_->size();
-    }
-
-    std::string Exifdatum::toString() const
-    {
-        return value_.get() == 0 ? "" : value_->toString();
-    }
-
-    std::string Exifdatum::toString(long n) const
-    {
-        return value_.get() == 0 ? "" : value_->toString(n);
-    }
-
-    long Exifdatum::toLong(long n) const
-    {
-        return value_.get() == 0 ? -1 : value_->toLong(n);
-    }
-
-    float Exifdatum::toFloat(long n) const
-    {
-        return value_.get() == 0 ? -1 : value_->toFloat(n);
-    }
-
-    Rational Exifdatum::toRational(long n) const
-    {
-        return value_.get() == 0 ? Rational(-1, 1) : value_->toRational(n);
-    }
-
-    Value::AutoPtr Exifdatum::getValue() const
-    {
-        return value_.get() == 0 ? Value::AutoPtr(0) : value_->clone();
-    }
-
-    long Exifdatum::sizeDataArea() const
-    {
-        return value_.get() == 0 ? 0 : value_->sizeDataArea();
-    }
-
-    DataBuf Exifdatum::dataArea() const
-    {
-        return value_.get() == 0 ? DataBuf(0, 0) : value_->dataArea();
-    }
 
     ExifThumbC::ExifThumbC(const ExifData& exifData)
         : exifData_(exifData)
@@ -547,7 +308,7 @@ namespace Exiv2 {
     void ExifThumb::setJpegThumbnail(const byte* buf, long size)
     {
         exifData_["Exif.Thumbnail.Compression"] = uint16_t(6);
-        Exifdatum& format = exifData_["Exif.Thumbnail.JPEGInterchangeFormat"];
+        Tag1& format = exifData_["Exif.Thumbnail.JPEGInterchangeFormat"];
         format = uint32_t(0);
         format.setDataArea(buf, size);
         exifData_["Exif.Thumbnail.JPEGInterchangeFormatLength"] = uint32_t(size);
@@ -558,12 +319,12 @@ namespace Exiv2 {
         eraseIfd(exifData_, ifd1Id);
     }
 
-    Exifdatum& ExifData::operator[](const std::string& key)
+    Tag1& ExifData::operator[](const std::string& key)
     {
         Key1 exifKey(key);
         iterator pos = findKey(exifKey);
         if (pos == end()) {
-            add(Exifdatum(exifKey));
+            add(Tag1(exifKey));
             pos = findKey(exifKey);
         }
         return *pos;
@@ -571,13 +332,13 @@ namespace Exiv2 {
 
     void ExifData::add(const Key1& key, const Value* pValue)
     {
-        add(Exifdatum(key, pValue));
+        add(Tag1(key, pValue));
     }
 
-    void ExifData::add(const Exifdatum& exifdatum)
+    void ExifData::add(const Tag1& tag)
     {
         // allow duplicates
-        exifMetadata_.push_back(exifdatum);
+        exifMetadata_.push_back(tag);
     }
 
     ExifData::const_iterator ExifData::findKey(const Key1& key) const
@@ -599,12 +360,12 @@ namespace Exiv2 {
 
     void ExifData::sortByKey()
     {
-        exifMetadata_.sort(cmpMetadataByKey);
+        exifMetadata_.sort(cmpTag1ByKey);
     }
 
     void ExifData::sortByTag()
     {
-        exifMetadata_.sort(cmpMetadataByTag);
+        exifMetadata_.sort(cmpTag1ByTag);
     }
 
     ExifData::iterator ExifData::erase(ExifData::iterator beg, ExifData::iterator end)
@@ -921,7 +682,7 @@ namespace {
         return format->dataArea();
     }
 
-    long sumToLong(const Exiv2::Exifdatum& md)
+    long sumToLong(const Exiv2::Tag1& md)
     {
         long sum = 0;
         for (int i = 0; i < md.count(); ++i) {

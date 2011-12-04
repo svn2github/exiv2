@@ -58,172 +58,6 @@ namespace Exiv2 {
 // class definitions
 
     /*!
-      @brief An Exif metadatum, consisting of a Key1 and a Value and
-             methods to manipulate these.
-     */
-    class EXIV2API Exifdatum : public Metadatum {
-        template<typename T> friend Exifdatum& setValue(Exifdatum&, const T&);
-    public:
-        //! @name Creators
-        //@{
-        /*!
-          @brief Constructor for new tags created by an application. The
-                 %Exifdatum is created from a \em key / value pair. %Exifdatum copies
-                 (clones) the \em key and value if one is provided. Alternatively,
-                 a program can create an 'empty' %Exifdatum with only a key
-                 and set the value using setValue().
-
-          @param key %Exif Key.
-          @param pValue Pointer to an %Exifdatum value.
-          @throw Error if the key cannot be parsed and converted.
-         */
-        explicit Exifdatum(const Key1& key, const Value* pValue =0);
-        //! Copy constructor
-        Exifdatum(const Exifdatum& rhs);
-        //! Destructor
-        virtual ~Exifdatum();
-        //@}
-
-        //! @name Manipulators
-        //@{
-        //! Assignment operator
-        Exifdatum& operator=(const Exifdatum& rhs);
-        /*!
-          @brief Assign \em value to the %Exifdatum. The type of the new Value
-                 is set to UShortValue.
-         */
-        Exifdatum& operator=(const uint16_t& value);
-        /*!
-          @brief Assign \em value to the %Exifdatum. The type of the new Value
-                 is set to ULongValue.
-         */
-        Exifdatum& operator=(const uint32_t& value);
-        /*!
-          @brief Assign \em value to the %Exifdatum. The type of the new Value
-                 is set to URationalValue.
-         */
-        Exifdatum& operator=(const URational& value);
-        /*!
-          @brief Assign \em value to the %Exifdatum. The type of the new Value
-                 is set to ShortValue.
-         */
-        Exifdatum& operator=(const int16_t& value);
-        /*!
-          @brief Assign \em value to the %Exifdatum. The type of the new Value
-                 is set to LongValue.
-         */
-        Exifdatum& operator=(const int32_t& value);
-        /*!
-          @brief Assign \em value to the %Exifdatum. The type of the new Value
-                 is set to RationalValue.
-         */
-        Exifdatum& operator=(const Rational& value);
-        /*!
-          @brief Assign \em value to the %Exifdatum.
-                 Calls setValue(const std::string&).
-         */
-        Exifdatum& operator=(const std::string& value);
-        /*!
-          @brief Assign \em value to the %Exifdatum.
-                 Calls setValue(const Value*).
-         */
-        Exifdatum& operator=(const Value& value);
-        void setValue(const Value* pValue);
-        /*!
-          @brief Set the value to the string \em value.  Uses Value::read(const
-                 std::string&).  If the %Exifdatum does not have a Value yet,
-                 then a %Value of the correct type for this %Exifdatum is
-                 created. An AsciiValue is created for unknown tags. Return
-                 0 if the value was read successfully.
-         */
-        int setValue(const std::string& value);
-        /*!
-          @brief Set the data area by copying (cloning) the buffer pointed to
-                 by \em buf.
-
-          Values may have a data area, which can contain additional
-          information besides the actual value. This method is used to set such
-          a data area.
-
-          @param buf Pointer to the source data area
-          @param len Size of the data area
-          @return Return -1 if the %Exifdatum does not have a value yet or the
-                  value has no data area, else 0.
-         */
-        int setDataArea(const byte* buf, long len);
-        //@}
-
-        //! @name Accessors
-        //@{
-        //! Return the key of the %Exifdatum.
-        std::string key() const;
-        const char* familyName() const;
-        std::string groupName() const;
-        std::string tagName() const;
-        std::string tagLabel() const;
-        uint16_t tag() const;
-        //! Return the IFD id as an integer. (Do not use, this is meant for library internal use.)
-        int ifdId() const;
-        //! Return the name of the IFD
-        const char* ifdName() const;
-        //! Return the index (unique id of this key within the original IFD)
-        int idx() const;
-        /*!
-          @brief Write value to a data buffer and return the number
-                 of bytes written.
-
-          The user must ensure that the buffer has enough memory. Otherwise
-          the call results in undefined behaviour.
-
-          @param buf Data buffer to write to.
-          @param byteOrder Applicable byte order (little or big endian).
-          @return Number of characters written.
-        */
-        long copy(byte* buf, ByteOrder byteOrder) const;
-        std::ostream& write(std::ostream& os, const ExifData* pMetadata =0) const;
-        //! Return the type id of the value
-        TypeId typeId() const;
-        //! Return the name of the type
-        const char* typeName() const;
-        //! Return the size in bytes of one component of this type
-        long typeSize() const;
-        //! Return the number of components in the value
-        long count() const;
-        //! Return the size of the value in bytes
-        long size() const;
-        //! Return the value as a string.
-        std::string toString() const;
-        std::string toString(long n) const;
-        long toLong(long n =0) const;
-        float toFloat(long n =0) const;
-        Rational toRational(long n =0) const;
-        Value::AutoPtr getValue() const;
-        const Value& value() const;
-        //! Return the size of the data area.
-        long sizeDataArea() const;
-        /*!
-          @brief Return a copy of the data area of the value. The caller owns
-                 this copy and %DataBuf ensures that it will be deleted.
-
-          Values may have a data area, which can contain additional
-          information besides the actual value. This method is used to access
-          such a data area.
-
-          @return A %DataBuf containing a copy of the data area or an empty
-                  %DataBuf if the value does not have a data area assigned or the
-                  value is not set.
-         */
-        DataBuf dataArea() const;
-        //@}
-
-    private:
-        // DATA
-        Key1 key_;                              //!< Key
-        Value::AutoPtr   value_;                //!< Value
-
-    }; // class Exifdatum
-
-    /*!
       @brief Access to a Exif %thumbnail image. This class provides higher level
              accessors to the thumbnail image that is optionally embedded in IFD1
              of the Exif data. These methods do not write to the Exif metadata.
@@ -422,11 +256,11 @@ namespace Exiv2 {
     }; // class ExifThumb
 
     //! Container type to hold all metadata
-    typedef std::list<Exifdatum> ExifMetadata;
+    typedef std::list<Tag1> ExifMetadata;
 
     /*!
       @brief A container for Exif data.  This is a top-level class of the %Exiv2
-             library. The container holds Exifdatum objects.
+             library. The container holds Tag1 objects.
 
       Provide high-level access to the Exif data of an image:
       - read Exif information from JPEG files
@@ -446,34 +280,34 @@ namespace Exiv2 {
         //! @name Manipulators
         //@{
         /*!
-          @brief Returns a reference to the %Exifdatum that is associated with a
+          @brief Returns a reference to the %Tag1 that is associated with a
                  particular \em key. If %ExifData does not already contain such
-                 an %Exifdatum, operator[] adds object \em Exifdatum(key).
+                 a %Tag1, operator[] adds object \em Tag1(key).
 
           @note  Since operator[] might insert a new element, it can't be a const
                  member function.
          */
-        Exifdatum& operator[](const std::string& key);
+        Tag1& operator[](const std::string& key);
         /*!
-          @brief Add an Exifdatum from the supplied key and value pair.  This
+          @brief Add a Tag1 from the supplied key and value pair.  This
                  method copies (clones) key and value. No duplicate checks are
                  performed, i.e., it is possible to add multiple metadata with
                  the same key.
          */
         void add(const Key1& key, const Value* pValue);
         /*!
-          @brief Add a copy of the \em exifdatum to the Exif metadata.  No
+          @brief Add a copy of the \em tag to the Exif metadata.  No
                  duplicate checks are performed, i.e., it is possible to add
                  multiple metadata with the same key.
 
           @throw Error if the makernote cannot be created
          */
-        void add(const Exifdatum& exifdatum);
+        void add(const Tag1& tag);
         /*!
-          @brief Delete the Exifdatum at iterator position \em pos, return the
-                 position of the next exifdatum. Note that iterators into
-                 the metadata, including \em pos, are potentially invalidated
-                 by this call.
+          @brief Delete the Tag1 at iterator position \em pos, return the
+                 position of the next tag. Note that iterators into the
+                 metadata, including \em pos, are potentially invalidated by
+                 this call.
          */
         iterator erase(iterator pos);
         /*!
@@ -483,7 +317,7 @@ namespace Exiv2 {
          */
         iterator erase(iterator beg, iterator end);
         /*!
-          @brief Delete all Exifdatum instances resulting in an empty container.
+          @brief Delete all tags resulting in an empty container.
                  Note that this also removes thumbnails.
          */
         void clear();
@@ -496,7 +330,7 @@ namespace Exiv2 {
         //! End of the metadata
         iterator end() { return exifMetadata_.end(); }
         /*!
-          @brief Find the first Exifdatum with the given \em key, return an
+          @brief Find the first Tag1 with the given \em key, return an
                  iterator to it.
          */
         iterator findKey(const Key1& key);
@@ -509,7 +343,7 @@ namespace Exiv2 {
         //! End of the metadata
         const_iterator end() const { return exifMetadata_.end(); }
         /*!
-          @brief Find the first Exifdatum with the given \em key, return a const
+          @brief Find the first Tag1 with the given \em key, return a const
                  iterator to it.
          */
         const_iterator findKey(const Key1& key) const;

@@ -454,36 +454,36 @@ namespace Exiv2 {
          */
         void encodeTiffComponent(
                   TiffEntryBase* object,
-            const Exifdatum*     datum =0
+            const Tag1* datum =0
         );
 
         //! Callback encoder function for an element of a binary array.
-        void encodeBinaryElement(TiffBinaryElement* object, const Exifdatum* datum);
+        void encodeBinaryElement(TiffBinaryElement* object, const Tag1* datum);
         //! Callback encoder function for a binary array.
-        void encodeBinaryArray(TiffBinaryArray* object, const Exifdatum* datum);
+        void encodeBinaryArray(TiffBinaryArray* object, const Tag1* datum);
         //! Callback encoder function for a data entry.
-        void encodeDataEntry(TiffDataEntry* object, const Exifdatum* datum);
+        void encodeDataEntry(TiffDataEntry* object, const Tag1* datum);
         //! Callback encoder function for a standard TIFF entry
-        void encodeTiffEntry(TiffEntry* object, const Exifdatum* datum);
+        void encodeTiffEntry(TiffEntry* object, const Tag1* datum);
         //! Callback encoder function for an image entry.
-        void encodeImageEntry(TiffImageEntry* object, const Exifdatum* datum);
+        void encodeImageEntry(TiffImageEntry* object, const Tag1* datum);
         //! Callback encoder function for a %Makernote entry.
-        void encodeMnEntry(TiffMnEntry* object, const Exifdatum* datum);
+        void encodeMnEntry(TiffMnEntry* object, const Tag1* datum);
         //! Callback encoder function for a size entry.
-        void encodeSizeEntry(TiffSizeEntry* object, const Exifdatum* datum);
+        void encodeSizeEntry(TiffSizeEntry* object, const Tag1* datum);
         //! Callback encoder function for a sub-IFD entry.
-        void encodeSubIfd(TiffSubIfd* object, const Exifdatum* datum);
+        void encodeSubIfd(TiffSubIfd* object, const Tag1* datum);
 
         //! Special encoder function for the base part of a TIFF entry.
-        void encodeTiffEntryBase(TiffEntryBase* object, const Exifdatum* datum);
+        void encodeTiffEntryBase(TiffEntryBase* object, const Tag1* datum);
         //! Special encoder function for an offset entry.
-        void encodeOffsetEntry(TiffEntryBase* object, const Exifdatum* datum);
+        void encodeOffsetEntry(TiffEntryBase* object, const Tag1* datum);
 
         //! Special encoder function to encode SubIFD contents to Image group if it contains primary image data
-        // Todo void encodeNikonSubIfd(TiffEntryBase* object, const Exifdatum* datum);
+        // Todo void encodeNikonSubIfd(TiffEntryBase* object, const Tag1* datum);
 
         //! Special encoder function to encode IPTC data to an IPTCNAA or Photoshop ImageResources tag.
-        void encodeIptc(TiffEntryBase* object, const Exifdatum* datum);
+        void encodeIptc(TiffEntryBase* object, const Tag1* datum);
         /*!
           @brief Add metadata from image to the TIFF composite.
 
