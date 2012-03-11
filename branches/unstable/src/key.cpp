@@ -40,6 +40,7 @@ EXIV2_RCSID("@(#) $Id$")
 
 // + standard includes
 #include <cstring>
+#include <cassert>
 
 // *****************************************************************************
 namespace {
@@ -125,6 +126,8 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
+        //! Define an order on keys of one family, default is by group, tag and idx.
+        virtual bool less(const Key1Impl* p) const;
         //! Return the key string.
         virtual std::string key() const =0;
         //! Return the metadata family name (the first part of the key string).
@@ -279,6 +282,7 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
+        virtual bool less(const Key1Impl* p) const;
         virtual std::string key() const;
         virtual std::string groupName() const;
         virtual int group() const;
@@ -314,6 +318,14 @@ namespace Exiv2 {
         const MetadataInfo* mi = find(metadataInfo_, getFamily(key));
         if (mi == 0) throw Error(6, key);
         return mi->keyFct_(key);
+    }
+
+    bool Key1Impl::less(const Key1Impl* p) const
+    {
+        assert(family() == p->family());
+        if (group() != p->group()) return group() < p->group();
+        if (tag() != p->tag()) return tag() < p->tag();
+        return idx() < p->idx();
     }
 
     const char* Key1Impl::familyName() const
@@ -493,6 +505,15 @@ namespace Exiv2 {
         property_ = property;
     }
 
+    bool XmpKey1::less(const Key1Impl* p) const
+    {
+        const XmpKey1* xp = dynamic_cast<const XmpKey1*>(p);
+        assert(xp != 0);
+        const int ret = strcmp(prefix_.c_str(), xp->prefix_.c_str());
+        if (ret != 0) return ret < 0;
+        return strcmp(property_.c_str(), xp->property_.c_str()) < 0;
+    }
+
     std::string XmpKey1::key() const
     {
         return std::string(familyName()) + "." + prefix_ + "." + property_;
@@ -589,6 +610,12 @@ namespace Exiv2 {
     void Key1::setIdx(int idx)
     {
         p_->setIdx(idx);
+    }
+
+    bool Key1::operator<(const Key1& rhs) const
+    {
+        if (family() != rhs.family()) return family() < rhs.family();
+        return p_->less(rhs.p_);
     }
 
     std::string Key1::key() const

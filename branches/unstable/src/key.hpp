@@ -126,6 +126,8 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
+        //! Define an order on keys, usually by family, group, tag (and idx).
+        bool operator<(const Key1& rhs) const;
         //! Return the key string. The key string is of the form \c FamilyName.GroupName.TagName.
         std::string key() const;
         //! Return the metadata family name (the first part of the key string).
