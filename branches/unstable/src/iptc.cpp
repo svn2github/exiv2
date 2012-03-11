@@ -298,9 +298,9 @@ namespace Exiv2 {
 
       This is a helper function for IptcParser::encode().
      */
-    bool cmpIptcdataByRecord(const Iptcdatum& lhs, const Iptcdatum& rhs)
+    bool cmpIptcdataByRecord(const Tag1& lhs, const Tag1& rhs)
     {
-        return lhs.record() < rhs.record();
+        return lhs.group() < rhs.group();
     }
 
     DataBuf IptcParser::encode(const IptcData& iptcData)

@@ -210,13 +210,6 @@ cp -f ../data/exiv2-empty.jpg $filename
 $bin/exiv2 -u -v -M"add Exif.Image.Make Canon" -M"add Exif.CanonCs.0x0001 Short 1" -M"add Exif.CanonCs.0x0000 Short 2" $filename
 $bin/exiv2 -u -v -PEkyct $filename
 
-# Test easy-access keys (using a dummy bug number)
-num=726
-filename=exiv2-bug$num.jpg
-cp -f ../data/exiv2-empty.jpg $filename
-$exiv2 -v -M"set Exif.Image.Make Samsung" $filename
-$binpath/easyaccess-test $filename
-
 ) > $results 2>&1
 
 # ----------------------------------------------------------------------
