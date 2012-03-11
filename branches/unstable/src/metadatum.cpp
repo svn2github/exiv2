@@ -198,30 +198,6 @@ namespace Exiv2 {
         return *pValue_;
     }
 
-    Metadatum::Metadatum()
-    {
-    }
-
-    Metadatum::Metadatum(const Metadatum& /*rhs*/)
-    {
-    }
-
-    Metadatum::~Metadatum()
-    {
-    }
-
-    Metadatum& Metadatum::operator=(const Metadatum& /*rhs*/)
-    {
-        return *this;
-    }
-
-    std::string Metadatum::print(const ExifData* pMetadata) const
-    {
-        std::ostringstream os;
-        write(os, pMetadata);
-        return os.str();
-    }
-
     bool cmpTag1ByTag(const Tag1& lhs, const Tag1& rhs)
     {
         return lhs.tag() < rhs.tag();
