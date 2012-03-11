@@ -672,4 +672,38 @@ namespace Exiv2 {
     {
         return p_->idx();
     }
+
+    const Key1& Key1::min(MetadataId family)
+    {
+        // Rather awkward implementation. Got a better idea?
+        switch (family) {
+        case mdExif: family = mdNone; break;
+        case mdIptc: family = mdExif; break;
+        case mdXmp:  family = mdIptc;  break;
+        case mdNone:
+        case mdComment:
+            assert(false);
+            break;
+        }
+        return max(family);
+    }
+
+    const Key1& Key1::max(MetadataId family)
+    {
+        static const Key1 firstExifKey(0x0000, "Image");
+        static const Key1 lastExifKey(0xffff, "LastGroup");
+        static const Key1 lastIptcKey(0xffff, 0xffff);
+        static const Key1 lastXmpKey("~", "~");
+        switch (family) {
+        case mdNone: return firstExifKey; break;
+        case mdExif: return lastExifKey; break;
+        case mdIptc: return lastIptcKey; break;
+        case mdXmp:  return lastXmpKey;  break;
+        case mdComment:
+            assert(false);
+            break;
+        }
+        assert(false);
+        return lastExifKey; // just to make the compiler happy
+    }
 }                                       // namespace Exiv2

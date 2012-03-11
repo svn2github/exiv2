@@ -147,7 +147,7 @@ namespace Exiv2 {
           @note The group number of a any Exif group may change from one version
                 of %Exiv2 to the next, even if they are binary compatible
                 versions. Do not hardcode Exif group numbers in an application.
-         */          
+         */
         int group() const;
         //! Return the tag name (the last part of the key string).
         std::string tagName() const;
@@ -177,6 +177,16 @@ namespace Exiv2 {
          */
         int idx() const;
         //@}
+        /*!
+          @brief Return the greatest key which is less or equal all other keys of
+                 metadata type \em family.
+         */
+        static const Key1& min(MetadataId family);
+        /*!
+          @brief Return the least key which is greater than all other keys of
+                 metadata type \em family.
+         */
+        static const Key1& max(MetadataId family);
 
     private:
         // Pimpl idiom (enhanced version :)

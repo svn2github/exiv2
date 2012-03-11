@@ -154,6 +154,7 @@ namespace Exiv2 {
         sony1MltCsNewId,
         sony1MltCsA100Id,
         lastId,
+        lastMakerId = lastId,
         ignoreId = lastId
     };
 
@@ -300,6 +301,8 @@ namespace Exiv2 {
     const TagInfo* gpsTagList();
     //! Return read-only list of built-in Exiv2 Makernote info tags
     const TagInfo* mnTagList();
+    //! Return a dummy tag list
+    const TagInfo* dummyTagList();
 
     //! Return the group id for a group name
     IfdId groupId(const std::string& groupName);

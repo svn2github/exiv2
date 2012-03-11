@@ -198,6 +198,122 @@ namespace Exiv2 {
         return *pValue_;
     }
 
+// ---------------------------------- Metadata (begin)
+/*
+  Issues with the Metadata implementation based on std::multiset
+  --------------------------------------------------------------
+  
+  iterator is const_iterator
+  The GNU C++ library's std::multiset has only a const_iterator to prevent any
+  modification of the key once added to the multiset.  In Exiv2 that's
+  conceptually not an issue though, as Tag consists of a Key and a Value of
+  which only the Value should be modifiable after creation. However, check Key,
+  Tag assignment operators and Key::setIdx().
+  Apparently, the C++ standard is going in the same direction. See
+  http://stackoverflow.com/questions/2038453/c-standard-unexpected-const-iterator-in-multiset
+
+  Sorting and comparison operation
+  std::multiset is an ordered container and allows only one sorting
+  algorithm. However, Exiv2 doesn't sort tags in makernote IFDs currently but
+  makes it a point to maintain the order as read from the image.
+
+  Exif keys use an index to remember the order of equal tags from the original
+  metadata. If the index is used in the sorting algorithm, it will not be
+  possible for a user to find an Exif tag which has a non-zero index unless he
+  knows the index.
+  TEST: find() with index
+
+  On the other hand, the ordered container allows an elegant way to access
+  tags by family, using begin(family) and end(family).
+ 
+  Miscellaneous
+  Add erase(Key) and maybe a wrapper for std::multiset::equal_range
+
+  So what about keeping it a list but making sure new elements are inserted at
+  the correct place? - Not safe: user can easily use begin()/end() and destroy
+  the sorting order.
+
+
+  => use multimap instead of multiset
+
+  - solves iterator problem
+
+  => use a running number as index for all tags, which is set on read but not
+     used for comparison. Make sure the running number is only set in the c'tor
+
+  - solves find() issue
+  - sort issue can be overcome too if necessary by copying the tags to a list before
+    serializing them and re-sorting them using the index where needed.
+
+*/
+
+    Tag1& Metadata::operator[](const std::string& key)
+    {
+/*
+  The GNU C++ library has this in stl_multiset.h:
+
+      // DR 103. set::iterator is required to be modifiable,
+      // but this allows modification of keys.
+      typedef typename _Rep_type::const_iterator            iterator;
+
+  which means the following code only compiles with a const-cast:
+
+        std::multiset<long> m;
+        std::multiset<long>::iterator i = m.find(3);
+        long& l = const_cast<long&>(*i);
+
+*/
+        Key1 k(key);
+        iterator pos = find(k);
+        if (pos == end()) {
+            pos = add(Tag1(k));
+        }
+        return const_cast<Tag1&>(*pos);
+    }
+
+    Metadata::iterator Metadata::add(const Tag1& tag)
+    {
+        return metadata_.insert(tag);
+    }
+
+    Metadata::iterator Metadata::begin(MetadataId family)
+    {
+        if (family == mdNone) return metadata_.begin();
+        return metadata_.upper_bound(Tag1(Key1::min(family)));
+    }
+
+    Metadata::iterator Metadata::end(MetadataId family)
+    {
+        if (family == mdNone) return metadata_.end();
+        return metadata_.lower_bound(Tag1(Key1::max(family)));
+    }
+
+    Metadata::iterator Metadata::find(const Key1& key)
+    {
+        // Todo: What about the index?
+        return metadata_.find(Tag1(key));
+    }
+
+    Metadata::const_iterator Metadata::begin(MetadataId family) const
+    {
+        if (family == mdNone) return metadata_.begin();
+        return metadata_.upper_bound(Tag1(Key1::min(family)));
+    }
+
+    Metadata::const_iterator Metadata::end(MetadataId family) const
+    {
+        if (family == mdNone) return metadata_.end();
+        return metadata_.lower_bound(Tag1(Key1::max(family)));
+    }
+
+    Metadata::const_iterator Metadata::find(const Key1& key) const
+    {
+        // Todo: What about the index?
+        return metadata_.find(Tag1(key));
+    }
+
+// ---------------------------------- Metadata (end)
+
     bool cmpTag1ByTag(const Tag1& lhs, const Tag1& rhs)
     {
         return lhs.tag() < rhs.tag();
@@ -209,4 +325,3 @@ namespace Exiv2 {
     }
 
 }                                       // namespace Exiv2
-

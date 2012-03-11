@@ -41,6 +41,7 @@
 #include "value.hpp"
 
 // + standard includes
+#include <set>
 #include <string>
 #include <memory>
 
@@ -168,6 +169,8 @@ namespace Exiv2 {
 
         //! @name Accessors
         //@{
+        //! Define an order on tags, based on their keys.
+        bool operator<(const Tag1& rhs) const   { return key_ < rhs.key_; }
         //! See Key1::key()
         std::string key() const                 { return key_.key(); }
         //! See Key1::familyName()
@@ -323,6 +326,100 @@ namespace Exiv2 {
     }; // class Tag1
 
     /*!
+      @brief Container for image metadata. The container holds Tag1 objects in a
+             std::multiset, sorted by Key1::operator<, i.e., by family and a
+             key-specific sorting algorithm.
+    */
+    class EXIV2API Metadata {
+    public:
+        //! Container type to hold all metadata
+        typedef std::multiset<Tag1> Container;
+        //! ExifMetadata iterator type
+        typedef Container::iterator iterator;
+        //! ExifMetadata const iterator type
+        typedef Container::const_iterator const_iterator;
+
+        //! @name Manipulators
+        //@{
+        /*!
+          @brief Returns a reference to the %Tag1 that is associated with a
+                 particular \em key. If %Metadata does not already contain such
+                 a %Tag1, operator[] adds object \em Tag1(key).
+
+          @note  Since operator[] might insert a new element, it can't be a const
+                 member function.
+         */
+        Tag1& operator[](const std::string& key);
+        /*!
+          @brief Add a Tag1 from the supplied key and value pair.  This
+                 method copies (clones) key and value. No duplicate checks are
+                 performed, i.e., it is possible to add multiple metadata with
+                 the same key. Return an iterator to the newly inserted tag.
+         */
+        iterator add(const Key1& key, const Value* pValue =0) { return add(Tag1(key, pValue)); }
+        /*!
+          @brief Add a copy of the \em tag to the metadata. No duplicate checks
+                 are performed, i.e., it is possible to add multiple metadata
+                 with the same key. Return an iterator to the newly inserted tag.
+         */
+        iterator add(const Tag1& tag);
+        /*!
+          @brief Erase the Tag1 at iterator position \em pos.
+         */
+        void erase(iterator pos) { metadata_.erase(pos); }
+        /*!
+          @brief Erase all tags in the range [ \em beg, \em end ).
+         */
+        void erase(iterator beg, iterator end)  { metadata_.erase(beg, end); }
+        /*!
+          @brief Erase all metadata tags resulting in an empty metadata container.
+         */
+        void clear() { metadata_.clear(); }
+        //! Begin of the metadata, optionally for a particular metadata family.
+        iterator begin(MetadataId family =mdNone);
+        //! End of the metadata, optionally for a particular metadata family.
+        iterator end(MetadataId family =mdNone);
+        /*!
+          @brief Find the first Tag1 with the given \em key, return an
+                 iterator to it.
+         */
+        iterator find(const std::string& key) { return find(Key1(key)); }
+        /*!
+          @brief Find the first Tag1 with the given \em key, return an
+                 iterator to it.
+         */
+        iterator find(const Key1& key);
+        //@}
+
+        //! @name Accessors
+        //@{
+        //! Begin of the metadata, optionally for a particular metadata family.
+        const_iterator begin(MetadataId family =mdNone) const;
+        //! End of the metadata, optionally for a particular metadata family.
+        const_iterator end(MetadataId family =mdNone) const;
+        /*!
+          @brief Find the first Tag1 with the given \em key, return a const
+                 iterator to it.
+         */
+        const_iterator find(const std::string& key) const { return find(Key1(key)); }
+        /*!
+          @brief Find the first Tag1 with the given \em key, return a const
+                 iterator to it.
+         */
+        const_iterator find(const Key1& key) const;
+        //! Return true if there is no Exif metadata
+        bool empty() const { return count() == 0; }
+        //! Get the number of metadata entries
+        long count() const { return static_cast<long>(metadata_.size()); }
+        //@}
+
+    private:
+        // DATA
+        Container metadata_;
+
+    }; // class Metadata
+
+    /*!
       @brief Output operator for Tag types, writing the interpreted
              tag value.
      */
@@ -349,9 +446,10 @@ namespace Exiv2 {
     }
 
 // Todo: The following class should be internal ----------------------
+//       Is it still required in the first place??
 
     //! Unary predicate that matches an Xmpdatum by key
-    class FindTag1ByKey {
+    class EXIV2API FindTag1ByKey {
     public:
         //! Constructor, initializes the object with key
         FindTag1ByKey(const Exiv2::Key1& key)
@@ -369,6 +467,7 @@ namespace Exiv2 {
 
 // -------------------------------------------------------------------
 
+    // Todo: Still required???
     /*!
       @brief Compare two tags by their tag number. Return true if the tag number of
              lhs is less than that of rhs.

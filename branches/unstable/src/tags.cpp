@@ -176,6 +176,7 @@ namespace Exiv2 {
         { sony1MltCsA100Id,"Makernote","Sony1MltCsA100",MinoltaMakerNote::tagListCsA100},
         { sony2CsId,       "Makernote", "Sony2Cs",      SonyMakerNote::tagListCs       },
         { sony2Cs2Id,      "Makernote", "Sony2Cs2",     SonyMakerNote::tagListCs2      },
+        { lastMakerId,     "Makernote", "LastGroup",    dummyTagList                   },
         { lastId,          "(Last IFD info)", "(Last IFD item)", 0 }
     };
 
@@ -2133,6 +2134,16 @@ namespace Exiv2 {
     const TagInfo* mnTagList()
     {
         return mnTagInfo;
+    }
+
+    // Dummy tag list
+    static const TagInfo dummyTagInfo[] = {
+        TagInfo(0xffff, "LastExifTag", N_("Last Exif tag"), N_("Last Exif tag"), lastMakerId, sectionIdNotSet, asciiString, -1, printValue)
+    };
+
+    const TagInfo* dummyTagList()
+    {
+        return dummyTagInfo;
     }
 
     // Unknown Tag
