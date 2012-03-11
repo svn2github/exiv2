@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -40,6 +40,7 @@ EXIV2_RCSID("@(#) $Id$")
 // + standard includes
 #include <iostream>
 #include <algorithm>
+#include <iterator>
 
 // *****************************************************************************
 namespace {
@@ -291,13 +292,29 @@ namespace Exiv2 {
         return 0;
     } // IptcParser::decode
 
+    /*!
+      @brief Compare two iptc items by record. Return true if the record of
+             lhs is less than that of rhs.
+
+      This is a helper function for IptcParser::encode().
+     */
+    bool cmpIptcdataByRecord(const Iptcdatum& lhs, const Iptcdatum& rhs)
+    {
+        return lhs.record() < rhs.record();
+    }
+
     DataBuf IptcParser::encode(const IptcData& iptcData)
     {
         DataBuf buf(iptcData.size());
         byte *pWrite = buf.pData_;
 
-        IptcData::const_iterator iter = iptcData.begin();
-        IptcData::const_iterator end = iptcData.end();
+        // Copy the iptc data sets and sort them by record but preserve the order of datasets
+        IptcMetadata sortedIptcData;
+        std::copy(iptcData.begin(), iptcData.end(), std::back_inserter(sortedIptcData));
+        std::stable_sort(sortedIptcData.begin(), sortedIptcData.end(), cmpIptcdataByRecord);
+
+        IptcData::const_iterator iter = sortedIptcData.begin();
+        IptcData::const_iterator end = sortedIptcData.end();
         for ( ; iter != end; ++iter) {
             // marker, record Id, dataset num
             *pWrite++ = marker_;

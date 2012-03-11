@@ -1,6 +1,6 @@
 # ************************************************************* -*- Makefile -*-
 #
-# Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+# Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
 #
 # This Makefile is part of the Exiv2 distribution.
 #
@@ -59,6 +59,7 @@ SHELL = /bin/sh
 # Add test drivers to this list
 TESTS = addmoddel.sh      \
         bugfixes-test.sh  \
+        eps-test.sh       \
         exifdata-test.sh  \
         exiv2-test.sh     \
         imagetest.sh      \
@@ -66,6 +67,7 @@ TESTS = addmoddel.sh      \
         iptctest.sh       \
         modify-test.sh    \
         path-test.sh      \
+        preview-test.sh   \
         stringto-test.sh  \
         tiff-test.sh      \
         write-test.sh     \

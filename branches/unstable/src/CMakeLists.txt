@@ -61,6 +61,7 @@ SET( LIBEXIV2_HDR         basicio.hpp
                           crwimage.hpp
                           datasets.hpp
                           easyaccess.hpp
+                          epsimage.hpp
                           error.hpp
                           exif.hpp
                           exiv2.hpp
@@ -100,6 +101,7 @@ SET( LIBEXIV2_SRC         basicio.cpp
                           crwimage.cpp
                           datasets.cpp
                           easyaccess.cpp
+                          epsimage.cpp
                           error.cpp
                           exif.cpp
                           futils.cpp
@@ -186,10 +188,9 @@ ADD_LIBRARY( exiv2 ${STATIC_FLAG} ${LIBEXIV2_SRC} )
 SET_TARGET_PROPERTIES( exiv2 PROPERTIES VERSION ${GENERIC_LIB_VERSION}
                                         SOVERSION ${GENERIC_LIB_SOVERSION}
                                         DEFINE_SYMBOL EXV_BUILDING_LIB
-                                        LINK_FLAGS "/LIBPATH:../zlib-1.2.5/$(ConfigurationName)"
                      )
 
-TARGET_LINK_LIBRARIES( exiv2 ) # ${EXPAT_LIBRARIES} )
+TARGET_LINK_LIBRARIES( exiv2 ${EXPAT_LIBRARIES} )
 
 # IF( MINGW OR UNIX )
 	if( EXIV2_ENABLE_LIBXMP )
@@ -200,9 +201,9 @@ TARGET_LINK_LIBRARIES( exiv2 ) # ${EXPAT_LIBRARIES} )
 		IF( ZLIB_FOUND )
 			IF ( MINGW OR UNIX )
 				TARGET_LINK_LIBRARIES( exiv2 ${ZLIB_LIBRARIES} )
-			ELSE ( MSVC )
+			ELSE ( MINGW OR UNIX )
 				TARGET_LINK_LIBRARIES( exiv2 zlibd )
-			ENDIF( MING OR UNIX)
+			ENDIF( MINGW OR UNIX )
 		ENDIF( ZLIB_FOUND )
 	ENDIF( EXIV2_ENABLE_PNG )
 

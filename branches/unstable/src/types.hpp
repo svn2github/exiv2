@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -48,17 +48,11 @@
 #include <utility>
 #include <algorithm>
 #include <sstream>
+
 #ifdef EXV_HAVE_STDINT_H
 # include <stdint.h>
-#endif
-
-// MSVC macro to convert a string to a wide string
-#ifdef EXV_UNICODE_PATH
-# define EXV_WIDEN(t) L ## t
-#endif
-
-// MSVC doesn't provide C99 types, but it has MS specific variants
-#ifdef _MSC_VER
+#elif defined(_MSC_VER)
+// MSVC (before 2010) doesn't provide C99 types, but it has MS specific variants
 typedef unsigned __int8  uint8_t;
 typedef unsigned __int16 uint16_t;
 typedef unsigned __int32 uint32_t;
@@ -67,6 +61,11 @@ typedef __int8           int8_t;
 typedef __int16          int16_t;
 typedef __int32          int32_t;
 typedef __int64          int64_t;
+#endif
+
+// MSVC macro to convert a string to a wide string
+#ifdef EXV_UNICODE_PATH
+# define EXV_WIDEN(t) L ## t
 #endif
 
 /*!

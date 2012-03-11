@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -535,6 +535,24 @@ namespace Exiv2 {
         { 24, ttUnsignedShort, 1 }, // AFAreaWidth
         { 26, ttUnsignedShort, 1 }, // AFAreaHeight
         { 28, ttUnsignedShort, 1 }, // ContrastDetectAFInFocus
+    };
+    
+    //! Nikon AF Fine Tune binary array - configuration
+    extern const ArrayCfg nikonAFTCfg = {
+        nikonAFTId,       // Group for the elements
+        littleEndian,     // Byte order
+        ttUndefined,      // Type for array entry
+        notEncrypted,     // Not encrypted
+        false,            // No size element
+        true,             // Write all tags
+        true,             // Concatenate gaps
+        { 0, ttUnsignedByte,  1 }
+    };
+    //! Nikon AF Fine Tune binary array - definition
+    extern const ArrayDef nikonAFTDef[] = {
+        {  0, ttUnsignedByte,  1 }, // AF Fine Tune on/off
+        {  1, ttUnsignedByte,  1 }, // AF Fine Tune index
+        {  2, ttUnsignedByte,  1 }  // AF Fine Tune value
     };
 
     //! Nikon File Info binary array - configuration
@@ -1183,6 +1201,7 @@ namespace Exiv2 {
         { Tag::root, nikonMeId,        nikon3Id,         0x00b0    },
         { Tag::root, nikonAf2Id,       nikon3Id,         0x00b7    },
         { Tag::root, nikonFiId,        nikon3Id,         0x00b8    },
+        { Tag::root, nikonAFTId,       nikon3Id,         0x00b9    },
         { Tag::root, nikonFl1Id,       nikon3Id,         0x00a8    },
         { Tag::root, nikonFl2Id,       nikon3Id,         0x00a8    },
         { Tag::root, nikonFl3Id,       nikon3Id,         0x00a8    },
@@ -1516,6 +1535,7 @@ namespace Exiv2 {
         {    0x00b0, nikon3Id,         EXV_BINARY_ARRAY(nikonMeCfg, nikonMeDef)  },
         {    0x00b7, nikon3Id,         EXV_BINARY_ARRAY(nikonAf2Cfg, nikonAf2Def)},
         {    0x00b8, nikon3Id,         EXV_BINARY_ARRAY(nikonFiCfg, nikonFiDef)  },
+        {    0x00b9, nikon3Id,         EXV_BINARY_ARRAY(nikonAFTCfg, nikonAFTDef)  },
         {  Tag::all, nikon3Id,         newTiffEntry                              },
 
         // Nikon3 makernote preview subdir
@@ -1541,6 +1561,9 @@ namespace Exiv2 {
         
         // Nikon3 auto focus 2
         {  Tag::all, nikonAf2Id,       newTiffBinaryElement                      },
+        
+        // Nikon3 AF Fine Tune
+        {  Tag::all, nikonAFTId,       newTiffBinaryElement                      },
         
         // Nikon3 file info
         {  Tag::all, nikonFiId,        newTiffBinaryElement                      },

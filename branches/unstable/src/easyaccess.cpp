@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -263,6 +263,8 @@ namespace Exiv2 {
             "Exif.SonyMinolta.LensID",
             "Exif.Sony1.LensID",
             "Exif.Sony2.LensID",
+            "Exif.OlympusEq.LensModel",
+            "Exif.Panasonic.LensType",
             "Exif.Samsung2.LensType"
         };
         return findMetadatum(ed, keys, EXV_COUNTOF(keys));

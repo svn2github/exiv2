@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -32,6 +32,11 @@
 #ifndef VERSION_HPP_
 #define VERSION_HPP_
 
+// *****************************************************************************
+// included header files
+// + standard includes
+#include <string>
+
 /*!
   @brief %Exiv2 MAJOR version number of the library used at compile-time.
  */
@@ -39,7 +44,7 @@
 /*!
   @brief %Exiv2 MINOR version number of the library used at compile-time.
  */
-#define EXIV2_MINOR_VERSION (21)
+#define EXIV2_MINOR_VERSION (22)
 /*!
   @brief %Exiv2 PATCH version number of the library used at compile-time.
  */
@@ -116,6 +121,10 @@ namespace Exiv2 {
       @brief Return the version of %Exiv2 available at runtime as an integer.
     */
     EXIV2API int versionNumber();
+    /*!
+      @brief Return the version of %Exiv2 as hex string of fixed length 6.
+    */
+    EXIV2API std::string versionNumberHexString();
     /*!
       @brief Return the version of %Exiv2 available at runtime as a string.
     */

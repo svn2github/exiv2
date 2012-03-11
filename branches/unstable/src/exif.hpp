@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -406,10 +406,10 @@ namespace Exiv2 {
           are "not recorded" in compressed images according to the Exif 2.2
           specification. It also doesn't write tags in groups which do not occur
           in JPEG images. If the resulting binary block is larger than allowed,
-          it further deletes specific large preview tags and unknown tags. The
-          operation succeeds even if the end result is still larger than the
-          allowed size. Application should therefore always check the size of
-          the \em blob.
+          it further deletes specific large preview tags, unknown tags larger
+          than 4kB and known tags larger than 40kB. The operation succeeds even
+          if the end result is still larger than the allowed size. Application
+          should therefore always check the size of the \em blob.
 
           @param blob      Container for the binary Exif data if "intrusive"
                            writing is necessary. Empty otherwise.

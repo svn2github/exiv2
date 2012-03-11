@@ -2,9 +2,9 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(exiv2, 0.21, ahuggel@gmx.net)
+AC_INIT(exiv2, 0.22, ahuggel@gmx.net)
 # See http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
-EXIV2_LTVERSION=10:0:0
+EXIV2_LTVERSION=11:0:0
 PACKAGE=$PACKAGE_NAME
 VERSION=$PACKAGE_VERSION
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
@@ -31,12 +31,6 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_CANONICAL_HOST
-# Add flag for DLL on Windows
-case "$host_os" in
-*mingw* | *cygwin*)
-    LDFLAGS="$LDFLAGS -no-undefined"
-    ;;
-esac
 
 # ---------------------------------------------------------------------------
 # i18n support
@@ -203,6 +197,17 @@ else
     EXV_LIB_STATIC=
 fi
 AC_SUBST(EXV_LIB_STATIC)
+
+# Add flag for DLL on Windows
+#
+# This must happen after all other configure checks, because
+# the "-no-undefined" flag is only for libtool and must not be
+# passed to GCC by accident.
+case "$host_os" in
+*mingw* | *cygwin*)
+    LDFLAGS="$LDFLAGS -no-undefined"
+    ;;
+esac
 
 # ---------------------------------------------------------------------------
 # Create output files.

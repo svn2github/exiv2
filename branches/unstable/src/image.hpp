@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -57,6 +57,19 @@ namespace Exiv2 {
     namespace ImageType {
         const int none = 0;         //!< Not an image
     }
+
+    //! Native preview information. This is meant to be used only by the PreviewManager.
+    struct NativePreview {
+        long position_;
+        uint32_t size_;
+        uint32_t width_;
+        uint32_t height_;
+        std::string filter_;
+        std::string mimeType_;
+    };
+
+    //! List of native previews. This is meant to be used only by the PreviewManager.
+    typedef std::vector<NativePreview> NativePreviewList;
 
     /*!
       @brief Abstract base class defining the interface for an image. This is
@@ -385,6 +398,8 @@ namespace Exiv2 {
         bool supportsMetadata(MetadataId metadataId) const;
         //! Return the flag indicating the source when writing XMP metadata.
         bool writeXmpFromPacket() const;
+        //! Return list of native previews. This is meant to be used only by the PreviewManager.
+        const NativePreviewList& nativePreviews() const;
         //@}
 
     protected:
@@ -397,6 +412,7 @@ namespace Exiv2 {
         std::string       xmpPacket_;         //!< XMP packet
         int               pixelWidth_;        //!< image pixel width
         int               pixelHeight_;       //!< image pixel height
+        NativePreviewList nativePreviews_;    //!< list of native previews
 
     private:
         //! @name NOT implemented

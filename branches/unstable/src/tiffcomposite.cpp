@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -143,7 +143,8 @@ namespace Exiv2 {
           setSize_(0),
           origData_(0),
           origSize_(0),
-          pRoot_(0)
+          pRoot_(0),
+          decoded_(false)
     {
         assert(arrayCfg != 0);
     }
@@ -162,7 +163,8 @@ namespace Exiv2 {
           setSize_(setSize),
           origData_(0),
           origSize_(0),
-          pRoot_(0)
+          pRoot_(0),
+          decoded_(false)
     {
         // We'll figure out the correct cfg later
         assert(cfgSelFct != 0);
@@ -282,7 +284,8 @@ namespace Exiv2 {
           setSize_(rhs.setSize_),
           origData_(rhs.origData_),
           origSize_(rhs.origSize_),
-          pRoot_(rhs.pRoot_)
+          pRoot_(rhs.pRoot_),
+          decoded_(false)
     {
     }
 
@@ -841,6 +844,7 @@ namespace Exiv2 {
     {
         TiffComponent* tc = tiffComponent.release();
         elements_.push_back(tc);
+        setDecoded(true);
         return tc;
     } // TiffBinaryArray::doAddChild
 
@@ -1036,13 +1040,23 @@ namespace Exiv2 {
 
     uint32_t TiffBinaryArray::doCount() const
     {
-        if (cfg() == 0) return TiffEntryBase::doCount();
+        if (cfg() == 0 || !decoded()) return TiffEntryBase::doCount();
 
         if (elements_.empty()) return 0;
 
         TypeId typeId = toTypeId(tiffType(), tag(), group());
         long typeSize = TypeInfo::typeSize(typeId);
-        assert(typeSize != 0);
+        if (0 == typeSize) {
+#ifndef SUPPRESS_WARNINGS
+            EXV_WARNING << "Directory " << groupName(group())
+                        << ", entry 0x" << std::setw(4)
+                        << std::setfill('0') << std::hex << tag()
+                        << " has unknown Exif (TIFF) type " << std::dec << tiffType()
+                        << "; setting type size 1.\n";
+#endif
+            typeSize = 1;
+        }
+
         return static_cast<uint32_t>(static_cast<double>(size()) / typeSize + 0.5);
     }
 
@@ -1290,12 +1304,13 @@ namespace Exiv2 {
         // For makernotes, write TIFF image data to the data area
         if (group() > mnId) o2 = offset + dataIdx;
 #ifdef DEBUG
-        std::cerr << "TiffImageEntry, Directory " << ifdItem(group())
+        std::cerr << "TiffImageEntry, Directory " << groupName(group())
                   << ", entry 0x" << std::setw(4)
                   << std::setfill('0') << std::hex << tag() << std::dec
                   << ": Writing offset " << o2 << "\n";
 #endif
         DataBuf buf(static_cast<long>(strips_.size()) * 4);
+        memset(buf.pData_, 0x0, buf.size_);
         uint32_t idx = 0;
         for (Strips::const_iterator i = strips_.begin(); i != strips_.end(); ++i) {
             idx += writeOffset(buf.pData_ + idx, o2, tiffType(), byteOrder);
@@ -1366,12 +1381,12 @@ namespace Exiv2 {
                                       uint32_t  dataIdx,
                                       uint32_t& imageIdx)
     {
-        if (cfg() == 0) return TiffEntryBase::doWrite(ioWrapper,
-                                                      byteOrder,
-                                                      offset,
-                                                      valueIdx,
-                                                      dataIdx,
-                                                      imageIdx);
+        if (cfg() == 0 || !decoded()) return TiffEntryBase::doWrite(ioWrapper,
+                                                                    byteOrder,
+                                                                    offset,
+                                                                    valueIdx,
+                                                                    dataIdx,
+                                                                    imageIdx);
         if (cfg()->byteOrder_ != invalidByteOrder) byteOrder = cfg()->byteOrder_;
         // Tags must be sorted in ascending order
         std::sort(elements_.begin(), elements_.end(), cmpTagLt);
@@ -1586,7 +1601,7 @@ namespace Exiv2 {
         uint32_t len = pValue()->sizeDataArea();
         if (len > 0) {
 #ifdef DEBUG
-            std::cerr << "TiffImageEntry, Directory " << ifdItem(group())
+            std::cerr << "TiffImageEntry, Directory " << groupName(group())
                       << ", entry 0x" << std::setw(4)
                       << std::setfill('0') << std::hex << tag() << std::dec
                       << ": Writing data area, size = " << len;
@@ -1599,7 +1614,7 @@ namespace Exiv2 {
         }
         else {
 #ifdef DEBUG
-            std::cerr << "TiffImageEntry, Directory " << ifdItem(group())
+            std::cerr << "TiffImageEntry, Directory " << groupName(group())
                       << ", entry 0x" << std::setw(4)
                       << std::setfill('0') << std::hex << tag() << std::dec
                       << ": Writing " << strips_.size() << " strips";
@@ -1681,15 +1696,23 @@ namespace Exiv2 {
 
     uint32_t TiffBinaryArray::doSize() const
     {
-        if (cfg() == 0) return TiffEntryBase::doSize();
+        if (cfg() == 0 || !decoded()) return TiffEntryBase::doSize();
 
         if (elements_.empty()) return 0;
 
+        // Remaining assumptions:
+        // - array elements don't "overlap"
+        // - no duplicate tags in the array
         uint32_t idx = 0;
+        uint32_t sz = cfg()->tagStep();
         for (Components::const_iterator i = elements_.begin(); i != elements_.end(); ++i) {
-            idx = EXV_MAX(idx, (*i)->tag() * cfg()->tagStep());
-            idx += (*i)->size();
+            if ((*i)->tag() > idx) {
+                idx = (*i)->tag();
+                sz = (*i)->size();
+            }
         }
+        idx = idx * cfg()->tagStep() + sz;
+
         if (cfg()->hasFillers_ && def()) {
             const ArrayDef* lastDef = def() + defSize() - 1;
             uint16_t lastTag = static_cast<uint16_t>(lastDef->idx_ / cfg()->tagStep());

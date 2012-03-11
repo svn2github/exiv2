@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -36,6 +36,7 @@ EXIV2_RCSID("@(#) $Id$")
 # include "exv_conf.h"
 #endif
 
+#include <climits>
 #include <string>
 
 #include "preview.hpp"
@@ -43,6 +44,7 @@ EXIV2_RCSID("@(#) $Id$")
 
 #include "image.hpp"
 #include "cr2image.hpp"
+#include "jpgimage.hpp"
 #include "tiffimage.hpp"
 
 // *****************************************************************************
@@ -65,6 +67,26 @@ namespace {
 
         return l < r;
     }
+
+    /*!
+      @brief Decode a Hex string.
+     */
+    DataBuf decodeHex(const byte *src, long srcSize);
+
+    /*!
+      @brief Decode a Base64 string.
+     */
+    DataBuf decodeBase64(const std::string &src);
+
+    /*!
+      @brief Decode an Illustrator thumbnail that follows after %AI7_Thumbnail.
+     */
+    DataBuf decodeAi7Thumbnail(const DataBuf &src);
+
+    /*!
+      @brief Create a PNM image from raw RGB data.
+     */
+    DataBuf makePnm(uint32_t width, uint32_t height, const DataBuf &rgb);
 
     /*!
       Base class for image loaders. Provides virtual methods for reading properties
@@ -131,6 +153,29 @@ namespace {
         //! True if the source image contains a preview image of given type
         bool valid_;
     };
+
+    //! Loader for native previews
+    class LoaderNative : public Loader {
+    public:
+        //! Constructor
+        LoaderNative(PreviewId id, const Image &image, int parIdx);
+
+        //! Get properties of a preview image with given params
+        virtual PreviewProperties getProperties() const;
+
+        //! Get a buffer that contains the preview image
+        virtual DataBuf getData() const;
+
+        //! Read preview image dimensions
+        virtual bool readDimensions();
+
+    protected:
+        //! Native preview information
+        NativePreview nativePreview_;
+    };
+
+    //! Function to create new LoaderNative
+    Loader::AutoPtr createLoaderNative(PreviewId id, const Image &image, int parIdx);
 
     //! Loader for Jpeg previews that are not read into ExifData directly
     class LoaderExifJpeg : public Loader {
@@ -236,36 +281,64 @@ namespace {
     //! Function to create new LoaderTiff
     Loader::AutoPtr createLoaderTiff(PreviewId id, const Image &image, int parIdx);
 
+    //! Loader for JPEG previews stored in the XMP metadata
+    class LoaderXmpJpeg : public Loader {
+    public:
+        //! Constructor
+        LoaderXmpJpeg(PreviewId id, const Image &image, int parIdx);
+
+        //! Get properties of a preview image with given params
+        virtual PreviewProperties getProperties() const;
+
+        //! Get a buffer that contains the preview image
+        virtual DataBuf getData() const;
+
+        //! Read preview image dimensions
+        virtual bool readDimensions();
+
+    protected:
+        //! Preview image data
+        DataBuf preview_;
+    };
+
+    //! Function to create new LoaderXmpJpeg
+    Loader::AutoPtr createLoaderXmpJpeg(PreviewId id, const Image &image, int parIdx);
+
 // *****************************************************************************
 // class member definitions
 
     const Loader::LoaderList Loader::loaderList_[] = {
-        { 0,                   createLoaderExifDataJpeg, 0 },
-        { 0,                   createLoaderExifDataJpeg, 1 },
-        { 0,                   createLoaderExifDataJpeg, 2 },
-        { 0,                   createLoaderExifDataJpeg, 3 },
-        { 0,                   createLoaderExifDataJpeg, 4 },
-        { 0,                   createLoaderExifDataJpeg, 5 },
-        { 0,                   createLoaderExifDataJpeg, 6 },
-        { 0,                   createLoaderExifDataJpeg, 7 },
+        { 0,                       createLoaderNative,       0 },
+        { 0,                       createLoaderNative,       1 },
+        { 0,                       createLoaderNative,       2 },
+        { 0,                       createLoaderNative,       3 },
+        { 0,                       createLoaderExifDataJpeg, 0 },
+        { 0,                       createLoaderExifDataJpeg, 1 },
+        { 0,                       createLoaderExifDataJpeg, 2 },
+        { 0,                       createLoaderExifDataJpeg, 3 },
+        { 0,                       createLoaderExifDataJpeg, 4 },
+        { 0,                       createLoaderExifDataJpeg, 5 },
+        { 0,                       createLoaderExifDataJpeg, 6 },
+        { 0,                       createLoaderExifDataJpeg, 7 },
         { "image/x-panasonic-rw2", createLoaderExifDataJpeg, 8 },
-        { 0,                   createLoaderExifDataJpeg, 9 },
-        { 0,                   createLoaderTiff,         0 },
-        { 0,                   createLoaderTiff,         1 },
-        { 0,                   createLoaderTiff,         2 },
-        { 0,                   createLoaderTiff,         3 },
-        { 0,                   createLoaderTiff,         4 },
-        { 0,                   createLoaderTiff,         5 },
-        { 0,                   createLoaderTiff,         6 },
-        { 0,                   createLoaderExifJpeg,     0 },
-        { 0,                   createLoaderExifJpeg,     1 },
-        { 0,                   createLoaderExifJpeg,     2 },
-        { 0,                   createLoaderExifJpeg,     3 },
-        { 0,                   createLoaderExifJpeg,     4 },
-        { 0,                   createLoaderExifJpeg,     5 },
-        { 0,                   createLoaderExifJpeg,     6 },
-        { "image/x-canon-cr2", createLoaderExifJpeg,     7 },
-        { 0,                   createLoaderExifJpeg,     8 }
+        { 0,                       createLoaderExifDataJpeg, 9 },
+        { 0,                       createLoaderTiff,         0 },
+        { 0,                       createLoaderTiff,         1 },
+        { 0,                       createLoaderTiff,         2 },
+        { 0,                       createLoaderTiff,         3 },
+        { 0,                       createLoaderTiff,         4 },
+        { 0,                       createLoaderTiff,         5 },
+        { 0,                       createLoaderTiff,         6 },
+        { 0,                       createLoaderExifJpeg,     0 },
+        { 0,                       createLoaderExifJpeg,     1 },
+        { 0,                       createLoaderExifJpeg,     2 },
+        { 0,                       createLoaderExifJpeg,     3 },
+        { 0,                       createLoaderExifJpeg,     4 },
+        { 0,                       createLoaderExifJpeg,     5 },
+        { 0,                       createLoaderExifJpeg,     6 },
+        { "image/x-canon-cr2",     createLoaderExifJpeg,     7 },
+        { 0,                       createLoaderExifJpeg,     8 },
+        { 0,                       createLoaderXmpJpeg,      0 }
     };
 
     const LoaderExifJpeg::Param LoaderExifJpeg::param_[] = {
@@ -281,15 +354,15 @@ namespace {
     };
 
     const LoaderExifDataJpeg::Param LoaderExifDataJpeg::param_[] = {
-        { "Exif.Thumbnail.JPEGInterchangeFormat",    "Exif.Thumbnail.JPEGInterchangeFormatLength"    }, // 0
-        { "Exif.NikonPreview.JPEGInterchangeFormat", "Exif.NikonPreview.JPEGInterchangeFormatLength" }, // 1
-        { "Exif.Pentax.PreviewOffset",               "Exif.Pentax.PreviewLength"                     }, // 2
-        { "Exif.Minolta.ThumbnailOffset",            "Exif.Minolta.ThumbnailLength"                  }, // 3
-        { "Exif.SonyMinolta.ThumbnailOffset",        "Exif.SonyMinolta.ThumbnailLength"              }, // 4
-        { "Exif.Olympus.ThumbnailImage",             0                                               }, // 5
-        { "Exif.Olympus2.ThumbnailImage",            0                                               }, // 6
-        { "Exif.Minolta.Thumbnail",                  0                                               }, // 7
-        { "Exif.PanasonicRaw.PreviewImage",          0                                               }, // 8
+        { "Exif.Thumbnail.JPEGInterchangeFormat",      "Exif.Thumbnail.JPEGInterchangeFormatLength"      }, // 0
+        { "Exif.NikonPreview.JPEGInterchangeFormat",   "Exif.NikonPreview.JPEGInterchangeFormatLength"   }, // 1
+        { "Exif.Pentax.PreviewOffset",                 "Exif.Pentax.PreviewLength"                       }, // 2
+        { "Exif.Minolta.ThumbnailOffset",              "Exif.Minolta.ThumbnailLength"                    }, // 3
+        { "Exif.SonyMinolta.ThumbnailOffset",          "Exif.SonyMinolta.ThumbnailLength"                }, // 4
+        { "Exif.Olympus.ThumbnailImage",               0                                                 }, // 5
+        { "Exif.Olympus2.ThumbnailImage",              0                                                 }, // 6
+        { "Exif.Minolta.Thumbnail",                    0                                                 }, // 7
+        { "Exif.PanasonicRaw.PreviewImage",            0                                                 }, // 8
         { "Exif.SamsungPreview.JPEGInterchangeFormat", "Exif.SamsungPreview.JPEGInterchangeFormatLength" } // 9
     };
 
@@ -339,6 +412,112 @@ namespace {
     PreviewId Loader::getNumLoaders()
     {
         return (PreviewId)EXV_COUNTOF(loaderList_);
+    }
+
+    LoaderNative::LoaderNative(PreviewId id, const Image &image, int parIdx)
+        : Loader(id, image)
+    {
+        if (!(0 <= parIdx && static_cast<size_t>(parIdx) < image.nativePreviews().size())) return;
+        nativePreview_ = image.nativePreviews()[parIdx];
+        width_ = nativePreview_.width_;
+        height_ = nativePreview_.height_;
+        valid_ = true;
+        if (nativePreview_.filter_ == "") {
+            size_ = nativePreview_.size_;
+        } else {
+            size_ = getData().size_;
+        }
+    }
+
+    Loader::AutoPtr createLoaderNative(PreviewId id, const Image &image, int parIdx)
+    {
+        return Loader::AutoPtr(new LoaderNative(id, image, parIdx));
+    }
+
+    PreviewProperties LoaderNative::getProperties() const
+    {
+        PreviewProperties prop = Loader::getProperties();
+        prop.mimeType_ = nativePreview_.mimeType_;
+        if (nativePreview_.mimeType_ == "image/jpeg") {
+            prop.extension_ = ".jpg";
+        } else if (nativePreview_.mimeType_ == "image/tiff") {
+            prop.extension_ = ".tif";
+        } else if (nativePreview_.mimeType_ == "image/x-wmf") {
+            prop.extension_ = ".wmf";
+        } else if (nativePreview_.mimeType_ == "image/x-portable-anymap") {
+            prop.extension_ = ".pnm";
+        } else {
+#ifndef SUPPRESS_WARNINGS
+            EXV_WARNING << "Unknown native preview format: " << nativePreview_.mimeType_ << "\n";
+#endif
+            prop.extension_ = ".dat";
+        }
+#ifdef EXV_UNICODE_PATH
+        prop.wextension_ = s2ws(prop.extension_);
+#endif
+        return prop;
+    }
+
+    DataBuf LoaderNative::getData() const
+    {
+        if (!valid()) return DataBuf();
+
+        BasicIo &io = image_.io();
+        if (io.open() != 0) {
+            throw Error(9, io.path(), strError());
+        }
+        IoCloser closer(io);
+        const byte* data = io.mmap();
+        if (io.size() < nativePreview_.position_ + static_cast<long>(nativePreview_.size_)) {
+#ifndef SUPPRESS_WARNINGS
+            EXV_WARNING << "Invalid native preview position or size.\n";
+#endif
+            return DataBuf();
+        }
+        if (nativePreview_.filter_ == "") {
+            return DataBuf(data + nativePreview_.position_, static_cast<long>(nativePreview_.size_));
+        } else if (nativePreview_.filter_ == "hex-ai7thumbnail-pnm") {
+            const DataBuf ai7thumbnail = decodeHex(data + nativePreview_.position_, static_cast<long>(nativePreview_.size_));
+            const DataBuf rgb = decodeAi7Thumbnail(ai7thumbnail);
+            return makePnm(width_, height_, rgb);
+        } else if (nativePreview_.filter_ == "hex-irb") {
+            const DataBuf psData = decodeHex(data + nativePreview_.position_, static_cast<long>(nativePreview_.size_));
+            const byte *record;
+            uint32_t sizeHdr;
+            uint32_t sizeData;
+            if (Photoshop::locatePreviewIrb(psData.pData_, psData.size_, &record, &sizeHdr, &sizeData) != 0) {
+#ifndef SUPPRESS_WARNINGS
+                EXV_WARNING << "Missing preview IRB in Photoshop EPS preview.\n";
+#endif
+                return DataBuf();
+            }
+            return DataBuf(record + sizeHdr + 28, sizeData - 28);
+        } else {
+            throw Error(1, "Invalid native preview filter: " + nativePreview_.filter_);
+        }
+    }
+
+    bool LoaderNative::readDimensions()
+    {
+        if (!valid()) return false;
+        if (width_ != 0 || height_ != 0) return true;
+
+        const DataBuf data = getData();
+        if (data.size_ == 0) return false;
+        try {
+            Image::AutoPtr image = ImageFactory::open(data.pData_, data.size_);
+            if (image.get() == 0) return false;
+            image->readMetadata();
+
+            width_ = image->pixelWidth();
+            height_ = image->pixelHeight();
+        } catch (const AnyError& /* error */) {
+#ifndef SUPPRESS_WARNINGS
+            EXV_WARNING << "Invalid native preview image.\n";
+#endif
+            return false;
+        }
+        return true;
     }
 
     LoaderExifJpeg::LoaderExifJpeg(PreviewId id, const Image &image, int parIdx)
@@ -661,6 +840,199 @@ namespace {
         XmpData  emptyXmp;
         TiffParser::encode(mio, 0, 0, Exiv2::littleEndian, preview, emptyIptc, emptyXmp);
         return DataBuf(mio.mmap(), mio.size());
+    }
+
+    LoaderXmpJpeg::LoaderXmpJpeg(PreviewId id, const Image &image, int parIdx)
+        : Loader(id, image)
+    {
+        (void)parIdx;
+
+        const XmpData &xmpData = image_.xmpData();
+
+        std::string prefix = "xmpGImg";
+        if (xmpData.findKey(XmpKey("Xmp.xmp.Thumbnails[1]/xapGImg:image")) != xmpData.end()) {
+            prefix = "xapGImg";
+        }
+
+        XmpData::const_iterator imageDatum = xmpData.findKey(XmpKey("Xmp.xmp.Thumbnails[1]/" + prefix + ":image"));
+        if (imageDatum == xmpData.end()) return;
+        XmpData::const_iterator formatDatum = xmpData.findKey(XmpKey("Xmp.xmp.Thumbnails[1]/" + prefix + ":format"));
+        if (formatDatum == xmpData.end()) return;
+        XmpData::const_iterator widthDatum = xmpData.findKey(XmpKey("Xmp.xmp.Thumbnails[1]/" + prefix + ":width"));
+        if (widthDatum == xmpData.end()) return;
+        XmpData::const_iterator heightDatum = xmpData.findKey(XmpKey("Xmp.xmp.Thumbnails[1]/" + prefix + ":height"));
+        if (heightDatum == xmpData.end()) return;
+
+        if (formatDatum->toString() != "JPEG") return;
+
+        width_ = widthDatum->toLong();
+        height_ = heightDatum->toLong();
+        preview_ = decodeBase64(imageDatum->toString());
+        size_ = static_cast<uint32_t>(preview_.size_);
+        valid_ = true;
+    }
+
+    Loader::AutoPtr createLoaderXmpJpeg(PreviewId id, const Image &image, int parIdx)
+    {
+        return Loader::AutoPtr(new LoaderXmpJpeg(id, image, parIdx));
+    }
+
+    PreviewProperties LoaderXmpJpeg::getProperties() const
+    {
+        PreviewProperties prop = Loader::getProperties();
+        prop.mimeType_ = "image/jpeg";
+        prop.extension_ = ".jpg";
+#ifdef EXV_UNICODE_PATH
+        prop.wextension_ = EXV_WIDEN(".jpg");
+#endif
+        return prop;
+    }
+
+    DataBuf LoaderXmpJpeg::getData() const
+    {
+        if (!valid()) return DataBuf();
+        return DataBuf(preview_.pData_, preview_.size_);
+    }
+
+    bool LoaderXmpJpeg::readDimensions()
+    {
+        return valid();
+    }
+
+    DataBuf decodeHex(const byte *src, long srcSize)
+    {
+        // create decoding table
+        byte invalid = 16;
+        byte decodeHexTable[256];
+        for (long i = 0; i < 256; i++) decodeHexTable[i] = invalid;
+        for (byte i = 0; i < 10; i++) decodeHexTable[static_cast<byte>('0') + i] = i;
+        for (byte i = 0; i < 6; i++) decodeHexTable[static_cast<byte>('A') + i] = i + 10;
+        for (byte i = 0; i < 6; i++) decodeHexTable[static_cast<byte>('a') + i] = i + 10;
+
+        // calculate dest size
+        long validSrcSize = 0;
+        for (long srcPos = 0; srcPos < srcSize; srcPos++) {
+            if (decodeHexTable[src[srcPos]] != invalid) validSrcSize++;
+        }
+        const long destSize = validSrcSize / 2;
+
+        // allocate dest buffer
+        DataBuf dest(destSize);
+
+        // decode
+        for (long srcPos = 0, destPos = 0; destPos < destSize; destPos++) {
+            byte buffer = 0;
+            for (int bufferPos = 1; bufferPos >= 0 && srcPos < srcSize; srcPos++) {
+                byte srcValue = decodeHexTable[src[srcPos]];
+                if (srcValue == invalid) continue;
+                buffer |= srcValue << (bufferPos * 4);
+                bufferPos--;
+            }
+            dest.pData_[destPos] = buffer;
+        }
+        return dest;
+    }
+
+    static const char encodeBase64Table[64 + 1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    DataBuf decodeBase64(const std::string& src)
+    {
+        const unsigned long srcSize = static_cast<const unsigned long>(src.size());
+
+        // create decoding table
+        unsigned long invalid = 64;
+        unsigned long decodeBase64Table[256];
+        for (unsigned long i = 0; i < 256; i++) decodeBase64Table[i] = invalid;
+        for (unsigned long i = 0; i < 64; i++) decodeBase64Table[(unsigned char)encodeBase64Table[i]] = i;
+
+        // calculate dest size
+        unsigned long validSrcSize = 0;
+        for (unsigned long srcPos = 0; srcPos < srcSize; srcPos++) {
+            if (decodeBase64Table[(unsigned char)src[srcPos]] != invalid) validSrcSize++;
+        }
+        if (validSrcSize > ULONG_MAX / 3) return DataBuf(); // avoid integer overflow
+        const unsigned long destSize = (validSrcSize * 3) / 4;
+
+        // allocate dest buffer
+        if (destSize > LONG_MAX) return DataBuf(); // avoid integer overflow
+        DataBuf dest(static_cast<long>(destSize));
+
+        // decode
+        for (unsigned long srcPos = 0, destPos = 0; destPos < destSize;) {
+            unsigned long buffer = 0;
+            for (int bufferPos = 3; bufferPos >= 0 && srcPos < srcSize; srcPos++) {
+                unsigned long srcValue = decodeBase64Table[(unsigned char)src[srcPos]];
+                if (srcValue == invalid) continue;
+                buffer |= srcValue << (bufferPos * 6);
+                bufferPos--;
+            }
+            for (int bufferPos = 2; bufferPos >= 0 && destPos < destSize; bufferPos--, destPos++) {
+                dest.pData_[destPos] = static_cast<byte>((buffer >> (bufferPos * 8)) & 0xFF);
+            }
+        }
+        return dest;
+    }
+
+    DataBuf decodeAi7Thumbnail(const DataBuf &src)
+    {
+        const byte *colorTable = src.pData_;
+        const long colorTableSize = 256 * 3;
+        if (src.size_ < colorTableSize) {
+#ifndef SUPPRESS_WARNINGS
+            EXV_WARNING << "Invalid size of AI7 thumbnail: " << src.size_ << "\n";
+#endif
+            return DataBuf();
+        }
+        const byte *imageData = src.pData_ + colorTableSize;
+        const long imageDataSize = src.size_ - colorTableSize;
+        const bool rle = (imageDataSize >= 3 && imageData[0] == 'R' && imageData[1] == 'L' && imageData[2] == 'E');
+        std::string dest;
+        for (long i = rle ? 3 : 0; i < imageDataSize;) {
+            byte num = 1;
+            byte value = imageData[i++];
+            if (rle && value == 0xFD) {
+                if (i >= imageDataSize) {
+#ifndef SUPPRESS_WARNINGS
+                    EXV_WARNING << "Unexpected end of image data at AI7 thumbnail.\n";
+#endif
+                    return DataBuf();
+                }
+                value = imageData[i++];
+                if (value != 0xFD) {
+                    if (i >= imageDataSize) {
+#ifndef SUPPRESS_WARNINGS
+                        EXV_WARNING << "Unexpected end of image data at AI7 thumbnail.\n";
+#endif
+                        return DataBuf();
+                    }
+                    num = value;
+                    value = imageData[i++];
+                }
+            }
+            for (; num != 0; num--) {
+                dest.append(reinterpret_cast<const char*>(colorTable + (3*value)), 3);
+            }
+        }
+        return DataBuf(reinterpret_cast<const byte*>(dest.data()), static_cast<long>(dest.size()));
+    }
+
+    DataBuf makePnm(uint32_t width, uint32_t height, const DataBuf &rgb)
+    {
+        const long expectedSize = static_cast<long>(width * height * 3);
+        if (rgb.size_ != expectedSize) {
+#ifndef SUPPRESS_WARNINGS
+            EXV_WARNING << "Invalid size of preview data. Expected " << expectedSize << " bytes, got " << rgb.size_ << " bytes.\n";
+#endif
+            return DataBuf();
+        }
+
+        const std::string header = "P6\n" + toString(width) + " " + toString(height) + "\n255\n";
+        const byte *headerBytes = reinterpret_cast<const byte*>(header.data());
+
+        DataBuf dest(static_cast<long>(header.size() + rgb.size_));
+        std::copy(headerBytes, headerBytes + header.size(), dest.pData_);
+        std::copy(rgb.pData_, rgb.pData_ + rgb.size_, dest.pData_ + header.size());
+        return dest;
     }
 
 }                                       // namespace

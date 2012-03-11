@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -46,6 +46,7 @@ EXIV2_RCSID("@(#) $Id$")
 
 #include "cr2image.hpp"
 #include "crwimage.hpp"
+#include "epsimage.hpp"
 #include "jpgimage.hpp"
 #include "mrwimage.hpp"
 #ifdef EXV_HAVE_LIBZ
@@ -119,7 +120,8 @@ namespace {
 #endif // EXV_HAVE_LIBZ
         { ImageType::pgf,  newPgfInstance,  isPgfType,  amReadWrite, amReadWrite, amReadWrite, amReadWrite },
         { ImageType::raf,  newRafInstance,  isRafType,  amRead,      amRead,      amRead,      amNone      },
-        { ImageType::xmp,  newXmpInstance,  isXmpType,  amNone,      amNone,      amReadWrite, amNone      },
+        { ImageType::eps,  newEpsInstance,  isEpsType,  amNone,      amNone,      amReadWrite, amNone      },
+        { ImageType::xmp,  newXmpInstance,  isXmpType,  amReadWrite, amReadWrite, amReadWrite, amNone      },
         { ImageType::gif,  newGifInstance,  isGifType,  amNone,      amNone,      amNone,      amNone      },
         { ImageType::psd,  newPsdInstance,  isPsdType,  amRead,      amRead,      amRead,      amNone      },
         { ImageType::tga,  newTgaInstance,  isTgaType,  amNone,      amNone,      amNone,      amNone      },
@@ -187,11 +189,19 @@ namespace Exiv2 {
 
     void Image::setMetadata(const Image& image)
     {
-        setExifData(image.exifData());
-        setIptcData(image.iptcData());
-        setXmpPacket(image.xmpPacket());
-        setXmpData(image.xmpData());
-        setComment(image.comment());
+        if (checkMode(mdExif) & amWrite) {
+            setExifData(image.exifData());
+        }
+        if (checkMode(mdIptc) & amWrite) {
+            setIptcData(image.iptcData());
+        }
+        if (checkMode(mdXmp) & amWrite) {
+            setXmpPacket(image.xmpPacket());
+            setXmpData(image.xmpData());
+        }
+        if (checkMode(mdComment) & amWrite) {
+            setComment(image.comment());
+        }
     }
 
     void Image::clearExifData()
@@ -308,6 +318,11 @@ namespace Exiv2 {
     bool Image::writeXmpFromPacket() const
     {
         return writeXmpFromPacket_;
+    }
+
+    const NativePreviewList& Image::nativePreviews() const
+    {
+        return nativePreviews_;
     }
 
     bool Image::good() const

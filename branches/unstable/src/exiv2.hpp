@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -39,6 +39,7 @@
 #include "crwimage.hpp"
 #include "datasets.hpp"
 #include "easyaccess.hpp"
+#include "epsimage.hpp"
 #include "error.hpp"
 #include "exif.hpp"
 #include "futils.hpp"

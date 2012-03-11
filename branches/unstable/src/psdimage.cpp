@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -296,6 +296,54 @@ namespace Exiv2 {
                 break;
             }
 
+            // - PS 4.0 preview data is fetched from ThumbnailResource
+            // - PS >= 5.0 preview data is fetched from ThumbnailResource2
+            case kPhotoshopResourceID_ThumbnailResource:
+            case kPhotoshopResourceID_ThumbnailResource2:
+            {
+                /*
+                  Photoshop thumbnail resource header
+
+                  offset  length    name            description
+                  ======  ========  ====            ===========
+                   0      4 bytes   format          = 1 (kJpegRGB). Also supports kRawRGB (0).
+                   4      4 bytes   width           Width of thumbnail in pixels.
+                   8      4 bytes   height          Height of thumbnail in pixels.
+                  12      4 bytes   widthbytes      Padded row bytes as (width * bitspixel + 31) / 32 * 4.
+                  16      4 bytes   size            Total size as widthbytes * height * planes
+                  20      4 bytes   compressedsize  Size after compression. Used for consistentcy check.
+                  24      2 bytes   bitspixel       = 24. Bits per pixel.
+                  26      2 bytes   planes          = 1. Number of planes.
+                  28      variable  data            JFIF data in RGB format.
+                                                    Note: For resource ID 1033 the data is in BGR format.
+                */
+                byte buf[28];
+                if (io_->read(buf, 28) != 28)
+                {
+                    throw Error(3, "Photoshop");
+                }
+                NativePreview nativePreview;
+                nativePreview.position_ = io_->tell();
+                nativePreview.size_ = getLong(buf + 20, bigEndian);    // compressedsize
+                nativePreview.width_ = getLong(buf + 4, bigEndian);
+                nativePreview.height_ = getLong(buf + 8, bigEndian);
+                const uint32_t format = getLong(buf + 0, bigEndian);
+
+                if (nativePreview.size_ > 0 && nativePreview.position_ >= 0) {
+                    io_->seek(static_cast<long>(nativePreview.size_), BasicIo::cur);
+                    if (io_->error() || io_->eof()) throw Error(14);
+
+                    if (format == 1) {
+                        nativePreview.filter_ = "";
+                        nativePreview.mimeType_ = "image/jpeg";
+                        nativePreviews_.push_back(nativePreview);
+                    } else {
+                        // unsupported format of native preview
+                    }
+                }
+                break;
+            }
+
             default:
             {
                 break;
@@ -400,7 +448,7 @@ namespace Exiv2 {
             uint32_t resourceType = getULong(buf, bigEndian);
 
             if (resourceType != kPhotoshopResourceType) {
-                break; // bad resource type
+                throw Error(3, "Photoshop"); // bad resource type
             }
             uint16_t resourceId = getUShort(buf + 4, bigEndian);
             uint32_t resourceNameLength = buf[6];
@@ -416,13 +464,13 @@ namespace Exiv2 {
             if (io_->read(buf, 4) != 4) throw Error(3, "Photoshop");
 
             uint32_t resourceSize = getULong(buf, bigEndian);
+            uint32_t pResourceSize = (resourceSize + 1) & ~1;    // padded resource size
             uint32_t curOffset = io_->tell();
 
             // Write IPTC_NAA resource block
             if ((resourceId == kPhotoshopResourceID_IPTC_NAA  ||
                  resourceId >  kPhotoshopResourceID_IPTC_NAA) && iptcDone == false) {
                 newResLength += writeIptcData(iptcData_, outIo);
-                resourceSize = (resourceSize + 1) & ~1;    // adjust for padding
                 iptcDone = true;
             }
 
@@ -430,7 +478,6 @@ namespace Exiv2 {
             else if ((resourceId == kPhotoshopResourceID_ExifInfo  ||
                       resourceId >  kPhotoshopResourceID_ExifInfo) && exifDone == false) {
                 newResLength += writeExifData(exifData_, outIo);
-                resourceSize = (resourceSize + 1) & ~1;    // adjust for padding
                 exifDone = true;
             }
 
@@ -438,7 +485,6 @@ namespace Exiv2 {
             else if ((resourceId == kPhotoshopResourceID_XMPPacket  ||
                       resourceId >  kPhotoshopResourceID_XMPPacket) && xmpDone == false) {
                 newResLength += writeXmpData(xmpData_, outIo);
-                resourceSize = (resourceSize + 1) & ~1;    // adjust for padding
                 xmpDone = true;
             }
 
@@ -467,10 +513,9 @@ namespace Exiv2 {
 
                 readTotal = 0;
                 toRead = 0;
-                resourceSize = (resourceSize + 1) & ~1;        // pad to even
-                while (readTotal < resourceSize) {
-                    toRead =   static_cast<long>(resourceSize - readTotal) < lbuf.size_
-                             ? static_cast<long>(resourceSize - readTotal) : lbuf.size_;
+                while (readTotal < pResourceSize) {
+                    toRead =   static_cast<long>(pResourceSize - readTotal) < lbuf.size_
+                             ? static_cast<long>(pResourceSize - readTotal) : lbuf.size_;
                     if (io_->read(lbuf.pData_, toRead) != toRead) {
                         throw Error(3, "Photoshop");
                     }
@@ -478,11 +523,11 @@ namespace Exiv2 {
                     if (outIo.write(lbuf.pData_, toRead) != toRead) throw Error(21);
                 }
                 if (outIo.error()) throw Error(21);
-                newResLength += resourceSize + adjResourceNameLen + 12;
+                newResLength += pResourceSize + adjResourceNameLen + 12;
             }
 
-            io_->seek(curOffset + resourceSize, BasicIo::beg);
-            oldResLength -= (12 + adjResourceNameLen + resourceSize);
+            io_->seek(curOffset + pResourceSize, BasicIo::beg);
+            oldResLength -= (12 + adjResourceNameLen + pResourceSize);
         }
 
         // Append IPTC_NAA resource block, if not yet written

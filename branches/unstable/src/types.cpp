@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -320,12 +320,12 @@ namespace Exiv2 {
     long us2Data(byte* buf, uint16_t s, ByteOrder byteOrder)
     {
         if (byteOrder == littleEndian) {
-            buf[0] =  (byte)(s & 0x00ff);
+            buf[0] = (byte) (s & 0x00ff);
             buf[1] = (byte)((s & 0xff00) >> 8);
         }
         else {
             buf[0] = (byte)((s & 0xff00) >> 8);
-            buf[1] =  (byte)(s & 0x00ff);
+            buf[1] = (byte) (s & 0x00ff);
         }
         return 2;
     }
@@ -333,7 +333,7 @@ namespace Exiv2 {
     long ul2Data(byte* buf, uint32_t l, ByteOrder byteOrder)
     {
         if (byteOrder == littleEndian) {
-            buf[0] =  (byte)(l & 0x000000ff);
+            buf[0] = (byte) (l & 0x000000ff);
             buf[1] = (byte)((l & 0x0000ff00) >> 8);
             buf[2] = (byte)((l & 0x00ff0000) >> 16);
             buf[3] = (byte)((l & 0xff000000) >> 24);
@@ -342,7 +342,7 @@ namespace Exiv2 {
             buf[0] = (byte)((l & 0xff000000) >> 24);
             buf[1] = (byte)((l & 0x00ff0000) >> 16);
             buf[2] = (byte)((l & 0x0000ff00) >> 8);
-            buf[3] =  (byte)(l & 0x000000ff);
+            buf[3] = (byte) (l & 0x000000ff);
         }
         return 4;
     }

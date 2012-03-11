@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -176,7 +176,8 @@ int main(int argc, char* const argv[])
     params.cleanup();
     Exiv2::XmpParser::terminate();
 
-    return rc;
+    // Return a positive one byte code for better consistency across platforms
+    return static_cast<unsigned int>(rc) % 256;
 } // main
 
 // *****************************************************************************
@@ -206,9 +207,9 @@ void Params::cleanup()
 void Params::version(std::ostream& os) const
 {
     bool  b64    = sizeof(void*)==8;
-    const char* sBuild = b64 ? " (64 bit build)" : " (32 bit build)" ;
-    os << EXV_PACKAGE_STRING << sBuild << "\n"
-       << _("Copyright (C) 2004-2010 Andreas Huggel.\n")
+    const char* sBuild = b64 ? "(64 bit build)" : "(32 bit build)" ;
+    os << EXV_PACKAGE_STRING << " " << Exiv2::versionNumberHexString() << " " << sBuild << "\n"
+       << _("Copyright (C) 2004-2011 Andreas Huggel.\n")
        << "\n"
        << _("This program is free software; you can redistribute it and/or\n"
             "modify it under the terms of the GNU General Public License\n"

@@ -13,6 +13,11 @@
 
 #ifdef _MSC_VER
 
+#if _MSC_VER >= 1600
+// stdint.h was introduced with DevStudio 2010
+#define EXV_HAVE_STDINT_H 1
+#endif
+
 /* Define to 1 if you have the <process.h> header file. */
 #define EXV_HAVE_PROCESS_H 1
 
@@ -23,13 +28,13 @@
 #define EXV_PACKAGE_NAME "exiv2"
 
 /* Define to the full name and version of this package. */
-#define EXV_PACKAGE_STRING "exiv2 0.21"
+#define EXV_PACKAGE_STRING "exiv2 0.22"
 
 /* Define to the one symbol short name of this package. */
 #define EXV_PACKAGE_TARNAME "exiv2"
 
 /* Define to the version of this package. */
-#define EXV_PACKAGE_VERSION "0.21"
+#define EXV_PACKAGE_VERSION "0.22"
 
 /* Define to `int' if <sys/types.h> does not define pid_t. */
 typedef int pid_t;

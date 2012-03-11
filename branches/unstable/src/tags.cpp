@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -39,6 +39,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "error.hpp"
 #include "futils.hpp"
 #include "value.hpp"
+#include "convert.hpp"
 #include "i18n.h"                // NLS support.
 
 #include "canonmn_int.hpp"
@@ -60,14 +61,6 @@ EXIV2_RCSID("@(#) $Id$")
 #include <cassert>
 #include <cmath>
 #include <cstring>
-
-#ifdef EXV_HAVE_ICONV
-# include <iconv.h>
-#endif
-
-#if defined WIN32 && !defined __CYGWIN__
-# include <windows.h>
-#endif
 
 // *****************************************************************************
 // local declarations
@@ -128,6 +121,7 @@ namespace Exiv2 {
         { nikonIiId,       "Makernote", "NikonIi",      Nikon3MakerNote::tagListIi     },
         { nikonAfId,       "Makernote", "NikonAf",      Nikon3MakerNote::tagListAf     },
         { nikonAf2Id,      "Makernote", "NikonAf2",     Nikon3MakerNote::tagListAf2    },
+        { nikonAFTId,      "Makernote", "NikonAFT",     Nikon3MakerNote::tagListAFT    },
         { nikonFiId,       "Makernote", "NikonFi",      Nikon3MakerNote::tagListFi     },
         { nikonMeId,       "Makernote", "NikonMe",      Nikon3MakerNote::tagListMe     },
         { nikonFl1Id,      "Makernote", "NikonFl1",     Nikon3MakerNote::tagListFl1    },
@@ -369,14 +363,14 @@ namespace Exiv2 {
     extern const TagDetails exifFlash[] = {
         { 0x00, N_("No flash")                                                      },
         { 0x01, N_("Fired")                                                         },
-        { 0x05, N_("Fired, strobe return light not detected")                       },
-        { 0x07, N_("Fired, strobe return light detected")                           },
+        { 0x05, N_("Fired, return light not detected")                              },
+        { 0x07, N_("Fired, return light detected")                                  },
         { 0x08, N_("Yes, did not fire")                                             },
         { 0x09, N_("Yes, compulsory")                                               },
         { 0x0d, N_("Yes, compulsory, return light not detected")                    },
         { 0x0f, N_("Yes, compulsory, return light detected")                        },
         { 0x10, N_("No, compulsory")                                                },
-        { 0x14, N_("No, did not fire, return not detected")                         },
+        { 0x14, N_("No, did not fire, return light not detected")                   },
         { 0x18, N_("No, auto")                                                      },
         { 0x19, N_("Yes, auto")                                                     },
         { 0x1d, N_("Yes, auto, return light not detected")                          },
@@ -1208,6 +1202,189 @@ namespace Exiv2 {
                    "tag pair, except they are for use by raw file editors rather than "
                    "camera manufacturers."),
                 ifd0Id, dngTags, signedRational, -1, printValue), // DNG tag
+        TagInfo(0xc6bf, "ColorimetricReference", N_("Colorimetric Reference"),
+                N_("The DNG color model documents a transform between camera colors and "
+                "CIE XYZ values. This tag describes the colorimetric reference for the "
+                "CIE XYZ values. 0 = The XYZ values are scene-referred. 1 = The XYZ values "
+                "are output-referred, using the ICC profile perceptual dynamic range. This "
+                "tag allows output-referred data to be stored in DNG files and still processed "
+                "correctly by DNG readers."),
+                ifd0Id, dngTags, unsignedShort, 0, printValue), // DNG tag
+        TagInfo(0xc6f3, "CameraCalibrationSignature", N_("Camera Calibration Signature"),
+                N_("A UTF-8 encoded string associated with the CameraCalibration1 and "
+                "CameraCalibration2 tags. The CameraCalibration1 and CameraCalibration2 tags "
+                "should only be used in the DNG color transform if the string stored in the "
+                "CameraCalibrationSignature tag exactly matches the string stored in the "
+                "ProfileCalibrationSignature tag for the selected camera profile."),
+                ifd0Id, dngTags, unsignedByte, 0, printValue), // DNG tag
+        TagInfo(0xc6f4, "ProfileCalibrationSignature", N_("Profile Calibration Signature"),
+                N_("A UTF-8 encoded string associated with the camera profile tags. The "
+                "CameraCalibration1 and CameraCalibration2 tags should only be used in the "
+                "DNG color transfer if the string stored in the CameraCalibrationSignature "
+                "tag exactly matches the string stored in the ProfileCalibrationSignature tag "
+                "for the selected camera profile."),
+                ifd0Id, dngTags, unsignedByte, 0, printValue), // DNG tag
+        TagInfo(0xc6f6, "AsShotProfileName", N_("As Shot Profile Name"),
+                N_("A UTF-8 encoded string containing the name of the \"as shot\" camera "
+                "profile, if any."),
+                ifd0Id, dngTags, unsignedByte, 0, printValue), // DNG tag
+        TagInfo(0xc6f7, "NoiseReductionApplied", N_("Noise Reduction Applied"),
+                N_("This tag indicates how much noise reduction has been applied to the raw "
+                "data on a scale of 0.0 to 1.0. A 0.0 value indicates that no noise reduction "
+                "has been applied. A 1.0 value indicates that the \"ideal\" amount of noise "
+                "reduction has been applied, i.e. that the DNG reader should not apply "
+                "additional noise reduction by default. A value of 0/0 indicates that this "
+                "parameter is unknown."),
+                ifd0Id, dngTags, unsignedRational, 1, printValue), // DNG tag
+        TagInfo(0xc6f8, "ProfileName", N_("Profile Name"),
+                N_("A UTF-8 encoded string containing the name of the camera profile. This "
+                "tag is optional if there is only a single camera profile stored in the file "
+                "but is required for all camera profiles if there is more than one camera "
+                "profile stored in the file."),
+                ifd0Id, dngTags, unsignedByte, 0, printValue), // DNG tag
+        TagInfo(0xc6f9, "ProfileHueSatMapDims", N_("Profile Hue Sat Map Dims"),
+                N_("This tag specifies the number of input samples in each dimension of the "
+                "hue/saturation/value mapping tables. The data for these tables are stored "
+                "in ProfileHueSatMapData1 and ProfileHueSatMapData2 tags. The most common "
+                "case has ValueDivisions equal to 1, so only hue and saturation are used as "
+                "inputs to the mapping table."),
+                ifd0Id, dngTags, unsignedLong, 3, printValue), // DNG tag
+        TagInfo(0xc6fa, "ProfileHueSatMapData1", N_("Profile Hue Sat Map Data 1"),
+                N_("This tag contains the data for the first hue/saturation/value mapping "
+                "table. Each entry of the table contains three 32-bit IEEE floating-point "
+                "values. The first entry is hue shift in degrees; the second entry is "
+                "saturation scale factor; and the third entry is a value scale factor. The "
+                "table entries are stored in the tag in nested loop order, with the value "
+                "divisions in the outer loop, the hue divisions in the middle loop, and the "
+                "saturation divisions in the inner loop. All zero input saturation entries "
+                "are required to have a value scale factor of 1.0."),
+                ifd0Id, dngTags, tiffFloat, 0, printValue), // DNG tag
+        TagInfo(0xc6fb, "ProfileHueSatMapData2", N_("Profile Hue Sat Map Data 2"),
+                N_("This tag contains the data for the second hue/saturation/value mapping "
+                "table. Each entry of the table contains three 32-bit IEEE floating-point "
+                "values. The first entry is hue shift in degrees; the second entry is a "
+                "saturation scale factor; and the third entry is a value scale factor. The "
+                "table entries are stored in the tag in nested loop order, with the value "
+                "divisions in the outer loop, the hue divisions in the middle loop, and the "
+                "saturation divisions in the inner loop. All zero input saturation entries "
+                "are required to have a value scale factor of 1.0."),
+                ifd0Id, dngTags, tiffFloat, 0, printValue), // DNG tag
+        TagInfo(0xc6fc, "ProfileToneCurve", N_("Profile Tone Curve"),
+                N_("This tag contains a default tone curve that can be applied while "
+                "processing the image as a starting point for user adjustments. The curve "
+                "is specified as a list of 32-bit IEEE floating-point value pairs in linear "
+                "gamma. Each sample has an input value in the range of 0.0 to 1.0, and an "
+                "output value in the range of 0.0 to 1.0. The first sample is required to be "
+                "(0.0, 0.0), and the last sample is required to be (1.0, 1.0). Interpolated "
+                "the curve using a cubic spline."),
+                ifd0Id, dngTags, tiffFloat, -1, printValue), // DNG tag
+        TagInfo(0xc6fd, "ProfileEmbedPolicy", N_("Profile Embed Policy"),
+                N_("This tag contains information about the usage rules for the associated "
+                "camera profile."),
+                ifd0Id, dngTags, unsignedLong, 1, printValue), // DNG tag
+        TagInfo(0xc6fe, "ProfileCopyright", N_("Profile Copyright"),
+                N_("A UTF-8 encoded string containing the copyright information for the "
+                "camera profile. This string always should be preserved along with the other "
+                "camera profile tags."),
+                ifd0Id, dngTags, unsignedByte, 0, printValue), // DNG tag
+        TagInfo(0xc714, "ForwardMatrix1", N_("Forward Matrix 1"),
+                N_("This tag defines a matrix that maps white balanced camera colors to XYZ "
+                "D50 colors."),
+                ifd0Id, dngTags, signedRational, -1, printValue), // DNG tag
+        TagInfo(0xc715, "ForwardMatrix2", N_("Forward Matrix 2"),
+                N_("This tag defines a matrix that maps white balanced camera colors to XYZ "
+                "D50 colors."),
+                ifd0Id, dngTags, signedRational, -1, printValue), // DNG tag
+        TagInfo(0xc716, "PreviewApplicationName", N_("Preview Application Name"),
+                N_("A UTF-8 encoded string containing the name of the application that "
+                "created the preview stored in the IFD."),
+                ifd0Id, dngTags, unsignedByte, 0, printValue), // DNG tag
+        TagInfo(0xc717, "PreviewApplicationVersion", N_("Preview Application Version"),
+                N_("A UTF-8 encoded string containing the version number of the application "
+                "that created the preview stored in the IFD."),
+                ifd0Id, dngTags, unsignedByte, 0, printValue), // DNG tag
+        TagInfo(0xc718, "PreviewSettingsName", N_("Preview Settings Name"),
+                N_("A UTF-8 encoded string containing the name of the conversion settings "
+                "(for example, snapshot name) used for the preview stored in the IFD."),
+                ifd0Id, dngTags, unsignedByte, 0, printValue), // DNG tag
+        TagInfo(0xc719, "PreviewSettingsDigest", N_("Preview Settings Digest"),
+                N_("A unique ID of the conversion settings (for example, MD5 digest) used "
+                "to render the preview stored in the IFD."),
+                ifd0Id, dngTags, unsignedByte, 16, printValue), // DNG tag
+        TagInfo(0xc71a, "PreviewColorSpace", N_("Preview Color Space"),
+                N_("This tag specifies the color space in which the rendered preview in this "
+                "IFD is stored. The default value for this tag is sRGB for color previews "
+                "and Gray Gamma 2.2 for monochrome previews."),
+                ifd0Id, dngTags, unsignedLong, 1, printValue), // DNG tag
+        TagInfo(0xc71b, "PreviewDateTime", N_("Preview Date Time"),
+                N_("This tag is an ASCII string containing the name of the date/time at which "
+                "the preview stored in the IFD was rendered. The date/time is encoded using "
+                "ISO 8601 format."),
+                ifd0Id, dngTags, asciiString, 0, printValue), // DNG tag
+        TagInfo(0xc71c, "RawImageDigest", N_("Raw Image Digest"),
+                N_("This tag is an MD5 digest of the raw image data. All pixels in the image "
+                "are processed in row-scan order. Each pixel is zero padded to 16 or 32 bits "
+                "deep (16-bit for data less than or equal to 16 bits deep, 32-bit otherwise). "
+                "The data for each pixel is processed in little-endian byte order."),
+                ifd0Id, dngTags, undefined, 16, printValue), // DNG tag
+        TagInfo(0xc71d, "OriginalRawFileDigest", N_("Original Raw File Digest"),
+                N_("This tag is an MD5 digest of the data stored in the OriginalRawFileData "
+                "tag."),
+                ifd0Id, dngTags, undefined, 16, printValue), // DNG tag
+        TagInfo(0xc71e, "SubTileBlockSize", N_("Sub Tile Block Size"),
+                N_("Normally, the pixels within a tile are stored in simple row-scan order. "
+                "This tag specifies that the pixels within a tile should be grouped first "
+                "into rectangular blocks of the specified size. These blocks are stored in "
+                "row-scan order. Within each block, the pixels are stored in row-scan order. "
+                "The use of a non-default value for this tag requires setting the "
+                "DNGBackwardVersion tag to at least 1.2.0.0."),
+                ifd0Id, dngTags, unsignedLong, 2, printValue), // DNG tag
+        TagInfo(0xc71f, "RowInterleaveFactor", N_("Row Interleave Factor"),
+                N_("This tag specifies that rows of the image are stored in interleaved "
+                "order. The value of the tag specifies the number of interleaved fields. "
+                "The use of a non-default value for this tag requires setting the "
+                "DNGBackwardVersion tag to at least 1.2.0.0."),
+                ifd0Id, dngTags, unsignedLong, 1, printValue), // DNG tag
+        TagInfo(0xc725, "ProfileLookTableDims", N_("Profile Look Table Dims"),
+                N_("This tag specifies the number of input samples in each dimension of a "
+                "default \"look\" table. The data for this table is stored in the "
+                "ProfileLookTableData tag."),
+                ifd0Id, dngTags, unsignedLong, 3, printValue), // DNG tag
+        TagInfo(0xc726, "ProfileLookTableData", N_("Profile Look Table Data"),
+                N_("This tag contains a default \"look\" table that can be applied while "
+                "processing the image as a starting point for user adjustment. This table "
+                "uses the same format as the tables stored in the ProfileHueSatMapData1 "
+                "and ProfileHueSatMapData2 tags, and is applied in the same color space. "
+                "However, it should be applied later in the processing pipe, after any "
+                "exposure compensation and/or fill light stages, but before any tone curve "
+                "stage. Each entry of the table contains three 32-bit IEEE floating-point "
+                "values. The first entry is hue shift in degrees, the second entry is a "
+                "saturation scale factor, and the third entry is a value scale factor. "
+                "The table entries are stored in the tag in nested loop order, with the "
+                "value divisions in the outer loop, the hue divisions in the middle loop, "
+                "and the saturation divisions in the inner loop. All zero input saturation "
+                "entries are required to have a value scale factor of 1.0."),
+                ifd0Id, dngTags, tiffFloat, -1, printValue), // DNG tag
+        TagInfo(0xc740, "OpcodeList1", N_("Opcode List 1"),
+                N_("Specifies the list of opcodes that should be applied to the raw image, "
+                "as read directly from the file."),
+                ifd0Id, dngTags, undefined, -1, printValue), // DNG tag
+        TagInfo(0xc741, "OpcodeList2", N_("Opcode List 2"),
+                N_("Specifies the list of opcodes that should be applied to the raw image, "
+                "just after it has been mapped to linear reference values."),
+                ifd0Id, dngTags, undefined, -1, printValue), // DNG tag
+        TagInfo(0xc74e, "OpcodeList3", N_("Opcode List 3"),
+                N_("Specifies the list of opcodes that should be applied to the raw image, "
+                "just after it has been demosaiced."),
+                ifd0Id, dngTags, undefined, -1, printValue), // DNG tag
+        TagInfo(0xc761, "NoiseProfile", N_("Noise Profile"),
+                N_("NoiseProfile describes the amount of noise in a raw image. Specifically, "
+                "this tag models the amount of signal-dependent photon (shot) noise and "
+                "signal-independent sensor readout noise, two common sources of noise in "
+                "raw images. The model assumes that the noise is white and spatially "
+                "independent, ignoring fixed pattern effects and other sources of noise (e.g., "
+                "pixel response non-uniformity, spatially-dependent thermal effects, etc.)."),
+                ifd0Id, dngTags, tiffDouble, -1, printValue), // DNG tag
         // End of list marker
         TagInfo(0xffff, "(UnknownIfdTag)", N_("Unknown IFD tag"),
                 N_("Unknown IFD tag"),
@@ -1386,6 +1563,38 @@ namespace Exiv2 {
                 "specified in ISO 14524. <OECF> is the relationship between "
                 "the camera optical input and the image values."),
                 exifId, captureCond, undefined, 0, printValue),
+        TagInfo(0x8830, "SensitivityType", N_("Sensitivity Type"),
+                N_("The SensitivityType tag indicates PhotographicSensitivity tag. which "
+                "one of the parameters of ISO12232 is the Although it is an optional tag, "
+                "it should be recorded when a PhotographicSensitivity tag is recorded. "
+                "Value = 4, 5, 6, or 7 may be used in case that the values of plural "
+                "parameters are the same."),
+                exifId, captureCond, unsignedShort, 1, printValue),
+        TagInfo(0x8831, "StandardOutputSensitivity", N_("Standard Output Sensitivity"),
+                N_("This tag indicates the standard output sensitivity value of a camera or "
+                "input device defined in ISO 12232. When recording this tag, the "
+                "PhotographicSensitivity and SensitivityType tags shall also be recorded."),
+                exifId, captureCond, unsignedLong, 1, printValue),
+        TagInfo(0x8832, "RecommendedExposureIndex", N_("Recommended Exposure Index"),
+                N_("This tag indicates the recommended exposure index value of a camera or "
+                "input device defined in ISO 12232. When recording this tag, the "
+                "PhotographicSensitivity and SensitivityType tags shall also be recorded."),
+                exifId, captureCond, unsignedLong, 1, printValue),
+        TagInfo(0x8833, "ISOSpeed", N_("ISO Speed"),
+                N_("This tag indicates the ISO speed value of a camera or input device that "
+                "is defined in ISO 12232. When recording this tag, the PhotographicSensitivity "
+                "and SensitivityType tags shall also be recorded."),
+                exifId, captureCond, unsignedLong, 1, printValue),
+        TagInfo(0x8834, "ISOSpeedLatitudeyyy", N_("ISO Speed Latitude yyy"),
+                N_("This tag indicates the ISO speed latitude yyy value of a camera or input "
+                "device that is defined in ISO 12232. However, this tag shall not be recorded "
+                "without ISOSpeed and ISOSpeedLatitudezzz."),
+                exifId, captureCond, unsignedLong, 1, printValue),
+        TagInfo(0x8835, "ISOSpeedLatitudezzz", N_("ISO Speed Latitude zzz"),
+                N_("This tag indicates the ISO speed latitude zzz value of a camera or input "
+                "device that is defined in ISO 12232. However, this tag shall not be recorded "
+                "without ISOSpeed and ISOSpeedLatitudeyyy."),
+                exifId, captureCond, unsignedLong, 1, printValue),
         TagInfo(0x9000, "ExifVersion", N_("Exif Version"),
                 N_("The version of this standard supported. Nonexistence of this "
                 "field is taken to mean nonconformance to the standard."),
@@ -1620,6 +1829,32 @@ namespace Exiv2 {
                 "each image. It is recorded as an ASCII string equivalent "
                 "to hexadecimal notation and 128-bit fixed length."),
                 exifId, otherTags, asciiString, 33, printValue),
+        TagInfo(0xa430, "CameraOwnerName", N_("Camera Owner Name"),
+                N_("This tag records the owner of a camera used in "
+                "photography as an ASCII string."),
+                exifId, otherTags, asciiString, 0, printValue),
+        TagInfo(0xa431, "BodySerialNumber", N_("Body Serial Number"),
+                N_("This tag records the serial number of the body of the camera "
+                "that was used in photography as an ASCII string."),
+                exifId, otherTags, asciiString, 0, printValue),
+        TagInfo(0xa432, "LensSpecification", N_("Lens Specification"),
+                N_("This tag notes minimum focal length, maximum focal length, "
+                "minimum F number in the minimum focal length, and minimum F number "
+                "in the maximum focal length, which are specification information "
+                "for the lens that was used in photography. When the minimum F "
+                "number is unknown, the notation is 0/0"),
+                exifId, otherTags, unsignedRational, 4, printValue),
+        TagInfo(0xa433, "LensMake", N_("Lens Make"),
+                N_("This tag records the lens manufactor as an ASCII string."),
+                exifId, otherTags, asciiString, 0, printValue),
+        TagInfo(0xa434, "LensModel", N_("Lens Model"),
+                N_("This tag records the lens's model name and model number as an "
+                "ASCII string."),
+                exifId, otherTags, asciiString, 0, printValue),
+        TagInfo(0xa435, "LensSerialNumber", N_("Lens Serial Number"),
+                N_("This tag records the serial number of the interchangeable lens "
+                "that was used in photography as an ASCII string."),
+                exifId, otherTags, asciiString, 0, printValue),
         // End of list marker
         TagInfo(0xffff, "(UnknownExifTag)", N_("Unknown Exif tag"),
                 N_("Unknown Exif tag"),
@@ -2068,78 +2303,18 @@ namespace Exiv2 {
 
     std::ostream& printUcs2(std::ostream& os, const Value& value, const ExifData*)
     {
-#if defined WIN32 && !defined __CYGWIN__
-        // in Windows the WideCharToMultiByte function can be used
-        if (value.typeId() == unsignedByte) {
-            DataBuf ib(value.size());
-            value.copy(ib.pData_, invalidByteOrder);
-            int out_size = WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<LPWSTR>(ib.pData_),
-                                               ib.size_ / sizeof(WCHAR), NULL, 0, NULL, NULL);
-            if (out_size >= 0) {
-                DataBuf ob(out_size + 1);
-                WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<LPWSTR>(ib.pData_),
-                                    ib.size_ / sizeof(WCHAR), reinterpret_cast<char*>(ob.pData_),
-                                    ob.size_, NULL, NULL);
-                os << std::string(reinterpret_cast<char*>(ob.pData_));
-            }
-            else {
-                os << value;
-            }
+        bool cnv = false;
+        if (value.typeId() == unsignedByte && value.size() > 0) {
+            DataBuf buf(value.size());
+            value.copy(buf.pData_, invalidByteOrder);
+            // Strip trailing UCS-2 0-character, if there is one
+            if (buf.pData_[buf.size_ - 1] == 0 && buf.pData_[buf.size_ - 2] == 0)  buf.size_ -= 2;
+            std::string str((const char*)buf.pData_, buf.size_);
+            cnv = convertStringCharset(str, "UCS-2LE", "UTF-8");
+            if (cnv) os << str;
         }
+        if (!cnv) os << value;
         return os;
-#elif defined EXV_HAVE_ICONV // !(defined WIN32 && !defined __CYGWIN__)
-        bool go = true;
-        iconv_t cd = (iconv_t)(-1);
-        if (value.typeId() != unsignedByte) {
-            go = false;
-        }
-        if (go) {
-            cd = iconv_open("UTF-8", "UCS-2LE");
-            if (cd == (iconv_t)(-1)) {
-#ifndef SUPPRESS_WARNINGS
-                EXV_WARNING << "iconv_open: " << strError() << "\n";
-#endif
-                go = false;
-            }
-        }
-        if (go) {
-            DataBuf ib(value.size());
-            value.copy(ib.pData_, invalidByteOrder);
-            DataBuf ob(value.size());
-            char* outptr = reinterpret_cast<char*>(ob.pData_);
-            const char* outbuf = outptr;
-            size_t outbytesleft = ob.size_;
-            EXV_ICONV_CONST char* inbuf
-                = reinterpret_cast<EXV_ICONV_CONST char*>(ib.pData_);
-            size_t inbytesleft = ib.size_;
-            size_t rc = iconv(cd,
-                              &inbuf,
-                              &inbytesleft,
-                              &outptr,
-                              &outbytesleft);
-            if (rc == size_t(-1)) {
-#ifndef SUPPRESS_WARNINGS
-                EXV_WARNING << "iconv: " << strError()
-                            << " inbytesleft = " << inbytesleft << "\n";
-#endif
-                go = false;
-            }
-            if (go) {
-                if (outptr > outbuf && *(outptr-1) == '\0') outptr--;
-                os << std::string(outbuf, outptr-outbuf);
-            }
-        }
-        if (cd != (iconv_t)(-1)) {
-            iconv_close(cd);
-        }
-        if (!go) {
-            os << value;
-        }
-        return os;
-#else
-        os << value;
-        return os;
-#endif // EXV_HAVE_ICONV
     } // printUcs2
 
     std::ostream& printExifUnit(std::ostream& os, const Value& value, const ExifData* metadata)

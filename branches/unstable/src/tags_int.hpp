@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2010 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2011 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -98,6 +98,7 @@ namespace Exiv2 {
         nikonIiId,
         nikonAfId,
         nikonAf2Id,
+        nikonAFTId,
         nikonFiId,
         nikonMeId,
         nikonFl1Id,
