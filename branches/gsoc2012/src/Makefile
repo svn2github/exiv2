@@ -84,6 +84,7 @@ CCSRC =  basicio.cpp           \
 	 jp2image.cpp          \
 	 jpgimage.cpp          \
 	 makernote.cpp         \
+	 matroskavideo.cpp     \
 	 metadatum.cpp         \
 	 minoltamn.cpp         \
 	 mrwimage.cpp          \
@@ -100,6 +101,7 @@ CCSRC += preview.cpp           \
 	 properties.cpp        \
 	 psdimage.cpp          \
 	 rafimage.cpp          \
+         riffvideo.cpp         \
 	 rw2image.cpp          \
 	 samsungmn.cpp         \
 	 sigmamn.cpp           \

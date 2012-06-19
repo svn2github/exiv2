@@ -20,6 +20,7 @@ SET( LIBEXIV2_PRIVATE_HDR canonmn_int.hpp
                           pentaxmn_int.hpp
                           pngchunk_int.hpp
                           rcsid_int.hpp
+                          riffvideo_int.hpp
                           rw2image_int.hpp
                           samsungmn_int.hpp
                           sigmamn_int.hpp
@@ -49,6 +50,7 @@ SET( LIBEXIV2_HDR         basicio.hpp
                           iptc.hpp
                           jp2image.hpp
                           jpgimage.hpp
+                          matroskavideo.hpp
                           metadatum.hpp
                           mrwimage.hpp
                           orfimage.hpp
@@ -57,6 +59,7 @@ SET( LIBEXIV2_HDR         basicio.hpp
                           properties.hpp
                           psdimage.hpp
                           rafimage.hpp
+                          riffvideo.hpp
                           rw2image.hpp
                           tags.hpp
                           tgaimage.hpp
@@ -89,6 +92,7 @@ SET( LIBEXIV2_SRC         basicio.cpp
                           jp2image.cpp
                           jpgimage.cpp
                           makernote.cpp
+                          matroskavideo.cpp
                           metadatum.cpp
                           minoltamn.cpp
                           mrwimage.cpp
@@ -102,6 +106,7 @@ SET( LIBEXIV2_SRC         basicio.cpp
                           properties.cpp
                           psdimage.cpp
                           rafimage.cpp
+                          riffvideo.cpp
                           rw2image.cpp
                           samsungmn.cpp
                           sigmamn.cpp
