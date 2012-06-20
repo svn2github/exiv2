@@ -43,6 +43,7 @@ protected:
 
 private:
     long positionCounter_;
+    Exiv2::XmpData xmpData_;
 
 }; //RiffVideo End
 
