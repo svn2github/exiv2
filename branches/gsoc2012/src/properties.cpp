@@ -96,6 +96,7 @@ namespace Exiv2 {
     extern const XmpPropertyInfo xmpMicrosoftPhotoRegionInfoInfo[];
     extern const XmpPropertyInfo xmpMicrosoftPhotoRegionInfo[];
     extern const XmpPropertyInfo xmpMWGRegionsInfo[];
+    extern const XmpPropertyInfo xmpVideoInfo[];
 
     extern const XmpNsInfo xmpNsInfo[] = {
         // Schemas   -   NOTE: Schemas which the XMP-SDK doesn't know must be registered in XmpParser::initialize - Todo: Automate this
@@ -126,6 +127,7 @@ namespace Exiv2 {
         { "http://ns.microsoft.com/photo/1.2/t/RegionInfo#", "MPRI",  xmpMicrosoftPhotoRegionInfoInfo, N_("Microsoft Photo RegionInfo schema")},
         { "http://ns.microsoft.com/photo/1.2/t/Region#",     "MPReg", xmpMicrosoftPhotoRegionInfo,     N_("Microsoft Photo Region schema")    },
         { "http://www.metadataworkinggroup.com/schemas/regions/", "mwg-rs", xmpMWGRegionsInfo,N_("Metadata Working Group Regions schema")     },
+        { "http://www.soontobeupdated/",                   "video",         xmpVideoInfo,         N_("XMP Extended Video schema")                 },
 
         // Structures
         { "http://ns.adobe.com/xap/1.0/g/",                   "xapG",    0, N_("Colorant structure")           },
@@ -983,6 +985,53 @@ namespace Exiv2 {
         { "BarCodeValue",        N_("BarCodeValue"),        "Text",             xmpText, xmpExternal,        N_("Decoded BarCode value string")                         },
         { "Extensions",          N_("Extensions"),          "Text",             xmpText, xmpInternal, N_("Any top level XMP property to describe the region content") },
         // End of list marker
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpVideoInfo[] = {
+        { "frameRate",          N_("Video Frame Rate"),             "Frames per Second",     xmpText, xmpExternal, N_("Rate at which frames are presented in a video (Expressed in fps(Frames per Second))")   },
+        { "microSecPerFrame",   N_("Micro Seconds Per Frame"),      "Integer",               xmpText, xmpExternal, N_("Number of micro seconds per frame, or frame rate")   },
+        { "maxDataRate",        N_("Maximum Data Rate"),            "kiloBytes per Second",  xmpText, xmpExternal, N_("Peak rate at which data is presented in a video (Expressed in kB/s(kiloBytes per Second))")   },
+        { "frameCount",         N_("Frame Count"),                  "Integer",               xmpText, xmpExternal, N_("Total number of frames in a video")   },
+        { "container",          N_("Container Type"),               "Text",                  xmpText, xmpExternal, N_("Primary Metadata Container")   },
+        { "streamCount",        N_("Stream Count"),                 "Integer",               xmpText, xmpExternal, N_("Total Number Of Streams")   },
+        { "fileType",           N_("File Type"),                    "Text",                  xmpText, xmpExternal, N_("Extension of File or Type of File")   },
+        { "videoCodec",         N_("Video Codec"),                  "Text",                  xmpText, xmpExternal, N_("Codec used for Video Encoding/Decoding")   },
+        { "width",              N_("Video Width"),                  "Integer",               xmpText, xmpExternal, N_("Video width in pixels")   },
+        { "height",             N_("Video Height"),                 "Integer",               xmpText, xmpExternal, N_("Video height in pixels")   },
+        { "compressor",         N_("Video Compressor"),             "Text",                  xmpText, xmpExternal, N_("Video Compression Technology/Codec Used")   },
+        { "aspectRatio",        N_("Video Aspect Ratio"),           "Ratio",                 xmpText, xmpExternal, N_("Ratio of Width:Height, helps to determine how a video would be displayed on a screen")   },
+        { "projectRef",         N_("Project Reference"),            "ProjectLink",           xmpText, xmpExternal, N_("A reference to the project that created this file.") },
+        { "frameSize",          N_("Video Frame Size"),             "Dimensions",            xmpText, xmpExternal, N_("The frame size. For example: w:720, h: 480, unit:pixels") },
+        { "pixelDepth",         N_("Video Pixel Depth"),            "closed Choice of Text", xmpText, xmpExternal, N_("The size in bits of each color component of a pixel. Standard Windows 32-bit "
+                                                                                                                      "pixels have 8 bits per component. One of: 8Int, 16Int, 32Int, 32Float.") },
+        { "audioSampleRate",    N_("Audio Sample Rate"),            "Integer",               xmpText, xmpExternal, N_("The audio sample rate. Can be any value, but commonly 32000, 41100, or 48000.") },
+        { "audioSampleType",    N_("Audio Sample Type"),            "closed Choice of Text", xmpText, xmpExternal, N_("The audio sample type. One of: 8Int, 16Int, 32Int, 32Float.") },
+        { "audioChannelType",   N_("Audio Channel Type"),           "closed Choice of Text", xmpText, xmpExternal, N_("The audio channel type. One of: Mono, Stereo, 5.1, 7.1.") },
+        { "audioCompressor",    N_("Audio Compressor"),             "Text",                  xmpText, xmpExternal, N_("The audio compression used. For example, MP3.") },
+        { "audioSampleCount",   N_("Audio Sample Count"),           "Integer",               xmpText, xmpExternal, N_("Sample taken for Analyzing Audio Stream")   },
+        { "audioCodec",         N_("Audio Codec"),                  "Text",                  xmpText, xmpExternal, N_("Codec used for Audio Encoding/Decoding")   },
+        { "avgBytePerSec",      N_("Average Bytes Per Second"),     "Integer",               xmpText, xmpExternal, N_("Average Bytes Per Second found in audio stream")   },
+        { "fileDataRate",       N_("File Data Rate"),               "Rational",              xmpText, xmpExternal, N_("The file data rate in megabytes per second. For example: \"36/10\" = 3.6 MB/sec") },
+        { "planes",             N_("Planes"),                       "Integer",               xmpText, xmpExternal, N_("The number of Image Planes in the video") },
+        { "imageLength",        N_("Image Length"),                 "Integer",               xmpText, xmpExternal, N_("Image Length, a property inherited from BitMap format") },
+        { "numOfColours",       N_("Number Of Colours"),            "Integer/Text",          xmpText, xmpExternal, N_("Total number of colours used") },
+        { "pixelPerMeterX",     N_("Pixels Per Meter X"),           "Integer",               xmpText, xmpExternal, N_("Pixels Per Meter X, a property inherited from BitMap format")   },
+        { "pixelPerMeterY",     N_("Pixels Per Meter Y"),           "Integer",               xmpText, xmpExternal, N_("Pixels Per Meter Y, a property inherited from BitMap format")   },
+        { "numOfImpColours",    N_("Number Of Important Colours"),  "Integer/Text",          xmpText, xmpExternal, N_("Number Of Important Colours, a property inherited from BitMap format")   },
+        { "streamType",         N_("Stream Type"),                  "Text",                  xmpText, xmpExternal, N_("Describes the Stream Type. Eg - Video, Audio or Subtitles")   },
+        { "junk",               N_("Junk Data"),                    "Text",                  xmpText, xmpExternal, N_("Video Junk data")   },
+        { "mimeType",           N_("Mime Type"),                    "Text",                  xmpText, xmpExternal, N_("Tells about the video format")   },
+        { "fileName",           N_("File Name"),                    "Text",                  xmpText, xmpExternal, N_("File Name or Absolute File Path")   },
+        { "fileSize",           N_("File Size"),                    "Integer",               xmpText, xmpExternal, N_("File Size, in MB")   },
+        { "codec",              N_("Stream Codec"),                 "Text",                  xmpText, xmpExternal, N_("Unspecified stream codec, for general purpose")   },
+        { "streamSampleRate",   N_("Stream Sample Rate"),           "Rational",              xmpText, xmpExternal, N_("Stream Sample Rate")   },
+        { "streamSampleCount",  N_("Stream Sample Count"),          "Integer",               xmpText, xmpExternal, N_("Stream Sample Count")   },
+        { "streamQuality",      N_("Stream Quality"),               "Integer",               xmpText, xmpExternal, N_("Generral Stream Quality")   },
+        { "videoQuality",       N_("Video Quality"),                "Integer",               xmpText, xmpExternal, N_("Video Stream Quality")   },
+        { "streamSampleSize",   N_("Stream Sample Size"),           "Integer",               xmpText, xmpExternal, N_("General Stream Sample Size")   },
+        { "videoSampleSize",    N_("Video Sample Size"),            "Integer",               xmpText, xmpExternal, N_("Video Stream Sample Size")   },
+        { "bitsPerSample",      N_("Bits Per Sample"),              "Integer",               xmpText, xmpExternal, N_("Bits per test sample")   },
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
 

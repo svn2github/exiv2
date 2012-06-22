@@ -5,8 +5,7 @@
 #include "basicio.hpp"
 #include "tags.hpp"
 #include "tags_int.hpp"
-#include <iomanip>
-#include <cstring>
+#include "types.hpp"
 
 namespace riffInternal {
 
@@ -22,13 +21,6 @@ unsigned long returnValueInDecimal(Exiv2::DataBuf& buf, int n=4) {
     for(int i=0;i<n;i++)
         temp=temp+ buf.pData_[i]*(pow(256,i));
     return temp;
-}
-
-const char* returnFrameSize(long width, long height) {
-    char* temp = "w:";
-    //todo
-    return temp;
-
 }
 
 long bufRead =0;
@@ -96,10 +88,9 @@ void RiffVideo::readMetadata() {
     IoCloser closer(*io_);
     clearMetadata();
 
-    std::cerr <<std::setw(35)<<std::left<< "File Name"<<": " << io_->path()<<"\n";
-    std::cerr <<std::setw(35)<<std::left<< "File Size"<<": " << (double)io_->size()/(double)1048576<<" MB"<< "\n";
-    std::cerr <<std::setw(35)<<std::left<< "MIME Type"<<": " << mimeType()<<"\n";
-    xmpData_["Xmp.xmpDM.projectRef"] = io_->path();
+    xmpData_["Xmp.video.fileSize"] = (double)io_->size()/(double)1048576;
+    xmpData_["Xmp.video.fileName"] = io_->path();
+    xmpData_["Xmp.video.mimeType"] = mimeType();
 
     const long bufMinSize = 4;
     DataBuf buf(bufMinSize);
@@ -121,14 +112,14 @@ void RiffVideo::readMetadata() {
 
         switch(Counter) {
         case container:
-            std::cerr <<std::setw(35)<<std::left<< "Container Type"<<": "<<buf.pData_<<"\n";
+            xmpData_["Xmp.video.container"] = buf.pData_;
             break;
         case filetype:
-            std::cerr <<std::setw(35)<<std::left<< "File Type"<<": "<<buf.pData_<<"\n";
+            xmpData_["Xmp.video.fileType"] = buf.pData_;
             break;
         case filesize:
-            long filesize_ = returnValueInDecimal(buf);
-            std::cerr <<std::setw(35)<<std::left<< "File Size Indicated By Metadata"<<": "<<filesize_<<" Bytes\n";
+            //long filesize_ = returnValueInDecimal(buf); (For Debug)
+            //std::cerr <<std::setw(35)<<std::left<< "File Size Indicated By Metadata"<<": "<<filesize_<<" Bytes\n";
             break;
         }
 
@@ -168,7 +159,6 @@ void RiffVideo::listHandler() {
         if(compareString(buf, "LIST") || compareString(buf, "JUNK")) {
             if(compareString(buf, "JUNK")) {
                 junkHandler();
-                std::cerr<<"\n";
                 continue;
             }
             else
@@ -182,24 +172,22 @@ void RiffVideo::listHandler() {
                 aviHeaderTagsHandler();
         }
         else if(compareString(buf, "VIDS")) {
-            std::cerr <<std::setw(35)<<std::left<< "Stream Type"<<": "<<"Video\n";
             streamHandler(Video);
         }
         else if(compareString(buf, "AUDS")) {
-            std::cerr <<std::setw(35)<<std::left<< "Stream Type"<<": "<<"Audio\n";
             streamHandler(Audio);
         }
         else if(compareString(buf, "INFO")) {
             infoTagsHandler();
         }
         else if(compareString(buf, "MOVI")) {
-            std::cerr <<std::setw(35)<<std::left<< "Metadata Has Reached Its End"<<": "<<buf.pData_<<"\n";
+            //std::cerr <<std::setw(35)<<std::left<< "Metadata Has Reached Its End"<<": "<<buf.pData_<<"\n"; (For Debug)
             return;
         }
     }
 }
 
-void RiffVideo::infoTagsHandler() {
+void RiffVideo::infoTagsHandler() { //Todo Decoding Info Tags
     const long bufMinSize = 100;
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
@@ -219,12 +207,13 @@ void RiffVideo::junkHandler() {
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
     long chunkEndPosition;
+    Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpSeq);
 
 
     bufRead = io_->read(buf.pData_, bufMinSize);
     chunkEndPosition = returnValueInDecimal(buf);
 
-    std::cerr <<std::setw(35)<<std::left<< "Junk Data"<<": ";
+    //std::cerr <<std::setw(35)<<std::left<< "Junk Data"<<": ";   (For Debug)
     for (positionCounter_ = 0; positionCounter_ < chunkEndPosition; ){
         std::memset(buf.pData_, 0x0, buf.size_);
         if (chunkEndPosition - positionCounter_ < 4) {
@@ -233,8 +222,9 @@ void RiffVideo::junkHandler() {
         else {
             bufRead = io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
         }
-        std::cerr << buf.pData_;
+        v->read(Exiv2::toString( buf.pData_));
     }
+    xmpData_.add(Exiv2::XmpKey("Xmp.video.junk"), v.get());
 }
 
 void RiffVideo::aviHeaderTagsHandler() {
@@ -253,39 +243,40 @@ void RiffVideo::aviHeaderTagsHandler() {
 
         switch(i) {
         case frameRate:
-            std::cerr <<std::setw(35)<<std::left<< "Frame Rate"<<": "<<(double)1000000/(double)returnValueInDecimal(buf)<<" fps\n";
+            xmpData_["Xmp.video.microSecPerFrame"] = returnValueInDecimal(buf);
             frame_rate = (double)1000000/(double)returnValueInDecimal(buf);
             break;
         case (maxDataRate):
-            std::cerr <<std::setw(35)<<std::left<< "Maximum Data Rate"<<": "<<(double)returnValueInDecimal(buf)/(double)1024<<" kB/s\n";
+            xmpData_["Xmp.video.maxDataRate"] = (double)returnValueInDecimal(buf)/(double)1024;
             break;
         case frameCount:
-            std::cerr <<std::setw(35)<<std::left<< "Frame Count"<<": "<<returnValueInDecimal(buf)<<"\n";
+            xmpData_["Xmp.video.frameCount"] = returnValueInDecimal(buf);
             frame_count = returnValueInDecimal(buf);
             break;
         case streamCount:
-            std::cerr <<std::setw(35)<<std::left<< "Stream Count"<<": "<<returnValueInDecimal(buf)<<"\n";
+            xmpData_["Xmp.video.streamCount"] = returnValueInDecimal(buf);
             break;
         case imageWidth_h:
-            std::cerr <<std::setw(35)<<std::left<< "Image Width"<<": "<<returnValueInDecimal(buf)<<"\n";
             width = returnValueInDecimal(buf);
+            xmpData_["Xmp.video.width"] = width;
             break;
         case imageHeight_h:
-            std::cerr <<std::setw(35)<<std::left<< "Image Height"<<": "<<returnValueInDecimal(buf)<<"\n";
             height = returnValueInDecimal(buf);
+            xmpData_["Xmp.video.height"] = height;
             break;
         }
     }
-//    std::cerr <<std::setw(35)<<std::left<< "Aspect Ratio"<<": ";
+
     displayAspectRatio(width, height);
-    xmpData_["Xmp.xmpDM.videoFrameSize"] = returnFrameSize(width , height);
-    //    std::cerr <<"\n";
 
-    std::cerr <<std::setw(35)<<std::left<< "Duration"<<": ";
+    Exiv2::XmpTextValue tv(Exiv2::toString(width));
+        xmpData_.add(Exiv2::XmpKey("Xmp.video.frameSize/stDim:w"), &tv);
+        tv.read(Exiv2::toString(height));
+        xmpData_.add(Exiv2::XmpKey("Xmp.video.frameSize/stDim:h"), &tv);
+        tv.read("pixels");
+        xmpData_.add(Exiv2::XmpKey("Xmp.video.frameSize/stDim:unit"), &tv);
+
     displayDuration(frame_rate, frame_count);
-    std::cerr <<"\n";
-
-
 }
 
 void RiffVideo::streamHandler(int streamType) {
@@ -300,56 +291,58 @@ void RiffVideo::streamHandler(int streamType) {
 
         switch(i) {
         case codec:
-            if(streamType==Video)
-                std::cerr <<std::setw(35)<<std::left<< "Video Codec"<<": "<<buf.pData_<<"\n";
-            else if (streamType==Audio)
-                std::cerr <<std::setw(35)<<std::left<< "Audio Codec"<<": "<<buf.pData_<<"\n";
+            if(streamType == Video)
+                xmpData_["Xmp.video.videoCodec"] = buf.pData_;
+            else if (streamType == Audio)
+                xmpData_["Xmp.video.audioCodec"] = buf.pData_;
             else
-                std::cerr <<std::setw(35)<<std::left<< "Codec"<<": "<<buf.pData_<<"\n";
+                xmpData_["Xmp.video.codec"] = buf.pData_;
             break;
         case sampleRate:
             divisor=returnValueInDecimal(buf);
             break;
         case (sampleRate+1):
-            if(streamType==Video) {
-                std::cerr <<std::setw(35)<<std::left<< "Video Frame Rate"<<": "<<returnSampleRate(buf,divisor)<<" fps\n";
-                xmpData_["Xmp.xmpDM.videoFrameRate"] = returnSampleRate(buf,divisor);
-            }
-            else if (streamType==Audio)
-                std::cerr <<std::setw(35)<<std::left<< "Audio Sample Rate"<<": "<<returnSampleRate(buf,divisor)<<"\n";
+            if(streamType == Video)
+                xmpData_["Xmp.video.frameRate"] = returnSampleRate(buf,divisor);
+            else if (streamType == Audio)
+                xmpData_["Xmp.video.audioSampleRate"] = returnSampleRate(buf,divisor);
             else
-                std::cerr <<std::setw(35)<<std::left<< "Stream Sample Rate"<<": "<<returnSampleRate(buf,divisor)<<"\n";
+                 xmpData_["Xmp.video.streamSampleRate"] = returnSampleRate(buf,divisor);
             break;
         case sampleCount:
-            if(streamType==Video)
-                std::cerr <<std::setw(35)<<std::left<< "Video Frame Count"<<": "<<returnValueInDecimal(buf)<<"\n";
-            else if (streamType==Audio)
-                std::cerr <<std::setw(35)<<std::left<< "Audio Sample Count"<<": "<<returnValueInDecimal(buf)<<"\n";
+            if(streamType == Video)
+                xmpData_["Xmp.video.frameCount"] = returnValueInDecimal(buf);
+            else if (streamType == Audio)
+                xmpData_["Xmp.video.audioSampleCount"] = returnValueInDecimal(buf);
             else
-                std::cerr <<std::setw(35)<<std::left<< "Stream Sample Count"<<": "<<returnValueInDecimal(buf)<<"\n";
+                xmpData_["Xmp.video.streamSampleCount"] = returnValueInDecimal(buf);
             break;
         case quality:
-            if (streamType!=Audio)
-                std::cerr <<std::setw(35)<<std::left<< "Quality"<<": "<<returnValueInDecimal(buf)<<"\n";
+            if(streamType == Video)
+                xmpData_["Xmp.video.videoQuality"] = returnValueInDecimal(buf);
+            else if(streamType != Audio)
+                xmpData_["Xmp.video.streamQuality"] = returnValueInDecimal(buf);
             break;
         case sampleSize:
-            if (streamType!=Audio)
-                std::cerr <<std::setw(35)<<std::left<< "Stream Sample Size"<<": "<<returnValueInDecimal(buf)<<"\n";
+            if(streamType == Video)
+                xmpData_["Xmp.video.videoSampleSize"] = returnValueInDecimal(buf);
+            else if(streamType != Audio)
+                xmpData_["Xmp.video.streamSampleSize"] = returnValueInDecimal(buf);
             break;
         }
 
         if(compareString(buf,"STRF")) {
-            std::cerr <<std::setw(35)<<std::left<< "Stream Format"<<": "<<"\n";
+            //std::cerr <<std::setw(35)<<std::left<< "Stream Format"<<": "<<"\n";  (For Debug)
             bufRead = io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
             streamFormatHandler(streamType);
         }
 
         //Checks the end of Video Stream or Audio Stream and adds two bits to the buffer progress
         if(compareString(buf,"VIDE")|| compareString(buf,"AUDI")) {
-            if(compareString(buf,"VIDE"))
-                std::cerr <<std::setw(35)<<std::left<< "Stream Type"<<": "<<"Video Stream Ends\n";
-            if(compareString(buf,"AUDI"))
-                std::cerr <<std::setw(35)<<std::left<< "Stream Type"<<": "<<"Audio Stream Ends\n";
+            //if(compareString(buf,"VIDE"))
+            //    std::cerr <<std::setw(35)<<std::left<< "Stream Type"<<": "<<"Video Stream Ends\n";
+            //if(compareString(buf,"AUDI"))
+            //    std::cerr <<std::setw(35)<<std::left<< "Stream Type"<<": "<<"Audio Stream Ends\n";  (For Debug)
             bufRead = io_->read(buf.pData_, 2); positionCounter_ +=2;
             return;
         }
@@ -368,53 +361,51 @@ void RiffVideo::streamFormatHandler(int streamType) {
             std::memset(buf.pData_, 0x0, buf.size_);
 
             switch(i) {
-            case imageWidth:
+            case imageWidth: //Will be used in case of debugging
                 bufRead = io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
-                std::cerr <<std::setw(35)<<std::left<< "Image Width"<<": "<<returnValueInDecimal(buf)<<"\n";
+                //std::cerr <<std::setw(35)<<std::left<< "Image Width"<<": "<<returnValueInDecimal(buf)<<"\n";
                 break;
-            case imageHeight:
+            case imageHeight: //Will be used in case of debugging
                 bufRead = io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
-                std::cerr <<std::setw(35)<<std::left<< "Image Height"<<": "<<returnValueInDecimal(buf)<<"\n";
+                //std::cerr <<std::setw(35)<<std::left<< "Image Height"<<": "<<returnValueInDecimal(buf)<<"\n";
                 break;
             case planes:
                 bufRead = io_->read(buf.pData_, 2); positionCounter_ += 2;
-                std::cerr <<std::setw(35)<<std::left<< "Planes"<<": "<<returnValueInDecimal(buf,2)<<"\n";
+                xmpData_["Xmp.video.planes"] = returnValueInDecimal(buf,2);
                 break;
             case bitDepth:
                 bufRead = io_->read(buf.pData_, 2); positionCounter_ += 2;
-                std::cerr <<std::setw(35)<<std::left<< "Bit Depth"<<": "<<returnValueInDecimal(buf,2)<<"\n";
-                xmpData_["Xmp.xmpDM.videoPixelDepth"] = returnValueInDecimal(buf,2);
+                xmpData_["Xmp.video.pixelDepth"] = returnValueInDecimal(buf,2);
                 break;
             case compression:
                 bufRead = io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
-                std::cerr <<std::setw(35)<<std::left<< "Image Compression"<<": "<<buf.pData_<<"\n";
-                xmpData_["Xmp.xmpDM.videoCompressor"] = buf.pData_;
+                xmpData_["Xmp.video.compressor"] = buf.pData_;
                 break;
             case imageLength:
                 bufRead = io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
-                std::cerr <<std::setw(35)<<std::left<< "Image Length"<<": "<<returnValueInDecimal(buf)<<"\n";
+                xmpData_["Xmp.video.imageLength"] = returnValueInDecimal(buf);
                 break;
             case pixelsPerMeterX:
                 bufRead = io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
-                std::cerr <<std::setw(35)<<std::left<< "Pixels Per MeterX"<<": "<<returnValueInDecimal(buf)<<"\n";
+                xmpData_["Xmp.video.pixelPerMeterX"] = returnValueInDecimal(buf);
                 break;
             case pixelsPerMeterY:
                 bufRead = io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
-                std::cerr <<std::setw(35)<<std::left<< "Pixels Per Metery"<<": "<<returnValueInDecimal(buf)<<"\n";
+                xmpData_["Xmp.video.pixelPerMeterY"] = returnValueInDecimal(buf);
                 break;
             case numColors:
                 bufRead = io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
                 if(returnValueInDecimal(buf) == 0)
-                    std::cerr <<std::setw(35)<<std::left<< "Number Of Colours"<<": "<<"Unspecified\n";
+                    xmpData_["Xmp.video.numOfColours"] = "Unspecified";
                 else
-                    std::cerr <<std::setw(35)<<std::left<< "Number Of Colours"<<": "<<returnValueInDecimal(buf)<<"\n";
+                    xmpData_["Xmp.video.numOfColours"] = returnValueInDecimal(buf);
                 break;
             case numImportantColors:
                 bufRead = io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
                 if(returnValueInDecimal(buf) == 0)
-                    std::cerr <<std::setw(35)<<std::left<< "Number Of Important Colours"<<": "<<"All\n";
+                    xmpData_["Xmp.video.numOfImpColours"] = "All";
                 else
-                    std::cerr <<std::setw(35)<<std::left<< "Number Of Important Colours"<<": "<<returnValueInDecimal(buf)<<"\n";
+                    xmpData_["Xmp.video.numIfImpColours"] = returnValueInDecimal(buf);
                 break;
             }
         }
@@ -427,27 +418,24 @@ void RiffVideo::streamFormatHandler(int streamType) {
 
             switch(i) {
             case encoding:
-                std::cerr <<std::setw(35)<<std::left<< "Encoding Format"<<": "<<returnValueInDecimal(buf,2)<<"\n"; //TODO - Decoding Audio Format
-                xmpData_["Xmp.xmpDM.audioCompressor"] = returnValueInDecimal(buf,2);
+                xmpData_["Xmp.video.audioCompressor"] = returnValueInDecimal(buf,2);
                 break;
             case numberOfChannels:
-                std::cerr <<std::setw(35)<<std::left<< "Number Of Channels"<<": "<< (c = returnValueInDecimal(buf,2))<<"\n";
-                if(c == 1) xmpData_["Xmp.xmpDM.audioChannelType"] = "Mono";
-                else if(c == 2) xmpData_["Xmp.xmpDM.audioChannelType"] = "Stereo";
-                else if(c == 5) xmpData_["Xmp.xmpDM.audioChannelType"] = "5.1";
-                else if(c == 7) xmpData_["Xmp.xmpDM.audioChannelType"] = "7.1";
-                else xmpData_["Xmp.xmpDM.audioChannelType"] = "Mono";
+                c = returnValueInDecimal(buf,2);
+                if(c == 1) xmpData_["Xmp.video.audioChannelType"] = "Mono";
+                else if(c == 2) xmpData_["Xmp.video.audioChannelType"] = "Stereo";
+                else if(c == 5) xmpData_["Xmp.video.audioChannelType"] = "5.1 Surround Sound";
+                else if(c == 7) xmpData_["Xmp.video.audioChannelType"] = "7.1 Surround Sound";
+                else xmpData_["Xmp.video.audioChannelType"] = "Mono";
                 break;
             case audioSampleRate:
-                std::cerr <<std::setw(35)<<std::left<< "Audio Sample Rate"<<": "<<returnValueInDecimal(buf,2)<<"\n";
-                xmpData_["Xmp.xmpDM.audioSampleRate"] = returnValueInDecimal(buf,2);
+                xmpData_["Xmp.video.audioSampleRate"] = returnValueInDecimal(buf,2);
                 break;
             case avgBytesPerSec:
-                std::cerr <<std::setw(35)<<std::left<< "Average Bytes Per Second"<<": "<<returnValueInDecimal(buf,2)<<"\n";
-                xmpData_["Xmp.xmpDM.audioSampleType"] = returnValueInDecimal(buf,2);
+                xmpData_["Xmp.video.audioSampleType"] = returnValueInDecimal(buf,2);
                 break;
             case bitsPerSample:
-                std::cerr <<std::setw(35)<<std::left<< "Bits Per Sample"<<": "<<returnValueInDecimal(buf,2)<<"\n";
+                xmpData_["Xmp.video.bitsPerSample"] = returnValueInDecimal(buf,2);
                 bufRead = io_->read(buf.pData_, 2); positionCounter_ += 2;
                 break;
             }
@@ -462,14 +450,14 @@ double RiffVideo::returnSampleRate(Exiv2::DataBuf& buf, long divisor) {
 void RiffVideo::displayAspectRatio(long width, long height) {
     double aspectRatio = (double)width / (double)height;
     aspectRatio = floor(aspectRatio*10) / 10;
-    if(aspectRatio == 1.3) xmpData_["Xmp.xmpDM.videoPixelAspectRatio"] = "4:3";
-    else if(aspectRatio == 1.7) xmpData_["Xmp.xmpDM.videoPixelAspectRatio"] = "16:9";
-    else if(aspectRatio == 1.0) xmpData_["Xmp.xmpDM.videoPixelAspectRatio"] = "1:1";
-    else if(aspectRatio == 1.6) xmpData_["Xmp.xmpDM.videoPixelAspectRatio"] = "16:10";
-    else if(aspectRatio == 2.2) xmpData_["Xmp.xmpDM.videoPixelAspectRatio"] = "2.21:1";
-    else if(aspectRatio == 2.3) xmpData_["Xmp.xmpDM.videoPixelAspectRatio"] = "2.35:1";
-    else if(aspectRatio == 1.2) xmpData_["Xmp.xmpDM.videoPixelAspectRatio"] = "5:4";
-    else std::cerr<< "Undetermined";
+    if(aspectRatio == 1.3) xmpData_["Xmp.video.aspectRatio"] = "4:3";
+    else if(aspectRatio == 1.7) xmpData_["Xmp.video.aspectRatio"] = "16:9";
+    else if(aspectRatio == 1.0) xmpData_["Xmp.video.aspectRatio"] = "1:1";
+    else if(aspectRatio == 1.6) xmpData_["Xmp.video.aspectRatio"] = "16:10";
+    else if(aspectRatio == 2.2) xmpData_["Xmp.video.aspectRatio"] = "2.21:1";
+    else if(aspectRatio == 2.3) xmpData_["Xmp.video.aspectRatio"] = "2.35:1";
+    else if(aspectRatio == 1.2) xmpData_["Xmp.video.aspectRatio"] = "5:4";
+    else xmpData_["Xmp.video.aspectRatio"] = aspectRatio;
 }
 
 void RiffVideo::displayDuration(double frame_rate, long frame_count) {
@@ -477,16 +465,26 @@ void RiffVideo::displayDuration(double frame_rate, long frame_count) {
         return;
 
     long hours = 0, minutes = 0, seconds = 0, duration = frame_count / frame_rate;
-    xmpData_["Xmp.xmpDM.duration"] = duration;
-    xmpData_["Xmp.xmpDM.fileDataRate"] = (double)io_->size()/(double)(1048576*duration);
+    xmpData_["Xmp.video.fileDataRate"] = (double)io_->size()/(double)(1048576*duration);
+    Exiv2::XmpTextValue tv("a");
+
     hours = duration / 3600;
     duration %= 3600;
     minutes = duration /60;
     seconds = duration % 60;
+    xmpData_["Xmp.video.duration/stDim:totalSec"] = duration;
 
-    if (hours != 0) std::cerr <<hours <<"hr ";
-    if (minutes != 0 || hours != 0) std::cerr <<minutes <<"mn ";
-    std::cerr <<seconds <<"s";
+    if (hours != 0) {
+        tv.read(Exiv2::toString(hours));
+        xmpData_.add(Exiv2::XmpKey("Xmp.video.duration/stDim:hr"), &tv);
+    }
+    if (minutes != 0 || hours != 0) {
+        tv.read(Exiv2::toString(minutes));
+        xmpData_.add(Exiv2::XmpKey("Xmp.video.duration/stDim:min"), &tv);
+    }
+
+    tv.read(Exiv2::toString(seconds));
+    xmpData_.add(Exiv2::XmpKey("Xmp.video.duration/stDim:sec"), &tv);
 }
 
 Image::AutoPtr newRiffInstance(BasicIo::AutoPtr io, bool /*create*/) {
