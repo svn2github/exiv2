@@ -40,11 +40,8 @@ protected:
     void displayAspectRatio(long width = 1,long height = 1);
     void displayDuration(double frame_rate, long frame_count);
 
-
 private:
     long positionCounter_;
-    Exiv2::XmpData xmpData_;
-
 }; //RiffVideo End
 
 
