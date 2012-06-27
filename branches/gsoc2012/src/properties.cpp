@@ -97,6 +97,7 @@ namespace Exiv2 {
     extern const XmpPropertyInfo xmpMicrosoftPhotoRegionInfo[];
     extern const XmpPropertyInfo xmpMWGRegionsInfo[];
     extern const XmpPropertyInfo xmpVideoInfo[];
+    extern const XmpPropertyInfo xmpAudioInfo[];
 
     extern const XmpNsInfo xmpNsInfo[] = {
         // Schemas   -   NOTE: Schemas which the XMP-SDK doesn't know must be registered in XmpParser::initialize - Todo: Automate this
@@ -127,7 +128,9 @@ namespace Exiv2 {
         { "http://ns.microsoft.com/photo/1.2/t/RegionInfo#", "MPRI",  xmpMicrosoftPhotoRegionInfoInfo, N_("Microsoft Photo RegionInfo schema")},
         { "http://ns.microsoft.com/photo/1.2/t/Region#",     "MPReg", xmpMicrosoftPhotoRegionInfo,     N_("Microsoft Photo Region schema")    },
         { "http://www.metadataworkinggroup.com/schemas/regions/", "mwg-rs", xmpMWGRegionsInfo,N_("Metadata Working Group Regions schema")     },
-        { "http://www.soontobeupdated/",                   "video",         xmpVideoInfo,         N_("XMP Extended Video schema")                 },
+        { "http://www.",                                  "video",          xmpVideoInfo,     N_("XMP Extended Video schema")                 },
+        { "http://www.",                                  "audio",          xmpAudioInfo,     N_("XMP Extended Audio schema")                 },
+
 
         // Structures
         { "http://ns.adobe.com/xap/1.0/g/",                   "xapG",    0, N_("Colorant structure")           },
@@ -997,6 +1000,7 @@ namespace Exiv2 {
         { "streamCount",        N_("Stream Count"),                 "Integer",               xmpText, xmpExternal, N_("Total Number Of Streams")   },
         { "fileType",           N_("File Type"),                    "Text",                  xmpText, xmpExternal, N_("Extension of File or Type of File")   },
         { "videoCodec",         N_("Video Codec"),                  "Text",                  xmpText, xmpExternal, N_("Codec used for Video Encoding/Decoding")   },
+        { "videoCodecInfo",     N_("Video Codec Information"),      "Text",                  xmpText, xmpExternal, N_("Contains information the codec needs before decoding can be started.")   },
         { "width",              N_("Video Width"),                  "Integer",               xmpText, xmpExternal, N_("Video width in pixels")   },
         { "height",             N_("Video Height"),                 "Integer",               xmpText, xmpExternal, N_("Video height in pixels")   },
         { "compressor",         N_("Video Compressor"),             "Text",                  xmpText, xmpExternal, N_("Video Compression Technology/Codec Used")   },
@@ -1005,13 +1009,6 @@ namespace Exiv2 {
         { "frameSize",          N_("Video Frame Size"),             "Dimensions",            xmpText, xmpExternal, N_("The frame size. For example: w:720, h: 480, unit:pixels") },
         { "pixelDepth",         N_("Video Pixel Depth"),            "closed Choice of Text", xmpText, xmpExternal, N_("The size in bits of each color component of a pixel. Standard Windows 32-bit "
                                                                                                                       "pixels have 8 bits per component. One of: 8Int, 16Int, 32Int, 32Float.") },
-        { "audioSampleRate",    N_("Audio Sample Rate"),            "Integer",               xmpText, xmpExternal, N_("The audio sample rate. Can be any value, but commonly 32000, 41100, or 48000.") },
-        { "audioSampleType",    N_("Audio Sample Type"),            "closed Choice of Text", xmpText, xmpExternal, N_("The audio sample type. One of: 8Int, 16Int, 32Int, 32Float.") },
-        { "audioChannelType",   N_("Audio Channel Type"),           "closed Choice of Text", xmpText, xmpExternal, N_("The audio channel type. One of: Mono, Stereo, 5.1, 7.1.") },
-        { "audioCompressor",    N_("Audio Compressor"),             "Text",                  xmpText, xmpExternal, N_("The audio compression used. For example, MP3.") },
-        { "audioSampleCount",   N_("Audio Sample Count"),           "Integer",               xmpText, xmpExternal, N_("Sample taken for Analyzing Audio Stream")   },
-        { "audioCodec",         N_("Audio Codec"),                  "Text",                  xmpText, xmpExternal, N_("Codec used for Audio Encoding/Decoding")   },
-        { "avgBytePerSec",      N_("Average Bytes Per Second"),     "Integer",               xmpText, xmpExternal, N_("Average Bytes Per Second found in audio stream")   },
         { "fileDataRate",       N_("File Data Rate"),               "Rational",              xmpText, xmpExternal, N_("The file data rate in megabytes per second. For example: \"36/10\" = 3.6 MB/sec") },
         { "planes",             N_("Planes"),                       "Integer",               xmpText, xmpExternal, N_("The number of Image Planes in the video") },
         { "imageLength",        N_("Image Length"),                 "Integer",               xmpText, xmpExternal, N_("Image Length, a property inherited from BitMap format") },
@@ -1031,7 +1028,38 @@ namespace Exiv2 {
         { "videoQuality",       N_("Video Quality"),                "Integer",               xmpText, xmpExternal, N_("Video Stream Quality")   },
         { "streamSampleSize",   N_("Stream Sample Size"),           "Integer",               xmpText, xmpExternal, N_("General Stream Sample Size")   },
         { "videoSampleSize",    N_("Video Sample Size"),            "Integer",               xmpText, xmpExternal, N_("Video Stream Sample Size")   },
+        { "videoScanType",      N_("Video Scan Type"),              "Text",                  xmpText, xmpExternal, N_("Video Scan Type, it can be Progressive or Interlaced")   },
+        { "docType",            N_("Doc Type"),                     "Text",                  xmpText, xmpExternal, N_("Describes the contents of the ﬁle. In the case of a MATROSKA ﬁle, its value is 'matroska'")   },
+        { "docTypeReadVersion", N_("Doc Type Read Version"),        "Integer",               xmpText, xmpExternal, N_("A Matroska video specific property, helps in determining the compatibility of file with a particular version of a video player")   },
+        { "docTypeVersion",     N_("Doc Type Version"),             "Integer",               xmpText, xmpExternal, N_("A Matroska video specific property, indicated the version of filetype, helps in determining the compatibility")   },
+        { "timecodeScale",      N_("Timecode Scale"),               "Rational",              xmpText, xmpExternal, N_("Multiplying factor which is helpful in calculation of a particular timecode")   },
+        { "muxingApp",          N_("Muxing App"),                   "Text",                  xmpText, xmpExternal, N_("Contains the name of the library that has been used to create the ﬁle (like ”libmatroska 0.7.0“)")   },
+        { "writingApp",         N_("Writing App"),                  "Text",                  xmpText, xmpExternal, N_("Contains the name of the application used to create the ﬁle (like ”mkvmerge 0.8.1“)")   },
+        { "dateUTC",            N_("Date-Time Original"),           "Text",                  xmpText, xmpExternal, N_("Contains the production date")   },
+        { "title",              N_("Title"),                        "Text",                  xmpText, xmpExternal, N_("Contains a general name of the SEGMENT, like 'Lord of the Rings - The Two Towers', however, Tags could be used to deﬁne several titles for a segment.")   },
+        { "trackLang",          N_("Track Language"),               "Text",                  xmpText, xmpExternal, N_("The Language in which a particular stream is recorded in.")   },
+        { "subTLang",           N_("Subtitles Language"),           "Text",                  xmpText, xmpExternal, N_("The Language in which the subtitles is recorded in.")   },
+        { "subTCodecInfo",      N_("Subtitles Codec Information"),  "Text",                  xmpText, xmpExternal, N_("Contains additional information about subtitles.")   },
+        { "subTCodec",          N_("Subtitles Codec"),              "Text",                  xmpText, xmpExternal, N_("Subtitles stream codec, for general purpose")   },
+        { "attachFileName",     N_("Attached File Name"),           "Text",                  xmpText, xmpExternal, N_("Attached File Name")   },
+        { "attachFileMIME",     N_("Attached File MIME Type"),      "Text",                  xmpText, xmpExternal, N_("Attached File MIME Type")   },
+        { "attachFileData",     N_("Attached File Data"),           "Text",                  xmpText, xmpExternal, N_("Attached File Data")   },
+        { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
+    };
+
+    extern const XmpPropertyInfo xmpAudioInfo[] = {
+        { "sampleRate",         N_("Audio Sample Rate"),            "Integer",               xmpText, xmpExternal, N_("The audio sample rate. Can be any value, but commonly 32000, 41100, or 48000.") },
+        { "outputSampleRate",   N_("Output Audio Sample Rate"),     "Integer",               xmpText, xmpExternal, N_("The ouput audio sample rate. Can be any value, but commonly 32000, 41100, or 48000.") },
+        { "sampleType",         N_("Audio Sample Type"),            "closed Choice of Text", xmpText, xmpExternal, N_("The audio sample type. One of: 8Int, 16Int, 32Int, 32Float.") },
+        { "channelType",        N_("Audio Channel Type"),           "closed Choice of Text", xmpText, xmpExternal, N_("The audio channel type. One of: Mono, Stereo, 5.1, 7.1.") },
+        { "compressor",         N_("Audio Compressor"),             "Text",                  xmpText, xmpExternal, N_("The audio compression used. For example, MP3.") },
+        { "sampleCount",        N_("Audio Sample Count"),           "Integer",               xmpText, xmpExternal, N_("Sample taken for Analyzing Audio Stream")   },
+        { "codec",              N_("Audio Codec"),                  "Text",                  xmpText, xmpExternal, N_("Codec used for Audio Encoding/Decoding")   },
         { "bitsPerSample",      N_("Bits Per Sample"),              "Integer",               xmpText, xmpExternal, N_("Bits per test sample")   },
+        { "avgBytePerSec",      N_("Average Bytes Per Second"),     "Integer",               xmpText, xmpExternal, N_("Average Bytes Per Second found in audio stream")   },
+        { "trackLang",          N_("Track Language"),               "Text",                  xmpText, xmpExternal, N_("The Language in which a particular stream is recorded in.")   },
+        { "defaultDuration",    N_("MicroSec audio chunk lasts"),   "Text",                  xmpText, xmpExternal, N_("The number of micro seconds an audio chunk plays.")   },
+        { "codecInfo",          N_("Audio Codec Information"),      "Text",                  xmpText, xmpExternal, N_("Contains information the codec needs before decoding can be started. An example is the Vorbis initialization packets for Vorbis audio.")   },
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
 

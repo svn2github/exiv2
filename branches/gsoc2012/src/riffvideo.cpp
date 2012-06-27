@@ -10,6 +10,96 @@
 namespace Exiv2 {
     namespace Internal {
 
+    extern const TagVocabulary infoTags[] =  {
+        {   "AGES", "Rated" },
+        {   "CMNT", "Comment" },
+        {   "CODE", "EncodedBy" },
+        {   "COMM", "Comments" },
+        {   "DIRC", "Directory" },
+        {   "DISP", "SoundSchemeTitle" },
+        {   "DTIM", "DateTimeOriginal" },
+        {   "GENR", "Genre" },
+        {   "IARL", "ArchivalLocation" },
+        {   "IART", "Artist" },
+        {   "IAS1", "FirstLanguage" },
+        {   "IAS2", "SecondLanguage" },
+        {   "IAS3", "ThirdLanguage" },
+        {   "IAS4", "FourthLanguage" },
+        {   "IAS5", "FifthLanguage" },
+        {   "IAS6", "SixthLanguage" },
+        {   "IAS7", "SeventhLanguage" },
+        {   "IAS8", "EighthLanguage" },
+        {   "IAS9", "NinthLanguage" },
+        {   "IBSU", "BaseURL" },
+        {   "ICAS", "DefaultAudioStream" },
+        {   "ICDS", "CostumeDesigner" },
+        {   "ICMS", "Commissioned" },
+        {   "ICMT", "Comment" },
+        {   "ICNM", "Cinematographer" },
+        {   "ICNT", "Country" },
+        {   "ICOP", "Copyright" },
+        {   "ICRD", "DateCreated" },
+        {   "ICRP", "Cropped" },
+        {   "IDIM", "Dimensions	" },
+        {   "IDPI", "DotsPerInch" },
+        {   "IDST", "DistributedBy" },
+        {   "IEDT", "EditedBy" },
+        {   "IENC", "EncodedBy" },
+        {   "IENG", "Engineer" },
+        {   "IGNR", "Genre" },
+        {   "IKEY", "Keywords" },
+        {   "ILGT", "Lightness" },
+        {   "ILGU", "LogoURL" },
+        {   "ILIU", "LogoIconURL" },
+        {   "ILNG", "Language" },
+        {   "IMBI", "MoreInfoBannerImage" },
+        {   "IMBU", "MoreInfoBannerURL" },
+        {   "IMED", "Medium" },
+        {   "IMIT", "MoreInfoText" },
+        {   "IMIU", "MoreInfoURL" },
+        {   "IMUS", "MusicBy" },
+        {   "INAM", "Title" },
+        {   "IPDS", "ProductionDesigner" },
+        {   "IPLT", "NumColors" },
+        {   "IPRD", "Product" },
+        {   "IPRO", "ProducedBy" },
+        {   "IRIP", "RippedBy" },
+        {   "IRTD", "Rating" },
+        {   "ISBJ", "Subject" },
+        {   "ISFT", "Software" },
+        {   "ISGN", "SecondaryGenre" },
+        {   "ISHP", "Sharpness" },
+        {   "ISRC", "Source" },
+        {   "ISRF", "SourceForm" },
+        {   "ISTD", "ProductionStudio" },
+        {   "ISTR", "Starring" },
+        {   "ITCH", "Technician" },
+        {   "IWMU", "WatermarkURL" },
+        {   "IWRI", "WrittenBy" },
+        {   "LANG", "Language" },
+        {   "LOCA", "Location" },
+        {   "PRT1", "Part" },
+        {   "PRT2", "NumberOfParts" },
+        {   "RATE", "Rate" },
+        {   "STAR", "Starring" },
+        {   "STAT", "Statistics" },
+        {   "TAPE", "TapeName" },
+        {   "TCDO", "EndTimecode" },
+        {   "TCOD", "StartTimecode" },
+        {   "TITL", "Title" },
+        {   "TLEN", "Length" },
+        {   "TORG", "Organization" },
+        {   "TRCK", "TrackNumber" },
+        {   "TURL", "URL" },
+        {   "TVER", "Version" },
+        {   "VMAJ", "VegasVersionMajor" },
+        {   "VMIN", "VegasVersionMinor" },
+        {   "YEAR", "Year" }
+
+
+    };
+
+
     extern const TagDetails audioEncodingValues[] =  {
         {   0x1, "Microsoft PCM" },
         {   0x2, "Microsoft ADPCM" },
@@ -508,7 +598,7 @@ void RiffVideo::streamHandler(int streamType) {
             if(streamType == Video)
                 xmpData_["Xmp.video.videoCodec"] = buf.pData_;
             else if (streamType == Audio)
-                xmpData_["Xmp.video.audioCodec"] = buf.pData_;
+                xmpData_["Xmp.audio.codec"] = buf.pData_;
             else
                 xmpData_["Xmp.video.codec"] = buf.pData_;
             break;
@@ -519,7 +609,7 @@ void RiffVideo::streamHandler(int streamType) {
             if(streamType == Video)
                 xmpData_["Xmp.video.frameRate"] = returnSampleRate(buf,divisor);
             else if (streamType == Audio)
-                xmpData_["Xmp.video.audioSampleRate"] = returnSampleRate(buf,divisor);
+                xmpData_["Xmp.audio.sampleRate"] = returnSampleRate(buf,divisor);
             else
                  xmpData_["Xmp.video.streamSampleRate"] = returnSampleRate(buf,divisor);
             break;
@@ -527,7 +617,7 @@ void RiffVideo::streamHandler(int streamType) {
             if(streamType == Video)
                 xmpData_["Xmp.video.frameCount"] = Exiv2::getULong(buf.pData_, littleEndian);
             else if (streamType == Audio)
-                xmpData_["Xmp.video.audioSampleCount"] = Exiv2::getULong(buf.pData_, littleEndian);
+                xmpData_["Xmp.audio.sampleCount"] = Exiv2::getULong(buf.pData_, littleEndian);
             else
                 xmpData_["Xmp.video.streamSampleCount"] = Exiv2::getULong(buf.pData_, littleEndian);
             break;
@@ -635,26 +725,26 @@ void RiffVideo::streamFormatHandler(int streamType) {
             case encoding:
                 td = find(audioEncodingValues , Exiv2::getUShort(buf.pData_, littleEndian));
                 if(td)
-                    xmpData_["Xmp.video.audioCompressor"] = exvGettext(td->label_);
+                    xmpData_["Xmp.audio.compressor"] = exvGettext(td->label_);
                 else
-                    xmpData_["Xmp.video.audioCompressor"] = Exiv2::getUShort(buf.pData_, littleEndian);
+                    xmpData_["Xmp.audio.compressor"] = Exiv2::getUShort(buf.pData_, littleEndian);
                 break;
             case numberOfChannels:
                 c = Exiv2::getUShort(buf.pData_, littleEndian);
-                if(c == 1) xmpData_["Xmp.video.audioChannelType"] = "Mono";
-                else if(c == 2) xmpData_["Xmp.video.audioChannelType"] = "Stereo";
-                else if(c == 5) xmpData_["Xmp.video.audioChannelType"] = "5.1 Surround Sound";
-                else if(c == 7) xmpData_["Xmp.video.audioChannelType"] = "7.1 Surround Sound";
-                else xmpData_["Xmp.video.audioChannelType"] = "Mono";
+                if(c == 1) xmpData_["Xmp.audio.channelType"] = "Mono";
+                else if(c == 2) xmpData_["Xmp.audio.channelType"] = "Stereo";
+                else if(c == 5) xmpData_["Xmp.audio.channelType"] = "5.1 Surround Sound";
+                else if(c == 7) xmpData_["Xmp.audio.channelType"] = "7.1 Surround Sound";
+                else xmpData_["Xmp.audio.channelType"] = "Mono";
                 break;
             case audioSampleRate:
-                xmpData_["Xmp.video.audioSampleRate"] = Exiv2::getUShort(buf.pData_, littleEndian);
+                xmpData_["Xmp.audio.sampleRate"] = Exiv2::getUShort(buf.pData_, littleEndian);
                 break;
             case avgBytesPerSec:
-                xmpData_["Xmp.video.audioSampleType"] = Exiv2::getUShort(buf.pData_, littleEndian);
+                xmpData_["Xmp.audio.sampleType"] = Exiv2::getUShort(buf.pData_, littleEndian);
                 break;
             case bitsPerSample:
-                xmpData_["Xmp.video.bitsPerSample"] = Exiv2::getUShort(buf.pData_,littleEndian);
+                xmpData_["Xmp.audio.bitsPerSample"] = Exiv2::getUShort(buf.pData_,littleEndian);
                 io_->read(buf.pData_, 2); positionCounter_ += 2;
                 break;
             }

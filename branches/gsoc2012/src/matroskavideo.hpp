@@ -5,10 +5,6 @@
 #include "exif.hpp"
 #include "image.hpp"
 #include "tags_int.hpp"
-#include <math.h>
-#include <string>
-#include <ctype.h>
-
 
 namespace Exiv2 {
 
@@ -32,6 +28,7 @@ public:
 protected:
     int findBlockSize(Exiv2::DataBuf& buf);
     void decodeBlock();
+    void contentManagement(const Exiv2::Internal::TagDetails* td, Exiv2::DataBuf & buf, unsigned long size);
 
 }; //MatroskaVideo End
 
