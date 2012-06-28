@@ -61,6 +61,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "bmpimage.hpp"
 #include "jp2image.hpp"
 #include "matroskavideo.hpp"
+#include "quicktimevideo.hpp"
 #include "riffvideo.hpp"
 #include "rw2image.hpp"
 #include "pgfimage.hpp"
@@ -129,6 +130,7 @@ namespace {
         { ImageType::tga,  newTgaInstance,  isTgaType,  amNone,      amNone,      amNone,      amNone      },
         { ImageType::bmp,  newBmpInstance,  isBmpType,  amNone,      amNone,      amNone,      amNone      },
         { ImageType::jp2,  newJp2Instance,  isJp2Type,  amReadWrite, amReadWrite, amReadWrite, amNone      },
+        { ImageType::qtime,newQTimeInstance,isQTimeType,amReadWrite, amNone,      amNone,      amNone      },
         { ImageType::riff, newRiffInstance, isRiffType, amReadWrite, amNone,      amNone,      amNone      },
         { ImageType::mkv,  newMkvInstance,  isMkvType,  amReadWrite, amNone,      amNone,      amNone      },
         // End of list marker

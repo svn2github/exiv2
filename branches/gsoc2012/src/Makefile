@@ -100,7 +100,8 @@ endif
 CCSRC += preview.cpp           \
 	 properties.cpp        \
 	 psdimage.cpp          \
-	 rafimage.cpp          \
+	 quicktimevideo.cpp    \
+         rafimage.cpp          \
          riffvideo.cpp         \
 	 rw2image.cpp          \
 	 samsungmn.cpp         \

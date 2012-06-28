@@ -58,6 +58,7 @@ SET( LIBEXIV2_HDR         basicio.hpp
                           preview.hpp
                           properties.hpp
                           psdimage.hpp
+                          quicktimevideo.hpp
                           rafimage.hpp
                           riffvideo.hpp
                           rw2image.hpp
@@ -105,6 +106,7 @@ SET( LIBEXIV2_SRC         basicio.cpp
                           preview.cpp
                           properties.cpp
                           psdimage.cpp
+                          quicktimevideo.cpp
                           rafimage.cpp
                           riffvideo.cpp
                           rw2image.cpp

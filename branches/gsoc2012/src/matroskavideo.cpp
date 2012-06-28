@@ -35,12 +35,12 @@ namespace Exiv2 {
     //! Returns true, if Tag is found in the ignoreList[]
     bool ignoreList (unsigned long tagValue) {
         unsigned long ignoreList[] = {
-            0x0023, 0x0021, 0x0033, 0x0071, 0x0077, 0x006c, 0x0067, 0x007b,
+            0x0023, 0x0021, 0x0033, 0x0071, 0x0077, 0x006c, 0x0067, 0x007b, 0x1031, 0x1032,
             0x13ab, 0x13ac, 0x15ee, 0x23c6, 0x2e67, 0x33a4, 0x33c5, 0x3446, 0x2de7, 0x2df8,
             0x3314f, 0x43a770
         };
 
-        for(int i = 0; i <= 19; i++)
+        for(int i = 0; i <= 21; i++)
             if(tagValue == ignoreList[i])
                 return true;
 
@@ -258,6 +258,39 @@ namespace Exiv2 {
         {   0x20, "Control" }
     };
 
+    extern const TagDetails compressionAlgorithm[] =  {
+        {   0, "zlib " },
+        {   1, "bzlib" },
+        {   2, "lzo1x" },
+        {   3, "Header Stripping" }
+    };
+
+    extern const TagDetails audioChannels[] =  {
+        {   1, "Mono" },
+        {   2, "Stereo" },
+        {   5, "5.1 Surround Sound" },
+        {   7, "7.1 Surround Sound" }
+    };
+
+    extern const TagDetails encryptionAlgorithm[] =  {
+        {   0, "Not Encrypted" },
+        {   1, "DES" },
+        {   2, "3DES" },
+        {   3, "Twofish" },
+        {   4, "Blowfish" },
+        {   5, "AES" }
+    };
+
+    extern const TagDetails encodingType[] =  {
+        {   0, "Compression" },
+        {   1, "Encryption" }
+    };
+
+    extern const TagDetails videoScanType[] =  {
+        {   0, "Progressive" },
+        {   1, "Interlaced" }
+    };
+
     unsigned long returnTagValue(Exiv2::DataBuf& buf, Exiv2::DataBuf& buf2, int n ) {
         long temp = 0;
         long reg1 = 0;
@@ -311,26 +344,12 @@ void MatroskaVideo::readMetadata() {
     IoCloser closer(*io_);
     clearMetadata();
 
-    std::cerr <<std::setw(35)<<std::left<< "File Name"<<": " << io_->path()<<"\n";
-    std::cerr <<std::setw(35)<<std::left<< "File Size"<<": " << (double)io_->size()/(double)1048576<<" MB"<< "\n";
-    std::cerr <<std::setw(35)<<std::left<< "MIME Type"<<": " << mimeType()<<"\n";
-
     xmpData_["Xmp.video.fileName"] = io_->path();
     xmpData_["Xmp.video.fileSize"] = (double)io_->size()/(double)1048576;
     xmpData_["Xmp.video.mimeType"] = mimeType();
 
-
-    const long bufMinSize = 8;
-    DataBuf buf(bufMinSize);
-
-    std::memset(buf.pData_, 0x0, buf.size_);
-    io_->read(buf.pData_, bufMinSize);
-
-    std::cerr <<std::setw(35)<<std::left<< "Doc Type"<<": " << buf.pData_<<"\n";
-    xmpData_["Xmp.video.docType"] = buf.pData_;
-
     for (int i =0 ;i <= 500; i++) {
-        //std::cout<<std::setw(3)<<i<<": ";
+//        std::cout<<std::setw(3)<<i<<": ";
         decodeBlock();
 
     }
@@ -361,13 +380,6 @@ void MatroskaVideo::decodeBlock() {
     if (ignoreList(td->val_))
         readData = false;
 
-    if (display && readData) {
-        if(td)
-            std::cerr <<std::setw(35)<<std::left<< exvGettext(td->label_)<<": ";
-        else
-            std::cerr <<std::setw(35)<<std::left<< std::hex <<returnTagValue(buf, buf2, s_ID)<<": ";
-    }
-
     io_->read(buf.pData_, 1);
     s_Size = findBlockSize(buf);
 
@@ -376,19 +388,14 @@ void MatroskaVideo::decodeBlock() {
 
     size = returnTagValue(buf, buf2, s_Size);
 
-    //if(display && readData) std::cerr <<"("<<std::setw(5)<<std::right<<returnTagValue(buf, buf2, s_Size)<<"): ";
-
-
     if (!display && readData)
-    {   //std::cout<<"\n";
-        return; }
+        return;
 
     io_->read(buf.pData_, size);
 
 
     if (!readData)
-    {   //std::cout<<"\n";
-        return; }
+        return;
 
     contentManagement(td, buf, size);
 
@@ -398,34 +405,40 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
 
     int64_t duration_in_sec = 0, hr = 0, mn = 0, sec = 0;
     static double time_code_scale = 1;
-    static long stream = 0;
+    static long stream = 0, track_count = 0;
+    char str[4] = "No";
 
     const TagDetails* internal_td;
 
     if(td->label_=="DocTypeReadVersion") {
         xmpData_["Xmp.video.docTypeReadVersion"] = returnValue(buf, size);
-        std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
+    }
+
+    else if(td->label_=="DocType") {
+        xmpData_["Xmp.video.docType"] = buf.pData_;
+        //std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
     }
 
     else if(td->label_=="DocTypeVersion") {
         xmpData_["Xmp.video.docTypeVersion"] = returnValue(buf, size);
-        std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
     }
 
     else if(td->label_=="TimecodeScale") {
         time_code_scale = (double)returnValue(buf, size)/(double)1000000000;
         xmpData_["Xmp.video.timecodeScale"] = time_code_scale;
-        std::cerr<<std::setw(20)<<std::left<< time_code_scale<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< time_code_scale<<"\n";
     }
 
     else if(td->label_=="MuxingApp") {
         xmpData_["Xmp.video.muxingApp"] = buf.pData_;
-        std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
     }
 
     else if(td->label_=="WritingApp") {
         xmpData_["Xmp.video.writingApp"] = buf.pData_;
-        std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
     }
 
     else if(td->label_=="Duration") {
@@ -444,121 +457,143 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
     else if(td->label_=="DateTimeOriginal") {
         duration_in_sec = returnValue(buf, size)/1000000000;
         xmpData_["Xmp.video.dateUTC"] = duration_in_sec;
-        std::cerr<<std::setw(20)<<std::left<< duration_in_sec <<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< duration_in_sec <<"\n";
     }
 
     else if(td->label_=="Title") {
         xmpData_["Xmp.video.title"] = buf.pData_;
-        std::cerr<<std::setw(20)<<std::left<< buf.pData_ <<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< buf.pData_ <<"\n";
     }
 
     else if(td->label_=="TrackNumber") {
-        std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
+        track_count++;
+        xmpData_["Xmp.video.totalStream"] = track_count;
     }
-
 
     else if(td->label_=="TrackType") {
         internal_td = find(matroskaTrackType ,returnValue(buf, size));
         stream = internal_td->val_;
-        std::cerr<<std::setw(20)<<std::left<< exvGettext(internal_td->label_)<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< exvGettext(internal_td->label_)<<"\n";
     }
 
     else if(td->label_=="TrackUsed") {
         if (returnValue(buf, size))
-            std::cerr<<std::setw(20)<<std::left<<"Yes"<<"\n";
-        else
-            std::cerr<<std::setw(20)<<std::left<<"No"<<"\n";
+            strcpy(str,"Yes");
+            switch(stream) {
+            case 1:
+                xmpData_["Xmp.video.enabled"] = str; break;
+            case 2:
+                xmpData_["Xmp.audio.enabled"] = str; break;
+            case 17:
+                xmpData_["Xmp.video.subTEnabled"] = str; break;
+            default: break;
+            }
     }
 
     else if(td->label_=="TrackDefault") {
         if (returnValue(buf, size))
-            std::cerr<<std::setw(20)<<std::left<<"Yes"<<"\n";
-        else
-            std::cerr<<std::setw(20)<<std::left<<"No"<<"\n";
+            strcpy(str,"Yes");
+            switch(stream) {
+            case 1:
+                xmpData_["Xmp.video.defaultOn"] = str; break;
+            case 2:
+                xmpData_["Xmp.audio.defaultOn"] = str; break;
+            case 17:
+                xmpData_["Xmp.video.subTDefaultOn"] = str; break;
+            default: break;
+            }
     }
 
     else if(td->label_=="TrackForced") {
         if (returnValue(buf, size))
-            std::cerr<<std::setw(20)<<std::left<<"Yes"<<"\n";
-        else
-            std::cerr<<std::setw(20)<<std::left<<"No"<<"\n";
+            strcpy(str,"Yes");
+            switch(stream) {
+            case 1:
+                xmpData_["Xmp.video.trackForced"] = str; break;
+            case 2:
+                xmpData_["Xmp.audio.trackForced"] = str; break;
+            case 17:
+                xmpData_["Xmp.video.subTTrackForced"] = str; break;
+            default: break;
+            }
     }
 
     else if(td->label_=="TrackLacing") {
         if (returnValue(buf, size))
-            std::cerr<<std::setw(20)<<std::left<<"Yes"<<"\n";
-        else
-            std::cerr<<std::setw(20)<<std::left<<"No"<<"\n";
+            strcpy(str,"Yes");
+            switch(stream) {
+            case 1:
+                xmpData_["Xmp.video.trackLacing"] = str; break;
+            case 2:
+                xmpData_["Xmp.audio.trackLacing"] = str; break;
+            case 17:
+                xmpData_["Xmp.video.subTTrackLacing"] = str; break;
+            default: break;
+            }
     }
 
     else if(td->label_=="VideoCodecID/AudioCodecID/CodecID") {
         switch(stream) {
         case 1:
-            xmpData_["Xmp.video.codec"] = buf.pData_;
-            break;
+            xmpData_["Xmp.video.codec"] = buf.pData_; break;
         case 2:
-            xmpData_["Xmp.audio.codec"] = buf.pData_;
-            break;
+            xmpData_["Xmp.audio.codec"] = buf.pData_; break;
         case 17:
-            xmpData_["Xmp.video.subTCodec"] = buf.pData_;
-            break;
-        default:
-            break;
+            xmpData_["Xmp.video.subTCodec"] = buf.pData_; break;
+        default: break;
         }
-        std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
     }
 
     else if(td->label_=="CodecDecodeAll") {
         if (returnValue(buf, size))
-            std::cerr<<std::setw(20)<<std::left<<"Yes"<<"\n";
-        else
-            std::cerr<<std::setw(20)<<std::left<<"No"<<"\n";
+            strcpy(str,"Yes");
+            switch(stream) {
+            case 1:
+                xmpData_["Xmp.video.trackLacing"] = str; break;
+            case 2:
+                xmpData_["Xmp.audio.trackLacing"] = str; break;
+            case 17:
+                xmpData_["Xmp.video.subTTrackLacing"] = str; break;
+            default: break;
+            }
     }
 
     else if(td->label_=="TrackLanguage") {
         switch(stream) {
         case 1:
-            xmpData_["Xmp.video.trackLang"] = buf.pData_;
-            break;
+            xmpData_["Xmp.video.trackLang"] = buf.pData_; break;
         case 2:
-            xmpData_["Xmp.audio.trackLang"] = buf.pData_;
-            break;
+            xmpData_["Xmp.audio.trackLang"] = buf.pData_; break;
         case 17:
-            xmpData_["Xmp.video.subTLang"] = buf.pData_;
-            break;
+            xmpData_["Xmp.video.subTLang"] = buf.pData_; break;
         }
-        std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
     }
 
     else if(td->label_=="DisplayWidth") {
         xmpData_["Xmp.video.width"] = returnValue(buf, size);
-        std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
     }
 
     else if(td->label_=="DisplayHeight") {
         xmpData_["Xmp.video.height"] = returnValue(buf, size);
-        std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
     }
 
     else if(td->label_=="ImageWidth") {
         xmpData_["Xmp.video.width"] = returnValue(buf, size);
-        std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
     }
 
     else if(td->label_=="ImageHeight") {
         xmpData_["Xmp.video.height"] = returnValue(buf, size);
-        std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
     }
 
     else if(td->label_=="VideoScanType") {
-        if (returnValue(buf, size)) {
-            xmpData_["Xmp.video.videoScanTpye"] = "Progressive";
-            std::cerr<<std::setw(20)<<std::left<<"Progressive "<<"\n";
-        }
-        else {
-            xmpData_["Xmp.video.videoScanTpye"] = "Interlaced";
-            std::cerr<<std::setw(20)<<std::left<<"Interlaced"<<"\n";
-        }
+        internal_td = find(videoScanType ,returnValue(buf, size));
+        xmpData_["Xmp.video.videoScanTpye"] = exvGettext(internal_td->label_);
     }
 
     else if(td->label_=="CodecPrivate") {
@@ -573,7 +608,7 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
             xmpData_["Xmp.video.subTCodecInfo"] = buf.pData_;
             break;
         }
-        std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< buf.pData_<<"\n";
     }
 
     else if(td->label_=="VideoFrameRate/DefaultDuration") {
@@ -594,49 +629,65 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
             xmpData_["Xmp.video.streamSampleRate"] = (double)1000000000/(double)returnValue(buf, size);
             break;
         }
-        std::cerr<<std::setw(20)<<std::left<< (double)1000000000/(double)returnValue(buf, size)<<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< (double)1000000000/(double)returnValue(buf, size)<<"\n";
     }
 
     else if(td->label_=="AudioSampleRate") {
         xmpData_["Xmp.audio.sampleRate"] = Exiv2::getFloat(buf.pData_, bigEndian) ;
-        std::cerr<<std::setw(20)<<std::left<< Exiv2::getFloat(buf.pData_, bigEndian) <<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< Exiv2::getFloat(buf.pData_, bigEndian) <<"\n";
     }
 
     else if(td->label_=="OutputAudioSampleRate") {
         xmpData_["Xmp.audio.outputSampleRate"] = Exiv2::getFloat(buf.pData_, bigEndian) ;
-        std::cerr<<std::setw(20)<<std::left<< Exiv2::getFloat(buf.pData_, bigEndian) <<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< Exiv2::getFloat(buf.pData_, bigEndian) <<"\n";
     }
 
     else if(td->label_=="AudioChannels") {
-        sec = returnValue(buf, size);
-        if(sec == 1) xmpData_["Xmp.audio.channelType"] = "Mono";
-        else if(sec == 2) xmpData_["Xmp.audio.channelType"] = "Stereo";
-        else if(sec == 5) xmpData_["Xmp.audio.channelType"] = "5.1 Surround Sound";
-        else if(sec == 7) xmpData_["Xmp.audio.channelType"] = "7.1 Surround Sound";
-        else xmpData_["Xmp.audio.channelType"] = "Mono";
-
-        std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<"\n";
+        internal_td = find(compressionAlgorithm ,returnValue(buf, size));
+        xmpData_["Xmp.audio.channelType"] = exvGettext(internal_td->label_);
+        //std::cerr<<std::setw(20)<<std::left<< exvGettext(internal_td->label_)<<"\n";
     }
 
     else if(td->label_=="AttachedFileName") {
         xmpData_["Xmp.video.attachFileName"] = buf.pData_;
-        std::cerr<<std::setw(20)<<std::left<< buf.pData_ <<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< buf.pData_ <<"\n";
     }
 
 
-    else if(td->label_=="AttachedFileMIMETpye") {
+    else if(td->label_=="AttachedFileMIMEType") {
         xmpData_["Xmp.video.attachFileMIME"] = buf.pData_;
-        std::cerr<<std::setw(20)<<std::left<< buf.pData_ <<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< buf.pData_ <<"\n";
     }
 
 
     else if(td->label_=="AttachedFileData") {
         xmpData_["Xmp.video.attachFileData"] = buf.pData_;
-        std::cerr<<std::setw(20)<<std::left<< buf.pData_ <<"\n";
+        //std::cerr<<std::setw(20)<<std::left<< buf.pData_ <<"\n";
     }
 
-    else
-        std::cerr<<std::setw(20)<<std::left<< returnValue(buf, size)<<": "<<buf.pData_<<"\n";
+    else if(td->label_=="ContentCompressionAlgorithm") {
+        internal_td = find(compressionAlgorithm ,returnValue(buf, size));
+        xmpData_["Xmp.video.contentCompressAlgo"] = exvGettext(internal_td->label_);
+        //std::cerr<<std::setw(20)<<std::left<< exvGettext(internal_td->label_)<<"\n";
+    }
+
+    else if(td->label_=="ContentEncryptionAlgorithm") {
+        internal_td = find(encryptionAlgorithm ,returnValue(buf, size));
+        xmpData_["Xmp.video.contentEncryptAlgo"] = exvGettext(internal_td->label_);
+        //std::cerr<<std::setw(20)<<std::left<< exvGettext(internal_td->label_)<<"\n";
+    }
+
+    else if(td->label_=="ContentEncodingType") {
+        internal_td = find(encodingType ,returnValue(buf, size));
+        xmpData_["Xmp.video.contentEncodingType"] = exvGettext(internal_td->label_);
+        //std::cerr<<std::setw(20)<<std::left<< exvGettext(internal_td->label_)<<"\n";
+    }
+
+    else {
+        std::cerr <<std::setw(35)<<std::left<< exvGettext(td->label_)<<": ";
+        std::cerr <<"("<<std::setw(5)<<std::right<<size<<"): ";
+        std::cerr<<std::setw(20)<<std::left<< std::hex<<returnValue(buf, size)<<": "<<buf.pData_<<"\n";
+    }
 }
 
 int MatroskaVideo::findBlockSize(Exiv2::DataBuf& buf) {
@@ -669,18 +720,18 @@ Image::AutoPtr newMkvInstance(BasicIo::AutoPtr io, bool /*create*/) {
 }
 
 bool isMkvType(BasicIo& iIo, bool advance) {
-    const int32_t len = 8;
-    const unsigned char MatroskaVideoId[8] = { 'm', 'a', 't' ,'r' , 'o' , 's' , 'k' , 'a'};
-    byte buf[len];
-    iIo.read(buf, len);
-    iIo.read(buf, len);
-    if (iIo.error() || iIo.eof()) {
-        return false;
+
+    bool result = true;
+    byte tmpBuf[4];
+    iIo.read(tmpBuf, 4);
+
+    if (iIo.error() || iIo.eof()) return false;
+
+    if (0x1a != tmpBuf[0] || 0x45 != tmpBuf[1] || 0xdf != tmpBuf[2] || 0xa3 != tmpBuf[3] ) {
+        result = false;
     }
-    bool matched = (memcmp(buf, MatroskaVideoId, len) == 0);
-    if (!advance || !matched) {
-        iIo.seek(-len, BasicIo::cur);
-    }
-    return matched;
+
+    if (!advance || !result ) iIo.seek(0, BasicIo::beg);
+    return result;
 }
 }
