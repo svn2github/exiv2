@@ -24,6 +24,9 @@ public:
     void writeMetadata();
     std::string mimeType() const;
 
+protected:
+    void decodeBlock();
+
 }; //QuickTimeVideo End
 
 EXIV2API Image::AutoPtr newQTimeInstance(BasicIo::AutoPtr io, bool create);

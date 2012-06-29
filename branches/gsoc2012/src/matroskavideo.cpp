@@ -24,7 +24,7 @@ namespace Exiv2 {
 
         };
 
-        for(int i = 0; i <= 45; i++)
+        for(int i = 0; i <= 40; i++)
             if(tagValue == ignoreList[i])
                 return true;
 

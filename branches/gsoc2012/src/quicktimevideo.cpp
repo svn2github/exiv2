@@ -131,6 +131,57 @@ void QuickTimeVideo::writeMetadata() {
 
 void QuickTimeVideo::readMetadata() {
 
+    if (io_->open() != 0) throw Error(9, io_->path(), strError());
+
+    // Ensure that this is the correct image type
+    if (!isQTimeType(*io_, false)) {
+        if (io_->error() || io_->eof()) throw Error(14);
+        throw Error(3, "QuickTime");
+    }
+
+    IoCloser closer(*io_);
+    clearMetadata();
+
+    for (int i =0 ;i <= 500; i++) {
+//        std::cout<<std::setw(3)<<i<<": ";
+        decodeBlock();
+    }
+}
+
+void QuickTimeVideo::decodeBlock() {
+    const long bufMinSize = 50;
+    DataBuf buf(bufMinSize);
+    DataBuf buf2(bufMinSize);
+    unsigned long size = 0;
+
+    std::memset(buf.pData_, 0x0, buf.size_);
+
+    io_->read(buf.pData_, 4);
+    size = Exiv2::getULong(buf.pData_, bigEndian);
+
+/*    const TagDetails* td;
+    td = find(matroskaTags , (returnTagValue(buf, buf2, s_ID)) );
+
+    if (dataIgnoreList(td->val_))
+        display = false;
+    if (ignoreList(td->val_))
+        readData = false;
+
+    io_->read(buf.pData_, 1);
+    s_Size = findBlockSize(buf);
+
+    if(s_Size != 0)
+        io_->read(buf2.pData_, s_Size - 1);
+
+    size = returnTagValue(buf, buf2, s_Size);
+
+    if (!display && readData)
+        return;
+*/
+    io_->read(buf.pData_, size-4);
+    std::cerr <<"("<<std::setw(5)<<std::right<<size<<"): ";
+    std::cerr<<std::setw(20)<<std::left<<Exiv2::getULong(buf.pData_, bigEndian)<<": "<<buf.pData_<<"\n";
+
 }
 
 Image::AutoPtr newQTimeInstance(BasicIo::AutoPtr io, bool /*create*/) {
