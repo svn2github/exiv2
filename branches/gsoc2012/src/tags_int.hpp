@@ -186,8 +186,7 @@ namespace Exiv2 {
         const char* label_;                     //!< Translation of the tag value
 
         //! Comparison operator for use with the find template
-        bool operator==(long key) const { return val_ == key; }
-        bool operator==(const char* key) const { return (strcmp(label_, key) == 0 ); }
+       bool operator==(long key) const { return val_ == key; }
     }; // struct TagDetails
 
     /*!

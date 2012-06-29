@@ -1055,9 +1055,13 @@ namespace Exiv2 {
         { "attachFileName",     N_("Attached File Name"),           "Text",                  xmpText, xmpExternal, N_("Attached File Name")   },
         { "attachFileMIME",     N_("Attached File MIME Type"),      "Text",                  xmpText, xmpExternal, N_("Attached File MIME Type")   },
         { "attachFileData",     N_("Attached File Data"),           "Text",                  xmpText, xmpExternal, N_("Attached File Data")   },
+        { "attachFileDesc",     N_("Attached File Description"),    "Text",                  xmpText, xmpExternal, N_("Attached File Description")   },
+        { "attachFileUID",      N_("Attached File UID"),            "Integer",               xmpText, xmpExternal, N_("Attached File Universal ID")   },
         { "contentCompressAlgo",N_("Content Compression Algorithm"),"Text",                  xmpText, xmpExternal, N_("Content Compression Algorithm. Eg: zlib")   },
         { "contentEncryptAlgo", N_("Content Encryption Algorithm"), "Text",                  xmpText, xmpExternal, N_("Content Encryption Algorithm. Eg: Blowfish")   },
         { "contentEncodingType",N_("Content Encoding Type"),        "Text",                  xmpText, xmpExternal, N_("Content Encoding Type. Eg: Encryption or Compression")   },
+        { "EBMLReadVersion",    N_("EBML Read Version"),            "Integer",               xmpText, xmpExternal, N_("Extensible Binary Meta Language Read Version")   },
+        { "EBMLVersion",        N_("EBML Version"),                 "Integer",               xmpText, xmpExternal, N_("Extensible Binary Meta Language Version")   },
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
 
