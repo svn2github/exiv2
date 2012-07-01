@@ -693,7 +693,7 @@ void QuickTimeVideo::mediaHeaderDecoder(unsigned long size) {
     DataBuf buf(4);
     std::memset(buf.pData_, 0x0, buf.size_);
     buf.pData_[4] = '\0';
-    int time_scale;
+    int time_scale = 1;
 
     for (int i = 0; size/4 != 0 ; size -=4, i++) {
         io_->read(buf.pData_, 4);
