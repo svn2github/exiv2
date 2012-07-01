@@ -26,6 +26,24 @@ public:
 
 protected:
     void decodeBlock();
+    void tagDecoder(Exiv2::DataBuf & buf, unsigned long size);
+
+private:
+    void fileTypeDecoder(unsigned long size);
+    void mediaHeaderDecoder(unsigned long size);
+    void videoHeaderDecoder(unsigned long size);
+    void movieHeaderDecoder(unsigned long size);
+    void trackHeaderDecoder(unsigned long size);
+    void handlerDecoder(unsigned long size);
+    void multipleEntriesDecoder();
+    void sampleDesc();
+    void imageDescDecoder();
+    void timeToSampleDecoder();
+    void setMediaStream();
+    void discard(unsigned long size);
+
+    uint64_t timeScale_;
+    int currentStream_;
 
 }; //QuickTimeVideo End
 
