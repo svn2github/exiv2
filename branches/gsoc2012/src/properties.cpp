@@ -1126,6 +1126,7 @@ namespace Exiv2 {
         { "defaultDuration",    N_("MicroSec audio chunk lasts"),   "Text",                  xmpText, xmpExternal, N_("The number of micro seconds an audio chunk plays.")   },
         { "defaultOn",          N_("Audio Track Default On"),       "Text",                  xmpText, xmpExternal, N_("Audio Track Default On , i.e. Enabled/Disabled")   },
         { "enabled",            N_("Audio Track Enabled"),          "Text",                  xmpText, xmpExternal, N_("Status of Audio Track, i.e. Enabled/Disabled")   },
+        { "format",             N_("Audio Format"),                 "Text",                  xmpText, xmpExternal, N_("A four-character code that identifies the format of the audio.")   },
         { "handlerClass",       N_("Handler Class"),                "Text",                  xmpText, xmpExternal, N_("A four-character code that identifies the type of the handler. Only two values are valid for this field: 'mhlr' for media handlers and 'dhlr' for data handlers.")   },
         { "handlerDescription", N_("Handler Description"),          "Text",                  xmpText, xmpExternal, N_("A (counted) string that specifies the name of the component—that is, the media handler used when this media was created..")   },
         { "handlerType",        N_("Handler Type"),                 "Text",                  xmpText, xmpExternal, N_("A four-character code that identifies the type of the media handler or data handler.")   },
@@ -1152,6 +1153,9 @@ namespace Exiv2 {
                                                                                                                       "values are displayed in front of tracks with higher layer values.")   },
         { "trackModifyDate",    N_("Audio Track Modify Date"),      "Integer",               xmpText, xmpExternal, N_("A 32-bit integer that indicates (in seconds since midnight, January 1, 1904) when the track header was last modified.")   },
         { "trackVolume",        N_("Track Volume"),                 "Rational",              xmpText, xmpExternal, N_("A 16-bit fixed-point number that specifies how loud to play this track’s sound. A value of 1.0 indicates full volume.") },
+        { "url",                N_("Audio URL"),                    "Text",                  xmpText, xmpExternal, N_("A C string that specifies a URL. There may be additional data after the C string.")   },
+        { "urn",                N_("Audio URN"),                    "Text",                  xmpText, xmpExternal, N_("A C string that specifies a URN. There may be additional data after the C string.")   },
+        { "vendorID",           N_("Vendor ID"),                    "Text",                  xmpText, xmpExternal, N_("A 32-bit integer that specifies the developer of the compressor that generated the compressed data. Often this field contains 'appl' to indicate Apple Computer, Inc.")   },
         { 0, 0, 0, invalidTypeId, xmpInternal, 0 }
     };
 

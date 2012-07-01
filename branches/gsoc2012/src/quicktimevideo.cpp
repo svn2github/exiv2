@@ -116,7 +116,7 @@ namespace Exiv2 {
         {   "opf2", "OMA PDCF DRM Format 2.1 (OMA-TS-DRM-DCF-V2_1-20070724-C)" },
         {   "opx2", "OMA PDCF DRM + XBS extensions (OMA-TS-DRM_XBS-V1_0-20070529-C)" },
         {   "pana", "Panasonic Digital Camera" },
-        {   "qt ", "Apple QuickTime (.MOV/QT)" },
+        {   "qt  ", "Apple QuickTime (.MOV/QT)" },
         {   "sdv ", "SD Memory Card Video" },
         {   "ssc1", "Samsung stereoscopic, single stream" },
         {   "ssc2", "Samsung stereoscopic, dual stream" }
@@ -231,6 +231,10 @@ namespace Exiv2 {
         YResolution, CompressorName = 10, BitDepth
     };
 
+    enum audioDescTags {
+        AudioFormat, AudioVendorID = 4, AudioChannels, AudioSampleRate = 7, MOV_AudioFormat = 13
+    };
+
     bool equalsQTimeTag(Exiv2::DataBuf& buf ,const char* str2) {
         for(int i=0;i<4;i++)
             if(tolower(buf.pData_[i])!=str2[i])
@@ -297,10 +301,14 @@ void QuickTimeVideo::readMetadata() {
 
     IoCloser closer(*io_);
     clearMetadata();
+    continue_Traversing = true;
 
-    for (int i =0 ;i <= 26; i++) {
+    for (int i =0 ;i <= 32; i++) {
         std::cout<<"\n"<<std::setw(3)<<i<<": ";
+        if(continue_Traversing)
         decodeBlock();
+        else
+            return;
     }
     std::cerr<<"\n";
 }
@@ -313,10 +321,14 @@ void QuickTimeVideo::decodeBlock() {
     std::memset(buf.pData_, 0x0, buf.size_);
 
     io_->read(buf.pData_, 4);
+    if(io_->eof()) {
+        continue_Traversing = false;
+        return;
+    }
+
     size = Exiv2::getULong(buf.pData_, bigEndian);
 
     io_->read(buf.pData_, 4);
-//    std::cerr<<"\n";
     std::cerr <<"("<<std::setw(9)<<std::right<<size<<"): ";
 
     tagDecoder(buf,size-8);
@@ -357,12 +369,18 @@ void QuickTimeVideo::tagDecoder(Exiv2::DataBuf &buf, unsigned long size) {
 
     else if (equalsQTimeTag(buf, "url ")) {
         io_->read(buf.pData_, size);
-        xmpData_["Xmp.video.url"] = Exiv2::toString(buf.pData_);
+        if (currentStream_ == Video)
+            xmpData_["Xmp.video.url"] = Exiv2::toString(buf.pData_);
+        else if (currentStream_ == Audio)
+            xmpData_["Xmp.audio.url"] = Exiv2::toString(buf.pData_);
     }
 
     else if (equalsQTimeTag(buf, "urn ")) {
         io_->read(buf.pData_, size);
-        xmpData_["Xmp.video.urn"] = Exiv2::toString(buf.pData_);
+        if (currentStream_ == Video)
+            xmpData_["Xmp.video.urn"] = Exiv2::toString(buf.pData_);
+        else if (currentStream_ == Audio)
+            xmpData_["Xmp.audio.urn"] = Exiv2::toString(buf.pData_);
     }
 
     else if (equalsQTimeTag(buf, "smhd")) {
@@ -375,7 +393,7 @@ void QuickTimeVideo::tagDecoder(Exiv2::DataBuf &buf, unsigned long size) {
         multipleEntriesDecoder();
 
     else if (equalsQTimeTag(buf, "stsd"))
-        sampleDesc();
+        sampleDesc(size);
 
     else if (equalsQTimeTag(buf, "stts"))
         timeToSampleDecoder();
@@ -387,12 +405,8 @@ void QuickTimeVideo::tagDecoder(Exiv2::DataBuf &buf, unsigned long size) {
 }
 
 void QuickTimeVideo::discard(unsigned long size) {
-    DataBuf buf(4);
-    while ( size/4 != 0 ) {
-        io_->read(buf.pData_, 4);
-        size -= 4;
-    }
-    io_->read(buf.pData_, size % 4);
+    uint64_t cur_pos = io_->tell();
+    io_->seek(cur_pos + size, BasicIo::beg);
 }
 
 void QuickTimeVideo::setMediaStream() {
@@ -416,7 +430,6 @@ void QuickTimeVideo::setMediaStream() {
                 currentStream_ = GenMediaHeader;
         }
     }
-
     io_->seek(current_position, BasicIo::beg);
 }
 
@@ -438,23 +451,69 @@ void QuickTimeVideo::timeToSampleDecoder() {
         io_->read(buf.pData_, 4);
         timeOfFrames += temp * returnBufValue(buf);
     }
+    if (currentStream_ == Video)
     xmpData_["Xmp.video.frameRate"] = (double)totalframes * (double)timeScale_ / (double)timeOfFrames;
 
 }
 
-void QuickTimeVideo::sampleDesc() {
-    DataBuf buf(4);
+void QuickTimeVideo::sampleDesc(unsigned long size) {
+    DataBuf buf(100);
+    uint64_t cur_pos = io_->tell();
     io_->read(buf.pData_, 4);
     io_->read(buf.pData_, 4);
     uint64_t noOfEntries;
     noOfEntries = returnUnsignedBufValue(buf);
-    std::cerr<<": "<<noOfEntries;
 
     for(unsigned long i = 1; i <= noOfEntries; i++) {
         if (currentStream_ == Video)
             imageDescDecoder();
-    }
+        else if (currentStream_ == Audio)
+            audioDescDecoder();
 
+    }
+    io_->seek(cur_pos + size, BasicIo::beg);
+
+}
+
+void QuickTimeVideo::audioDescDecoder() {
+    DataBuf buf(40);
+    std::memset(buf.pData_, 0x0, buf.size_);
+    buf.pData_[4] = '\0';
+    io_->read(buf.pData_, 4);
+    uint64_t size = 82;
+
+    const TagVocabulary* td;
+
+    for (int i = 0; size/4 != 0 ; size -= 4, i++) {
+        io_->read(buf.pData_, 4);
+        switch(i) {
+        case AudioFormat:
+            td = find(qTimeFileType, Exiv2::toString( buf.pData_));
+            if(td)
+                xmpData_["Xmp.audio.compressor"] = exvGettext(td->label_);
+            else
+                xmpData_["Xmp.audio.compressor"] = Exiv2::toString( buf.pData_);
+            break;
+        case AudioVendorID:
+            td = find(vendorIDTags, Exiv2::toString( buf.pData_));
+            if(td)
+                xmpData_["Xmp.audio.vendorID"] = exvGettext(td->label_);
+            break;
+        case AudioChannels:
+            xmpData_["Xmp.audio.channelType"] = returnBufValue(buf, 2);
+            xmpData_["Xmp.audio.bitsPerSample"] = (buf.pData_[2] * 256 + buf.pData_[3]);
+            break;
+        case AudioSampleRate:
+            xmpData_["Xmp.audio.sampleRate"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
+            break;
+//        case MOV_AudioFormat:
+//            xmpData_["Xmp.audio.format"] = Exiv2::toString( buf.pData_);
+//            break;
+        default:
+            break;
+        }
+    }
+    io_->read(buf.pData_, size % 4);
 }
 
 void QuickTimeVideo::imageDescDecoder() {
@@ -501,7 +560,7 @@ void QuickTimeVideo::imageDescDecoder() {
             break;
         }
     }
-    io_->read(buf.pData_, size%4);
+    io_->read(buf.pData_, size % 4);
     xmpData_["Xmp.video.bitDepth"] = returnBufValue(buf, 1);
 }
 
@@ -533,7 +592,7 @@ void QuickTimeVideo::videoHeaderDecoder(unsigned long size) {
             td = find(graphicsModetags, returnBufValue(buf,2));
             if(td)
                 xmpData_["Xmp.video.graphicsMode"] = exvGettext(td->label_);
-                break;
+            break;
         case OpColor:
             xmpData_["Xmp.video.opColor"] = returnBufValue(buf,2);
             break;
@@ -541,16 +600,19 @@ void QuickTimeVideo::videoHeaderDecoder(unsigned long size) {
             break;
         }
     }
+    io_->read(buf.pData_, size % 2);
 }
 
 void QuickTimeVideo::handlerDecoder(unsigned long size) {
-    DataBuf buf(4);
+    uint64_t cur_pos = io_->tell();
+    DataBuf buf(100);
     std::memset(buf.pData_, 0x0, buf.size_);
     buf.pData_[4] = '\0';
+    int desc_size = 0;
 
     const TagVocabulary* td;
 
-    for (int i = 0; size/4 != 0 ; size -=4, i++) {
+    for (int i = 0; i < 7 ; i++) {
         io_->read(buf.pData_, 4);
 
         switch(i) {
@@ -582,6 +644,10 @@ void QuickTimeVideo::handlerDecoder(unsigned long size) {
             }
             break;
         case HandlerDescription:
+            desc_size = returnBufValue(buf,1);
+            io_->seek(-3, BasicIo::cur);
+            io_->read(buf.pData_, desc_size);
+
             if (currentStream_ == Video)
                 xmpData_["Xmp.video.handlerDescription"] = Exiv2::toString( buf.pData_);
             else if (currentStream_ == Audio)
@@ -589,7 +655,7 @@ void QuickTimeVideo::handlerDecoder(unsigned long size) {
             break;
         }
     }
-    io_->read(buf.pData_, size%4);
+    io_->seek(cur_pos + size, BasicIo::beg);
 }
 
 void QuickTimeVideo::fileTypeDecoder(unsigned long size) {
@@ -599,12 +665,13 @@ void QuickTimeVideo::fileTypeDecoder(unsigned long size) {
     Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpSeq);
     const TagVocabulary* td;
 
-    for (int i = 0; size !=0 ; size -=4, i++) {
+    for (int i = 0; size/4 != 0; size -=4, i++) {
         io_->read(buf.pData_, 4);
         td = find(qTimeFileType, Exiv2::toString( buf.pData_));
 
         switch(i) {
         case 0:
+            if(td)
             xmpData_["Xmp.video.majorBrand"] = exvGettext(td->label_);
             break;
         case 1:
@@ -619,6 +686,7 @@ void QuickTimeVideo::fileTypeDecoder(unsigned long size) {
         }
     }
     xmpData_.add(Exiv2::XmpKey("Xmp.video.compatibleBrands"), v.get());
+    io_->read(buf.pData_, size%4);
 }
 
 void QuickTimeVideo::mediaHeaderDecoder(unsigned long size) {
@@ -627,7 +695,7 @@ void QuickTimeVideo::mediaHeaderDecoder(unsigned long size) {
     buf.pData_[4] = '\0';
     int time_scale;
 
-    for (int i = 0; size !=0 ; size -=4, i++) {
+    for (int i = 0; size/4 != 0 ; size -=4, i++) {
         io_->read(buf.pData_, 4);
 
         switch(i) {
@@ -675,6 +743,7 @@ void QuickTimeVideo::mediaHeaderDecoder(unsigned long size) {
 
         }
     }
+    io_->read(buf.pData_, size%4);
 }
 
 void QuickTimeVideo::trackHeaderDecoder(unsigned long size) {
@@ -684,7 +753,7 @@ void QuickTimeVideo::trackHeaderDecoder(unsigned long size) {
 
     std::cerr<<"    Stream  |"<<currentStream_<<"|  ";
 
-    for (int i = 0; size !=0 ; size -=4, i++) {
+    for (int i = 0; size/4 != 0  ; size -=4, i++) {
         io_->read(buf.pData_, 4);
 
         switch(i) {
@@ -744,6 +813,7 @@ void QuickTimeVideo::trackHeaderDecoder(unsigned long size) {
             break;
         }
     }
+    io_->read(buf.pData_, size%4);
 }
 
 void QuickTimeVideo::movieHeaderDecoder(unsigned long size) {
@@ -751,7 +821,7 @@ void QuickTimeVideo::movieHeaderDecoder(unsigned long size) {
     std::memset(buf.pData_, 0x0, buf.size_);
     buf.pData_[4] = '\0';
 
-    for (int i = 0; size !=0 ; size -=4, i++) {
+    for (int i = 0; size/4 != 0 ; size -=4, i++) {
         io_->read(buf.pData_, 4);
 
         switch(i) {
@@ -804,6 +874,7 @@ void QuickTimeVideo::movieHeaderDecoder(unsigned long size) {
             break;
         }
     }
+    io_->read(buf.pData_, size%4);
 }
 
 Image::AutoPtr newQTimeInstance(BasicIo::AutoPtr io, bool /*create*/) {

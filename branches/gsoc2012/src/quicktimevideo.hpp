@@ -36,14 +36,16 @@ private:
     void trackHeaderDecoder(unsigned long size);
     void handlerDecoder(unsigned long size);
     void multipleEntriesDecoder();
-    void sampleDesc();
+    void sampleDesc(unsigned long size);
     void imageDescDecoder();
+    void audioDescDecoder();
     void timeToSampleDecoder();
     void setMediaStream();
     void discard(unsigned long size);
 
     uint64_t timeScale_;
     int currentStream_;
+    bool continue_Traversing;
 
 }; //QuickTimeVideo End
 
