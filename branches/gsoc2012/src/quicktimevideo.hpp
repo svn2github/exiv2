@@ -38,6 +38,8 @@ private:
     void multipleEntriesDecoder();
     void sampleDesc(unsigned long size);
     void imageDescDecoder();
+    void userDataDecoder(unsigned long size);
+    void DcMDDecoder(unsigned long size);
     void audioDescDecoder();
     void timeToSampleDecoder();
     void setMediaStream();

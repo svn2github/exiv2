@@ -166,6 +166,11 @@ namespace Exiv2 {
         {   "niko", "Nikon" }
     };
 
+    extern const TagVocabulary cameraByteOrderTags[] =  {
+        {   "II", "Little-endian (Intel, II)" },
+        {   "MM", "Big-endian (Motorola, MM)" }
+    };
+
     extern const TagDetails graphicsModetags[] = {
         {   0x0, "srcCopy" },
         {   0x1, "srcOr" },
@@ -198,6 +203,153 @@ namespace Exiv2 {
         {   0x101, "White Alpha" },
         {   0x102, "Pre-multiplied Black Alpha" },
         {   0x110, "Component Alpha" }
+    };
+
+
+    extern const TagVocabulary userDatatags[] = {
+        {   "AllF", "PlayAllFrames" },
+        {   "CNCV", "CompressorVersion" },
+        {   "CNFV", "FirmwareVersion" },
+        {   "CNMN", "Model" },
+        {   "CNTH", "CanonCNTH" },
+        {   "DcMD", "DcMD" },
+        {   "FFMV", "FujiFilmFFMV" },
+        {   "INFO", "SamsungINFO" },
+        {   "LOOP", "LoopStyle" },
+        {   "MMA0", "MinoltaMMA0" },
+        {   "MMA1", "MinoltaMMA1" },
+        {   "MVTG", "FujiFilmMVTG" },
+        {   "NCDT", "NikonNCDT" },
+        {   "PANA", "PanasonicPANA" },
+        {   "PENT", "PentaxPENT" },
+        {   "PXMN", "MakerNotePentax5b" },
+        {   "PXTH", "PentaxPreview" },
+        {   "QVMI", "CasioQVMI" },
+        {   "SDLN", "PlayMode" },
+        {   "SelO", "PlaySelection" },
+        {   "TAGS", "KodakTags/KonicaMinoltaTags/MinoltaTags/NikonTags/OlympusTags/PentaxTags/SamsungTags/SanyoMOV/SanyoMP4" },
+        {   "WLOC", "WindowLocation" },
+        {   "XMP_", "XMP" },
+        {   "Xtra", "Xtra" },
+        {   "hinf", "HintTrackInfo" },
+        {   "hinv", "HintVersion" },
+        {   "hnti", "Hint" },
+        {   "meta", "Meta" },
+        {   "name", "Name" },
+        {   "ptv ", "PrintToVideo" },
+        {   "scrn", "OlympusPreview" },
+        {   "thmb", "MakerNotePentax5a/OlympusThumbnail" },
+        {   "vndr", "Vendor" },
+        {   " ART", "Artist" },
+        {   " alb", "Album" },
+        {   " arg", "Arranger" },
+        {   " ark", "ArrangerKeywords" },
+        {   " cmt", "Comment" },
+        {   " cok", "ComposerKeywords" },
+        {   " com", "Composer" },
+        {   " cpy", "Copyright" },
+        {   " day", "CreateDate" },
+        {   " dir", "Director" },
+        {   " ed1", "Edit1" },
+        {   " ed2", "Edit2" },
+        {   " ed3", "Edit3" },
+        {   " ed4", "Edit4" },
+        {   " ed5", "Edit5" },
+        {   " ed6", "Edit6" },
+        {   " ed7", "Edit7" },
+        {   " ed8", "Edit8" },
+        {   " ed9", "Edit9" },
+        {   " fmt", "Format" },
+        {   " gen", "Genre" },
+        {   " grp", "Grouping" },
+        {   " inf", "Information" },
+        {   " isr", "ISRCCode" },
+        {   " lab", "RecordLabelName" },
+        {   " lal", "RecordLabelURL" },
+        {   " lyr", "Lyrics" },
+        {   " mak", "Make" },
+        {   " mal", "MakerURL" },
+        {   " mod", "Model" },
+        {   " nam", "Title" },
+        {   " pdk", "ProducerKeywords" },
+        {   " phg", "RecordingCopyright" },
+        {   " prd", "Producer" },
+        {   " prf", "Performers" },
+        {   " prk", "PerformerKeywords" },
+        {   " prl", "PerformerURL" },
+        {   " req", "Requirements" },
+        {   " snk", "SubtitleKeywords" },
+        {   " snm", "Subtitle" },
+        {   " src", "SourceCredits" },
+        {   " swf", "SongWriter" },
+        {   " swk", "SongWriterKeywords" },
+        {   " swr", "SoftwareVersion" },
+        {   " too", "Encoder" },
+        {   " trk", "Track" },
+        {   " wrt", "Composer" },
+        {   " xyz", "GPSCoordinates" }
+    };
+
+    extern const TagVocabulary userDataReferencetags[] = {
+        {   "CNCV", "Xmp.video.udCompressorVersion" },
+        {   "CNFV", "Xmp.video.udFirmwareVersion" },
+        {   "CNMN", "Xmp.video.udModel" },
+        {   "WLOC", "Xmp.video.udWindowLocation" },
+        {   "SDLN", "Xmp.video.udPlayMode" },
+        {   "SelO", "Xmp.video.udPlaySelection" },
+        {   "name", "Xmp.video.udName" },
+        {   "vndr", "Xmp.video.udVendor" },
+        {   " ART", "Xmp.video.udArtist" },
+        {   " alb", "Xmp.video.udAlbum" },
+        {   " arg", "Xmp.video.udArranger" },
+        {   " ark", "Xmp.video.udArrangerKeywords" },
+        {   " cmt", "Xmp.video.udComment" },
+        {   " cok", "Xmp.video.udComposerKeywords" },
+        {   " com", "Xmp.video.udComposer" },
+        {   " cpy", "Xmp.video.udCopyright" },
+        {   " day", "Xmp.video.udCreateDate" },
+        {   " dir", "Xmp.video.udDirector" },
+        {   " ed1", "Xmp.video.udEdit1" },
+        {   " ed2", "Xmp.video.udEdit2" },
+        {   " ed3", "Xmp.video.udEdit3" },
+        {   " ed4", "Xmp.video.udEdit4" },
+        {   " ed5", "Xmp.video.udEdit5" },
+        {   " ed6", "Xmp.video.udEdit6" },
+        {   " ed7", "Xmp.video.udEdit7" },
+        {   " ed8", "Xmp.video.udEdit8" },
+        {   " ed9", "Xmp.video.udEdit9" },
+        {   " enc", "Xmp.video.udEncoder" },
+        {   " fmt", "Xmp.video.udFormat" },
+        {   " gen", "Xmp.video.udGenre" },
+        {   " grp", "Xmp.video.udGrouping" },
+        {   " inf", "Xmp.video.udInformation" },
+        {   " isr", "Xmp.video.udISRCCode" },
+        {   " lab", "Xmp.video.udRecordLabelName" },
+        {   " lal", "Xmp.video.udRecordLabelURL" },
+        {   " lyr", "Xmp.video.udLyrics" },
+        {   " mak", "Xmp.video.udMake" },
+        {   " mal", "Xmp.video.udMakerURL" },
+        {   " mod", "Xmp.video.udModel" },
+        {   " nam", "Xmp.video.udTitle" },
+        {   " pdk", "Xmp.video.udProducerKeywords" },
+        {   " phg", "Xmp.video.udRecordingCopyright" },
+        {   " prd", "Xmp.video.udProducer" },
+        {   " prf", "Xmp.video.udPerformers" },
+        {   " prk", "Xmp.video.udPerformerKeywords" },
+        {   " prl", "Xmp.video.udPerformerURL" },
+        {   " req", "Xmp.video.udRequirements" },
+        {   " snk", "Xmp.video.udSubtitleKeywords" },
+        {   " snm", "Xmp.video.udSubtitle" },
+        {   " src", "Xmp.video.udSourceCredits" },
+        {   " swf", "Xmp.video.udSongWriter" },
+        {   " swk", "Xmp.video.udSongWriterKeywords" },
+        {   " swr", "Xmp.video.udSoftwareVersion" },
+        {   " too", "Xmp.video.udEncoder" },
+        {   " trk", "Xmp.video.udTrack" },
+        {   " wrt", "Xmp.video.udComposer" },
+        {   " xyz", "Xmp.video.udGPSCoordinates" },
+        {   "CMbo", "Xmp.video.udCameraByteOrder" },
+        {   "Cmbo", "Xmp.video.udCameraByteOrder" },
     };
 
     enum movieHeaderTags {
@@ -237,7 +389,7 @@ namespace Exiv2 {
 
     bool equalsQTimeTag(Exiv2::DataBuf& buf ,const char* str2) {
         for(int i=0;i<4;i++)
-            if(tolower(buf.pData_[i])!=str2[i])
+            if(tolower(buf.pData_[i])!=tolower(str2[i]))
                 return false;
         return true;
     }
@@ -303,20 +455,22 @@ void QuickTimeVideo::readMetadata() {
     clearMetadata();
     continue_Traversing = true;
 
-    for (int i =0 ;i <= 32; i++) {
-        std::cout<<"\n"<<std::setw(3)<<i<<": ";
-        if(continue_Traversing)
-        decodeBlock();
-        else
-            return;
-    }
+    xmpData_["Xmp.video.fileSize"] = (double)io_->size()/(double)1048576;
+    xmpData_["Xmp.video.fileName"] = io_->path();
+    xmpData_["Xmp.video.mimeType"] = mimeType();
+
+        while (continue_Traversing) {
+            std::cerr<<"\n";
+            decodeBlock();
+        }
     std::cerr<<"\n";
 }
 
 void QuickTimeVideo::decodeBlock() {
-    const long bufMinSize = 50;
+    const long bufMinSize = 4;
     DataBuf buf(bufMinSize);
     unsigned long size = 0;
+    buf.pData_[4] = '\0' ;
 
     std::memset(buf.pData_, 0x0, buf.size_);
 
@@ -367,6 +521,9 @@ void QuickTimeVideo::tagDecoder(Exiv2::DataBuf &buf, unsigned long size) {
     else if (equalsQTimeTag(buf, "vmhd"))
         videoHeaderDecoder(size);
 
+    else if (equalsQTimeTag(buf, "udta"))
+        userDataDecoder(size);
+
     else if (equalsQTimeTag(buf, "url ")) {
         io_->read(buf.pData_, size);
         if (currentStream_ == Video)
@@ -407,6 +564,77 @@ void QuickTimeVideo::tagDecoder(Exiv2::DataBuf &buf, unsigned long size) {
 void QuickTimeVideo::discard(unsigned long size) {
     uint64_t cur_pos = io_->tell();
     io_->seek(cur_pos + size, BasicIo::beg);
+}
+
+void QuickTimeVideo::userDataDecoder(unsigned long size_external) {
+
+    uint64_t cur_pos = io_->tell();
+    const TagVocabulary* td;
+    const TagVocabulary* tv, *tv_internal;
+
+    const long bufMinSize = 100;
+    DataBuf buf(bufMinSize);
+    unsigned long size = 0, size_internal = size_external;
+    std::memset(buf.pData_, 0x0, buf.size_);
+
+    while((size_internal/4 != 0) && (size_internal > 0)) {
+
+        buf.pData_[4] = '\0' ;
+        io_->read(buf.pData_, 4);
+        size = Exiv2::getULong(buf.pData_, bigEndian);
+        if(size > size_internal)
+            break;
+        size_internal -= size;
+        io_->read(buf.pData_, 4);
+        std::cerr <<"("<<std::setw(9)<<std::right<<size<<"): ";
+
+        if(buf.pData_[0] == 169)
+            buf.pData_[0] = ' ';
+        td = find(userDatatags, Exiv2::toString( buf.pData_));
+        std::cerr <<"|"<<buf.pData_<<"|:";
+        tv = find(userDataReferencetags, Exiv2::toString( buf.pData_));
+
+        if(size == 0 || (size - 12) <= 0)
+            break;
+
+        else if(equalsQTimeTag(buf, "DcMD"))
+            userDataDecoder(size - 8);
+
+        else if(equalsQTimeTag(buf, "CNCV") || equalsQTimeTag(buf, "CNFV") || equalsQTimeTag(buf, "CNMN")) {
+            io_->read(buf.pData_, size - 8);
+            xmpData_[exvGettext(tv->label_)] = Exiv2::toString(buf.pData_);
+        }
+
+
+        else if(equalsQTimeTag(buf, "CMbo") || equalsQTimeTag(buf, "Cmbo")) {
+            io_->read(buf.pData_, 2);
+            buf.pData_[2] = '\0' ;
+            tv_internal = find(cameraByteOrderTags, Exiv2::toString( buf.pData_));
+            if (tv_internal)
+                xmpData_[exvGettext(tv->label_)] = exvGettext(tv_internal->label_);
+            else
+                xmpData_[exvGettext(tv->label_)] = Exiv2::toString(buf.pData_);
+        }
+
+        else if(tv) {
+            io_->read(buf.pData_, 4);
+            io_->read(buf.pData_, size-12);
+            xmpData_[exvGettext(tv->label_)] = Exiv2::toString(buf.pData_);
+        }
+
+        else if(td)
+            tagDecoder(buf,size-8);
+    }
+    io_->seek(cur_pos + size_external, BasicIo::beg);
+}
+
+void QuickTimeVideo::DcMDDecoder(unsigned long size_external) {
+    uint64_t cur_pos = io_->tell();
+    const long bufMinSize = 100;
+    DataBuf buf(bufMinSize);
+    unsigned long size = 0, size_internal = size_external;
+
+    io_->seek(cur_pos + size_external, BasicIo::beg);
 }
 
 void QuickTimeVideo::setMediaStream() {
@@ -453,7 +681,6 @@ void QuickTimeVideo::timeToSampleDecoder() {
     }
     if (currentStream_ == Video)
     xmpData_["Xmp.video.frameRate"] = (double)totalframes * (double)timeScale_ / (double)timeOfFrames;
-
 }
 
 void QuickTimeVideo::sampleDesc(unsigned long size) {
@@ -645,7 +872,7 @@ void QuickTimeVideo::handlerDecoder(unsigned long size) {
             break;
         case HandlerDescription:
             desc_size = returnBufValue(buf,1);
-            io_->seek(-3, BasicIo::cur);
+            io_->seek(-4, BasicIo::cur);
             io_->read(buf.pData_, desc_size);
 
             if (currentStream_ == Video)
