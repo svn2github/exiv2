@@ -30,6 +30,9 @@ protected:
     void decodeBlock();
     void contentManagement(const Exiv2::Internal::TagDetails* td, Exiv2::DataBuf & buf, unsigned long size);
 
+private:
+    bool continueTraversing_;
+
 }; //MatroskaVideo End
 
 EXIV2API Image::AutoPtr newMkvInstance(BasicIo::AutoPtr io, bool create);

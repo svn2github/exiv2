@@ -47,7 +47,7 @@ private:
 
     uint64_t timeScale_;
     int currentStream_;
-    bool continue_Traversing;
+    bool continueTraversing_;
 
 }; //QuickTimeVideo End
 

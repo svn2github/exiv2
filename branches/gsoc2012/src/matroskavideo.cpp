@@ -36,11 +36,11 @@ namespace Exiv2 {
     bool ignoreList (unsigned long tagValue) {
         unsigned long ignoreList[] = {
             0x0023, 0x0021, 0x0033, 0x0071, 0x0077, 0x006c, 0x0067, 0x007b, 0x02f2, 0x02f3,
-            0x1031, 0x1032, 0x13ab, 0x13ac, 0x15ee, 0x23c6, 0x2e67, 0x33a4, 0x33c5, 0x3446,
-            0x2de7, 0x2df8, 0x3314f, 0x43a770
+            0x1031, 0x1032, 0x13ab, 0x13ac, 0x15ee, 0x23a2, 0x23c6, 0x2e67, 0x33a4, 0x33c5,
+            0x3446, 0x2de7, 0x2df8, 0x3314f, 0x43a770
         };
 
-        for(int i = 0; i <= 23; i++)
+        for(int i = 0; i <= 24; i++)
             if(tagValue == ignoreList[i])
                 return true;
 
@@ -347,17 +347,17 @@ void MatroskaVideo::readMetadata() {
     xmpData_["Xmp.video.fileName"] = io_->path();
     xmpData_["Xmp.video.fileSize"] = (double)io_->size()/(double)1048576;
     xmpData_["Xmp.video.mimeType"] = mimeType();
+//    int i=0;
 
-    for (int i =0 ;i <= 500; i++) {
-//        std::cout<<std::setw(3)<<i<<": ";
+    while (continueTraversing_) {
+//        std::cout<<std::setw(3)<<i<<": ";i++;
         decodeBlock();
-
     }
 
 }
 
 void MatroskaVideo::decodeBlock() {
-    const long bufMinSize = 7000000;
+    const long bufMinSize = 200;
     DataBuf buf(bufMinSize);
     DataBuf buf2(bufMinSize);
     unsigned long s_ID = 0;
@@ -368,6 +368,12 @@ void MatroskaVideo::decodeBlock() {
 
     std::memset(buf.pData_, 0x0, buf.size_);
     io_->read(buf.pData_, 1);
+
+    if(io_->eof()) {
+        continueTraversing_ = false;
+        return;
+    }
+
     s_ID = findBlockSize(buf);
     if(s_ID != 0)
         io_->read(buf2.pData_, s_ID - 1);
@@ -375,6 +381,11 @@ void MatroskaVideo::decodeBlock() {
     const TagDetails* td;
     td = find(matroskaTags , (returnTagValue(buf, buf2, s_ID)) );
 
+    if(td->val_ == 0xc53bb6b || td->val_ == 0xf43b675) {
+        continueTraversing_ = false;
+        return;
+    }
+//    std::cerr<<std::setw(35)<<std::left<<td->label_<<":";
     if (dataIgnoreList(td->val_))
         display = false;
     if (ignoreList(td->val_))
@@ -387,16 +398,18 @@ void MatroskaVideo::decodeBlock() {
         io_->read(buf2.pData_, s_Size - 1);
 
     size = returnTagValue(buf, buf2, s_Size);
+//    std::cerr<<std::setw(7)<<size;
 
     if (!display && readData)
         return;
 
-    io_->read(buf.pData_, size);
-
-
-    if (!readData)
+    if (!readData) {
+        io_->seek(size, BasicIo::cur);
         return;
+    }
+//    std::cerr<<"check\n";
 
+    io_->read(buf.pData_, size);
     contentManagement(td, buf, size);
 
 }
@@ -619,7 +632,7 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         break;
 
     case 0x001f:
-        internal_td = find(compressionAlgorithm ,returnValue(buf, size));
+        internal_td = find(audioChannels ,returnValue(buf, size));
         xmpData_["Xmp.audio.channelType"] = exvGettext(internal_td->label_);
         break;
 

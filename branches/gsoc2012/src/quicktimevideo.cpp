@@ -453,13 +453,13 @@ void QuickTimeVideo::readMetadata() {
 
     IoCloser closer(*io_);
     clearMetadata();
-    continue_Traversing = true;
+    continueTraversing_ = true;
 
     xmpData_["Xmp.video.fileSize"] = (double)io_->size()/(double)1048576;
     xmpData_["Xmp.video.fileName"] = io_->path();
     xmpData_["Xmp.video.mimeType"] = mimeType();
 
-        while (continue_Traversing) {
+        while (continueTraversing_) {
             std::cerr<<"\n";
             decodeBlock();
         }
@@ -476,7 +476,7 @@ void QuickTimeVideo::decodeBlock() {
 
     io_->read(buf.pData_, 4);
     if(io_->eof()) {
-        continue_Traversing = false;
+        continueTraversing_ = false;
         return;
     }
 
