@@ -190,12 +190,6 @@ msvc_runtime_configure(${EXIV2_ENABLE_SHARED})
 # ******************************************************************************
 # exiv2lib library
 
-FOREACH(_currentfile ${${LIBEXIV2_SRC}})
-    IF(NOT MSVC)
-        SET_SOURCE_FILES_PROPERTIES(${_currentfile} PROPERTIES COMPILE_FLAGS "-fPIC")
-    ENDIF(NOT MSVC)
-ENDFOREACH(_currentfile ${${LIBEXIV2_SRC}})
-
 ADD_LIBRARY( exiv2lib ${STATIC_FLAG} ${LIBEXIV2_SRC} ${LIBEXIV2_HDR} )
 
 SET_TARGET_PROPERTIES( exiv2lib PROPERTIES
