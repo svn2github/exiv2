@@ -596,7 +596,7 @@ void RiffVideo::streamHandler(int streamType) {
         switch(i) {
         case codec:
             if(streamType == Video)
-                xmpData_["Xmp.video.videoCodec"] = buf.pData_;
+                xmpData_["Xmp.video.codec"] = buf.pData_;
             else if (streamType == Audio)
                 xmpData_["Xmp.audio.codec"] = buf.pData_;
             else

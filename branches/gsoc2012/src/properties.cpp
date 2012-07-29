@@ -1172,7 +1172,7 @@ namespace Exiv2 {
     extern const XmpPropertyInfo xmpAudioInfo[] = {
         { "avgBytePerSec",      N_("Average Bytes Per Second"),     "Integer",               xmpText, xmpExternal, N_("Average Bytes Per Second found in audio stream")   },
         { "balance",            N_("Balance"),                      "Integer",               xmpText, xmpExternal, N_("Indicates the left-right balance of the audio")   },
-        { "bitsPerSample",      N_("Bits Per Sample"),              "Integer",               xmpText, xmpExternal, N_("Bits per test sample")   },
+        { "bitsPerSample",      N_("Bits Per Sample/ Bit Rate"),    "Integer",               xmpText, xmpExternal, N_("Bits per test sample")   },
         { "channelType",        N_("Audio Channel Type"),           "closed Choice of Text", xmpText, xmpExternal, N_("The audio channel type. One of: Mono, Stereo, 5.1, 7.1.") },
         { "codec",              N_("Audio Codec"),                  "Text",                  xmpText, xmpExternal, N_("Codec used for Audio Encoding/Decoding")   },
         { "codecDecodeAll",     N_("Audio Codec Decode Info"),      "Text",                  xmpText, xmpExternal, N_("Contains information the audio codec decode all, i.e. Enabled/Disabled")   },

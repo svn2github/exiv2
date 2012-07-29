@@ -607,9 +607,9 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         switch(stream) {
         case 1:
             if(returnValue(buf, size))
-                xmpData_["Xmp.video.framerate"] = (double)1000000000/(double)returnValue(buf, size);
+                xmpData_["Xmp.video.frameRate"] = (double)1000000000/(double)returnValue(buf, size);
             else
-                xmpData_["Xmp.video.framerate"] = "Variable Bit Rate";
+                xmpData_["Xmp.video.frameRate"] = "Variable Bit Rate";
             break;
         case 2:
             if(returnValue(buf, size))
