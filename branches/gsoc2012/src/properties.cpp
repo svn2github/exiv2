@@ -1025,7 +1025,7 @@ namespace Exiv2 {
         { "docType",            N_("Doc Type"),                     "Text",                  xmpText, xmpExternal, N_("Describes the contents of the ﬁle. In the case of a MATROSKA ﬁle, its value is 'matroska'")   },
         { "docTypeReadVersion", N_("Doc Type Read Version"),        "Integer",               xmpText, xmpExternal, N_("A Matroska video specific property, helps in determining the compatibility of file with a particular version of a video player")   },
         { "docTypeVersion",     N_("Doc Type Version"),             "Integer",               xmpText, xmpExternal, N_("A Matroska video specific property, indicated the version of filetype, helps in determining the compatibility")   },
-        { "duration",           N_("Duration"),                     "Integer",               xmpText, xmpExternal, N_("The duration of the media file. Measured in seconds.")   },
+        { "duration",           N_("Duration"),                     "Integer",               xmpText, xmpExternal, N_("The duration of the media file. Measured in milli-seconds.")   },
         { "EBMLReadVersion",    N_("EBML Read Version"),            "Integer",               xmpText, xmpExternal, N_("Extensible Binary Meta Language Read Version")   },
         { "EBMLVersion",        N_("EBML Version"),                 "Integer",               xmpText, xmpExternal, N_("Extensible Binary Meta Language Version")   },
         { "enabled",            N_("Video Track Enabled"),          "Text",                  xmpText, xmpExternal, N_("Status of Video Track, i.e. Enabled/Disabled")   },

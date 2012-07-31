@@ -511,6 +511,8 @@ void RiffVideo::junkHandler() {
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
     long chunkEndPosition;
+    uint64_t cur_pos = io_->tell();
+
     Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpSeq);
 
 
@@ -529,6 +531,9 @@ void RiffVideo::junkHandler() {
         v->read(Exiv2::toString( buf.pData_));
     }
     xmpData_.add(Exiv2::XmpKey("Xmp.video.junk"), v.get());
+
+    io_->seek(cur_pos + chunkEndPosition, BasicIo::beg);
+
 }
 
 void RiffVideo::aviHeaderTagsHandler() {
@@ -658,6 +663,8 @@ void RiffVideo::streamFormatHandler(int streamType) {
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
 
+//    uint64_t cur_pos = io_->tell();
+
     if(streamType == Video) {
         io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
 
@@ -750,6 +757,8 @@ void RiffVideo::streamFormatHandler(int streamType) {
             }
         }
     }
+//    io_->seek(cur_pos + size, BasicIo::beg);
+
 }
 
 double RiffVideo::returnSampleRate(Exiv2::DataBuf& buf, long divisor) {
