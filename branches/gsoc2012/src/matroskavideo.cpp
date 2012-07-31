@@ -484,10 +484,9 @@ void MatroskaVideo::decodeBlock() {
     unsigned long size = 0;
     bool display = true;
     bool readData = true;
-    std::cout<<"\nPhase 1";
+
     std::memset(buf.pData_, 0x0, buf.size_);
     io_->read(buf.pData_, 1);
-    std::cout<<"\nPhase 2";
 
     if(io_->eof()) {
         continueTraversing_ = false;
@@ -500,13 +499,11 @@ void MatroskaVideo::decodeBlock() {
 
     const TagDetails* td;
     td = find(matroskaTags , (returnTagValue(buf, buf2, s_ID)) );
-    std::cout<<"\nPhase 3 :"<<td->label_;
 
     if(td->val_ == 0xc53bb6b || td->val_ == 0xf43b675) {
         continueTraversing_ = false;
         return;
     }
-    std::cout<<"\nPhase 4";
 
     if (dataIgnoreList(td->val_))
         display = false;
@@ -540,7 +537,7 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
     static double time_code_scale = 1, temp;
     static long stream = 0, track_count = 0;
     char str[4] = "No";
-    const TagDetails* internal_td;
+    const TagDetails* internal_td = NULL;
 
     switch(td->val_) {
 
