@@ -484,9 +484,10 @@ void MatroskaVideo::decodeBlock() {
     unsigned long size = 0;
     bool display = true;
     bool readData = true;
-
+    std::cout<<"\nPhase 1";
     std::memset(buf.pData_, 0x0, buf.size_);
     io_->read(buf.pData_, 1);
+    std::cout<<"\nPhase 2";
 
     if(io_->eof()) {
         continueTraversing_ = false;
@@ -499,11 +500,13 @@ void MatroskaVideo::decodeBlock() {
 
     const TagDetails* td;
     td = find(matroskaTags , (returnTagValue(buf, buf2, s_ID)) );
+    std::cout<<"\nPhase 3 :"<<td->label_;
 
     if(td->val_ == 0xc53bb6b || td->val_ == 0xf43b675) {
         continueTraversing_ = false;
         return;
     }
+    std::cout<<"\nPhase 4";
 
     if (dataIgnoreList(td->val_))
         display = false;
@@ -571,6 +574,7 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         case 0x23c3: internal_td = find(chapterPhysicalEquivalent ,returnValue(buf, size)); break;
         case 0x29bf: internal_td = find(chapterTranslateCodec ,returnValue(buf, size)); break;
         }
+        if(internal_td)
         xmpData_[exvGettext(td->label_)] = exvGettext(internal_td->label_);
         break;
 
@@ -591,6 +595,7 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         case 0x1a9697: internal_td = find(codecSettings ,stream); break;
         case 0x0484: internal_td = td; break;
         }
+        if(internal_td)
         xmpData_[exvGettext(internal_td->label_)] = str;
         break;
 
@@ -602,6 +607,7 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         case 0x6b240:
         case 0x1b4040: internal_td = find(codecDownloadUrl ,stream); break;
         }
+        if(internal_td)
         xmpData_[exvGettext(internal_td->label_)] = buf.pData_;
         break;
 
@@ -635,9 +641,11 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
             case 1: temp = (double)1000000000/(double)returnValue(buf, size); break;
             case 2: temp = returnValue(buf, size)/1000; break;
             }
+            if(internal_td)
             xmpData_[exvGettext(internal_td->label_)] = temp;
         }
         else
+            if(internal_td)
             xmpData_[exvGettext(internal_td->label_)] = "Variable Bit Rate";
         break;
 
