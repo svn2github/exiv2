@@ -572,7 +572,7 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         case 0x29bf: internal_td = find(chapterTranslateCodec ,returnValue(buf, size)); break;
         }
         if(internal_td)
-        xmpData_[exvGettext(td->label_)] = exvGettext(internal_td->label_);
+            xmpData_[exvGettext(td->label_)] = exvGettext(internal_td->label_);
         break;
 
     case 0x0035: case 0x38b5:
@@ -593,7 +593,7 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         case 0x0484: internal_td = td; break;
         }
         if(internal_td)
-        xmpData_[exvGettext(internal_td->label_)] = str;
+            xmpData_[exvGettext(internal_td->label_)] = str;
         break;
 
     case 0x0006: case 0x2b59c: case 0x58688: case 0x6b240: case 0x1b4040:
@@ -605,7 +605,7 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         case 0x1b4040: internal_td = find(codecDownloadUrl ,stream); break;
         }
         if(internal_td)
-        xmpData_[exvGettext(internal_td->label_)] = buf.pData_;
+            xmpData_[exvGettext(internal_td->label_)] = buf.pData_;
         break;
 
     case 0x0489: case 0x0461:
@@ -639,11 +639,11 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
             case 2: temp = returnValue(buf, size)/1000; break;
             }
             if(internal_td)
-            xmpData_[exvGettext(internal_td->label_)] = temp;
+                xmpData_[exvGettext(internal_td->label_)] = temp;
         }
         else
             if(internal_td)
-            xmpData_[exvGettext(internal_td->label_)] = "Variable Bit Rate";
+                xmpData_[exvGettext(internal_td->label_)] = "Variable Bit Rate";
         break;
 
     default:
