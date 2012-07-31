@@ -37,24 +37,31 @@ namespace Exiv2 {
         unsigned long ignoreList[] = {
             0x0021, 0x0023, 0x0033, 0x0071, 0x0077, 0x006c, 0x0067, 0x007b, 0x02f2, 0x02f3,
             0x1031, 0x1032, 0x13ab, 0x13ac, 0x15ee, 0x23a2, 0x23c6, 0x2e67, 0x33a4, 0x33c5,
-            0x3446, 0x2de7, 0x2df8, 0x3314f, 0x43a770,
-
+            0x3446, 0x2de7, 0x2df8, 0x26bf, 0x28ca, 0x3384, 0x13b8, 0x037e, 0x0485, 0x18d7,
             0x0005, 0x0009, 0x0011, 0x0012, 0x0016, 0x0017, 0x0018, 0x0022, 0x0024, 0x0025,
             0x0027, 0x002b, 0x002f, 0x003f, 0x004b, 0x004c, 0x004d, 0x004e, 0x004f, 0x006a,
             0x006b, 0x006e, 0x007a, 0x007d, 0x0255, 0x3eb5, 0x3ea5, 0x3d7b, 0x33c4, 0x2fab,
             0x2ebc, 0x29fc, 0x29a5, 0x2955, 0x2933, 0x135f, 0x2922, 0x26a5, 0x26fc, 0x2532,
             0x23c9, 0x23c4, 0x23c5, 0x137f, 0x1378, 0x07e2, 0x07e3, 0x07e4, 0x0675, 0x05bc,
-            0x05bd, 0x05db, 0x05dd, 0x0598, 0x050d, 0x0444, 0x037c, 0x037e,
-            0x1eb923, 0x1cb923, 0xeb524, 0x1c83ab, 0x1e83bb
+            0x05bd, 0x05db, 0x05dd, 0x0598, 0x050d, 0x0444, 0x037c,
+
+            0x3314f, 0x43a770, 0x1eb923, 0x1cb923, 0xeb524, 0x1c83ab, 0x1e83bb
         };
 
-        for(int i = 0; i <= 24+63; i++)
+        for(int i = 0; i <= 93; i++)
             if(tagValue == ignoreList[i])
                 return true;
 
         return false;
     }
 
+    //! Tag Look-up list for Matroska Type Video Files
+    //! The Tags have been categorized in 4 categories. Which are
+    //! mentioned as a comment in front of them.
+    //! s   --  Tag to be Skipped
+    //! sd  --  Tag to be Skipped along with its data
+    //! u   --  Tag used directly for storing metadata
+    //! ui  --  Tag used only internally
     extern const TagDetails matroskaTags[] =  {
         {      0x0000, "ChapterDisplay" },                              //s
         {      0x0003, "TrackType" },                                   //ui
@@ -126,15 +133,15 @@ namespace Exiv2 {
         {      0x037c, "ChapterLanguage" },                             //sd
         {      0x037e, "ChapterCountry" },                              //sd
         {      0x0444, "SegmentFamily" },                               //sd
-        {      0x0461, "Xmp.video.dateUTC" },                           //u
-        {      0x047a, "TagLanguage" },
-        {      0x0484, "TagDefault" },
-        {      0x0485, "TagBinary" },
-        {      0x0487, "TagString" },
-        {      0x0489, "Xmp.video.duration" }, //Date Time Original - measured in seconds relatively to Jan 01, 2001, 0:00:00 GMT+0h
+        {      0x0461, "Xmp.video.dateUTC" }, //Date Time Original - measured in seconds relatively to Jan 01, 2001, 0:00:00 GMT+0h
+        {      0x047a, "Xmp.video.tagLanguage" },                       //u
+        {      0x0484, "Xmp.video.tagDefault" },                        //u
+        {      0x0485, "TagBinary" },                                   //sd
+        {      0x0487, "Xmp.video.tagString" },                         //u
+        {      0x0489, "Xmp.video.duration" },                          //u
         {      0x050d, "ChapterProcessPrivate" },                       //sd
         {      0x0598, "ChapterFlagEnabled" },                          //sd
-        {      0x05a3, "TagName" },
+        {      0x05a3, "Xmp.video.tagName" },                           //u
         {      0x05b9, "EditionEntry" },                                //s
         {      0x05bc, "EditionUID" },                                  //sd
         {      0x05bd, "EditionFlagHidden" },                           //sd
@@ -160,25 +167,25 @@ namespace Exiv2 {
         {      0x1034, "ContentCompression" },                          //s
         {      0x1035, "ContentEncryption" },                           //s
         {      0x135f, "CueRefNumber" },                                //sd
-        {      0x136e, "TrackName" },
+        {      0x136e, "Xmp.video.trackName" },                         //u
         {      0x1378, "CueBlockNumber" },                              //sd
         {      0x137f, "TrackOffset" },                                 //sd
         {      0x13ab, "SeekID" },                                      //sd
         {      0x13ac, "SeekPosition" },                                //sd
-        {      0x13b8, "Stereo3DMode" },
-        {      0x14aa, "CropBottom" },
+        {      0x13b8, "Stereo3DMode" },                                //sd
+        {      0x14aa, "Xmp.video.cropBottom" },                        //ui
         {      0x14b0, "Xmp.video.width" },                             //u
         {      0x14b2, "Xmp.video.displayUnit" },                       //u
         {      0x14b3, "Xmp.video.aspectRatioType" },                   //u
         {      0x14ba, "Xmp.video.height" },                            //u
-        {      0x14bb, "CropTop" },
-        {      0x14cc, "CropLeft" },
-        {      0x14dd, "CropRight" },
+        {      0x14bb, "Xmp.video.cropTop" },                           //ui
+        {      0x14cc, "Xmp.video.cropLeft" },                          //ui
+        {      0x14dd, "Xmp.video.cropRight" },                         //ui
         {      0x15aa, "TrackForced" },                                 //ui
         {      0x15ee, "MaxBlockAdditionID" },                          //sd
         {      0x1741, "Xmp.video.writingApp" },                        //u
         {      0x1854, "SilentTracks" },                                //s
-        {      0x18d7, "SilentTrackNumber" },
+        {      0x18d7, "SilentTrackNumber" },                           //sd
         {      0x21a7, "AttachedFile" },                                //s
         {      0x2240, "ContentEncoding" },                             //s
         {      0x2264, "Xmp.audio.bitsPerSample" },                     //u
@@ -189,14 +196,14 @@ namespace Exiv2 {
         {      0x23c5, "TagTrackUID" },                                 //sd
         {      0x23c6, "TagAttachmentUID" },                            //sd
         {      0x23c9, "TagEditionUID" },                               //sd
-        {      0x23ca, "TargetType" },
+        {      0x23ca, "Xmp.video.targetType" },                        //u
         {      0x2532, "SignedElement" },                               //sd
         {      0x2624, "TrackTranslate" },                              //s
         {      0x26a5, "TrackTranslateTrackID" },                       //sd
-        {      0x26bf, "TrackTranslateCodec" },
+        {      0x26bf, "TrackTranslateCodec" },                         //sd
         {      0x26fc, "TrackTranslateEditionUID" },                    //sd
         {      0x27c8, "SimpleTag" },                                   //s
-        {      0x28ca, "TargetTypeValue" },
+        {      0x28ca, "TargetTypeValue" },                             //sd
         {      0x2911, "ChapterProcessCommand" },                       //s
         {      0x2922, "ChapterProcessTime" },                          //sd
         {      0x2924, "ChapterTranslate" },                            //s
@@ -213,7 +220,7 @@ namespace Exiv2 {
         {      0x2ebc, "ChapterSegmentEditionUID" },                    //sd
         {      0x2fab, "TrackOverlay" },                                //sd
         {      0x3373, "Tag" },                                         //s
-        {      0x3384, "SegmentFileName" },
+        {      0x3384, "SegmentFileName" },                             //sd
         {      0x33a4, "SegmentUID" },                                  //sd
         {      0x33c4, "ChapterUID" },                                  //sd
         {      0x33c5, "TrackUID" },                                    //sd
@@ -224,8 +231,8 @@ namespace Exiv2 {
         {      0x3d7b, "ChannelPositions" },                            //sd
         {      0x3e5b, "SignatureElements" },                           //s
         {      0x3e7b, "SignatureElementList" },                        //s
-        {      0x3e8a, "SignatureAlgo" },
-        {      0x3e9a, "SignatureHash" },
+        {      0x3e8a, "Xmp.video.contentSignAlgo" },                   //u
+        {      0x3e9a, "Xmp.video.contentSignHashAlgo" },               //u
         {      0x3ea5, "SignaturePublicKey" },                          //sd
         {      0x3eb5, "Signature" },                                   //sd
         {     0x2b59c, "TrackLanguage" },                               //ui
@@ -237,7 +244,7 @@ namespace Exiv2 {
         {     0xad7b1, "TimecodeScale" },                               //ui
         {     0xeb524, "ColorSpace" },                                  //sd
         {     0xfb523, "Xmp.video.opColor" },                           //u
-        {    0x1a9697, "CodecSettings" },
+        {    0x1a9697, "CodecSettings" },                               //ui
         {    0x1b4040, "CodecInfoURL" },                                //ui
         {    0x1c83ab, "PrevFileName" },                                //sd
         {    0x1cb923, "PrevUID" },                                     //sd
@@ -373,6 +380,12 @@ namespace Exiv2 {
         {   0x11, "Xmp.video.subTCodecDownloadUrl" }
     };
 
+    extern const TagDetails codecSettings[] =  {
+        {   0x1,  "Xmp.video.codecSettings" },
+        {   0x2,  "Xmp.audio.codecSettings" },
+        {   0x11, "Xmp.video.subTCodecSettings" }
+    };
+
     extern const TagDetails trackCodec[] =  {
         {   0x1,  "Xmp.video.codec" },
         {   0x2,  "Xmp.audio.compressor" },
@@ -426,7 +439,6 @@ namespace Exiv2 {
 
 using namespace Exiv2::Internal;
 
-
 namespace Exiv2 {
 
 MatroskaVideo::MatroskaVideo(BasicIo::AutoPtr io)
@@ -456,10 +468,8 @@ void MatroskaVideo::readMetadata() {
     xmpData_["Xmp.video.fileName"] = io_->path();
     xmpData_["Xmp.video.fileSize"] = (double)io_->size()/(double)1048576;
     xmpData_["Xmp.video.mimeType"] = mimeType();
-//    int i=0;
 
     while (continueTraversing_) {
-//        std::cout<<std::setw(3)<<i<<": ";i++;
         decodeBlock();
     }
 
@@ -494,7 +504,7 @@ void MatroskaVideo::decodeBlock() {
         continueTraversing_ = false;
         return;
     }
-//    std::cerr<<std::setw(35)<<std::left<<td->label_<<":";
+
     if (dataIgnoreList(td->val_))
         display = false;
     if (ignoreList(td->val_))
@@ -507,7 +517,6 @@ void MatroskaVideo::decodeBlock() {
         io_->read(buf2.pData_, s_Size - 1);
 
     size = returnTagValue(buf, buf2, s_Size);
-//    std::cerr<<std::setw(7)<<size;
 
     if (!display && readData)
         return;
@@ -516,7 +525,6 @@ void MatroskaVideo::decodeBlock() {
         io_->seek(size, BasicIo::cur);
         return;
     }
-//    std::cerr<<"check\n";
 
     io_->read(buf.pData_, size);
     contentManagement(td, buf, size);
@@ -534,24 +542,29 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
     switch(td->val_) {
 
     case 0x0282: case 0x0d80: case 0x1741: case 0x3ba9: case 0x066e: case 0x0660:
-    case 0x065c: case 0x067e: case 0xeb524:
+    case 0x065c: case 0x067e: case 0x047a: case 0x0487: case 0x05a3: case 0x136e:
+    case 0x23ca: case 0xeb524:
         xmpData_[exvGettext(td->label_)] = buf.pData_;
         break;
 
-    case 0x0030: case 0x003a: case 0x0287: case 0x285: case 0x14b0: case 0x14ba:
-    case 0x06ae: case 0x0286: case 0x02f7: case 0x2264:
+    case 0x0030: case 0x003a: case 0x0287: case 0x14b0: case 0x14ba: case 0x285:
+    case 0x06ae: case 0x0286: case 0x02f7: case 0x2264: case 0x14aa: case 0x14bb:
+    case 0x14cc: case 0x14dd:
         xmpData_[exvGettext(td->label_)] = returnValue(buf, size);
         break;
 
     case 0x001a: case 0x001f: case 0x0254: case 0x07e1: case 0x07e5: case 0x07e6:
-    case 0x1033: case 0x14b2: case 0x14b3: case 0x23c3: case 0x29bf:
+    case 0x1033: case 0x14b2: case 0x14b3: case 0x23c3: case 0x29bf: case 0x3e8a:
+    case 0x3e9a:
         switch(td->val_) {
         case 0x001a: internal_td = find(videoScanType ,returnValue(buf, size)); break;
         case 0x001f: internal_td = find(audioChannels ,returnValue(buf, size)); break;
         case 0x0254: internal_td = find(compressionAlgorithm ,returnValue(buf, size)); break;
         case 0x07e1: internal_td = find(encryptionAlgorithm ,returnValue(buf, size)); break;
         case 0x1033: internal_td = find(encodingType ,returnValue(buf, size)); break;
+        case 0x3e8a:
         case 0x07e5: internal_td = find(contentSignatureAlgorithm ,returnValue(buf, size)); break;
+        case 0x3e9a:
         case 0x07e6: internal_td = find(contentSignatureHashAlgorithm ,returnValue(buf, size)); break;
         case 0x14b2: internal_td = find(displayUnit ,returnValue(buf, size)); break;
         case 0x14b3: internal_td = find(aspectRatioType ,returnValue(buf, size)); break;
@@ -565,7 +578,8 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         xmpData_[exvGettext(td->label_)] = Exiv2::getFloat(buf.pData_, bigEndian);
         break;
 
-    case 0x0039: case 0x0008: case 0x15aa: case 0x001c: case 0x002a:
+    case 0x0039: case 0x0008: case 0x15aa: case 0x001c: case 0x002a: case 0x1a9697:
+    case 0x0484:
         if (returnValue(buf, size))
             strcpy(str,"Yes");
         switch(td->val_) {
@@ -574,6 +588,8 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         case 0x15aa: internal_td = find(trackForced ,stream); break;
         case 0x001c: internal_td = find(trackLacing ,stream); break;
         case 0x002a: internal_td = find(codecDecodeAll ,stream); break;
+        case 0x1a9697: internal_td = find(codecSettings ,stream); break;
+        case 0x0484: internal_td = td; break;
         }
         xmpData_[exvGettext(internal_td->label_)] = str;
         break;
@@ -626,9 +642,6 @@ void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf,
         break;
 
     default:
-        std::cerr <<std::setw(35)<<std::left<< exvGettext(td->label_)<<": ";
-        std::cerr <<"("<<std::setw(5)<<std::right<<size<<"): ";
-        std::cerr<<std::setw(20)<<std::left<< std::hex<<returnValue(buf, size)<<": "<<buf.pData_<<"\n";
         break;
     }
 }
