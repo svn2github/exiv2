@@ -435,10 +435,10 @@ void RiffVideo::decodeBlock() {
 
 //    std::memset(buf2.pData_, 0x0, buf.size_);
 //    std::memset(buf.pData_, 0x0, buf.size_);
-//    std::cout<<"|st|"<<buf2.pData_;
+    std::cout<<"|st|"<<buf2.pData_;
 
     io_->read(buf2.pData_, 4);
-//    std::cout<<"\nBuf2 |"<<buf2.pData_;
+    std::cout<<"\nBuf2 |"<<buf2.pData_;
 
     if(io_->eof() || equalsRiffTag(buf2, "MOVI")) {
         continueTraversing_ = false;
@@ -451,35 +451,53 @@ void RiffVideo::decodeBlock() {
 
     io_->read(buf.pData_, 4);
     size = Exiv2::getULong(buf.pData_, littleEndian);
-//    std::cout <<"("<<std::setw(9)<<std::right<<size<<"): ";
+    std::cout <<"("<<std::setw(9)<<std::right<<size<<"): ";
     tagDecoder(buf2, size);
     }
 }
 
 void RiffVideo::tagDecoder(Exiv2::DataBuf& buf, unsigned long size) {
     uint64_t cur_pos = io_->tell();
+    static bool listFlag = false, listEnd = false;
 
-    if(equalsRiffTag(buf, "LIST"))
-        decodeBlock();
-
-    else if(equalsRiffTag(buf, "JUNK"))
+    if(equalsRiffTag(buf, "LIST")) {
+        listFlag = true;
+        listEnd = false;
+        while(io_->tell() < cur_pos + size)
+            decodeBlock();
+        listEnd = true;
+        io_->seek(cur_pos + size, BasicIo::beg);
+    }
+    else if(equalsRiffTag(buf, "JUNK") && listEnd) {
         junkHandler(size);
-
-    else if(equalsRiffTag(buf, "AVIH"))
+    }
+    else if(equalsRiffTag(buf, "AVIH")) {
+        listFlag = false;
         aviHeaderTagsHandler(size);
-
+    }
     else if(equalsRiffTag(buf, "STRH")) {
+        listFlag = false;
         streamHandler(size);
     }
     else if(equalsRiffTag(buf,"STRF")) {
+        listFlag = false;
         streamFormatHandler(size);
     }
     else if(equalsRiffTag(buf, "IDIT")) {
+        listFlag = false;
         dateTimeOriginal(size);
     }
     else if(equalsRiffTag(buf, "INFO")) {
+        listFlag = false;
         infoTagsHandler();
     }
+    else if(equalsRiffTag(buf, "ODML")) {
+        listFlag = false;
+        odmlTagsHandler();
+    }
+    else if (listFlag)
+        skipListData();
+
     else
         io_->seek(cur_pos + size, BasicIo::beg);
 }
@@ -490,6 +508,41 @@ void RiffVideo::dateTimeOriginal(long size) {
     DataBuf buf(bufMinSize);
     io_->read(buf.pData_, size);
     xmpData_["Xmp.video.dateUTC"] = buf.pData_;
+    io_->seek(cur_pos + size, BasicIo::beg);
+}
+
+void RiffVideo::odmlTagsHandler() {
+    const long bufMinSize = 100;
+    DataBuf buf(bufMinSize);
+    buf.pData_[4] = '\0';
+    io_->seek(-12, BasicIo::cur);
+    io_->read(buf.pData_, 4);
+    unsigned long size = Exiv2::getULong(buf.pData_, littleEndian);
+    unsigned long size2 = size;
+
+    uint64_t cur_pos = io_->tell();
+    io_->read(buf.pData_, 4); size -= 4;
+
+    while(size > 0) {
+        io_->read(buf.pData_, 4); size -= 4;
+        if(equalsRiffTag(buf,"OMLH")) {
+            io_->read(buf.pData_, 4); size -= 4;
+            io_->read(buf.pData_, 4); size -= 4;
+            xmpData_["Xmp.video.totalFrameCount"] = Exiv2::getULong(buf.pData_, littleEndian);
+        }
+    }
+    io_->seek(cur_pos + size2, BasicIo::beg);
+}
+
+void RiffVideo::skipListData() {
+    const long bufMinSize = 100;
+    DataBuf buf(bufMinSize);
+    buf.pData_[4] = '\0';
+    io_->seek(-12, BasicIo::cur);
+    io_->read(buf.pData_, 4);
+    unsigned long size = Exiv2::getULong(buf.pData_, littleEndian);
+
+    uint64_t cur_pos = io_->tell();
     io_->seek(cur_pos + size, BasicIo::beg);
 }
 

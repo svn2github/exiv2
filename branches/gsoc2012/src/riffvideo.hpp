@@ -37,6 +37,8 @@ protected:
     void junkHandler(long size);
     void listHandler(long size);
     void infoTagsHandler();
+    void odmlTagsHandler();
+    void skipListData();
     void dateTimeOriginal(long size);
     const char* printAudioEncoding(long i);
     double returnSampleRate(Exiv2::DataBuf& buf, long divisor = 1);

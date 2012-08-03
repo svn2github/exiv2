@@ -1106,6 +1106,7 @@ namespace Exiv2 {
                                                                                                                       "pass per second in its time coordinate system. A time coordinate system that measures time"
                                                                                                                       "in sixtieths of a second, for example, has a time scale of 60.")   },
         { "title",              N_("Title"),                        "Text",                  xmpText, xmpExternal, N_("Contains a general name of the SEGMENT, like 'Lord of the Rings - The Two Towers', however, Tags could be used to deﬁne several titles for a segment.")   },
+        { "totalFrameCount",    N_("Total Frame Count"),            "Integer",               xmpText, xmpExternal, N_("Total number of frames in a video")   },
         { "totalStream",        N_("Number Of Streams"),            "Integer",               xmpText, xmpExternal, N_("Total number of streams present in a video. Eg - Video, Audio or Subtitles")   },
         { "trackCreateDate",    N_("Video Track Create Date"),      "Integer",               xmpText, xmpExternal, N_("A 32-bit integer that indicates (in seconds since midnight, January 1, 1904) when the track header was created.")   },
         { "trackDuration",      N_("Video Track Duration"),         "Integer",               xmpText, xmpExternal, N_("A time value that indicates the duration of this track (in the movie’s time coordinate system).")   },
