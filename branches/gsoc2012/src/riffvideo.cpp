@@ -66,7 +66,7 @@ namespace Exiv2 {
         {   "IRIP", "RippedBy" },
         {   "IRTD", "Rating" },
         {   "ISBJ", "Subject" },
-        {   "ISFT", "Software" },
+        {   "ISFT", "Xmp.video.software" },
         {   "ISGN", "SecondaryGenre" },
         {   "ISHP", "Sharpness" },
         {   "ISRC", "Source" },
@@ -353,11 +353,8 @@ namespace Exiv2 {
         return true;
     }
 
-    enum rifftags {
-        container, filesize, filetype
-    } ;
     enum streamTypeInfo {
-        Audio,  MIDI, Text, Video
+        Audio = 1,  MIDI, Text, Video
     };
     enum streamHeaderTags {
         codec = 1, sampleRate = 5, sampleCount = 8, quality = 10, sampleSize
@@ -408,6 +405,7 @@ void RiffVideo::readMetadata() {
 
     IoCloser closer(*io_);
     clearMetadata();
+    continueTraversing_ = true;
 
     xmpData_["Xmp.video.fileSize"] = (double)io_->size()/(double)1048576;
     xmpData_["Xmp.video.fileName"] = io_->path();
@@ -416,108 +414,126 @@ void RiffVideo::readMetadata() {
     const long bufMinSize = 4;
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
+    io_->read(buf.pData_, bufMinSize);
+    xmpData_["Xmp.video.container"] = buf.pData_;
+    io_->read(buf.pData_, bufMinSize);
+    io_->read(buf.pData_, bufMinSize);
+    xmpData_["Xmp.video.fileType"] = buf.pData_;
 
-    for(long Counter = 0; Counter < 15000; Counter++) {
-        std::memset(buf.pData_, 0x0, buf.size_);
-        io_->read(buf.pData_, bufMinSize);
-
-        if(equalsRiffTag(buf, "LIST") || equalsRiffTag(buf, "JUNK")) {
-            if(equalsRiffTag(buf, "JUNK")) {
-                junkHandler();
-                std::cerr<<"\n";
-                continue;
-            }
-            else
-            listHandler();
-        }
-
-        switch(Counter) {
-        case container:
-            xmpData_["Xmp.video.container"] = buf.pData_;
-            break;
-        case filetype:
-            xmpData_["Xmp.video.fileType"] = buf.pData_;
-            break;
-        case filesize:
-            //long filesize_ = Exiv2::getULong(buf.pData_, littleEndian); (For Debug)
-            //std::cerr <<std::setw(35)<<std::left<< "File Size Indicated By Metadata"<<": "<<filesize_<<" Bytes\n";
-            break;
-        }
-
+    while (continueTraversing_) {
+        decodeBlock();
     }
 }
 
-void RiffVideo::listHandler() {
+void RiffVideo::decodeBlock() {
     const long bufMinSize = 4;
     DataBuf buf(bufMinSize);
-    buf.pData_[4] = '\0';
-    long chunkEndPosition;
+    DataBuf buf2(bufMinSize);
+    unsigned long size = 0;
+    buf.pData_[4] = '\0' ;
+    buf2.pData_[4] = '\0' ;
 
-    io_->read(buf.pData_, bufMinSize);
-    chunkEndPosition = Exiv2::getULong(buf.pData_, littleEndian);
+//    std::memset(buf2.pData_, 0x0, buf.size_);
+//    std::memset(buf.pData_, 0x0, buf.size_);
+//    std::cout<<"|st|"<<buf2.pData_;
 
-    for (positionCounter_ = 0; positionCounter_ <= chunkEndPosition; ) {
-        std::memset(buf.pData_, 0x0, buf.size_);
-        io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
+    io_->read(buf2.pData_, 4);
+//    std::cout<<"\nBuf2 |"<<buf2.pData_;
 
-        if(equalsRiffTag(buf, "LIST") || equalsRiffTag(buf, "JUNK")) {
-            if(equalsRiffTag(buf, "JUNK")) {
-                junkHandler();
-                continue;
-            }
-            else
-                listHandler();
-        }
-        else if(equalsRiffTag(buf, "HDRL")) {
-            std::memset(buf.pData_, 0x0, buf.size_);
-            io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
-
-            if(equalsRiffTag(buf, "AVIH"))
-                aviHeaderTagsHandler();
-        }
-        else if(equalsRiffTag(buf, "VIDS")) {
-            streamHandler(Video);
-        }
-        else if(equalsRiffTag(buf, "AUDS")) {
-            streamHandler(Audio);
-        }
-        else if(equalsRiffTag(buf, "INFO")) {
-            infoTagsHandler();
-        }
-        else if(equalsRiffTag(buf, "MOVI")) {
-            //std::cerr <<std::setw(35)<<std::left<< "Metadata Has Reached Its End"<<": "<<buf.pData_<<"\n"; (For Debug)
-            return;
-        }
+    if(io_->eof() || equalsRiffTag(buf2, "MOVI")) {
+        continueTraversing_ = false;
+        return;
     }
+    else if(equalsRiffTag(buf2, "HDRL") || equalsRiffTag(buf2, "STRL")) {
+        decodeBlock();
+    }
+    else {
+
+    io_->read(buf.pData_, 4);
+    size = Exiv2::getULong(buf.pData_, littleEndian);
+//    std::cout <<"("<<std::setw(9)<<std::right<<size<<"): ";
+    tagDecoder(buf2, size);
+    }
+}
+
+void RiffVideo::tagDecoder(Exiv2::DataBuf& buf, unsigned long size) {
+    uint64_t cur_pos = io_->tell();
+
+    if(equalsRiffTag(buf, "LIST"))
+        decodeBlock();
+
+    else if(equalsRiffTag(buf, "JUNK"))
+        junkHandler(size);
+
+    else if(equalsRiffTag(buf, "AVIH"))
+        aviHeaderTagsHandler(size);
+
+    else if(equalsRiffTag(buf, "STRH")) {
+        streamHandler(size);
+    }
+    else if(equalsRiffTag(buf,"STRF")) {
+        streamFormatHandler(size);
+    }
+    else if(equalsRiffTag(buf, "IDIT")) {
+        dateTimeOriginal(size);
+    }
+    else if(equalsRiffTag(buf, "INFO")) {
+        infoTagsHandler();
+    }
+    else
+        io_->seek(cur_pos + size, BasicIo::beg);
+}
+
+void RiffVideo::dateTimeOriginal(long size) {
+    uint64_t cur_pos = io_->tell();
+    const long bufMinSize = 100;
+    DataBuf buf(bufMinSize);
+    io_->read(buf.pData_, size);
+    xmpData_["Xmp.video.dateUTC"] = buf.pData_;
+    io_->seek(cur_pos + size, BasicIo::beg);
 }
 
 void RiffVideo::infoTagsHandler() { //Todo Decoding Info Tags
     const long bufMinSize = 100;
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
-    long infoSize;
+    io_->seek(-12, BasicIo::cur);
+    io_->read(buf.pData_, 4);
+    unsigned long infoSize, size = Exiv2::getULong(buf.pData_, littleEndian);
+    unsigned long size2 = size;
+    const TagVocabulary* tv;
 
-    io_->read(buf.pData_, 4); positionCounter_ += 4;
-    std::cerr <<std::setw(35)<<std::left<< "Info Name"<<": "<< buf.pData_<<"\n";
-    io_->read(buf.pData_, 4); positionCounter_ += 4;
-    infoSize = Exiv2::getULong(buf.pData_, littleEndian);
+    uint64_t cur_pos = io_->tell();
+    io_->read(buf.pData_, 4); size -= 4;
 
-    io_->read(buf.pData_, infoSize); positionCounter_ += infoSize;
-    std::cerr <<std::setw(35)<<std::left<< "Info Data"<<": "<< buf.pData_<<"\n";
+    while(size > 0) {
+        io_->read(buf.pData_, 4); size -= 4;
+//        std::cerr <<std::setw(35)<<std::left<< "Info Name"<<": "<< buf.pData_<<"\n";
+        tv = find(infoTags , Exiv2::toString( buf.pData_));
+        io_->read(buf.pData_, 4); size -= 4;
+        infoSize = Exiv2::getULong(buf.pData_, littleEndian);
+
+        io_->read(buf.pData_, infoSize); size -= infoSize;
+//        std::cerr <<std::setw(35)<<std::left<< "Info Data"<<": "<< buf.pData_<<"\n";
+
+        if(tv)
+            xmpData_[exvGettext(tv->label_)] = buf.pData_;
+    }
+    io_->seek(cur_pos + size2, BasicIo::beg);
 }
 
-void RiffVideo::junkHandler() {
+void RiffVideo::junkHandler(long chunkEndPosition) {
     const long bufMinSize = 4;
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
-    long chunkEndPosition;
+//    long chunkEndPosition;
     uint64_t cur_pos = io_->tell();
 
     Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpSeq);
 
 
-    io_->read(buf.pData_, bufMinSize);
-    chunkEndPosition = Exiv2::getULong(buf.pData_, littleEndian);
+//    io_->read(buf.pData_, bufMinSize);
+//    chunkEndPosition = Exiv2::getULong(buf.pData_, littleEndian);
 
     //std::cerr <<std::setw(35)<<std::left<< "Junk Data"<<": ";   (For Debug)
     for (positionCounter_ = 0; positionCounter_ < chunkEndPosition; ){
@@ -536,19 +552,18 @@ void RiffVideo::junkHandler() {
 
 }
 
-void RiffVideo::aviHeaderTagsHandler() {
+void RiffVideo::aviHeaderTagsHandler(long size) {
     const long bufMinSize = 4;
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
     long width = 0, height = 0, frame_count = 0;
     double frame_rate = 1;
 
-    std::memset(buf.pData_, 0x0, buf.size_);
-    io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
+    uint64_t cur_pos = io_->tell();
 
     for(int i = 0; i <= 9; i++, positionCounter_ += 4) {
         std::memset(buf.pData_, 0x0, buf.size_);
-        io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
+        io_->read(buf.pData_, bufMinSize); //positionCounter_ += 4;
 
         switch(i) {
         case frameRate:
@@ -586,23 +601,33 @@ void RiffVideo::aviHeaderTagsHandler() {
         xmpData_.add(Exiv2::XmpKey("Xmp.video.frameSize/stDim:unit"), &tv);
 
     displayDuration(frame_rate, frame_count);
+
+    io_->seek(cur_pos + size, BasicIo::beg);
 }
 
-void RiffVideo::streamHandler(int streamType) {
+void RiffVideo::streamHandler(long size) {
     const long bufMinSize = 4;
     DataBuf buf(bufMinSize);
     buf.pData_[4]='\0';
     long divisor = 1;
+    uint64_t cur_pos = io_->tell();
+
+    io_->read(buf.pData_, bufMinSize);
+    if(equalsRiffTag(buf, "VIDS")) //{
+        streamType_ = Video; //std::cout<<"Video Set";}
+    else if (equalsRiffTag(buf, "AUDS")) // {
+        streamType_ = Audio; //std::cout<<"Audio Set";}
+
 
     for(int i=1; i<=25; i++,positionCounter_++) {
         std::memset(buf.pData_, 0x0, buf.size_);
-        io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
+        io_->read(buf.pData_, bufMinSize); //positionCounter_ += 4;
 
         switch(i) {
         case codec:
-            if(streamType == Video)
+            if(streamType_ == Video)
                 xmpData_["Xmp.video.codec"] = buf.pData_;
-            else if (streamType == Audio)
+            else if (streamType_ == Audio)
                 xmpData_["Xmp.audio.codec"] = buf.pData_;
             else
                 xmpData_["Xmp.video.codec"] = buf.pData_;
@@ -611,61 +636,47 @@ void RiffVideo::streamHandler(int streamType) {
             divisor=Exiv2::getULong(buf.pData_, littleEndian);
             break;
         case (sampleRate+1):
-            if(streamType == Video)
+            if(streamType_ == Video)
                 xmpData_["Xmp.video.frameRate"] = returnSampleRate(buf,divisor);
-            else if (streamType == Audio)
+            else if (streamType_ == Audio)
                 xmpData_["Xmp.audio.sampleRate"] = returnSampleRate(buf,divisor);
             else
                  xmpData_["Xmp.video.streamSampleRate"] = returnSampleRate(buf,divisor);
             break;
         case sampleCount:
-            if(streamType == Video)
+            if(streamType_ == Video)
                 xmpData_["Xmp.video.frameCount"] = Exiv2::getULong(buf.pData_, littleEndian);
-            else if (streamType == Audio)
+            else if (streamType_ == Audio)
                 xmpData_["Xmp.audio.sampleCount"] = Exiv2::getULong(buf.pData_, littleEndian);
             else
                 xmpData_["Xmp.video.streamSampleCount"] = Exiv2::getULong(buf.pData_, littleEndian);
             break;
         case quality:
-            if(streamType == Video)
+            if(streamType_ == Video)
                 xmpData_["Xmp.video.videoQuality"] = Exiv2::getULong(buf.pData_, littleEndian);
-            else if(streamType != Audio)
+            else if(streamType_ != Audio)
                 xmpData_["Xmp.video.streamQuality"] = Exiv2::getULong(buf.pData_, littleEndian);
             break;
         case sampleSize:
-            if(streamType == Video)
+            if(streamType_ == Video)
                 xmpData_["Xmp.video.videoSampleSize"] = Exiv2::getULong(buf.pData_, littleEndian);
-            else if(streamType != Audio)
+            else if(streamType_ != Audio)
                 xmpData_["Xmp.video.streamSampleSize"] = Exiv2::getULong(buf.pData_, littleEndian);
             break;
         }
 
-        if(equalsRiffTag(buf,"STRF")) {
-            //std::cerr <<std::setw(35)<<std::left<< "Stream Format"<<": "<<"\n";  (For Debug)
-            io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
-            streamFormatHandler(streamType);
-        }
-
-        //Checks the end of Video Stream or Audio Stream and adds two bits to the buffer progress
-        if(equalsRiffTag(buf,"VIDE")|| equalsRiffTag(buf,"AUDI")) {
-            //if(equalsRiffTag(buf,"VIDE"))
-            //    std::cerr <<std::setw(35)<<std::left<< "Stream Type"<<": "<<"Video Stream Ends\n";
-            //if(equalsRiffTag(buf,"AUDI"))
-            //    std::cerr <<std::setw(35)<<std::left<< "Stream Type"<<": "<<"Audio Stream Ends\n";  (For Debug)
-            io_->read(buf.pData_, 2); positionCounter_ +=2;
-            return;
-        }
     }
+    io_->seek(cur_pos + size, BasicIo::beg);
 }
 
-void RiffVideo::streamFormatHandler(int streamType) {
+void RiffVideo::streamFormatHandler(long size) {
     const long bufMinSize = 4;
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
+    uint64_t cur_pos = io_->tell();
 
-//    uint64_t cur_pos = io_->tell();
-
-    if(streamType == Video) {
+//    std::cerr<<"Stream :"<<streamType_;
+    if(streamType_ == Video) {
         io_->read(buf.pData_, bufMinSize); positionCounter_ += 4;
 
         for(int i = 0; i <= 9; i++, positionCounter_++) {
@@ -721,10 +732,9 @@ void RiffVideo::streamFormatHandler(int streamType) {
             }
         }
     }
-    else if(streamType == Audio) {
+    else if(streamType_ == Audio) {
         int c = 0;
         const TagDetails* td;
-
         for(int i = 0; i <= 7; i++, positionCounter_++) {
             io_->read(buf.pData_, 2); positionCounter_ += 2;
 
@@ -757,8 +767,8 @@ void RiffVideo::streamFormatHandler(int streamType) {
             }
         }
     }
-//    io_->seek(cur_pos + size, BasicIo::beg);
-
+    io_->seek(cur_pos + size, BasicIo::beg);
+//     std::cout<<"\nComplete\n";
 }
 
 double RiffVideo::returnSampleRate(Exiv2::DataBuf& buf, long divisor) {

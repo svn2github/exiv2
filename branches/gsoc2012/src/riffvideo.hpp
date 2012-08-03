@@ -29,12 +29,15 @@ public:
     std::string mimeType() const;
 
 protected:
-    void streamHandler(int streamType);
-    void streamFormatHandler(int streamType);
-    void aviHeaderTagsHandler();
-    void junkHandler();
-    void listHandler();
+    void streamHandler(long size);
+    void streamFormatHandler(long size);
+    void aviHeaderTagsHandler(long size);
+    void decodeBlock();
+    void tagDecoder(Exiv2::DataBuf& buf, unsigned long size);
+    void junkHandler(long size);
+    void listHandler(long size);
     void infoTagsHandler();
+    void dateTimeOriginal(long size);
     const char* printAudioEncoding(long i);
     double returnSampleRate(Exiv2::DataBuf& buf, long divisor = 1);
     void displayAspectRatio(long width = 1,long height = 1);
@@ -42,6 +45,8 @@ protected:
 
 private:
     long positionCounter_;
+    bool continueTraversing_;
+    int streamType_;
 }; //RiffVideo End
 
 
