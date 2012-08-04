@@ -435,10 +435,10 @@ void RiffVideo::decodeBlock() {
 
 //    std::memset(buf2.pData_, 0x0, buf.size_);
 //    std::memset(buf.pData_, 0x0, buf.size_);
-    std::cout<<"|st|"<<buf2.pData_;
+//    std::cout<<"|st|"<<buf2.pData_;
 
     io_->read(buf2.pData_, 4);
-    std::cout<<"\nBuf2 |"<<buf2.pData_;
+//    std::cout<<"\nBuf2 |"<<buf2.pData_;
 
     if(io_->eof() || equalsRiffTag(buf2, "MOVI")) {
         continueTraversing_ = false;
@@ -451,7 +451,8 @@ void RiffVideo::decodeBlock() {
 
     io_->read(buf.pData_, 4);
     size = Exiv2::getULong(buf.pData_, littleEndian);
-    std::cout <<"("<<std::setw(9)<<std::right<<size<<"): ";
+//    std::cout <<"("<<std::setw(9)<<std::right<<size<<"): ";
+
     tagDecoder(buf2, size);
     }
 }
@@ -463,7 +464,7 @@ void RiffVideo::tagDecoder(Exiv2::DataBuf& buf, unsigned long size) {
     if(equalsRiffTag(buf, "LIST")) {
         listFlag = true;
         listEnd = false;
-        while(io_->tell() < cur_pos + size)
+        while((uint64_t)(io_->tell()) < cur_pos + size)
             decodeBlock();
         listEnd = true;
         io_->seek(cur_pos + size, BasicIo::beg);
@@ -559,7 +560,7 @@ void RiffVideo::infoTagsHandler() { //Todo Decoding Info Tags
     uint64_t cur_pos = io_->tell();
     io_->read(buf.pData_, 4); size -= 4;
 
-    while(size > 0) {
+    while(size > 3) {
         io_->read(buf.pData_, 4); size -= 4;
 //        std::cerr <<std::setw(35)<<std::left<< "Info Name"<<": "<< buf.pData_<<"\n";
         tv = find(infoTags , Exiv2::toString( buf.pData_));
