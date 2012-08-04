@@ -433,14 +433,12 @@ void RiffVideo::decodeBlock() {
     buf.pData_[4] = '\0' ;
     buf2.pData_[4] = '\0' ;
 
-//    std::memset(buf2.pData_, 0x0, buf.size_);
-//    std::memset(buf.pData_, 0x0, buf.size_);
 //    std::cout<<"|st|"<<buf2.pData_;
 
     io_->read(buf2.pData_, 4);
 //    std::cout<<"\nBuf2 |"<<buf2.pData_;
 
-    if(io_->eof() || equalsRiffTag(buf2, "MOVI")) {
+    if(io_->eof() || equalsRiffTag(buf2, "MOVI") || equalsRiffTag(buf2, "DATA")) {
         continueTraversing_ = false;
         return;
     }
@@ -563,11 +561,16 @@ void RiffVideo::infoTagsHandler() { //Todo Decoding Info Tags
     while(size > 3) {
         io_->read(buf.pData_, 4); size -= 4;
 //        std::cerr <<std::setw(35)<<std::left<< "Info Name"<<": "<< buf.pData_<<"\n";
+        if(!Exiv2::getULong(buf.pData_, littleEndian))
+            break;
         tv = find(infoTags , Exiv2::toString( buf.pData_));
         io_->read(buf.pData_, 4); size -= 4;
         infoSize = Exiv2::getULong(buf.pData_, littleEndian);
 
-        io_->read(buf.pData_, infoSize); size -= infoSize;
+        if(infoSize) {
+            size -= infoSize;
+            io_->read(buf.pData_, infoSize);
+        }
 //        std::cerr <<std::setw(35)<<std::left<< "Info Data"<<": "<< buf.pData_<<"\n";
 
         if(tv)
