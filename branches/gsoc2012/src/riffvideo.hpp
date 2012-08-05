@@ -36,10 +36,11 @@ protected:
     void tagDecoder(Exiv2::DataBuf& buf, unsigned long size);
     void junkHandler(long size);
     void listHandler(long size);
+    void streamDataTagHandler(long size);
     void infoTagsHandler();
     void odmlTagsHandler();
     void skipListData();
-    void dateTimeOriginal(long size);
+    void dateTimeOriginal(long size, int i = 0);
     const char* printAudioEncoding(long i);
     double returnSampleRate(Exiv2::DataBuf& buf, long divisor = 1);
     void displayAspectRatio(long width = 1,long height = 1);

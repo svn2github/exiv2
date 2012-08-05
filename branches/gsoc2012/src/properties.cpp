@@ -1081,6 +1081,7 @@ namespace Exiv2 {
         { "sourceImageHeight",  N_("Source Image Height"),          "Integer",               xmpText, xmpExternal, N_("Video height in pixels")   },
         { "sourceImageWidth",   N_("Source Image Width"),           "Integer",               xmpText, xmpExternal, N_("Video width in pixels")   },
         { "streamCount",        N_("Stream Count"),                 "Integer",               xmpText, xmpExternal, N_("Total Number Of Streams")   },
+        { "streamName",         N_("Stream Name"),                  "Text",                  xmpText, xmpExternal, N_("Describes the Stream Name. Eg - FUJIFILM AVI STREAM 0100")   },
         { "streamQuality",      N_("Stream Quality"),               "Integer",               xmpText, xmpExternal, N_("Generral Stream Quality")   },
         { "streamSampleRate",   N_("Stream Sample Rate"),           "Rational",              xmpText, xmpExternal, N_("Stream Sample Rate")   },
         { "streamSampleCount",  N_("Stream Sample Count"),          "Integer",               xmpText, xmpExternal, N_("Stream Sample Count")   },
