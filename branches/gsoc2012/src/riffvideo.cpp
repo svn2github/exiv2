@@ -814,7 +814,7 @@ void RiffVideo::infoTagsHandler() { //Todo Decoding Info Tags
 }
 
 void RiffVideo::junkHandler(long size) {
-    const long bufMinSize = 20000;
+    const long bufMinSize = 4;
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
     uint64_t cur_pos = io_->tell();
@@ -822,7 +822,7 @@ void RiffVideo::junkHandler(long size) {
     Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpSeq);
 
     //std::cerr <<std::setw(35)<<std::left<< "Junk Data"<<": ";   (For Debug)
-    for (int i = 0; i < size; ){
+    for (int i = 0; i < size; ) {
         std::memset(buf.pData_, 0x0, buf.size_);
         if (size - i < 4) {
             io_->read(buf.pData_, 2); i += 2;
