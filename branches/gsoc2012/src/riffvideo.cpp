@@ -6,9 +6,45 @@
 #include "tags.hpp"
 #include "tags_int.hpp"
 #include "types.hpp"
+#include "tiffimage_int.hpp"
 
 namespace Exiv2 {
     namespace Internal {
+
+    /*!
+      @brief Dummy TIFF header structure.
+     */
+    class DummyTiffHeader : public TiffHeaderBase {
+    public:
+        //! @name Creators
+        //@{
+        //! Default constructor
+        DummyTiffHeader(ByteOrder byteOrder);
+        //! Destructor
+        ~DummyTiffHeader();
+        //@}
+
+        //! @name Manipulators
+        //@{
+        //! Dummy read function. Does nothing and returns true.
+        bool read(const byte* pData, uint32_t size);
+        //@}
+
+    }; // class TiffHeader
+
+    DummyTiffHeader::DummyTiffHeader(ByteOrder byteOrder)
+        : TiffHeaderBase(42, 0, byteOrder, 0)
+    {
+    }
+
+    DummyTiffHeader::~DummyTiffHeader()
+    {
+    }
+
+    bool DummyTiffHeader::read(const byte* /*pData*/, uint32_t /*size*/)
+    {
+        return true;
+    }
 
     extern const TagVocabulary infoTags[] =  {
         {   "AGES", "Rated" },
@@ -95,10 +131,7 @@ namespace Exiv2 {
         {   "VMAJ", "VegasVersionMajor" },
         {   "VMIN", "VegasVersionMinor" },
         {   "YEAR", "Year" }
-
-
     };
-
 
     extern const TagDetails audioEncodingValues[] =  {
         {   0x1, "Microsoft PCM" },
@@ -346,9 +379,64 @@ namespace Exiv2 {
         {   0xffff, "Development" }
     };
 
+    extern const TagDetails nikonAVITags[] =  {
+        {   0x0003, "Xmp.tiff.Make" },
+        {   0x0004, "Xmp.tiff.Model" },
+        {   0x0005, "Xmp.tiff.Software" },
+        {   0x0006, "Xmp.video.udEquipment" },
+        {   0x0007, "Xmp.tiff.Orientation" },
+        {   0x0008, "Xmp.exif.ExposureTime" },
+        {   0x0009, "Xmp.exif.FNumber" },
+        {   0x000a, "Xmp.video.udExposureCompensation" },
+        {   0x000b, "Xmp.exif.MaxApertureValue" },
+        {   0x000c, "Xmp.exif.MeteringMode" },
+        {   0x000f, "Xmp.exif.FocalLength" },
+        {   0x0010, "Xmp.tiff.XResolution" },
+        {   0x0011, "Xmp.tiff.YResolution" },
+        {   0x0012, "Xmp.tiff.ResolutionUnit" },
+        {   0x0013, "Xmp.exif.DateTimeOriginal" },
+        {   0x0014, "Xmp.exif.DateTimeDigitized" },
+        {   0x0016, "Xmp.video.duration" },
+        {   0x0018, "Xmp.video.udFocusMode" },
+        {   0x001b, "Xmp.exif.DigitalZoomRatio" },
+        {   0x001d, "Xmp.video.udColorMode" },
+        {   0x001e, "Xmp.exif.Sharpness" },
+        {   0x001f, "Xmp.exif.WhiteBalance" },
+        {   0x0020, "Xmp.crs.ColorNoiseReduction" }
+ };
+
+    /*
+    extern const TagDetails orientation[] =  {
+        {   1, "Horizontal (normal)" },
+        {   2, "Mirror horizontal" },
+        {   3, "Rotate 180" },
+        {   4, "Mirror vertical" },
+        {   5, "Mirror horizontal and rotate 270 CW" },
+        {   6, "Rotate 90 CW" },
+        {   7, "Mirror horizontal and rotate 90 CW" },
+        {   8, "Rotate 270 CW" }
+    };
+*/
+    extern const TagDetails meteringMode[] =  {
+        {   0, "Unknown" },
+        {   1, "Average" },
+        {   2, "Center-weighted average" },
+        {   3, "Spot" },
+        {   4, "Multi-spot" },
+        {   5, "Multi-segment" },
+        {   6, "Partial" },
+        { 255, "Other" }
+    };
+
+    extern const TagDetails resolutionUnit[] =  {
+        {   1, "None" },
+        {   2, "inches" },
+        {   3, "cm" }
+    };
+
     bool equalsRiffTag(Exiv2::DataBuf& buf ,const char* str2) {
-        for(int i=0;i<4;i++)
-            if(toupper(buf.pData_[i])!=str2[i])
+        for(int i = 0; i < 4; i++ )
+            if(toupper(buf.pData_[i]) != str2[i])
                 return false;
         return true;
     }
@@ -500,6 +588,10 @@ void RiffVideo::tagDecoder(Exiv2::DataBuf& buf, unsigned long size) {
         listFlag = false;
         infoTagsHandler();
     }
+    else if(equalsRiffTag(buf, "NCDT")) {
+        listFlag = false;
+        nikonTagsHandler();
+    }
     else if(equalsRiffTag(buf, "ODML")) {
         listFlag = false;
         odmlTagsHandler();
@@ -514,20 +606,40 @@ void RiffVideo::tagDecoder(Exiv2::DataBuf& buf, unsigned long size) {
     }
 }
 
-void RiffVideo::streamDataTagHandler(long size) {
+void RiffVideo::streamDataTagHandler(long size) { //TODO decode Data Stream Tags
     const long bufMinSize = 20000;
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
     uint64_t cur_pos = io_->tell();
 
     //std::cerr <<std::setw(35)<<std::left<< "Junk Data"<<": ";   (For Debug)
-    ByteOrder bo;
-    io_->read(buf.pData_, 4);
+        io_->read(buf.pData_, 8);
 
-    if(equalsRiffTag(buf, "AVIF"))
-        io_->read(buf.pData_, size - 4);
-        bo = ExifParser::decode(exifData_, buf.pData_, buf.size_);
+         if(equalsRiffTag(buf, "AVIF")) {
 
+             io_->read(buf.pData_, size - 4);
+
+             IptcData iptcData;
+             XmpData  xmpData;
+             DummyTiffHeader tiffHeader(littleEndian);
+             TiffParserWorker::decode(exifData_,
+                                      iptcData,
+                                      xmpData,
+                                      buf.pData_,
+                                      buf.size_,
+                                      Tag::root,
+                                      TiffMapping::findDecoder,
+                                      &tiffHeader);
+
+     #ifndef SUPPRESS_WARNINGS
+             if (!iptcData.empty()) {
+                 EXV_WARNING << "Ignoring IPTC information encoded in the Exif data.\n";
+             }
+             if (!xmpData.empty()) {
+                 EXV_WARNING << "Ignoring XMP information encoded in the Exif data.\n";
+             }
+     #endif
+         }
     io_->seek(cur_pos + size, BasicIo::beg);
 
 }
@@ -579,6 +691,94 @@ void RiffVideo::skipListData() {
     io_->seek(cur_pos + size, BasicIo::beg);
 }
 
+void RiffVideo::nikonTagsHandler() {
+    const long bufMinSize = 100;
+    DataBuf buf(bufMinSize), buf2(4);
+    buf.pData_[4] = '\0';
+    io_->seek(-12, BasicIo::cur);
+    io_->read(buf.pData_, 4);
+
+    unsigned long internal_size = 0, tagID = 0, dataSize = 0, tempSize, size = Exiv2::getULong(buf.pData_, littleEndian);
+    tempSize = size; char str[9] = " . . . ";
+    uint64_t internal_pos, cur_pos; internal_pos = cur_pos = io_->tell();
+    const TagDetails* td;
+    io_->read(buf.pData_, 4); tempSize -= 4;
+
+    while(tempSize > 0) {
+        std::memset(buf.pData_, 0x0, buf.size_);
+        io_->read(buf.pData_, 4);
+        io_->read(buf2.pData_, 4);
+        int temp = internal_size = Exiv2::getULong(buf2.pData_, littleEndian);
+        internal_pos = io_->tell(); tempSize -= (internal_size + 8);
+
+        if(equalsRiffTag(buf, "NCVR")) {
+            while(temp > 3) {
+                std::memset(buf.pData_, 0x0, buf.size_);
+                io_->read(buf.pData_, 2);
+                tagID = Exiv2::getULong(buf.pData_, littleEndian);
+                io_->read(buf.pData_, 2);
+                dataSize = Exiv2::getULong(buf.pData_, littleEndian);
+                temp -= (4 + dataSize);
+
+                if(tagID == 0x0001) {
+                    io_->read(buf.pData_, dataSize);
+                    xmpData_["Xmp.video.makerNoteType"] = buf.pData_;
+                }
+                else if (tagID == 0x0002) {
+                    while(dataSize) {
+                        std::memset(buf.pData_, 0x0, buf.size_); io_->read(buf.pData_, 1);
+                        str[(4 - dataSize) * 2] = (char)(Exiv2::getULong(buf.pData_, littleEndian) + 48);
+                        --dataSize;
+                    }
+                    xmpData_["Xmp.video.makerNoteVersion"] = str;
+                }
+            }
+        }
+        else if(equalsRiffTag(buf, "NCTG")) {
+            while(temp > 3) {
+                std::memset(buf.pData_, 0x0, buf.size_);
+                io_->read(buf.pData_, 2);
+                tagID = Exiv2::getULong(buf.pData_, littleEndian);
+                io_->read(buf.pData_, 2);
+                dataSize = Exiv2::getULong(buf.pData_, littleEndian);
+                temp -= (4 + dataSize);
+                td = find(nikonAVITags , tagID);
+                io_->read(buf.pData_, dataSize);
+
+                switch (tagID) {
+                case 0x0003: case 0x0004: case 0x0005: case 0x0006: case 0x0013: case 0x0014:
+                case 0x0018: case 0x001d: case 0x001e: case 0x001f: case 0x0020:
+                    if(td)
+                        xmpData_[exvGettext(td->label_)] = buf.pData_; break;
+
+                case 0x0007: case 0x0010: case 0x0011: case 0x000c: case 0x0012:
+                    xmpData_[exvGettext(td->label_)] = Exiv2::getULong(buf.pData_, littleEndian); break;
+
+                case 0x0008: case 0x0009: case 0x000a: case 0x000b: case 0x000f: case 0x001b: case 0x0016:
+                    buf2.pData_[0] = buf.pData_[4]; buf2.pData_[1] = buf.pData_[5];
+                    buf2.pData_[2] = buf.pData_[6]; buf2.pData_[3] = buf.pData_[7];
+                    xmpData_[exvGettext(td->label_)] = (double)Exiv2::getLong(buf.pData_, littleEndian) / (double)Exiv2::getLong(buf2.pData_, littleEndian);;
+                    break;
+
+                default:
+                    break;
+                }
+//                if(td)
+//                    std::cerr<<"\n|TagID|"<<std::hex<<tagID<<"|Tag|"<<exvGettext(td->label_)<<"|Size|"<<dataSize<<"|Buf|"<<buf.pData_;
+            }
+        }
+
+        else if(equalsRiffTag(buf, "NCTH")) {//TODO Thumbnail Image
+        }
+
+        else if(equalsRiffTag(buf, "NCVW")) {//TODO Preview Image
+        }
+
+        io_->seek(internal_pos + internal_size, BasicIo::beg);
+    }
+    io_->seek(cur_pos + size, BasicIo::beg);
+}
+
 void RiffVideo::infoTagsHandler() { //Todo Decoding Info Tags
     const long bufMinSize = 100;
     DataBuf buf(bufMinSize);
@@ -614,7 +814,7 @@ void RiffVideo::infoTagsHandler() { //Todo Decoding Info Tags
 }
 
 void RiffVideo::junkHandler(long size) {
-    const long bufMinSize = 4;
+    const long bufMinSize = 20000;
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
     uint64_t cur_pos = io_->tell();

@@ -38,6 +38,7 @@ protected:
     void listHandler(long size);
     void streamDataTagHandler(long size);
     void infoTagsHandler();
+    void nikonTagsHandler();
     void odmlTagsHandler();
     void skipListData();
     void dateTimeOriginal(long size, int i = 0);
