@@ -521,10 +521,10 @@ void RiffVideo::decodeBlock() {
     buf.pData_[4] = '\0' ;
     buf2.pData_[4] = '\0' ;
 
-    std::cout<<"|st|"<<buf2.pData_;
+//    std::cout<<"|st|"<<buf2.pData_;
 
     io_->read(buf2.pData_, 4);
-    std::cout<<"\nBuf2 |"<<buf2.pData_;
+//    std::cout<<"\nBuf2 |"<<buf2.pData_;
 
     if(io_->eof() || equalsRiffTag(buf2, "MOVI") || equalsRiffTag(buf2, "DATA")) {
         continueTraversing_ = false;
@@ -537,7 +537,7 @@ void RiffVideo::decodeBlock() {
 
     io_->read(buf.pData_, 4);
     size = Exiv2::getULong(buf.pData_, littleEndian);
-    std::cout <<"("<<std::setw(9)<<std::right<<size<<"): ";
+//    std::cout <<"("<<std::setw(9)<<std::right<<size<<"): ";
 
     tagDecoder(buf2, size);
     }
