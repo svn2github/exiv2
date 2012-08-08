@@ -7,6 +7,7 @@
 #include "tags_int.hpp"
 #include "types.hpp"
 #include "tiffimage_int.hpp"
+#include "../xmpsdk/include/XMPSDK.hpp"
 
 namespace Exiv2 {
     namespace Internal {
@@ -102,7 +103,7 @@ namespace Exiv2 {
         {   "IRIP", "RippedBy" },
         {   "IRTD", "Rating" },
         {   "ISBJ", "Subject" },
-        {   "ISFT", "Xmp.video.software" },
+        {   "ISFT", "Xmp.video.Software" },
         {   "ISGN", "SecondaryGenre" },
         {   "ISHP", "Sharpness" },
         {   "ISRC", "Source" },
@@ -380,29 +381,29 @@ namespace Exiv2 {
     };
 
     extern const TagDetails nikonAVITags[] =  {
-        {   0x0003, "Xmp.tiff.Make" },
-        {   0x0004, "Xmp.tiff.Model" },
-        {   0x0005, "Xmp.tiff.Software" },
-        {   0x0006, "Xmp.video.udEquipment" },
-        {   0x0007, "Xmp.tiff.Orientation" },
-        {   0x0008, "Xmp.exif.ExposureTime" },
-        {   0x0009, "Xmp.exif.FNumber" },
-        {   0x000a, "Xmp.video.udExposureCompensation" },
-        {   0x000b, "Xmp.exif.MaxApertureValue" },
-        {   0x000c, "Xmp.exif.MeteringMode" },
-        {   0x000f, "Xmp.exif.FocalLength" },
-        {   0x0010, "Xmp.tiff.XResolution" },
-        {   0x0011, "Xmp.tiff.YResolution" },
-        {   0x0012, "Xmp.tiff.ResolutionUnit" },
-        {   0x0013, "Xmp.exif.DateTimeOriginal" },
-        {   0x0014, "Xmp.exif.DateTimeDigitized" },
+        {   0x0003, "Xmp.video.Make" },
+        {   0x0004, "Xmp.video.Model" },
+        {   0x0005, "Xmp.video.Software" },
+        {   0x0006, "Xmp.video.Equipment" },
+        {   0x0007, "Xmp.video.Orientation" },
+        {   0x0008, "Xmp.video.ExposureTime" },
+        {   0x0009, "Xmp.video.FNumber" },
+        {   0x000a, "Xmp.video.ExposureCompensation" },
+        {   0x000b, "Xmp.video.MaxApertureValue" },
+        {   0x000c, "Xmp.video.MeteringMode" },
+        {   0x000f, "Xmp.video.FocalLength" },
+        {   0x0010, "Xmp.video.XResolution" },
+        {   0x0011, "Xmp.video.YResolution" },
+        {   0x0012, "Xmp.video.ResolutionUnit" },
+        {   0x0013, "Xmp.video.DateTimeOriginal" },
+        {   0x0014, "Xmp.video.DateTimeDigitized" },
         {   0x0016, "Xmp.video.duration" },
-        {   0x0018, "Xmp.video.udFocusMode" },
-        {   0x001b, "Xmp.exif.DigitalZoomRatio" },
-        {   0x001d, "Xmp.video.udColorMode" },
-        {   0x001e, "Xmp.exif.Sharpness" },
-        {   0x001f, "Xmp.exif.WhiteBalance" },
-        {   0x0020, "Xmp.crs.ColorNoiseReduction" }
+        {   0x0018, "Xmp.video.FocusMode" },
+        {   0x001b, "Xmp.video.DigitalZoomRatio" },
+        {   0x001d, "Xmp.video.ColorMode" },
+        {   0x001e, "Xmp.video.Sharpness" },
+        {   0x001f, "Xmp.video.WhiteBalance" },
+        {   0x0020, "Xmp.video.ColorNoiseReduction" }
  };
 
     /*
@@ -521,8 +522,6 @@ void RiffVideo::decodeBlock() {
     buf.pData_[4] = '\0' ;
     buf2.pData_[4] = '\0' ;
 
-//    std::cout<<"|st|"<<buf2.pData_;
-
     io_->read(buf2.pData_, 4);
 //    std::cout<<"\nBuf2 |"<<buf2.pData_;
 
@@ -597,11 +596,11 @@ void RiffVideo::tagDecoder(Exiv2::DataBuf& buf, unsigned long size) {
         odmlTagsHandler();
     }
     else if (listFlag) {
-        std::cout<<"|unprocessed|"<<buf.pData_;
+//        std::cout<<"|unprocessed|"<<buf.pData_;
         skipListData();
     }
     else {
-        std::cout<<"|unprocessed|"<<buf.pData_;
+//        std::cout<<"|unprocessed|"<<buf.pData_;
         io_->seek(cur_pos + size, BasicIo::beg);
     }
 }
@@ -612,7 +611,6 @@ void RiffVideo::streamDataTagHandler(long size) { //TODO decode Data Stream Tags
     buf.pData_[4] = '\0';
     uint64_t cur_pos = io_->tell();
 
-    //std::cerr <<std::setw(35)<<std::left<< "Junk Data"<<": ";   (For Debug)
         io_->read(buf.pData_, 8);
 
          if(equalsRiffTag(buf, "AVIF")) {
@@ -748,7 +746,6 @@ void RiffVideo::nikonTagsHandler() {
                 switch (tagID) {
                 case 0x0003: case 0x0004: case 0x0005: case 0x0006: case 0x0013: case 0x0014:
                 case 0x0018: case 0x001d: case 0x001e: case 0x001f: case 0x0020:
-                    if(td)
                         xmpData_[exvGettext(td->label_)] = buf.pData_; break;
 
                 case 0x0007: case 0x0010: case 0x0011: case 0x000c: case 0x0012:
@@ -763,8 +760,6 @@ void RiffVideo::nikonTagsHandler() {
                 default:
                     break;
                 }
-//                if(td)
-//                    std::cerr<<"\n|TagID|"<<std::hex<<tagID<<"|Tag|"<<exvGettext(td->label_)<<"|Size|"<<dataSize<<"|Buf|"<<buf.pData_;
             }
         }
 
@@ -814,25 +809,68 @@ void RiffVideo::infoTagsHandler() { //Todo Decoding Info Tags
 }
 
 void RiffVideo::junkHandler(long size) {
-    const long bufMinSize = 4;
-    DataBuf buf(bufMinSize);
+    const long bufMinSize = size;
+    DataBuf buf(bufMinSize), buf2(4);
+    std::memset(buf.pData_, 0x0, buf.size_);
     buf.pData_[4] = '\0';
     uint64_t cur_pos = io_->tell();
 
-    Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpSeq);
+    io_->read(buf.pData_, 4);
+    if(equalsRiffTag(buf, "PENT")) {
 
-    //std::cerr <<std::setw(35)<<std::left<< "Junk Data"<<": ";   (For Debug)
-    for (int i = 0; i < size; ) {
+        io_->seek(cur_pos + 18, BasicIo::beg);
+        io_->read(buf.pData_, 26);
+        xmpData_["Xmp.video.Make"] = buf.pData_;
+
+        io_->read(buf.pData_, 50);
+        xmpData_["Xmp.video.Model"] = buf.pData_;
+
         std::memset(buf.pData_, 0x0, buf.size_);
-        if (size - i < 4) {
-            io_->read(buf.pData_, 2); i += 2;
-        }
-        else {
-            io_->read(buf.pData_, bufMinSize); i += 4;
-        }
-        v->read(Exiv2::toString( buf.pData_));
+        io_->read(buf.pData_, 8);
+        buf2.pData_[0] = buf.pData_[4]; buf2.pData_[1] = buf.pData_[5];
+        buf2.pData_[2] = buf.pData_[6]; buf2.pData_[3] = buf.pData_[7];
+        xmpData_["Xmp.video.FNumber"] = (double)Exiv2::getLong(buf.pData_, littleEndian) / (double)Exiv2::getLong(buf2.pData_, littleEndian);;
+
+        io_->seek(cur_pos + 131, BasicIo::beg);
+        io_->read(buf.pData_, 26);
+        xmpData_["Xmp.video.DateTimeOriginal"] = buf.pData_;
+
+        io_->read(buf.pData_, 26);
+        xmpData_["Xmp.video.DateTimeDigitized"] = buf.pData_;
+
+        io_->seek(cur_pos + 299, BasicIo::beg);
+        std::memset(buf.pData_, 0x0, buf.size_);
+
+        io_->read(buf.pData_, 2);
+        Exiv2::XmpTextValue tv(Exiv2::toString(Exiv2::getLong(buf.pData_, littleEndian)));
+        xmpData_.add(Exiv2::XmpKey("Xmp.xmp.Thumbnails/xmpGImg:width"), &tv);
+
+        io_->read(buf.pData_, 2);
+        tv.read(Exiv2::toString(Exiv2::getLong(buf.pData_, littleEndian)));
+        xmpData_.add(Exiv2::XmpKey("Xmp.xmp.Thumbnails/xmpGImg:height"), &tv);
+
+        io_->read(buf.pData_, 4);
+
+        /* TODO - Storing the image Thumbnail in Base64 Format
+
+
+        uint64_t length = Exiv2::getLong(buf.pData_, littleEndian);
+        io_->read(buf.pData_, length);
+
+        char *rawStr = Exiv2::toString(buf.pData_);
+        char *encodedStr;
+
+        SXMPUtils::EncodeToBase64(rawStr, encodedStr);
+
+        tv.read(Exiv2::toString(encodedStr));
+        xmpData_.add(Exiv2::XmpKey("Xmp.xmp.Thumbnails/xmpGImg:image"), &tv);
+*/
     }
-    xmpData_.add(Exiv2::XmpKey("Xmp.video.junk"), v.get());
+    else {
+        io_->seek(cur_pos, BasicIo::beg);
+        io_->read(buf.pData_, size);
+        xmpData_["Xmp.video.junk"] = buf.pData_;
+    }
 
     io_->seek(cur_pos + size, BasicIo::beg);
 
@@ -899,11 +937,10 @@ void RiffVideo::streamHandler(long size) {
     uint64_t cur_pos = io_->tell();
 
     io_->read(buf.pData_, bufMinSize);
-    if(equalsRiffTag(buf, "VIDS")) //{
-        streamType_ = Video; //std::cout<<"Video Set";}
-    else if (equalsRiffTag(buf, "AUDS")) // {
-        streamType_ = Audio; //std::cout<<"Audio Set";}
-
+    if(equalsRiffTag(buf, "VIDS"))
+        streamType_ = Video;
+    else if (equalsRiffTag(buf, "AUDS"))
+        streamType_ = Audio;
 
     for(int i=1; i<=25; i++) {
         std::memset(buf.pData_, 0x0, buf.size_);
@@ -1053,7 +1090,6 @@ void RiffVideo::streamFormatHandler(long size) {
         }
     }
     io_->seek(cur_pos + size, BasicIo::beg);
-//     std::cout<<"\nComplete\n";
 }
 
 double RiffVideo::returnSampleRate(Exiv2::DataBuf& buf, long divisor) {
