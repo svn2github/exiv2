@@ -33,7 +33,8 @@ SET( LIBEXIV2_PRIVATE_HDR canonmn_int.hpp
    )
 
 # Add standalone C++ header files to this list
-SET( LIBEXIV2_HDR         basicio.hpp
+SET( LIBEXIV2_HDR         asfvideo.hpp
+                          basicio.hpp
                           bmpimage.hpp
                           convert.hpp
                           cr2image.hpp
@@ -73,7 +74,8 @@ SET( LIBEXIV2_HDR         basicio.hpp
    )
 
 # Add library C++ source files to this list
-SET( LIBEXIV2_SRC         basicio.cpp
+SET( LIBEXIV2_SRC         asfvideo.cpp
+                          basicio.cpp
                           bmpimage.cpp
                           canonmn.cpp
                           convert.cpp

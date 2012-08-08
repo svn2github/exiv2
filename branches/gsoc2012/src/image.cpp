@@ -63,6 +63,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "matroskavideo.hpp"
 #include "quicktimevideo.hpp"
 #include "riffvideo.hpp"
+#include "asfvideo.hpp"
 #include "rw2image.hpp"
 #include "pgfimage.hpp"
 #include "xmpsidecar.hpp"
@@ -132,6 +133,7 @@ namespace {
         { ImageType::jp2,  newJp2Instance,  isJp2Type,  amReadWrite, amReadWrite, amReadWrite, amNone      },
         { ImageType::qtime,newQTimeInstance,isQTimeType,amReadWrite, amNone,      amNone,      amNone      },
         { ImageType::riff, newRiffInstance, isRiffType, amReadWrite, amNone,      amNone,      amNone      },
+        { ImageType::asf,  newAsfInstance,  isAsfType,  amReadWrite, amNone,      amNone,      amNone      },
         { ImageType::mkv,  newMkvInstance,  isMkvType,  amReadWrite, amNone,      amNone,      amNone      },
         // End of list marker
         { ImageType::none, 0,               0,          amNone,      amNone,      amNone,      amNone      }

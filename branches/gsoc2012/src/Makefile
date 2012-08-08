@@ -65,7 +65,8 @@ CCHDR =  exiv2.hpp             \
          version.hpp
 
 # Add library C++ source files to this list
-CCSRC =  basicio.cpp           \
+CCSRC =  asfvideo.cpp          \
+	 basicio.cpp           \
 	 bmpimage.cpp          \
 	 canonmn.cpp           \
 	 convert.cpp           \
@@ -101,7 +102,7 @@ CCSRC += preview.cpp           \
 	 properties.cpp        \
 	 psdimage.cpp          \
 	 quicktimevideo.cpp    \
-         rafimage.cpp          \
+	 rafimage.cpp          \
          riffvideo.cpp         \
 	 rw2image.cpp          \
 	 samsungmn.cpp         \
