@@ -4,10 +4,7 @@
 #include "exif.hpp"
 #include "image.hpp"
 #include "tags_int.hpp"
-//#include <math.h>
-//#include <string>
-//#include <ctype.h>
-
+using namespace Exiv2::Internal;
 
 namespace Exiv2 {
 
@@ -30,6 +27,8 @@ public:
 
 protected:
     void decodeBlock();
+    void tagDecoder(const TagVocabulary* tv, uint64_t size);
+    void fileProperties();
 private:
     bool continueTraversing_;
 }; //AsfVideo End
