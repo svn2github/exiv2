@@ -4,9 +4,9 @@
 #include "exif.hpp"
 #include "image.hpp"
 #include "tags_int.hpp"
-#include <math.h>
-#include <string>
-#include <ctype.h>
+//#include <math.h>
+//#include <string>
+//#include <ctype.h>
 
 
 namespace Exiv2 {
@@ -28,6 +28,10 @@ public:
     void writeMetadata();
     std::string mimeType() const;
 
+protected:
+    void decodeBlock();
+private:
+    bool continueTraversing_;
 }; //AsfVideo End
 
 
