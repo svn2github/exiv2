@@ -522,14 +522,13 @@ void MatroskaVideo::decodeBlock() {
     if (!display && readData)
         return;
 
-    if (!readData) {
+    if (!readData || size > 200) {
         io_->seek(size, BasicIo::cur);
         return;
     }
 
     io_->read(buf.pData_, size);
     contentManagement(td, buf, size);
-
 }
 
 void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf, unsigned long size) {

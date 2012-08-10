@@ -379,7 +379,7 @@ namespace Exiv2 {
     };
 
     enum imageDescTags {
-        CompressorID, VendorID = 4, SourceImageWidth_Height = 7,  XResolution,
+        codec, VendorID = 4, SourceImageWidth_Height = 7,  XResolution,
         YResolution, CompressorName = 10, BitDepth
     };
 
@@ -756,12 +756,12 @@ void QuickTimeVideo::imageDescDecoder() {
         io_->read(buf.pData_, 4);
 
         switch(i) {
-        case CompressorID:
+        case codec:
             td = find(qTimeFileType, Exiv2::toString( buf.pData_));
             if(td)
-                xmpData_["Xmp.video.compressorID"] = exvGettext(td->label_);
+                xmpData_["Xmp.video.codec"] = exvGettext(td->label_);
             else
-                xmpData_["Xmp.video.compressorID"] = Exiv2::toString( buf.pData_);
+                xmpData_["Xmp.video.codec"] = Exiv2::toString( buf.pData_);
             break;
         case VendorID:
             td = find(vendorIDTags, Exiv2::toString( buf.pData_));
