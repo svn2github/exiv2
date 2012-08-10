@@ -29,8 +29,13 @@ protected:
     void decodeBlock();
     void tagDecoder(const TagVocabulary* tv, uint64_t size);
     void fileProperties();
+    void streamProperties();
+    void codecList();
+    void metadataHandler(int meta = 1);
+    void headerExtension(uint64_t size);
 private:
     bool continueTraversing_;
+    uint64_t localPosition_;
 }; //AsfVideo End
 
 

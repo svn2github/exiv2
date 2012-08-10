@@ -7,6 +7,7 @@
 #include "tags_int.hpp"
 #include "types.hpp"
 #include "tiffimage_int.hpp"
+#include "videotags_int.hpp"
 #include "../xmpsdk/include/XMPSDK.hpp"
 
 namespace Exiv2 {

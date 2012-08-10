@@ -20,7 +20,6 @@ SET( LIBEXIV2_PRIVATE_HDR canonmn_int.hpp
                           pentaxmn_int.hpp
                           pngchunk_int.hpp
                           rcsid_int.hpp
-                          riffvideo_int.hpp
                           rw2image_int.hpp
                           samsungmn_int.hpp
                           sigmamn_int.hpp
@@ -30,6 +29,7 @@ SET( LIBEXIV2_PRIVATE_HDR canonmn_int.hpp
                           tifffwd_int.hpp
                           tiffimage_int.hpp
                           tiffvisitor_int.hpp
+                          videotags_int.hpp
    )
 
 # Add standalone C++ header files to this list

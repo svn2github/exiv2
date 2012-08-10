@@ -8,7 +8,6 @@
 #include <string>
 #include <ctype.h>
 
-
 namespace Exiv2 {
 
 namespace ImageType {
