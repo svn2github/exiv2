@@ -367,7 +367,7 @@ namespace Exiv2 {
     };
 
     enum handlerTags {
-        HandlerClass = 1, HandlerType, HandlerVendorID, HandlerDescription = 6
+        HandlerClass = 1, HandlerType, HandlerVendorID
     };
 
     enum videoHeaderTags {
@@ -484,7 +484,8 @@ void QuickTimeVideo::decodeBlock() {
 
     io_->read(buf.pData_, 4);
     std::cerr <<"("<<std::setw(9)<<std::right<<size<<"): ";
-
+    if(size < 8)
+        return;
     tagDecoder(buf,size-8);
 }
 
@@ -632,7 +633,7 @@ void QuickTimeVideo::DcMDDecoder(unsigned long size_external) {
     uint64_t cur_pos = io_->tell();
     const long bufMinSize = 100;
     DataBuf buf(bufMinSize);
-    unsigned long size = 0, size_internal = size_external;
+//    unsigned long size = 0, size_internal = size_external;
 
     io_->seek(cur_pos + size_external, BasicIo::beg);
 }
@@ -656,6 +657,7 @@ void QuickTimeVideo::setMediaStream() {
                 currentStream_ = Hint;
             else
                 currentStream_ = GenMediaHeader;
+            break;
         }
     }
     io_->seek(current_position, BasicIo::beg);
@@ -835,50 +837,40 @@ void QuickTimeVideo::handlerDecoder(unsigned long size) {
     DataBuf buf(100);
     std::memset(buf.pData_, 0x0, buf.size_);
     buf.pData_[4] = '\0';
-    int desc_size = 0;
 
-    const TagVocabulary* td;
+    const TagVocabulary* tv;
 
-    for (int i = 0; i < 7 ; i++) {
+    for (int i = 0; i < 5 ; i++) {
+
         io_->read(buf.pData_, 4);
 
         switch(i) {
         case HandlerClass:
-            td = find(handlerClassTags, Exiv2::toString( buf.pData_));
-            if(td) {
+            tv = find(handlerClassTags, Exiv2::toString( buf.pData_));
+            if(tv) {
                 if (currentStream_ == Video)
-                    xmpData_["Xmp.video.handlerClass"] = exvGettext(td->label_);
+                    xmpData_["Xmp.video.handlerClass"] = exvGettext(tv->label_);
                 else if (currentStream_ == Audio)
-                    xmpData_["Xmp.audio.handlerClass"] = exvGettext(td->label_);
+                    xmpData_["Xmp.audio.handlerClass"] = exvGettext(tv->label_);
             }
             break;
         case HandlerType:
-            td = find(handlerTypeTags, Exiv2::toString( buf.pData_));
-            if(td) {
+            tv = find(handlerTypeTags, Exiv2::toString( buf.pData_));
+            if(tv) {
                 if (currentStream_ == Video)
-                    xmpData_["Xmp.video.handlerType"] = exvGettext(td->label_);
+                    xmpData_["Xmp.video.handlerType"] = exvGettext(tv->label_);
                 else if (currentStream_ == Audio)
-                    xmpData_["Xmp.audio.handlerType"] = exvGettext(td->label_);
+                    xmpData_["Xmp.audio.handlerType"] = exvGettext(tv->label_);
             }
             break;
         case HandlerVendorID:
-            td = find(vendorIDTags, Exiv2::toString( buf.pData_));
-            if(td) {
+            tv = find(vendorIDTags, Exiv2::toString( buf.pData_));
+            if(tv) {
                 if (currentStream_ == Video)
-                    xmpData_["Xmp.video.handlerVendorID"] = exvGettext(td->label_);
+                    xmpData_["Xmp.video.handlerVendorID"] = exvGettext(tv->label_);
                 else if (currentStream_ == Audio)
-                    xmpData_["Xmp.audio.handlerVendorID"] = exvGettext(td->label_);
+                    xmpData_["Xmp.audio.handlerVendorID"] = exvGettext(tv->label_);
             }
-            break;
-        case HandlerDescription:
-            desc_size = returnBufValue(buf,1);
-            io_->seek(-4, BasicIo::cur);
-            io_->read(buf.pData_, desc_size);
-
-            if (currentStream_ == Video)
-                xmpData_["Xmp.video.handlerDescription"] = Exiv2::toString( buf.pData_);
-            else if (currentStream_ == Audio)
-                xmpData_["Xmp.audio.handlerDescription"] = Exiv2::toString( buf.pData_);
             break;
         }
     }
