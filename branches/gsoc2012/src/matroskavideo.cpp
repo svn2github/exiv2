@@ -45,11 +45,7 @@ EXIV2_RCSID("@(#) $Id$")
 namespace Exiv2 {
     namespace Internal {
 
-    /*!
-      @brief Function used to ignore nested tags, i.e., tags which contain other
-          tags inside them, since they are not necessary as metadata information.
-          Returns true, if tag is found in the list
-     */
+    //! List of tags which won't be displayed (nested tags)
     uint32_t dontDisplayList[] = {
         0x0000, 0x000e, 0x000f, 0x0020, 0x0026, 0x002e, 0x0036,
         0x0037, 0x003b, 0x005b, 0x0060, 0x0061, 0x0068, 0x05b9,
@@ -59,16 +55,9 @@ namespace Exiv2 {
         0x14d9b74, 0x254c367, 0x549a966, 0x654ae6b, 0x8538067,
         0x941a469, 0xa45dfa3, 0xb538667, 0xc53bb6b, 0xf43b675
     };
-    bool dataIgnoreList(unsigned long tagValue) {
-        return find(dontDisplayList, (uint32_t)tagValue);
-    }
 
-    /*!
-      @brief Function used to ignore tags and values stored in them, since
-          they are not necessary as metadata information.
-          Returns true, if Tag is found in the list
-     */
-    unsigned long dontReadList[] = {
+    //! List of tags which won't be read
+    uint32_t dontReadList[] = {
         0x0021, 0x0023, 0x0033, 0x0071, 0x0077, 0x006c, 0x0067, 0x007b, 0x02f2, 0x02f3,
         0x1031, 0x1032, 0x13ab, 0x13ac, 0x15ee, 0x23a2, 0x23c6, 0x2e67, 0x33a4, 0x33c5,
         0x3446, 0x2de7, 0x2df8, 0x26bf, 0x28ca, 0x3384, 0x13b8, 0x037e, 0x0485, 0x18d7,
@@ -81,9 +70,6 @@ namespace Exiv2 {
 
         0x3314f, 0x43a770, 0x1eb923, 0x1cb923, 0xeb524, 0x1c83ab, 0x1e83bb
     };
-    bool ignoreList (unsigned long tagValue) {
-        return find(dontReadList, (uint32_t)tagValue);
-    }
 
     /*!
       Tag Look-up list for Matroska Type Video Files
@@ -519,8 +505,6 @@ namespace Exiv2 {
         unsigned long s_ID = 0;
         unsigned long s_Size = 0;
         unsigned long size = 0;
-        bool display = true;
-        bool readData = true;
 
         std::memset(buf.pData_, 0x0, buf.size_);
         io_->read(buf.pData_, 1);
@@ -541,8 +525,8 @@ namespace Exiv2 {
             return;
         }
 
-        if (dataIgnoreList(td->val_)) display = false;
-        if (ignoreList(td->val_)) readData = false;
+        bool display = !find(dontDisplayList, (uint32_t)td->val_);
+        bool readData = !find(dontReadList, (uint32_t)td->val_);
 
         io_->read(buf.pData_, 1);
         s_Size = findBlockSize(buf);
