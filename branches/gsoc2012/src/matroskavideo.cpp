@@ -38,7 +38,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "tags_int.hpp"
 
 // + standard includes
-#include <math.h>
+#include <cmath>
 
 // *****************************************************************************
 // class member definitions
