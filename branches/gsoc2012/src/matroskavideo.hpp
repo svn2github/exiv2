@@ -1,73 +1,138 @@
- 
-#ifndef MATROSKAVIDEO_HPP
-#define MATROSKAVIDEO_HPP
+// ***************************************************************** -*- C++ -*-
+/*
+ * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
+ *
+ * This program is part of the Exiv2 distribution.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
+ */
+/*!
+  @file    matroskavideo.hpp
+  @brief   An Image subclass to support Matroska video files
+  @version $Rev$
+  @author  Abhinav Badola for GSoC 2012
+           <a href="mailto:mail.abu.to@gmail.com">mail.abu.to@gmail.com</a>
+  @date    18-Jun-12, AB: created
+ */
+#ifndef MATROSKAVIDEO_HPP_
+#define MATROSKAVIDEO_HPP_
 
+// *****************************************************************************
+// included header files
 #include "exif.hpp"
 #include "image.hpp"
 #include "tags_int.hpp"
 
+// *****************************************************************************
+// namespace extensions
 namespace Exiv2 {
 
-namespace ImageType {
-    const int mkv = 21; //!< Treating mkv as an image type>
-}
+// *****************************************************************************
+// class definitions
 
-class EXIV2API MatroskaVideo:public Image
-{
-
-public:
-
-    //! Copy constructor
-    MatroskaVideo(const MatroskaVideo& rhs);
-
-    //! Assignment operator
-    MatroskaVideo& operator=(const MatroskaVideo& rhs);
-    MatroskaVideo(BasicIo::AutoPtr io);
-
-    void readMetadata();
-    void writeMetadata();
-
-    std::string mimeType() const;
-
-protected:
-    /*!
-      @brief Function used to calulate Size of a block.
-             This information is only stored in one byte.
-             The size of the block is calculated by counting
-             the number of leading zeros in the binary code of the byte.
-             Size = (No. of Leading Zeros + 1) bytes
-      @param Exiv2 DataBuffer, which stores the information
-      @return Returns an integer value
-    */
-    int findBlockSize(Exiv2::DataBuf& buf);
+    // Add MKV to the supported image formats
+    namespace ImageType {
+        const int mkv = 21; //!< Treating mkv as an image type>
+    }
 
     /*!
-      @brief Function checks for a valid Tag, and takes the required action.
-             Calls contentManagement() or skips to next Tag, if required
-    */
-    void decodeBlock();
+      @brief Class to access Matroska video files.
+     */
+    class EXIV2API MatroskaVideo : public Image {
+    public:
+        //! @name Creators
+        //@{
+        /*!
+          @brief Constructor for a Matroska video. Since the constructor
+              can not return a result, callers should check the good() method
+              after object construction to determine success or failure.
+          @param io An auto-pointer that owns a BasicIo instance used for
+              reading and writing image metadata. \b Important: The constructor
+              takes ownership of the passed in BasicIo instance through the
+              auto-pointer. Callers should not continue to use the BasicIo
+              instance after it is passed to this method. Use the Image::io()
+              method to get a temporary reference.
+         */
+        MatroskaVideo(BasicIo::AutoPtr io);
+        //@}
 
+        //! @name Manipulators
+        //@{
+        void readMetadata();
+        void writeMetadata();
+        //@}
+
+        //! @name Accessors
+        //@{
+        std::string mimeType() const;
+        //@}
+
+    protected:
+        /*!
+          @brief Function used to calulate the size of a block.
+              This information is only stored in one byte.
+              The size of the block is calculated by counting
+              the number of leading zeros in the binary code of the byte.
+              Size = (No. of leading zeros + 1) bytes
+          @param buf Exiv2 data buffer, which stores the information
+          @return Return the size of the block.
+         */
+        int findBlockSize(Exiv2::DataBuf& buf);
+        /*!
+          @brief Check for a valid tag and decode the block at the current IO position.
+              Calls contentManagement() or skips to next tag, if required.
+         */
+        void decodeBlock();
+        /*!
+          @brief Interpret tag information, and save it in the respective XMP container.
+          @param td Pointer to current tag,
+          @param buf Data buffer with the tag information.
+          @param size Size of buf.
+         */
+        void contentManagement(const Exiv2::Internal::TagDetails* td, Exiv2::DataBuf& buf, unsigned long size);
+
+    private:
+        //! @name NOT Implemented
+        //@{
+        //! Copy constructor
+        MatroskaVideo(const MatroskaVideo& rhs);
+        //! Assignment operator
+        MatroskaVideo& operator=(const MatroskaVideo& rhs);
+        //@}
+
+    private:
+        //! Variable to check the end of metadata traversing.
+        bool continueTraversing_;
+
+    }; // class MatroskaVideo
+
+// *****************************************************************************
+// template, inline and free functions
+
+    // These could be static private functions on Image subclasses but then
+    // ImageFactory needs to be made a friend.
     /*!
-      @brief Function used to interpret the Tag information,
-             and save it in the respective XMP container
-      @param TagDetails pointer (points to current Tag), Exiv2 DataBuffer (stores the Tag information),
-             unsignedLong size (contains the Size of DataBuf)
-    */
-    void contentManagement(const Exiv2::Internal::TagDetails* td, Exiv2::DataBuf & buf, unsigned long size);
+      @brief Create a new MatroskaVideo instance and return an auto-pointer to it.
+          Caller owns the returned object and the auto-pointer ensures that
+          it will be deleted.
+     */
+    EXIV2API Image::AutoPtr newMkvInstance(BasicIo::AutoPtr io, bool create);
 
-private:
-    //! Variable to check the End Of Metadata Traversing
-    bool continueTraversing_;
-
-}; //MatroskaVideo End
-
-EXIV2API Image::AutoPtr newMkvInstance(BasicIo::AutoPtr io, bool create);
-
-//! Check if the file iIo is a Matroska Video.
-EXIV2API bool isMkvType(BasicIo& iIo, bool advance);
-
+    //! Check if the file iIo is a Matroska Video.
+    EXIV2API bool isMkvType(BasicIo& iIo, bool advance);
 
 }                                       // namespace Exiv2
 
-
-#endif // MatroskaVideo_HPP
+#endif                                  // #ifndef MATROSKAVIDEO_HPP_
