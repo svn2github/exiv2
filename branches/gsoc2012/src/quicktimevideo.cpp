@@ -10,30 +10,30 @@
 namespace Exiv2 {
     namespace Internal {
 
-    extern const TagVocabulary qTimeMajorTags[] =  {
-        {   "PICT", "PreviewPICT" },
-        {   "free", "KodakFree" },
-        {   "ftyp", "FileType" },
-        {   "junk", "Junk" },
-        {   "mdat", "MovieData" },
-        {   "mdat-size", "MovieDataSize" },
-        {   "moov", "Movie" },
-        {   "pict", "PreviewPICT" },
-        {   "pnot", "Preview" },
-        {   "skip", "Skip" },
-        {   "uuid", "UUID-XMP/UUID-PROF/UUID-Flip/UUID-Unknown" },
-        {   "wide", "Wide" }
-    };
+//    extern const TagVocabulary qTimeMajorTags[] =  {
+//        {   "PICT", "PreviewPICT" },
+//        {   "free", "KodakFree" },
+//        {   "ftyp", "FileType" },
+//        {   "junk", "Junk" },
+//        {   "mdat", "MovieData" },
+//        {   "mdat-size", "MovieDataSize" },
+//        {   "moov", "Movie" },
+//        {   "pict", "PreviewPICT" },
+//        {   "pnot", "Preview" },
+//        {   "skip", "Skip" },
+//        {   "uuid", "UUID-XMP/UUID-PROF/UUID-Flip/UUID-Unknown" },
+//        {   "wide", "Wide" }
+//    };
 
-    extern const TagVocabulary qTimeMovieTags[] =  {
-        {   "cmov", "CompressedMovie" },
-        {   "iods", "InitialObjectDescriptor" },
-        {   "meta", "Meta" },
-        {   "mvhd", "MovieHeader" },
-        {   "trak", "Track" },
-        {   "udta", "UserData" },
-        {   "uuid", "UUID-USMT/UUID-Unknown" }
-    };
+//    extern const TagVocabulary qTimeMovieTags[] =  {
+//        {   "cmov", "CompressedMovie" },
+//        {   "iods", "InitialObjectDescriptor" },
+//        {   "meta", "Meta" },
+//        {   "mvhd", "MovieHeader" },
+//        {   "trak", "Track" },
+//        {   "udta", "UserData" },
+//        {   "uuid", "UUID-USMT/UUID-Unknown" }
+//    };
 
     extern const TagVocabulary qTimeFileType[] =  {
         {   "3g2a", "3GPP2 Media (.3G2) compliant with 3GPP2 C.S0050-0 V1.0" },
@@ -77,6 +77,7 @@ namespace Exiv2 {
         {   "NDXM", "H.264/MPEG-4 AVC (.MP4) Nero Mobile Profile" },
         {   "NDXP", "H.264/MPEG-4 AVC (.MP4) Nero Portable Profile" },
         {   "NDXS", "H.264/MPEG-4 AVC (.MP4) Nero Standard Profile" },
+        {   "NIKO", "Nikon" },
         {   "ROSS", "Ross Video" },
         {   "avc1", "MP4 Base w/ AVC ext [ISO 14496-12:2005]" },
         {   "caqv", "Casio Digital Camera" },
@@ -112,6 +113,7 @@ namespace Exiv2 {
         {   "mp42", "MP4 v2 [ISO 14496-14]" },
         {   "mp71", "MP4 w/ MPEG-7 Metadata [per ISO 14496-12]" },
         {   "mqt ", "Sony / Mobile QuickTime (.MQV) US Patent 7,477,830 (Sony Corp)" },
+        {   "niko", "Nikon" },
         {   "odcf", "OMA DCF DRM Format 2.0 (OMA-TS-DRM-DCF-V2_0-20060303-A)" },
         {   "opf2", "OMA PDCF DRM Format 2.1 (OMA-TS-DRM-DCF-V2_1-20070724-C)" },
         {   "opx2", "OMA PDCF DRM + XBS extensions (OMA-TS-DRM_XBS-V1_0-20070529-C)" },
@@ -239,117 +241,198 @@ namespace Exiv2 {
         {   "ptv ", "PrintToVideo" },
         {   "scrn", "OlympusPreview" },
         {   "thmb", "MakerNotePentax5a/OlympusThumbnail" },
-        {   "vndr", "Vendor" },
-        {   " ART", "Artist" },
-        {   " alb", "Album" },
-        {   " arg", "Arranger" },
-        {   " ark", "ArrangerKeywords" },
-        {   " cmt", "Comment" },
-        {   " cok", "ComposerKeywords" },
-        {   " com", "Composer" },
-        {   " cpy", "Copyright" },
-        {   " day", "CreateDate" },
-        {   " dir", "Director" },
-        {   " ed1", "Edit1" },
-        {   " ed2", "Edit2" },
-        {   " ed3", "Edit3" },
-        {   " ed4", "Edit4" },
-        {   " ed5", "Edit5" },
-        {   " ed6", "Edit6" },
-        {   " ed7", "Edit7" },
-        {   " ed8", "Edit8" },
-        {   " ed9", "Edit9" },
-        {   " fmt", "Format" },
-        {   " gen", "Genre" },
-        {   " grp", "Grouping" },
-        {   " inf", "Information" },
-        {   " isr", "ISRCCode" },
-        {   " lab", "RecordLabelName" },
-        {   " lal", "RecordLabelURL" },
-        {   " lyr", "Lyrics" },
-        {   " mak", "Make" },
-        {   " mal", "MakerURL" },
-        {   " mod", "Model" },
-        {   " nam", "Title" },
-        {   " pdk", "ProducerKeywords" },
-        {   " phg", "RecordingCopyright" },
-        {   " prd", "Producer" },
-        {   " prf", "Performers" },
-        {   " prk", "PerformerKeywords" },
-        {   " prl", "PerformerURL" },
-        {   " req", "Requirements" },
-        {   " snk", "SubtitleKeywords" },
-        {   " snm", "Subtitle" },
-        {   " src", "SourceCredits" },
-        {   " swf", "SongWriter" },
-        {   " swk", "SongWriterKeywords" },
-        {   " swr", "SoftwareVersion" },
-        {   " too", "Encoder" },
-        {   " trk", "Track" },
-        {   " wrt", "Composer" },
-        {   " xyz", "GPSCoordinates" }
     };
 
     extern const TagVocabulary userDataReferencetags[] = {
-        {   "CNCV", "Xmp.video.udCompressorVersion" },
-        {   "CNFV", "Xmp.video.udFirmwareVersion" },
-        {   "CNMN", "Xmp.video.udModel" },
-        {   "WLOC", "Xmp.video.udWindowLocation" },
-        {   "SDLN", "Xmp.video.udPlayMode" },
-        {   "SelO", "Xmp.video.udPlaySelection" },
-        {   "name", "Xmp.video.udName" },
-        {   "vndr", "Xmp.video.udVendor" },
-        {   " ART", "Xmp.video.udArtist" },
-        {   " alb", "Xmp.video.udAlbum" },
-        {   " arg", "Xmp.video.udArranger" },
-        {   " ark", "Xmp.video.udArrangerKeywords" },
-        {   " cmt", "Xmp.video.udComment" },
-        {   " cok", "Xmp.video.udComposerKeywords" },
-        {   " com", "Xmp.video.udComposer" },
-        {   " cpy", "Xmp.video.udCopyright" },
-        {   " day", "Xmp.video.udCreateDate" },
-        {   " dir", "Xmp.video.udDirector" },
-        {   " ed1", "Xmp.video.udEdit1" },
-        {   " ed2", "Xmp.video.udEdit2" },
-        {   " ed3", "Xmp.video.udEdit3" },
-        {   " ed4", "Xmp.video.udEdit4" },
-        {   " ed5", "Xmp.video.udEdit5" },
-        {   " ed6", "Xmp.video.udEdit6" },
-        {   " ed7", "Xmp.video.udEdit7" },
-        {   " ed8", "Xmp.video.udEdit8" },
-        {   " ed9", "Xmp.video.udEdit9" },
-        {   " enc", "Xmp.video.udEncoder" },
-        {   " fmt", "Xmp.video.udFormat" },
-        {   " gen", "Xmp.video.udGenre" },
-        {   " grp", "Xmp.video.udGrouping" },
-        {   " inf", "Xmp.video.udInformation" },
-        {   " isr", "Xmp.video.udISRCCode" },
-        {   " lab", "Xmp.video.udRecordLabelName" },
-        {   " lal", "Xmp.video.udRecordLabelURL" },
-        {   " lyr", "Xmp.video.udLyrics" },
-        {   " mak", "Xmp.video.udMake" },
-        {   " mal", "Xmp.video.udMakerURL" },
-        {   " mod", "Xmp.video.udModel" },
-        {   " nam", "Xmp.video.udTitle" },
-        {   " pdk", "Xmp.video.udProducerKeywords" },
-        {   " phg", "Xmp.video.udRecordingCopyright" },
-        {   " prd", "Xmp.video.udProducer" },
-        {   " prf", "Xmp.video.udPerformers" },
-        {   " prk", "Xmp.video.udPerformerKeywords" },
-        {   " prl", "Xmp.video.udPerformerURL" },
-        {   " req", "Xmp.video.udRequirements" },
-        {   " snk", "Xmp.video.udSubtitleKeywords" },
-        {   " snm", "Xmp.video.udSubtitle" },
-        {   " src", "Xmp.video.udSourceCredits" },
-        {   " swf", "Xmp.video.udSongWriter" },
-        {   " swk", "Xmp.video.udSongWriterKeywords" },
-        {   " swr", "Xmp.video.udSoftwareVersion" },
-        {   " too", "Xmp.video.udEncoder" },
-        {   " trk", "Xmp.video.udTrack" },
-        {   " wrt", "Xmp.video.udComposer" },
-        {   " xyz", "Xmp.video.udGPSCoordinates" },
-        {   "CMbo", "Xmp.video.udCameraByteOrder" },
-        {   "Cmbo", "Xmp.video.udCameraByteOrder" },
+        {   "CNCV", "Xmp.video.CompressorVersion" },
+        {   "CNFV", "Xmp.video.FirmwareVersion" },
+        {   "CNMN", "Xmp.video.Model" },
+        {   "NCHD", "Xmp.video.MakerNoteType" },
+        {   "WLOC", "Xmp.video.WindowLocation" },
+        {   "SDLN", "Xmp.video.PlayMode" },
+        {   "SelO", "Xmp.video.PlaySelection" },
+        {   "name", "Xmp.video.Name" },
+        {   "vndr", "Xmp.video.Vendor" },
+        {   " ART", "Xmp.video.Artist" },
+        {   " alb", "Xmp.video.Album" },
+        {   " arg", "Xmp.video.Arranger" },
+        {   " ark", "Xmp.video.ArrangerKeywords" },
+        {   " cmt", "Xmp.video.Comment" },
+        {   " cok", "Xmp.video.ComposerKeywords" },
+        {   " com", "Xmp.video.Composer" },
+        {   " cpy", "Xmp.video.Copyright" },
+        {   " day", "Xmp.video.CreateDate" },
+        {   " dir", "Xmp.video.Director" },
+        {   " ed1", "Xmp.video.Edit1" },
+        {   " ed2", "Xmp.video.Edit2" },
+        {   " ed3", "Xmp.video.Edit3" },
+        {   " ed4", "Xmp.video.Edit4" },
+        {   " ed5", "Xmp.video.Edit5" },
+        {   " ed6", "Xmp.video.Edit6" },
+        {   " ed7", "Xmp.video.Edit7" },
+        {   " ed8", "Xmp.video.Edit8" },
+        {   " ed9", "Xmp.video.Edit9" },
+        {   " enc", "Xmp.video.Encoder" },
+        {   " fmt", "Xmp.video.Format" },
+        {   " gen", "Xmp.video.Genre" },
+        {   " grp", "Xmp.video.Grouping" },
+        {   " inf", "Xmp.video.Information" },
+        {   " isr", "Xmp.video.ISRCCode" },
+        {   " lab", "Xmp.video.RecordLabelName" },
+        {   " lal", "Xmp.video.RecordLabelURL" },
+        {   " lyr", "Xmp.video.Lyrics" },
+        {   " mak", "Xmp.video.Make" },
+        {   " mal", "Xmp.video.MakerURL" },
+        {   " mod", "Xmp.video.Model" },
+        {   " nam", "Xmp.video.Title" },
+        {   " pdk", "Xmp.video.ProducerKeywords" },
+        {   " phg", "Xmp.video.RecordingCopyright" },
+        {   " prd", "Xmp.video.Producer" },
+        {   " prf", "Xmp.video.Performers" },
+        {   " prk", "Xmp.video.PerformerKeywords" },
+        {   " prl", "Xmp.video.PerformerURL" },
+        {   " req", "Xmp.video.Requirements" },
+        {   " snk", "Xmp.video.SubtitleKeywords" },
+        {   " snm", "Xmp.video.Subtitle" },
+        {   " src", "Xmp.video.SourceCredits" },
+        {   " swf", "Xmp.video.SongWriter" },
+        {   " swk", "Xmp.video.SongWriterKeywords" },
+        {   " swr", "Xmp.video.SoftwareVersion" },
+        {   " too", "Xmp.video.Encoder" },
+        {   " trk", "Xmp.video.Track" },
+        {   " wrt", "Xmp.video.Composer" },
+        {   " xyz", "Xmp.video.GPSCoordinates" },
+        {   "CMbo", "Xmp.video.CameraByteOrder" },
+        {   "Cmbo", "Xmp.video.CameraByteOrder" },
+    };
+
+    extern const TagDetails NikonNCTGTags[] = {
+        {       0x0001, "Xmp.video.Make" },
+        {       0x0002, "Xmp.video.Model" },
+        {       0x0003, "Xmp.video.Software" },
+        {       0x0011, "Xmp.video.CreationDate" },
+        {       0x0012, "Xmp.video.DateTimeOriginal" },
+        {       0x0013, "Xmp.video.FrameCount" },
+        {       0x0016, "Xmp.video.FrameRate" },
+        {       0x0022, "Xmp.video.FrameWidth" },
+        {       0x0023, "Xmp.video.FrameHeight" },
+        {       0x0032, "Xmp.audio.channelType" },
+        {       0x0033, "Xmp.audio.BitsPerSample" },
+        {       0x0034, "Xmp.audio.sampleRate" },
+        {    0x1108822, "Xmp.video.ExposureProgram" },
+        {    0x1109204, "Xmp.video.ExposureCompensation" },
+        {    0x1109207, "Xmp.video.MeteringMode" },
+        {    0x110a434, "Xmp.video.LensModel" },
+        {    0x1200000, "Xmp.video.GPSVersionID" },
+        {    0x1200001, "Xmp.video.GPSLatitudeRef" },
+        {    0x1200002, "Xmp.video.GPSLatitude" },
+        {    0x1200003, "Xmp.video.GPSLongitudeRef" },
+        {    0x1200004, "Xmp.video.GPSLongitude" },
+        {    0x1200005, "Xmp.video.GPSAltitudeRef" },
+        {    0x1200006, "Xmp.video.GPSAltitude" },
+        {    0x1200007, "Xmp.video.GPSTimeStamp" },
+        {    0x1200008, "Xmp.video.GPSSatellites" },
+        {    0x1200010, "Xmp.video.GPSImgDirectionRef" },
+        {    0x1200011, "Xmp.video.GPSImgDirection" },
+        {    0x1200012, "Xmp.video.GPSMapDatum" },
+        {    0x120001d, "Xmp.video.GPSDateStamp" },
+        {    0x2000001, "Xmp.video.MakerNoteVersion" },
+        {    0x2000005, "Xmp.video.WhiteBalance" },
+        {    0x200000b, "Xmp.video.WhiteBalanceFineTune" },
+        {    0x200001e, "Xmp.video.ColorSpace" },
+        {    0x2000023, "Xmp.video.PictureControlData" },
+        {    0x2000024, "Xmp.video.WorldTime" },
+        {    0x200002c, "Xmp.video.UnknownInfo" },
+        {    0x2000032, "Xmp.video.UnknownInfo2" },
+        {    0x2000039, "Xmp.video.LocationInfo" },
+        {    0x2000083, "Xmp.video.LensType" },
+        {    0x2000084, "Xmp.video.LensModel" },
+        {    0x20000ab, "Xmp.video.VariProgram" },
+    };
+
+    extern const TagDetails NikonColorSpace[] = {
+        {       1, "sRGB" },
+        {       2, "Adobe RGB" },
+    };
+
+    extern const TagVocabulary NikonGPS_Latitude_Longitude_ImgDirection_Reference[] = {
+        {   "N", "North" },
+        {   "S", "South" },
+        {   "E", "East" },
+        {   "W", "West" },
+        {   "M", "Magnetic North" },
+        {   "T", "True North" },
+    };
+
+    extern const TagDetails NikonGPSAltitudeRef[] = {
+        {   0, "Above Sea Level" },
+        {   1, "Below Sea Level" },
+    };
+
+    extern const TagDetails NikonExposureProgram[] = {
+        {   0, "Not Defined" },
+        {   1, "Manual" },
+        {   2, "Program AE" },
+        {   3, "Aperture-priority AE" },
+        {   4, "Shutter speed priority AE" },
+        {   5, "Creative (Slow speed)" },
+        {   6, "Action (High speed)" },
+        {   7, "Portrait" },
+        {   8, "Landscape" },
+    };
+
+    extern const TagDetails NikonMeteringMode[] = {
+        {   0, "Unknown" },
+        {   1, "Average" },
+        {   2, "Center-weighted average" },
+        {   3, "Spot" },
+        {   4, "Multi-spot" },
+        {   5, "Multi-segment" },
+        {   6, "Partial" },
+        { 255, "Other" },
+    };
+
+    extern const TagDetails PictureControlAdjust[] = {
+        {   0, "Default Settings" },
+        {   1, "Quick Adjust" },
+        {   2, "Full Control" },
+    };
+
+    //! Contrast and Sharpness
+    extern const TagDetails NormalSoftHard[] = {
+        {   0, "Normal" },
+        {   1, "Soft"   },
+        {   2, "Hard"   }
+    };
+
+    //! Saturation
+    extern const TagDetails Saturation[] = {
+        {   0, "Normal" },
+        {   1, "Low"    },
+        {   2, "High"   }
+    };
+
+    extern const TagDetails FilterEffect[] = {
+        {   0x80, "Off" },
+        {   0x81, "Yellow"    },
+        {   0x82, "Orange"   },
+        {   0x83, "Red"   },
+        {   0x84, "Green"   },
+        {   0xff, "n/a"   },
+    };
+
+    extern const TagDetails ToningEffect[] = {
+        {   0x80, "B&W" },
+        {   0x81, "Sepia" },
+        {   0x82, "Cyanotype" },
+        {   0x83, "Red" },
+        {   0x84, "Yellow" },
+        {   0x85, "Green" },
+        {   0x86, "Blue-green" },
+        {   0x87, "Blue" },
+        {   0x88, "Purple-blue" },
+        {   0x89, "Red-purple" },
+        {   0xff, "n/a" },
     };
 
     enum movieHeaderTags {
@@ -392,6 +475,35 @@ namespace Exiv2 {
             if(tolower(buf.pData_[i])!=tolower(str2[i]))
                 return false;
         return true;
+    }
+
+    //! Function used to ignore Tags and values stored in them, since they are not necessary as metadata information
+    //! Returns true, if Tag is found in the ignoreList[]
+    bool ignoreList (Exiv2::DataBuf& buf) {
+        const char ignoreList[13][5] = {
+            "mdat", "edts", "junk", "iods", "alis", "stsc", "stsz", "stco", "ctts", "stss",
+            "skip", "wide", "cmvd",
+        };
+
+        for(int i = 0 ; i < 13 ; i++)
+            if(equalsQTimeTag(buf, ignoreList[i]))
+                return true;
+
+        return false;
+    }
+
+    //! Function used to ignore Tags, basically Tags which contain other tags inside them, since they are not necessary as metadata information
+    //! Returns true, if Tag is found in the ignoreList[]
+    bool dataIgnoreList (Exiv2::DataBuf& buf) {
+        const char ignoreList[7][5] = {
+            "moov", "mdia", "minf", "dinf", "alis", "stbl", "cmov",
+        };
+
+        for(int i = 0 ; i < 7 ; i++)
+            if(equalsQTimeTag(buf, ignoreList[i]))
+                return true;
+
+        return false;
     }
 
     int64_t returnBufValue(Exiv2::DataBuf& buf, int n = 4) {
@@ -455,9 +567,9 @@ void QuickTimeVideo::readMetadata() {
     clearMetadata();
     continueTraversing_ = true;
 
-    xmpData_["Xmp.video.fileSize"] = (double)io_->size()/(double)1048576;
-    xmpData_["Xmp.video.fileName"] = io_->path();
-    xmpData_["Xmp.video.mimeType"] = mimeType();
+    xmpData_["Xmp.video.FileSize"] = (double)io_->size()/(double)1048576;
+    xmpData_["Xmp.video.FileName"] = io_->path();
+    xmpData_["Xmp.video.MimeType"] = mimeType();
 
         while (continueTraversing_) {
             std::cerr<<"\n";
@@ -494,21 +606,20 @@ void QuickTimeVideo::tagDecoder(Exiv2::DataBuf &buf, unsigned long size) {
 
     std::cerr <<std::setw(10)<<std::left<<buf.pData_<<":";
 
-    if (equalsQTimeTag(buf, "ftyp"))
-        fileTypeDecoder(size);
+    if (ignoreList(buf))
+        discard(size);
 
-    else if (equalsQTimeTag(buf, "moov") || equalsQTimeTag(buf, "mdia") || equalsQTimeTag(buf, "minf")
-             || equalsQTimeTag(buf, "dinf") || equalsQTimeTag(buf, "stbl"))
+    else if (dataIgnoreList(buf))
         decodeBlock();
+
+    else if (equalsQTimeTag(buf, "ftyp"))
+        fileTypeDecoder(size);
 
     else if (equalsQTimeTag(buf, "trak"))
         setMediaStream();
 
     else if (equalsQTimeTag(buf, "mvhd"))
         movieHeaderDecoder(size);
-
-    else if (equalsQTimeTag(buf, "iods"))
-        discard(size);
 
     else if (equalsQTimeTag(buf, "tkhd"))
         trackHeaderDecoder(size);
@@ -539,6 +650,11 @@ void QuickTimeVideo::tagDecoder(Exiv2::DataBuf &buf, unsigned long size) {
             xmpData_["Xmp.video.urn"] = Exiv2::toString(buf.pData_);
         else if (currentStream_ == Audio)
             xmpData_["Xmp.audio.urn"] = Exiv2::toString(buf.pData_);
+    }
+
+    else if (equalsQTimeTag(buf, "dcom")) {
+        io_->read(buf.pData_, size);
+        xmpData_["Xmp.video.Compressor"] = Exiv2::toString(buf.pData_);
     }
 
     else if (equalsQTimeTag(buf, "smhd")) {
@@ -598,10 +714,13 @@ void QuickTimeVideo::userDataDecoder(unsigned long size_external) {
         if(size == 0 || (size - 12) <= 0)
             break;
 
-        else if(equalsQTimeTag(buf, "DcMD"))
+        else if(equalsQTimeTag(buf, "DcMD")  || equalsQTimeTag(buf, "NCDT"))
             userDataDecoder(size - 8);
 
-        else if(equalsQTimeTag(buf, "CNCV") || equalsQTimeTag(buf, "CNFV") || equalsQTimeTag(buf, "CNMN")) {
+        else if(equalsQTimeTag(buf, "NCTG"))
+            NikonTagsDecoder(size - 8);
+
+        else if(equalsQTimeTag(buf, "CNCV") || equalsQTimeTag(buf, "CNFV") || equalsQTimeTag(buf, "CNMN") || equalsQTimeTag(buf, "NCHD")) {
             io_->read(buf.pData_, size - 8);
             xmpData_[exvGettext(tv->label_)] = Exiv2::toString(buf.pData_);
         }
@@ -629,12 +748,138 @@ void QuickTimeVideo::userDataDecoder(unsigned long size_external) {
     io_->seek(cur_pos + size_external, BasicIo::beg);
 }
 
-void QuickTimeVideo::DcMDDecoder(unsigned long size_external) {
+void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
     uint64_t cur_pos = io_->tell();
-    const long bufMinSize = 100;
-    DataBuf buf(bufMinSize);
-//    unsigned long size = 0, size_internal = size_external;
+    DataBuf buf(100), buf2(4);
+    unsigned long TagID = 0;//, size_internal = size_external;
+    unsigned short dataLength = 0, dataType = 2;
+    const TagDetails* td, *td2;
 
+    for(int i = 0 ; i < 80 ; i++) {
+        io_->read(buf.pData_, 4); //size_internal -= 4;
+        TagID = Exiv2::getULong(buf.pData_, bigEndian);
+        td = find(NikonNCTGTags, TagID);
+
+        io_->read(buf.pData_, 2);
+        dataType = Exiv2::getUShort(buf.pData_, bigEndian);
+
+        std::memset(buf.pData_, 0x0, buf.size_);
+        io_->read(buf.pData_, 2); //size_internal -= 4;
+
+        if(TagID == 0x2000023) {
+            uint64_t local_pos = io_->tell();
+            dataLength = Exiv2::getUShort(buf.pData_, bigEndian);
+            std::memset(buf.pData_, 0x0, buf.size_);
+
+            io_->read(buf.pData_, 4);
+            xmpData_["Xmp.video.PictureControlVersion"] = Exiv2::toString(buf.pData_);
+            io_->read(buf.pData_, 20);
+            xmpData_["Xmp.video.PictureControlName"] = Exiv2::toString(buf.pData_);
+            io_->read(buf.pData_, 20);
+            xmpData_["Xmp.video.PictureControlBase"] = Exiv2::toString(buf.pData_);
+            io_->read(buf.pData_, 4);
+            std::memset(buf.pData_, 0x0, buf.size_);
+            io_->read(buf.pData_, 1);
+            td2 = find(PictureControlAdjust, (int)buf.pData_[0] & 7 );
+            if(td2)
+                xmpData_["Xmp.video.PictureControlAdjust"] = exvGettext(td2->label_);
+            else
+                xmpData_["Xmp.video.PictureControlAdjust"] = (int)buf.pData_[0] & 7 ;
+            io_->read(buf.pData_, 1);
+            td2 = find(NormalSoftHard, (int)buf.pData_[0] & 7 );
+            if(td2)
+                xmpData_["Xmp.video.PictureControlQuickAdjust"] = exvGettext(td2->label_);
+            io_->read(buf.pData_, 1);
+            td2 = find(NormalSoftHard, (int)buf.pData_[0] & 7 );
+            if(td2)
+                xmpData_["Xmp.video.Sharpness"] = exvGettext(td2->label_);
+            else
+                xmpData_["Xmp.video.Sharpness"] = (int)buf.pData_[0] & 7;
+            io_->read(buf.pData_, 1);
+            td2 = find(NormalSoftHard, (int)buf.pData_[0] & 7 );
+            if(td2)
+                xmpData_["Xmp.video.Contrast"] = exvGettext(td2->label_);
+            else
+                xmpData_["Xmp.video.Contrast"] = (int)buf.pData_[0] & 7;
+            io_->read(buf.pData_, 1);
+            td2 = find(NormalSoftHard, (int)buf.pData_[0] & 7 );
+            if(td2)
+                xmpData_["Xmp.video.Brightness"] = exvGettext(td2->label_);
+            else
+                xmpData_["Xmp.video.Brightness"] = (int)buf.pData_[0] & 7;
+            io_->read(buf.pData_, 1);
+            td2 = find(Saturation, (int)buf.pData_[0] & 7 );
+            if(td2)
+                xmpData_["Xmp.video.Saturation"] = exvGettext(td2->label_);
+            else
+                xmpData_["Xmp.video.Saturation"] = (int)buf.pData_[0] & 7;
+
+            io_->read(buf.pData_, 1);
+            xmpData_["Xmp.video.HueAdjustment"] = (int)buf.pData_[0] & 7;
+
+            io_->read(buf.pData_, 1);
+            td2 = find(FilterEffect, (int)buf.pData_[0]);
+            if(td2)
+                xmpData_["Xmp.video.FilterEffect"] = exvGettext(td2->label_);
+            else
+                xmpData_["Xmp.video.FilterEffect"] = (int)buf.pData_[0];
+
+            io_->read(buf.pData_, 1);
+            td2 = find(ToningEffect, (int)buf.pData_[0]);
+            if(td2)
+                xmpData_["Xmp.video.ToningEffect"] = exvGettext(td2->label_);
+            else
+                xmpData_["Xmp.video.ToningEffect"] = (int)buf.pData_[0];
+
+            io_->read(buf.pData_, 1);
+            xmpData_["Xmp.video.ToningSaturation"] = (int)buf.pData_[0];
+
+            io_->seek(local_pos + dataLength, BasicIo::beg);
+        }
+        else if(dataType == 2 || dataType == 7) {
+            dataLength = Exiv2::getUShort(buf.pData_, bigEndian);
+            std::memset(buf.pData_, 0x0, buf.size_);
+            io_->read(buf.pData_, dataLength);  //size_internal -= dataLength;
+            if(td)
+                xmpData_[exvGettext(td->label_)] = Exiv2::toString(buf.pData_);
+        }
+        else if(dataType == 4)  {
+            dataLength = Exiv2::getUShort(buf.pData_, bigEndian) * 4;
+            std::memset(buf.pData_, 0x0, buf.size_);
+            io_->read(buf.pData_, 4);  //size_internal -= dataLength;
+            if(td)
+                xmpData_[exvGettext(td->label_)] = Exiv2::toString(Exiv2::getULong( buf.pData_, bigEndian));
+            io_->read(buf.pData_, dataLength - 4);
+        }
+        else if(dataType == 3)  {
+            dataLength = Exiv2::getUShort(buf.pData_, bigEndian) * 2;
+            std::memset(buf.pData_, 0x0, buf.size_);
+            io_->read(buf.pData_, 2);  //size_internal -= dataLength;
+            if(td)
+                xmpData_[exvGettext(td->label_)] = Exiv2::toString(Exiv2::getUShort( buf.pData_, bigEndian));
+            io_->read(buf.pData_, dataLength - 2);
+        }
+        else if(dataType == 5) {
+            dataLength = Exiv2::getUShort(buf.pData_, bigEndian) * 8;
+            std::memset(buf.pData_, 0x0, buf.size_);
+            io_->read(buf.pData_, 4);
+            io_->read(buf2.pData_, 4); //size_internal -= dataLength;
+            if(td)
+                xmpData_[exvGettext(td->label_)] = Exiv2::toString((double)Exiv2::getULong( buf.pData_, bigEndian) / (double)Exiv2::getULong( buf2.pData_, bigEndian));
+            io_->read(buf.pData_, dataLength - 8);
+        }
+        else if(dataType == 8) {
+            dataLength = Exiv2::getUShort(buf.pData_, bigEndian) * 2;
+            std::memset(buf.pData_, 0x0, buf.size_);
+            io_->read(buf.pData_, 2);
+            io_->read(buf2.pData_, 2); //size_internal -= dataLength;
+            if(td)
+                xmpData_[exvGettext(td->label_)] = Exiv2::toString(Exiv2::getUShort( buf.pData_, bigEndian) ) + " " + Exiv2::toString(Exiv2::getUShort( buf2.pData_, bigEndian));
+            io_->read(buf.pData_, dataLength - 4);
+        }
+//        else
+//            std::cerr<<"Tag ID =>"<<std::hex<<TagID<<"=> Tag Data=>"<<Exiv2::toString(buf.pData_);
+    }
     io_->seek(cur_pos + size_external, BasicIo::beg);
 }
 
@@ -730,7 +975,7 @@ void QuickTimeVideo::audioDescDecoder() {
             break;
         case AudioChannels:
             xmpData_["Xmp.audio.channelType"] = returnBufValue(buf, 2);
-            xmpData_["Xmp.audio.bitsPerSample"] = (buf.pData_[2] * 256 + buf.pData_[3]);
+            xmpData_["Xmp.audio.BitsPerSample"] = (buf.pData_[2] * 256 + buf.pData_[3]);
             break;
         case AudioSampleRate:
             xmpData_["Xmp.audio.sampleRate"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
@@ -1045,50 +1290,36 @@ void QuickTimeVideo::movieHeaderDecoder(unsigned long size) {
 
         switch(i) {
         case MovieHeaderVersion:
-            xmpData_["Xmp.video.movieHeaderVersion"] = returnBufValue(buf,1);
-            break;
+            xmpData_["Xmp.video.movieHeaderVersion"] = returnBufValue(buf,1); break;
         case CreateDate:
             //A 32-bit integer that specifies (in seconds since midnight, January 1, 1904) when the movie atom was created.
-            xmpData_["Xmp.video.dateUTC"] = returnUnsignedBufValue(buf);
-            break;
+            xmpData_["Xmp.video.dateUTC"] = returnUnsignedBufValue(buf); break;
         case ModifyDate:
             //A 32-bit integer that specifies (in seconds since midnight, January 1, 1904) when the movie atom was created.
-            xmpData_["Xmp.video.modificationDate"] = returnUnsignedBufValue(buf);
-            break;
+            xmpData_["Xmp.video.modificationDate"] = returnUnsignedBufValue(buf); break;
         case TimeScale:
             xmpData_["Xmp.video.timeScale"] = returnBufValue(buf);
-            timeScale_ = returnBufValue(buf);
-            break;
+            timeScale_ = returnBufValue(buf); break;
         case Duration:
-            xmpData_["Xmp.video.duration"] = returnBufValue(buf)/timeScale_;
-            break;
+            xmpData_["Xmp.video.duration"] = returnBufValue(buf)/timeScale_; break;
         case PreferredRate:
-            xmpData_["Xmp.video.preferredRate"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
-            break;
+            xmpData_["Xmp.video.preferredRate"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01); break;
         case PreferredVolume:
-            xmpData_["Xmp.video.preferredVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100;
-            break;
+            xmpData_["Xmp.video.preferredVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100; break;
         case PreviewTime:
-            xmpData_["Xmp.video.previewTime"] = returnBufValue(buf);
-            break;
+            xmpData_["Xmp.video.previewTime"] = returnBufValue(buf); break;
         case PreviewDuration:
-            xmpData_["Xmp.video.previewDuration"] = returnBufValue(buf);
-            break;
+            xmpData_["Xmp.video.previewDuration"] = returnBufValue(buf); break;
         case PosterTime:
-            xmpData_["Xmp.video.posterTime"] = returnBufValue(buf);
-            break;
+            xmpData_["Xmp.video.posterTime"] = returnBufValue(buf); break;
         case SelectionTime:
-            xmpData_["Xmp.video.selectionTime"] = returnBufValue(buf);
-            break;
+            xmpData_["Xmp.video.selectionTime"] = returnBufValue(buf); break;
         case SelectionDuration:
-            xmpData_["Xmp.video.selectionDuration"] = returnBufValue(buf);
-            break;
+            xmpData_["Xmp.video.selectionDuration"] = returnBufValue(buf); break;
         case CurrentTime:
-            xmpData_["Xmp.video.currentTime"] = returnBufValue(buf);
-            break;
+            xmpData_["Xmp.video.currentTime"] = returnBufValue(buf); break;
         case NextTrackID:
-            xmpData_["Xmp.video.nextTrackID"] = returnBufValue(buf);
-            break;
+            xmpData_["Xmp.video.nextTrackID"] = returnBufValue(buf); break;
         default:
             break;
         }

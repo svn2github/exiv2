@@ -489,9 +489,9 @@ namespace Exiv2 {
         IoCloser closer(*io_);
         clearMetadata();
 
-        xmpData_["Xmp.video.fileName"] = io_->path();
-        xmpData_["Xmp.video.fileSize"] = (double)io_->size()/(double)1048576;
-        xmpData_["Xmp.video.mimeType"] = mimeType();
+        xmpData_["Xmp.video.FileName"] = io_->path();
+        xmpData_["Xmp.video.FileSize"] = (double)io_->size()/(double)1048576;
+        xmpData_["Xmp.video.MimeType"] = mimeType();
         xmpData_["Xmp.video.aspectRatio"] = "0";
 
         while (continueTraversing_) decodeBlock();
