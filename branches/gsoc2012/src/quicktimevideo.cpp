@@ -412,6 +412,19 @@ namespace Exiv2 {
         {   2, "High"   }
     };
 
+    //! YesNo, used for DaylightSavings
+    extern const TagDetails YesNo[] = {
+        {   0, "No"    },
+        {   1, "Yes"   }
+    };
+
+    //! DateDisplayFormat
+    extern const TagDetails DateDisplayFormat[] = {
+        {   0, "Y/M/D" },
+        {   1, "M/D/Y" },
+        {   2, "D/M/Y" }
+    };
+
     extern const TagDetails FilterEffect[] = {
         {   0x80, "Off" },
         {   0x81, "Yellow"    },
@@ -755,7 +768,7 @@ void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
     unsigned short dataLength = 0, dataType = 2;
     const TagDetails* td, *td2;
 
-    for(int i = 0 ; i < 80 ; i++) {
+    for(int i = 0 ; i < 100 ; i++) {
         io_->read(buf.pData_, 4); //size_internal -= 4;
         TagID = Exiv2::getULong(buf.pData_, bigEndian);
         td = find(NikonNCTGTags, TagID);
@@ -771,42 +784,44 @@ void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
             dataLength = Exiv2::getUShort(buf.pData_, bigEndian);
             std::memset(buf.pData_, 0x0, buf.size_);
 
-            io_->read(buf.pData_, 4);
-            xmpData_["Xmp.video.PictureControlVersion"] = Exiv2::toString(buf.pData_);
-            io_->read(buf.pData_, 20);
-            xmpData_["Xmp.video.PictureControlName"] = Exiv2::toString(buf.pData_);
-            io_->read(buf.pData_, 20);
-            xmpData_["Xmp.video.PictureControlBase"] = Exiv2::toString(buf.pData_);
-            io_->read(buf.pData_, 4);
-            std::memset(buf.pData_, 0x0, buf.size_);
+            io_->read(buf.pData_, 4);   xmpData_["Xmp.video.PictureControlVersion"]  = Exiv2::toString(buf.pData_);
+            io_->read(buf.pData_, 20);  xmpData_["Xmp.video.PictureControlName"]     = Exiv2::toString(buf.pData_);
+            io_->read(buf.pData_, 20);  xmpData_["Xmp.video.PictureControlBase"]     = Exiv2::toString(buf.pData_);
+            io_->read(buf.pData_, 4);   std::memset(buf.pData_, 0x0, buf.size_);
+
             io_->read(buf.pData_, 1);
             td2 = find(PictureControlAdjust, (int)buf.pData_[0] & 7 );
             if(td2)
                 xmpData_["Xmp.video.PictureControlAdjust"] = exvGettext(td2->label_);
             else
                 xmpData_["Xmp.video.PictureControlAdjust"] = (int)buf.pData_[0] & 7 ;
+
             io_->read(buf.pData_, 1);
             td2 = find(NormalSoftHard, (int)buf.pData_[0] & 7 );
             if(td2)
                 xmpData_["Xmp.video.PictureControlQuickAdjust"] = exvGettext(td2->label_);
+
             io_->read(buf.pData_, 1);
             td2 = find(NormalSoftHard, (int)buf.pData_[0] & 7 );
             if(td2)
                 xmpData_["Xmp.video.Sharpness"] = exvGettext(td2->label_);
             else
                 xmpData_["Xmp.video.Sharpness"] = (int)buf.pData_[0] & 7;
+
             io_->read(buf.pData_, 1);
             td2 = find(NormalSoftHard, (int)buf.pData_[0] & 7 );
             if(td2)
                 xmpData_["Xmp.video.Contrast"] = exvGettext(td2->label_);
             else
                 xmpData_["Xmp.video.Contrast"] = (int)buf.pData_[0] & 7;
+
             io_->read(buf.pData_, 1);
             td2 = find(NormalSoftHard, (int)buf.pData_[0] & 7 );
             if(td2)
                 xmpData_["Xmp.video.Brightness"] = exvGettext(td2->label_);
             else
                 xmpData_["Xmp.video.Brightness"] = (int)buf.pData_[0] & 7;
+
             io_->read(buf.pData_, 1);
             td2 = find(Saturation, (int)buf.pData_[0] & 7 );
             if(td2)
@@ -831,11 +846,39 @@ void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
             else
                 xmpData_["Xmp.video.ToningEffect"] = (int)buf.pData_[0];
 
-            io_->read(buf.pData_, 1);
-            xmpData_["Xmp.video.ToningSaturation"] = (int)buf.pData_[0];
+            io_->read(buf.pData_, 1);   xmpData_["Xmp.video.ToningSaturation"] = (int)buf.pData_[0];
 
             io_->seek(local_pos + dataLength, BasicIo::beg);
         }
+
+        else if(TagID == 0x2000024) {
+            uint64_t local_pos = io_->tell();
+            dataLength = Exiv2::getUShort(buf.pData_, bigEndian);
+            std::memset(buf.pData_, 0x0, buf.size_);
+
+            io_->read(buf.pData_, 2);   xmpData_["Xmp.video.TimeZone"] = Exiv2::getShort(buf.pData_, bigEndian);
+            io_->read(buf.pData_, 1);
+            td2 = find(YesNo, (int)buf.pData_[0]);
+            if(td2)
+                xmpData_["Xmp.video.DayLightSavings"] = exvGettext(td2->label_);
+
+            io_->read(buf.pData_, 1);
+            td2 = find(DateDisplayFormat, (int)buf.pData_[0]);
+            if(td2)
+                xmpData_["Xmp.video.DateDisplayFormat"] = exvGettext(td2->label_);
+
+            io_->seek(local_pos + dataLength, BasicIo::beg);
+        }
+
+//        else if(TagID == 0x2000083) {
+//            uint64_t local_pos = io_->tell();
+//            dataLength = Exiv2::getUShort(buf.pData_, bigEndian);
+//            io_->read(buf.pData_, dataLength);
+//            if(td)
+//                xmpData_[exvGettext(td->label_)] = Exiv2::toString((int)buf.pData_[0] & 7 );
+//            io_->seek(local_pos + dataLength, BasicIo::beg);
+//        }
+
         else if(dataType == 2 || dataType == 7) {
             dataLength = Exiv2::getUShort(buf.pData_, bigEndian);
             std::memset(buf.pData_, 0x0, buf.size_);
@@ -877,8 +920,7 @@ void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
                 xmpData_[exvGettext(td->label_)] = Exiv2::toString(Exiv2::getUShort( buf.pData_, bigEndian) ) + " " + Exiv2::toString(Exiv2::getUShort( buf2.pData_, bigEndian));
             io_->read(buf.pData_, dataLength - 4);
         }
-//        else
-//            std::cerr<<"Tag ID =>"<<std::hex<<TagID<<"=> Tag Data=>"<<Exiv2::toString(buf.pData_);
+
     }
     io_->seek(cur_pos + size_external, BasicIo::beg);
 }
