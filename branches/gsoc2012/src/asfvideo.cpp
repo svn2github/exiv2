@@ -6,7 +6,7 @@
 #include "tags.hpp"
 #include "tags_int.hpp"
 #include "types.hpp"
-//#include <math.h>
+#include <math.h>
 #include <cstring>
 #include <ctype.h>
 
@@ -125,17 +125,42 @@ namespace Exiv2 {
         {    1, "Xmp.video.maxBitRate" }
     };
 
+    extern const TagDetails contentDescriptionTags[] =  {
+        {    1, "Xmp.video.Title" },
+        {    2, "Xmp.video.Author" },
+        {    3, "Xmp.video.Copyright" },
+        {    4, "Xmp.video.Description" },
+        {    5, "Xmp.video.Rating" }
+    };
+
     std::string toString16(Exiv2::DataBuf& buf)
     {
-        std::ostringstream os; int t;
+        std::ostringstream os; char t;
 
         for(int i = 0; i <= buf.size_; i += 2 ) {
             t = buf.pData_[i] + 16 * buf.pData_[i + 1];
             if(t == 0) {
-                os << '\0';
+                if(i)
+                    os << '\0';
                 break;
             }
-            os << (char)t;
+            os<< t;
+        }
+        return os.str();
+    }
+
+    std::wstring towString16(Exiv2::DataBuf& buf)
+    {
+        std::wstringstream os; wchar_t t;
+
+        for(int i = 0; i <= buf.size_; i += 2 ) {
+            t = buf.pData_[i] + 16 * buf.pData_[i + 1];
+            if(t == 0) {
+                if(i)
+                    os << '\0';
+                break;
+            }
+            os<< t;
         }
         return os.str();
     }
@@ -195,6 +220,16 @@ namespace Exiv2 {
         return false;
     }
 
+    uint64_t getUint64_t(Exiv2::DataBuf& buf) {
+        uint64_t temp = 0;
+
+        for(int i = 0; i < 8; ++i)
+            temp = temp + buf.pData_[i]*(pow(256,i));
+
+        return temp;
+    }
+
+
     }
 }
 
@@ -234,9 +269,8 @@ void AsfVideo::readMetadata() {
     xmpData_["Xmp.video.FileName"] = io_->path();
     xmpData_["Xmp.video.MimeType"] = mimeType();
 
-    while (continueTraversing_) {
+    while (continueTraversing_)
         decodeBlock();
-    }
 }
 
 void AsfVideo::decodeBlock() {
@@ -264,12 +298,7 @@ void AsfVideo::decodeBlock() {
 
     io_->read(buf.pData_, 8);
 
-    size = Exiv2::getULong(buf.pData_, littleEndian);
-
-//    if(tv)
-//        std::cerr<<"\nGUID =>"<<std::setw(40)<<exvGettext(tv->label_)<<" =>Size=>"<<size;
-//    else
-//        std::cerr<<"\nGUID =>"<<std::setw(40)<<GUID<<" =>Size=>"<<size;
+    size = getUint64_t(buf);
 
     if(tv)
         tagDecoder(tv,size-24);
@@ -308,8 +337,17 @@ void AsfVideo::tagDecoder(const TagVocabulary *tv, uint64_t size) {
     else if(compareTag( exvGettext(tv->label_), "Extended_Content_Description"))
         metadataHandler(2);
 
+    else if(compareTag( exvGettext(tv->label_), "Metadata_Library"))
+        metadataHandler(3);
+
     else if(compareTag( exvGettext(tv->label_), "Codec_List"))
         codecList();
+
+    else if(compareTag( exvGettext(tv->label_), "Content_Description"))
+        contentDescription(size);
+
+    else if(compareTag( exvGettext(tv->label_), "Extended_Stream_Properties"))
+        extendedStreamProperties(size);
 
     else if(compareTag( exvGettext(tv->label_), "Header_Extension")) {
         localPosition_ = 0;
@@ -319,12 +357,11 @@ void AsfVideo::tagDecoder(const TagVocabulary *tv, uint64_t size) {
     else if(compareTag( exvGettext(tv->label_), "Language_List")) {
         std::memset(buf.pData_, 0x0, buf.size_);
         io_->read(buf.pData_, 2);
-        count = Exiv2::getULong(buf.pData_, littleEndian);
+        count = Exiv2::getUShort(buf.pData_, littleEndian);
 
         while(count--){
             std::memset(buf.pData_, 0x0, buf.size_);
-            io_->read(buf.pData_, 1);
-            tempLength = Exiv2::getULong(buf.pData_, littleEndian);
+            io_->read(buf.pData_, 1);   tempLength = (int)buf.pData_[0];
 
             io_->read(buf.pData_, tempLength);
             v->read(toString16(buf));
@@ -332,11 +369,51 @@ void AsfVideo::tagDecoder(const TagVocabulary *tv, uint64_t size) {
         xmpData_.add(Exiv2::XmpKey("Xmp.video.trackLang"), v.get());
     }
 
-//    else
-//        std::cerr<<"   ---   Unprocessed";
-
     io_->seek(cur_pos + size, BasicIo::beg);
     localPosition_ = io_->tell();
+}
+
+void AsfVideo::extendedStreamProperties(uint64_t size) {
+    uint64_t cur_pos = io_->tell(), avgTimePerFrame = 0;
+    DataBuf buf(8);
+    static int previousStream;
+    io_->seek(cur_pos + 48, BasicIo::beg);
+
+    std::memset(buf.pData_, 0x0, buf.size_);
+    io_->read(buf.pData_, 2);
+    streamNumber_ = Exiv2::getUShort(buf.pData_, littleEndian);
+
+    io_->read(buf.pData_, 2);
+    io_->read(buf.pData_, 8);
+    avgTimePerFrame = getUint64_t(buf);
+
+    if(previousStream < streamNumber_ && avgTimePerFrame != 0)
+        xmpData_["Xmp.video.frameRate"] = (double)10000000/(double)avgTimePerFrame;
+
+    previousStream = streamNumber_;
+    io_->seek(cur_pos + size, BasicIo::beg);
+}
+
+void AsfVideo::contentDescription(uint64_t size) {
+    uint64_t cur_pos = io_->tell();
+    uint64_t length[5];
+    const TagDetails* td;
+    DataBuf buf(200);
+    std::memset(buf.pData_, 0x0, buf.size_);
+
+    for(int i = 0 ; i < 5 ; ++i ) {
+        io_->read(buf.pData_, 2);
+        length[i] = Exiv2::getUShort(buf.pData_, littleEndian);
+    }
+
+    for(int i = 0 ; i < 5 ; ++i ) {
+        std::memset(buf.pData_, 0x0, buf.size_);
+        io_->read(buf.pData_, length[i] );
+        td = find( contentDescriptionTags, i + 1);
+        xmpData_[exvGettext(td->label_)] = toString16(buf);
+    }
+
+    io_->seek(cur_pos + size, BasicIo::beg);
 }
 
 void AsfVideo::streamProperties() {
@@ -350,32 +427,35 @@ void AsfVideo::streamProperties() {
     getGUID(guidBuf, streamType);
 
     const TagVocabulary* tv;
-//    const TagDetails* td;
 
     tv = find( GUIDReferenceTags, streamType);
     io_->read(guidBuf, 16);
 
     if(compareTag( exvGettext(tv->label_), "Audio_Media"))
-        stream = 2;
-    else if(compareTag( exvGettext(tv->label_), "Video_Media"))
         stream = 1;
+    else if(compareTag( exvGettext(tv->label_), "Video_Media"))
+        stream = 2;
 
     io_->read(buf.pData_, 8);
-    if(stream == 1)
-        xmpData_["Xmp.video.TimeOffset"] = Exiv2::getULong(buf.pData_, littleEndian);
-    else if(stream == 2)
-        xmpData_["Xmp.audio.TimeOffset"] = Exiv2::getULong(buf.pData_, littleEndian);
+    if(stream == 2)
+        xmpData_["Xmp.video.TimeOffset"] = getUint64_t(buf);
+    else if(stream == 1)
+        xmpData_["Xmp.audio.TimeOffset"] = getUint64_t(buf);
+    io_->read(buf.pData_, 8);
 
-    io_->read(buf.pData_, 14);
+    std::memset(buf.pData_, 0x0, buf.size_);
+    io_->read(buf.pData_, 1);
+    streamNumber_ = (int)buf.pData_[0] & 127;
+
+    io_->read(buf.pData_, 5);
     std::memset(buf.pData_, 0x0, buf.size_);
     io_->read(buf.pData_, 2);
     long temp = Exiv2::getUShort(buf.pData_, littleEndian);
-//    td = find( Exiv2::Internal::audioEncodingValues, temp);
 
-    if(stream == 1)
+    if(stream == 2)
         xmpData_["Xmp.video.width"] = temp;
-    else if(stream == 2)
-        xmpData_["Xmp.audio.codec"] = temp;
+    else if(stream == 1)
+        xmpData_["Xmp.audio.codec"] = temp; //  TODO -  Decode Audio type from RIFF audio list
 
     io_->read(buf.pData_, 2);
     temp = Exiv2::getUShort(buf.pData_, littleEndian);
@@ -385,9 +465,9 @@ void AsfVideo::streamProperties() {
     io_->read(buf.pData_, 4);
     temp = Exiv2::getULong(buf.pData_, littleEndian);
 
-    if(stream == 1)
+    if(stream == 2)
         xmpData_["Xmp.video.height"] = temp;
-    else if(stream == 2)
+    else if(stream == 1)
         xmpData_["Xmp.audio.sampleRate"] = temp;
 
 }
@@ -444,15 +524,16 @@ void AsfVideo::headerExtension(uint64_t size) {
 }
 
 void AsfVideo::metadataHandler(int meta) {
-    DataBuf buf(100);
+    DataBuf buf(500);
     io_->read(buf.pData_, 2);
     int recordCount = Exiv2::getUShort(buf.pData_, littleEndian), nameLength = 0, dataLength = 0, dataType = 0;
     Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpSeq);
+    byte guidBuf[16];   char fileID[33] = "";
 
     while(recordCount--) {
         std::memset(buf.pData_, 0x0, buf.size_);
 
-        if(meta == 1) {
+        if(meta == 1 || meta == 3) {
             io_->read(buf.pData_, 4);
             io_->read(buf.pData_, 2);
             nameLength = Exiv2::getUShort(buf.pData_, littleEndian);
@@ -463,7 +544,12 @@ void AsfVideo::metadataHandler(int meta) {
 
             io_->read(buf.pData_, nameLength);
             v->read(toString16(buf));
-            io_->read(buf.pData_, dataLength);
+            if(dataType == 6) {
+                io_->read(guidBuf, 16);
+                getGUID(guidBuf, fileID);
+            }
+            else
+                io_->read(buf.pData_, dataLength);
         }
 
         else if(meta == 2) {
@@ -486,11 +572,18 @@ void AsfVideo::metadataHandler(int meta) {
             v->read( Exiv2::toString( Exiv2::getUShort( buf.pData_, littleEndian) ) );
         else if(dataType == 3 || dataType == 4)
             v->read( Exiv2::toString( Exiv2::getULong( buf.pData_, littleEndian) ) );
+        else if(dataType == 6)
+            v->read(Exiv2::toString(fileID));
         else
             v->read( Exiv2::toString(buf.pData_) );
     }
 
-    xmpData_.add(Exiv2::XmpKey("Xmp.video.UnknownMetadata"), v.get());
+    if(meta == 2)
+        xmpData_.add(Exiv2::XmpKey("Xmp.video.ExtendedContentDescription"), v.get());
+    else if(meta == 1)
+        xmpData_.add(Exiv2::XmpKey("Xmp.video.Metadata"), v.get());
+    else
+        xmpData_.add(Exiv2::XmpKey("Xmp.video.MetadataLibrary"), v.get());
 }
 
 void AsfVideo::fileProperties() {
@@ -513,7 +606,7 @@ void AsfVideo::fileProperties() {
             buf.pData_[4] = '\0' ;
             io_->read(buf.pData_, 4); io_->read(buf.pData_, 4);
         }
-        xmpData_[exvGettext(td->label_)] = Exiv2::getULong(buf.pData_, littleEndian);
+        xmpData_[exvGettext(td->label_)] = getUint64_t(buf);
     }
 }
 

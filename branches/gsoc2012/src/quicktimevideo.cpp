@@ -10,31 +10,6 @@
 namespace Exiv2 {
     namespace Internal {
 
-//    extern const TagVocabulary qTimeMajorTags[] =  {
-//        {   "PICT", "PreviewPICT" },
-//        {   "free", "KodakFree" },
-//        {   "ftyp", "FileType" },
-//        {   "junk", "Junk" },
-//        {   "mdat", "MovieData" },
-//        {   "mdat-size", "MovieDataSize" },
-//        {   "moov", "Movie" },
-//        {   "pict", "PreviewPICT" },
-//        {   "pnot", "Preview" },
-//        {   "skip", "Skip" },
-//        {   "uuid", "UUID-XMP/UUID-PROF/UUID-Flip/UUID-Unknown" },
-//        {   "wide", "Wide" }
-//    };
-
-//    extern const TagVocabulary qTimeMovieTags[] =  {
-//        {   "cmov", "CompressedMovie" },
-//        {   "iods", "InitialObjectDescriptor" },
-//        {   "meta", "Meta" },
-//        {   "mvhd", "MovieHeader" },
-//        {   "trak", "Track" },
-//        {   "udta", "UserData" },
-//        {   "uuid", "UUID-USMT/UUID-Unknown" }
-//    };
-
     extern const TagVocabulary qTimeFileType[] =  {
         {   "3g2a", "3GPP2 Media (.3G2) compliant with 3GPP2 C.S0050-0 V1.0" },
         {   "3g2b", "3GPP2 Media (.3G2) compliant with 3GPP2 C.S0050-A V1.0.0" },
@@ -764,12 +739,12 @@ void QuickTimeVideo::userDataDecoder(unsigned long size_external) {
 void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
     uint64_t cur_pos = io_->tell();
     DataBuf buf(100), buf2(4);
-    unsigned long TagID = 0;//, size_internal = size_external;
+    unsigned long TagID = 0;
     unsigned short dataLength = 0, dataType = 2;
     const TagDetails* td, *td2;
 
     for(int i = 0 ; i < 100 ; i++) {
-        io_->read(buf.pData_, 4); //size_internal -= 4;
+        io_->read(buf.pData_, 4);
         TagID = Exiv2::getULong(buf.pData_, bigEndian);
         td = find(NikonNCTGTags, TagID);
 
@@ -777,7 +752,7 @@ void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
         dataType = Exiv2::getUShort(buf.pData_, bigEndian);
 
         std::memset(buf.pData_, 0x0, buf.size_);
-        io_->read(buf.pData_, 2); //size_internal -= 4;
+        io_->read(buf.pData_, 2);
 
         if(TagID == 0x2000023) {
             uint64_t local_pos = io_->tell();
@@ -870,26 +845,17 @@ void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
             io_->seek(local_pos + dataLength, BasicIo::beg);
         }
 
-//        else if(TagID == 0x2000083) {
-//            uint64_t local_pos = io_->tell();
-//            dataLength = Exiv2::getUShort(buf.pData_, bigEndian);
-//            io_->read(buf.pData_, dataLength);
-//            if(td)
-//                xmpData_[exvGettext(td->label_)] = Exiv2::toString((int)buf.pData_[0] & 7 );
-//            io_->seek(local_pos + dataLength, BasicIo::beg);
-//        }
-
         else if(dataType == 2 || dataType == 7) {
             dataLength = Exiv2::getUShort(buf.pData_, bigEndian);
             std::memset(buf.pData_, 0x0, buf.size_);
-            io_->read(buf.pData_, dataLength);  //size_internal -= dataLength;
+            io_->read(buf.pData_, dataLength);
             if(td)
                 xmpData_[exvGettext(td->label_)] = Exiv2::toString(buf.pData_);
         }
         else if(dataType == 4)  {
             dataLength = Exiv2::getUShort(buf.pData_, bigEndian) * 4;
             std::memset(buf.pData_, 0x0, buf.size_);
-            io_->read(buf.pData_, 4);  //size_internal -= dataLength;
+            io_->read(buf.pData_, 4);
             if(td)
                 xmpData_[exvGettext(td->label_)] = Exiv2::toString(Exiv2::getULong( buf.pData_, bigEndian));
             io_->read(buf.pData_, dataLength - 4);
@@ -897,7 +863,7 @@ void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
         else if(dataType == 3)  {
             dataLength = Exiv2::getUShort(buf.pData_, bigEndian) * 2;
             std::memset(buf.pData_, 0x0, buf.size_);
-            io_->read(buf.pData_, 2);  //size_internal -= dataLength;
+            io_->read(buf.pData_, 2);
             if(td)
                 xmpData_[exvGettext(td->label_)] = Exiv2::toString(Exiv2::getUShort( buf.pData_, bigEndian));
             io_->read(buf.pData_, dataLength - 2);
@@ -906,7 +872,7 @@ void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
             dataLength = Exiv2::getUShort(buf.pData_, bigEndian) * 8;
             std::memset(buf.pData_, 0x0, buf.size_);
             io_->read(buf.pData_, 4);
-            io_->read(buf2.pData_, 4); //size_internal -= dataLength;
+            io_->read(buf2.pData_, 4);
             if(td)
                 xmpData_[exvGettext(td->label_)] = Exiv2::toString((double)Exiv2::getULong( buf.pData_, bigEndian) / (double)Exiv2::getULong( buf2.pData_, bigEndian));
             io_->read(buf.pData_, dataLength - 8);
@@ -915,7 +881,7 @@ void QuickTimeVideo::NikonTagsDecoder(unsigned long size_external) {
             dataLength = Exiv2::getUShort(buf.pData_, bigEndian) * 2;
             std::memset(buf.pData_, 0x0, buf.size_);
             io_->read(buf.pData_, 2);
-            io_->read(buf2.pData_, 2); //size_internal -= dataLength;
+            io_->read(buf2.pData_, 2);
             if(td)
                 xmpData_[exvGettext(td->label_)] = Exiv2::toString(Exiv2::getUShort( buf.pData_, bigEndian) ) + " " + Exiv2::toString(Exiv2::getUShort( buf2.pData_, bigEndian));
             io_->read(buf.pData_, dataLength - 4);
@@ -1022,9 +988,6 @@ void QuickTimeVideo::audioDescDecoder() {
         case AudioSampleRate:
             xmpData_["Xmp.audio.sampleRate"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
             break;
-//        case MOV_AudioFormat:
-//            xmpData_["Xmp.audio.format"] = Exiv2::toString( buf.pData_);
-//            break;
         default:
             break;
         }

@@ -31,11 +31,14 @@ protected:
     void fileProperties();
     void streamProperties();
     void codecList();
+    void contentDescription(uint64_t size);
+    void extendedStreamProperties(uint64_t size);
     void metadataHandler(int meta = 1);
     void headerExtension(uint64_t size);
 private:
     bool continueTraversing_;
     uint64_t localPosition_;
+    int streamNumber_;
 }; //AsfVideo End
 
 
