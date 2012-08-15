@@ -459,7 +459,7 @@ void AsfVideo::streamProperties() {
 
     io_->read(buf.pData_, 2);
     temp = Exiv2::getUShort(buf.pData_, littleEndian);
-    if(stream == 2)
+    if(stream == 1)
         xmpData_["Xmp.audio.channelType"] = temp;
 
     io_->read(buf.pData_, 4);
