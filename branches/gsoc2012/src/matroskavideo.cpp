@@ -549,7 +549,7 @@ namespace Exiv2 {
     void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf, unsigned long size)
     {
         int64_t duration_in_ms = 0;
-        static double time_code_scale = 1, temp = 0;
+        static double time_code_scale = 1.0, temp = 0;
         static long stream = 0, track_count = 0;
         char str[4] = "No";
         const TagDetails* internal_td = NULL;
@@ -624,10 +624,10 @@ namespace Exiv2 {
             switch (td->val_) {
             case 0x0489:
                 if(size <= 4) {
-                    duration_in_ms = Exiv2::getFloat(buf.pData_, bigEndian) * time_code_scale;
+                    duration_in_ms = Exiv2::getFloat(buf.pData_, bigEndian) * time_code_scale * 1000;
                 }
                 else {
-                    duration_in_ms = Exiv2::getDouble(buf.pData_, bigEndian) * time_code_scale;
+                    duration_in_ms = Exiv2::getDouble(buf.pData_, bigEndian) * time_code_scale * 1000;
                 }
                 break;
             case 0x0461: duration_in_ms = returnValue(buf, size)/1000000000; break;

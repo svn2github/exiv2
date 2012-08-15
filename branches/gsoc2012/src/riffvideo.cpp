@@ -1113,7 +1113,7 @@ void RiffVideo::displayDuration(double frame_rate, long frame_count) {
     if(frame_rate == 0)
         return;
 
-    long duration = frame_count / frame_rate;
+    uint64_t duration = (double)frame_count * (double)1000 / (double)frame_rate;
     xmpData_["Xmp.video.fileDataRate"] = (double)io_->size()/(double)(1048576*duration);
     xmpData_["Xmp.video.duration"] = duration; //Duration in number of seconds
 }

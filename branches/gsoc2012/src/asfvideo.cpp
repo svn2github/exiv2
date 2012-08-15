@@ -606,7 +606,10 @@ void AsfVideo::fileProperties() {
             buf.pData_[4] = '\0' ;
             io_->read(buf.pData_, 4); io_->read(buf.pData_, 4);
         }
-        xmpData_[exvGettext(td->label_)] = getUint64_t(buf);
+        if(count == 3 || count == 2)
+            xmpData_[exvGettext(td->label_)] = getUint64_t(buf) / 10000;
+        else
+            xmpData_[exvGettext(td->label_)] = getUint64_t(buf);
     }
 }
 

@@ -1306,7 +1306,7 @@ void QuickTimeVideo::movieHeaderDecoder(unsigned long size) {
             xmpData_["Xmp.video.timeScale"] = returnBufValue(buf);
             timeScale_ = returnBufValue(buf); break;
         case Duration:
-            xmpData_["Xmp.video.duration"] = returnBufValue(buf)/timeScale_; break;
+            xmpData_["Xmp.video.duration"] = returnBufValue(buf) * 1000 / timeScale_; break;
         case PreferredRate:
             xmpData_["Xmp.video.preferredRate"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01); break;
         case PreferredVolume:
