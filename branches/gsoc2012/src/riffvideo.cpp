@@ -8,6 +8,9 @@
 #include "types.hpp"
 #include "tiffimage_int.hpp"
 #include "../xmpsdk/include/XMPSDK.hpp"
+#include <math.h>
+#include <string>
+#include <ctype.h>
 
 namespace Exiv2 {
     namespace Internal {
@@ -678,7 +681,7 @@ void RiffVideo::odmlTagsHandler() {
 }
 
 void RiffVideo::skipListData() {
-    const long bufMinSize = 100;
+    const long bufMinSize = 4;
     DataBuf buf(bufMinSize);
     buf.pData_[4] = '\0';
     io_->seek(-12, BasicIo::cur);
@@ -1094,6 +1097,15 @@ void RiffVideo::streamFormatHandler(long size) {
 
 double RiffVideo::returnSampleRate(Exiv2::DataBuf& buf, long divisor) {
     return ((double)Exiv2::getULong(buf.pData_, littleEndian) / (double)divisor);
+}
+
+const char* RiffVideo::printAudioEncoding(uint64_t i) {
+    const TagDetails* td;
+    td = find(audioEncodingValues , i);
+    if(td)
+        return exvGettext(td->label_);
+
+    return "Undefined";
 }
 
 void RiffVideo::displayAspectRatio(long width, long height) {

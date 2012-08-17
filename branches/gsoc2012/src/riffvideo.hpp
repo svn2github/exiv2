@@ -1,62 +1,186 @@
+// ***************************************************************** -*- C++ -*-
+/*
+ * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
+ *
+ * This program is part of the Exiv2 distribution.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, 5th Floor, Boston, MA 02110-1301 USA.
+ */
+/*!
+  @file    riffvideo.hpp
+  @brief   An Image subclass to support RIFF video files
+  @version $Rev$
+  @author  Abhinav Badola for GSoC 2012
+           <a href="mailto:mail.abu.to@gmail.com">mail.abu.to@gmail.com</a>
+  @date    18-Jun-12, AB: created
+ */
 #ifndef RIFFVIDEO_HPP
 #define RIFFVIDEO_HPP
 
+// *****************************************************************************
+// included header files
 #include "exif.hpp"
 #include "image.hpp"
 #include "tags_int.hpp"
-#include <math.h>
-#include <string>
-#include <ctype.h>
 
+// *****************************************************************************
+// namespace extensions
 namespace Exiv2 {
 
-namespace ImageType {
-    const int riff = 20; //!< Treating riff as an image type>
-}
+// *****************************************************************************
+// class definitions
 
-class EXIV2API RiffVideo:public Image
-{
-public:
-    //! Copy constructor
-    RiffVideo(const RiffVideo& rhs);
-    //! Assignment operator
-    RiffVideo& operator=(const RiffVideo& rhs);
-    RiffVideo(BasicIo::AutoPtr io);
+    // Add RIFF to the supported image formats
+    namespace ImageType {
+        const int riff = 20; //!< Treating riff as an image type>
+    }
 
-    void readMetadata();
-    void writeMetadata();
-    std::string mimeType() const;
+    /*!
+      @brief Class to access RIFF video files.
+     */
+    class EXIV2API RiffVideo:public Image
+    {
+    public:
+        //! @name Creators
+        //@{
+        /*!
+          @brief Constructor for a Riff video. Since the constructor
+              can not return a result, callers should check the good() method
+              after object construction to determine success or failure.
+          @param io An auto-pointer that owns a BasicIo instance used for
+              reading and writing image metadata. \b Important: The constructor
+              takes ownership of the passed in BasicIo instance through the
+              auto-pointer. Callers should not continue to use the BasicIo
+              instance after it is passed to this method. Use the Image::io()
+              method to get a temporary reference.
+         */
+        RiffVideo(BasicIo::AutoPtr io);
+        //@}
 
-protected:
-    void streamHandler(long size);
-    void streamFormatHandler(long size);
-    void aviHeaderTagsHandler(long size);
-    void decodeBlock();
-    void tagDecoder(Exiv2::DataBuf& buf, unsigned long size);
-    void junkHandler(long size);
-    void listHandler(long size);
-    void streamDataTagHandler(long size);
-    void infoTagsHandler();
-    void nikonTagsHandler();
-    void odmlTagsHandler();
-    void skipListData();
-    void dateTimeOriginal(long size, int i = 0);
-    const char* printAudioEncoding(long i);
-    double returnSampleRate(Exiv2::DataBuf& buf, long divisor = 1);
-    void displayAspectRatio(long width = 1,long height = 1);
-    void displayDuration(double frame_rate, long frame_count);
+        //! @name Manipulators
+        //@{
+        void readMetadata();
+        void writeMetadata();
+        //@}
 
-private:
-    long positionCounter_;
-    bool continueTraversing_;
-    int streamType_;
-}; //RiffVideo End
+        //! @name Accessors
+        //@{
+        std::string mimeType() const;
+        const char* printAudioEncoding(uint64_t i);
+        //@}
+
+    protected:
+        /*!
+          @brief Check for a valid tag and decode the block at the current IO
+          position. Calls tagDecoder() or skips to next tag, if required.
+         */
+        void decodeBlock();
+        /*!
+          @brief Interpret tag information, and call the respective function
+              to save it in the respective XMP container. Decodes a Tag
+              Information and saves it in the respective XMP container, if
+              the block size is small.
+          @param buf Data buffer which cotains tag ID.
+          @param size Size of the data block used to store Tag Information.
+         */
+        void tagDecoder(Exiv2::DataBuf& buf, unsigned long size);
+        /*!
+          @brief Interpret Junk tag information, and save it
+              in the respective XMP container.
+          @param size Size of the data block used to store Tag Information.
+         */
+        void junkHandler(long size);
+        /*!
+          @brief Interpret Stream tag information, and save it
+              in the respective XMP container.
+          @param size Size of the data block used to store Tag Information.
+         */
+        void streamHandler(long size);
+        /*!
+          @brief Interpret Stream Format tag information, and save it
+              in the respective XMP container.
+          @param size Size of the data block used to store Tag Information.
+         */
+        void streamFormatHandler(long size);
+        /*!
+          @brief Interpret Riff Header tag information, and save it
+              in the respective XMP container.
+          @param size Size of the data block used to store Tag Information.
+         */
+        void aviHeaderTagsHandler(long size);
+        /*!
+          @brief Interpret Riff List tag information, and save it
+              in the respective XMP container.
+          @param size Size of the data block used to store Tag Information.
+         */
+        void listHandler(long size);
+        /*!
+          @brief Interpret Riff Stream Data tag information, and save it
+              in the respective XMP container.
+          @param size Size of the data block used to store Tag Information.
+         */
+        void streamDataTagHandler(long size);
+        /*!
+          @brief Interpret INFO tag information, and save it
+              in the respective XMP container.
+         */
+        void infoTagsHandler();
+        /*!
+          @brief Interpret Nikon Tags related to Video information, and
+              save it in the respective XMP container.
+         */
+        void nikonTagsHandler();
+        /*!
+          @brief Interpret OpenDML tag information, and save it
+              in the respective XMP container.
+         */
+        void odmlTagsHandler();
+        //! @brief Skips Particular Blocks of Metadata List.
+        void skipListData();
+        /*!
+          @brief Interprets DateTimeOriginal tag information, and save it
+              in the respective XMP container.
+          @param size Size of the data block used to store Tag Information.
+         */
+        void dateTimeOriginal(long size, int i = 0);
+        double returnSampleRate(Exiv2::DataBuf& buf, long divisor = 1);
+        void displayAspectRatio(long width = 1,long height = 1);
+        void displayDuration(double frame_rate, long frame_count);
+
+    private:
+        //! @name NOT Implemented
+        //@{
+        //! Copy constructor
+        RiffVideo(const RiffVideo& rhs);
+        //! Assignment operator
+        RiffVideo& operator=(const RiffVideo& rhs);
+        //@}
+
+    private:
+        //! Variable to check the end of metadata traversing.
+        bool continueTraversing_;
+        //! Variable which stores current stream being processsed.
+        int streamType_;
+
+    }; //RiffVideo End
 
 
-EXIV2API Image::AutoPtr newRiffInstance(BasicIo::AutoPtr io, bool create);
+    EXIV2API Image::AutoPtr newRiffInstance(BasicIo::AutoPtr io, bool create);
 
-//! Check if the file iIo is a Windows Riff Video.
-EXIV2API bool isRiffType(BasicIo& iIo, bool advance);
+    //! Check if the file iIo is a Windows Riff Video.
+    EXIV2API bool isRiffType(BasicIo& iIo, bool advance);
 
 }                                       // namespace Exiv2
 

@@ -652,7 +652,7 @@ namespace Exiv2 {
             if (returnValue(buf, size)) {
                 switch (stream) {
                 case 1: temp = (double)1000000000/(double)returnValue(buf, size); break;
-                case 2: temp = returnValue(buf, size)/1000; break;
+                case 2: temp = returnValue(buf, size)/1000;                       break;
                 }
                 if (internal_td) xmpData_[exvGettext(internal_td->label_)] = temp;
             }
