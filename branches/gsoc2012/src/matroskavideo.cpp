@@ -45,8 +45,8 @@ EXIV2_RCSID("@(#) $Id$")
 namespace Exiv2 {
     namespace Internal {
 
-    //! List of tags which won't be displayed (nested tags)
-    uint32_t dontDisplayList[] = {
+    //! List of composite tags. They are skipped and the child tags are read immediately
+    uint32_t compositeTagsList[] = {
         0x0000, 0x000e, 0x000f, 0x0020, 0x0026, 0x002e, 0x0036,
         0x0037, 0x003b, 0x005b, 0x0060, 0x0061, 0x0068, 0x05b9,
         0x0dbb, 0x1034, 0x1035, 0x1854, 0x21a7, 0x2240, 0x23c0,
@@ -56,8 +56,8 @@ namespace Exiv2 {
         0x941a469, 0xa45dfa3, 0xb538667, 0xc53bb6b, 0xf43b675
     };
 
-    //! List of tags which won't be read
-    uint32_t dontReadList[] = {
+    //! List of tags which are ignored, i.e., tag and value won't be read
+    uint32_t ignoredTagsList[] = {
         0x0021, 0x0023, 0x0033, 0x0071, 0x0077, 0x006c, 0x0067, 0x007b, 0x02f2, 0x02f3,
         0x1031, 0x1032, 0x13ab, 0x13ac, 0x15ee, 0x23a2, 0x23c6, 0x2e67, 0x33a4, 0x33c5,
         0x3446, 0x2de7, 0x2df8, 0x26bf, 0x28ca, 0x3384, 0x13b8, 0x037e, 0x0485, 0x18d7,
@@ -525,8 +525,8 @@ namespace Exiv2 {
             return;
         }
 
-        bool display = !find(dontDisplayList, (uint32_t)td->val_);
-        bool readData = !find(dontReadList, (uint32_t)td->val_);
+        bool skip = find(compositeTagsList, (uint32_t)td->val_);
+        bool ignore = find(ignoredTagsList, (uint32_t)td->val_);
 
         io_->read(buf.pData_, 1);
         s_Size = findBlockSize(buf);
@@ -535,9 +535,9 @@ namespace Exiv2 {
 
         size = returnTagValue(buf, buf2, s_Size);
 
-        if (!display && readData) return;
+        if (skip && !ignore) return;
 
-        if (!readData || size > 200) {
+        if (ignore || size > 200) {
             io_->seek(size, BasicIo::cur);
             return;
         }
