@@ -533,7 +533,7 @@ namespace Exiv2 {
 
         if (skip && !ignore) return;
 
-        if (ignore || size > 200) {
+        if (ignore || size > bufMinSize) {
             io_->seek(size, BasicIo::cur);
             return;
         }
