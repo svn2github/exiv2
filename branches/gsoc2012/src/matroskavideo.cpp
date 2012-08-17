@@ -434,10 +434,10 @@ namespace Exiv2 {
           is used to calculate the rest of the Tag.
           Returns Tag Value in unsinged long.
      */
-    unsigned long returnTagValue(Exiv2::DataBuf& buf, Exiv2::DataBuf& buf2, int n ) {
+    unsigned long returnTagValue(byte b, Exiv2::DataBuf& buf2, int n ) {
         long temp = 0;
         long reg1 = 0;
-        reg1 = (buf.pData_[0] & (int)(pow(2,8-n)-1));
+        reg1 = (b & (int)(pow(2,8-n)-1));
 
         for(int i = n-2; i >= 0; i--) {
             temp = temp + buf2.pData_[i]*(pow(256,n-i-2));
@@ -500,22 +500,21 @@ namespace Exiv2 {
     void MatroskaVideo::decodeBlock()
     {
         const long bufMinSize = 200;
-        DataBuf buf(bufMinSize);
         DataBuf buf2(bufMinSize);
 
-        std::memset(buf.pData_, 0x0, buf.size_);
-        io_->read(buf.pData_, 1);
+        byte b;
+        io_->read(&b, 1);
 
         if(io_->eof()) {
             continueTraversing_ = false;
             return;
         }
 
-        long sz = findBlockSize(buf.pData_[0]);
+        long sz = findBlockSize(b);
         if (sz > 0) io_->read(buf2.pData_, sz - 1);
 
         const TagDetails* td;
-        td = find(matroskaTags, returnTagValue(buf, buf2, sz));
+        td = find(matroskaTags, returnTagValue(b, buf2, sz));
 
         if(td->val_ == 0xc53bb6b || td->val_ == 0xf43b675) {
             continueTraversing_ = false;
@@ -525,11 +524,11 @@ namespace Exiv2 {
         bool skip = find(compositeTagsList, (uint32_t)td->val_);
         bool ignore = find(ignoredTagsList, (uint32_t)td->val_);
 
-        io_->read(buf.pData_, 1);
-        sz = findBlockSize(buf.pData_[0]);
+        io_->read(&b, 1);
+        sz = findBlockSize(b);
 
         if (sz > 0) io_->read(buf2.pData_, sz - 1);
-        long size = returnTagValue(buf, buf2, sz);
+        long size = returnTagValue(b, buf2, sz);
 
         if (skip && !ignore) return;
 
@@ -538,6 +537,8 @@ namespace Exiv2 {
             return;
         }
 
+        DataBuf buf(bufMinSize);
+        std::memset(buf.pData_, 0x0, buf.size_);
         io_->read(buf.pData_, size);
         contentManagement(td, buf, size);
     } // MatroskaVideo::decodeBlock
