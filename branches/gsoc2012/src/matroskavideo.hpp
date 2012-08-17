@@ -86,10 +86,10 @@ namespace Exiv2 {
               The size of the block is calculated by counting
               the number of leading zeros in the binary code of the byte.
               Size = (No. of leading zeros + 1) bytes
-          @param buf Exiv2 data buffer, which stores the information
+          @param b The byte, which stores the information to calculate the size
           @return Return the size of the block.
          */
-        int findBlockSize(Exiv2::DataBuf& buf);
+        long findBlockSize(byte b);
         /*!
           @brief Check for a valid tag and decode the block at the current IO position.
               Calls contentManagement() or skips to next tag, if required.
@@ -101,7 +101,7 @@ namespace Exiv2 {
           @param buf Data buffer with the tag information.
           @param size Size of buf.
          */
-        void contentManagement(const Exiv2::Internal::TagDetails* td, Exiv2::DataBuf& buf, unsigned long size);
+        void contentManagement(const Exiv2::Internal::TagDetails* td, Exiv2::DataBuf& buf, long size);
 
     private:
         //! @name NOT Implemented

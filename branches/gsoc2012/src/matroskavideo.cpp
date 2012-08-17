@@ -502,9 +502,6 @@ namespace Exiv2 {
         const long bufMinSize = 200;
         DataBuf buf(bufMinSize);
         DataBuf buf2(bufMinSize);
-        unsigned long s_ID = 0;
-        unsigned long s_Size = 0;
-        unsigned long size = 0;
 
         std::memset(buf.pData_, 0x0, buf.size_);
         io_->read(buf.pData_, 1);
@@ -514,11 +511,11 @@ namespace Exiv2 {
             return;
         }
 
-        s_ID = findBlockSize(buf);
-        if(s_ID != 0) io_->read(buf2.pData_, s_ID - 1);
+        long sz = findBlockSize(buf.pData_[0]);
+        if (sz > 0) io_->read(buf2.pData_, sz - 1);
 
         const TagDetails* td;
-        td = find(matroskaTags , (returnTagValue(buf, buf2, s_ID)) );
+        td = find(matroskaTags, returnTagValue(buf, buf2, sz));
 
         if(td->val_ == 0xc53bb6b || td->val_ == 0xf43b675) {
             continueTraversing_ = false;
@@ -529,11 +526,10 @@ namespace Exiv2 {
         bool ignore = find(ignoredTagsList, (uint32_t)td->val_);
 
         io_->read(buf.pData_, 1);
-        s_Size = findBlockSize(buf);
+        sz = findBlockSize(buf.pData_[0]);
 
-        if(s_Size != 0) io_->read(buf2.pData_, s_Size - 1);
-
-        size = returnTagValue(buf, buf2, s_Size);
+        if (sz > 0) io_->read(buf2.pData_, sz - 1);
+        long size = returnTagValue(buf, buf2, sz);
 
         if (skip && !ignore) return;
 
@@ -546,7 +542,7 @@ namespace Exiv2 {
         contentManagement(td, buf, size);
     } // MatroskaVideo::decodeBlock
 
-    void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf, unsigned long size)
+    void MatroskaVideo::contentManagement(const TagDetails* td, Exiv2::DataBuf& buf, long size)
     {
         int64_t duration_in_ms = 0;
         static double time_code_scale = 1.0, temp = 0;
@@ -668,17 +664,17 @@ namespace Exiv2 {
         }
     } // MatroskaVideo::contentManagement
 
-    int MatroskaVideo::findBlockSize(Exiv2::DataBuf& buf)
+    long MatroskaVideo::findBlockSize(byte b)
     {
-        if      (buf.pData_[0] & 128) return 1;
-        else if (buf.pData_[0] &  64) return 2;
-        else if (buf.pData_[0] &  32) return 3;
-        else if (buf.pData_[0] &  16) return 4;
-        else if (buf.pData_[0] &   8) return 5;
-        else if (buf.pData_[0] &   4) return 6;
-        else if (buf.pData_[0] &   2) return 7;
-        else if (buf.pData_[0] &   1) return 8;
-        else                          return 0;
+        if      (b & 128) return 1;
+        else if (b &  64) return 2;
+        else if (b &  32) return 3;
+        else if (b &  16) return 4;
+        else if (b &   8) return 5;
+        else if (b &   4) return 6;
+        else if (b &   2) return 7;
+        else if (b &   1) return 8;
+        else              return 0;
     } // MatroskaVideo::findBlockSize
 
     Image::AutoPtr newMkvInstance(BasicIo::AutoPtr io, bool /*create*/)
