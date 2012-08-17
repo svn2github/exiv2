@@ -569,19 +569,19 @@ namespace Exiv2 {
         case 0x1033: case 0x14b2: case 0x14b3: case 0x23c3: case 0x29bf: case 0x3e8a:
         case 0x3e9a:
             switch (td->val_) {
-            case 0x001a: internal_td = find(videoScanType, returnValue(buf, size)); break;
-            case 0x001f: internal_td = find(audioChannels, returnValue(buf, size)); break;
-            case 0x0254: internal_td = find(compressionAlgorithm, returnValue(buf, size)); break;
-            case 0x07e1: internal_td = find(encryptionAlgorithm, returnValue(buf, size)); break;
-            case 0x1033: internal_td = find(encodingType, returnValue(buf, size)); break;
+            case 0x001a: internal_td = find(videoScanType, returnValue(buf, size));                 break;
+            case 0x001f: internal_td = find(audioChannels, returnValue(buf, size));                 break;
+            case 0x0254: internal_td = find(compressionAlgorithm, returnValue(buf, size));          break;
+            case 0x07e1: internal_td = find(encryptionAlgorithm, returnValue(buf, size));           break;
+            case 0x1033: internal_td = find(encodingType, returnValue(buf, size));                  break;
             case 0x3e8a:
-            case 0x07e5: internal_td = find(contentSignatureAlgorithm, returnValue(buf, size)); break;
+            case 0x07e5: internal_td = find(contentSignatureAlgorithm, returnValue(buf, size));     break;
             case 0x3e9a:
             case 0x07e6: internal_td = find(contentSignatureHashAlgorithm, returnValue(buf, size)); break;
-            case 0x14b2: internal_td = find(displayUnit, returnValue(buf, size)); break;
-            case 0x14b3: internal_td = find(aspectRatioType, returnValue(buf, size)); break;
-            case 0x23c3: internal_td = find(chapterPhysicalEquivalent, returnValue(buf, size)); break;
-            case 0x29bf: internal_td = find(chapterTranslateCodec, returnValue(buf, size)); break;
+            case 0x14b2: internal_td = find(displayUnit, returnValue(buf, size));                   break;
+            case 0x14b3: internal_td = find(aspectRatioType, returnValue(buf, size));               break;
+            case 0x23c3: internal_td = find(chapterPhysicalEquivalent, returnValue(buf, size));     break;
+            case 0x29bf: internal_td = find(chapterTranslateCodec, returnValue(buf, size));         break;
             }
             if(internal_td)
                 xmpData_[exvGettext(td->label_)] = exvGettext(internal_td->label_);
@@ -595,11 +595,11 @@ namespace Exiv2 {
         case 0x0484:
             if (returnValue(buf, size)) strcpy(str, "Yes");
             switch (td->val_) {
-            case 0x0039: internal_td = find(trackEnable, stream); break;
-            case 0x0008: internal_td = find(defaultOn, stream); break;
-            case 0x15aa: internal_td = find(trackForced, stream); break;
-            case 0x001c: internal_td = find(trackLacing, stream); break;
-            case 0x002a: internal_td = find(codecDecodeAll, stream); break;
+            case 0x0039: internal_td = find(trackEnable, stream);     break;
+            case 0x0008: internal_td = find(defaultOn, stream);       break;
+            case 0x15aa: internal_td = find(trackForced, stream);     break;
+            case 0x001c: internal_td = find(trackLacing, stream);     break;
+            case 0x002a: internal_td = find(codecDecodeAll, stream);  break;
             case 0x1a9697: internal_td = find(codecSettings, stream); break;
             case 0x0484: internal_td = td; break;
             }
@@ -608,9 +608,9 @@ namespace Exiv2 {
 
         case 0x0006: case 0x2b59c: case 0x58688: case 0x6b240: case 0x1b4040:
             switch (td->val_) {
-            case 0x0006: internal_td = find(trackCodec, stream); break;
-            case 0x2b59c: internal_td = find(trackLanguage, stream); break;
-            case 0x58688: internal_td = find(codecInfo, stream); break;
+            case 0x0006: internal_td = find(trackCodec, stream);         break;
+            case 0x2b59c: internal_td = find(trackLanguage, stream);     break;
+            case 0x58688: internal_td = find(codecInfo, stream);         break;
             case 0x6b240:
             case 0x1b4040: internal_td = find(codecDownloadUrl, stream); break;
             }
