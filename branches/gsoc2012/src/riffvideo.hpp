@@ -150,14 +150,33 @@ namespace Exiv2 {
         //! @brief Skips Particular Blocks of Metadata List.
         void skipListData();
         /*!
-          @brief Interprets DateTimeOriginal tag information, and save it
-              in the respective XMP container.
+          @brief Interprets DateTimeOriginal tag or stream name tag
+              information, and save it in the respective XMP container.
           @param size Size of the data block used to store Tag Information.
+          @param i parameter used to overload function
          */
         void dateTimeOriginal(long size, int i = 0);
+        /*!
+          @brief Calculates Sample Rate of a particular stream.
+          @param buf Data buffer with the dividend.
+          @param divisor The Divisor required to calculate sample rate.
+          @return Return the sample rate of the stream.
+         */
         double returnSampleRate(Exiv2::DataBuf& buf, long divisor = 1);
-        void displayAspectRatio(long width = 1,long height = 1);
-        void displayDuration(double frame_rate, long frame_count);
+        /*!
+          @brief Calculates Aspect Ratio of a video, and stores it in the
+              respective XMP container.
+          @param width Width of the video.
+          @param height Height of the video.
+         */
+        void fillAspectRatio(long width = 1,long height = 1);
+        /*!
+          @brief Calculates Duration of a video, and stores it in the
+              respective XMP container.
+          @param frame_rate Frame rate of the video.
+          @param frame_count Total number of frames present in the video.
+         */
+        void fillDuration(double frame_rate, long frame_count);
 
     private:
         //! @name NOT Implemented
@@ -174,15 +193,23 @@ namespace Exiv2 {
         //! Variable which stores current stream being processsed.
         int streamType_;
 
-    }; //RiffVideo End
+    }; //Class RiffVideo
 
+// *****************************************************************************
+// template, inline and free functions
 
+    // These could be static private functions on Image subclasses but then
+    // ImageFactory needs to be made a friend.
+    /*!
+      @brief Create a new RiffVideo instance and return an auto-pointer to it.
+          Caller owns the returned object and the auto-pointer ensures that
+          it will be deleted.
+     */
     EXIV2API Image::AutoPtr newRiffInstance(BasicIo::AutoPtr io, bool create);
 
-    //! Check if the file iIo is a Windows Riff Video.
+    //! Check if the file iIo is a Riff Video.
     EXIV2API bool isRiffType(BasicIo& iIo, bool advance);
 
 }                                       // namespace Exiv2
 
-
-#endif // RIFFVIDEO_HPP
+#endif                                  // RIFFVIDEO_HPP

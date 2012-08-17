@@ -164,7 +164,7 @@ namespace Exiv2 {
     // These could be static private functions on Image subclasses but then
     // ImageFactory needs to be made a friend.
     /*!
-      @brief Create a new MatroskaVideo instance and return an auto-pointer to it.
+      @brief Create a new AsfVideo instance and return an auto-pointer to it.
           Caller owns the returned object and the auto-pointer ensures that
           it will be deleted.
      */
