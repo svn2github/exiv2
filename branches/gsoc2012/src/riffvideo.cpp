@@ -82,90 +82,90 @@ namespace Exiv2 {
     }
 
     extern const TagVocabulary infoTags[] =  {
-        {   "AGES", "Rated" },
-        {   "CMNT", "Comment" },
-        {   "CODE", "EncodedBy" },
-        {   "COMM", "Comments" },
-        {   "DIRC", "Directory" },
-        {   "DISP", "SoundSchemeTitle" },
-        {   "DTIM", "DateTimeOriginal" },
-        {   "GENR", "Genre" },
-        {   "IARL", "ArchivalLocation" },
-        {   "IART", "Artist" },
-        {   "IAS1", "FirstLanguage" },
-        {   "IAS2", "SecondLanguage" },
-        {   "IAS3", "ThirdLanguage" },
-        {   "IAS4", "FourthLanguage" },
-        {   "IAS5", "FifthLanguage" },
-        {   "IAS6", "SixthLanguage" },
-        {   "IAS7", "SeventhLanguage" },
-        {   "IAS8", "EighthLanguage" },
-        {   "IAS9", "NinthLanguage" },
-        {   "IBSU", "BaseURL" },
-        {   "ICAS", "DefaultAudioStream" },
-        {   "ICDS", "CostumeDesigner" },
-        {   "ICMS", "Commissioned" },
-        {   "ICMT", "Comment" },
-        {   "ICNM", "Cinematographer" },
-        {   "ICNT", "Country" },
-        {   "ICOP", "Copyright" },
-        {   "ICRD", "DateCreated" },
-        {   "ICRP", "Cropped" },
-        {   "IDIM", "Dimensions	" },
-        {   "IDPI", "DotsPerInch" },
-        {   "IDST", "DistributedBy" },
-        {   "IEDT", "EditedBy" },
-        {   "IENC", "EncodedBy" },
-        {   "IENG", "Engineer" },
-        {   "IGNR", "Genre" },
-        {   "IKEY", "Keywords" },
-        {   "ILGT", "Lightness" },
-        {   "ILGU", "LogoURL" },
-        {   "ILIU", "LogoIconURL" },
-        {   "ILNG", "Language" },
-        {   "IMBI", "MoreInfoBannerImage" },
-        {   "IMBU", "MoreInfoBannerURL" },
-        {   "IMED", "Medium" },
-        {   "IMIT", "MoreInfoText" },
-        {   "IMIU", "MoreInfoURL" },
-        {   "IMUS", "MusicBy" },
-        {   "INAM", "Title" },
-        {   "IPDS", "ProductionDesigner" },
-        {   "IPLT", "NumColors" },
-        {   "IPRD", "Product" },
-        {   "IPRO", "ProducedBy" },
-        {   "IRIP", "RippedBy" },
-        {   "IRTD", "Rating" },
-        {   "ISBJ", "Subject" },
+        {   "AGES", "Xmp.video.Rated" },
+        {   "CMNT", "Xmp.video.Comment" },
+        {   "CODE", "Xmp.video.EncodedBy" },
+        {   "COMM", "Xmp.video.Comment" },
+        {   "DIRC", "Xmp.video.Director" },
+        {   "DISP", "Xmp.audio.SchemeTitle" },
+        {   "DTIM", "Xmp.video.DateTimeOriginal" },
+        {   "GENR", "Xmp.video.Genre" },
+        {   "IARL", "Xmp.video.ArchivalLocation" },
+        {   "IART", "Xmp.video.Artist" },
+        {   "IAS1", "Xmp.video.Edit1" },
+        {   "IAS2", "Xmp.video.Edit2" },
+        {   "IAS3", "Xmp.video.Edit3" },
+        {   "IAS4", "Xmp.video.Edit4" },
+        {   "IAS5", "Xmp.video.Edit5" },
+        {   "IAS6", "Xmp.video.Edit6" },
+        {   "IAS7", "Xmp.video.Edit7" },
+        {   "IAS8", "Xmp.video.Edit8" },
+        {   "IAS9", "Xmp.video.Edit9" },
+        {   "IBSU", "Xmp.video.BaseURL" },
+        {   "ICAS", "Xmp.audio.DefaultStream" },
+        {   "ICDS", "Xmp.video.CostumeDesigner" },
+        {   "ICMS", "Xmp.video.Commissioned" },
+        {   "ICMT", "Xmp.video.Comment" },
+        {   "ICNM", "Xmp.video.Cinematographer" },
+        {   "ICNT", "Xmp.video.Country" },
+        {   "ICOP", "Xmp.video.Copyright" },
+        {   "ICRD", "Xmp.video.DateTimeDigitized" },
+        {   "ICRP", "Xmp.video.Cropped" },
+        {   "IDIM", "Xmp.video.Dimensions	" },
+        {   "IDPI", "Xmp.video.DotsPerInch" },
+        {   "IDST", "Xmp.video.DistributedBy" },
+        {   "IEDT", "Xmp.video.EditedBy" },
+        {   "IENC", "Xmp.video.EncodedBy" },
+        {   "IENG", "Xmp.video.Engineer" },
+        {   "IGNR", "Xmp.video.Genre" },
+        {   "IKEY", "Xmp.video.PerformerKeywords" },
+        {   "ILGT", "Xmp.video.Lightness" },
+        {   "ILGU", "Xmp.video.LogoURL" },
+        {   "ILIU", "Xmp.video.LogoIconURL" },
+        {   "ILNG", "Xmp.video.Language" },
+        {   "IMBI", "Xmp.video.InfoBannerImage" },
+        {   "IMBU", "Xmp.video.InfoBannerURL" },
+        {   "IMED", "Xmp.video.Medium" },
+        {   "IMIT", "Xmp.video.InfoText" },
+        {   "IMIU", "Xmp.video.InfoURL" },
+        {   "IMUS", "Xmp.video.MusicBy" },
+        {   "INAM", "Xmp.video.Title" },
+        {   "IPDS", "Xmp.video.ProductionDesigner" },
+        {   "IPLT", "Xmp.video.NumOfColors" },
+        {   "IPRD", "Xmp.video.Product" },
+        {   "IPRO", "Xmp.video.ProducedBy" },
+        {   "IRIP", "Xmp.video.RippedBy" },
+        {   "IRTD", "Xmp.video.Rating" },
+        {   "ISBJ", "Xmp.video.Subject" },
         {   "ISFT", "Xmp.video.Software" },
-        {   "ISGN", "SecondaryGenre" },
-        {   "ISHP", "Sharpness" },
-        {   "ISRC", "Source" },
-        {   "ISRF", "SourceForm" },
-        {   "ISTD", "ProductionStudio" },
-        {   "ISTR", "Starring" },
-        {   "ITCH", "Technician" },
-        {   "IWMU", "WatermarkURL" },
-        {   "IWRI", "WrittenBy" },
-        {   "LANG", "Language" },
-        {   "LOCA", "Location" },
-        {   "PRT1", "Part" },
-        {   "PRT2", "NumberOfParts" },
-        {   "RATE", "Rate" },
-        {   "STAR", "Starring" },
-        {   "STAT", "Statistics" },
-        {   "TAPE", "TapeName" },
-        {   "TCDO", "EndTimecode" },
-        {   "TCOD", "StartTimecode" },
-        {   "TITL", "Title" },
-        {   "TLEN", "Length" },
-        {   "TORG", "Organization" },
-        {   "TRCK", "TrackNumber" },
-        {   "TURL", "URL" },
-        {   "TVER", "Version" },
-        {   "VMAJ", "VegasVersionMajor" },
-        {   "VMIN", "VegasVersionMinor" },
-        {   "YEAR", "Year" }
+        {   "ISGN", "Xmp.video.SecondaryGenre" },
+        {   "ISHP", "Xmp.video.Sharpness" },
+        {   "ISRC", "Xmp.video.Source" },
+        {   "ISRF", "Xmp.video.SourceForm" },
+        {   "ISTD", "Xmp.video.ProductionStudio" },
+        {   "ISTR", "Xmp.video.Starring" },
+        {   "ITCH", "Xmp.video.Technician" },
+        {   "IWMU", "Xmp.video.WatermarkURL" },
+        {   "IWRI", "Xmp.video.WrittenBy" },
+        {   "LANG", "Xmp.video.Language" },
+        {   "LOCA", "Xmp.video.LocationInfo" },
+        {   "PRT1", "Xmp.video.Part" },
+        {   "PRT2", "Xmp.video.NumOfParts" },
+        {   "RATE", "Xmp.video.Rate" },
+        {   "STAR", "Xmp.video.Starring" },
+        {   "STAT", "Xmp.video.Statistics" },
+        {   "TAPE", "Xmp.video.TapeName" },
+        {   "TCDO", "Xmp.video.EndTimecode" },
+        {   "TCOD", "Xmp.video.StartTimecode" },
+        {   "TITL", "Xmp.video.Title" },
+        {   "TLEN", "Xmp.video.Length" },
+        {   "TORG", "Xmp.video.Organization" },
+        {   "TRCK", "Xmp.video.TrackNumber" },
+        {   "TURL", "Xmp.video.URL" },
+        {   "TVER", "Xmp.video.SoftwareVersion" },
+        {   "VMAJ", "Xmp.video.VegasVersionMajor" },
+        {   "VMIN", "Xmp.video.VegasVersionMinor" },
+        {   "YEAR", "Xmp.video.Year" }
     };
 
     extern const TagDetails audioEncodingValues[] =  {
@@ -820,7 +820,7 @@ namespace Exiv2 {
         io_->seek(cur_pos + size, BasicIo::beg);
     } // RiffVideo::nikonTagsHandler
 
-    void RiffVideo::infoTagsHandler() // Todo Decoding Info Tags
+    void RiffVideo::infoTagsHandler()
     {
         const long bufMinSize = 100;
         DataBuf buf(bufMinSize);
@@ -828,7 +828,7 @@ namespace Exiv2 {
         io_->seek(-12, BasicIo::cur);
         io_->read(buf.pData_, 4);
         unsigned long infoSize, size = Exiv2::getULong(buf.pData_, littleEndian);
-        unsigned long size2 = size;
+        unsigned long size_external = size;
         const TagVocabulary* tv;
 
         uint64_t cur_pos = io_->tell();
@@ -836,7 +836,6 @@ namespace Exiv2 {
 
         while(size > 3) {
             io_->read(buf.pData_, 4); size -= 4;
-    //        std::cerr <<std::setw(35)<<std::left<< "Info Name"<<": "<< buf.pData_<<"\n";
             if(!Exiv2::getULong(buf.pData_, littleEndian))
                 break;
             tv = find(infoTags , Exiv2::toString( buf.pData_));
@@ -847,12 +846,11 @@ namespace Exiv2 {
                 size -= infoSize;
                 io_->read(buf.pData_, infoSize);
             }
-    //        std::cerr <<std::setw(35)<<std::left<< "Info Data"<<": "<< buf.pData_<<"\n";
 
             if(tv)
                 xmpData_[exvGettext(tv->label_)] = buf.pData_;
         }
-        io_->seek(cur_pos + size2, BasicIo::beg);
+        io_->seek(cur_pos + size_external, BasicIo::beg);
     } // RiffVideo::infoTagsHandler
 
     void RiffVideo::junkHandler(long size)
