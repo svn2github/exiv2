@@ -56,7 +56,7 @@ echo "."
 # ----------------------------------------------------------------------
 # Result
 if ! diff -q $diffargs "../data/video/video-test.out" "video-test.out" ; then
-    diff -u $diffargs "../data/video/video-test.out" "video-test.out"
+    diff -u -a $diffargs "../data/video/video-test.out" "video-test.out"
     exit 1
 fi
 echo "All testcases passed."
