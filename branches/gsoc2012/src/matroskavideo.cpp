@@ -94,10 +94,10 @@ namespace Exiv2 {
         {      0x0016, "CueRefTime" },                                  //sd
         {      0x0017, "CueRefCluster" },                               //sd
         {      0x0018, "ChapterFlagHidden" },                           //sd
-        {      0x001a, "Xmp.video.videoScanTpye" },                     //u
+        {      0x001a, "Xmp.video.VideoScanTpye" },                     //u
         {      0x001b, "BlockDuration" },                               //s
         {      0x001c, "TrackLacing" },                                 //ui
-        {      0x001f, "Xmp.audio.channelType" },                       //u
+        {      0x001f, "Xmp.audio.ChannelType" },                       //u
         {      0x0020, "BlockGroup" },                                  //s
         {      0x0021, "Block" },                                       //sd
         {      0x0022, "BlockVirtual" },                                //sd
@@ -110,13 +110,13 @@ namespace Exiv2 {
         {      0x002b, "PrevSize" },                                    //sd
         {      0x002e, "TrackEntry" },                                  //s
         {      0x002f, "EncryptedBlock" },                              //sd
-        {      0x0030, "Xmp.video.width" },                             //u
+        {      0x0030, "Xmp.video.Width" },                             //u
         {      0x0033, "CueTime" },                                     //sd
-        {      0x0035, "Xmp.audio.sampleRate" },                        //u
+        {      0x0035, "Xmp.audio.SampleRate" },                        //u
         {      0x0036, "ChapterAtom" },                                 //s
         {      0x0037, "CueTrackPositions" },                           //s
         {      0x0039, "TrackUsed" },                                   //ui
-        {      0x003a, "Xmp.video.height" },                            //u
+        {      0x003a, "Xmp.video.Height" },                            //u
         {      0x003b, "CuePoint" },                                    //s
         {      0x003f, "CRC-32" },                                      //sd
         {      0x004b, "BlockAdditionalID" },                           //sd
@@ -139,82 +139,82 @@ namespace Exiv2 {
         {      0x007a, "ReferencePriority" },                           //sd
         {      0x007b, "ReferenceBlock" },                              //sd
         {      0x007d, "ReferenceVirtual" },                            //sd
-        {      0x0254, "Xmp.video.contentCompressAlgo" },               //u
+        {      0x0254, "Xmp.video.ContentCompressAlgo" },               //u
         {      0x0255, "ContentCompressionSettings" },                  //sd
-        {      0x0282, "Xmp.video.docType" },                           //u
-        {      0x0285, "Xmp.video.docTypeReadVersion" },                //u
+        {      0x0282, "Xmp.video.DocType" },                           //u
+        {      0x0285, "Xmp.video.DocTypeReadVersion" },                //u
         {      0x0286, "Xmp.video.EBMLVersion" },                       //u
-        {      0x0287, "Xmp.video.docTypeVersion" },                    //u
+        {      0x0287, "Xmp.video.DocTypeVersion" },                    //u
         {      0x02f2, "EBMLMaxIDLength" },                             //sd
         {      0x02f3, "EBMLMaxSizeLength" },                           //sd
         {      0x02f7, "Xmp.video.EBMLReadVersion" },                   //u
         {      0x037c, "ChapterLanguage" },                             //sd
         {      0x037e, "ChapterCountry" },                              //sd
         {      0x0444, "SegmentFamily" },                               //sd
-        {      0x0461, "Xmp.video.dateUTC" }, //Date Time Original - measured in seconds relatively to Jan 01, 2001, 0:00:00 GMT+0h
-        {      0x047a, "Xmp.video.tagLanguage" },                       //u
-        {      0x0484, "Xmp.video.tagDefault" },                        //u
+        {      0x0461, "Xmp.video.DateUTC" }, //Date Time Original - measured in seconds relatively to Jan 01, 2001, 0:00:00 GMT+0h
+        {      0x047a, "Xmp.video.TagLanguage" },                       //u
+        {      0x0484, "Xmp.video.TagDefault" },                        //u
         {      0x0485, "TagBinary" },                                   //sd
-        {      0x0487, "Xmp.video.tagString" },                         //u
-        {      0x0489, "Xmp.video.duration" },                          //u
+        {      0x0487, "Xmp.video.TagString" },                         //u
+        {      0x0489, "Xmp.video.Duration" },                          //u
         {      0x050d, "ChapterProcessPrivate" },                       //sd
         {      0x0598, "ChapterFlagEnabled" },                          //sd
-        {      0x05a3, "Xmp.video.tagName" },                           //u
+        {      0x05a3, "Xmp.video.TagName" },                           //u
         {      0x05b9, "EditionEntry" },                                //s
         {      0x05bc, "EditionUID" },                                  //sd
         {      0x05bd, "EditionFlagHidden" },                           //sd
         {      0x05db, "EditionFlagDefault" },                          //sd
         {      0x05dd, "EditionFlagOrdered" },                          //sd
-        {      0x065c, "Xmp.video.attachFileData" },                    //u
-        {      0x0660, "Xmp.video.attachFileMIME" },                    //u
-        {      0x066e, "Xmp.video.attachFileName" },                    //u
+        {      0x065c, "Xmp.video.AttachFileData" },                    //u
+        {      0x0660, "Xmp.video.AttachFileMIME" },                    //u
+        {      0x066e, "Xmp.video.AttachFileName" },                    //u
         {      0x0675, "AttachedFileReferral" },                        //sd
-        {      0x067e, "Xmp.video.attachFileDesc" },                    //u
-        {      0x06ae, "Xmp.video.attachFileUID" },                     //u
-        {      0x07e1, "Xmp.video.contentEncryptAlgo" },                //u
+        {      0x067e, "Xmp.video.AttachFileDesc" },                    //u
+        {      0x06ae, "Xmp.video.AttachFileUID" },                     //u
+        {      0x07e1, "Xmp.video.ContentEncryptAlgo" },                //u
         {      0x07e2, "ContentEncryptionKeyID" },                      //sd
         {      0x07e3, "ContentSignature" },                            //sd
         {      0x07e4, "ContentSignatureKeyID" },                       //sd
-        {      0x07e5, "Xmp.video.contentSignAlgo" },                   //u
-        {      0x07e6, "Xmp.video.contentSignHashAlgo" },               //u
-        {      0x0d80, "Xmp.video.muxingApp" },                         //u
+        {      0x07e5, "Xmp.video.ContentSignAlgo" },                   //u
+        {      0x07e6, "Xmp.video.ContentSignHashAlgo" },               //u
+        {      0x0d80, "Xmp.video.MuxingApp" },                         //u
         {      0x0dbb, "Seek" },                                        //s
         {      0x1031, "ContentEncodingOrder" },                        //sd
         {      0x1032, "ContentEncodingScope" },                        //sd
-        {      0x1033, "Xmp.video.contentEncodingType" },               //u
+        {      0x1033, "Xmp.video.ContentEncodingType" },               //u
         {      0x1034, "ContentCompression" },                          //s
         {      0x1035, "ContentEncryption" },                           //s
         {      0x135f, "CueRefNumber" },                                //sd
-        {      0x136e, "Xmp.video.trackName" },                         //u
+        {      0x136e, "Xmp.video.TrackName" },                         //u
         {      0x1378, "CueBlockNumber" },                              //sd
         {      0x137f, "TrackOffset" },                                 //sd
         {      0x13ab, "SeekID" },                                      //sd
         {      0x13ac, "SeekPosition" },                                //sd
         {      0x13b8, "Stereo3DMode" },                                //sd
-        {      0x14aa, "Xmp.video.cropBottom" },                        //ui
-        {      0x14b0, "Xmp.video.width" },                             //u
-        {      0x14b2, "Xmp.video.displayUnit" },                       //u
-        {      0x14b3, "Xmp.video.aspectRatioType" },                   //u
-        {      0x14ba, "Xmp.video.height" },                            //u
-        {      0x14bb, "Xmp.video.cropTop" },                           //ui
-        {      0x14cc, "Xmp.video.cropLeft" },                          //ui
-        {      0x14dd, "Xmp.video.cropRight" },                         //ui
+        {      0x14aa, "Xmp.video.CropBottom" },                        //ui
+        {      0x14b0, "Xmp.video.Width" },                             //u
+        {      0x14b2, "Xmp.video.DisplayUnit" },                       //u
+        {      0x14b3, "Xmp.video.AspectRatioType" },                   //u
+        {      0x14ba, "Xmp.video.Height" },                            //u
+        {      0x14bb, "Xmp.video.CropTop" },                           //ui
+        {      0x14cc, "Xmp.video.CropLeft" },                          //ui
+        {      0x14dd, "Xmp.video.CropRight" },                         //ui
         {      0x15aa, "TrackForced" },                                 //ui
         {      0x15ee, "MaxBlockAdditionID" },                          //sd
-        {      0x1741, "Xmp.video.writingApp" },                        //u
+        {      0x1741, "Xmp.video.WritingApp" },                        //u
         {      0x1854, "SilentTracks" },                                //s
         {      0x18d7, "SilentTrackNumber" },                           //sd
         {      0x21a7, "AttachedFile" },                                //s
         {      0x2240, "ContentEncoding" },                             //s
-        {      0x2264, "Xmp.audio.bitsPerSample" },                     //u
+        {      0x2264, "Xmp.audio.BitsPerSample" },                     //u
         {      0x23a2, "CodecPrivate" },                                //sd
         {      0x23c0, "Targets" },                                     //s
-        {      0x23c3, "Xmp.video.physicalEquivalent" },                //u
+        {      0x23c3, "Xmp.video.PhysicalEquivalent" },                //u
         {      0x23c4, "TagChapterUID" },                               //sd
         {      0x23c5, "TagTrackUID" },                                 //sd
         {      0x23c6, "TagAttachmentUID" },                            //sd
         {      0x23c9, "TagEditionUID" },                               //sd
-        {      0x23ca, "Xmp.video.targetType" },                        //u
+        {      0x23ca, "Xmp.video.TargetType" },                        //u
         {      0x2532, "SignedElement" },                               //sd
         {      0x2624, "TrackTranslate" },                              //s
         {      0x26a5, "TrackTranslateTrackID" },                       //sd
@@ -229,7 +229,7 @@ namespace Exiv2 {
         {      0x2944, "ChapterProcess" },                              //s
         {      0x2955, "ChapterProcessCodecID" },                       //sd
         {      0x29a5, "ChapterTranslateID" },                          //sd
-        {      0x29bf, "Xmp.video.translateCodec" },                    //u
+        {      0x29bf, "Xmp.video.TranslateCodec" },                    //u
         {      0x29fc, "ChapterTranslateEditionUID" },                  //sd
         {      0x2d80, "ContentEncodings" },                            //s
         {      0x2de7, "MinCache" },                                    //sd
@@ -244,24 +244,24 @@ namespace Exiv2 {
         {      0x33c5, "TrackUID" },                                    //sd
         {      0x3446, "TrackAttachmentUID" },                          //sd
         {      0x35a1, "BlockAdditions" },                              //s
-        {      0x38b5, "Xmp.audio.outputSampleRate" },                  //u
-        {      0x3ba9, "Xmp.video.title" },                             //u
+        {      0x38b5, "Xmp.audio.OutputSampleRate" },                  //u
+        {      0x3ba9, "Xmp.video.Title" },                             //u
         {      0x3d7b, "ChannelPositions" },                            //sd
         {      0x3e5b, "SignatureElements" },                           //s
         {      0x3e7b, "SignatureElementList" },                        //s
-        {      0x3e8a, "Xmp.video.contentSignAlgo" },                   //u
-        {      0x3e9a, "Xmp.video.contentSignHashAlgo" },               //u
+        {      0x3e8a, "Xmp.video.ContentSignAlgo" },                   //u
+        {      0x3e9a, "Xmp.video.ContentSignHashAlgo" },               //u
         {      0x3ea5, "SignaturePublicKey" },                          //sd
         {      0x3eb5, "Signature" },                                   //sd
         {     0x2b59c, "TrackLanguage" },                               //ui
         {     0x3314f, "TrackTimecodeScale" },                          //sd
-        {     0x383e3, "Xmp.video.frameRate" },                         //u
+        {     0x383e3, "Xmp.video.FrameRate" },                         //u
         {     0x3e383, "VideoFrameRate/DefaultDuration" },              //ui
         {     0x58688, "VideoCodecName/AudioCodecName/CodecName" },     //ui
         {     0x6b240, "CodecDownloadURL" },                            //ui
         {     0xad7b1, "TimecodeScale" },                               //ui
         {     0xeb524, "ColorSpace" },                                  //sd
-        {     0xfb523, "Xmp.video.opColor" },                           //u
+        {     0xfb523, "Xmp.video.OpColor" },                           //u
         {    0x1a9697, "CodecSettings" },                               //ui
         {    0x1b4040, "CodecInfoURL" },                                //ui
         {    0x1c83ab, "PrevFileName" },                                //sd
@@ -363,68 +363,68 @@ namespace Exiv2 {
     };
 
     extern const TagDetails trackEnable[] =  {
-        {   0x1,  "Xmp.video.enabled" },
-        {   0x2,  "Xmp.audio.enabled" },
-        {   0x11, "Xmp.video.subTEnabled" }
+        {   0x1,  "Xmp.video.Enabled" },
+        {   0x2,  "Xmp.audio.Enabled" },
+        {   0x11, "Xmp.video.SubTEnabled" }
     };
 
     extern const TagDetails defaultOn[] =  {
-        {   0x1,  "Xmp.video.defaultOn" },
-        {   0x2,  "Xmp.audio.defaultOn" },
-        {   0x11, "Xmp.video.subTDefaultOn" }
+        {   0x1,  "Xmp.video.DefaultOn" },
+        {   0x2,  "Xmp.audio.DefaultOn" },
+        {   0x11, "Xmp.video.SubTDefaultOn" }
     };
 
     extern const TagDetails trackForced[] =  {
-        {   0x1,  "Xmp.video.trackForced" },
-        {   0x2,  "Xmp.audio.trackForced" },
-        {   0x11, "Xmp.video.subTTrackForced" }
+        {   0x1,  "Xmp.video.TrackForced" },
+        {   0x2,  "Xmp.audio.TrackForced" },
+        {   0x11, "Xmp.video.SubTTrackForced" }
     };
 
     extern const TagDetails trackLacing[] =  {
-        {   0x1,  "Xmp.video.trackLacing" },
-        {   0x2,  "Xmp.audio.trackLacing" },
-        {   0x11, "Xmp.video.subTTrackLacing" }
+        {   0x1,  "Xmp.video.TrackLacing" },
+        {   0x2,  "Xmp.audio.TrackLacing" },
+        {   0x11, "Xmp.video.SubTTrackLacing" }
     };
 
     extern const TagDetails codecDecodeAll[] =  {
-        {   0x1,  "Xmp.video.codecDecodeAll" },
-        {   0x2,  "Xmp.audio.codecDecodeAll" },
-        {   0x11, "Xmp.video.subTCodecDecodeAll" }
+        {   0x1,  "Xmp.video.CodecDecodeAll" },
+        {   0x2,  "Xmp.audio.CodecDecodeAll" },
+        {   0x11, "Xmp.video.SubTCodecDecodeAll" }
     };
 
     extern const TagDetails codecDownloadUrl[] =  {
-        {   0x1,  "Xmp.video.codecDownloadUrl" },
-        {   0x2,  "Xmp.audio.codecDownloadUrl" },
-        {   0x11, "Xmp.video.subTCodecDownloadUrl" }
+        {   0x1,  "Xmp.video.CodecDownloadUrl" },
+        {   0x2,  "Xmp.audio.CodecDownloadUrl" },
+        {   0x11, "Xmp.video.SubTCodecDownloadUrl" }
     };
 
     extern const TagDetails codecSettings[] =  {
-        {   0x1,  "Xmp.video.codecSettings" },
-        {   0x2,  "Xmp.audio.codecSettings" },
-        {   0x11, "Xmp.video.subTCodecSettings" }
+        {   0x1,  "Xmp.video.CodecSettings" },
+        {   0x2,  "Xmp.audio.CodecSettings" },
+        {   0x11, "Xmp.video.SubTCodecSettings" }
     };
 
     extern const TagDetails trackCodec[] =  {
-        {   0x1,  "Xmp.video.codec" },
-        {   0x2,  "Xmp.audio.compressor" },
-        {   0x11, "Xmp.video.subTCodec" }
+        {   0x1,  "Xmp.video.Codec" },
+        {   0x2,  "Xmp.audio.Compressor" },
+        {   0x11, "Xmp.video.SubTCodec" }
     };
 
     extern const TagDetails trackLanguage[] =  {
-        {   0x1,  "Xmp.video.trackLang" },
-        {   0x2,  "Xmp.audio.trackLang" },
-        {   0x11, "Xmp.video.subTLang" }
+        {   0x1,  "Xmp.video.TrackLang" },
+        {   0x2,  "Xmp.audio.TrackLang" },
+        {   0x11, "Xmp.video.SubTLang" }
     };
 
     extern const TagDetails codecInfo[] =  {
-        {   0x1,  "Xmp.video.codecInfo" },
-        {   0x2,  "Xmp.audio.codecInfo" },
-        {   0x11, "Xmp.video.subTCodecInfo" }
+        {   0x1,  "Xmp.video.CodecInfo" },
+        {   0x2,  "Xmp.audio.CodecInfo" },
+        {   0x11, "Xmp.video.SubTCodecInfo" }
     };
 
     extern const TagDetails streamRate[] =  {
-        {   0x1,  "Xmp.video.frameRate" },
-        {   0x2,  "Xmp.audio.defaultDuration" }
+        {   0x1,  "Xmp.video.FrameRate" },
+        {   0x2,  "Xmp.audio.DefaultDuration" }
     };
 
     /*!
@@ -492,7 +492,7 @@ namespace Exiv2 {
         xmpData_["Xmp.video.FileName"] = io_->path();
         xmpData_["Xmp.video.FileSize"] = (double)io_->size()/(double)1048576;
         xmpData_["Xmp.video.MimeType"] = mimeType();
-        xmpData_["Xmp.video.aspectRatio"] = "0";
+        xmpData_["Xmp.video.AspectRatio"] = "0";
 
         while (continueTraversing_) decodeBlock();
     } // MatroskaVideo::readMetadata
@@ -634,12 +634,12 @@ namespace Exiv2 {
 
         case 0x0057:
             track_count++;
-            xmpData_["Xmp.video.totalStream"] = track_count;
+            xmpData_["Xmp.video.TotalStream"] = track_count;
             break;
 
         case 0xad7b1:
             time_code_scale = (double)returnValue(buf, size)/(double)1000000000;
-            xmpData_["Xmp.video.timecodeScale"] = time_code_scale;
+            xmpData_["Xmp.video.TimecodeScale"] = time_code_scale;
             break;
 
         case 0x0003:

@@ -540,11 +540,11 @@ namespace Exiv2 {
         buf.pData_[4] = '\0';
 
         io_->read(buf.pData_, bufMinSize);
-        xmpData_["Xmp.video.container"] = buf.pData_;
+        xmpData_["Xmp.video.Container"] = buf.pData_;
 
         io_->read(buf.pData_, bufMinSize);
         io_->read(buf.pData_, bufMinSize);
-        xmpData_["Xmp.video.fileType"] = buf.pData_;
+        xmpData_["Xmp.video.FileType"] = buf.pData_;
 
         while (continueTraversing_) decodeBlock();
     } // RiffVideo::readMetadata
@@ -559,7 +559,6 @@ namespace Exiv2 {
         buf2.pData_[4] = '\0' ;
 
         io_->read(buf2.pData_, 4);
-        // std::cout<<"\nBuf2 |"<<buf2.pData_;
 
         if(io_->eof() || equalsRiffTag(buf2, "MOVI") || equalsRiffTag(buf2, "DATA")) {
             continueTraversing_ = false;
@@ -571,7 +570,6 @@ namespace Exiv2 {
         else {
             io_->read(buf.pData_, 4);
             size = Exiv2::getULong(buf.pData_, littleEndian);
-            // std::cout <<"("<<std::setw(9)<<std::right<<size<<"): ";
 
         tagDecoder(buf2, size);
         }
@@ -688,9 +686,9 @@ namespace Exiv2 {
         DataBuf buf(bufMinSize);
         io_->read(buf.pData_, size);
         if(!i)
-            xmpData_["Xmp.video.dateUTC"] = buf.pData_;
+            xmpData_["Xmp.video.DateUTC"] = buf.pData_;
         else
-            xmpData_["Xmp.video.streamName"] = buf.pData_;
+            xmpData_["Xmp.video.StreamName"] = buf.pData_;
         io_->seek(cur_pos + size, BasicIo::beg);
     } // RiffVideo::dateTimeOriginal
 
@@ -712,7 +710,7 @@ namespace Exiv2 {
             if(equalsRiffTag(buf,"DMLH")) {
                 io_->read(buf.pData_, 4); size -= 4;
                 io_->read(buf.pData_, 4); size -= 4;
-                xmpData_["Xmp.video.totalFrameCount"] = Exiv2::getULong(buf.pData_, littleEndian);
+                xmpData_["Xmp.video.TotalFrameCount"] = Exiv2::getULong(buf.pData_, littleEndian);
             }
         }
         io_->seek(cur_pos + size2, BasicIo::beg);
@@ -763,7 +761,7 @@ namespace Exiv2 {
 
                     if(tagID == 0x0001) {
                         io_->read(buf.pData_, dataSize);
-                        xmpData_["Xmp.video.makerNoteType"] = buf.pData_;
+                        xmpData_["Xmp.video.MakerNoteType"] = buf.pData_;
                     }
                     else if (tagID == 0x0002) {
                         while(dataSize) {
@@ -771,7 +769,7 @@ namespace Exiv2 {
                             str[(4 - dataSize) * 2] = (char)(Exiv2::getULong(buf.pData_, littleEndian) + 48);
                             --dataSize;
                         }
-                        xmpData_["Xmp.video.makerNoteVersion"] = str;
+                        xmpData_["Xmp.video.MakerNoteVersion"] = str;
                     }
                 }
             }
@@ -916,7 +914,7 @@ namespace Exiv2 {
         else {
             io_->seek(cur_pos, BasicIo::beg);
             io_->read(buf.pData_, size);
-            xmpData_["Xmp.video.junk"] = buf.pData_;
+            xmpData_["Xmp.video.Junk"] = buf.pData_;
         }
 
         io_->seek(cur_pos + size, BasicIo::beg);
@@ -938,26 +936,26 @@ namespace Exiv2 {
 
             switch(i) {
             case frameRate:
-                xmpData_["Xmp.video.microSecPerFrame"] = Exiv2::getULong(buf.pData_, littleEndian);
+                xmpData_["Xmp.video.MicroSecPerFrame"] = Exiv2::getULong(buf.pData_, littleEndian);
                 frame_rate = (double)1000000/(double)Exiv2::getULong(buf.pData_, littleEndian);
                 break;
             case (maxDataRate):
-                xmpData_["Xmp.video.maxDataRate"] = (double)Exiv2::getULong(buf.pData_, littleEndian)/(double)1024;
+                xmpData_["Xmp.video.MaxDataRate"] = (double)Exiv2::getULong(buf.pData_, littleEndian)/(double)1024;
                 break;
             case frameCount:
-                xmpData_["Xmp.video.frameCount"] = Exiv2::getULong(buf.pData_, littleEndian);
+                xmpData_["Xmp.video.FrameCount"] = Exiv2::getULong(buf.pData_, littleEndian);
                 frame_count = Exiv2::getULong(buf.pData_, littleEndian);
                 break;
             case streamCount:
-                xmpData_["Xmp.video.streamCount"] = Exiv2::getULong(buf.pData_, littleEndian);
+                xmpData_["Xmp.video.StreamCount"] = Exiv2::getULong(buf.pData_, littleEndian);
                 break;
             case imageWidth_h:
                 width = Exiv2::getULong(buf.pData_, littleEndian);
-                xmpData_["Xmp.video.width"] = width;
+                xmpData_["Xmp.video.Width"] = width;
                 break;
             case imageHeight_h:
                 height = Exiv2::getULong(buf.pData_, littleEndian);
-                xmpData_["Xmp.video.height"] = height;
+                xmpData_["Xmp.video.Height"] = height;
                 break;
             }
         }
@@ -989,42 +987,42 @@ namespace Exiv2 {
             switch(i) {
             case codec:
                 if(streamType_ == Video)
-                    xmpData_["Xmp.video.codec"] = buf.pData_;
+                    xmpData_["Xmp.video.Codec"] = buf.pData_;
                 else if (streamType_ == Audio)
-                    xmpData_["Xmp.audio.codec"] = buf.pData_;
+                    xmpData_["Xmp.audio.Codec"] = buf.pData_;
                 else
-                    xmpData_["Xmp.video.codec"] = buf.pData_;
+                    xmpData_["Xmp.video.Codec"] = buf.pData_;
                 break;
             case sampleRate:
                 divisor=Exiv2::getULong(buf.pData_, littleEndian);
                 break;
             case (sampleRate+1):
                 if(streamType_ == Video)
-                    xmpData_["Xmp.video.frameRate"] = returnSampleRate(buf,divisor);
+                    xmpData_["Xmp.video.FrameRate"] = returnSampleRate(buf,divisor);
                 else if (streamType_ == Audio)
-                    xmpData_["Xmp.audio.sampleRate"] = returnSampleRate(buf,divisor);
+                    xmpData_["Xmp.audio.SampleRate"] = returnSampleRate(buf,divisor);
                 else
-                     xmpData_["Xmp.video.streamSampleRate"] = returnSampleRate(buf,divisor);
+                     xmpData_["Xmp.video.StreamSampleRate"] = returnSampleRate(buf,divisor);
                 break;
             case sampleCount:
                 if(streamType_ == Video)
-                    xmpData_["Xmp.video.frameCount"] = Exiv2::getULong(buf.pData_, littleEndian);
+                    xmpData_["Xmp.video.FrameCount"] = Exiv2::getULong(buf.pData_, littleEndian);
                 else if (streamType_ == Audio)
-                    xmpData_["Xmp.audio.sampleCount"] = Exiv2::getULong(buf.pData_, littleEndian);
+                    xmpData_["Xmp.audio.SampleCount"] = Exiv2::getULong(buf.pData_, littleEndian);
                 else
-                    xmpData_["Xmp.video.streamSampleCount"] = Exiv2::getULong(buf.pData_, littleEndian);
+                    xmpData_["Xmp.video.StreamSampleCount"] = Exiv2::getULong(buf.pData_, littleEndian);
                 break;
             case quality:
                 if(streamType_ == Video)
-                    xmpData_["Xmp.video.videoQuality"] = Exiv2::getULong(buf.pData_, littleEndian);
+                    xmpData_["Xmp.video.VideoQuality"] = Exiv2::getULong(buf.pData_, littleEndian);
                 else if(streamType_ != Audio)
-                    xmpData_["Xmp.video.streamQuality"] = Exiv2::getULong(buf.pData_, littleEndian);
+                    xmpData_["Xmp.video.StreamQuality"] = Exiv2::getULong(buf.pData_, littleEndian);
                 break;
             case sampleSize:
                 if(streamType_ == Video)
-                    xmpData_["Xmp.video.videoSampleSize"] = Exiv2::getULong(buf.pData_, littleEndian);
+                    xmpData_["Xmp.video.VideoSampleSize"] = Exiv2::getULong(buf.pData_, littleEndian);
                 else if(streamType_ != Audio)
-                    xmpData_["Xmp.video.streamSampleSize"] = Exiv2::getULong(buf.pData_, littleEndian);
+                    xmpData_["Xmp.video.StreamSampleSize"] = Exiv2::getULong(buf.pData_, littleEndian);
                 break;
             }
 
@@ -1052,38 +1050,38 @@ namespace Exiv2 {
                     io_->read(buf.pData_, bufMinSize); break;
                 case planes:
                     io_->read(buf.pData_, 2);
-                    xmpData_["Xmp.video.planes"] = Exiv2::getUShort(buf.pData_, littleEndian); break;
+                    xmpData_["Xmp.video.Planes"] = Exiv2::getUShort(buf.pData_, littleEndian); break;
                 case bitDepth:
                     io_->read(buf.pData_, 2);
-                    xmpData_["Xmp.video.pixelDepth"] = Exiv2::getUShort(buf.pData_, littleEndian); break;
+                    xmpData_["Xmp.video.PixelDepth"] = Exiv2::getUShort(buf.pData_, littleEndian); break;
                 case compression:
                     io_->read(buf.pData_, bufMinSize);
-                    xmpData_["Xmp.video.compressor"] = buf.pData_; break;
+                    xmpData_["Xmp.video.Compressor"] = buf.pData_; break;
                 case imageLength:
                     io_->read(buf.pData_, bufMinSize);
-                    xmpData_["Xmp.video.imageLength"] = Exiv2::getULong(buf.pData_, littleEndian); break;
+                    xmpData_["Xmp.video.ImageLength"] = Exiv2::getULong(buf.pData_, littleEndian); break;
                 case pixelsPerMeterX:
                     io_->read(buf.pData_, bufMinSize);
-                    xmpData_["Xmp.video.pixelPerMeterX"] = Exiv2::getULong(buf.pData_, littleEndian); break;
+                    xmpData_["Xmp.video.PixelPerMeterX"] = Exiv2::getULong(buf.pData_, littleEndian); break;
                 case pixelsPerMeterY:
                     io_->read(buf.pData_, bufMinSize);
-                    xmpData_["Xmp.video.pixelPerMeterY"] = Exiv2::getULong(buf.pData_, littleEndian); break;
+                    xmpData_["Xmp.video.PixelPerMeterY"] = Exiv2::getULong(buf.pData_, littleEndian); break;
                 case numColors:
                     io_->read(buf.pData_, bufMinSize);
                     if(Exiv2::getULong(buf.pData_, littleEndian) == 0) {
-                        xmpData_["Xmp.video.numOfColours"] = "Unspecified";
+                        xmpData_["Xmp.video.NumOfColours"] = "Unspecified";
                     }
                     else {
-                        xmpData_["Xmp.video.numOfColours"] = Exiv2::getULong(buf.pData_, littleEndian);
+                        xmpData_["Xmp.video.NumOfColours"] = Exiv2::getULong(buf.pData_, littleEndian);
                     }
                     break;
                 case numImportantColors:
                     io_->read(buf.pData_, bufMinSize);
                     if(Exiv2::getULong(buf.pData_, littleEndian)) {
-                        xmpData_["Xmp.video.numIfImpColours"] = Exiv2::getULong(buf.pData_, littleEndian);
+                        xmpData_["Xmp.video.NumIfImpColours"] = Exiv2::getULong(buf.pData_, littleEndian);
                     }
                     else {
-                        xmpData_["Xmp.video.numOfImpColours"] = "All";
+                        xmpData_["Xmp.video.NumOfImpColours"] = "All";
                     }
                     break;
                 }
@@ -1099,28 +1097,28 @@ namespace Exiv2 {
                 case encoding:
                     td = find(audioEncodingValues , Exiv2::getUShort(buf.pData_, littleEndian));
                     if(td) {
-                        xmpData_["Xmp.audio.compressor"] = exvGettext(td->label_);
+                        xmpData_["Xmp.audio.Compressor"] = exvGettext(td->label_);
                     }
                     else {
-                        xmpData_["Xmp.audio.compressor"] = Exiv2::getUShort(buf.pData_, littleEndian);
+                        xmpData_["Xmp.audio.Compressor"] = Exiv2::getUShort(buf.pData_, littleEndian);
                     }
                     break;
                 case numberOfChannels:
                     c = Exiv2::getUShort(buf.pData_, littleEndian);
-                    if(c == 1) xmpData_["Xmp.audio.channelType"] = "Mono";
-                    else if(c == 2) xmpData_["Xmp.audio.channelType"] = "Stereo";
-                    else if(c == 5) xmpData_["Xmp.audio.channelType"] = "5.1 Surround Sound";
-                    else if(c == 7) xmpData_["Xmp.audio.channelType"] = "7.1 Surround Sound";
-                    else xmpData_["Xmp.audio.channelType"] = "Mono";
+                    if(c == 1) xmpData_["Xmp.audio.ChannelType"] = "Mono";
+                    else if(c == 2) xmpData_["Xmp.audio.ChannelType"] = "Stereo";
+                    else if(c == 5) xmpData_["Xmp.audio.ChannelType"] = "5.1 Surround Sound";
+                    else if(c == 7) xmpData_["Xmp.audio.ChannelType"] = "7.1 Surround Sound";
+                    else xmpData_["Xmp.audio.ChannelType"] = "Mono";
                     break;
                 case audioSampleRate:
-                    xmpData_["Xmp.audio.sampleRate"] = Exiv2::getUShort(buf.pData_, littleEndian);
+                    xmpData_["Xmp.audio.SampleRate"] = Exiv2::getUShort(buf.pData_, littleEndian);
                     break;
                 case avgBytesPerSec:
-                    xmpData_["Xmp.audio.sampleType"] = Exiv2::getUShort(buf.pData_, littleEndian);
+                    xmpData_["Xmp.audio.SampleType"] = Exiv2::getUShort(buf.pData_, littleEndian);
                     break;
                 case bitsPerSample:
-                    xmpData_["Xmp.audio.bitsPerSample"] = Exiv2::getUShort(buf.pData_,littleEndian);
+                    xmpData_["Xmp.audio.BitsPerSample"] = Exiv2::getUShort(buf.pData_,littleEndian);
                     io_->read(buf.pData_, 2);
                     break;
                 }
@@ -1148,14 +1146,14 @@ namespace Exiv2 {
     {
         double aspectRatio = (double)width / (double)height;
         aspectRatio = floor(aspectRatio*10) / 10;
-        if(aspectRatio == 1.3) xmpData_["Xmp.video.aspectRatio"] = "4:3";
-        else if(aspectRatio == 1.7) xmpData_["Xmp.video.aspectRatio"] = "16:9";
-        else if(aspectRatio == 1.0) xmpData_["Xmp.video.aspectRatio"] = "1:1";
-        else if(aspectRatio == 1.6) xmpData_["Xmp.video.aspectRatio"] = "16:10";
-        else if(aspectRatio == 2.2) xmpData_["Xmp.video.aspectRatio"] = "2.21:1";
-        else if(aspectRatio == 2.3) xmpData_["Xmp.video.aspectRatio"] = "2.35:1";
-        else if(aspectRatio == 1.2) xmpData_["Xmp.video.aspectRatio"] = "5:4";
-        else xmpData_["Xmp.video.aspectRatio"] = aspectRatio;
+        if(aspectRatio == 1.3) xmpData_["Xmp.video.AspectRatio"] = "4:3";
+        else if(aspectRatio == 1.7) xmpData_["Xmp.video.AspectRatio"] = "16:9";
+        else if(aspectRatio == 1.0) xmpData_["Xmp.video.AspectRatio"] = "1:1";
+        else if(aspectRatio == 1.6) xmpData_["Xmp.video.AspectRatio"] = "16:10";
+        else if(aspectRatio == 2.2) xmpData_["Xmp.video.AspectRatio"] = "2.21:1";
+        else if(aspectRatio == 2.3) xmpData_["Xmp.video.AspectRatio"] = "2.35:1";
+        else if(aspectRatio == 1.2) xmpData_["Xmp.video.AspectRatio"] = "5:4";
+        else xmpData_["Xmp.video.AspectRatio"] = aspectRatio;
     } // RiffVideo::fillAspectRatio
 
     void RiffVideo::fillDuration(double frame_rate, long frame_count)
@@ -1164,8 +1162,8 @@ namespace Exiv2 {
             return;
 
         uint64_t duration = (double)frame_count * (double)1000 / (double)frame_rate;
-        xmpData_["Xmp.video.fileDataRate"] = (double)io_->size()/(double)(1048576*duration);
-        xmpData_["Xmp.video.duration"] = duration; //Duration in number of seconds
+        xmpData_["Xmp.video.FileDataRate"] = (double)io_->size()/(double)(1048576*duration);
+        xmpData_["Xmp.video.Duration"] = duration; //Duration in number of seconds
     } // RiffVideo::fillDuration
 
     Image::AutoPtr newRiffInstance(BasicIo::AutoPtr io, bool /*create*/)

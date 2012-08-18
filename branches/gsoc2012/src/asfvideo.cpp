@@ -161,10 +161,10 @@ namespace Exiv2 {
         {    7, "Xmp.video.FileLength" },
         {    6, "Xmp.video.CreationDate" },
         {    5, "Xmp.video.DataPackets" },
-        {    4, "Xmp.video.duration" },
+        {    4, "Xmp.video.Duration" },
         {    3, "Xmp.video.SendDuration" },
         {    2, "Xmp.video.Preroll" },
-        {    1, "Xmp.video.maxBitRate" }
+        {    1, "Xmp.video.MaxBitRate" }
     };
 
     extern const TagDetails contentDescriptionTags[] =  {
@@ -417,7 +417,7 @@ namespace Exiv2 {
                 io_->read(buf.pData_, tempLength);
                 v->read(toString16(buf));
             }
-            xmpData_.add(Exiv2::XmpKey("Xmp.video.trackLang"), v.get());
+            xmpData_.add(Exiv2::XmpKey("Xmp.video.TrackLang"), v.get());
         }
 
         io_->seek(cur_pos + size, BasicIo::beg);
@@ -440,7 +440,7 @@ namespace Exiv2 {
         avgTimePerFrame = getUint64_t(buf);
 
         if(previousStream < streamNumber_  &&  avgTimePerFrame != 0)
-            xmpData_["Xmp.video.frameRate"] = (double)10000000/(double)avgTimePerFrame;
+            xmpData_["Xmp.video.FrameRate"] = (double)10000000/(double)avgTimePerFrame;
 
         previousStream = streamNumber_;
         io_->seek(cur_pos + size, BasicIo::beg);
@@ -505,22 +505,22 @@ namespace Exiv2 {
         long temp = Exiv2::getUShort(buf.pData_, littleEndian);
 
         if(stream == 2)
-            xmpData_["Xmp.video.width"] = temp;
+            xmpData_["Xmp.video.Width"] = temp;
         else if(stream == 1)
-            xmpData_["Xmp.audio.codec"] = test->printAudioEncoding(temp);
+            xmpData_["Xmp.audio.Codec"] = test->printAudioEncoding(temp);
 
         io_->read(buf.pData_, 2);
         temp = Exiv2::getUShort(buf.pData_, littleEndian);
         if(stream == 1)
-            xmpData_["Xmp.audio.channelType"] = temp;
+            xmpData_["Xmp.audio.ChannelType"] = temp;
 
         io_->read(buf.pData_, 4);
         temp = Exiv2::getULong(buf.pData_, littleEndian);
 
         if(stream == 2)
-            xmpData_["Xmp.video.height"] = temp;
+            xmpData_["Xmp.video.Height"] = temp;
         else if(stream == 1)
-            xmpData_["Xmp.audio.sampleRate"] = temp;
+            xmpData_["Xmp.audio.SampleRate"] = temp;
     } // AsfVideo::streamProperties
 
     void AsfVideo::codecList()
@@ -541,9 +541,9 @@ namespace Exiv2 {
             io_->read(buf.pData_, descLength);
 
             if(codecType == 1)
-                xmpData_["Xmp.video.codec"] = toString16(buf);
+                xmpData_["Xmp.video.Codec"] = toString16(buf);
             else if(codecType == 2)
-                xmpData_["Xmp.audio.compressor"] = toString16(buf);
+                xmpData_["Xmp.audio.Compressor"] = toString16(buf);
 
             std::memset(buf.pData_, 0x0, buf.size_);
             io_->read(buf.pData_, 2);
@@ -551,9 +551,9 @@ namespace Exiv2 {
             io_->read(buf.pData_, descLength);
 
             if(codecType == 1)
-                xmpData_["Xmp.video.codecDescription"] = toString16(buf);
+                xmpData_["Xmp.video.CodecDescription"] = toString16(buf);
             else if(codecType == 2)
-                xmpData_["Xmp.audio.codecDescription"] = toString16(buf);
+                xmpData_["Xmp.audio.CodecDescription"] = toString16(buf);
 
             std::memset(buf.pData_, 0x0, buf.size_);
             io_->read(buf.pData_, 2);

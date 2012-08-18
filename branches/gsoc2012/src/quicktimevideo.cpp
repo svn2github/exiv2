@@ -622,8 +622,7 @@ namespace Exiv2 {
         xmpData_["Xmp.video.FileName"] = io_->path();
         xmpData_["Xmp.video.MimeType"] = mimeType();
 
-            while (continueTraversing_)
-                decodeBlock();
+            while (continueTraversing_) decodeBlock();
     } // QuickTimeVideo::readMetadata
 
     void QuickTimeVideo::decodeBlock()
@@ -694,17 +693,17 @@ namespace Exiv2 {
         else if (equalsQTimeTag(buf, "url ")) {
             io_->read(buf.pData_, size);
             if (currentStream_ == Video)
-                xmpData_["Xmp.video.url"] = Exiv2::toString(buf.pData_);
+                xmpData_["Xmp.video.URL"] = Exiv2::toString(buf.pData_);
             else if (currentStream_ == Audio)
-                xmpData_["Xmp.audio.url"] = Exiv2::toString(buf.pData_);
+                xmpData_["Xmp.audio.URL"] = Exiv2::toString(buf.pData_);
         }
 
         else if (equalsQTimeTag(buf, "urn ")) {
             io_->read(buf.pData_, size);
             if (currentStream_ == Video)
-                xmpData_["Xmp.video.urn"] = Exiv2::toString(buf.pData_);
+                xmpData_["Xmp.video.URN"] = Exiv2::toString(buf.pData_);
             else if (currentStream_ == Audio)
-                xmpData_["Xmp.audio.urn"] = Exiv2::toString(buf.pData_);
+                xmpData_["Xmp.audio.URN"] = Exiv2::toString(buf.pData_);
         }
 
         else if (equalsQTimeTag(buf, "dcom")) {
@@ -715,7 +714,7 @@ namespace Exiv2 {
         else if (equalsQTimeTag(buf, "smhd")) {
             io_->read(buf.pData_, 4);
             io_->read(buf.pData_, 4);
-            xmpData_["Xmp.audio.balance"] = returnBufValue(buf, 2);
+            xmpData_["Xmp.audio.Balance"] = returnBufValue(buf, 2);
         }
 
         else {
@@ -997,7 +996,7 @@ namespace Exiv2 {
             timeOfFrames += temp * returnBufValue(buf);
         }
         if (currentStream_ == Video)
-        xmpData_["Xmp.video.frameRate"] = (double)totalframes * (double)timeScale_ / (double)timeOfFrames;
+        xmpData_["Xmp.video.FrameRate"] = (double)totalframes * (double)timeScale_ / (double)timeOfFrames;
     } // QuickTimeVideo::timeToSampleDecoder
 
     void QuickTimeVideo::sampleDesc(unsigned long size)
@@ -1034,21 +1033,21 @@ namespace Exiv2 {
             case AudioFormat:
                 td = find(qTimeFileType, Exiv2::toString( buf.pData_));
                 if(td)
-                    xmpData_["Xmp.audio.compressor"] = exvGettext(td->label_);
+                    xmpData_["Xmp.audio.Compressor"] = exvGettext(td->label_);
                 else
-                    xmpData_["Xmp.audio.compressor"] = Exiv2::toString( buf.pData_);
+                    xmpData_["Xmp.audio.Compressor"] = Exiv2::toString( buf.pData_);
                 break;
             case AudioVendorID:
                 td = find(vendorIDTags, Exiv2::toString( buf.pData_));
                 if(td)
-                    xmpData_["Xmp.audio.vendorID"] = exvGettext(td->label_);
+                    xmpData_["Xmp.audio.VendorID"] = exvGettext(td->label_);
                 break;
             case AudioChannels:
-                xmpData_["Xmp.audio.channelType"] = returnBufValue(buf, 2);
+                xmpData_["Xmp.audio.ChannelType"] = returnBufValue(buf, 2);
                 xmpData_["Xmp.audio.BitsPerSample"] = (buf.pData_[2] * 256 + buf.pData_[3]);
                 break;
             case AudioSampleRate:
-                xmpData_["Xmp.audio.sampleRate"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
+                xmpData_["Xmp.audio.SampleRate"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
                 break;
             default:
                 break;
@@ -1074,18 +1073,18 @@ namespace Exiv2 {
             case codec:
                 td = find(qTimeFileType, Exiv2::toString( buf.pData_));
                 if(td)
-                    xmpData_["Xmp.video.codec"] = exvGettext(td->label_);
+                    xmpData_["Xmp.video.Codec"] = exvGettext(td->label_);
                 else
-                    xmpData_["Xmp.video.codec"] = Exiv2::toString( buf.pData_);
+                    xmpData_["Xmp.video.Codec"] = Exiv2::toString( buf.pData_);
                 break;
             case VendorID:
                 td = find(vendorIDTags, Exiv2::toString( buf.pData_));
                 if(td)
-                    xmpData_["Xmp.video.vendorID"] = exvGettext(td->label_);
+                    xmpData_["Xmp.video.VendorID"] = exvGettext(td->label_);
                 break;
             case SourceImageWidth_Height:
-                xmpData_["Xmp.video.sourceImageWidth"] = returnBufValue(buf, 2);
-                xmpData_["Xmp.video.sourceImageHeight"] = (buf.pData_[2] * 256 + buf.pData_[3]);
+                xmpData_["Xmp.video.SourceImageWidth"] = returnBufValue(buf, 2);
+                xmpData_["Xmp.video.SourceImageHeight"] = (buf.pData_[2] * 256 + buf.pData_[3]);
                 break;
             case XResolution:
                 xmpData_["Xmp.video.XResolution"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
@@ -1096,14 +1095,14 @@ namespace Exiv2 {
                 break;
             case CompressorName:
                 io_->read(buf.pData_, 32); size -= 32;
-                xmpData_["Xmp.video.compressor"] = Exiv2::toString( buf.pData_);
+                xmpData_["Xmp.video.Compressor"] = Exiv2::toString( buf.pData_);
                 break;
             default:
                 break;
             }
         }
         io_->read(buf.pData_, size % 4);
-        xmpData_["Xmp.video.bitDepth"] = returnBufValue(buf, 1);
+        xmpData_["Xmp.video.BitDepth"] = returnBufValue(buf, 1);
     } // QuickTimeVideo::imageDescDecoder
 
     void QuickTimeVideo::multipleEntriesDecoder()
@@ -1134,10 +1133,10 @@ namespace Exiv2 {
             case GraphicsMode:
                 td = find(graphicsModetags, returnBufValue(buf,2));
                 if(td)
-                    xmpData_["Xmp.video.graphicsMode"] = exvGettext(td->label_);
+                    xmpData_["Xmp.video.GraphicsMode"] = exvGettext(td->label_);
                 break;
             case OpColor:
-                xmpData_["Xmp.video.opColor"] = returnBufValue(buf,2);
+                xmpData_["Xmp.video.OpColor"] = returnBufValue(buf,2);
                 break;
             default:
                 break;
@@ -1163,27 +1162,27 @@ namespace Exiv2 {
                 tv = find(handlerClassTags, Exiv2::toString( buf.pData_));
                 if(tv) {
                     if (currentStream_ == Video)
-                        xmpData_["Xmp.video.handlerClass"] = exvGettext(tv->label_);
+                        xmpData_["Xmp.video.HandlerClass"] = exvGettext(tv->label_);
                     else if (currentStream_ == Audio)
-                        xmpData_["Xmp.audio.handlerClass"] = exvGettext(tv->label_);
+                        xmpData_["Xmp.audio.HandlerClass"] = exvGettext(tv->label_);
                 }
                 break;
             case HandlerType:
                 tv = find(handlerTypeTags, Exiv2::toString( buf.pData_));
                 if(tv) {
                     if (currentStream_ == Video)
-                        xmpData_["Xmp.video.handlerType"] = exvGettext(tv->label_);
+                        xmpData_["Xmp.video.HandlerType"] = exvGettext(tv->label_);
                     else if (currentStream_ == Audio)
-                        xmpData_["Xmp.audio.handlerType"] = exvGettext(tv->label_);
+                        xmpData_["Xmp.audio.HandlerType"] = exvGettext(tv->label_);
                 }
                 break;
             case HandlerVendorID:
                 tv = find(vendorIDTags, Exiv2::toString( buf.pData_));
                 if(tv) {
                     if (currentStream_ == Video)
-                        xmpData_["Xmp.video.handlerVendorID"] = exvGettext(tv->label_);
+                        xmpData_["Xmp.video.HandlerVendorID"] = exvGettext(tv->label_);
                     else if (currentStream_ == Audio)
-                        xmpData_["Xmp.audio.handlerVendorID"] = exvGettext(tv->label_);
+                        xmpData_["Xmp.audio.HandlerVendorID"] = exvGettext(tv->label_);
                 }
                 break;
             }
@@ -1205,10 +1204,10 @@ namespace Exiv2 {
             switch(i) {
             case 0:
                 if(td)
-                xmpData_["Xmp.video.majorBrand"] = exvGettext(td->label_);
+                xmpData_["Xmp.video.MajorBrand"] = exvGettext(td->label_);
                 break;
             case 1:
-                xmpData_["Xmp.video.minorVersion"] = returnBufValue(buf);
+                xmpData_["Xmp.video.MinorVersion"] = returnBufValue(buf);
                 break;
             default:
                 if(td)
@@ -1218,7 +1217,7 @@ namespace Exiv2 {
                 break;
             }
         }
-        xmpData_.add(Exiv2::XmpKey("Xmp.video.compatibleBrands"), v.get());
+        xmpData_.add(Exiv2::XmpKey("Xmp.video.CompatibleBrands"), v.get());
         io_->read(buf.pData_, size%4);
     } // QuickTimeVideo::fileTypeDecoder
 
@@ -1234,42 +1233,42 @@ namespace Exiv2 {
             switch(i) {
             case MediaHeaderVersion:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.mediaHeaderVersion"] = returnBufValue(buf,1);
+                    xmpData_["Xmp.video.MediaHeaderVersion"] = returnBufValue(buf,1);
                 else if (currentStream_ == Audio)
-                    xmpData_["Xmp.audio.mediaHeaderVersion"] = returnBufValue(buf,1);
+                    xmpData_["Xmp.audio.MediaHeaderVersion"] = returnBufValue(buf,1);
                 break;
             case MediaCreateDate:
                 //A 32-bit integer that specifies (in seconds since midnight, January 1, 1904) when the movie atom was created.
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.mediaCreateDate"] = returnUnsignedBufValue(buf);
+                    xmpData_["Xmp.video.MediaCreateDate"] = returnUnsignedBufValue(buf);
                 else if (currentStream_ == Audio)
-                    xmpData_["Xmp.audio.mediaCreateDate"] = returnUnsignedBufValue(buf);
+                    xmpData_["Xmp.audio.MediaCreateDate"] = returnUnsignedBufValue(buf);
                 break;
             case MediaModifyDate:
                 //A 32-bit integer that specifies (in seconds since midnight, January 1, 1904) when the movie atom was created.
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.mediaModifyDate"] = returnUnsignedBufValue(buf);
+                    xmpData_["Xmp.video.MediaModifyDate"] = returnUnsignedBufValue(buf);
                 else if (currentStream_ == Audio)
-                    xmpData_["Xmp.audio.mediaModifyDate"] = returnUnsignedBufValue(buf);
+                    xmpData_["Xmp.audio.MediaModifyDate"] = returnUnsignedBufValue(buf);
                 break;
             case MediaTimeScale:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.mediaTimeScale"] = returnBufValue(buf);
+                    xmpData_["Xmp.video.MediaTimeScale"] = returnBufValue(buf);
                 else if (currentStream_ == Audio)
-                    xmpData_["Xmp.audio.mediaTimeScale"] = returnBufValue(buf);
+                    xmpData_["Xmp.audio.MediaTimeScale"] = returnBufValue(buf);
                 time_scale = returnBufValue(buf);
                 break;
             case MediaDuration:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.mediaDuration"] = returnBufValue(buf)/time_scale;
+                    xmpData_["Xmp.video.MediaDuration"] = returnBufValue(buf)/time_scale;
                 else if (currentStream_ == Audio)
                     xmpData_["Xmp.audio.mediaDuration"] = returnBufValue(buf)/time_scale;
                 break;
             case MediaLanguageCode:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.mediaLangCode"] = returnUnsignedBufValue(buf,2);
+                    xmpData_["Xmp.video.MediaLangCode"] = returnUnsignedBufValue(buf,2);
                 else if (currentStream_ == Audio)
-                    xmpData_["Xmp.audio.mediaLangCode"] = returnUnsignedBufValue(buf,2);
+                    xmpData_["Xmp.audio.MediaLangCode"] = returnUnsignedBufValue(buf,2);
                 break;
 
             default:
@@ -1290,55 +1289,55 @@ namespace Exiv2 {
             switch(i) {
             case TrackHeaderVersion:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.trackHeaderVersion"] = returnBufValue(buf,1);
+                    xmpData_["Xmp.video.TrackHeaderVersion"] = returnBufValue(buf,1);
                 else if(currentStream_ == Audio)
-                    xmpData_["Xmp.audio.trackHeaderVersion"] = returnBufValue(buf,1);
+                    xmpData_["Xmp.audio.TrackHeaderVersion"] = returnBufValue(buf,1);
                 break;
             case TrackCreateDate:
                 //A 32-bit integer that specifies (in seconds since midnight, January 1, 1904) when the movie atom was created.
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.trackCreateDate"] = returnUnsignedBufValue(buf);
+                    xmpData_["Xmp.video.TrackCreateDate"] = returnUnsignedBufValue(buf);
                 else if(currentStream_ == Audio)
-                    xmpData_["Xmp.audio.trackCreateDate"] = returnUnsignedBufValue(buf);
+                    xmpData_["Xmp.audio.TrackCreateDate"] = returnUnsignedBufValue(buf);
                 break;
             case TrackModifyDate:
                 //A 32-bit integer that specifies (in seconds since midnight, January 1, 1904) when the movie atom was created.
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.trackModifyDate"] = returnUnsignedBufValue(buf);
+                    xmpData_["Xmp.video.TrackModifyDate"] = returnUnsignedBufValue(buf);
                 else if(currentStream_ == Audio)
-                    xmpData_["Xmp.audio.trackModifyDate"] = returnUnsignedBufValue(buf);
+                    xmpData_["Xmp.audio.TrackModifyDate"] = returnUnsignedBufValue(buf);
                 break;
             case TrackID:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.trackID"] = returnBufValue(buf);
+                    xmpData_["Xmp.video.TrackID"] = returnBufValue(buf);
                 else if(currentStream_ == Audio)
-                    xmpData_["Xmp.audio.trackID"] = returnBufValue(buf);
+                    xmpData_["Xmp.audio.TrackID"] = returnBufValue(buf);
                 break;
             case TrackDuration:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.trackDuration"] = returnBufValue(buf)/timeScale_;
+                    xmpData_["Xmp.video.TrackDuration"] = returnBufValue(buf)/timeScale_;
                 else if(currentStream_ == Audio)
-                    xmpData_["Xmp.audio.trackDuration"] = returnBufValue(buf)/timeScale_;
+                    xmpData_["Xmp.audio.TrackDuration"] = returnBufValue(buf)/timeScale_;
                 break;
             case TrackLayer:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.trackLayer"] = returnBufValue(buf, 2);
+                    xmpData_["Xmp.video.TrackLayer"] = returnBufValue(buf, 2);
                 else if(currentStream_ == Audio)
-                    xmpData_["Xmp.audio.trackLayer"] = returnBufValue(buf, 2);
+                    xmpData_["Xmp.audio.TrackLayer"] = returnBufValue(buf, 2);
                 break;
             case TrackVolume:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.trackVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100;
+                    xmpData_["Xmp.video.TrackVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100;
                 else if(currentStream_ == Audio)
-                    xmpData_["Xmp.video.trackVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100;
+                    xmpData_["Xmp.video.TrackVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100;
                 break;
             case ImageWidth:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.width"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
+                    xmpData_["Xmp.video.Width"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
                 break;
             case ImageHeight:
                 if(currentStream_ == Video)
-                    xmpData_["Xmp.video.height"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
+                    xmpData_["Xmp.video.Height"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
                 break;
             default:
                 break;
@@ -1357,36 +1356,36 @@ namespace Exiv2 {
 
             switch(i) {
             case MovieHeaderVersion:
-                xmpData_["Xmp.video.movieHeaderVersion"] = returnBufValue(buf,1); break;
+                xmpData_["Xmp.video.MovieHeaderVersion"] = returnBufValue(buf,1); break;
             case CreateDate:
                 //A 32-bit integer that specifies (in seconds since midnight, January 1, 1904) when the movie atom was created.
-                xmpData_["Xmp.video.dateUTC"] = returnUnsignedBufValue(buf); break;
+                xmpData_["Xmp.video.DateUTC"] = returnUnsignedBufValue(buf); break;
             case ModifyDate:
                 //A 32-bit integer that specifies (in seconds since midnight, January 1, 1904) when the movie atom was created.
-                xmpData_["Xmp.video.modificationDate"] = returnUnsignedBufValue(buf); break;
+                xmpData_["Xmp.video.ModificationDate"] = returnUnsignedBufValue(buf); break;
             case TimeScale:
-                xmpData_["Xmp.video.timeScale"] = returnBufValue(buf);
+                xmpData_["Xmp.video.TimeScale"] = returnBufValue(buf);
                 timeScale_ = returnBufValue(buf); break;
             case Duration:
-                xmpData_["Xmp.video.duration"] = returnBufValue(buf) * 1000 / timeScale_; break;
+                xmpData_["Xmp.video.Duration"] = returnBufValue(buf) * 1000 / timeScale_; break;
             case PreferredRate:
-                xmpData_["Xmp.video.preferredRate"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01); break;
+                xmpData_["Xmp.video.PreferredRate"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01); break;
             case PreferredVolume:
-                xmpData_["Xmp.video.preferredVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100; break;
+                xmpData_["Xmp.video.PreferredVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100; break;
             case PreviewTime:
-                xmpData_["Xmp.video.previewTime"] = returnBufValue(buf); break;
+                xmpData_["Xmp.video.PreviewTime"] = returnBufValue(buf); break;
             case PreviewDuration:
-                xmpData_["Xmp.video.previewDuration"] = returnBufValue(buf); break;
+                xmpData_["Xmp.video.PreviewDuration"] = returnBufValue(buf); break;
             case PosterTime:
-                xmpData_["Xmp.video.posterTime"] = returnBufValue(buf); break;
+                xmpData_["Xmp.video.PosterTime"] = returnBufValue(buf); break;
             case SelectionTime:
-                xmpData_["Xmp.video.selectionTime"] = returnBufValue(buf); break;
+                xmpData_["Xmp.video.SelectionTime"] = returnBufValue(buf); break;
             case SelectionDuration:
-                xmpData_["Xmp.video.selectionDuration"] = returnBufValue(buf); break;
+                xmpData_["Xmp.video.SelectionDuration"] = returnBufValue(buf); break;
             case CurrentTime:
-                xmpData_["Xmp.video.currentTime"] = returnBufValue(buf); break;
+                xmpData_["Xmp.video.CurrentTime"] = returnBufValue(buf); break;
             case NextTrackID:
-                xmpData_["Xmp.video.nextTrackID"] = returnBufValue(buf); break;
+                xmpData_["Xmp.video.NextTrackID"] = returnBufValue(buf); break;
             default:
                 break;
             }
