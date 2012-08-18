@@ -1047,50 +1047,44 @@ namespace Exiv2 {
 
                 switch(i) {
                 case imageWidth: //Will be used in case of debugging
-                    io_->read(buf.pData_, bufMinSize);
-                    //std::cerr <<std::setw(35)<<std::left<< "Image Width"<<": "<<Exiv2::getULong(buf.pData_, littleEndian)<<"\n";
-                    break;
+                    io_->read(buf.pData_, bufMinSize); break;
                 case imageHeight: //Will be used in case of debugging
-                    io_->read(buf.pData_, bufMinSize);
-                    //std::cerr <<std::setw(35)<<std::left<< "Image Height"<<": "<<Exiv2::getULong(buf.pData_, littleEndian)<<"\n";
-                    break;
+                    io_->read(buf.pData_, bufMinSize); break;
                 case planes:
                     io_->read(buf.pData_, 2);
-                    xmpData_["Xmp.video.planes"] = Exiv2::getUShort(buf.pData_, littleEndian);
-                    break;
+                    xmpData_["Xmp.video.planes"] = Exiv2::getUShort(buf.pData_, littleEndian); break;
                 case bitDepth:
                     io_->read(buf.pData_, 2);
-                    xmpData_["Xmp.video.pixelDepth"] = Exiv2::getUShort(buf.pData_, littleEndian);
-                    break;
+                    xmpData_["Xmp.video.pixelDepth"] = Exiv2::getUShort(buf.pData_, littleEndian); break;
                 case compression:
                     io_->read(buf.pData_, bufMinSize);
-                    xmpData_["Xmp.video.compressor"] = buf.pData_;
-                    break;
+                    xmpData_["Xmp.video.compressor"] = buf.pData_; break;
                 case imageLength:
                     io_->read(buf.pData_, bufMinSize);
-                    xmpData_["Xmp.video.imageLength"] = Exiv2::getULong(buf.pData_, littleEndian);
-                    break;
+                    xmpData_["Xmp.video.imageLength"] = Exiv2::getULong(buf.pData_, littleEndian); break;
                 case pixelsPerMeterX:
                     io_->read(buf.pData_, bufMinSize);
-                    xmpData_["Xmp.video.pixelPerMeterX"] = Exiv2::getULong(buf.pData_, littleEndian);
-                    break;
+                    xmpData_["Xmp.video.pixelPerMeterX"] = Exiv2::getULong(buf.pData_, littleEndian); break;
                 case pixelsPerMeterY:
                     io_->read(buf.pData_, bufMinSize);
-                    xmpData_["Xmp.video.pixelPerMeterY"] = Exiv2::getULong(buf.pData_, littleEndian);
-                    break;
+                    xmpData_["Xmp.video.pixelPerMeterY"] = Exiv2::getULong(buf.pData_, littleEndian); break;
                 case numColors:
                     io_->read(buf.pData_, bufMinSize);
-                    if(Exiv2::getULong(buf.pData_, littleEndian) == 0)
+                    if(Exiv2::getULong(buf.pData_, littleEndian) == 0) {
                         xmpData_["Xmp.video.numOfColours"] = "Unspecified";
-                    else
+                    }
+                    else {
                         xmpData_["Xmp.video.numOfColours"] = Exiv2::getULong(buf.pData_, littleEndian);
+                    }
                     break;
                 case numImportantColors:
                     io_->read(buf.pData_, bufMinSize);
-                    if(Exiv2::getULong(buf.pData_, littleEndian) == 0)
-                        xmpData_["Xmp.video.numOfImpColours"] = "All";
-                    else
+                    if(Exiv2::getULong(buf.pData_, littleEndian)) {
                         xmpData_["Xmp.video.numIfImpColours"] = Exiv2::getULong(buf.pData_, littleEndian);
+                    }
+                    else {
+                        xmpData_["Xmp.video.numOfImpColours"] = "All";
+                    }
                     break;
                 }
             }
@@ -1104,10 +1098,12 @@ namespace Exiv2 {
                 switch(i) {
                 case encoding:
                     td = find(audioEncodingValues , Exiv2::getUShort(buf.pData_, littleEndian));
-                    if(td)
+                    if(td) {
                         xmpData_["Xmp.audio.compressor"] = exvGettext(td->label_);
-                    else
+                    }
+                    else {
                         xmpData_["Xmp.audio.compressor"] = Exiv2::getUShort(buf.pData_, littleEndian);
+                    }
                     break;
                 case numberOfChannels:
                     c = Exiv2::getUShort(buf.pData_, littleEndian);
