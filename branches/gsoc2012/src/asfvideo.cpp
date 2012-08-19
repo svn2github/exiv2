@@ -457,7 +457,7 @@ namespace Exiv2 {
         long pos = io_->tell();
         uint16_t length[5];
         const TagDetails* td;
-        DataBuf buf(200);
+        DataBuf buf(500);
         std::memset(buf.pData_, 0x0, buf.size_);
         for (int i = 0 ; i < 5 ; ++i) {
             io_->read(buf.pData_, 2);
