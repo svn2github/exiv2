@@ -102,6 +102,11 @@ namespace Exiv2 {
           @param size Size of buf.
          */
         void contentManagement(const Exiv2::Internal::TagDetails* td, Exiv2::DataBuf& buf, long size);
+        /*!
+          @brief Calculates Aspect Ratio of a video, and stores it in the
+              respective XMP container.
+         */
+        void aspectRatio();
 
     private:
         //! @name NOT Implemented
@@ -115,6 +120,8 @@ namespace Exiv2 {
     private:
         //! Variable to check the end of metadata traversing.
         bool continueTraversing_;
+        //! Variable to store height and width of a video frame.
+        uint64_t height_, width_;
 
     }; // class MatroskaVideo
 

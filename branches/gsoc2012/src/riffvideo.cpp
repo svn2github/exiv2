@@ -1146,14 +1146,14 @@ namespace Exiv2 {
     {
         double aspectRatio = (double)width / (double)height;
         aspectRatio = floor(aspectRatio*10) / 10;
-        if(aspectRatio == 1.3) xmpData_["Xmp.video.AspectRatio"] = "4:3";
+        if(aspectRatio == 1.3)      xmpData_["Xmp.video.AspectRatio"] = "4:3";
         else if(aspectRatio == 1.7) xmpData_["Xmp.video.AspectRatio"] = "16:9";
         else if(aspectRatio == 1.0) xmpData_["Xmp.video.AspectRatio"] = "1:1";
         else if(aspectRatio == 1.6) xmpData_["Xmp.video.AspectRatio"] = "16:10";
         else if(aspectRatio == 2.2) xmpData_["Xmp.video.AspectRatio"] = "2.21:1";
         else if(aspectRatio == 2.3) xmpData_["Xmp.video.AspectRatio"] = "2.35:1";
         else if(aspectRatio == 1.2) xmpData_["Xmp.video.AspectRatio"] = "5:4";
-        else xmpData_["Xmp.video.AspectRatio"] = aspectRatio;
+        else                        xmpData_["Xmp.video.AspectRatio"] = aspectRatio;
     } // RiffVideo::fillAspectRatio
 
     void RiffVideo::fillDuration(double frame_rate, long frame_count)

@@ -138,6 +138,11 @@ namespace Exiv2 {
               for various Tags that have a similar method of decoding.
          */
         void metadataHandler(int meta = 1);
+        /*!
+          @brief Calculates Aspect Ratio of a video, and stores it in the
+              respective XMP container.
+         */
+        void aspectRatio();
 
     private:
         //! @name NOT Implemented
@@ -155,6 +160,8 @@ namespace Exiv2 {
         uint64_t localPosition_;
         //! Variable which stores current stream being processsed.
         int streamNumber_;
+        //! Variable to store height and width of a video frame.
+        uint64_t height_, width_;
 
     }; //Class AsfVideo
 

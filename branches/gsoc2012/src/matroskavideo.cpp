@@ -488,13 +488,15 @@ namespace Exiv2 {
 
         IoCloser closer(*io_);
         clearMetadata();
+        height_ = width_ = 1;
 
         xmpData_["Xmp.video.FileName"] = io_->path();
         xmpData_["Xmp.video.FileSize"] = (double)io_->size()/(double)1048576;
         xmpData_["Xmp.video.MimeType"] = mimeType();
-        xmpData_["Xmp.video.AspectRatio"] = "0";
 
         while (continueTraversing_) decodeBlock();
+
+        aspectRatio();
     } // MatroskaVideo::readMetadata
 
     void MatroskaVideo::decodeBlock()
@@ -563,6 +565,10 @@ namespace Exiv2 {
         case 0x06ae: case 0x0286: case 0x02f7: case 0x2264: case 0x14aa: case 0x14bb:
         case 0x14cc: case 0x14dd:
             xmpData_[exvGettext(td->label_)] = returnValue(buf, size);
+            if(td->val_ == 0x0030 || td->val_ == 0x14b0)
+                width_ = returnValue(buf, size);
+            else if(td->val_ == 0x003a || td->val_ == 0x14ba)
+                height_ = returnValue(buf, size);
             break;
 
         case 0x001a: case 0x001f: case 0x0254: case 0x07e1: case 0x07e5: case 0x07e6:
@@ -664,6 +670,22 @@ namespace Exiv2 {
             break;
         }
     } // MatroskaVideo::contentManagement
+
+    void MatroskaVideo::aspectRatio()
+    {
+        //TODO - Make a better unified method to handle all cases of Aspect Ratio
+
+        double aspectRatio = (double)width_ / (double)height_;
+        aspectRatio = floor(aspectRatio*10) / 10;
+        if(aspectRatio == 1.3)      xmpData_["Xmp.video.AspectRatio"] = "4:3";
+        else if(aspectRatio == 1.7) xmpData_["Xmp.video.AspectRatio"] = "16:9";
+        else if(aspectRatio == 1.0) xmpData_["Xmp.video.AspectRatio"] = "1:1";
+        else if(aspectRatio == 1.6) xmpData_["Xmp.video.AspectRatio"] = "16:10";
+        else if(aspectRatio == 2.2) xmpData_["Xmp.video.AspectRatio"] = "2.21:1";
+        else if(aspectRatio == 2.3) xmpData_["Xmp.video.AspectRatio"] = "2.35:1";
+        else if(aspectRatio == 1.2) xmpData_["Xmp.video.AspectRatio"] = "5:4";
+        else                        xmpData_["Xmp.video.AspectRatio"] = aspectRatio;
+    } // MatroskaVideo::aspectRatio
 
     long MatroskaVideo::findBlockSize(byte b)
     {

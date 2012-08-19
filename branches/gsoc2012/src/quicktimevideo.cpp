@@ -617,12 +617,15 @@ namespace Exiv2 {
         IoCloser closer(*io_);
         clearMetadata();
         continueTraversing_ = true;
+        height_ = width_ = 1;
 
         xmpData_["Xmp.video.FileSize"] = (double)io_->size()/(double)1048576;
         xmpData_["Xmp.video.FileName"] = io_->path();
         xmpData_["Xmp.video.MimeType"] = mimeType();
 
-            while (continueTraversing_) decodeBlock();
+        while (continueTraversing_) decodeBlock();
+
+        aspectRatio();
     } // QuickTimeVideo::readMetadata
 
     void QuickTimeVideo::decodeBlock()
@@ -1282,6 +1285,7 @@ namespace Exiv2 {
         DataBuf buf(4);
         std::memset(buf.pData_, 0x0, buf.size_);
         buf.pData_[4] = '\0';
+        uint64_t temp = 0;
 
         for (int i = 0; size/4 != 0  ; size -=4, i++) {
             io_->read(buf.pData_, 4);
@@ -1332,12 +1336,18 @@ namespace Exiv2 {
                     xmpData_["Xmp.video.TrackVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100;
                 break;
             case ImageWidth:
-                if(currentStream_ == Video)
-                    xmpData_["Xmp.video.Width"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
+                if(currentStream_ == Video) {
+                    temp = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
+                    xmpData_["Xmp.video.Width"] = temp;
+                    width_ = temp;
+                }
                 break;
             case ImageHeight:
-                if(currentStream_ == Video)
-                    xmpData_["Xmp.video.Height"] = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
+                if(currentStream_ == Video) {
+                    temp = returnBufValue(buf, 2) + ((buf.pData_[2] * 256 + buf.pData_[3]) * 0.01);
+                    xmpData_["Xmp.video.Height"] = temp;
+                    height_ = temp;
+                }
                 break;
             default:
                 break;
@@ -1392,6 +1402,23 @@ namespace Exiv2 {
         }
         io_->read(buf.pData_, size%4);
     } // QuickTimeVideo::movieHeaderDecoder
+
+    void QuickTimeVideo::aspectRatio()
+    {
+        //TODO - Make a better unified method to handle all cases of Aspect Ratio
+
+        double aspectRatio = (double)width_ / (double)height_;
+        aspectRatio = floor(aspectRatio*10) / 10;
+        if(aspectRatio == 1.3)      xmpData_["Xmp.video.AspectRatio"] = "4:3";
+        else if(aspectRatio == 1.7) xmpData_["Xmp.video.AspectRatio"] = "16:9";
+        else if(aspectRatio == 1.0) xmpData_["Xmp.video.AspectRatio"] = "1:1";
+        else if(aspectRatio == 1.6) xmpData_["Xmp.video.AspectRatio"] = "16:10";
+        else if(aspectRatio == 2.2) xmpData_["Xmp.video.AspectRatio"] = "2.21:1";
+        else if(aspectRatio == 2.3) xmpData_["Xmp.video.AspectRatio"] = "2.35:1";
+        else if(aspectRatio == 1.2) xmpData_["Xmp.video.AspectRatio"] = "5:4";
+        else                        xmpData_["Xmp.video.AspectRatio"] = aspectRatio;
+    } // QuickTimeVideo::aspectRatio
+
 
     Image::AutoPtr newQTimeInstance(BasicIo::AutoPtr io, bool /*create*/) {
         Image::AutoPtr image(new QuickTimeVideo(io));

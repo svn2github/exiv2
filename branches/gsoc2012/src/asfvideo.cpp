@@ -321,12 +321,15 @@ namespace Exiv2 {
         clearMetadata();
         continueTraversing_ = true;
         io_->seek(0, BasicIo::beg);
+        height_ = width_ = 1;
 
         xmpData_["Xmp.video.FileSize"] = (double)io_->size()/(double)1048576;
         xmpData_["Xmp.video.FileName"] = io_->path();
         xmpData_["Xmp.video.MimeType"] = mimeType();
 
         while (continueTraversing_) decodeBlock();
+
+        aspectRatio();
     } // AsfVideo::readMetadata
 
     void AsfVideo::decodeBlock()
@@ -511,10 +514,13 @@ namespace Exiv2 {
         io_->read(buf.pData_, 2);
         long temp = Exiv2::getUShort(buf.pData_, littleEndian);
 
-        if(stream == 2)
+        if(stream == 2) {
             xmpData_["Xmp.video.Width"] = temp;
-        else if(stream == 1)
+            width_ = temp;
+        }
+        else if(stream == 1) {
             xmpData_["Xmp.audio.Codec"] = test->printAudioEncoding(temp);
+        }
 
         io_->read(buf.pData_, 2);
         temp = Exiv2::getUShort(buf.pData_, littleEndian);
@@ -524,10 +530,13 @@ namespace Exiv2 {
         io_->read(buf.pData_, 4);
         temp = Exiv2::getULong(buf.pData_, littleEndian);
 
-        if(stream == 2)
+        if(stream == 2) {
             xmpData_["Xmp.video.Height"] = temp;
-        else if(stream == 1)
+            height_ = temp;
+        }
+        else if(stream == 1) {
             xmpData_["Xmp.audio.SampleRate"] = temp;
+        }
     } // AsfVideo::streamProperties
 
     void AsfVideo::codecList()
@@ -641,7 +650,7 @@ namespace Exiv2 {
             else if(dataType == 6) {                  // 128-bit GUID
                 v->read(Exiv2::toString(fileID));
             }
-            else {                                   // Byte array
+            else {                                    // Byte array
                 v->read( Exiv2::toString(buf.pData_));
             }
         }
@@ -687,6 +696,23 @@ namespace Exiv2 {
             }
         }
     } // AsfVideo::fileProperties
+
+    void AsfVideo::aspectRatio()
+    {
+        //TODO - Make a better unified method to handle all cases of Aspect Ratio
+
+        double aspectRatio = (double)width_ / (double)height_;
+        aspectRatio = floor(aspectRatio*10) / 10;
+        if(aspectRatio == 1.3)      xmpData_["Xmp.video.AspectRatio"] = "4:3";
+        else if(aspectRatio == 1.7) xmpData_["Xmp.video.AspectRatio"] = "16:9";
+        else if(aspectRatio == 1.0) xmpData_["Xmp.video.AspectRatio"] = "1:1";
+        else if(aspectRatio == 1.6) xmpData_["Xmp.video.AspectRatio"] = "16:10";
+        else if(aspectRatio == 2.2) xmpData_["Xmp.video.AspectRatio"] = "2.21:1";
+        else if(aspectRatio == 2.3) xmpData_["Xmp.video.AspectRatio"] = "2.35:1";
+        else if(aspectRatio == 1.2) xmpData_["Xmp.video.AspectRatio"] = "5:4";
+        else                        xmpData_["Xmp.video.AspectRatio"] = aspectRatio;
+    } // AsfVideo::aspectRatio
+
 
     Image::AutoPtr newAsfInstance(BasicIo::AutoPtr io, bool /*create*/)
     {
