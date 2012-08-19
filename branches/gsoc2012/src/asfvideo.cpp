@@ -38,6 +38,8 @@ EXIV2_RCSID("@(#) $Id$")
 #include "tags_int.hpp"
 #include "types.hpp"
 #include "riffvideo.hpp"
+#include "convert.hpp"
+
 // + standard includes
 #include <cmath>
 #include <cstring>
@@ -463,7 +465,12 @@ namespace Exiv2 {
             std::memset(buf.pData_, 0x0, buf.size_);
             io_->read(buf.pData_, length[i] );
             td = find( contentDescriptionTags, i + 1);
-            xmpData_[exvGettext(td->label_)] = toString16(buf);
+            std::string str = toString(buf.pData_);
+
+            if(Exiv2::convertStringCharset(str, "UCS-2LE", "UTF-8"))
+                xmpData_[exvGettext(td->label_)] = str;
+            else
+                xmpData_[exvGettext(td->label_)] = toString16(buf);
         }
 
         io_->seek(cur_pos + size, BasicIo::beg);
