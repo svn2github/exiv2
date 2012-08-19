@@ -1146,6 +1146,8 @@ namespace Exiv2 {
     {
         double aspectRatio = (double)width / (double)height;
         aspectRatio = floor(aspectRatio*10) / 10;
+        xmpData_["Xmp.video.AspectRatio"] = aspectRatio;
+
         if(aspectRatio == 1.3)      xmpData_["Xmp.video.AspectRatio"] = "4:3";
         else if(aspectRatio == 1.7) xmpData_["Xmp.video.AspectRatio"] = "16:9";
         else if(aspectRatio == 1.0) xmpData_["Xmp.video.AspectRatio"] = "1:1";
