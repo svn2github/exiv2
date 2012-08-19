@@ -44,6 +44,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include <cmath>
 #include <cstring>
 #include <ctype.h>
+#include <cassert>
 
 // *****************************************************************************
 // class member definitions
@@ -450,31 +451,29 @@ namespace Exiv2 {
 
     void AsfVideo::contentDescription(uint64_t size)
     {
-        uint64_t cur_pos = io_->tell();
-        uint64_t length[5];
+        long pos = io_->tell();
+        uint16_t length[5];
         const TagDetails* td;
         DataBuf buf(200);
         std::memset(buf.pData_, 0x0, buf.size_);
-
-        for(int i = 0 ; i < 5 ; ++i ) {
+        for (int i = 0 ; i < 5 ; ++i) {
             io_->read(buf.pData_, 2);
-            length[i] = Exiv2::getUShort(buf.pData_, littleEndian);
+            length[i] = getUShort(buf.pData_, littleEndian);
         }
-
-        for(int i = 0 ; i < 5 ; ++i ) {
+        for (int i = 0 ; i < 5 ; ++i) {
             std::memset(buf.pData_, 0x0, buf.size_);
-            io_->read(buf.pData_, length[i] );
-            td = find( contentDescriptionTags, i + 1);
+            assert(length[i] <= buf.size_); // Todo: Fix me!
+            io_->read(buf.pData_, length[i]);
+            td = find(contentDescriptionTags, i + 1);
             std::string str((const char*)buf.pData_, length[i]);
-            if (Exiv2::convertStringCharset(str, "UCS-2LE", "UTF-8")) {
-                xmpData_[exvGettext(td->label_)] = str;
+            if (convertStringCharset(str, "UCS-2LE", "UTF-8")) {
+                xmpData_[td->label_] = str;
             }
             else {
-                xmpData_[exvGettext(td->label_)] = toString16(buf);
+                xmpData_[td->label_] = toString16(buf);
             }
         }
-
-        io_->seek(cur_pos + size, BasicIo::beg);
+        io_->seek(pos + size, BasicIo::beg);
     } // AsfVideo::contentDescription
 
     void AsfVideo::streamProperties()
