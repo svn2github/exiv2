@@ -44,7 +44,6 @@ EXIV2_RCSID("@(#) $Id$")
 #include <cmath>
 #include <cstring>
 #include <ctype.h>
-#include <cassert>
 
 // *****************************************************************************
 // class member definitions
@@ -455,17 +454,18 @@ namespace Exiv2 {
     void AsfVideo::contentDescription(uint64_t size)
     {
         long pos = io_->tell();
-        uint16_t length[5];
+        long length[5];
         const TagDetails* td;
-        DataBuf buf(500);
-        std::memset(buf.pData_, 0x0, buf.size_);
+        byte buf2[2];
+
         for (int i = 0 ; i < 5 ; ++i) {
-            io_->read(buf.pData_, 2);
-            length[i] = getUShort(buf.pData_, littleEndian);
+            io_->read(buf2, 2);
+            length[i] = (long)buf2[0] + 16 * (long)buf2[1];
         }
+
         for (int i = 0 ; i < 5 ; ++i) {
+            DataBuf buf(length[i]);
             std::memset(buf.pData_, 0x0, buf.size_);
-            assert(length[i] <= buf.size_); // Todo: Fix me!
             io_->read(buf.pData_, length[i]);
             td = find(contentDescriptionTags, i + 1);
             std::string str((const char*)buf.pData_, length[i]);

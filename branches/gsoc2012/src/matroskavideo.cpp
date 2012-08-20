@@ -565,6 +565,7 @@ namespace Exiv2 {
         case 0x06ae: case 0x0286: case 0x02f7: case 0x2264: case 0x14aa: case 0x14bb:
         case 0x14cc: case 0x14dd:
             xmpData_[exvGettext(td->label_)] = returnValue(buf, size);
+
             if(td->val_ == 0x0030 || td->val_ == 0x14b0)
                 width_ = returnValue(buf, size);
             else if(td->val_ == 0x003a || td->val_ == 0x14ba)
