@@ -456,11 +456,11 @@ namespace Exiv2 {
         long pos = io_->tell();
         long length[5];
         const TagDetails* td;
-        byte buf2[2];
 
         for (int i = 0 ; i < 5 ; ++i) {
-            io_->read(buf2, 2);
-            length[i] = (long)buf2[0] + 16 * (long)buf2[1];
+            byte buf[2];
+            io_->read(buf, 2);
+            length[i] = (long)buf[0] + 16 * (long)buf[1];
         }
 
         for (int i = 0 ; i < 5 ; ++i) {
