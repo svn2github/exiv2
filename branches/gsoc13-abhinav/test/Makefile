@@ -31,7 +31,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # File:      Makefile
-# Version:   $Rev: 2942 $
+# Version:   $Rev: 3012 $
 # Author(s): Andreas Huggel (ahu) <ahuggel@gmx.net>
 # History:   26-Dec-04, ahu: created
 #
@@ -90,7 +90,10 @@ tests:
 test:
 	@list='$(TESTS)'; for p in $$list; do \
 	    echo Running $$p ...; \
-	    ./$$p; \
+	    ./$$p;  \
+	    rc=$$?; \
+	    if [ $$rc -ne 0 ]; then echo result = $$rc ; fi ; \
+	    if [ $$rc -gt 2 ]; then exit $$rc          ; fi ; \
 	done
 
 testv:

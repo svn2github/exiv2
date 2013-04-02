@@ -31,7 +31,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # File:      Makefile
-# Version:   $Rev: 2940 $
+# Version:   $Rev: 3012 $
 # Author(s): Andreas Huggel (ahu) <ahuggel@gmx.net>
 # History:   08-Oct-07, ahu: created
 #
@@ -60,7 +60,6 @@ BINSRC = addmoddel.cpp        \
          exifcomment.cpp      \
          exifdata-test.cpp    \
          exifprint.cpp        \
-         httptest.cpp         \
          iotest.cpp           \
          iptceasy.cpp         \
          iptcprint.cpp        \
@@ -84,6 +83,9 @@ BINSRC = addmoddel.cpp        \
 # Initialisations
 SHELL = /bin/sh
 
+PKGCONFIG=pkg-config
+BAR='****************************************'
+
 .SUFFIXES:
 .SUFFIXES: .c .cpp .o .so
 
@@ -106,6 +108,7 @@ endif
 samples: $(BINARY) $(OTHER)
 
 $(BINOBJ): %.o: %.cpp
+	@if [ -z `which $(PKGCONFIG)`  ]; then echo $(BAR) $'\\n***' utility $(PKGCONFIG) not available $'***\n'$(BAR) ; exit 42 ; fi
 	$(COMPILE.cc) -I../src -o $@ $<
 	@$(MAKEDEPEND)
 	@$(POSTDEPEND)
