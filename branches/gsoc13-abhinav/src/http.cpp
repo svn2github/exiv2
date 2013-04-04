@@ -79,12 +79,11 @@ void Sleep(int millisecs)
 ////////////////////////////////////////
 // code
 const char* httpTemplate =
-"%s %s%s HTTP/%s\r\n"              // $verb SLASH $page $version
+"%s %s HTTP %s\r\n"            // $verb $page $version
 "User-Agent: exiv2http/1.0.0\r\n"
-"If-Modified-Since: Sat, 1 Jan 2000 00:00:00 GMT\r\n"
 "Accept: */*\r\n"
-"Host: %s:%s\r\n"                   // $servername,$port
-"%s"                                // $header
+"Host: %s\r\n"                 // $servername
+"%s"                           // $header
 "\r\n"
 ;
 
@@ -120,8 +119,8 @@ static int forgive(int n,int& err)
     return n ;
 }
 
-static int error(std::string errors,const char* msg,const char* x=NULL,const char* y=NULL,int z=NULL);
-static int error(std::string errors,const char* msg,const char* x,const char* y,int z)
+static int error(std::string errors,const char* msg,const char* x=NULL,const char* y=NULL,int z=0);
+static int error(std::string errors,const char* msg,const char* x     ,const char* y     ,int z )
 {
     char buffer[512] ;
     snprintf(buffer,sizeof buffer,msg,x,y,z) ;
@@ -157,7 +156,7 @@ int http(dict_t& request,dict_t& response,std::string& errors)
     if ( !request.count("verb")   ) request["verb"  ]  = "GET";
     if ( !request.count("header") ) request["header"]  = ""   ;
     if ( !request.count("version")) request["version"] = "1.0";
-
+    
     std::string file;
     errors     = "";
     int result = 0;
@@ -175,7 +174,27 @@ int http(dict_t& request,dict_t& response,std::string& errors)
     const char* verb       = request["verb"   ].c_str();
     const char* header     = request["header" ].c_str();
     const char* version    = request["version"].c_str();
+    
+    const char* servername_p = servername;
+    const char* port_p       = port      ;
+    std::string url = std::string("http://") + request["server"] + request["page"];
 
+    // parse and change server if using a proxy
+    const char* PROXI  = "HTTP_PROXY";
+    const char* proxi  = "http_proxy";
+    const char* PROXY  = getenv(PROXI);
+    const char* proxy  = getenv(proxi);
+    bool        proxb  = PROXY || proxy;
+    const char* prox   = proxb ? (proxy?proxy:PROXY):"";
+    Uri   Proxy = Uri::Parse(prox);
+	if (  proxb ) {
+		servername_p = Proxy.Host.c_str();
+		port_p       = Proxy.Port.c_str();
+        page         = url.c_str();
+        std::string  p(proxy?proxi:PROXI);
+        std::cerr << p << '=' << prox << " page = " << page << std::endl;
+	}
+	
     ////////////////////////////////////
     // open the socket
     int     sockfd = (int) socket(AF_INET , SOCK_STREAM,IPPROTO_TCP) ;
@@ -189,36 +208,36 @@ int http(dict_t& request,dict_t& response,std::string& errors)
     int                 serv_len = sizeof(serv_addr);
     memset((char *)&serv_addr,0,serv_len);
 
-    serv_addr.sin_addr.s_addr   = inet_addr(servername);
+    serv_addr.sin_addr.s_addr   = inet_addr(servername_p);
     serv_addr.sin_family        = AF_INET    ;
-    serv_addr.sin_port          = htons(atoi(port));
+    serv_addr.sin_port          = htons(atoi(port_p));
 
     // convert unknown servername into IP address
     // http://publib.boulder.ibm.com/infocenter/iseries/v5r3/index.jsp?topic=/rzab6/rzab6uafinet.htm
     if (serv_addr.sin_addr.s_addr == (unsigned long)INADDR_NONE)
     {
-        struct hostent* host = gethostbyname(servername);
-        if ( !host )  return error("no such host",servername,NULL,0);
+        struct hostent* host = gethostbyname(servername_p);
+        if ( !host )  return error("no such host",servername_p,NULL,0);
         memcpy(&serv_addr.sin_addr,host->h_addr,sizeof(serv_addr.sin_addr));
     }
-
-    char   buffer[32*1024+1];
-    size_t buff_l= sizeof buffer - 1 ;
-
-    ////////////////////////////////////
-    // format the request
-    const char* slash =  page[0]=='/' ? "" : "/";
-    int    n  = snprintf(buffer,buff_l,httpTemplate,verb,slash,page,version,servername,port,header) ;
-    buffer[n] = 0 ;
-    response["requestheaders"]=std::string(buffer,n);
-
+    
     makeNonBlocking(sockfd) ;
 
     ////////////////////////////////////
     // and connect
     server = connect(sockfd, (const struct sockaddr *) &serv_addr, serv_len) ;
     if ( server == SOCKET_ERROR && WSAGetLastError() != WSAEWOULDBLOCK )
-        return error(errors,"error - unable to connect to server = %s port = %s wsa_error = %d",servername,port,WSAGetLastError());
+        return error(errors,"error - unable to connect to server = %s port = %s wsa_error = %d",servername_p,port_p,WSAGetLastError());
+
+    char   buffer[32*1024+1];
+    size_t buff_l= sizeof buffer - 1 ;
+
+    ////////////////////////////////////
+    // format the request
+    int    n  = snprintf(buffer,buff_l,httpTemplate,verb,page,version,servername,header) ;
+    buffer[n] = 0 ;
+    response["requestheaders"]=std::string(buffer,n);
+
 
     ////////////////////////////////////
     // send the header (we'll have to wait for the connection by the non-blocking socket)
@@ -319,3 +338,67 @@ int http(dict_t& request,dict_t& response,std::string& errors)
     return result;
 }
 
+// http://stackoverflow.com/questions/2616011/easy-way-to-parse-a-url-in-c-cross-platform
+Uri Uri::Parse(const std::string &uri)
+{
+	Uri result;
+
+	typedef std::string::const_iterator iterator_t;
+
+	if ( !uri.length() )  return result;
+
+	iterator_t uriEnd = uri.end();
+
+	// get query start
+	iterator_t queryStart = std::find(uri.begin(), uriEnd, '?');
+
+	// protocol
+	iterator_t protocolStart = uri.begin();
+	iterator_t protocolEnd   = std::find(protocolStart, uriEnd, ':');            //"://");
+
+	if (protocolEnd != uriEnd)
+	{
+		std::string prot = &*(protocolEnd);
+		if ((prot.length() > 3) && (prot.substr(0, 3) == "://"))
+		{
+			result.Protocol = std::string(protocolStart, protocolEnd);
+			protocolEnd += 3;   //      ://
+		}
+		else
+			protocolEnd = uri.begin();  // no protocol
+	}
+	else
+		protocolEnd = uri.begin();  // no protocol
+
+	// host
+	iterator_t hostStart = protocolEnd;
+	iterator_t pathStart = std::find(hostStart, uriEnd, '/');  // get pathStart
+
+	iterator_t hostEnd = std::find(protocolEnd, 
+		(pathStart != uriEnd) ? pathStart : queryStart,
+		':');  // check for port
+
+	result.Host = std::string(hostStart, hostEnd);
+
+	// port
+	if ((hostEnd != uriEnd) && ((&*(hostEnd))[0] == ':'))  // we have a port
+	{
+		hostEnd++;
+		iterator_t portEnd = (pathStart != uriEnd) ? pathStart : queryStart;
+		result.Port = std::string(hostEnd, portEnd);
+	}
+	if ( !result.Port.length() && result.Protocol == "http" ) result.Port = "80";
+
+	// path
+	if (pathStart != uriEnd)
+		result.Path = std::string(pathStart, queryStart);
+
+	// query
+	if (queryStart != uriEnd)
+		result.QueryString = std::string(queryStart, uri.end());
+
+	return result;
+}   // Parse
+
+// That's all Folks
+////

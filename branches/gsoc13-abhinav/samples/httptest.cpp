@@ -6,41 +6,20 @@
 #include <iostream>
 using namespace std;
 
-// Quote a help string appropriately for DOS/bash
-std::string Q(const std::string& str)
-{
-	std::string result = str; 
-#ifdef _MSC_VER
-	std::string from("\\");
-	std::string to("^");
-#else
-	std::string from = "\\\"";
-	std::string to   = "\'"  ;
-#endif
-	size_t index = 0;
-	while (index != string::npos) {
-        index = result.find(from, index);
-	    if (index != string::npos) {
-		   result.replace(index,from.length(), to);
-		   index += to.length();
-	    }
-	}
-	return result ;
-}
-
 int main(int argc,const char** argv)
 {
     if ( argc < 3 ) {
         cout << "usage:   " << argv[0] << " [key value]+" << endl;
-        cout << "example: " << argv[0] << Q(" -server clanmills.com -page LargsPanorama.jpg -header \\\"Range: bytes=0-200\\\"") << endl;
+        cout << "example: " << argv[0] << " -server clanmills.com -page /LargsPanorama.jpg -header \"Range: bytes=0-200\"" << endl;
         cout << "useful  keys: -verb {GET|HEAD|PUT}  -page str -server str -port number -version [-header something]+ " << endl;
-        cout << "default keys: -server clanmills.com -page robin.shtml -port 80 -version 1.0 -header ''" << endl;
+        cout << "default keys: -verb GET -server clanmills.com -page robin.shtml -port 80 -version 1.0" << endl;
+        cout << "export http_proxy=url eg http_proxy=http://64.62.247.244:80" << endl;
         return 0;
     }
 
-    dict_t      response;
-    dict_t      request;
-    std::string errors;
+    dict_t response;
+    dict_t request;
+    string errors;
 
     request["page"  ]   = "robin.shtml";
     request["server"]   = "clanmills.com";
@@ -63,12 +42,12 @@ int main(int argc,const char** argv)
     }
 
     int result = http(request,response,errors);
-    std::cout << "result = " << result << std::endl;
-    std::cout << "errors = " << errors << std::endl;
-    std::cout << endl;
+    cout << "result = " << result << endl;
+    cout << "errors = " << errors << endl;
+    cout << endl;
 
     for ( dict_i it = response.begin() ; it != response.end() ; it++ ) {
-        std::cout << it->first << " -> ";
+        cout << it->first << " -> ";
         if ( it->first ==  "body") cout << "# " << it->second.length();
         else                       cout << it->second;
         cout << endl;
@@ -76,3 +55,6 @@ int main(int argc,const char** argv)
 
     return 0;
 }
+
+// That's all Folks!
+////
