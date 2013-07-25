@@ -22,6 +22,7 @@
   File:      quicktimevideo.cpp
   Version:   $Rev$
   Author(s): Abhinav Badola for GSoC 2012 (AB) <mail.abu.to@gmail.com>
+             Mahesh Hegde for GSOC 2013 <maheshmhegade@gmail.com>
   History:   28-Jun-12, AB: created
   Credits:   See header file
  */
@@ -1529,7 +1530,7 @@ namespace Exiv2 {
                 if(currentStream_ == Video)
                     xmpData_["Xmp.video.TrackVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100;
                 else if(currentStream_ == Audio)
-                    xmpData_["Xmp.video.TrackVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100;
+                    xmpData_["Xmp.audio.TrackVolume"] = (returnBufValue(buf, 1) + (buf.pData_[2] * 0.1)) * 100;
                 break;
             case ImageWidth:
                 if(currentStream_ == Video) {

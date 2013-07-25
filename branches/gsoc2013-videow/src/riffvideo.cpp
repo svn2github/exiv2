@@ -22,6 +22,7 @@
   File:      riffvideo.cpp
   Version:   $Rev$
   Author(s): Abhinav Badola for GSoC 2012 (AB) <mail.abu.to@gmail.com>
+             Mahesh Hegde for GSOC 2013 <maheshmhegade@gmail.com> 
   History:   18-Jun-12, AB: created
   Credits:   See header file
  */
