@@ -198,6 +198,13 @@ namespace Exiv2 {
         const char* label_;                     //!< Description of the tag value
     }; // struct TagDetailsBitmask
 
+    struct RevTagDetails {
+    const char* label_;                     //!< Translation of the tag value
+    long val_;                              //!< Tag value
+
+    //! Comparison operator for use with the find template
+   bool operator==(const char* key) const { return label_ == key; }
+    };
     /*!
       @brief Helper structure for lookup tables for translations of controlled
              vocabulary strings to their descriptions.
