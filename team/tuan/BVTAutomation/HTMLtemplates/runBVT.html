@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<title>Exiv2 BVT</title>
+	</head>
+	
+	<body bgcolor="ffffff">
+		<div align="center">
+			<table style=" width: 90%; border: 10px solid #fafafa; margin-top:30px; margin-bottom:30px" border="0" cellspacing="0" cellpadding="10" align="center" bgcolor="#FFFFFF">
+			  <tbody>
+				<tr>
+					<td style="font-size: 28px; border-top: 1px dashed #CCCCCC; border-bottom: 1px dashed #CCCCCC; color: #333333;">
+						Exiv2 BVT log for version %LastBuild
+					</td>
+				</tr>
+				<tr>
+					<td>
+<pre id="logcontent" width=100%>%LogContent</pre>
+<br>
+<img id="loading_img" src="http://exiv2.nuditu.com/loading.gif" style="display:none; width: 30px"/>
+<br>
+<span style="color: red" id="msg"></span>
+					</td>
+				</tr>
+			  </tbody>
+			</table>
+		</div>
+		<script src="/socket.io/socket.io.js"></script>
+		<script language="javascript">
+		// For real time update
+		var socket = io.connect(location.protocol+'//'+location.hostname);
+
+		// For real time update
+		var socket = io.connect(location.protocol+'//'+location.hostname);
+		// register into the room
+		socket.on('connect', function() {
+			console.log("connection!");
+			socket.emit('register', { buildVersion: '%LastBuild'});
+		});
+		// update the last OTP when server pushs the data
+		socket.on('stdout', function (data) {
+			document.getElementById('loading_img').style.display = "inline";
+			document.getElementById('logcontent').innerHTML += data;
+		});
+		// update when it finish
+		socket.on('finish', function (data) {
+			document.getElementById('loading_img').style.display = "none";
+			document.getElementById('msg').innerHTML = "###Finish BVT in " + data + " minutes";
+		});
+		
+		// update when it fail
+		socket.on('fail', function (data) {
+			document.getElementById('loading_img').style.display = "none";
+			document.getElementById('msg').innerHTML = "###Stop BVT. Fail at " + data;
+		});
+		</script>
+	</body>
+</html>

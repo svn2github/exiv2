@@ -1,0 +1,13 @@
+To: nhudinhtuan@gmail.com,robin@clanmills.com
+From: exiv2bvt@gmail.com
+Subject: %subject
+
+Hi,
+
+%body
+
+Regards,
+Exiv2 BVT
+
+--------
+Please do not reply directly to this email. This email was sent from a notification-only address that maynot accept incoming email. If you have questions or need assistance, contact nhudinhtuan@gmail.com.
