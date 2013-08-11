@@ -1,6 +1,6 @@
 EXIV2 - Build Verification Test Automation
 The application is to automate the build verification test. 
-Version 1.0
+Version 2013-08-10: Update the Readme.txt
 
 -------------------------------
 REQUIRE: 
@@ -34,6 +34,9 @@ SETUP:
 + To make it automatic, you need to set up crontab (or schedule). 
 crontab example: (check new build every half an hour).
 0 */2 * * * curl -s http://localhost:8888/bvt
+
+-------------------------------
+Version History: None.
 
 -------------------------------
 More info: nhudinhtuan@gmail.com
