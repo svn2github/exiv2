@@ -3,7 +3,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH EXIV2 1 "Nov 11, 2012"
+.TH EXIV2 1 "Aug 12, 2013"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -67,6 +67,36 @@ image are determined.
 .IP \(bu 2
 Reading other TIFF-like RAW image formats, which are not listed in the
 table, may also work.
+.PP
+The following protocols are supported:
+.TS
+lB lB lB lB
+_	_	_	_
+l l 1 l.
+Protocol	Support	Example	Library
+File Path	Read/Write	~/foo.jpg (or c:\\foo\.jpg on Windows)
+File Uri	Read/Write	file://home/rmills/foo.jpg
+Stdin	Read/Write	-
+Data Uri	Read/Write	data:image/jpeg;base64,/9j/4AA... (data is base64 encoded)
+HTTP	Read/Write	http://clanmills.com/files/LargsPanorama.jpg
+HTTPS	Read/Write	https://clanmills.com/files/LargsPanorama.jpg	libcurl
+FTP	Read	ftp://username:password@clanmills.com/files/LargsPanorama.jpg	libcurl
+SSH	Read/Write	ssh://username:password@clanmills.com/files/LargsPanorama.jpg	libssh
+SFTP	Read	sftp://username:password@clanmills.com/files/LargsPanorama.jpg	libssh
+.TE
+.IP \(bu 2
+HTTP, HTTPS write access: the data are submitted via POST. There must be a 
+script on the server to handle submitted data. The server-side script can be
+specified with the environment string
+.I EXIV2_HTTP_POST
+.br
+.ne 3
+    
+.br
+A code for the default server script can be found at
+.I http://www.exiv2.org/scripts/exiv2.php
+.IP \(bu 2
+Examine the output of exiv2 --verbose --version to determine libraries linked to exiv2.
 .SH ACTIONS
 The \fIaction\fP argument is only required if it is not clear from the
 \fIoptions\fP which action is implied.
@@ -150,10 +180,6 @@ Show large binary values (default is to suppress them).
 .TP
 .B \-u
 Show unknown tags (default is to suppress tags which don't have a name).
-.TP
-.B \-g \fIkey\fP
-Only output info for this Exiv2 key (grep). Multiple \fB\-g\fP options
-can be used to grep info for several keys.
 .TP
 .B \-n \fIenc\fP
 Charset to use to decode Exif Unicode user comments. \fIenc\fP is
@@ -294,11 +320,12 @@ with the 'print' option \fB\-pp\fP.
 X : Extract metadata to an XMP sidecar file <file>.xmp. The remaining
 extract targets determine what metadata to extract to the sidecar
 file. Possible are Exif, IPTC and XMP and the default is all of these.
-
 .TP
 .B \-g \fImatch\fP
 Report only keys which match.  This is sub-string match and not grep, although
-the \fB\-g\fP option is intended to help you remember this as grep. The match is case-sensitive.
+the \fB\-g\fP option is intended to help you remember this as grep.
+The match is case-sensitive. Multiple \-g match keys may be given and any key which
+matches any \-g match will be reported.
 .br
 .sp 1
 .nf
@@ -439,6 +466,14 @@ An additional command is available to register XMP namespaces:
 .SS Command file format
 Empty lines and lines starting with \fB#\fP in a command file are
 ignored (comments). Remaining lines are commands as described above.
+.SH ENVIRONMENT
+.TP
+EXIV2_HTTP_POST
+The file on the http server handles the submitted write-access data.
+If it's not set, "exiv2.php" is used as the default value.
+.TP
+EXIV2_TIMEOUT
+The maximum time in seconds that you allow the connection to the server to take. This only limits the connection phase, once it has connected, this value is of no more use. The default value is 40 seconds.
 .SH EXAMPLES
 .TP
 exiv2 *.jpg
@@ -446,6 +481,18 @@ Prints a summary of the Exif information for all JPEG files in the directory.
 .TP
 exiv2 \-pi image.jpg
 Prints the IPTC metadata of the image.
+.TP
+exiv2 \-pi -
+Prints the IPTC metadata of stdin. "-" implies the image data from stdin.
+.TP
+exiv2 \-pi ftp://username:password@example.com/photos/image.jpg
+Prints the IPTC metadata of the image from FTP protocol. Username and password should be url-encoded.
+.TP
+exiv2 \-pi "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA"
+Prints the IPTC metadata of data uri.
+.TP
+exiv2 \-pi file:///etc/photos/image.jpg
+Prints the IPTC metadata of file uri.
 .TP
 exiv2 rename img_1234.jpg
 Renames img_1234.jpg (taken on 13\-Nov\-05 at 22:58:31) to 20051113_225831.jpg
