@@ -1,0 +1,2 @@
+Exif.Image.ExifTag                           Long        1  26
+Exif.Photo.UserComment                       Ascii      30  LEAD Technologies Inc. V1.01

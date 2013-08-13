@@ -1,0 +1,36 @@
+Modify the metadata ...
+Print out the new metadata ...
+Exif.Image.Make                              0x010f Ascii       6  Canon
+Exif.Image.Software                          0x0131 Ascii       6  Exiv2
+Exif.Image.DateTime                          0x0132 Ascii      20  2013:06:09 14:30:30
+Exif.Image.Copyright                         0x8298 Ascii       6  Exiv2
+Exif.Image.ExifTag                           0x8769 Long        1  112
+Exif.Photo.MakerNote                         0x927c Undefined  82  2 0 9 0 2 0 5 0 0 0 172 0 0 0 1 0 3 0 23 0 0 0 178 0 0 0 0 0 0 0 84 117 97 110 0 0 46 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 255
+Exif.MakerNote.Offset                        0x0001 Long        1  142
+Exif.MakerNote.ByteOrder                     0x0002 Ascii       3  II
+Exif.Canon.OwnerName                         0x0009 Ascii       5  Tuan
+Exif.CanonCs.0x0000                          0x0000 Short       1  46
+Exif.CanonCs.Macro                           0x0001 Short       1  0
+Exif.CanonCs.Selftimer                       0x0002 Short       1  0
+Exif.CanonCs.Quality                         0x0003 Short       1  0
+Exif.CanonCs.FlashMode                       0x0004 Short       1  0
+Exif.CanonCs.DriveMode                       0x0005 Short       1  0
+Exif.CanonCs.0x0006                          0x0006 Short       1  0
+Exif.CanonCs.FocusMode                       0x0007 Short       1  0
+Exif.CanonCs.0x0008                          0x0008 Short       1  0
+Exif.CanonCs.0x0009                          0x0009 Short       1  0
+Exif.CanonCs.ImageSize                       0x000a Short       1  0
+Exif.CanonCs.EasyMode                        0x000b Short       1  0
+Exif.CanonCs.DigitalZoom                     0x000c Short       1  0
+Exif.CanonCs.Contrast                        0x000d Short       1  0
+Exif.CanonCs.Saturation                      0x000e Short       1  0
+Exif.CanonCs.Sharpness                       0x000f Short       1  0
+Exif.CanonCs.ISOSpeed                        0x0010 Short       1  0
+Exif.CanonCs.MeteringMode                    0x0011 Short       1  0
+Exif.CanonCs.FocusType                       0x0012 Short       1  0
+Exif.CanonCs.AFPoint                         0x0013 Short       1  0
+Exif.CanonCs.ExposureProgram                 0x0014 Short       1  0
+Exif.CanonCs.0x0015                          0x0015 Short       1  0
+Exif.CanonCs.LensType                        0x0016 Short       1  65535
+Exif.Photo.UserComment                       0x9286 Undefined  19  Hello World
+Reset ...

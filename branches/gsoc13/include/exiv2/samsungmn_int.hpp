@@ -22,7 +22,7 @@
   @file    samsungmn_int.hpp
   @brief   Samsung makernote tags.<BR>References:<BR>
   [1] <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/">ExifTool</a> by Phil Harvey
-  @version $Rev: 2681 $
+  @version $Rev: 3090 $
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    27-Sep-10, ahu: created

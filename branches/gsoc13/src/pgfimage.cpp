@@ -34,12 +34,8 @@ EXIV2_RCSID("@(#) $Id$")
 //#define DEBUG 1
 
 // *****************************************************************************
-// included header files
-#ifdef _MSC_VER
-# include "exv_msvc.h"
-#else
+
 # include "exv_conf.h"
-#endif
 
 #include "pgfimage.hpp"
 #include "image.hpp"

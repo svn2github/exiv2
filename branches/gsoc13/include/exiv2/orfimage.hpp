@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2013 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -21,7 +21,7 @@
 /*!
   @file    orfimage.hpp
   @brief   Olympus RAW image
-  @version $Rev: 2681 $
+  @version $Rev: 3091 $
   @author  Jeff Costlow
            <a href="mailto:costlow@gmail.com">costlow@gmail.com</a>
   @date    31-Jul-07, costlow: created

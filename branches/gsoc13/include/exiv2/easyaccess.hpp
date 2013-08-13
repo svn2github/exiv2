@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2013 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -21,7 +21,7 @@
 /*!
   @file    easyaccess.hpp
   @brief   Provides easy (high-level) access to some Exif meta data.
-  @version $Rev: 2681 $
+  @version $Rev: 3091 $
   @author  Carsten Pfeiffer <pfeiffer@kde.org>
   @date    28-Feb-09, gis: created
  */

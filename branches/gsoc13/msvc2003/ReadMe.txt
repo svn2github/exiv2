@@ -1,14 +1,18 @@
 Notes about msvc2003 32 bit build of exiv2
 ------------------------------------------
 
-+-----------------------------------------------------------+
-| msvc2012 builds 32bit and 64bit binaries                  |
-|          with Visual Studio 2012                          |
-| msvc2005 builds 32bit and 64bit binaries                  |
-|          with Visual Studio 2005/8/10                     |
-| msvc2003 builds 32bit binaries                            |
-|          with Visual Studio 2003/5/8                      |
-+-----------------------------------------------------------+
++-------------------------------------------------------+
+| msvc2003 builds 32bit binaries                        |
+|          with Visual Studio 2003/5/8                  |
+| ***************************************************** |
+| Exiv2 0.25 is the final release with msvc2003 support |
+| ***************************************************** |
+|                                                       |
+| msvc2005 builds 32bit and 64bit binaries              |
+|          with Visual Studio 2005/8/10/12              |
++-------------------------------------------------------+
+
+Updated: 2013-07-28 
 
 Tools
 -----
@@ -35,27 +39,6 @@ All builds in msvc2003 are 32bit.
                           DOES NOT BUILT WITH VC7.1
                           
                           set Environment string BOOST_ROOT=c:\boost_1_37_0
-
-Notes for DevStudio 2010 Users
-------------------------------
-
-A new setting "TargetName"=$(ProjectName) has been added to DevStudio 2010.  There is only one project impacted by this:
-
-Select Project "exiv2lib" in Project Explorer.  Right-Click/Properties
-
-+ Configuration Properties\General
-
-exiv2lib.vcproj
-Target Name | exiv2sd       Debug
-            | exiv2d        DebugDLL
-            | exiv2s        Release
-            | exiv2         ReleaseDLL
-
-If you don't add these setting, you will get 1,000s of errors.  The damming error concerns:
-"Name of output is not equal to target name"  (or something obscure such as this).
-
-This matter has been reported to Microsoft.
-http://msdn.microsoft.com/EN-US/library/E0846D4D-2CE1-48E3-B219-674FF070BF4E#11
 
 How to build and test exiv2 (with/without organize.exe)
 -------------------------------------------------------

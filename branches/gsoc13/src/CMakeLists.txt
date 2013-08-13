@@ -1,5 +1,5 @@
 # CMake build system for exiv2 library and executables
-# Copyright 2012-     Robin Mills      <robin@clanmills.com>
+# Copyright 2012+     Robin Mills      <robin@clanmills.com>
 # Copyright 2010-2012 Gilles Caulier   <caulier dot gilles at gmail dot com>
 # Copyright 2008      Patrick Spendrin <ps_ml@gmx.de>
 
@@ -11,69 +11,72 @@ if ( NOT MSVC )
 endif()
 
 # Private headers which are only needed for the library itself
-SET( LIBEXIV2_PRIVATE_HDR canonmn_int.hpp
-                          cr2image_int.hpp
-                          crwimage_int.hpp
-                          fujimn_int.hpp
-                          makernote_int.hpp
-                          minoltamn_int.hpp
-                          nikonmn_int.hpp
-                          olympusmn_int.hpp
-                          orfimage_int.hpp
-                          panasonicmn_int.hpp
-                          pentaxmn_int.hpp
-                          pngchunk_int.hpp
-                          rcsid_int.hpp
-                          rw2image_int.hpp
-                          samsungmn_int.hpp
-                          sigmamn_int.hpp
-                          sonymn_int.hpp
-                          tags_int.hpp
-                          tiffcomposite_int.hpp
-                          tifffwd_int.hpp
-                          tiffimage_int.hpp
-                          tiffvisitor_int.hpp
+SET( LIBEXIV2_PRIVATE_HDR ../include/exiv2/canonmn_int.hpp
+                          ../include/exiv2/cr2image_int.hpp
+                          ../include/exiv2/crwimage_int.hpp
+                          ../include/exiv2/fujimn_int.hpp
+                          ../include/exiv2/makernote_int.hpp
+                          ../include/exiv2/minoltamn_int.hpp
+                          ../include/exiv2/nikonmn_int.hpp
+                          ../include/exiv2/olympusmn_int.hpp
+                          ../include/exiv2/orfimage_int.hpp
+                          ../include/exiv2/panasonicmn_int.hpp
+                          ../include/exiv2/pentaxmn_int.hpp
+                          ../include/exiv2/pngchunk_int.hpp
+                          ../include/exiv2/rcsid_int.hpp
+                          ../include/exiv2/rw2image_int.hpp
+                          ../include/exiv2/samsungmn_int.hpp
+                          ../include/exiv2/sigmamn_int.hpp
+                          ../include/exiv2/sonymn_int.hpp
+                          ../include/exiv2/tags_int.hpp
+                          ../include/exiv2/tiffcomposite_int.hpp
+                          ../include/exiv2/tifffwd_int.hpp
+                          ../include/exiv2/tiffimage_int.hpp
+                          ../include/exiv2/tiffvisitor_int.hpp
    )
 
 # Add standalone C++ header files to this list
-SET( LIBEXIV2_HDR         asfvideo.hpp
-                          basicio.hpp
-                          bmpimage.hpp
-                          convert.hpp
-                          cr2image.hpp
-                          crwimage.hpp
-                          datasets.hpp
-                          easyaccess.hpp
-                          epsimage.hpp
-                          error.hpp
-                          exif.hpp
-                          exiv2.hpp
-                          futils.hpp
-                          gifimage.hpp
-                          image.hpp
-                          iptc.hpp
-                          jp2image.hpp
-                          jpgimage.hpp
-                          matroskavideo.hpp
-                          metadatum.hpp
-                          mrwimage.hpp
-                          orfimage.hpp
-                          pgfimage.hpp
-                          preview.hpp
-                          properties.hpp
-                          psdimage.hpp
-                          quicktimevideo.hpp
-                          rafimage.hpp
-                          riffvideo.hpp
-                          rw2image.hpp
-                          tags.hpp
-                          tgaimage.hpp
-                          tiffimage.hpp
-                          types.hpp
-                          value.hpp
-                          version.hpp
-                          xmp.hpp
-                          xmpsidecar.hpp
+SET( LIBEXIV2_HDR         ../include/exiv2/asfvideo.hpp
+                          ../include/exiv2/basicio.hpp
+                          ../include/exiv2/bmpimage.hpp
+                          ../include/exiv2/convert.hpp
+                          ../include/exiv2/cr2image.hpp
+                          ../include/exiv2/crwimage.hpp
+                          ../include/exiv2/datasets.hpp
+                          ../include/exiv2/easyaccess.hpp
+                          ../include/exiv2/epsimage.hpp
+                          ../include/exiv2/error.hpp
+                          ../include/exiv2/exif.hpp
+                          ../include/exiv2/exiv2.hpp
+                          ../include/exiv2/futils.hpp
+                          ../include/exiv2/gifimage.hpp
+                          ../include/exiv2/http.hpp
+                          ../include/exiv2/ssh.hpp
+                          ../include/exiv2/image.hpp
+                          ../include/exiv2/iptc.hpp
+                          ../include/exiv2/jp2image.hpp
+                          ../include/exiv2/jpgimage.hpp
+                          ../include/exiv2/Jzon.h
+                          ../include/exiv2/matroskavideo.hpp
+                          ../include/exiv2/metadatum.hpp
+                          ../include/exiv2/mrwimage.hpp
+                          ../include/exiv2/orfimage.hpp
+                          ../include/exiv2/pgfimage.hpp
+                          ../include/exiv2/preview.hpp
+                          ../include/exiv2/properties.hpp
+                          ../include/exiv2/psdimage.hpp
+                          ../include/exiv2/quicktimevideo.hpp
+                          ../include/exiv2/rafimage.hpp
+                          ../include/exiv2/riffvideo.hpp
+                          ../include/exiv2/rw2image.hpp
+                          ../include/exiv2/tags.hpp
+                          ../include/exiv2/tgaimage.hpp
+                          ../include/exiv2/tiffimage.hpp
+                          ../include/exiv2/types.hpp
+                          ../include/exiv2/value.hpp
+                          ../include/exiv2/version.hpp
+                          ../include/exiv2/xmp.hpp
+                          ../include/exiv2/xmpsidecar.hpp
    )
 
 # Add library C++ source files to this list
@@ -93,10 +96,13 @@ SET( LIBEXIV2_SRC         asfvideo.cpp
                           futils.cpp
                           fujimn.cpp
                           gifimage.cpp
+                          http.cpp
+                          ssh.cpp
                           image.cpp
                           iptc.cpp
                           jp2image.cpp
                           jpgimage.cpp
+                          Jzon.cpp
                           makernote.cpp
                           matroskavideo.cpp
                           metadatum.cpp
@@ -138,7 +144,7 @@ IF( EXIV2_ENABLE_PNG )
                           pngchunk.cpp
                           pngimage.cpp
            )
-        set( LIBEXIV2_HDR ${LIBEXIV2_HDR} pngimage.hpp )
+        set( LIBEXIV2_HDR ${LIBEXIV2_HDR} ../include/exiv2/pngimage.hpp )
     ENDIF( ZLIB_FOUND )
 ENDIF( EXIV2_ENABLE_PNG )
 
@@ -157,6 +163,12 @@ SET( EXIV2_SRC            exiv2.cpp
                           actions.cpp
                           utils.cpp
 )
+# connection test application
+SET( CONNTEST             ../samples/conntest.cpp)
+# exifprint application
+SET( EXIFPRINT            ../samples/exifprint.cpp)
+# cmdfiletest application
+SET( REMOTETEST           ../samples/remotetest.cpp)
 
 ##
 # modify source lists to suit environment
@@ -180,7 +192,6 @@ msvc_runtime_configure(${EXIV2_ENABLE_SHARED})
 
 # ******************************************************************************
 # exiv2lib library
-
 ADD_LIBRARY( exiv2lib ${STATIC_FLAG} ${LIBEXIV2_SRC} ${LIBEXIV2_HDR} )
 
 SET_TARGET_PROPERTIES( exiv2lib PROPERTIES
@@ -193,17 +204,28 @@ SET_TARGET_PROPERTIES( exiv2lib PROPERTIES
 if ( MSVC ) 
     source_group("Header Files" FILES ${LIBEXIV2_HDR} )
     TARGET_LINK_LIBRARIES( exiv2lib ${EXPAT_LIBRARIES} )
+    source_group("Header Files" FILES ${LIBCURL_HDR} )
+    TARGET_LINK_LIBRARIES( exiv2lib ${CURL_LIBRARIES} )
+    source_group("Header Files" FILES ${SSH_HDR} )
+    TARGET_LINK_LIBRARIES( exiv2lib ${SSH_LIBRARIES} )
 else()
     if ( NOT MINGW )
         TARGET_LINK_LIBRARIES( exiv2lib dl ${EXPAT_LIBRARIES} )
+        TARGET_LINK_LIBRARIES( exiv2lib dl ${CURL_LIBRARIES} )
+        TARGET_LINK_LIBRARIES( exiv2lib dl ${SSH_LIBRARIES} )
     else()
         TARGET_LINK_LIBRARIES( exiv2lib    ${EXPAT_LIBRARIES} )
+        TARGET_LINK_LIBRARIES( exiv2lib    ${CURL_LIBRARIES} )
+        TARGET_LINK_LIBRARIES( exiv2lib    ${SSH_LIBRARIES} )
     endif()
+    
 endif()
 
 if( EXIV2_ENABLE_LIBXMP )
     ADD_DEPENDENCIES( exiv2lib xmp )
-    LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH}/$(ConfigurationName))
+    if  ( MSVC ) 
+        LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH}/$(ConfigurationName))
+    endif(MSVC)
     TARGET_LINK_LIBRARIES( exiv2lib xmp )
 ENDIF()
 
@@ -233,24 +255,31 @@ IF (CYGWIN OR MINGW)
     TARGET_LINK_LIBRARIES( exiv2lib psapi )
 ENDIF(CYGWIN OR MINGW)
 
+##
+# copy curl dlls to output directory (TODO: rewrite for NMake)
+IF ( MSVC AND EXIV2_ENABLE_CURL )
+    get_filename_component(CURL_LIBRARY_DIR ${CURL_LIBRARY} PATH)
+    string(REGEX REPLACE "/" "\\\\" CURL_LIBRARY_DIR ${CURL_LIBRARY_DIR})
+    ADD_CUSTOM_COMMAND(
+      TARGET exiv2lib
+      POST_BUILD
+      COMMAND copy /y ${CURL_LIBRARY_DIR}\\*.dll $(SolutionDir)\\bin\\${P_DIR}\\${T_DIR}\\$(ConfigurationName)
+    )
+ENDIF()
+INSTALL( TARGETS exiv2lib ${INSTALL_TARGET_STANDARD_ARGS} )
 
 ##
-# copy header files (TODO: rewrite for NMake)
-IF (MSVC )
-    if (OUT_OF_SOURCE) 
-        ADD_CUSTOM_COMMAND(
-          TARGET exiv2lib
-          PRE_BUILD
-          COMMAND set S=$(SolutionDir)..\\src\nset I=$(SolutionDir)include\nset E=%I%\\exiv2\nif NOT exist %I% mkdir %I%\nif NOT exist %E% mkdir %E%\ncopy /y %S%\\*.h %E%\ncopy /y %S%\\*.hpp %E%
-        )
-    else()
-        ADD_CUSTOM_COMMAND(
-          TARGET exiv2lib
-          PRE_BUILD
-          COMMAND set S=$(SolutionDir)src\nset I=$(SolutionDir)include\nset E=%I%\\exiv2\nif NOT exist %I% mkdir %I%\nif NOT exist %E% mkdir %E%\ncopy /y %S%\\*.h %E%\ncopy /y %S%\\*.hpp %E%
-        )
-    endif()
+# copy libssh dlls to output directory (TODO: rewrite for NMake)
+IF ( MSVC AND EXIV2_ENABLE_SSH )
+    get_filename_component(SSH_LIBRARY_DIR ${SSH_LIBRARY} PATH)
+    string(REGEX REPLACE "/" "\\\\" SSH_LIBRARY_DIR ${SSH_LIBRARY_DIR})
+    ADD_CUSTOM_COMMAND(
+      TARGET exiv2lib
+      POST_BUILD
+      COMMAND copy /y ${SSH_LIBRARY_DIR}\\*.dll $(SolutionDir)\\bin\\${P_DIR}\\${T_DIR}\\$(ConfigurationName)
+    )
 ENDIF()
+INSTALL( TARGETS exiv2lib ${INSTALL_TARGET_STANDARD_ARGS} )
 
 ##
 # copy zlib and expat dlls to output directory (TODO: rewrite for NMake)
@@ -277,6 +306,21 @@ INSTALL( TARGETS exiv2lib ${INSTALL_TARGET_STANDARD_ARGS} )
 ADD_EXECUTABLE( exiv2 ${EXIV2_SRC} )
 TARGET_LINK_LIBRARIES( exiv2 exiv2lib )
 INSTALL( TARGETS exiv2 ${INSTALL_TARGET_STANDARD_ARGS} )
+
+# ******************************************************************************
+# connection test application
+ADD_EXECUTABLE( conntest ${CONNTEST} )
+TARGET_LINK_LIBRARIES( conntest exiv2lib )
+
+# ******************************************************************************
+# exifprint application
+ADD_EXECUTABLE( exifprint ${EXIFPRINT} )
+TARGET_LINK_LIBRARIES( exifprint exiv2lib )
+
+# ******************************************************************************
+# remotetest application
+ADD_EXECUTABLE( remotetest ${REMOTETEST} )
+TARGET_LINK_LIBRARIES( remotetest exiv2lib )
 
 # ******************************************************************************
 # Headers

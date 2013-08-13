@@ -24,7 +24,7 @@
            References: Similar versioning defines are used in KDE, GTK and other
            libraries. See http://apr.apache.org/versioning.html for accompanying
            guidelines.
-  @version $Rev: 2949 $
+  @version $Rev: 3090 $
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    31-May-06, ahu: created
@@ -32,8 +32,8 @@
 #ifndef VERSION_HPP_
 #define VERSION_HPP_
 
-#include "exv_conf.h"
-
+// *****************************************************************************
+// included header files
 // + standard includes
 #include <string>
 
@@ -122,7 +122,7 @@ namespace Exiv2 {
     */
     EXIV2API int versionNumber();
     /*!
-      @brief Return the version string Example: "0.23.0" (major.minor.patch)
+      @brief Return the version string Example: "0.24.0" (major.minor.patch)
     */
     EXIV2API std::string versionString();
     /*!

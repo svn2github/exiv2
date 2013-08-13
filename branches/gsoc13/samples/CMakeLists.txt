@@ -21,11 +21,12 @@ endif()
 include_directories("${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/src")
 
 SET( SAMPLES addmoddel.cpp
+             httptest.cpp
              convert-test.cpp
              easyaccess-test.cpp
              exifcomment.cpp
              exifdata-test.cpp
-             exifprint.cpp
+             exif2json.cpp
              geotag.cpp
              iotest.cpp
              iptceasy.cpp

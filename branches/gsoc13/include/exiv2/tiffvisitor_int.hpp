@@ -22,7 +22,7 @@
   @file    tiffvisitor_int.hpp
   @brief   Internal operations on a TIFF composite tree, implemented as visitor
            classes.
-  @version $Rev: 2681 $
+  @version $Rev: 3090 $
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    11-Apr-06, ahu: created

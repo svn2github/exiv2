@@ -21,7 +21,7 @@
 /*!
   @file    tiffimage.hpp
   @brief   Class TiffImage
-  @version $Rev: 2681 $
+  @version $Rev: 3090 $
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    15-Mar-06, ahu: created

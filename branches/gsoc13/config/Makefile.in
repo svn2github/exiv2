@@ -76,6 +76,9 @@ tests:
 teste:
 	cd test && $(MAKE) teste
 
+testx:
+	cd test && $(MAKE) testx
+	
 testv:
 	cd test && $(MAKE) testv
 
@@ -113,6 +116,8 @@ mostlyclean clean: config/config.mk
 	cd xmpsdk/src && $(MAKE) $(MAKECMDGOALS)
 	cd config && $(MAKE) -f config.make $(MAKECMDGOALS)
 	cd po && $(MAKE) $(MAKECMDGOALS)
+	rm -rf test/tmp
+	mkdir  test/tmp
 
 # `make distclean' also removes files created by configuring 
 # the program. Running `make all distclean' prepares the project 

@@ -26,7 +26,7 @@
   This is a simplified version of the ACE_RCSID macro that is used in the
   <a href="http://www.cs.wustl.edu/~schmidt/ACE.html">ACE(TM)</a> distribution.
 
-  @version $Rev: 3021 $
+  @version $Rev: 3090 $
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    02-Feb-04, ahu: created

@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2013 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -21,7 +21,7 @@
 /*!
   @file    preview.hpp
   @brief   Classes to access all preview images embedded in an image.
-  @version $Rev: 2681 $
+  @version $Rev: 3091 $
   @author  Vladimir Nadvornik (vn)
            <a href="mailto:nadvornik@suse.cz">nadvornik@suse.cz</a>
   @date    18-Sep-08, vn: created

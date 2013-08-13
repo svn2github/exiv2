@@ -29,13 +29,7 @@
 EXIV2_RCSID("@(#) $Id$")
 
 // *****************************************************************************
-// included header files
-#ifdef _MSC_VER
-# include "exv_msvc.h"
-#else
-# include "exv_conf.h"
-#endif
-
+#include "exv_conf.h"
 #include "utils.hpp"
 
 // + standard includes
@@ -95,9 +89,14 @@ namespace Util {
 
     std::string dirname(const std::string& path)
     {
-        if (path == "") return ".";
+        Exiv2::Protocol fileProt = Exiv2::fileProtocol(path);
         // Strip trailing slashes or backslashes
         std::string p = path;
+        if (path == "" || (fileProt != Exiv2::pFile && fileProt != Exiv2::pFileUri))
+            return "."; // for remote files, get current dir
+        if (fileProt == Exiv2::pFileUri)
+            p = Exiv2::pathOfFileUrl(path);
+
         while (   p.length() > 1
                && (p[p.length()-1] == '\\' || p[p.length()-1] == '/')) {
             p = p.substr(0, p.length()-1);

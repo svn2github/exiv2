@@ -30,11 +30,18 @@
 EXIV2_RCSID("@(#) $Id$")
 
 // *****************************************************************************
-// included header files
-#ifdef _MSC_VER
-# include "exv_msvc.h"
-#else
-# include "exv_conf.h"
+
+#include "exv_conf.h"
+
+#ifndef EXV_USE_SSH
+#define EXV_USE_SSH 0
+#endif
+
+#ifndef EXV_USE_CURL
+#define EXV_USE_CURL 0
+#endif
+#if EXV_USE_CURL == 1
+#include <curl/curl.h>
 #endif
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
@@ -47,11 +54,14 @@ EXIV2_RCSID("@(#) $Id$")
 #include <windows.h>
 #endif
 
+#include "http.hpp"
 #include "version.hpp"
 
 // + standard includes
 #include <iomanip>
 #include <sstream>
+
+
 
 namespace Exiv2 {
     int versionNumber()
@@ -98,7 +108,6 @@ typedef string_v::iterator  string_i;
 #ifndef _MAX_PATH
 #define _MAX_PATH 512
 #endif
-
 
 // platform specific support for dumpLibraryInfo
 #if defined(WIN32)
@@ -180,8 +189,7 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
 #if defined(__SUNPRO_CC) || defined (__SUNPRO_C)
 #define     __oracle__      
 #endif
-      
-      
+
 #ifndef __VERSION__
 #ifdef  __clang__version__
 #define __VERSION__ __clang__version__
@@ -259,7 +267,18 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
     os << "version="  << __VERSION__            << endl;
     os << "date="     << __DATE__               << endl;
     os << "time="     << __TIME__               << endl;
-
+    os << "ssh="      << EXV_USE_SSH            << endl;
+#if EXV_USE_CURL == 1
+    curl_version_info_data* vinfo   =  curl_version_info(CURLVERSION_NOW);
+    os << "curlversion="            << vinfo->version      << endl;
+    os << "curlprotocols=";
+    for (int i = 0; vinfo->protocols[i]; i++)
+        os << vinfo->protocols[i] << " ";
+    os << endl;
+#else
+    os << "curl="     << EXV_USE_CURL          << endl;
+#endif
+    os << "id="       << "$Id$" << endl;
     if ( libs.begin() != libs.end() ) {
         os << "executable=" << *libs.begin() << endl;
         for ( string_i lib = libs.begin()+1 ; lib != libs.end() ; lib++ )

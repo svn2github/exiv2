@@ -31,12 +31,8 @@
 EXIV2_RCSID("@(#) $Id$")
 
 // *****************************************************************************
-// included header files
-#ifdef _MSC_VER
-# include "exv_msvc.h"
-#else
+
 # include "exv_conf.h"
-#endif
 
 #include "exiv2app.hpp"
 #include "actions.hpp"
@@ -44,6 +40,7 @@ EXIV2_RCSID("@(#) $Id$")
 #include "convert.hpp"
 #include "i18n.h"      // NLS support.
 #include "xmp.hpp"
+#include "version.hpp"
 
 #include <string>
 #include <iostream>

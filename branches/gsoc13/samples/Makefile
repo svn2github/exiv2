@@ -55,11 +55,12 @@ include $(top_srcdir)/config/config.mk
 
 # Add source files of sample programs to this list
 BINSRC = addmoddel.cpp        \
+         httptest.cpp         \
          convert-test.cpp     \
          easyaccess-test.cpp  \
          exifcomment.cpp      \
          exifdata-test.cpp    \
-         exifprint.cpp        \
+         exif2json.cpp        \
          iotest.cpp           \
          iptceasy.cpp         \
          iptcprint.cpp        \
@@ -92,7 +93,7 @@ BAR='****************************************'
 .PRECIOUS: %.cpp
 
 CPPFLAGS := `pkg-config exiv2 --cflags`
-LDFLAGS := `pkg-config exiv2 --libs`
+LDFLAGS  := `pkg-config exiv2 --libs`
 
 BINOBJ = $(BINSRC:.cpp=.o)
 BINARY = $(BINSRC:.cpp=)
@@ -112,7 +113,7 @@ samples: $(BINARY) $(OTHER)
 
 $(BINOBJ): %.o: %.cpp
 	@if [ -z `which $(PKGCONFIG)`  ]; then echo $(BAR) $'\\n***' utility $(PKGCONFIG) not available $'***\n'$(BAR) ; exit 42 ; fi
-	$(COMPILE.cc) -I../src -o $@ $<
+	$(COMPILE.cc) -I../include/exiv2 -o $@ $<
 	@$(MAKEDEPEND)
 	@$(POSTDEPEND)
 
@@ -137,16 +138,16 @@ relink: binclean samples
 
 # link expat directly to geotag
 geotag : geotag.cpp
-	$(COMPILE.cc) -I../src -o $@.o $<
+	$(COMPILE.cc) -I../include/exiv2 -o $@.o $<
 	$(LIBTOOL)  --mode=link $(LINK.cc) -lexpat $@.o -o ../bin/$@ 
 
 # link applications which require utils.cpp support
 metacopy: metacopy.cpp ../src/utils.o
-	$(COMPILE.cc) -I../src -o $@.o $<
+	$(COMPILE.cc) -I../include/exiv2 -o $@.o $<
 	$(LIBTOOL)  --mode=link $(LINK.cc) $@.o ../src/utils.o -o ../bin/$@
 
 path-test: path-test.cpp ../src/utils.o
-	$(COMPILE.cc) -I../src -o $@.o $<
+	$(COMPILE.cc) -I../include/exiv2 -o $@.o $<
 	$(LIBTOOL)  --mode=link $(LINK.cc) $@.o ../src/utils.o -o ../bin/$@
 
 # Remove binaries, e.g., to relink them

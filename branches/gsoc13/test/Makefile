@@ -54,7 +54,7 @@ SHELL = /bin/sh
 
 # ******************************************************************************
 # Targets
-.PHONY: all test testv teste clean distclean maintainer-clean
+.PHONY: all test testx testv teste clean distclean maintainer-clean
 
 ##
 # to save download time for simple build/test, we download video and eps data on demand
@@ -62,27 +62,32 @@ SHELL = /bin/sh
 #       If we remove it now, it'll break the test instructions on the web:
 #       http://www.exiv2.org/download.html
 SVN = svn://dev.exiv2.org/svn/testdata/trunk
+SVN_TEST = svn://dev.exiv2.org/svn/trunk/test/data
 
 ##
 # Add test drivers to this list
 TESTS = addmoddel.sh      \
         bugfixes-test.sh  \
         exifdata-test.sh  \
-        exiv2-test.sh     \
         imagetest.sh      \
         iotest.sh         \
         iptctest.sh       \
-        modify-test.sh    \
         path-test.sh      \
-        preview-test.sh   \
         stringto-test.sh  \
         tiff-test.sh      \
         write-test.sh     \
         write2-test.sh    \
         xmpparser-test.sh \
+        exiv2-test.sh     \
+        modify-test.sh    \
         conversions.sh
 TESTV = video-test.sh
-TESTE = eps-test.sh    
+TESTE = eps-test.sh       \
+        preview-test.sh
+TESTX = xpathiotest.sh    \
+		httpiotest.sh     \
+        curliotest.sh     \
+        sshiotest.sh
 
 tests:
 	cd .. ; make tests
@@ -110,7 +115,20 @@ testv:
 ##
 # TODO: download eps data on demand for 0.24 (similar to testv)
 teste:
+	@for t in /eps ; do \
+		if [ ! -e data/$$t ]; then \
+	echo svn export '$(SVN_TEST)'$$t data$$t ; \
+	     svn export '$(SVN_TEST)'$$t data$$t ; \
+	fi ; done
 	@list='$(TESTE)'; for p in $$list; do \
+	    echo Running $$p ...; \
+	    ./$$p; \
+	done
+
+##
+# TODO: test httpIo and remoteIo
+testx:
+	@list='$(TESTX)'; for p in $$list; do \
 	    echo Running $$p ...; \
 	    ./$$p; \
 	done

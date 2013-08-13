@@ -225,6 +225,21 @@ diffCheck()
     fi 
 }
 
+# Make sure to pass the test file first and the known good file second
+diffCheckAscii() 
+{
+    test=$1
+    good=$2
+    
+    #run diff and check results
+    diff -q $diffargs $test $good
+    if [ $? -ne 0 ]; then
+       errors=`expr $errors + 1`
+    else
+       rm $test
+    fi 
+}
+
 
 ##
 # moved here from iotest.sh

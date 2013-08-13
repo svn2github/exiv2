@@ -21,7 +21,7 @@
 /*!
   @file    tiffimage_int.hpp
   @brief   Internal class TiffParserWorker to parse TIFF data.
-  @version $Rev: 2681 $
+  @version $Rev: 3090 $
   @author  Andreas Huggel (ahu)
            <a href="mailto:ahuggel@gmx.net">ahuggel@gmx.net</a>
   @date    23-Apr-08, ahu: created

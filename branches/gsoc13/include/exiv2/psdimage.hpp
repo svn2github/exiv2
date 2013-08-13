@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2013 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -22,7 +22,7 @@
   @file    psdimage.hpp
   @brief   Photoshop image, implemented using the following references:
            <a href="http://www.fine-view.com/jp/lab/doc/ps6ffspecsv2.pdf">Adobe Photoshop 6.0 File Format Specification</a> by Adobe<br>
-  @version $Rev: 2681 $
+  @version $Rev: 3091 $
   @author  Marco Piovanelli, Ovolab (marco)
            <a href="mailto:marco.piovanelli@pobox.com">marco.piovanelli@pobox.com</a>
   @author  Michael Ulbrich

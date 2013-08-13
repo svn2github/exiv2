@@ -29,12 +29,8 @@
 EXIV2_RCSID("@(#) $Id$")
 
 // *****************************************************************************
-// included header files
-#ifdef _MSC_VER
-# include "exv_msvc.h"
-#else
+
 # include "exv_conf.h"
-#endif
 
 #include "tiffcomposite_int.hpp" // Do not change the order of these 2 includes,
 #include "tiffvisitor_int.hpp"   // see bug #487

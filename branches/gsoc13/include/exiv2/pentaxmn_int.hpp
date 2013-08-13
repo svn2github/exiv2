@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2013 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -24,7 +24,7 @@
            http://www.gvsoft.homedns.org/exif/makernote-pentax-type3.html and
            based on ExifTool implementation and
            <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Pentax.html">Pentax Makernote list</a> by Phil Harvey<br>
-  @version $Rev: 2681 $
+  @version $Rev: 3091 $
   @author  Michal Cihar
            <a href="mailto:michal@cihar.com">michal@cihar.com</a>
   @date    27-Sep-07
