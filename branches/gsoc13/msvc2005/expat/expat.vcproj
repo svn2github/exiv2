@@ -371,7 +371,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="Win32\DebugDLL/libexpat.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile="..\..\..\expat\lib\libexpat.def"
@@ -464,7 +463,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\x64\DebugDLL/libexpat.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile="..\..\..\expat\lib\libexpat.def"
@@ -557,7 +555,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="Win32\ReleaseDLL/libexpat.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile="..\..\..\expat\lib\libexpat.def"
@@ -649,7 +646,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\x64\ReleaseDLL/libexpat.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile="..\..\..\expat\lib\libexpat.def"

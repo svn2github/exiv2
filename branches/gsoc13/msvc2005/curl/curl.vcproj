@@ -377,7 +377,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib wldap32.lib"
-				OutputFile="Win32\DebugDLL/libcurl.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
@@ -471,7 +470,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib wldap32.lib"
-				OutputFile=".\x64\DebugDLL/libcurl.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
@@ -565,7 +563,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib wldap32.lib"
-				OutputFile="Win32\ReleaseDLL/libcurl.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ImportLibrary=".\Win32\ReleaseDLL/libcurl.lib"
@@ -658,7 +655,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib wldap32.lib"
-				OutputFile=".\x64\ReleaseDLL/libcurl.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ImportLibrary=".\x64\ReleaseDLL/libcurl.lib"
