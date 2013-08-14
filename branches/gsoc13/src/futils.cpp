@@ -220,7 +220,7 @@ namespace Exiv2 {
             }
             if (!len)
                 continue;
-            if (out_size < (done + len - 1))
+            if (out_size < (size_t) (done + len - 1))
                 /* out buffer is too small */
                 return -1;
             if (len >= 2)
@@ -231,7 +231,7 @@ namespace Exiv2 {
                 *out++ = ((quad[2] << 6) & 0xc0) | quad[3];
             done += len - 1;
         }
-        if (done + 1 >= out_size)
+        if ((size_t)(done + 1) >= out_size)
             return -1;
         *out++ = '\0';
         return done;
@@ -318,7 +318,7 @@ namespace Exiv2 {
 #ifdef EXV_UNICODE_PATH
     std::wstring pathOfFileUrl(const std::wstring& wurl) {
         std::wstring path = wurl.substr(7);
-        size_t found = path.find("/");
+        int found = path.find('/');
         if (found == std::wstring::npos) return path;
         else return path.substr(found);
     }
