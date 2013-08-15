@@ -54,7 +54,6 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -141,7 +140,6 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -240,7 +238,6 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalOptions=" /MACHINE:X64"
-				OutputFile="$(OutDir)\$(ProjectName)d.lib"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrtd"
 			/>
@@ -310,7 +307,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\$(ProjectName)d.lib"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrtd"
 			/>
@@ -385,9 +381,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="&quot;/IMPLIB:$(TargetDir)\zlib1d.lib&quot;"
 				AdditionalDependencies=""
-				OutputFile="$(OutDir)\$(ProjectName)d.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile="..\..\..\zlib\win32\zlib.def"
@@ -476,8 +470,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="&quot;/IMPLIB:$(TargetDir)\zlib1d.lib&quot;"
-				OutputFile="$(OutDir)\$(ProjectName)d.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile="..\..\..\zlib\win32\zlib.def"
