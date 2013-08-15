@@ -1,0 +1,10 @@
+Exif.Image.Orientation                       Short       1  top, left
+Exif.Image.XResolution                       Rational    1  72
+Exif.Image.YResolution                       Rational    1  72
+Exif.Image.ResolutionUnit                    Short       1  inch
+Exif.Image.Software                          Ascii      20  Adobe Photoshop 7.0
+Exif.Image.DateTime                          Ascii      20  2005:06:08 14:52:19
+Exif.Image.ExifTag                           Long        1  154
+Exif.Photo.ColorSpace                        Short       1  Uncalibrated
+Exif.Photo.PixelXDimension                   Long        1  100
+Exif.Photo.PixelYDimension                   Long        1  100

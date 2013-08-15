@@ -1,0 +1,7 @@
+Exif.Image.Orientation                       Short       1  top, left
+Exif.Image.XResolution                       Rational    1  150
+Exif.Image.YResolution                       Rational    1  150
+Exif.Image.ResolutionUnit                    Short       1  inch
+Exif.Image.ExifTag                           Long        1  90
+Exif.Photo.PixelXDimension                   Long        1  100
+Exif.Photo.PixelYDimension                   Long        1  147

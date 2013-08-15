@@ -1,0 +1,64 @@
+Exif.Image.ImageDescription                  Ascii      32  IPTC CONTENT PANEL: DESCRIPTION
+Exif.Image.Orientation                       Short       1  top, left
+Exif.Image.XResolution                       Rational    1  600
+Exif.Image.YResolution                       Rational    1  600
+Exif.Image.ResolutionUnit                    Short       1  inch
+Exif.Image.Software                          Ascii      28  Adobe Photoshop CS2 Windows
+Exif.Image.DateTime                          Ascii      20  2009:05:19 10:56:21
+Exif.Image.Artist                            Ascii      28  IPTC CONTACT PANEL: CREATOR
+Exif.Image.Copyright                         Ascii      36  IPTC STATUS PANEL: COPYRIGHT NOTICE
+Exif.Image.ExifTag                           Long        1  294
+Exif.Photo.ColorSpace                        Short       1  Uncalibrated
+Exif.Photo.PixelXDimension                   Long        1  100
+Exif.Photo.PixelYDimension                   Long        1  126
+Iptc.Envelope.CharacterSet                   String      3  %G
+Iptc.Application2.RecordVersion              Short       1  2
+Iptc.Application2.SpecialInstructions        String     31  IPTC STATUS PANEL: INSTRUCTIONS
+Iptc.Application2.Caption                    String     31  IPTC CONTENT PANEL: DESCRIPTION
+Iptc.Application2.DateCreated                Date        8  2007-11-19
+Iptc.Application2.Copyright                  String     35  IPTC STATUS PANEL: COPYRIGHT NOTICE
+Iptc.Application2.City                       String     22  IPTC IMAGE PANEL: CITY
+Iptc.Application2.Headline                   String     20  IPTC CONTENT PANEL: 
+Iptc.Application2.SubLocation                String     26  IPTC IMAGE PANEL: LOCATION
+Iptc.Application2.Writer                     String     38  IPTC CONTENT PANEL: DESCRIPTION WRITER
+Iptc.Application2.ObjectName                 String     24  IPTC STATUS PANEL: TITLE
+Iptc.Application2.ObjectAttribute            String     36  IPTC IMAGE PANEL: INTELLECTUAL GENRE
+Iptc.Application2.Credit                     String     27  IPTC STATUS PANEL: PROVIDER
+Iptc.Application2.ProvinceState              String     32  IPTC IMAGE PANEL: STATE/PROVINCE
+Iptc.Application2.Byline                     String     27  IPTC CONTACT PANEL: CREATOR
+Iptc.Application2.CountryName                String     25  IPTC IMAGE PANEL: COUNTRY
+Iptc.Application2.TransmissionReference      String     24  IPTC STATUS PANEL: TITLE
+Iptc.Application2.Keywords                   String      8  KEYWORDS
+Iptc.Application2.Keywords                   String     19  IPTC CONTENT PANEL:
+Iptc.Application2.BylineTitle                String     39  IPTC CONTACT PANEL: CREATOR"S JOB TITLE
+Iptc.Application2.Source                     String     25  IPTC STATUS PANEL: SOURCE
+Iptc.Application2.Subject                    String     37  IPTC CONTENT PANEL: IPTC SUBJECT CODE
+Xmp.photoshop.City                           XmpText    22  IPTC IMAGE PANEL: CITY
+Xmp.photoshop.Country                        XmpText    25  IPTC IMAGE PANEL: COUNTRY
+Xmp.photoshop.AuthorsPosition                XmpText    39  IPTC CONTACT PANEL: CREATOR"S JOB TITLE
+Xmp.photoshop.CaptionWriter                  XmpText    38  IPTC CONTENT PANEL: DESCRIPTION WRITER
+Xmp.photoshop.Headline                       XmpText    20  IPTC CONTENT PANEL: 
+Xmp.photoshop.Instructions                   XmpText    31  IPTC STATUS PANEL: INSTRUCTIONS
+Xmp.photoshop.TransmissionReference          XmpText    24  IPTC STATUS PANEL: TITLE
+Xmp.photoshop.Credit                         XmpText    27  IPTC STATUS PANEL: PROVIDER
+Xmp.photoshop.State                          XmpText    32  IPTC IMAGE PANEL: STATE/PROVINCE
+Xmp.photoshop.Source                         XmpText    25  IPTC STATUS PANEL: SOURCE
+Xmp.dc.rights                                LangAlt     1  lang="x-default" IPTC STATUS PANEL: COPYRIGHT NOTICE
+Xmp.dc.creator                               XmpSeq      1  IPTC CONTACT PANEL: CREATOR
+Xmp.dc.description                           LangAlt     1  lang="x-default" IPTC CONTENT PANEL: DESCRIPTION
+Xmp.dc.subject                               XmpBag      2  IPTC CONTENT PANEL:, KEYWORDS
+Xmp.dc.title                                 LangAlt     1  lang="x-default" IPTC STATUS PANEL: TITLE
+Xmp.iptc.CreatorContactInfo                  XmpText     0  type="Struct"
+Xmp.iptc.CreatorContactInfo/Iptc4xmpCore:CiTelWork XmpText    28  IPTC CONTACT PANEL: PHONE(S)
+Xmp.iptc.CreatorContactInfo/Iptc4xmpCore:CiAdrCtry XmpText    27  IPTC CONTACT PANEL: COUNTRY
+Xmp.iptc.CreatorContactInfo/Iptc4xmpCore:CiUrlWork XmpText    30  IPTC CONTACT PANEL: WEBSITE(S)
+Xmp.iptc.CreatorContactInfo/Iptc4xmpCore:CiAdrExtadr XmpText    27  IPTC CONTACT PANEL: ADDRESS
+Xmp.iptc.CreatorContactInfo/Iptc4xmpCore:CiAdrPcode XmpText    20  IPTC COPANEL: POSTAL
+Xmp.iptc.CreatorContactInfo/Iptc4xmpCore:CiAdrRegion XmpText    34  IPTC CONTACT PANEL: STATE/PROVINCE
+Xmp.iptc.CreatorContactInfo/Iptc4xmpCore:CiAdrCity XmpText    24  IPTC CONTACT PANEL: CITY
+Xmp.iptc.CreatorContactInfo/Iptc4xmpCore:CiEmailWork XmpText    29  IPTC CONTACT PANEL: E_MAIL(S)
+Xmp.iptc.IntellectualGenre                   XmpText    36  IPTC IMAGE PANEL: INTELLECTUAL GENRE
+Xmp.iptc.Location                            XmpText    26  IPTC IMAGE PANEL: LOCATION
+Xmp.iptc.Scene                               XmpBag      1  IPTC IMAGE PANEL: IPTC SCENE
+Xmp.iptc.SubjectCode                         XmpBag      1  IPTC CONTENT PANEL: IPTC SUBJECT CODE
+Xmp.xmpRights.UsageTerms                     LangAlt     1  lang="x-default" IPTC STATUS PANEL: RIGHTS USAGE TERMS

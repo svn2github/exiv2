@@ -1,0 +1,41 @@
+Exif.Image.Make                              Ascii       6  Canon
+Exif.Image.Model                             Ascii      20  Canon PowerShot S40
+Exif.Image.Orientation                       Short       1  top, left
+Exif.Image.XResolution                       Rational    1  180
+Exif.Image.YResolution                       Rational    1  180
+Exif.Image.ResolutionUnit                    Short       1  inch
+Exif.Image.DateTime                          Ascii      20  2003:12:14 12:01:44
+Exif.Image.ExifTag                           Long        1  172
+Exif.Photo.ExposureTime                      Rational    1  1/500 s
+Exif.Photo.FNumber                           Rational    1  F4.9
+Exif.Photo.ExposureProgram                   Short       1  Auto
+Exif.Photo.ISOSpeedRatings                   Short       1  100
+Exif.Photo.ExifVersion                       Undefined   4  2.20
+Exif.Photo.DateTimeOriginal                  Ascii      20  2003:12:14 12:01:44
+Exif.Photo.DateTimeDigitized                 Ascii      20  2003:12:14 12:01:44
+Exif.Photo.ComponentsConfiguration           Undefined   4  Y
+Exif.Photo.CompressedBitsPerPixel            Rational    1  5
+Exif.Photo.ShutterSpeedValue                 SRational   1  1/501 s
+Exif.Photo.ApertureValue                     Rational    1  F5
+Exif.Photo.ExposureBiasValue                 SRational   1  0 EV
+Exif.Photo.MaxApertureValue                  Rational    1  F2.8
+Exif.Photo.MeteringMode                      Short       1  Center weighted average
+Exif.Photo.Flash                             Short       1  No, auto
+Exif.Photo.FocalLength                       Rational    1  21.3 mm
+Exif.Photo.FlashpixVersion                   Undefined   4  1.00
+Exif.Photo.ColorSpace                        Short       1  sRGB
+Exif.Photo.PixelXDimension                   Long        1  100
+Exif.Photo.PixelYDimension                   Long        1  75
+Exif.Photo.FocalPlaneXResolution             Rational    1  8114.29
+Exif.Photo.FocalPlaneYResolution             Rational    1  8114.29
+Exif.Photo.FocalPlaneResolutionUnit          Short       1  inch
+Exif.Photo.SensingMethod                     Short       1  One-chip color area
+Exif.Photo.CustomRendered                    Short       1  Normal process
+Exif.Photo.ExposureMode                      Short       1  Auto
+Exif.Photo.WhiteBalance                      Short       1  Auto
+Exif.Photo.DigitalZoomRatio                  Rational    1  1.0
+Exif.Photo.SceneCaptureType                  Short       1  Standard
+Xmp.aux.Lens                                 XmpText    11  7.1-21.3 mm
+Xmp.aux.OwnerName                            XmpText    14  Andreas Huggel
+Xmp.aux.Firmware                             XmpText    21  Firmware Version 1.10
+Xmp.aux.FlashCompensation                    XmpText     3  0/1

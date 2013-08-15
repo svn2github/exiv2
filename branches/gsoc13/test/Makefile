@@ -84,8 +84,7 @@ TESTS = addmoddel.sh      \
 TESTV = video-test.sh
 TESTE = eps-test.sh       \
         preview-test.sh
-TESTX = xpathiotest.sh    \
-		httpiotest.sh     \
+TESTX = httpiotest.sh     \
         curliotest.sh     \
         sshiotest.sh
 

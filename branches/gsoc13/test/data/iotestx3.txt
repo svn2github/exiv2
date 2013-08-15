@@ -6,15 +6,14 @@ Exif.Image.YResolution                       Rational    1  72
 Exif.Image.ResolutionUnit                    Short       1  inch
 Exif.Image.Software                          Ascii      22  1.00                 
 Exif.Image.DateTime                          Ascii      20  2005:04:30 10:20:06
-Exif.Image.YCbCrPositioning                  Short       1  Centered
-Exif.Image.ExifTag                           Long        1  276
+Exif.Image.ExifTag                           Long        1  212
 Exif.Photo.ExposureTime                      Rational    1  1/500 s
 Exif.Photo.FNumber                           Rational    1  F2.8
 Exif.Photo.ExposureProgram                   Short       1  Auto
 Exif.Photo.ExifVersion                       Undefined   4  2.20
 Exif.Photo.DateTimeOriginal                  Ascii      20  2005:04:30 10:20:06
 Exif.Photo.DateTimeDigitized                 Ascii      20  2005:04:30 10:20:06
-Exif.Photo.ComponentsConfiguration           Undefined   4  YCbCr
+Exif.Photo.ComponentsConfiguration           Undefined   4  Y
 Exif.Photo.CompressedBitsPerPixel            Rational    1  0.478453
 Exif.Photo.ExposureBiasValue                 SRational   1  0 EV
 Exif.Photo.MaxApertureValue                  Rational    1  F2.8
@@ -22,29 +21,17 @@ Exif.Photo.MeteringMode                      Short       1  Multi-segment
 Exif.Photo.LightSource                       Short       1  Unknown
 Exif.Photo.Flash                             Short       1  No, compulsory
 Exif.Photo.FocalLength                       Rational    1  8.0 mm
-Exif.Photo.MakerNote                         Undefined 27312  (Binary value suppressed)
 Exif.Photo.FlashpixVersion                   Undefined   4  1.00
 Exif.Photo.ColorSpace                        Short       1  sRGB
-Exif.Photo.PixelXDimension                   Long        1  538
-Exif.Photo.PixelYDimension                   Long        1  337
-Exif.Photo.InteroperabilityTag               Long        1  28062
-Exif.Iop.InteroperabilityIndex               Ascii       4  R98
-Exif.Iop.InteroperabilityVersion             Undefined   4  1.00
-Exif.Photo.FileSource                        Undefined   1  Digital still camera
+Exif.Photo.PixelXDimension                   Long        1  100
+Exif.Photo.PixelYDimension                   Long        1  63
 Exif.Photo.CustomRendered                    Short       1  Normal process
 Exif.Photo.ExposureMode                      Short       1  Auto
 Exif.Photo.WhiteBalance                      Short       1  Auto
-Exif.Photo.DigitalZoomRatio                  Rational    1  Digital zoom not used
+Exif.Photo.DigitalZoomRatio                  Rational    1  0.0
 Exif.Photo.FocalLengthIn35mmFilm             Short       1  39.0 mm
 Exif.Photo.SceneCaptureType                  Short       1  Standard
 Exif.Photo.GainControl                       Short       1  None
 Exif.Photo.Contrast                          Short       1  Normal
 Exif.Photo.Saturation                        Short       1  High
 Exif.Photo.Sharpness                         Short       1  Normal
-Exif.Image.PrintImageMatching                Undefined  40  80 114 105 110 116 73 77 0 48 50 53 48 0 0 0 4 0 1 0 20 0 20 0 2 1 0 0 0 1 0 5 0 0 0 1 1 6 0 0 0
-Exif.Thumbnail.Compression                   Short       1  JPEG (old-style)
-Exif.Thumbnail.XResolution                   Rational    1  72
-Exif.Thumbnail.YResolution                   Rational    1  72
-Exif.Thumbnail.ResolutionUnit                Short       1  inch
-Exif.Thumbnail.JPEGInterchangeFormat         Long        1  28186
-Exif.Thumbnail.JPEGInterchangeFormatLength   Long        1  7314
