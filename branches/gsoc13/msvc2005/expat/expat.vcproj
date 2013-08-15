@@ -69,7 +69,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="Win32\Debug\libexpat.lib"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrtd"
 			/>
@@ -144,7 +143,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\x64\Debug\libexpat.lib"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrtd"
 			/>
@@ -217,7 +215,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="Win32\Release/libexpat.lib"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrt"
 			/>
@@ -291,7 +288,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\x64\Release/libexpat.lib"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrt"
 			/>

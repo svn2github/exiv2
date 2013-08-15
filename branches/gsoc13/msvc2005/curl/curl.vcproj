@@ -70,7 +70,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="Win32\Debug\libcurl.lib"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrtd"
 			/>
@@ -146,7 +145,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\x64\Debug\libcurl.lib"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrtd"
 			/>
@@ -220,7 +218,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="Win32\Release/libcurl.lib"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrt"
 			/>
@@ -295,7 +292,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\x64\Release/libcurl.lib"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrt"
 			/>
@@ -380,7 +376,6 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
-				ImportLibrary=".\Win32\DebugDLL/libcurl.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -473,7 +468,6 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
-				ImportLibrary=".\x64\DebugDLL/libcurl.lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -565,7 +559,6 @@
 				AdditionalDependencies="ws2_32.lib wldap32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				ImportLibrary=".\Win32\ReleaseDLL/libcurl.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -657,7 +650,6 @@
 				AdditionalDependencies="ws2_32.lib wldap32.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				ImportLibrary=".\x64\ReleaseDLL/libcurl.lib"
 				TargetMachine="17"
 			/>
 			<Tool

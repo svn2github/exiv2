@@ -17,7 +17,7 @@
       <Tool Name="VCManagedResourceCompilerTool"/>
       <Tool Name="VCResourceCompilerTool"/>
       <Tool Name="VCPreLinkEventTool"/>
-      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  OutputFile="$(OutDir)/$(ProjectName).exe" LinkIncremental="1" IgnoreDefaultLibraryNames="msvcrtd" GenerateDebugInformation="true" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="1"/>
+      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  LinkIncremental="1" IgnoreDefaultLibraryNames="msvcrtd" GenerateDebugInformation="true" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="1"/>
       <Tool Name="VCALinkTool"/>
       <Tool Name="VCManifestTool"/>
       <Tool Name="VCXDCMakeTool"/>
@@ -36,7 +36,7 @@
       <Tool Name="VCManagedResourceCompilerTool"/>
       <Tool Name="VCResourceCompilerTool"/>
       <Tool Name="VCPreLinkEventTool"/>
-      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  OutputFile="$(OutDir)/$(ProjectName).exe" LinkIncremental="1" IgnoreDefaultLibraryNames="msvcrtd" GenerateDebugInformation="true" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="17"/>
+      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  LinkIncremental="1" IgnoreDefaultLibraryNames="msvcrtd" GenerateDebugInformation="true" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="17"/>
       <Tool Name="VCALinkTool"/>
       <Tool Name="VCManifestTool"/>
       <Tool Name="VCXDCMakeTool"/>
@@ -56,7 +56,7 @@
       <Tool Name="VCManagedResourceCompilerTool"/>
       <Tool Name="VCResourceCompilerTool"/>
       <Tool Name="VCPreLinkEventTool"/>
-      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  OutputFile="$(OutDir)/$(ProjectName).exe" LinkIncremental="1" IgnoreDefaultLibraryNames="msvcrt" GenerateDebugInformation="false" SubSystem="1" OptimizeReferences="2" EnableCOMDATFolding="2" TargetMachine="1"/>
+      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  LinkIncremental="1" IgnoreDefaultLibraryNames="msvcrt" GenerateDebugInformation="false" SubSystem="1" OptimizeReferences="2" EnableCOMDATFolding="2" TargetMachine="1"/>
       <Tool Name="VCALinkTool"/>
       <Tool Name="VCManifestTool"/>
       <Tool Name="VCXDCMakeTool"/>
@@ -76,7 +76,7 @@
       <Tool Name="VCManagedResourceCompilerTool"/>
       <Tool Name="VCResourceCompilerTool"/>
       <Tool Name="VCPreLinkEventTool"/>
-      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  OutputFile="$(OutDir)/$(ProjectName).exe" LinkIncremental="1" IgnoreDefaultLibraryNames="msvcrt" GenerateDebugInformation="false" SubSystem="1" OptimizeReferences="2" EnableCOMDATFolding="2" TargetMachine="17"/>
+      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  LinkIncremental="1" IgnoreDefaultLibraryNames="msvcrt" GenerateDebugInformation="false" SubSystem="1" OptimizeReferences="2" EnableCOMDATFolding="2" TargetMachine="17"/>
       <Tool Name="VCALinkTool"/>
       <Tool Name="VCManifestTool"/>
       <Tool Name="VCXDCMakeTool"/>
@@ -94,7 +94,7 @@
       <Tool Name="VCManagedResourceCompilerTool"/>
       <Tool Name="VCResourceCompilerTool"/>
       <Tool Name="VCPreLinkEventTool" CommandLine=""/>
-      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  OutputFile="$(OutDir)/$(ProjectName).exe" LinkIncremental="1" GenerateDebugInformation="true" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="1"/>
+      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  LinkIncremental="1" GenerateDebugInformation="true" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="1"/>
       <Tool Name="VCALinkTool"/>
       <Tool Name="VCManifestTool"/>
       <Tool Name="VCXDCMakeTool"/>
@@ -111,7 +111,7 @@
       <Tool Name="VCCLCompilerTool" Optimization="0" AdditionalIncludeDirectories="../../include;../../include/exiv2;../../src;../../xmpsdk/include;../../xmpsdk/src;../../../expat/lib;../../../zlib;../../../curl/include;" PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_GETOPT;EXV_HAVE_DLL;EXV_HAVE_DLL" MinimalRebuild="true" BasicRuntimeChecks="3" RuntimeLibrary="3" BufferSecurityCheck="true" RuntimeTypeInfo="true" UsePrecompiledHeader="0" BrowseInformation="1" WarningLevel="3" WarnAsError="false" DebugInformationFormat="3"/>
       <Tool Name="VCManagedResourceCompilerTool"/>
       <Tool Name="VCResourceCompilerTool"/>
-      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  OutputFile="$(OutDir)/$(ProjectName).exe" LinkIncremental="1" GenerateDebugInformation="true" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="17"/>
+      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  LinkIncremental="1" GenerateDebugInformation="true" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="17"/>
       <Tool Name="VCALinkTool"/>
       <Tool Name="VCManifestTool"/>
       <Tool Name="VCXDCMakeTool"/>
@@ -129,7 +129,7 @@
       <Tool Name="VCManagedResourceCompilerTool"/>
       <Tool Name="VCResourceCompilerTool"/>
       <Tool Name="VCPreLinkEventTool" CommandLine=""/>
-      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  OutputFile="$(OutDir)/$(ProjectName).exe" LinkIncremental="1" GenerateDebugInformation="false" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="1"/>
+      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  LinkIncremental="1" GenerateDebugInformation="false" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="1"/>
       <Tool Name="VCALinkTool"/>
       <Tool Name="VCManifestTool"/>
       <Tool Name="VCXDCMakeTool"/>
@@ -147,7 +147,7 @@
       <Tool Name="VCManagedResourceCompilerTool"/>
       <Tool Name="VCResourceCompilerTool"/>
       <Tool Name="VCPreLinkEventTool" CommandLine=""/>
-      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  OutputFile="$(OutDir)/$(ProjectName).exe" LinkIncremental="1" GenerateDebugInformation="false" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="17"/>
+      <Tool Name="VCLinkerTool" LinkLibraryDependencies="true"  LinkIncremental="1" GenerateDebugInformation="false" ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb" SubSystem="1" TargetMachine="17"/>
       <Tool Name="VCALinkTool"/>
       <Tool Name="VCManifestTool"/>
       <Tool Name="VCXDCMakeTool"/>
