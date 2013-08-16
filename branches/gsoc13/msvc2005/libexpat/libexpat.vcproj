@@ -2,9 +2,9 @@
 <VisualStudioProject
     ProjectType="Visual C++"
     Version="8.00"
-    Name="expat"
+    Name="libexpat"
     ProjectGUID="{6C4C06A3-6F8F-4067-AA4C-D5F41E1FFF9A}"
-    RootNamespace="expat"
+    RootNamespace="libexpat"
     >
     <Platforms>
         <Platform
