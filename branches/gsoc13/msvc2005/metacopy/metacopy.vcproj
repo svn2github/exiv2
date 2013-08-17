@@ -24,7 +24,9 @@
   <Configurations
     >
     <Configuration
-        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)" IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)" InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
+        IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
+        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
         Name="Debug|Win32"
         ConfigurationType="1"
         CharacterSet="2"
@@ -46,6 +48,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           Optimization="0"
           PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_GETOPT"
           MinimalRebuild="true"
@@ -100,7 +103,9 @@
     </Configuration
     >
     <Configuration
-        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)" IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)" InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
+        IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
+        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
         Name="Debug|x64"
         ConfigurationType="1"
         CharacterSet="2"
@@ -123,6 +128,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           Optimization="0"
           PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_GETOPT"
           MinimalRebuild="true"
@@ -177,7 +183,9 @@
     </Configuration
     >
     <Configuration
-        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)" IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)" InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
+        IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
+        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
         Name="Release|Win32"
         ConfigurationType="1"
         CharacterSet="2"
@@ -199,6 +207,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;_NDEBUG;_CONSOLE;BUILD_GETOPT"
           RuntimeLibrary="0"
           RuntimeTypeInfo="true"
@@ -251,7 +260,9 @@
     </Configuration
     >
     <Configuration
-        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)" IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)" InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
+        IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
+        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
         Name="Release|x64"
         ConfigurationType="1"
         CharacterSet="2"
@@ -274,6 +285,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;_NDEBUG;_CONSOLE;BUILD_GETOPT"
           RuntimeLibrary="0"
           RuntimeTypeInfo="true"
@@ -326,7 +338,9 @@
     </Configuration
     >
     <Configuration
-        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)" IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)" InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
+        IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
+        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
         Name="DebugDLL|Win32"
         ConfigurationType="1"
         CharacterSet="2"
@@ -345,6 +359,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           Optimization="0"
           PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_GETOPT;EXV_HAVE_DLL;EXV_HAVE_DLL"
           MinimalRebuild="true"
@@ -399,7 +414,9 @@
     </Configuration
     >
     <Configuration
-        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)" IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)" InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
+        IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
+        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
         Name="DebugDLL|x64"
         ConfigurationType="1"
         CharacterSet="2"
@@ -419,6 +436,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           Optimization="0"
           PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_GETOPT;EXV_HAVE_DLL;EXV_HAVE_DLL"
           MinimalRebuild="true"
@@ -469,7 +487,9 @@
     </Configuration
     >
     <Configuration
-        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)" IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)" InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
+        IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
+        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
         Name="ReleaseDLL|Win32"
         ConfigurationType="1"
         CharacterSet="2"
@@ -488,6 +508,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           Optimization="0"
           PreprocessorDefinitions="WIN32;_NDEBUG;_CONSOLE;BUILD_GETOPT;EXV_HAVE_DLL;EXV_HAVE_DLL"
           MinimalRebuild="true"
@@ -542,7 +563,9 @@
     </Configuration
     >
     <Configuration
-        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)" IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)" InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
+        IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
+        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
         Name="ReleaseDLL|x64"
         ConfigurationType="1"
         CharacterSet="2"
@@ -562,6 +585,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           Optimization="0"
           PreprocessorDefinitions="WIN32;_NDEBUG;_CONSOLE;BUILD_GETOPT;EXV_HAVE_DLL;EXV_HAVE_DLL"
           MinimalRebuild="true"

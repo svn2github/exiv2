@@ -18,7 +18,7 @@
   >
   <ToolFiles
     >
-	</ToolFiles
+    </ToolFiles
   >
   <Configurations
     >
@@ -55,7 +55,7 @@
           Name="VCCLCompilerTool"
           Optimization="2"
           InlineFunctionExpansion="1"
-          AdditionalIncludeDirectories="../../../libssh/include;c:/openssl/include;../../../zlib"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
           StringPooling="true"
           RuntimeLibrary="2"
@@ -143,7 +143,7 @@
           Name="VCCLCompilerTool"
           Optimization="2"
           InlineFunctionExpansion="1"
-          AdditionalIncludeDirectories="../../../libssh/include;c:/openssl/include;../../../zlib"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
           StringPooling="true"
           RuntimeLibrary="2"
@@ -224,7 +224,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="../../../libssh/include;c:/openssl/include;../../../zlib"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS"
           MinimalRebuild="true"
           BasicRuntimeChecks="3"
@@ -295,7 +295,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="../../../libssh/include;c:/openssl/include;../../../zlib"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS"
           MinimalRebuild="true"
           BasicRuntimeChecks="3"
@@ -372,7 +372,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="../../../libssh/include;c:/openssl/include;../../../zlib"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS"
           MinimalRebuild="true"
           BasicRuntimeChecks="3"
@@ -463,7 +463,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="../../../libssh/include;c:/openssl/include;../../../zlib"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS"
           MinimalRebuild="true"
           BasicRuntimeChecks="3"
@@ -549,7 +549,7 @@
           Name="VCCLCompilerTool"
           Optimization="2"
           InlineFunctionExpansion="1"
-          AdditionalIncludeDirectories="../../../libssh/include;c:/openssl/include;../../../zlib"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
           StringPooling="true"
           RuntimeLibrary="0"
@@ -619,7 +619,7 @@
           Name="VCCLCompilerTool"
           Optimization="2"
           InlineFunctionExpansion="1"
-          AdditionalIncludeDirectories="../../../libssh/include;c:/openssl/include;../../../zlib"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
           StringPooling="true"
           RuntimeLibrary="0"
@@ -665,7 +665,7 @@
   >
   <References
     >
-	</References
+    </References
   >
   <Files
     >
@@ -676,232 +676,232 @@
       <File
           RelativePath="..\..\..\libssh\src\agent.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\auth.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\auth1.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\base64.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\bind.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\buffer.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\callbacks.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\channels.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\channels1.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\client.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\config.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\connect.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\crc32.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\crypt.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\dh.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\error.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\gcrypt_missing.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\getpass.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\gzip.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\init.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\kex.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\keyfiles.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\keys.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\known_hosts.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\legacy.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\libcrypto.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\libgcrypt.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\log.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\match.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\messages.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\misc.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\options.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\packet.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\packet1.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\pcap.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\pki.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\poll.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\scp.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\server.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\session.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\sftp.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\sftpserver.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\socket.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\string.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\threads.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\src\wrapper.c"
         >
-			</File
+            </File
       >
     </Filter
     >
@@ -912,172 +912,172 @@
       <File
           RelativePath="..\..\..\libssh\include\libssh\agent.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\auth.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\bind.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\buffer.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\callbacks.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\channels.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\CMakeLists.txt"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\crypto.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\dh.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\kex.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\keyfiles.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\keys.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\legacy.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\libcrypto.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\libgcrypt.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\libssh.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\libsshpp.hpp"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\messages.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\misc.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\packet.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\pcap.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\pki.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\poll.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\priv.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\scp.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\server.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\session.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\sftp.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\socket.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\ssh1.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\ssh2.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\string.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\threads.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\libssh\include\libssh\wrapper.h"
         >
-			</File
+            </File
       >
     </Filter
     >
@@ -1085,7 +1085,7 @@
   >
   <Globals
     >
-	</Globals
+    </Globals
   >
 </VisualStudioProject
 >

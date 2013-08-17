@@ -18,7 +18,7 @@
   >
   <ToolFiles
     >
-	</ToolFiles
+    </ToolFiles
   >
   <Configurations
     >
@@ -55,7 +55,7 @@
           Name="VCCLCompilerTool"
           Optimization="2"
           InlineFunctionExpansion="1"
-          AdditionalIncludeDirectories="../.."
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
           StringPooling="true"
           RuntimeLibrary="2"
@@ -142,7 +142,7 @@
           Name="VCCLCompilerTool"
           Optimization="2"
           InlineFunctionExpansion="1"
-          AdditionalIncludeDirectories="../.."
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
           StringPooling="true"
           RuntimeLibrary="2"
@@ -222,7 +222,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="../.."
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS"
           MinimalRebuild="true"
           BasicRuntimeChecks="3"
@@ -292,7 +292,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="../.."
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS"
           MinimalRebuild="true"
           BasicRuntimeChecks="3"
@@ -368,7 +368,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="../.."
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS"
           MinimalRebuild="true"
           BasicRuntimeChecks="3"
@@ -457,7 +457,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="../.."
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS"
           MinimalRebuild="true"
           BasicRuntimeChecks="3"
@@ -541,7 +541,7 @@
           Name="VCCLCompilerTool"
           Optimization="2"
           InlineFunctionExpansion="1"
-          AdditionalIncludeDirectories="../.."
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
           StringPooling="true"
           RuntimeLibrary="0"
@@ -610,7 +610,7 @@
           Name="VCCLCompilerTool"
           Optimization="2"
           InlineFunctionExpansion="1"
-          AdditionalIncludeDirectories="../.."
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
           StringPooling="true"
           RuntimeLibrary="0"
@@ -655,7 +655,7 @@
   >
   <References
     >
-	</References
+    </References
   >
   <Files
     >
@@ -666,82 +666,82 @@
       <File
           RelativePath="..\..\..\zlib\adler32.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\compress.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\crc32.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\deflate.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\gzclose.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\gzlib.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\gzread.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\gzwrite.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\infback.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\inffast.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\inflate.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\inftrees.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\trees.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\uncompr.c"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\win32\zlib.def"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\zutil.c"
         >
-			</File
+            </File
       >
     </Filter
     >
@@ -752,52 +752,52 @@
       <File
           RelativePath="..\..\..\zlib\crc32.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\deflate.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\inffast.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\inffixed.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\inflate.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\inftrees.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\trees.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\zconf.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\zlib.h"
         >
-			</File
+            </File
       >
       <File
           RelativePath="..\..\..\zlib\zutil.h"
         >
-			</File
+            </File
       >
     </Filter
     >
@@ -808,7 +808,7 @@
       <File
           RelativePath="..\..\..\zlib\win32\zlib1.rc"
         >
-			</File
+            </File
       >
     </Filter
     >
@@ -816,7 +816,7 @@
   >
   <Globals
     >
-	</Globals
+    </Globals
   >
 </VisualStudioProject
 >

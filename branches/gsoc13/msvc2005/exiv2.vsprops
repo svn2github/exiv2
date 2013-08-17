@@ -12,7 +12,6 @@
 
   <Tool
       Name="VCCLCompilerTool"
-      AdditionalIncludeDirectories="../../include;../../include/exiv2;../../src;../../xmpsdk/include;../../xmpsdk/src;../../../expat/lib;../../../zlib;../../../curl/include;"
       LinkLibraryDependencies="false"
       ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
   />
