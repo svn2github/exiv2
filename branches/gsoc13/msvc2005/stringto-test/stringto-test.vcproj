@@ -26,7 +26,7 @@
     <Configuration
         OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
         IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
-        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        InheritedPropertySheets="$(SolutionDir)exiv2.vsprops"
         Name="Debug|Win32"
         ConfigurationType="1"
         CharacterSet="2"
@@ -105,7 +105,7 @@
     <Configuration
         OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
         IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
-        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        InheritedPropertySheets="$(SolutionDir)exiv2.vsprops"
         Name="Debug|x64"
         ConfigurationType="1"
         CharacterSet="2"
@@ -185,7 +185,7 @@
     <Configuration
         OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
         IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
-        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        InheritedPropertySheets="$(SolutionDir)exiv2.vsprops"
         Name="Release|Win32"
         ConfigurationType="1"
         CharacterSet="2"
@@ -262,7 +262,7 @@
     <Configuration
         OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
         IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
-        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        InheritedPropertySheets="$(SolutionDir)exiv2.vsprops"
         Name="Release|x64"
         ConfigurationType="1"
         CharacterSet="2"
@@ -340,7 +340,7 @@
     <Configuration
         OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
         IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
-        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        InheritedPropertySheets="$(SolutionDir)exiv2.vsprops"
         Name="DebugDLL|Win32"
         ConfigurationType="1"
         CharacterSet="2"
@@ -416,7 +416,7 @@
     <Configuration
         OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
         IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
-        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        InheritedPropertySheets="$(SolutionDir)exiv2.vsprops"
         Name="DebugDLL|x64"
         ConfigurationType="1"
         CharacterSet="2"
@@ -489,7 +489,7 @@
     <Configuration
         OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
         IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
-        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        InheritedPropertySheets="$(SolutionDir)exiv2.vsprops"
         Name="ReleaseDLL|Win32"
         ConfigurationType="1"
         CharacterSet="2"
@@ -565,7 +565,7 @@
     <Configuration
         OutputDirectory="$(SolutionDir)bin/$(PlatformName)/$(ConfigurationName)"
         IntermediateDirectory="build/$(PlatformName)/$(ConfigurationName)"
-        InheritedPropertySheets="$(SolutionDir)/exiv2.vsprops"
+        InheritedPropertySheets="$(SolutionDir)exiv2.vsprops"
         Name="ReleaseDLL|x64"
         ConfigurationType="1"
         CharacterSet="2"

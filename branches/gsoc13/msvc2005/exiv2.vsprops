@@ -7,12 +7,11 @@
 
   <Tool
       Name="VCLinkerTool"
-      AdditionalDependencies="$(OutDir)/xmpsdk.lib $(OutDir)/libexpat.lib $(OutDir)/zlib1.lib $(OutDir)/curl.lib"
+      LinkLibraryDependencies="true"
   />
 
   <Tool
       Name="VCCLCompilerTool"
-      LinkLibraryDependencies="false"
       ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
   />
 

@@ -83,6 +83,12 @@ T A B L E  o f  C O N T E N T S
 
      Build time is about 30 minutes on a 2.2GHz Duo Core and consumes 3.0 gBytes of disk space.
 
+     +------------------------------------------------+
+     | Caution: Visual Studio 2010+ Users             |
+     | Don't build Platforms Win32 & x64 simulateously|
+     | Or use build.bat to do this for you            |
+     +------------------------------------------------+
+
 1.4  What is built
      The DLL builds use the DLL version of the C runtime libraries
      The Debug|Release builds use static C runtime libraries
@@ -94,7 +100,7 @@ T A B L E  o f  C O N T E N T S
      Exiv2 has been successfully built and tested in the past with expat-2.0.1,
      zlib-1.2.3, zlib-1.2.5, zlib-1.2.6 and zlib-1.2.8
      
-1.6  Building without curl (or expat or zlib)
+1.6  Building without curl (or without expat or without zlib)
      To build with a dependant library:
      a) Open msvc2005/exiv2.sln in Visual Studio
      b) Select and delete the curl (or expat or zlib) from the Project Explorer
