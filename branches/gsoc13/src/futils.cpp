@@ -57,7 +57,7 @@ extern int strerror_r(int errnum, char *buf, size_t n);
 #endif
 
 namespace Exiv2 {
-    const char* ENVARDEF[] = {"exiv2.php", "40"};
+    const char* ENVARDEF[] = {"", "40"};
     const char* ENVARKEY[] = {"EXIV2_HTTP_POST", "EXIV2_TIMEOUT"};
 // *****************************************************************************
 // free functions

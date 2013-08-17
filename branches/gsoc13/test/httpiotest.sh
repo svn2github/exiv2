@@ -31,6 +31,10 @@ httpIoTest()
         echo "***" please set the environmental variable EXIV2_AWSUBUNTU_HOST "***"
         exit 1
     fi
+    if [ -z $EXIV2_HTTP_POST ]; then
+        echo "***" please set the environmental variable EXIV2_HTTP_POST "***"
+        exit 1
+    fi
 
     errors=0
     testfile="conntest.jpg"

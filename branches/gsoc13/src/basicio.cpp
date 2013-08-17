@@ -1898,10 +1898,8 @@ namespace Exiv2 {
           @param from The start position in the remote file where the data replace.
           @param to The end position in the remote file where the data replace.
           @note The data are submitted to the remote machine via POST. This requires the script file
-                on the remote machine to receive the data and edit the remote file. The script file
-                needs to be the same location as the remote file. By default the name of script file
-                is exiv2.php, but you can change this name by setting the value for the enviromental
-                variable EXIV2_HTTP_POST.
+                on the remote machine to receive the data and edit the remote file. The server-side
+                script must be specified with the environment string EXIV2_HTTP_POST.
           @throw Error if it fails.
          */
         void writeRemote(const byte* data, size_t size, long from, long to);
@@ -1970,16 +1968,18 @@ namespace Exiv2 {
 
     void HttpIo::HttpImpl::writeRemote(const byte* data, size_t size, long from, long to)
     {
+        std::string scriptPath(getEnv(envHTTPPOST));
+        if (scriptPath == "") {
+            throw Error(1, "Please set the path of the server script to handle http post data to EXIV2_HTTP_POST environmental variable.");
+        }
+
         dict_t response;
         dict_t request;
         std::string errors;
 
-        size_t found = hostInfo_.Path.find_last_of("/\\");
-        std::string filename = hostInfo_.Path.substr(found+1);
-
         request["server"] = hostInfo_.Host;
         if (hostInfo_.Port != "") request["port"] = hostInfo_.Port;
-        request["page"] = hostInfo_.Path.substr(0, found+1) + getEnv(envHTTPPOST);
+        request["page"] = scriptPath;
         request["verb"] = "POST";
 
         // encode base64
@@ -1991,10 +1991,10 @@ namespace Exiv2 {
         delete[] encodeData;
 
         std::stringstream ss;
-        ss << "filename="   << filename << "&"
-           << "from="       << from     << "&"
-           << "to="         << to       << "&"
-           << "data="       << urlencodeData;
+        ss << "path="   << hostInfo_.Path << "&"
+           << "from="   << from           << "&"
+           << "to="     << to             << "&"
+           << "data="   << urlencodeData;
         std::string postData = ss.str();
         delete[] urlencodeData;
 
@@ -2062,9 +2062,8 @@ namespace Exiv2 {
           @throw Error if it fails.
           @note The write access is only available on HTTP & HTTPS protocols. The data are submitted to server
                 via POST method. It requires the script file on the remote machine to receive the data
-                and edit the remote file. The script file needs to be the same location as the remote file.
-                By default the name of script file is exiv2.php, but you can change this name by setting the value for
-                the enviromental variable EXIV2_HTTP_POST.
+                and edit the remote file. The server-side script must be specified with the environment
+                string EXIV2_HTTP_POST.
          */
         void writeRemote(const byte* data, size_t size, long from, long to);
     protected:
@@ -2182,16 +2181,18 @@ namespace Exiv2 {
 
     void CurlIo::CurlImpl::writeRemote(const byte* data, size_t size, long from, long to)
     {
-        //printf("RemoteIo::Impl::httpPost post %ld bytes to server (filesize = %ld)\n", size, (long)size_);
+        std::string scriptPath(getEnv(envHTTPPOST));
+        if (scriptPath == "") {
+            throw Error(1, "Please set the path of the server script to handle http post data to EXIV2_HTTP_POST environmental variable.");
+        }
+
         curl_easy_reset(curl_); // reset all options
         curl_easy_setopt(curl_, CURLOPT_NOPROGRESS, 1L); // no progress meter please
         //curl_easy_setopt(curl_, CURLOPT_VERBOSE, 1); // debugging mode
-        size_t found = path_.find_last_of("/\\");
-        std::string filename = path_.substr(found+1);
-
-        std::string postUrl = path_.substr(0, found+1) + getEnv(envHTTPPOST);
-        curl_easy_setopt(curl_, CURLOPT_URL, postUrl.c_str());
+        curl_easy_setopt(curl_, CURLOPT_URL, scriptPath.c_str());
         curl_easy_setopt(curl_, CURLOPT_SSL_VERIFYPEER, 0L);
+
+        Exiv2::Uri hostInfo = Exiv2::Uri::Parse(path_);
 
         // encode base64
         size_t encodeLength = ((size + 2) / 3) * 4 + 1;
@@ -2201,9 +2202,9 @@ namespace Exiv2 {
         char* urlencodeData = urlencode(encodeData);
         delete[] encodeData;
         std::stringstream ss;
-        ss << "filename="   << filename << "&"
-           << "from="       << from     << "&"
-           << "to="         << to       << "&"
+        ss << "path="       << hostInfo.Path << "&"
+           << "from="       << from          << "&"
+           << "to="         << to            << "&"
            << "data="       << urlencodeData;
         std::string postData = ss.str();
         delete[] urlencodeData;
