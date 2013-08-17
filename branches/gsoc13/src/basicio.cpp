@@ -1977,9 +1977,10 @@ namespace Exiv2 {
         dict_t request;
         std::string errors;
 
-        request["server"] = hostInfo_.Host;
-        if (hostInfo_.Port != "") request["port"] = hostInfo_.Port;
-        request["page"] = scriptPath;
+        Uri scriptUri = Exiv2::Uri::Parse(scriptPath);
+        request["server"] = scriptUri.Host;
+        if (scriptUri.Port != "") request["port"] = scriptUri.Port;
+        request["page"] = scriptUri.Path;
         request["verb"] = "POST";
 
         // encode base64
