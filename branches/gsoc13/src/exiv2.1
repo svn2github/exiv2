@@ -94,7 +94,7 @@ specified with the environment string
     
 .br
 A code for the default server script can be found at
-.I http://www.exiv2.org/scripts/exiv2.php
+.I http://dev.exiv2.org/projects/exiv2/wiki/The_server-side_script_to_handle_Exiv2_HTTP_Write_Access
 .IP \(bu 2
 Examine the output of exiv2 --verbose --version to determine libraries linked to exiv2.
 .SH ACTIONS
@@ -469,8 +469,7 @@ ignored (comments). Remaining lines are commands as described above.
 .SH ENVIRONMENT
 .TP
 EXIV2_HTTP_POST
-The file on the http server handles the submitted write-access data.
-If you want to use HTTP/HTTPS write access, this environmental variable must be set.
+The file path on the http server handles the submitted write-access data. The value can be a url (http://example.com/scriptpath) or just the path ("/scriptpath"). The default value is "/exiv2.php".
 .TP
 EXIV2_TIMEOUT
 The maximum time in seconds that you allow the connection to the server to take. This only limits the connection phase, once it has connected, this value is of no more use. The default value is 40 seconds.

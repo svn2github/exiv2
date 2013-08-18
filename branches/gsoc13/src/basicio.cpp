@@ -1899,7 +1899,8 @@ namespace Exiv2 {
           @param to The end position in the remote file where the data replace.
           @note The data are submitted to the remote machine via POST. This requires the script file
                 on the remote machine to receive the data and edit the remote file. The server-side
-                script must be specified with the environment string EXIV2_HTTP_POST.
+                script may be specified with the environment string EXIV2_HTTP_POST. The default value is
+                "/exiv2.php". More info is available at http://dev.exiv2.org/wiki/exiv2
           @throw Error if it fails.
          */
         void writeRemote(const byte* data, size_t size, long from, long to);
@@ -1973,12 +1974,18 @@ namespace Exiv2 {
             throw Error(1, "Please set the path of the server script to handle http post data to EXIV2_HTTP_POST environmental variable.");
         }
 
+        // standadize the path without "/" at the beginning.
+        std::size_t protocolIndex = scriptPath.find("://");
+        if (protocolIndex == std::string::npos && scriptPath[0] != '/') {
+            scriptPath = "/" + scriptPath;
+        }
+
         dict_t response;
         dict_t request;
         std::string errors;
 
         Uri scriptUri = Exiv2::Uri::Parse(scriptPath);
-        request["server"] = scriptUri.Host;
+        request["server"] = scriptUri.Host == "" ? hostInfo_.Host : scriptUri.Host;
         if (scriptUri.Port != "") request["port"] = scriptUri.Port;
         request["page"] = scriptUri.Path;
         request["verb"] = "POST";
@@ -2063,8 +2070,9 @@ namespace Exiv2 {
           @throw Error if it fails.
           @note The write access is only available on HTTP & HTTPS protocols. The data are submitted to server
                 via POST method. It requires the script file on the remote machine to receive the data
-                and edit the remote file. The server-side script must be specified with the environment
-                string EXIV2_HTTP_POST.
+                and edit the remote file. The server-side script may be specified with the environment
+                string EXIV2_HTTP_POST. The default value is "/exiv2.php". More info is available at
+                http://dev.exiv2.org/wiki/exiv2
          */
         void writeRemote(const byte* data, size_t size, long from, long to);
     protected:
@@ -2187,13 +2195,21 @@ namespace Exiv2 {
             throw Error(1, "Please set the path of the server script to handle http post data to EXIV2_HTTP_POST environmental variable.");
         }
 
+        Exiv2::Uri hostInfo = Exiv2::Uri::Parse(path_);
+
+        // add the protocol and host to the path
+        std::size_t protocolIndex = scriptPath.find("://");
+        if (protocolIndex == std::string::npos) {
+            if (scriptPath[0] != '/') scriptPath = "/" + scriptPath;
+            scriptPath = hostInfo.Protocol + "://" + hostInfo.Host + scriptPath;
+        }
+
         curl_easy_reset(curl_); // reset all options
         curl_easy_setopt(curl_, CURLOPT_NOPROGRESS, 1L); // no progress meter please
         //curl_easy_setopt(curl_, CURLOPT_VERBOSE, 1); // debugging mode
         curl_easy_setopt(curl_, CURLOPT_URL, scriptPath.c_str());
         curl_easy_setopt(curl_, CURLOPT_SSL_VERIFYPEER, 0L);
 
-        Exiv2::Uri hostInfo = Exiv2::Uri::Parse(path_);
 
         // encode base64
         size_t encodeLength = ((size + 2) / 3) * 4 + 1;
