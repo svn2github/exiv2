@@ -5,22 +5,23 @@ test=$2
 home=$(dirname $(readlink -f $0))
 
 if [ -z $msvc ]; then
-	echo usage: $0 \<path-to-msvc-bin\> [test]
-	exit
+    echo usage: $0 \<path-to-msvc-bin\> [test]
+    exit
 fi
 
 if [ ! -d "$msvc" ]; then
-	echo directory "$msvc" does not exist
-	exit
+    echo directory "$msvc" does not exist
+    exit
 else
-	msvc=$(readlink -f "$msvc")
+    msvc=$(readlink -f "$msvc")
 fi
 
 if [ -z $test ]; then
-	test=tests
+    test=tests
 fi
 
 for d in $(find "$msvc" -name exiv2.exe -exec dirname {} ";"); do
+    d=$(readlink -f $d)
     export EXIV2_BINDIR=$d
     bar='-----'
     Bar=$bar
@@ -28,7 +29,7 @@ for d in $(find "$msvc" -name exiv2.exe -exec dirname {} ";"); do
     Bar+=$bar
     echo $Bar
     echo $bar $d $bar
-    echo $bar $(cygpath -aw "$msvc") $bar
+    echo $bar $(cygpath -aw "$d") $bar
     echo $Bar
     (
       cd "$home/.." 
