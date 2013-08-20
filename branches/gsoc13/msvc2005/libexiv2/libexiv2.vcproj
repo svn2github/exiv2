@@ -2,9 +2,9 @@
 <VisualStudioProject
     ProjectType="Visual C++"
     Version="8.00"
-    Name="exiv2lib"
+    Name="libexiv2"
     ProjectGUID="{831EF580-92C8-4CA8-B0CE-3D906280A54D}"
-    RootNamespace="exiv2lib"
+    RootNamespace="libexiv2"
     Keyword="Win32Proj"
   >
   <Platforms

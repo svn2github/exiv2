@@ -12,7 +12,7 @@ exiv2\msvc2005\ReadMe.txt
 | ***************************************************** |
 +-------------------------------------------------------+
 
-Updated: 2013-07-28 
+Updated: 2013-08-20 
 
 Robin Mills
 http://clanmills.com
@@ -28,6 +28,7 @@ T A B L E  o f  C O N T E N T S
 1.4  What is build
 1.5  Building with zlib1.2.3 (or 1.2.5) and expat 2.0.1
 1.6  Building without curl (or expat or zlib)
+1.7  Building with build.bat
 
 2    Design
 2.1  Architecture
@@ -72,14 +73,14 @@ T A B L E  o f  C O N T E N T S
      curl-7.30.0 is available from http://curl.haxx.se/download.html
      
 1.3  Open exiv2\msvc2005\exiv2.sln
-     Projects are zlib, expat, xmpsdk, curl, exiv2lib, exiv2, addmoddel etc...
+     Projects are zlib, xmpsdk, libcurl, libexpat, libexiv2, exiv2.exe, addmoddel.exe etc...
      Build/Batch build...  Select All, Build
-     - 32 projects      (zlib, expat, curl, xmpsdk, exiv2lib, exiv2, addmoddel etc)
-     x 2 Platforms      (x64|Win32)
-     x 4 Configurations (Debug|Release|DebugDLL|ReleaseDLL)
-     = 32x2x4 = 256 builds.
+     - 37 projects       (zlib1, xmpsdk, libexpat, libcurl, libexiv2, exiv2, addmoddel etc)
+      x 2 Platforms      (x64|Win32)
+      x 4 Configurations (Debug|Release|DebugDLL|ReleaseDLL)
+     =  2x4*37 = 292 builds.
 
-     If you haven't installed the x64 compiler, remove the 64 bit configuration!
+     If you haven't installed the x64 compiler, remove the 64 bit Platform!
 
      Build time is about 30 minutes on a 2.2GHz Duo Core and consumes 3.0 gBytes of disk space.
 
@@ -103,8 +104,17 @@ T A B L E  o f  C O N T E N T S
 1.6  Building without curl (or without expat or without zlib)
      To build with a dependant library:
      a) Open msvc2005/exiv2.sln in Visual Studio
-     b) Select and delete the curl (or expat or zlib) from the Project Explorer
+     b) Select and delete the libcurl (or libexpat or zlib1) from the Project Explorer
      c) Modify include/exiv2/exv_msvc.h to set build flags (eg EXV_USE_CURL)
+
+1.7  Building with build.bat
+     The batch file build.bat is provided for batch building outside the Visual Studio IDE
+     a) Setup the Visual Studio Environment with vcvars32.bat 
+        vcvars32.bat is typically in C:\Program Files (x86)\Microsoft Visual Studio 8\VC\bin\vcvars32.bat
+     b) build.bat /build will build all targets
+     or build.bat /upgrade will upgrade the project files (if you're using Visual Studio 2008+
+     or build.bat /rebuild
+     or build.bat /build Release^^^|Win32 to build a specific target|platform
 
 2    Design
 
@@ -114,10 +124,10 @@ T A B L E  o f  C O N T E N T S
      work cleanly for me.  They use different projects for VC9 and VC10.
      They don't provide support for VC8 or VC11
      
-     I have created build environments for zlib, expat and curl within exiv2/msvc2005.
-     I don't include the source code for zlib, expat or curl - only the build environment.
+     I have created build environments for zlib1, libexpat and libcurl within exiv2/msvc2005.
+     I don't include the source code for zlib1, libexpat or libcurl - only the build environment.
      
-     You are expected to install the "vanilla" expat and zlib libraries
+     You are expected to install the "vanilla" expat, zlib and curl source code
      in a directory at the same level as exiv2.
      I personally always build in the directory c:\gnu,
      however the name/location/spaces of the build directory are all irrelevant,
@@ -125,18 +135,17 @@ T A B L E  o f  C O N T E N T S
 
 2.1  Architecture
      There are directories for every component:
-     The libraries: zlib1, expat, xmpsdk, curl, exiv2lib
+     The libraries: zlib1, libexpat, xmpsdk, libcurl, libexiv2
      Applications:  exiv2.exe
      Sample Apps:   exifprint.exe, addmoddel.exe and many more (used by test suite)
 
      For each component, there are three build directories:
-     exiv2lib\build                                         intermediate results
-     exiv2lib\Win32\{Debug|Release|DebugDLL|ReleaseDLL}     32 bit builds
-     exiv2lib\x64\{Debug|Release|DebugDLL|ReleaseDLL}       64 bit builds
+     libexiv2\build                                         intermediate results
+     libexiv2\Win32\{Debug|Release|DebugDLL|ReleaseDLL}     32 bit builds
+     libexiv2\x64\{Debug|Release|DebugDLL|ReleaseDLL}       64 bit builds
 
      Final builds and include directories (for export to "foreign" projects)
-     bin\{win32|x84}\Win32\{Debug|Release|DebugDLL|ReleaseDLL} 
-     include
+     bin\{win32|x64}\Win32\{Debug|Release|DebugDLL|ReleaseDLL} 
 
 2.2  Relationship with msvc2003 build environment
      msvc2005 is similar to msvc2003.
@@ -148,10 +157,12 @@ T A B L E  o f  C O N T E N T S
      5) msvc2005 does not require you to build 'vanilla' expat and zlib projects in advance
      6) msvc2005 does not support the organize application
      7) msvc2005 supports building with zlib1.2.7 (default) or zlib1.2.3/5
-     7) msvc2005 supports building with expat2.1.0 (default) or expa2.0.1
-
+     8) msvc2005 supports building with expat2.1.0 (default) or expa2.0.1
+     9) msvc2005 supports curl.  msvc2003 only support http (no https/ftp/ssh)
+     
      msvc2003 will continue to be supported for 32 bit builds using DevStudio 2003/05/08,
      however there is no plan to enhance or develop msvc2003 going forward.
+     Exiv2 v0.25 will be the final release with msvc2003 support.
 
 3    Acknowledgement of prior work
      This work is based on work by the following people:
