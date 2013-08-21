@@ -51,6 +51,8 @@ nmake -f %MAKEFILE% clean
 nmake -f %MAKEFILE% 
 nmake -f %MAKEFILE% install
 nmake -f %MAKEFILE% clean
+copy/y %ProjectDir%\%PLATFORM%\%CONFIG%\lib\*.lib %OutDir%
+
 set ERRORLEVEL=0
 goto EOF
 

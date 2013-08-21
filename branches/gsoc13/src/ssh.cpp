@@ -76,6 +76,11 @@ namespace Exiv2 {
             if (rc != SSH_OK) {
                 throw Error(1, ssh_get_error(session_));
             } else {
+#ifdef  _MSC_VER
+// S_IRUSR & S_IWUSR not in MSVC (0000400 & 0000200 in /usr/include/sys/stat.h on MacOS-X 10.8) 
+#define S_IRUSR S_IREAD
+#define S_IWUSR S_IWRITE
+#endif
                 rc = ssh_scp_push_file (scp, filename.c_str(), size, S_IRUSR |  S_IWUSR);
                 if (rc != SSH_OK) {
                     throw Error(1, ssh_get_error(session_));

@@ -68,7 +68,9 @@ EXIV2_RCSID("@(#) $Id$")
 
 #if defined WIN32 && !defined __CYGWIN__
 // Windows doesn't provide mode_t, nlink_t
+#ifndef EXV_USE_SSH
 typedef unsigned short mode_t;
+#endif
 typedef short nlink_t;
 
 # include <windows.h>
@@ -2348,7 +2350,7 @@ namespace Exiv2 {
         }
     }
 #ifdef EXV_UNICODE_PATH
-    SshIo::SshImpl::SshImpl(const std::wstring& wurl, size_t blockSize):Impl(url, blockSize)
+    SshIo::SshImpl::SshImpl(const std::wstring& wurl, size_t blockSize):Impl(wurl, blockSize)
     {
         std::string url;
         url.assign(wurl.begin(), wurl.end());
@@ -2489,7 +2491,7 @@ namespace Exiv2 {
 #ifdef EXV_UNICODE_PATH
     SshIo::SshIo(const std::wstring& wurl, size_t blockSize)
     {
-        p_ = new SshImpl(url, blockSize);
+        p_ = new SshImpl(wurl, blockSize);
     }
 #endif
 

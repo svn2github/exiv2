@@ -87,6 +87,12 @@ typedef int pid_t;
 #define EXV_USE_CURL 1
 #endif
 
+/* Define as 1 if you want to use libssh (for ssh:// and sftp:// support */
+#ifndef EXV_USE_SSH
+#define EXV_USE_SSH 1
+#endif
+
+
 /* Help out our buddy curl */
 #ifndef EXV_HAVE_DLL
 #define CURL_STATICLIB
@@ -103,7 +109,7 @@ typedef int pid_t;
 #define EXV_SEPERATOR_CHR '\\'
 
 /* Windows unicode path support */
-#define EXV_UNICODE_PATH
+// #define EXV_UNICODE_PATH
 
 /* Define to 1 if you have the `mmap' function. */
 /* #undef EXV_HAVE_MMAP */

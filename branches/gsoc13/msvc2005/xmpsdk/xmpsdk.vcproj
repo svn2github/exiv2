@@ -49,7 +49,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
           PreprocessorDefinitions="WIN32;_DEBUG;_LIB;XML_STATIC"
           MinimalRebuild="false"
           BasicRuntimeChecks="3"
@@ -120,7 +120,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
           PreprocessorDefinitions="WIN32;_DEBUG;_LIB;XML_STATIC"
           MinimalRebuild="false"
           BasicRuntimeChecks="3"
@@ -189,7 +189,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
-          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_LIB;XML_STATIC"
           MinimalRebuild="false"
           RuntimeLibrary="0"
@@ -255,7 +255,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
-          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_LIB;XML_STATIC"
           MinimalRebuild="false"
           RuntimeLibrary="0"
@@ -321,7 +321,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
           PreprocessorDefinitions="WIN32;_DebugDLL;_LIB;"
           MinimalRebuild="false"
           BasicRuntimeChecks="3"
@@ -391,7 +391,7 @@
       <Tool
           Name="VCCLCompilerTool"
           Optimization="0"
-          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
           PreprocessorDefinitions="WIN32;_DebugDLL;_LIB;"
           MinimalRebuild="false"
           BasicRuntimeChecks="3"
@@ -459,7 +459,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
-          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
           MinimalRebuild="false"
           RuntimeLibrary="2"
@@ -525,7 +525,7 @@
       />
       <Tool
           Name="VCCLCompilerTool"
-          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;"
+          AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
           PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
           MinimalRebuild="false"
           RuntimeLibrary="2"
