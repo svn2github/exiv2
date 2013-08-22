@@ -207,7 +207,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalLibraryDirectories="..\xmpsdk\$(PlatformName)\$(ConfigurationName);..\expat\(PlatformName)\$(ConfigurationName)"
+				AdditionalDependencies="libeay32.lib ssleay32.lib libssh.lib"
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;..\xmpsdk\$(PlatformName)\$(ConfigurationName)&quot;;&quot;..\expat\(PlatformName)\$(ConfigurationName)&quot;"
 				IgnoreDefaultLibraryNames="msvcrt"
 			/>
 			<Tool
@@ -275,7 +276,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalLibraryDirectories="..\xmpsdk\$(PlatformName)\$(ConfigurationName);..\expat\(PlatformName)\$(ConfigurationName)"
+				AdditionalDependencies="libeay32.lib ssleay32.lib libssh.lib"
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;..\xmpsdk\$(PlatformName)\$(ConfigurationName)&quot;;&quot;..\expat\(PlatformName)\$(ConfigurationName)&quot;"
 				IgnoreDefaultLibraryNames="msvcrt"
 			/>
 			<Tool

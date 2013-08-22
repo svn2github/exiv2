@@ -44,19 +44,32 @@ T A B L E  o f  C O N T E N T S
 
 1    Build Instructions
 
-     +------------------------------------------------+
-     | Caution: Disable Visual Studio Parallel builds |
-     | Tools/Options/Projects & Solutions/Build       |
-     | Max Parallel Builds: 1                         |
-     | !! Parallel builds often have linking issues!! |
-     +------------------------------------------------+
+     +-------------------------------------------------+
+     | Caution: Disable Visual Studio Parallel builds  |
+     | Tools/Options/Projects & Solutions/Build        |
+     | Max Parallel Builds: 1                          |
+     | ** Parallel builds create linking issues     ** |
+     +-------------------------------------------------+
+
+     +-------------------------------------------------+
+     | Caution: Don't build in a path with spaces      |
+     | Example: c:\gnu           GOOD                  |
+     |          c:\Open Source   BAD                   |
+     +-------------------------------------------------+
+
+     +-------------------------------------------------+
+     | You need Perl on your path to build openssl     |
+     | I use the following on Windows7/64              |
+     | C:\Users\rmills\Downloads>perl --version        |
+     | ... v5.10.1 built for MSWin32-x64-multi-thread  |
+     +-------------------------------------------------+
 
 1.1  Tools
      This has been tested with
      : "Pro"     edition of VS 2005/08/10
      : "Express" edition of VS 2012
 
-1.2  Install zlib, expat, and curl sources.
+1.2  Install zlib, expat, curl, openssl and libssh sources.
      I use the directory c:\gnu for this purpose, however the name isn't important.
 
      c:\gnu>dir
@@ -65,15 +78,18 @@ T A B L E  o f  C O N T E N T S
      2012-05-04  23:35    <DIR>             expat                <--- "vanilla" expat 2.1.0 source tree
      2012-05-04  23:35    <DIR>             zlib                 <--- "vanilla" zlib  1.2.7 source tree
      2012-05-04  23:35    <DIR>             curl                 <--- "vanilla" curl  7.30.0 source tree
+     2012-05-04  23:35    <DIR>             openssl              <--- "vanilla" openssl-1.0.1e
+     2012-05-04  23:35    <DIR>             libssh               <--- "vanilla" libssh-0.5.5
      c:\gnu>
 
-     The URLs from which to obtain zlib and expat are documented in exiv2\msvc2003\ReadMe.txt
      expat-2.1.0 is available from http://voxel.dl.sourceforge.net/sourceforge/expat/expat-2.1.0.tar.gz
      zlib-1.2.7  is available from http://zlib.net/zlib-1.2.7.tar.gz
-     curl-7.30.0 is available from http://curl.haxx.se/download.html
+     curl-7.30.0 is available from http://curl.haxx.se/download/curl-7.30.0.tar.gz
+     openssl-1.0.1e available from http://www.openssl.org/source/openssl-1.0.1e.tar.gz
+     libssh-0.5.5   available from https://red.libssh.org/attachments/download/51/libssh-0.5.5.tar.gz
      
 1.3  Open exiv2\msvc2005\exiv2.sln
-     Projects are zlib, xmpsdk, libcurl, libexpat, libexiv2, exiv2.exe, addmoddel.exe etc...
+     Projects are zlib1, xmpsdk, libcurl, libexpat, libssh, openssl, libexiv2, exiv2.exe, addmoddel.exe etc...
      Build/Batch build...  Select All, Build
      - 37 projects       (zlib1, xmpsdk, libexpat, libcurl, libexiv2, exiv2, addmoddel etc)
       x 2 Platforms      (x64|Win32)
@@ -84,11 +100,11 @@ T A B L E  o f  C O N T E N T S
 
      Build time is about 30 minutes on a 2.2GHz Duo Core and consumes 3.0 gBytes of disk space.
 
-     +------------------------------------------------+
-     | Caution: Visual Studio 2010+ Users             |
-     | Don't build Platforms Win32 & x64 simulateously|
-     | Or use build.bat to do this for you            |
-     +------------------------------------------------+
+     +-------------------------------------------------+
+     | Caution: Visual Studio 2010+ Users              |
+     | Don't build Platforms Win32 & x64 simulateously |
+     | Or use build.bat to do this for you             |
+     +-------------------------------------------------+
 
 1.4  What is built
      The DLL builds use the DLL version of the C runtime libraries
@@ -101,11 +117,11 @@ T A B L E  o f  C O N T E N T S
      Exiv2 has been successfully built and tested in the past with expat-2.0.1,
      zlib-1.2.3, zlib-1.2.5, zlib-1.2.6 and zlib-1.2.8
      
-1.6  Building without curl (or without expat or without zlib)
+1.6  Building without curl (or without expat or any other dependant library)
      To build with a dependant library:
      a) Open msvc2005/exiv2.sln in Visual Studio
      b) Select and delete the libcurl (or libexpat or zlib1) from the Project Explorer
-     c) Modify include/exiv2/exv_msvc.h to set build flags (eg EXV_USE_CURL)
+     c) Modify include/exiv2/exv_msvc.h to unset build flags (eg EXV_USE_CURL)
 
 1.7  Building with build.bat
      The batch file build.bat is provided for batch building outside the Visual Studio IDE
@@ -158,7 +174,7 @@ T A B L E  o f  C O N T E N T S
      6) msvc2005 does not support the organize application
      7) msvc2005 supports building with zlib1.2.7 (default) or zlib1.2.3/5
      8) msvc2005 supports building with expat2.1.0 (default) or expa2.0.1
-     9) msvc2005 supports curl.  msvc2003 only support http (no https/ftp/ssh)
+     9) msvc2005 supports curl, libssh and openssl.  msvc2003 only support http (no https/ftp/ssh)
      
      msvc2003 will continue to be supported for 32 bit builds using DevStudio 2003/05/08,
      however there is no plan to enhance or develop msvc2003 going forward.
