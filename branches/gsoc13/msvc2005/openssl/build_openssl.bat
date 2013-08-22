@@ -35,7 +35,12 @@ if NOT EXIST %PROJECTDIR%\..\..\..\openssl (
 )
 
 @echo on
-cd %PROJECTDIR%\..\..\..\openssl
+cd %PROJECTDIR%..\..\..\openssl
+set BUILD=0
+if %ACTION% == rebuild set BUILD=build
+if NOT EXIST %SolutionDir%bin\%PLATFORM%\%CONFIG%\ssleay32.lib set BUILD=build
+if NOT EXIST %SolutionDir%bin\%PLATFORM%\%CONFIG%\libeay32.lib set BUILD=build
+if %BUILD% == 0 GOTO POSTPROCESS
 
 set VCVARS=vcvars32.bat
 set VCCONFIG=VC-WIN32
@@ -45,38 +50,28 @@ if %PLATFORM% == x64 (
     set VCVARS=x86_amd64\vcvarsx86_amd64.bat
     SET DO=ms\do_win64a.bat
 )
-echo call %VCInstallDir%\bin\%VCVARS%
+call %VCInstallDir%\bin\%VCVARS%
 
 set SHARED=shared
-if %CONFIG% == Debug   set SHARED=no-shared
-if %CONFIG% == Release set SHARED=no-shared
+if %CONFIG% == Debug     set SHARED=no-shared
+if %CONFIG% == Release   set SHARED=no-shared
 
 set MAKEFILE=ms\ntdll.mak
-set BUILD=0
-if %ACTION% == rebuild set BUILD=1
-if NOT EXIST %SolutionDir%bin\%PLATFORM%\%CONFIG%\ssleay32.lib set BUILD=1
-if NOT EXIST %SolutionDir%bin\%PLATFORM%\%CONFIG%\libeay32.lib set BUILD=1
-if %BUILD% == 0 GOTO POSTPROCESS
-
+if %SHARED% == no-shared set MAKEFILE=ms\nt.mak
+perl Configure %VCCONFIG% no-asm %SHARED% --prefix=%ProjectDir%%PLATFORM%\%CONFIG%
+call     %DO%
 nmake -f %MAKEFILE% clean
 nmake -f %MAKEFILE% 
 nmake -f %MAKEFILE% install
 nmake -f %MAKEFILE% clean
-copy/y %ProjectDir%build\%PLATFORM%\%CONFIG%\lib\*.lib %SolutionDir%bin\%PLATFORM%\%CONFIG%\
-if %CONFIG% == ReleaseDLL copy/y %ProjectDir%build\%PLATFORM%\%CONFIG%\bin\*.dll %SolutionDir%bin\%PLATFORM%\%CONFIG%\
-if %CONFIG% == DebugDLL   copy/y %ProjectDir%build\%PLATFORM%\%CONFIG%\bin\*.dll %SolutionDir%bin\%PLATFORM%\%CONFIG%\
+
+                      copy/y %ProjectDir%%PLATFORM%\%CONFIG%\lib\*.lib  %SolutionDir%bin\%PLATFORM%\%CONFIG%\
+if %SHARED% == shared copy/y %ProjectDir%%PLATFORM%\%CONFIG%\bin\*.dll  %SolutionDir%bin\%PLATFORM%\%CONFIG%\
 
 :POSTPROCESS
 
-rem Force Release and Debug to adopt DLL libraries
-rem if %CONFIG% == Release    copy/y %ProjectDir%build\%PLATFORM%\%CONFIG%DLL\bin\*.dll %SolutionDir%bin\%PLATFORM%\%CONFIG%\
-rem if %CONFIG% == Debug      copy/y %ProjectDir%build\%PLATFORM%\%CONFIG%DLL\bin\*.dll %SolutionDir%bin\%PLATFORM%\%CONFIG%\
-rem if %CONFIG% == Release    copy/y %ProjectDir%build\%PLATFORM%\%CONFIG%DLL\lib\*.lib %SolutionDir%bin\%PLATFORM%\%CONFIG%\
-rem if %CONFIG% == Debug      copy/y %ProjectDir%build\%PLATFORM%\%CONFIG%DLL\lib\*.lib %SolutionDir%bin\%PLATFORM%\%CONFIG%\
-rem if %CONFIG% == Release    copy/y %SolutionDir%bin\%PLATFORM%\%CONFIG%\libssh.*      %SolutionDir%bin\%PLATFORM%\%CONFIG%\
-rem if %CONFIG% == Debug      copy/y %SolutionDir%bin\%PLATFORM%\%CONFIG%\libssh.*      %SolutionDir%bin\%PLATFORM%\%CONFIG%\
-
 set ERRORLEVEL=0
+echo OK
 goto EOF
 
 :ERROR
