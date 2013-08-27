@@ -74,12 +74,12 @@ T A B L E  o f  C O N T E N T S
 
      c:\gnu>dir
      Directory of c:\gnu
-     2010-12-05  10:05    <DIR>             exiv2                <--- this tree
-     2012-05-04  23:35    <DIR>             expat                <--- "vanilla" expat 2.1.0 source tree
-     2012-05-04  23:35    <DIR>             zlib                 <--- "vanilla" zlib  1.2.7 source tree
-     2012-05-04  23:35    <DIR>             curl                 <--- "vanilla" curl  7.30.0 source tree
-     2012-05-04  23:35    <DIR>             openssl              <--- "vanilla" openssl-1.0.1e
-     2012-05-04  23:35    <DIR>             libssh               <--- "vanilla" libssh-0.5.5
+     2013-08-22  13:54    <DIR>          exiv2                <--- this tree
+     2013-08-18  00:09    <DIR>          curl                 <--- "vanilla" curl  7.30.0 source tree
+     2013-08-18  00:09    <DIR>          expat                <--- "vanilla" expat 2.1.0 source tree
+     2013-08-21  20:44    <DIR>          libssh               <--- "vanilla" libssh-0.5.5
+     2013-08-27  23:36    <DIR>          openssl              <--- "vanilla" openssl-1.0.1e
+     2013-08-18  00:11    <DIR>          zlib                 <--- "vanilla" zlib  1.2.7 source tree
      c:\gnu>
 
      expat-2.1.0 is available from http://voxel.dl.sourceforge.net/sourceforge/expat/expat-2.1.0.tar.gz
@@ -89,21 +89,21 @@ T A B L E  o f  C O N T E N T S
      libssh-0.5.5   available from https://red.libssh.org/attachments/download/51/libssh-0.5.5.tar.gz
      
 1.3  Open exiv2\msvc2005\exiv2.sln
-     Projects are zlib1, xmpsdk, libcurl, libexpat, libssh, openssl, libexiv2, exiv2.exe, addmoddel.exe etc...
+     Projects are zlib1, xmpsdk, libcurl, libexpat, libssh, libeay32, ssleay32, libexiv2, exiv2.exe, addmoddel.exe etc...
      Build/Batch build...  Select All, Build
-     - 37 projects       (zlib1, xmpsdk, libexpat, libcurl, libexiv2, exiv2, addmoddel etc)
-      x 2 Platforms      (x64|Win32)
-      x 4 Configurations (Debug|Release|DebugDLL|ReleaseDLL)
-     =  2x4*37 = 292 builds.
+     - 41 projects       (zlib1, xmpsdk, libexpat, libcurl, libexiv2, exiv2, addmoddel etc)
+     x 2 Platforms      (x64|Win32)
+     x 4 Configurations (Debug|Release|DebugDLL|ReleaseDLL)
+     =  2x4*41 = 328 builds.
 
      If you haven't installed the x64 compiler, remove the 64 bit Platform!
 
-     Build time is about 30 minutes on a 2.2GHz Duo Core and consumes 3.0 gBytes of disk space.
+     Build time is about 60 minutes on a 2.2GHz Duo Core and consumes 4.0 gBytes of disk space.
 
      +-------------------------------------------------+
      | Caution: Visual Studio 2010+ Users              |
      | Don't build Platforms Win32 & x64 simulateously |
-     | Or use build.bat to do this for you             |
+     | Or use build.bat to do this for you (see below) |
      +-------------------------------------------------+
 
 1.4  What is built
@@ -128,7 +128,7 @@ T A B L E  o f  C O N T E N T S
      a) Setup the Visual Studio Environment with vcvars32.bat 
         vcvars32.bat is typically in C:\Program Files (x86)\Microsoft Visual Studio 8\VC\bin\vcvars32.bat
      b) build.bat /build will build all targets
-     or build.bat /upgrade will upgrade the project files (if you're using Visual Studio 2008+
+     or build.bat /upgrade will upgrade the project files (if you're using Visual Studio 2008+)
      or build.bat /rebuild
      or build.bat /build Release^^^|Win32 to build a specific target|platform
 
@@ -143,25 +143,25 @@ T A B L E  o f  C O N T E N T S
      I have created build environments for zlib1, libexpat and libcurl within exiv2/msvc2005.
      I don't include the source code for zlib1, libexpat or libcurl - only the build environment.
      
-     You are expected to install the "vanilla" expat, zlib and curl source code
+     libssh support is required for sftp and ssh support.
+     libssh requires openssl support which creates libeay32 and ssleay32 
+     
+     You are expected to install "vanilla" expat, zlib, curl, openssl and libssh source code
      in a directory at the same level as exiv2.
      I personally always build in the directory c:\gnu,
      however the name/location/spaces of the build directory are all irrelevant,
-     it's only the relative position of zlib, expat and curl that matter.
+     it's only the relative position of dependent library source (zlib, expat etc) that matter.
 
 2.1  Architecture
      There are directories for every component:
-     The libraries: zlib1, libexpat, xmpsdk, libcurl, libexiv2
+     The libraries: zlib1, libexpat, xmpsdk, libcurl, libssh, libeay32, ssleay32, libexiv2
      Applications:  exiv2.exe
      Sample Apps:   exifprint.exe, addmoddel.exe and many more (used by test suite)
 
      For each component, there are three build directories:
      libexiv2\build                                         intermediate results
-     libexiv2\Win32\{Debug|Release|DebugDLL|ReleaseDLL}     32 bit builds
-     libexiv2\x64\{Debug|Release|DebugDLL|ReleaseDLL}       64 bit builds
-
-     Final builds and include directories (for export to "foreign" projects)
-     bin\{win32|x64}\Win32\{Debug|Release|DebugDLL|ReleaseDLL} 
+     solution\bin\Win32\{Debug|Release|DebugDLL|ReleaseDLL} 32 bit builds
+     soluntion\bin\x64\{Debug|Release|DebugDLL|ReleaseDLL}  64 bit builds
 
 2.2  Relationship with msvc2003 build environment
      msvc2005 is similar to msvc2003.
