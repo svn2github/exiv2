@@ -44,7 +44,7 @@
             <Tool
                 Name="VCCLCompilerTool"
                 Optimization="0"
-                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/Win32/Release/include&quot;"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;"
                 PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_GETOPT;LIBSSH_STATIC"
                 MinimalRebuild="true"
                 BasicRuntimeChecks="3"
@@ -127,7 +127,7 @@
             <Tool
                 Name="VCCLCompilerTool"
                 Optimization="0"
-                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/Win32/Release/include&quot;"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;"
                 PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_GETOPT;LIBSSH_STATIC"
                 MinimalRebuild="true"
                 BasicRuntimeChecks="3"
@@ -208,7 +208,7 @@
             />
             <Tool
                 Name="VCCLCompilerTool"
-                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/Win32/Release/include&quot;"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;"
                 PreprocessorDefinitions="WIN32;_NDEBUG;_CONSOLE;BUILD_GETOPT;LIBSSH_STATIC"
                 RuntimeLibrary="0"
                 RuntimeTypeInfo="true"
@@ -289,7 +289,7 @@
             />
             <Tool
                 Name="VCCLCompilerTool"
-                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/Win32/Release/include&quot;"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;"
                 PreprocessorDefinitions="WIN32;_NDEBUG;_CONSOLE;BUILD_GETOPT;LIBSSH_STATIC"
                 RuntimeLibrary="0"
                 RuntimeTypeInfo="true"
@@ -370,7 +370,7 @@
             <Tool
                 Name="VCCLCompilerTool"
                 Optimization="0"
-                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/Win32/Release/include&quot;"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;"
                 PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_GETOPT;EXV_HAVE_DLL;EXV_HAVE_DLL"
                 MinimalRebuild="true"
                 BasicRuntimeChecks="3"
@@ -452,7 +452,7 @@
             <Tool
                 Name="VCCLCompilerTool"
                 Optimization="0"
-                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/Win32/Release/include&quot;"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;"
                 PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_GETOPT;EXV_HAVE_DLL;EXV_HAVE_DLL"
                 MinimalRebuild="true"
                 BasicRuntimeChecks="3"
@@ -532,7 +532,7 @@
             <Tool
                 Name="VCCLCompilerTool"
                 Optimization="0"
-                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/Win32/Release/include&quot;"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;"
                 PreprocessorDefinitions="WIN32;_NDEBUG;_CONSOLE;BUILD_GETOPT;EXV_HAVE_DLL;EXV_HAVE_DLL"
                 MinimalRebuild="true"
                 BasicRuntimeChecks="0"
@@ -614,7 +614,7 @@
             <Tool
                 Name="VCCLCompilerTool"
                 Optimization="0"
-                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/Win32/Release/include&quot;"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)/../../curl/include&quot;;&quot;$(SolutionDir)/../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;"
                 PreprocessorDefinitions="WIN32;_NDEBUG;_CONSOLE;BUILD_GETOPT;EXV_HAVE_DLL;EXV_HAVE_DLL"
                 MinimalRebuild="true"
                 BasicRuntimeChecks="0"

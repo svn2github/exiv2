@@ -44,8 +44,8 @@
             <Tool
                 Name="VCCLCompilerTool"
                 Optimization="0"
-                AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
-                PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;COMPILED_FROM_DSP;_LIB;CURL_STATICLIB;BUILDING_LIBCURL"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)../../curl/include&quot;;&quot;$(SolutionDir)../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include/openssl&quot;"
+                PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;COMPILED_FROM_DSP;_LIB;CURL_STATICLIB;BUILDING_LIBCURL;USE_SSLEAY;USE_OPENSSL;"
                 BasicRuntimeChecks="3"
                 RuntimeLibrary="1"
                 PrecompiledHeaderFile=".\build\Win32\Debug/curl_static.pch"
@@ -116,8 +116,8 @@
             <Tool
                 Name="VCCLCompilerTool"
                 Optimization="0"
-                AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
-                PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;COMPILED_FROM_DSP;_LIB;CURL_STATICLIB;XML_LARGE_SIZE;BUILDING_LIBCURL"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)../../curl/include&quot;;&quot;$(SolutionDir)../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include/openssl&quot;"
+                PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;COMPILED_FROM_DSP;_LIB;CURL_STATICLIB;XML_LARGE_SIZE;BUILDING_LIBCURL;USE_SSLEAY;USE_OPENSSL;"
                 BasicRuntimeChecks="3"
                 RuntimeLibrary="1"
                 PrecompiledHeaderFile=".\build\x64\Debug/curl_static.pch"
@@ -188,8 +188,8 @@
                 Name="VCCLCompilerTool"
                 Optimization="2"
                 InlineFunctionExpansion="1"
-                AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
-                PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_LIB;COMPILED_FROM_DSP;BUILDING_LIBCURL;CURL_STATICLIB"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)../../curl/include&quot;;&quot;$(SolutionDir)../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include/openssl&quot;"
+                PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_LIB;COMPILED_FROM_DSP;BUILDING_LIBCURL;CURL_STATICLIB;USE_SSLEAY;USE_OPENSSL;"
                 StringPooling="true"
                 RuntimeLibrary="0"
                 PrecompiledHeaderFile=".\build\Win32\Release/curl_static.pch"
@@ -259,8 +259,8 @@
                 Name="VCCLCompilerTool"
                 Optimization="2"
                 InlineFunctionExpansion="1"
-                AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
-                PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_LIB;COMPILED_FROM_DSP;BUILDING_LIBCURL;XML_LARGE_SIZE;CURL_STATICLIB"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)../../curl/include&quot;;&quot;$(SolutionDir)../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include/openssl&quot;"
+                PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_LIB;COMPILED_FROM_DSP;BUILDING_LIBCURL;XML_LARGE_SIZE;CURL_STATICLIB;USE_SSLEAY;USE_OPENSSL;"
                 StringPooling="true"
                 RuntimeLibrary="0"
                 PrecompiledHeaderFile=".\build\x64\Release/curl_static.pch"
@@ -334,8 +334,8 @@
             <Tool
                 Name="VCCLCompilerTool"
                 Optimization="0"
-                AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
-                PreprocessorDefinitions="_DEBUG;COMPILED_FROM_DSP;WIN32;_WINDOWS;_USRDLL;BUILDING_LIBCURL"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)../../curl/include&quot;;&quot;$(SolutionDir)../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include/openssl&quot;"
+                PreprocessorDefinitions="_DEBUG;COMPILED_FROM_DSP;WIN32;_WINDOWS;_USRDLL;BUILDING_LIBCURL;USE_SSLEAY;USE_OPENSSL;"
                 BasicRuntimeChecks="3"
                 RuntimeLibrary="3"
                 PrecompiledHeaderFile=".\build\Win32\Debug/curl.pch"
@@ -423,8 +423,8 @@
             <Tool
                 Name="VCCLCompilerTool"
                 Optimization="0"
-                AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
-                PreprocessorDefinitions="_DEBUG;COMPILED_FROM_DSP;WIN32;_WINDOWS;_USRDLL;BUILDING_LIBCURL;XML_LARGE_SIZE"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)../../curl/include&quot;;&quot;$(SolutionDir)../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include/openssl&quot;"
+                PreprocessorDefinitions="_DEBUG;COMPILED_FROM_DSP;WIN32;_WINDOWS;_USRDLL;BUILDING_LIBCURL;XML_LARGE_SIZE;USE_SSLEAY;USE_OPENSSL;"
                 BasicRuntimeChecks="3"
                 RuntimeLibrary="3"
                 PrecompiledHeaderFile=".\build\x64\Debug/curl.pch"
@@ -513,8 +513,8 @@
                 Name="VCCLCompilerTool"
                 Optimization="2"
                 InlineFunctionExpansion="1"
-                AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
-                PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;COMPILED_FROM_DSP;BUILDING_LIBCURL"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)../../curl/include&quot;;&quot;$(SolutionDir)../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include/openssl&quot;"
+                PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;COMPILED_FROM_DSP;BUILDING_LIBCURL;USE_SSLEAY;USE_OPENSSL;"
                 StringPooling="true"
                 RuntimeLibrary="2"
                 PrecompiledHeaderFile=".\build\Win32\Release/curl.pch"
@@ -600,8 +600,8 @@
                 Name="VCCLCompilerTool"
                 Optimization="2"
                 InlineFunctionExpansion="1"
-                AdditionalIncludeDirectories="$(SolutionDir)../include;$(SolutionDir)../include/exiv2;$(SolutionDir)../xmpsdk/include;$(SolutionDir)../../expat/lib;$(SolutionDir)../../zlib;$(SolutionDir)/../../curl/include;$(SolutionDir)/../../libssh/include;$(SolutionDir)xssl/Win32/Release/include;"
-                PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;COMPILED_FROM_DSP;BUILDING_LIBCURL;XML_LARGE_SIZE"
+                AdditionalIncludeDirectories="&quot;$(SolutionDir)../include&quot;;&quot;$(SolutionDir)../include/exiv2&quot;;&quot;$(SolutionDir)../xmpsdk/include&quot;;&quot;$(SolutionDir)../../expat/lib&quot;;&quot;$(SolutionDir)../../zlib&quot;;&quot;$(SolutionDir)../../curl/include&quot;;&quot;$(SolutionDir)../../libssh/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include&quot;;&quot;$(SolutionDir)openssl/$(PlatformName)/$(ConfigurationName)/include/openssl&quot;"
+                PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;COMPILED_FROM_DSP;BUILDING_LIBCURL;XML_LARGE_SIZE;USE_SSLEAY;USE_OPENSSL;"
                 StringPooling="true"
                 RuntimeLibrary="2"
                 PrecompiledHeaderFile=".\build\x64\Release/curl.pch"
@@ -661,10 +661,6 @@
             Name="Source Files"
             Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
             >
-            <File
-                RelativePath="..\..\..\curl\lib\amigaos.c"
-                >
-            </File>
             <File
                 RelativePath="..\..\..\curl\lib\asyn-ares.c"
                 >
@@ -1106,10 +1102,6 @@
             Name="Header Files"
             Filter="h;hpp;hxx;hm;inl"
             >
-            <File
-                RelativePath="..\..\..\curl\lib\amigaos.h"
-                >
-            </File>
             <File
                 RelativePath="..\..\..\curl\lib\arpa_telnet.h"
                 >
