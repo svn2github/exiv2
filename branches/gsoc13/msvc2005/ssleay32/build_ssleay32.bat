@@ -36,6 +36,8 @@ set SHARED=shared
 if %CONFIG% == Debug     set SHARED=no-shared
 if %CONFIG% == Release   set SHARED=no-shared
 
+if NOT EXIST %SolutionDir%bin\%PLATFORM%\%CONFIG%\ mkdir %SolutionDir%bin\%PLATFORM%\%CONFIG%\
+
                       copy/y %ProjectDir%..\openssl\%PLATFORM%\%CONFIG%\lib\*.lib  %SolutionDir%bin\%PLATFORM%\%CONFIG%\
 if %SHARED% == shared copy/y %ProjectDir%..\openssl\%PLATFORM%\%CONFIG%\bin\*.dll  %SolutionDir%bin\%PLATFORM%\%CONFIG%\
 
