@@ -17,8 +17,15 @@
 #define LIBDIR "/usr/local/lib"
 #define PLUGINDIR "/usr/local/lib/libssh-4"
 #define SYSCONFDIR "/usr/local/etc"
+
+// TODO: fix and document this in msvc2005/ReadMe.txt
 #define BINARYDIR "/c/Users/rmills/gnu/libssh/build"
 #define SOURCEDIR "/c/Users/rmills/gnu/libssh/libssh-0.5.5"
+
+// Visual Studio 2012 supports ntohll
+#if    _MSC_VER >= 1700
+#define HAVE_NTOHLL 1
+#endif
 
 
 /************************** HEADER FILES *************************/

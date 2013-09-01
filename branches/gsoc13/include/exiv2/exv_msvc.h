@@ -29,6 +29,10 @@
 #define MSDEV_2003    1
 #endif
 
+#if MSDEV_2012
+#define HAVE_NTOHLL 1
+#endif
+
 /* Define to 1 if you have the <process.h> header file. */
 #define EXV_HAVE_PROCESS_H 1
 
