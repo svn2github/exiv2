@@ -1,16 +1,16 @@
 exiv2\msvc2005\ReadMe.txt
 -------------------------
 
-+-------------------------------------------------------+
-| msvc2005 builds 32bit and 64bit binaries              |
-|          with Visual Studio 2005/8/10/12              |
-|                                                       |
-| msvc2003 builds 32bit binaries                        |
-|          with Visual Studio 2003/5/8                  |
-| ***************************************************** |
-| Exiv2 0.25 is the final release with msvc2003 support |
-| ***************************************************** |
-+-------------------------------------------------------+
+     +-------------------------------------------------------+
+     | msvc2005 builds 32bit and 64bit binaries              |
+     |          with Visual Studio 2005/8/10/12              |
+     |                                                       |
+     | msvc2003 builds 32bit binaries                        |
+     |          with Visual Studio 2003/5/8                  |
+     | ***************************************************** |
+     | Exiv2 0.25 is the final release with msvc2003 support |
+     | ***************************************************** |
+     +-------------------------------------------------------+
 
 Updated: 2013-08-20 
 
@@ -98,13 +98,14 @@ T A B L E  o f  C O N T E N T S
 
      If you haven't installed the x64 compiler, remove the 64 bit Platform!
 
-     Build time is about 60 minutes on a 2.2GHz Duo Core and consumes 4.0 gBytes of disk space.
+     Build time is about 120 minutes on a 2.2GHz Duo Core and consumes 3.8 gBytes of disk space.
 
-     +-------------------------------------------------+
-     | Caution: Visual Studio 2010+ Users              |
-     | Don't build Platforms Win32 & x64 simulateously |
-     | Or use build.bat to do this for you (see below) |
-     +-------------------------------------------------+
+     +-------------------------------------------------------+
+     | Caution: Visual Studio 2010+ Users                    |
+     | Don't build Platforms Win32 & x64 simulateously       |
+     | Or use build.bat                                      |
+     | C:\2010\exiv2\msvc2005>build /upgrade && build /build |
+     +-------------------------------------------------------+
 
 1.4  What is built
      The DLL builds use the DLL version of the C runtime libraries

@@ -1,7 +1,7 @@
 @echo off
-echo  +++
-echo  +++ building %* +++
-echo  +++
+echo +++
+echo +++ building %* +++
+echo +++
 
 setlocal ENABLEEXTENSIONS
 
@@ -13,14 +13,14 @@ set ProjectDir=%5
 set SolutionDir=%6
 set Action=%7
 
-echo  +++ PLATFORM     = %PLATFORM%
-echo  +++ CONFIG       = %CONFIG%
-echo  +++ OutDir       = %OutDir%
-echo  +++ VCInstallDir = %VCInstallDir%
-echo  +++ ProjectDir   = %ProjectDir%
-echo  +++ SolutionDir  = %SolutionDir%
-echo  +++ Action       = %Action%
-echo  +++
+echo +++ PLATFORM     = %PLATFORM%
+echo +++ CONFIG       = %CONFIG%
+echo +++ OutDir       = %OutDir%
+echo +++ VCInstallDir = %VCInstallDir%
+echo +++ ProjectDir   = %ProjectDir%
+echo +++ SolutionDir  = %SolutionDir%
+echo +++ Action       = %Action%
+echo +++
 echo.
 
 perl --version > nul 2> nul
@@ -60,20 +60,16 @@ set MAKEFILE=ms\ntdll.mak
 if %SHARED% == no-shared set MAKEFILE=ms\nt.mak
 perl Configure %VCCONFIG% no-asm %SHARED% --prefix=%ProjectDir%%PLATFORM%\%CONFIG%
 call     %DO%
-nmake -f %MAKEFILE% clean
 nmake -f %MAKEFILE% 
 nmake -f %MAKEFILE% install
 nmake -f %MAKEFILE% clean
 
-if NOT EXIST %SolutionDir%bin\%PLATFORM%\%CONFIG%\ mkdir %SolutionDir%bin\%PLATFORM%\%CONFIG%\
-
-                      copy/y %ProjectDir%%PLATFORM%\%CONFIG%\lib\*.lib  %SolutionDir%bin\%PLATFORM%\%CONFIG%\
-if %SHARED% == shared copy/y %ProjectDir%%PLATFORM%\%CONFIG%\bin\*.dll  %SolutionDir%bin\%PLATFORM%\%CONFIG%\
+if NOT EXIST                    %SolutionDir%bin\%PLATFORM%\%CONFIG%\ mkdir %SolutionDir%bin\%PLATFORM%\%CONFIG%\
+                         copy/y %ProjectDir%%PLATFORM%\%CONFIG%\lib\*.lib   %SolutionDir%bin\%PLATFORM%\%CONFIG%\
+if %SHARED% == shared    copy/y %ProjectDir%%PLATFORM%\%CONFIG%\bin\*.dll   %SolutionDir%bin\%PLATFORM%\%CONFIG%\
 
 :POSTPROCESS
-
 set ERRORLEVEL=0
-echo OK
 goto EOF
 
 :ERROR
