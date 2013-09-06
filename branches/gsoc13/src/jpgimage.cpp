@@ -515,6 +515,25 @@ namespace Exiv2 {
             if (io_->error() || io_->eof()) throw Error(14);
             throw Error(15);
         }
+        
+        // nemonic for markers
+        std::string nm[256] ;
+        nm[0xe1]="APP1" ;
+        nm[0xd8]="SOI"  ;
+        nm[0xd9]="EOI"  ;
+        nm[0xc4]="DHT"  ;
+        nm[0xdb]="DQT"  ;
+        nm[0xdd]="DRI"  ;
+        nm[0xda]="SOS"  ;
+        nm[0xfe]="COM"  ;
+        for ( int i = 0 ; i <= 15 ; i++ ) {
+        	char app[10];
+        	sprintf(app,"APP%d",i);
+            nm[0xe0+i] = app;
+        	char sof[10];
+        	sprintf(sof,"SOF%d",i);
+            nm[0xc0+i] = sof;
+        }
 
         // Container for the signature
         const long bufMinSize = 36;
@@ -525,49 +544,58 @@ namespace Exiv2 {
         int marker = advanceToMarker();
         if (marker < 0) throw Error(15);
 
-        printf("marker | size | signature\n");
-        do {
+        printf("STRUCTURE OF FILE:\n");
+        printf("  offset | marker     | size | signature\n");
+        while (1) {
             // print marker bytes
-            printf("0x%x    ", marker);
+            printf("%8ld   %#02x %-5s",io_->tell(), marker,nm[marker].c_str());
+            if ( marker == eoi_ ) break ;
 
-            // Read size and signature
-            std::memset(buf.pData_, 0x0, buf.size_);
-            bufRead = io_->read(buf.pData_, bufMinSize);
-            if (io_->error()) throw Error(14);
-            if (bufRead < 2) throw Error(15);
-            uint16_t size = 0;
+			// Read size and signature
+			std::memset(buf.pData_, 0x0, buf.size_);
+			bufRead = io_->read(buf.pData_, bufMinSize);
+			if (io_->error()) throw Error(14);
+			if (bufRead < 2) throw Error(15);
+			uint16_t size = 0;
 
-            // not all markers have size field.
-            if ((marker >= sof0_ && marker <= sof15_) ||
-                (marker >= app0_ && marker <= (app0_ | 0x0F)) ||
-                 marker == dht_ || marker == dqt_ || marker == dri_ ||
-                 marker == com_ || marker == sos_) {
-                size = getUShort(buf.pData_, bigEndian);
-                printf("%*d  ", 6, size);
-            } else {
-                printf("        ");
-            }
+			// not all markers have size field.
+			if( ( marker >= sof0_ && marker <= sof15_)
+			||  ( marker >= app0_ && marker <= (app0_ | 0x0F))
+			||    marker == dht_
+			||    marker == dqt_
+			||    marker == dri_
+			||    marker == com_
+			||    marker == sos_
+			){
+				size = getUShort(buf.pData_, bigEndian);
+				printf("%7d   ", size);
+			} else {
+				printf("        ");
+			}
 
-            // only print the signature for appn
-            if (marker >= app0_ && marker <= (app0_ | 0x0F)) {
-                startSig = size>0?2:0;
-                while (startSig < bufRead && buf.pData_[startSig] < 128)
-                    printf("%c", buf.pData_[startSig++]);
-            }
+			// only print the signature for appn
+			if (marker >= app0_ && marker <= (app0_ | 0x0F)) {
+				startSig = size>0?2:0;
+				int endSig = size?size:bufRead;
+				if (endSig > 32) endSig = 32 ;
+				while (startSig++ < endSig ) {
+					int c = buf.pData_[startSig-1] ;
+					printf("%c", (' '<=c && c<128) ? c : '.' );
+					// else     endSig = startSig;
+				}
+			}
 
-            // Skip the segment if the size is known
-            if (io_->seek(size - bufRead, BasicIo::cur)) throw Error(14);
+			// Skip the segment if the size is known
+			if (io_->seek(size - bufRead, BasicIo::cur)) throw Error(14);
 
-            printf("\n");
-            // sos_ is immediately followed by entropy-coded data & eoi_
-            if (marker == sos_) break;
+			printf("\n");
+			// sos_ is immediately followed by entropy-coded data & eoi_
+			if (marker == sos_) break;
 
-            // Read the beginning of the next segment
-            marker = advanceToMarker();
-        } while(marker > 0 && marker != eoi_);
-
-        // print eoi_
-        printf("0x%x\n", eoi_);
+			// Read the beginning of the next segment
+			marker = advanceToMarker();
+        }
+        printf("-----------------\n");
     }
 
     void JpegBase::writeMetadata()

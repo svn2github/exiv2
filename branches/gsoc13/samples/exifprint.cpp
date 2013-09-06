@@ -31,9 +31,7 @@ try {
 
     // print the structure of image file.
     if (printStructure) {
-        std::cout << "STRUTURE OF FILE:" << std::endl;
         image->printStructure();
-        std::cout << "-----------------" << std::endl;
     }
 
     image->readMetadata();
