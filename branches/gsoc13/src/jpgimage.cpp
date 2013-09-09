@@ -518,21 +518,24 @@ namespace Exiv2 {
         
         // nemonic for markers
         std::string nm[256] ;
-        nm[0xe1]="APP1" ;
         nm[0xd8]="SOI"  ;
         nm[0xd9]="EOI"  ;
-        nm[0xc4]="DHT"  ;
+        nm[0xda]="SOS"  ;
         nm[0xdb]="DQT"  ;
         nm[0xdd]="DRI"  ;
-        nm[0xda]="SOS"  ;
         nm[0xfe]="COM"  ;
+        
+        // 0xe0 .. 0xef are APPn
+        // 0xc0 .. 0xcf are SOFn (except 4)
+        nm[0xc4]="DHT"  ;
         for ( int i = 0 ; i <= 15 ; i++ ) {
-        	char app[10];
-        	sprintf(app,"APP%d",i);
-            nm[0xe0+i] = app;
-        	char sof[10];
-        	sprintf(sof,"SOF%d",i);
-            nm[0xc0+i] = sof;
+        	char MN[10];
+        	sprintf(MN,"APP%d",i);
+            nm[0xe0+i] = MN;
+            if ( i != 4 ) {
+                sprintf(MN,"SOF%d",i);
+                nm[0xc0+i] = MN;
+            }
         }
 
         // Container for the signature
