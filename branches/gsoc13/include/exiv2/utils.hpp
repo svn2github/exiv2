@@ -33,7 +33,7 @@
 // included header files
 // + standard includes
 #include <string>
-#include <exiv2/futils.hpp>
+#include <futils.hpp>
 // *********************************************************************
 // namespace extensions
 /*!

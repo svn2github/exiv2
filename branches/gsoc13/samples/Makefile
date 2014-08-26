@@ -112,6 +112,7 @@ endif
 
 PREFIX = /usr/local/lib
 LINK.cc += -rpath $(PREFIX) -L$(PREFIX) 
+COMPILE.cc += -I$(top_srcdir)/include/exiv2
 
 # ******************************************************************************
 # Rules

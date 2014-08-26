@@ -46,7 +46,7 @@ fi
 
 if [ "$PLATFORM" == "cygwin" ]; then 
     if [ "$label" == "MSVC" ] ; then
-        if [ "$MSVC" == true ]; then
+        if [ "$msvc" == "true" ]; then
 		    ##
 		    # Invoke MSVC build
 
@@ -56,7 +56,7 @@ if [ "$PLATFORM" == "cygwin" ]; then
 	 	    PATH=$PATH:/cygdrive/c/Windows/System32
 	 	    cmd.exe /c "cd $(cygpath -aw .) && call jenkins_build.bat"
 	 	else
-	 	    echo '*** MSVC has not been requested'
+	 		echo "*** msvc build not requested ***"
 	 	fi
 	 	exit $?
     else
@@ -85,12 +85,10 @@ if [ $build == 1 ]; then
 	./configure --prefix=$PWD/usr  $withcurl $withssh
 	make "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/xmpsdk/src/.libs"
 	make install
-    make samples CXXFLAGS=-I${PWD}/usr/include "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/include -L${PWD}/xmpsdk/src/.libs -lexiv2"
+    make samples "CXXFLAGS=-I${PWD}/usr/include -I${PWD}/src" "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/xmpsdk/src/.libs -lexiv2"
 	if [ "$tests" == true ]; then
 		make tests
 	fi
-else
-    echo '***' nothing to build for PLATFORM $PLATFORM '***'
 fi
 
 # That's all Folks!

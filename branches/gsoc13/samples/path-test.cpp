@@ -1,7 +1,7 @@
 // ***************************************************************** -*- C++ -*-
 // path-test.cpp, $Rev$
 
-#include "exiv2/utils.hpp"
+#include "utils.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>

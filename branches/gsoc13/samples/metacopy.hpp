@@ -28,6 +28,8 @@
 #ifndef METACOPY_HPP_
 #define METACOPY_HPP_
 
+#include "utils.hpp"
+
 class Params : public Util::Getopt {
 private:
     std::string optstring_;
