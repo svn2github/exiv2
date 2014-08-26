@@ -28,10 +28,12 @@
  */
 // *****************************************************************************
 // included header files
-#include "image.hpp"
-#include "iptc.hpp"
-#include "exif.hpp"
-#include "types.hpp"
+#include "exiv2/image.hpp"
+#include "exiv2/iptc.hpp"
+#include "exiv2/exif.hpp"
+#include "exiv2/types.hpp"
+#include "exiv2/utils.hpp"
+
 #include "metacopy.hpp"
 #include <iostream>
 #include <fstream>

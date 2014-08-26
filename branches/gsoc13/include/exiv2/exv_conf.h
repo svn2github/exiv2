@@ -9,10 +9,10 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to 1 if you want to use libssh */
-#define EXV_USE_SSH 1
+/* #undef EXV_USE_SSH */
 
 /* Define to 1 if you want to use libcurl in httpIo */
-#define EXV_USE_CURL 1
+/* #undef EXV_USE_CURL */
 
 /* Define to 1 if you have the `alarm' function. */
 /* #undef EXV_HAVE_ALARM */
@@ -28,7 +28,7 @@
 #define EXV_HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the <libintl.h> header file. */
-/* #undef EXV_HAVE_LIBINTL_H */
+#define EXV_HAVE_LIBINTL_H 1
 
 #ifndef EXV_COMMERCIAL_VERSION
 
@@ -37,7 +37,7 @@
 
 /* Define to 1 if translation of program messages to the user's
    native language is requested. */
-/* #undef EXV_ENABLE_NLS */
+#define EXV_ENABLE_NLS 1
 
 #endif /* !EXV_COMMERCIAL_VERSION */
 
@@ -48,7 +48,7 @@
 #define EXV_ICONV_CONST 
 
 /* Define to 1 if you have the <libintl.h> header file. */
-/* #undef EXV_HAVE_LIBINTL_H */
+#define EXV_HAVE_LIBINTL_H 1
 
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */

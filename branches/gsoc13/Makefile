@@ -73,14 +73,11 @@ samples: config/config.mk
 tests:
 	cd test && $(MAKE) test
 
-teste:
-	cd test && $(MAKE) teste
+teste testx testv:
+	cd test && $(MAKE) $@
 
-testx:
-	cd test && $(MAKE) testx
-	
-testv:
-	cd test && $(MAKE) testv
+exiv2 conntest exifprint remotetest:
+	cd src && $(MAKE) $0
 
 MAJOR=$(shell grep "define.*EXIV2_.*_VERSION .*\\d*" src/version.hpp | grep MAJOR | sed -e 's/EXIV2//g' | tr -dC [:digit:])
 MINOR=$(shell grep "define.*EXIV2_.*_VERSION .*\\d*" src/version.hpp | grep MINOR | sed -e 's/EXIV2//g' | tr -dC [:digit:])
@@ -142,6 +139,6 @@ rebuild:
 	make
 	sudo make install
 	make samples
-
+	
 # That's all Folks!
 ##

@@ -44,18 +44,20 @@ if grep -q ssh  ./configure ; then
     if [ "$ssh"  == "true" ]; then withssh=--with-ssh   ; else withssh=--without-ssh  ; fi
 fi
 
-echo --------- withcurl = $withcurl ---------
-
 if [ "$PLATFORM" == "cygwin" ]; then 
     if [ "$label" == "MSVC" ] ; then
-		##
-		# Invoke MSVC build
+        if [ "$MSVC" == true ]; then
+		    ##
+		    # Invoke MSVC build
 
-	 	rm -rf $PWD/bin
-	 	mkdir $PWD/bin
+	 	    rm -rf $PWD/bin
+	 	    mkdir $PWD/bin
 
-	 	PATH=$PATH:/cygdrive/c/Windows/System32
-	 	cmd.exe /c "cd $(cygpath -aw .) && call jenkins_build.bat"
+	 	    PATH=$PATH:/cygdrive/c/Windows/System32
+	 	    cmd.exe /c "cd $(cygpath -aw .) && call jenkins_build.bat"
+	 	else
+	 	    echo '*** MSVC has not been requested'
+	 	fi
 	 	exit $?
     else
 		# export LIBS=-lintl
@@ -83,10 +85,12 @@ if [ $build == 1 ]; then
 	./configure --prefix=$PWD/usr  $withcurl $withssh
 	make "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/xmpsdk/src/.libs"
 	make install
-    make samples CXXFLAGS=-I${PWD}/usr/include "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/xmpsdk/src/.libs -lexiv2"
+    make samples CXXFLAGS=-I${PWD}/usr/include "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/include -L${PWD}/xmpsdk/src/.libs -lexiv2"
 	if [ "$tests" == true ]; then
 		make tests
 	fi
+else
+    echo '***' nothing to build for PLATFORM $PLATFORM '***'
 fi
 
 # That's all Folks!
