@@ -131,7 +131,7 @@ case "$build" in
 			run_tests
   ;;
 
-  "$MINGW" ) 
+  "$MING" ) 
 			echo "**********************************************************************"
 			echo " MinGW build not implemented yet.  platform=$PLATFORM label=$label ***"
 			echo "**********************************************************************"
