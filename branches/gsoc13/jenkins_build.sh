@@ -49,7 +49,7 @@ fi
 # set up some defaults (used when running this script from the terminal)
 if [						  -z "$tests"  ]; then export tests=true  ; fi
 if [ $PLATFORM == "macosx" -a -z "$macosx" ]; then export macosx=true ; export label=macosx ; fi
-if [ $PLATFORM == "cygwin" -a -z "cygwin"  ]; then export cygwin=true ; export label=cygwin ; fi
+if [ $PLATFORM == "cygwin" -a -z "$cygwin" ]; then export cygwin=true ; export label=cygwin ; fi
 if [ $PLATFORM == "linux"  -a -z "$linux"  ]; then export linux=true  ; export label=linux	; fi
 if [ $PLATFORM == "mingw"  -a -z "$mingw"  ]; then export mingw=true  ; export label=mingw	; fi
 
