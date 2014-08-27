@@ -98,7 +98,7 @@ NONE=0
 UNIX=1
 CYGW=2
 MSVC=3
-MING=$NONE
+MING=4
 build=$NONE
 
 if [ $PLATFORM == "linux"  -a "$label" == "linux"  -a "$linux"	== "true" ]; then build=$UNIX ; fi
@@ -129,6 +129,12 @@ case "$build" in
 			make install
 			make samples
 			run_tests
+  ;;
+
+  "$MINGW" ) 
+			echo "**********************************************************************"
+			echo " MinGW build not implemented yet.  platform=$PLATFORM label=$label ***"
+			echo "**********************************************************************"
   ;;
 
   "$MSVC" ) 
