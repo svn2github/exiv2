@@ -20,15 +20,16 @@ run_tests() {
 ##
 # Quick dodge, use rmills ~/bin/.profile to set some environment variables
 # This code will be removed later
-# set +v
-# DIR="$PWD"
-# if [ -e /home/rmills/bin/.profile ]; then
-#	source /home/rmills/bin/.profile
-# fi
-# if [ -e /Users/rmills/bin/.profile ]; then
-#	source /Users/rmills/bin/.profile
-# fi
-# cd "$DIR"
+set +v
+DIR="$PWD"
+if [ -e /home/rmills/bin/.profile ]; then
+	source /home/rmills/bin/.profile
+fi
+if [ -e /Users/rmills/bin/.profile ]; then
+	source /Users/rmills/bin/.profile
+fi
+cd "$DIR"
+set -v
 
 export PLATFORM=''
 if [ `uname` == Darwin  ]; then
