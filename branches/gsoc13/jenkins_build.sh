@@ -142,7 +142,7 @@ case "$build" in
   
   "$NONE") 
 	 echo "**************************************************************"
-	 echo "*** no build for platform $PLATFORM label $label requested ***"
+	 echo "*** no build for platform=$PLATFORM label=$label requested ***"
 	 echo "**************************************************************"
   ;; 
 esac
