@@ -105,7 +105,7 @@ if [ $PLATFORM == "linux"  -a "$label" == "linux"  -a "$linux"	== "true" ]; then
 if [ $PLATFORM == "macosx" -a "$label" == "macosx" -a "$macosx" == "true" ]; then build=$UNIX ; fi
 if [ $PLATFORM == "cygwin" -a "$label" == "cygwin" -a "$cygwin" == "true" ]; then build=$CYGW ; fi
 if [ $PLATFORM == "cygwin" -a "$label" == "mingw"  -a "$mingw"	== "true" ]; then build=$MING ; fi
-if [ $PLATFORM == "cygwin" -a "$label" == "msvc"   -a "$MSVC"	== "true" ]; then build=$MSVC ; fi
+if [ $PLATFORM == "cygwin" -a "$label" == "msvc"   -a "$msvc"	== "true" ]; then build=$MSVC ; fi
 
 case "$build" in
   "$UNIX" ) 
@@ -141,11 +141,12 @@ case "$build" in
   
   
   "$NONE") 
-	 echo "*************************************************"
-	 echo "*** no build for platform $PLATFORM requested ***"
-	 echo "*************************************************"
+	 echo "**************************************************************"
+	 echo "*** no build for platform $PLATFORM label $label requested ***"
+	 echo "**************************************************************"
   ;; 
 esac
+
 set -v
 # That's all Folks!
 ##
