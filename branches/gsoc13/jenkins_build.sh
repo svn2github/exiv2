@@ -47,11 +47,13 @@ fi
 
 ##
 # set up some defaults (used when running this script from the terminal)
-if [						  -z "$tests"  ]; then export tests=true  ; fi
 if [ $PLATFORM == "macosx" -a -z "$macosx" ]; then export macosx=true ; export label=macosx ; fi
 if [ $PLATFORM == "cygwin" -a -z "$cygwin" ]; then export cygwin=true ; export label=cygwin ; fi
 if [ $PLATFORM == "linux"  -a -z "$linux"  ]; then export linux=true  ; export label=linux	; fi
 if [ $PLATFORM == "mingw"  -a -z "$mingw"  ]; then export mingw=true  ; export label=mingw	; fi
+
+if [ -z "$tests"    ]; then export tests=true                            ; fi
+if [ -z "$JOB_NAME" ]; then export JOB_NAME="jenkins-build.sh=$PLATFORM" ; fi
 
 export PATH=$PATH:/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/usr/lib/pkgconfig:/opt/local/bin:$PWD/usr/bin:/opt/local/bin:/opt/local/sbin:/opt/pkgconfig:bin
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PWD/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
@@ -100,12 +102,13 @@ CYGW=2
 MSVC=3
 MING=4
 build=$NONE
+target=$(echo $JOB_NAME|cut -d= -f 2)
 
-if [ $PLATFORM == "linux"  -a "$label" == "linux"  -a "$linux"	== "true" ]; then build=$UNIX ; fi
-if [ $PLATFORM == "macosx" -a "$label" == "macosx" -a "$macosx" == "true" ]; then build=$UNIX ; fi
-if [ $PLATFORM == "cygwin" -a "$label" == "cygwin" -a "$cygwin" == "true" ]; then build=$CYGW ; fi
-if [ $PLATFORM == "cygwin" -a "$label" == "mingw"  -a "$mingw"	== "true" ]; then build=$MING ; fi
-if [ $PLATFORM == "cygwin" -a "$label" == "msvc"   -a "$msvc"	== "true" ]; then build=$MSVC ; fi
+if [ $PLATFORM == "linux"  -a "$target" == "linux"  -a "$linux"	== "true"  ]; then build=$UNIX ; fi
+if [ $PLATFORM == "macosx" -a "$target" == "macosx" -a "$macosx" == "true" ]; then build=$UNIX ; fi
+if [ $PLATFORM == "cygwin" -a "$target" == "cygwin" -a "$cygwin" == "true" ]; then build=$CYGW ; fi
+if [ $PLATFORM == "cygwin" -a "$target" == "mingw"  -a "$mingw"	== "true"  ]; then build=$MING ; fi
+if [ $PLATFORM == "cygwin" -a "$target" == "msvc"   -a "$msvc"	== "true"  ]; then build=$MSVC ; fi
 
 case "$build" in
   "$UNIX" ) 
