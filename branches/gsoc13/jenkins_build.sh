@@ -19,6 +19,7 @@ run_tests() {
 
 ##
 # Quick dodge, use rmills ~/bin/.profile to set some environment variables
+# I think I need this is necessary to find pkg-config
 # This code will be removed later
 set +v
 DIR="$PWD"
@@ -31,6 +32,8 @@ fi
 cd "$DIR"
 set -v
 
+##
+# where are we?
 export PLATFORM=''
 if [ `uname` == Darwin  ]; then
     PLATFORM=macosx
@@ -44,10 +47,10 @@ fi
 
 ##
 # set up some defaults (used when running this script from the terminal)
-if [                          -z "$tests"  ]; then export tests=true; fi
-if [ $PLATFORM == "macosx" -a -z "$macosx" ]; then macosx=true      ; fi
-if [ $PLATFORM == "cygwin" -a -z "cygwin"  ]; then cygwin=true      ; fi
-if [ $PLATFORM == "linux"  -a -z "$linux"  ]; then linux=true       ; fi
+if [                          -z "$tests"  ]; then export tests=true  ; fi
+if [ $PLATFORM == "macosx" -a -z "$macosx" ]; then export macosx=true ; fi
+if [ $PLATFORM == "cygwin" -a -z "cygwin"  ]; then export cygwin=true ; fi
+if [ $PLATFORM == "linux"  -a -z "$linux"  ]; then export linux=true  ; fi
 
 export PATH=$PATH:/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/usr/lib/pkgconfig:/opt/local/bin:$PWD/usr/bin:/opt/local/bin:/opt/local/sbin:/opt/pkgconfig:bin
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PWD/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
