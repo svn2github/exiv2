@@ -132,9 +132,9 @@ case "$build" in
   ;;
 
   "$MING" ) 
-			echo "**********************************************************************"
-			echo " MinGW build not implemented yet.  platform=$PLATFORM label=$label ***"
-			echo "**********************************************************************"
+			echo "*********************************************************************"
+			echo " MinGW build not implemented yet. platform=$PLATFORM label=$label ***"
+			echo "*********************************************************************"
   ;;
 
   "$MSVC" ) 
