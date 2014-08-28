@@ -146,6 +146,7 @@ case "$build" in
 
 			PATH=$PATH:/cygdrive/c/Windows/System32
 			cmd.exe /c "cd $(cygpath -aw .) && call jenkins_build.bat"
+			exit $?
   ;;
   
   
