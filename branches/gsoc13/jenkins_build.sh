@@ -52,9 +52,9 @@ fi
 # set up some defaults (used when running this script from the terminal)
 echo "1 target = $target platform = $PLATFORM WORKSPACE = $WORKSPACE"
 if [ $PLATFORM == "macosx" -a -z "$macosx" ]; then export macosx=true ; export target=macosx    ; fi
-if [ $PLATFORM == "cygwin" -a -z "$cygwin" ]; then export cygwin=true ; export target=cygwin    ; fi
 if [ $PLATFORM == "linux"  -a -z "$linux"  ]; then export linux=true  ; export target=linux	    ; fi
-if [ $PLATFORM == "mingw"  -a -z "$mingw"  ]; then export mingw=true  ; export target=mingw	    ; fi
+# if [ $PLATFORM == "cygwin" -a -z "$cygwin" ]; then export cygwin=true ; export target=cygwin  ; fi
+# if [ $PLATFORM == "mingw"  -a -z "$mingw"  ]; then export mingw=true  ; export target=mingw	; fi
 
 if [ -z "$tests"     ]; then export tests=true                                                  ; fi
 if [ -z "$WORKSPACE" ]; then export WORKSPACE="$0/$PLATFORM"                                    ; fi
