@@ -53,9 +53,6 @@ fi
 echo "1 target = $target platform = $PLATFORM WORKSPACE = $WORKSPACE"
 if [ $PLATFORM == "macosx" -a -z "$macosx" ]; then export macosx=true ; export target=macosx    ; fi
 if [ $PLATFORM == "linux"  -a -z "$linux"  ]; then export linux=true  ; export target=linux	    ; fi
-# if [ $PLATFORM == "cygwin" -a -z "$cygwin" ]; then export cygwin=true ; export target=cygwin  ; fi
-# if [ $PLATFORM == "mingw"  -a -z "$mingw"  ]; then export mingw=true  ; export target=mingw	; fi
-
 if [ -z "$tests"     ]; then export tests=true                                                  ; fi
 if [ -z "$WORKSPACE" ]; then export WORKSPACE="$0/$PLATFORM"                                    ; fi
 
@@ -117,8 +114,7 @@ if [ $PLATFORM == "cygwin" -a "$target" == "cygwin" -a "$cygwin" == "true"  ]; t
 if [ $PLATFORM == "cygwin" -a "$target" == "mingw"  -a "$mingw"	 == "true"  ]; then build=$MING ; fi
 if [ $PLATFORM == "cygwin" -a "$target" == "msvc"   -a "$msvc"	 == "true"  ]; then build=$MSVC ; fi
 
-echo "3 target = $target platform = $PLATFORM WORKSPACE = $WORKSPACE build = $build = ${builds[$build]}"
-exit 0
+echo "3 target = $target platform = $PLATFORM build = $build =\> ${builds[$build]}"
 
 case "$build" in
   "$UNIX" ) 
@@ -147,9 +143,9 @@ case "$build" in
   ;;
 
   "$MING" ) 
-			echo "**********************************************************************"
-			echo " MinGW build not implemented yet.  platform=$PLATFORM label=$label ***"
-			echo "**********************************************************************"
+			echo "*************************************"
+			echo " MinGW build not implemented yet. ***"
+			echo "*************************************"
   ;;
 
   "$MSVC" ) 
@@ -163,9 +159,9 @@ case "$build" in
   
   
   "$NONE") 
-	 echo "*************************************************************"
-	 echo "*** no build for platform=$PLATFORM target=$target requested ***"
-	 echo "*************************************************************"
+	 echo "********************************************"
+	 echo "*** no build requested for $target       ***"
+	 echo "********************************************"
   ;; 
 esac
 
