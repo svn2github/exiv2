@@ -7,6 +7,8 @@
 #	called from terminal 
 #	- script has build-in defaults for some environment variable
 #
+#  arguments:
+#    status :	filter last build with grep
 ##
 result=0
 
@@ -19,6 +21,30 @@ run_tests() {
 		fi
 	fi
 }
+
+thepath () { 
+    if [ -d $1 ]; then
+        ( cd $1;
+        pwd );
+    else
+        ( cd $(dirname $1);
+        echo $(pwd)/$(basename $1) );
+    fi
+}
+
+##
+# arg: status [grep-args]
+# example: ./jenkins_build.sh status -e URL
+if [ "$1" == "status" ]; then
+	shift
+	build=$(basename $PWD)
+	for b in linux macosx cygwin mingw msvc ; do
+		echo $build/$b
+		curl --silent http://exiv2.dyndns.org:8080/job/Exiv2-$build/label=$b/lastBuild/consoleText | grep -e SVN -e JOB_NAME -e BUILD_ID -e Finished $@
+		echo ''
+	done
+	exit $result
+fi
 
 ##
 # Quick dodge, use rmills ~/bin/.profile to set some environment variables
