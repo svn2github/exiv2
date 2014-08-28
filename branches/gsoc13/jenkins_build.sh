@@ -13,7 +13,7 @@ result=0
 ##
 # functions
 run_tests() {
-	if [ "$result" == "0"]; then
+	if [ "$result" == "0" ]; then
 		if [ "$tests" == true ]; then
 			make tests
 		fi
@@ -101,68 +101,62 @@ fi
 
 ##
 # what kind of build is this?
-NONE=0
-UNIX=1
-CYGW=2
-MSVC=3
-MING=4
-builds=( none unix cygwin msvc mingw )
-build=$NONE
+build=NONE
 
-if [ $PLATFORM == "linux"  -a "$target" == "linux"  -a "$linux"	 == "true"  ]; then build=$UNIX ; fi
-if [ $PLATFORM == "macosx" -a "$target" == "macosx" -a "$macosx" == "true"  ]; then build=$UNIX ; fi
-if [ $PLATFORM == "cygwin" -a "$target" == "cygwin" -a "$cygwin" == "true"  ]; then build=$CYGW ; fi
-if [ $PLATFORM == "cygwin" -a "$target" == "mingw"  -a "$mingw"	 == "true"  ]; then build=$MING ; fi
-if [ $PLATFORM == "cygwin" -a "$target" == "msvc"   -a "$msvc"	 == "true"  ]; then build=$MSVC ; fi
+if [ $PLATFORM == "linux"  -a "$target" == "linux"  -a "$linux"	 == "true"  ]; then build=UNIX ; fi
+if [ $PLATFORM == "macosx" -a "$target" == "macosx" -a "$macosx" == "true"  ]; then build=UNIX ; fi
+if [ $PLATFORM == "cygwin" -a "$target" == "cygwin" -a "$cygwin" == "true"  ]; then build=CYGW ; fi
+if [ $PLATFORM == "cygwin" -a "$target" == "mingw"  -a "$mingw"	 == "true"  ]; then build=MING ; fi
+if [ $PLATFORM == "cygwin" -a "$target" == "msvc"   -a "$msvc"	 == "true"  ]; then build=MSVC ; fi
 
-echo "3 target = $target platform = $PLATFORM build = $build =\> ${builds[$build]}"
+echo "3 target = $target platform = $PLATFORM build = $build"
 
 case "$build" in
-  "$UNIX" ) 
-			echo -------------
-			echo ./configure --prefix=$PWD/usr	$withcurl $withssh
-			echo -------------
-			./configure --prefix=$PWD/usr  $withcurl $withssh
-			make "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/xmpsdk/src/.libs"
-			make install
-			make samples "CXXFLAGS=-I${PWD}/usr/include -I${PWD}/src" "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/xmpsdk/src/.libs -lexiv2"
-			result=$?
-			run_tests
+  UNIX) 
+		echo -------------
+		echo ./configure --prefix=$PWD/usr	$withcurl $withssh
+		echo -------------
+		./configure --prefix=$PWD/usr  $withcurl $withssh
+		make "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/xmpsdk/src/.libs"
+		make install
+		make samples "CXXFLAGS=-I${PWD}/usr/include -I${PWD}/src" "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/xmpsdk/src/.libs -lexiv2"
+		result=$?
+		run_tests
   ;;
   
-  "$CYGW" ) 
-			# export LIBS=-lintl
-			# I've given up:
-			# 1. trying to get Cygwin to build with gettext and friends
-			# 2. trying to get Cygwin to install into a local directory
-			./configure --disable-nls  $withcurl $withssh
-			make
-			result=$?
-			make install
-			make samples
-			run_tests
+  CYGW) 
+		# export LIBS=-lintl
+		# I've given up:
+		# 1. trying to get Cygwin to build with gettext and friends
+		# 2. trying to get Cygwin to install into a local directory
+		./configure --disable-nls  $withcurl $withssh
+		make
+		result=$?
+		make install
+		make samples
+		run_tests
   ;;
 
-  "$MING" ) 
-			echo "*************************************"
-			echo " MinGW build not implemented yet. ***"
-			echo "*************************************"
+  MING) 
+		echo "**************************************"
+		echo " MinGW build not implemented yet.  ***"
+		echo "**************************************"
   ;;
 
-  "$MSVC" ) 
-			rm -rf $PWD/bin
-			mkdir $PWD/bin
+  MSVC) 
+		rm -rf $PWD/bin
+		mkdir $PWD/bin
 
-			PATH=$PATH:/cygdrive/c/Windows/System32
-			cmd.exe /c "cd $(cygpath -aw .) && call jenkins_build.bat"
-			result=$?
+		PATH=$PATH:/cygdrive/c/Windows/System32
+		cmd.exe /c "cd $(cygpath -aw .) && call jenkins_build.bat"
+		result=$?
   ;;
   
   
-  "$NONE") 
-	 echo "********************************************"
-	 echo "*** no build requested for $target       ***"
-	 echo "********************************************"
+  NONE) 
+		echo "**************************************"
+		echo "*** no build requested for $target ***"
+		echo "**************************************"
   ;; 
 esac
 
