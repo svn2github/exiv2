@@ -14,6 +14,8 @@
 #    JENKINS   : URL of jenkins server. Default http://exiv2.dyndns.org:8080
 ##
 result=0
+base=$(basename $0)
+tmp=/tmp/$base.tmp
 if [ -z "$JENKINS"]; then JENKINS=http://exiv2.dyndns.org:8080; fi
 
 ##
@@ -42,9 +44,11 @@ thepath () {
 if [ "$1" == "status" ]; then
 	shift
 	build=$(basename $PWD)
+	declare -A expect=( [linux]=900 [macosx]=1300 [cygwin]=1000 [mingw]=100 [msvc]=1200 )
 	for b in linux macosx cygwin mingw msvc ; do
 		echo $build/$b
-		curl --silent http://exiv2.dyndns.org:8080/job/Exiv2-$build/label=$b/lastBuild/consoleText | grep -E -e SVN_[A-Z]+= -e JOB_NAME -e BUILD_ID -e Finished $@
+		curl --silent http://exiv2.dyndns.org:8080/job/Exiv2-$build/label=$b/lastBuild/consoleText | tee $tmp | grep -E -e SVN_[A-Z]+= -e JOB_NAME -e BUILD_ID -e Finished $@ ;
+		echo lines = $(wc -l $tmp | cut -d/ -f 1) expect ~${expect[$b]}
 		echo ''
 	done
 	exit $result
