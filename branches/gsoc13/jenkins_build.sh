@@ -44,11 +44,17 @@ thepath () {
 if [ "$1" == "status" ]; then
 	shift
 	build=$(basename $PWD)
-	declare -A expect=( [linux]=900 [macosx]=1300 [cygwin]=1000 [mingw]=100 [msvc]=1200 )
+	declare -A expects=( [linux]=900 [macosx]=1300 [cygwin]=1000 [mingw]=100 [msvc]=1200 )
 	for b in linux macosx cygwin mingw msvc ; do
 		echo $build/$b
 		curl --silent http://exiv2.dyndns.org:8080/job/Exiv2-$build/label=$b/lastBuild/consoleText | tee $tmp | grep -E -e SVN_[A-Z]+= -e JOB_NAME -e BUILD_ID -e Finished $@ ;
-		echo lines = $(wc -l $tmp | cut -d/ -f 1) expect ~${expect[$b]}
+		declare -i lines=$(wc -l $tmp | cut -d/ -f 1)
+		declare -i expect=${expects[$b]}
+		diff=$(( lines-expect>0?lines-expect:expect-lines ))
+		msg=''
+		warn=''
+		if [ "$diff" -gt "200" ]; then warn="***" ; msg="TAKE CARE " ; fi
+		echo "${warn}${msg}lines= ${lines} expect~${expect} diff=${diff}" "${msg}${warn}"
 		echo ''
 	done
 	exit $result
