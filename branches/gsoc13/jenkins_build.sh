@@ -8,12 +8,15 @@
 #	- script has build-in defaults for some environment variable
 #
 ##
+result=0
 
 ##
 # functions
 run_tests() {
-	if [ "$tests" == true ]; then
-		make tests
+	if [ "$result" == "0"]; then
+		if [ "$tests" == true ]; then
+			make tests
+		fi
 	fi
 }
 
@@ -47,13 +50,13 @@ fi
 
 ##
 # set up some defaults (used when running this script from the terminal)
-if [ $PLATFORM == "macosx" -a -z "$macosx" ]; then export macosx=true ; export label=macosx ; fi
-if [ $PLATFORM == "cygwin" -a -z "$cygwin" ]; then export cygwin=true ; export label=cygwin ; fi
-if [ $PLATFORM == "linux"  -a -z "$linux"  ]; then export linux=true  ; export label=linux	; fi
-if [ $PLATFORM == "mingw"  -a -z "$mingw"  ]; then export mingw=true  ; export label=mingw	; fi
+if [ $PLATFORM == "macosx" -a -z "$macosx" ]; then export macosx=true ; export target=macosx ; fi
+if [ $PLATFORM == "cygwin" -a -z "$cygwin" ]; then export cygwin=true ; export target=cygwin ; fi
+if [ $PLATFORM == "linux"  -a -z "$linux"  ]; then export linux=true  ; export target=linux	 ; fi
+if [ $PLATFORM == "mingw"  -a -z "$mingw"  ]; then export mingw=true  ; export target=mingw	 ; fi
 
-if [ -z "$tests"     ]; then export tests=true               ; fi
-if [ -z "$WORKSPACE" ]; then export WORKSPACE="$0/$PLATFORM" ; fi
+if [ -z "$tests"  ]; then export tests=true                                         ; fi
+if [ -z "$target" ]; then target=$(basename $(echo $WORKSPACE | sed -e 's#\\#/#g')) ; fi
 
 export PATH=$PATH:/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/usr/lib/pkgconfig:/opt/local/bin:$PWD/usr/bin:/opt/local/bin:/opt/local/sbin:/opt/pkgconfig:bin
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PWD/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
@@ -102,13 +105,12 @@ CYGW=2
 MSVC=3
 MING=4
 build=$NONE
-target=basename $(echo $WORKSPACE | sed -e 's#\\#/#g')
 
-if [ $PLATFORM == "linux"  -a "$target" == "linux"  -a "$linux"	== "true"  ]; then build=$UNIX ; fi
-if [ $PLATFORM == "macosx" -a "$target" == "macosx" -a "$macosx" == "true" ]; then build=$UNIX ; fi
-if [ $PLATFORM == "cygwin" -a "$target" == "cygwin" -a "$cygwin" == "true" ]; then build=$CYGW ; fi
-if [ $PLATFORM == "cygwin" -a "$target" == "mingw"  -a "$mingw"	== "true"  ]; then build=$MING ; fi
-if [ $PLATFORM == "cygwin" -a "$target" == "msvc"   -a "$msvc"	== "true"  ]; then build=$MSVC ; fi
+if [ $PLATFORM == "linux"  -a "$target" == "linux"  -a "$linux"	 == "true"  ]; then build=$UNIX ; fi
+if [ $PLATFORM == "macosx" -a "$target" == "macosx" -a "$macosx" == "true"  ]; then build=$UNIX ; fi
+if [ $PLATFORM == "cygwin" -a "$target" == "cygwin" -a "$cygwin" == "true"  ]; then build=$CYGW ; fi
+if [ $PLATFORM == "cygwin" -a "$target" == "mingw"  -a "$mingw"	 == "true"  ]; then build=$MING ; fi
+if [ $PLATFORM == "cygwin" -a "$target" == "msvc"   -a "$msvc"	 == "true"  ]; then build=$MSVC ; fi
 
 case "$build" in
   "$UNIX" ) 
@@ -119,6 +121,7 @@ case "$build" in
 			make "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/xmpsdk/src/.libs"
 			make install
 			make samples "CXXFLAGS=-I${PWD}/usr/include -I${PWD}/src" "LDFLAGS=-L${PWD}/usr/lib -L${PWD}/xmpsdk/src/.libs -lexiv2"
+			result=$?
 			run_tests
   ;;
   
@@ -129,6 +132,7 @@ case "$build" in
 			# 2. trying to get Cygwin to install into a local directory
 			./configure --disable-nls  $withcurl $withssh
 			make
+			result=$?
 			make install
 			make samples
 			run_tests
@@ -146,17 +150,18 @@ case "$build" in
 
 			PATH=$PATH:/cygdrive/c/Windows/System32
 			cmd.exe /c "cd $(cygpath -aw .) && call jenkins_build.bat"
-			exit $?
+			result=$?
   ;;
   
   
   "$NONE") 
-	 echo "**************************************************************"
-	 echo "*** no build for platform=$PLATFORM label=$label requested ***"
-	 echo "**************************************************************"
+	 echo "*************************************************************"
+	 echo "*** no build for platform=$PLATFORM target=$target requested ***"
+	 echo "*************************************************************"
   ;; 
 esac
 
 set -v
 # That's all Folks!
 ##
+exit $result
