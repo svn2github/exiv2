@@ -117,5 +117,7 @@ if %x64%==true   (
 
 popd
 
+set ERRORLEVEL=29
+
 rem That's all Folks!
 rem -----------------
