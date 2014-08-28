@@ -50,13 +50,17 @@ fi
 
 ##
 # set up some defaults (used when running this script from the terminal)
+echo "1 target = $target platform = $PLATFORM WORKSPACE = $WORKSPACE"
 if [ $PLATFORM == "macosx" -a -z "$macosx" ]; then export macosx=true ; export target=macosx ; fi
 if [ $PLATFORM == "cygwin" -a -z "$cygwin" ]; then export cygwin=true ; export target=cygwin ; fi
 if [ $PLATFORM == "linux"  -a -z "$linux"  ]; then export linux=true  ; export target=linux	 ; fi
 if [ $PLATFORM == "mingw"  -a -z "$mingw"  ]; then export mingw=true  ; export target=mingw	 ; fi
 
-if [ -z "$tests"  ]; then export tests=true                                         ; fi
-if [ -z "$target" ]; then target=$(basename $(echo $WORKSPACE | sed -e 's#\\#/#g')) ; fi
+if [ -z "$tests"     ]; then export tests=true                                               ; fi
+if [ -z "$WORKSPACE" ]; then export "WORKSPACE=$0/$PLATFORM"                                 ; fi
+
+if [ -z "$target" ]; then export target=$(basename $(echo $WORKSPACE | sed -e 's#\\#/#g'))   ; fi
+echo "2 target = $target platform = $PLATFORM WORKSPACE = $WORKSPACE"
 
 export PATH=$PATH:/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/usr/lib/pkgconfig:/opt/local/bin:$PWD/usr/bin:/opt/local/bin:/opt/local/sbin:/opt/pkgconfig:bin
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PWD/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
@@ -104,6 +108,7 @@ UNIX=1
 CYGW=2
 MSVC=3
 MING=4
+builds=( none unix cygwin msvc mingw )
 build=$NONE
 
 if [ $PLATFORM == "linux"  -a "$target" == "linux"  -a "$linux"	 == "true"  ]; then build=$UNIX ; fi
@@ -111,6 +116,9 @@ if [ $PLATFORM == "macosx" -a "$target" == "macosx" -a "$macosx" == "true"  ]; t
 if [ $PLATFORM == "cygwin" -a "$target" == "cygwin" -a "$cygwin" == "true"  ]; then build=$CYGW ; fi
 if [ $PLATFORM == "cygwin" -a "$target" == "mingw"  -a "$mingw"	 == "true"  ]; then build=$MING ; fi
 if [ $PLATFORM == "cygwin" -a "$target" == "msvc"   -a "$msvc"	 == "true"  ]; then build=$MSVC ; fi
+
+echo "2 target = $target platform = $PLATFORM WORKSPACE = $WORKSPACE build = $build = ${builds[$build]}"
+exit 0
 
 case "$build" in
   "$UNIX" ) 
