@@ -52,8 +52,8 @@ if [ $PLATFORM == "cygwin" -a -z "$cygwin" ]; then export cygwin=true ; export l
 if [ $PLATFORM == "linux"  -a -z "$linux"  ]; then export linux=true  ; export label=linux	; fi
 if [ $PLATFORM == "mingw"  -a -z "$mingw"  ]; then export mingw=true  ; export label=mingw	; fi
 
-if [ -z "$tests"    ]; then export tests=true                            ; fi
-if [ -z "$JOB_NAME" ]; then export JOB_NAME="jenkins-build.sh=$PLATFORM" ; fi
+if [ -z "$tests"     ]; then export tests=true               ; fi
+if [ -z "$WORKSPACE" ]; then export WORKSPACE="$0/$PLATFORM" ; fi
 
 export PATH=$PATH:/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/usr/lib/pkgconfig:/opt/local/bin:$PWD/usr/bin:/opt/local/bin:/opt/local/sbin:/opt/pkgconfig:bin
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PWD/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
@@ -102,7 +102,7 @@ CYGW=2
 MSVC=3
 MING=4
 build=$NONE
-target=$(echo $JOB_NAME|cut -d= -f 2)
+target=basename $(echo $WORKSPACE | sed -e 's#\\#/#g')
 
 if [ $PLATFORM == "linux"  -a "$target" == "linux"  -a "$linux"	== "true"  ]; then build=$UNIX ; fi
 if [ $PLATFORM == "macosx" -a "$target" == "macosx" -a "$macosx" == "true" ]; then build=$UNIX ; fi
