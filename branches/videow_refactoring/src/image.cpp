@@ -135,6 +135,8 @@ namespace {
         { ImageType::riff, newRiffInstance, isRiffType, amRead,      amNone,      amRead,      amNone      },
         { ImageType::asf,  newAsfInstance,  isAsfType,  amNone,      amNone,      amRead,      amNone      },
         { ImageType::mkv,  newMkvInstance,  isMkvType,  amNone,      amNone,      amRead,      amNone      },
+        { ImageType::qtime,newQTimeInstance,isQTimeType,amRead,      amNone,      amRead,      amNone      },
+        { ImageType::riff, newRiffInstance, isRiffType, amRead,      amNone,      amRead,      amNone      },
         // End of list marker
         { ImageType::none, 0,               0,          amNone,      amNone,      amNone,      amNone      }
     };

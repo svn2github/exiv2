@@ -1,6 +1,6 @@
 # ************************************************************* -*- Makefile -*-
 #
-# Copyright (C) 2004-2013 Andreas Huggel <ahuggel@gmx.net>
+# Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
 #
 # This Makefile is part of the Exiv2 distribution.
 #
@@ -100,8 +100,8 @@ test:
 testv:
 	@for t in /video ; do \
 		if [ ! -e data/$$t ]; then \
-	echo svn export '$(SVN)'$$t data$$t -r 3100 ; \
-	     svn export '$(SVN)'$$t data$$t -r 3100 ; \
+	echo svn export '$(SVN)'$$t data$$t ; \
+	     svn export '$(SVN)'$$t data$$t ; \
 	fi ; done
 	@list='$(TESTV)'; for p in $$list; do \
 	    echo Running $$p ...; \
