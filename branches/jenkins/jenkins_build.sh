@@ -188,10 +188,13 @@ case "$build" in
 		    export CC=$(which gcc)
             export CXX=$(which g++)
             export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+            echo   --- recursive build ---
+            export
+            echo   -----------------------
 		    ./configure --disable-nls  $withcurl $withssh
-			make          # -j4
+			make -j4
 			make install
-			make samples  # -j4 samples
+			make -j4 samples
 			run_tests
 		else
 			if [ -e config/config.mk ]; then make clean ; fi
@@ -212,6 +215,19 @@ case "$build" in
 ##			# That's all Folks
 ##			##
 #########################################
+
+#########################################
+##			: mingw32.bat
+##			: invoke MinGW bash
+##			:
+##			setlocal
+##			set "PATH=c:\MinGW\bin;c:\MinGW\msys\1.0\bin;C:\MinGW\msys\1.0\local\bin;"
+##			set "PS1=\! ${PWD}> "
+##			c:\MinGW\msys\1.0\bin\bash.exe %*%
+##
+##			: That's all Folks
+#########################################
+
 		fi
   ;;
 
