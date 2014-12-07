@@ -184,7 +184,7 @@ case "$build" in
   ;;
 
   MING) 
-		if [ -z "$BUILDMINGW" ]; then
+		if [ ! -z "$BUILDMINGW" ]; then
 		    ./configure --disable-nls  $withcurl $withssh
 			make -j4
 			make install
