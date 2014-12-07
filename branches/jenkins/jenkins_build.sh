@@ -202,7 +202,7 @@ case "$build" in
 				export TEMP=$TMP
 				export BUILDMINGW=1
 				export "PATH=c:\\MinGW\\bin;c:\\MinGW\\msys\\1.0\\bin;C:\\MinGW\\msys\\1.0\\local\\bin;"
-				/cygdrive/c/MinGW/msys/1.0/bin/bash.exe "-c jenkins_build.sh"
+				/cygdrive/c/MinGW/msys/1.0/bin/bash.exe -c $0
 			)
 #########################################
 ##			#!/bin/bash
