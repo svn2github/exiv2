@@ -194,8 +194,21 @@ case "$build" in
 			if [ -e config/config.mk ]; then make clean ; fi
 			df
 			ls -alt /cygdrive/c/Users/rmills/com/mingw64.sh
+			export TMP=/tmp
+			export TEMP=$TMP
 			export BUILDMINGW=1
 			/cygdrive/c/Users/rmills/com/mingw64.sh "-c jenkins_build.sh"
+#########################################
+##			#!/bin/bash
+##			# mingw64.sh
+##			# invoke 32bit MinGW bash (see http://clanmills.com/exiv2/mingw.shtml about 64bit build)
+##			#
+##			export "PATH=c:\\MinGW\\bin;c:\\MinGW\\msys\\1.0\\bin;C:\\MinGW\\msys\\1.0\\local\\bin;"
+##			/cygdrive/c/MinGW/msys/1.0/bin/bash.exe $*
+##
+##			# That's all Folks
+##			##
+#########################################
 		fi
   ;;
 
