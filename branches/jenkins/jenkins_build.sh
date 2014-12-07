@@ -200,6 +200,8 @@ case "$build" in
 			run_tests
 		else
 			if [ -e config/config.mk ]; then make clean ; fi
+			df
+			ls -alt /cygdrive/c/Users/rmills/com/mingw64.sh
 			/cygdrive/c/Users/rmills/com/mingw64.sh "-c jenkins_build.sh buildmingw"
 		fi
   ;;
