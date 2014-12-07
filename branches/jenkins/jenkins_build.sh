@@ -22,14 +22,6 @@ start=$(date)
 starts=$(date +%s)
 
 ##
-# are we recursively building mingw?
-buildmingw=0
-if [ "$1" == "buildmingw" ]; then
-	buildmingw=1
-	shift
-fi
-
-##
 # functions
 run_tests() {
 	if [ "$result" == "0" ]; then
@@ -192,7 +184,7 @@ case "$build" in
   ;;
 
   MING) 
-		if [ "$buildmingw" == "1" ]; then
+		if [ -z "$BUILDMINGW" ]; then
 		    ./configure --disable-nls  $withcurl $withssh
 			make -j4
 			make install
@@ -202,7 +194,8 @@ case "$build" in
 			if [ -e config/config.mk ]; then make clean ; fi
 			df
 			ls -alt /cygdrive/c/Users/rmills/com/mingw64.sh
-			/cygdrive/c/Users/rmills/com/mingw64.sh "-c jenkins_build.sh buildmingw"
+			export BUILDMINGW=1
+			/cygdrive/c/Users/rmills/com/mingw64.sh "-c jenkins_build.sh"
 		fi
   ;;
 
