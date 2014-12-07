@@ -189,7 +189,8 @@ case "$build" in
             export CXX=$(which g++)
             export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
             echo   --- recursive build ---
-		    ./configure --disable-nls  $withcurl $withssh
+            if [ ! -d   "--prefix=$PWD/usr" ]; then mkdir "$PWD/usr" ; fi
+		    ./configure "--prefix=$PWD/usr" --disable-nls  $withcurl $withssh
 			make # -j4   DO NOT USE -j4 because it seems to hang the build!
 			make install
 			make samples
