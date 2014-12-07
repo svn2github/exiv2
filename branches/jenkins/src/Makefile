@@ -236,7 +236,7 @@ bin: lib $(EXIV2BIN)
 
 lib: $(OBJ)
 	$(LIBTOOL) --mode=link $(LINK.cc) -o $(LIBRARY) $(LOBJ) -rpath $(libdir) -version-info $(EXIV2_LTVERSION) $(LIBS)
-	@touch lib
+	@echo '' > lib
 
 $(EXIV2BIN): lib $(EXIV2OBJ) $(EXIV2COBJ) svn_version.h
 	-mkdir -p ../bin >/dev/null 2>&1
