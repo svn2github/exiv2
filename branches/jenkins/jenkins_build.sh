@@ -188,21 +188,22 @@ case "$build" in
 		    export CC=$(which gcc)
             export CXX=$(which g++)
             export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-            echo   --- recursive build ---
+            echo   --- recursive MinGW build ---
             if [ ! -d   "--prefix=$PWD/usr" ]; then mkdir "$PWD/usr" ; fi
-		    ./configure "--prefix=$PWD/usr" --disable-nls  $withcurl $withssh
-			make # -j4   DO NOT USE -j4 because it seems to hang the build!
+		    ./configure "--prefix=$PWD/usr" $withcurl $withssh
+			make          # DO NOT USE -j4.  It seems to hang the build!
 			make install
 			make samples
 			run_tests
 		else
 			if [ -e config/config.mk ]; then make clean ; fi
-			df
-			ls -alt /cygdrive/c/Users/rmills/com/mingw64.sh
-			export TMP=/tmp
-			export TEMP=$TMP
-			export BUILDMINGW=1
-			/cygdrive/c/Users/rmills/com/mingw64.sh "-c jenkins_build.sh"
+			(
+				export TMP=/tmp
+				export TEMP=$TMP
+				export BUILDMINGW=1
+				export "PATH=c:\\MinGW\\bin;c:\\MinGW\\msys\\1.0\\bin;C:\\MinGW\\msys\\1.0\\local\\bin;"
+				/cygdrive/c/MinGW/msys/1.0/bin/bash.exe "-c jenkins_build.sh"
+			)
 #########################################
 ##			#!/bin/bash
 ##			# mingw64.sh
