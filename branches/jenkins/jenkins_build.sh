@@ -189,9 +189,9 @@ case "$build" in
             export CXX=$(which g++)
             export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 		    ./configure --disable-nls  $withcurl $withssh
-			make         # -j4
+			make          # -j4
 			make install
-			make samples # -j4 samples
+			make samples  # -j4 samples
 			run_tests
 		else
 			if [ -e config/config.mk ]; then make clean ; fi
