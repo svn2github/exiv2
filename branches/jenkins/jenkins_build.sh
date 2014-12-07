@@ -199,8 +199,8 @@ case "$build" in
 			make -j4 samples
 			run_tests
 		else
-			make clean
-			/c/Users/rmills/com/mingw64.sh "-c jenkins_build.sh buildmingw"
+			if [ -e config/config.mk ]; then make clean ; fi
+			/cygdrive/c/Users/rmills/com/mingw64.sh "-c jenkins_build.sh buildmingw"
 		fi
   ;;
 
