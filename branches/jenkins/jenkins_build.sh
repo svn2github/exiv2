@@ -191,6 +191,7 @@ case "$build" in
             echo   --- recursive MinGW build ---
 		    ./configure $withcurl $withssh
 			make        # DO NOT USE -j4.  It seems to hang the build!
+			bin/exiv2 -v -V
 			make install
 			make samples
 			run_tests
@@ -205,8 +206,8 @@ case "$build" in
 			)
 #########################################
 ##			#!/bin/bash
-##			# mingw64.sh
-##			# invoke 32bit MinGW bash (see http://clanmills.com/exiv2/mingw.shtml about 64bit build)
+##			# mingw32.sh
+##			# invoke 32bit MinGW bash 
 ##			#
 ##			export "PATH=c:\\MinGW\\bin;c:\\MinGW\\msys\\1.0\\bin;C:\\MinGW\\msys\\1.0\\local\\bin;"
 ##			/cygdrive/c/MinGW/msys/1.0/bin/bash.exe $*
@@ -226,6 +227,36 @@ case "$build" in
 ##
 ##			: That's all Folks
 #########################################
+
+#########################################
+## 			see http://clanmills.com/exiv2/mingw.shtml about 64bit build
+##          Install a fresh (32 bit) mingw/msys into c:\MinGW64
+##          install the 64 bit compiler from: http://tdm-gcc.tdragon.net
+##          I used the "on-demand" installer and "Create" put the tools in c:\TDM-GCC-64. The main change is to add the 64 bit compilers to the path BEFORE the 32 bit compilers. 
+## 			set PATH=c:\TDM-GCC-64\bin;c:\MinGW\bin;c:\MinGW\msys\1.0\bin;C:\MinGW\msys\1.0\local\bin;
+##
+##          keep MinGW64 for 64 bit builds and /usr/lib have 
+#########################################
+
+#########################################
+## 			zlib and expat
+##          mkdir -p ~/gnu/zlib ~/gnu/expat
+##			get the tar.gz files and tar zxf them
+##          build (see http://clanmills.com/exiv2/mingw.shtml about zlib)
+##          DO THIS IN BOTH c:\MinGW and c:\MinGW64
+#########################################
+
+#########################################
+##			The keith bug
+##			rm -rf /c/MinGW/lib/libintl.la
+#########################################
+
+#########################################
+##          to build dlfcn-win32
+##			git clone https://github.com/dlfcn-win32/dlfcn-win32
+##			cd dlfcn-win32 ; ./configure --prefix=/usr --enable-shared ; make ; make install
+#########################################
+
 
 		fi
   ;;
