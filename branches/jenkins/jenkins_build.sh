@@ -235,12 +235,17 @@ case "$build" in
 
 #########################################
 ## 			see http://clanmills.com/exiv2/mingw.shtml about 64bit build
-##          Install a fresh (32 bit) mingw/msys into c:\MinGW64
-##          install the 64 bit compiler from: http://tdm-gcc.tdragon.net
-##          I used the "on-demand" installer and "Create" put the tools in c:\TDM-GCC-64. The main change is to add the 64 bit compilers to the path BEFORE the 32 bit compilers. 
+##			Install a fresh (32 bit) mingw/msys into c:\MinGW64
+##			install the 64 bit compiler from: http://tdm-gcc.tdragon.net
+##			I used the "on-demand" installer and "Create" put the tools in c:\TDM-GCC-64. The main change is to add the 64 bit compilers to the path BEFORE the 32 bit compilers. 
 ## 			set PATH=c:\TDM-GCC-64\bin;c:\MinGW\bin;c:\MinGW\msys\1.0\bin;C:\MinGW\msys\1.0\local\bin;
 ##
-##          keep MinGW64 for 64 bit builds and /usr/lib have 
+##          keep MinGW64 for 64 bit builds and /usr/lib has 64bit libraries
+##			keep MinGW   for 32 bit builds and /usr/lib has 32bit libraries
+##
+##			install msys-coreutils, binutils, autotools
+##
+##			For pkg-config see mingw.shtml
 #########################################
 
 #########################################
