@@ -191,10 +191,10 @@ case "$build" in
             echo --- recursive MinGW build ---
             ./configure $withcurl $withssh
             make        # DO NOT USE -j4.  It seems to hang the build!
-            bin/exiv2 -v -V
             make install
             make samples
             run_tests
+            exiv2 -v -V
         else
             if [ -e config/config.mk ]; then make clean ; fi
             (
