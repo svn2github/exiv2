@@ -265,7 +265,6 @@ case "$build" in
 ##          cd dlfcn-win32 ; ./configure --prefix=/usr --enable-shared ; make ; make install
 #########################################
 
-
         fi
   ;;
 
