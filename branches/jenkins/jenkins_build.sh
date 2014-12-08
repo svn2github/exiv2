@@ -202,11 +202,9 @@ case "$build" in
 				export TEMP=$TMP
 				export BUILDMINGW=1
 				if [ "$x64" == true ]; then 
-					export "PATH=c:\\MinGW64\\bin;c:\\MinGW64\\msys\\1.0\\bin;C:\\MinGW64\\msys\\1.0\\local\\bin;"
-					/cygdrive/c/MinGW64/msys/1.0/bin/bash.exe -c $0
+					/cygdrive/c/MinGW64/msys/1.0/bin/bash.exe -c 'env PATH=/c/MinGW64/bin:/c/MinGW64/msys/1.0/bin:/c/MinGW64/msys/1.0/local/bin $0'
 				else 
-					export "PATH=c:\\MinGW\\bin;c:\\MinGW\\msys\\1.0\\bin;C:\\MinGW\\msys\\1.0\\local\\bin;"
-					/cygdrive/c/MinGW/msys/1.0/bin/bash.exe -c $0
+					/cygdrive/c/MinGW/msys/1.0/bin/bash.exe -c 'env PATH=/c/MinGW/bin:/c/MinGW/msys/1.0/bin:/c/MinGW/msys/1.0/local/bin $0'
 				fi
 			)
 #########################################
