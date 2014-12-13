@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2013 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -29,29 +29,39 @@
 #include "rcsid_int.hpp"
 EXIV2_RCSID("@(#) $Id$")
 
-#if defined(__MINGW32__) || defined(__MINGW64__)
-#ifndef __MINGW__
-#define __MINGW__
-#endif
+// *****************************************************************************
+
+#include "exv_conf.h"
+
+#ifndef EXV_USE_SSH
+#define EXV_USE_SSH 0
 #endif
 
-// *****************************************************************************
-// included header files
-#ifdef _MSC_VER
-# include "exv_msvc.h"
-#else
-# include "exv_conf.h"
+#ifndef EXV_USE_CURL
+#define EXV_USE_CURL 0
+#endif
+#if EXV_USE_CURL == 1
+#include <curl/curl.h>
+#endif
+
+#if defined(__MINGW32__) || defined(__MINGW64__)
+# ifndef  __MINGW__
+#  define __MINGW__
+# endif
 #endif
 
 #if defined(__CYGWIN__) || defined(__MINGW__)
 #include <windows.h>
 #endif
 
+#include "http.hpp"
 #include "version.hpp"
 
 // + standard includes
 #include <iomanip>
 #include <sstream>
+
+
 
 namespace Exiv2 {
     int versionNumber()
@@ -99,7 +109,6 @@ typedef string_v::iterator  string_i;
 #define _MAX_PATH 512
 #endif
 
-
 // platform specific support for dumpLibraryInfo
 #if defined(WIN32)
 # include <windows.h>
@@ -116,6 +125,7 @@ typedef string_v::iterator  string_i;
 #elif defined(__linux__)
 # include <unistd.h>
 // http://syprog.blogspot.com/2011/12/listing-loaded-shared-objects-in-linux.html
+# include "link.h"
 # include <dlfcn.h>
   struct something
   {
@@ -129,6 +139,10 @@ typedef string_v::iterator  string_i;
     void*    not_needed1;    /* Pointer to the dynamic section of the shared object */
     struct lmap *next, *prev;/* chain of loaded objects */
   };
+#elif defined(__MINGW32__) || defined(__MINGW64__)
+#ifndef __MINGW__
+#define __MINGW__
+#endif
 #endif
 
 EXIV2API void dumpLibraryInfo(std::ostream& os)
@@ -142,7 +156,7 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
       int debug=0;
 #endif
 
-#if   defined(DLL_EXPORT) || defined(EXV_HAVE_DLL)
+#if   defined(EXV_HAVE_DLL)
       int dll=1;
 #else
       int dll=0;
@@ -173,9 +187,8 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
 #endif
 
 #if defined(__SUNPRO_CC) || defined (__SUNPRO_C)
-#define     __oracle__
+#define     __oracle__      
 #endif
-
 
 #ifndef __VERSION__
 #ifdef  __clang__version__
@@ -192,10 +205,8 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
       "windows";
 #elif defined(__APPLE__)
       "apple";
-#elif defined(__MINGW64__)
-      "mingw64";
-#elif defined(__MINGW32__)
-      "mingw32";
+#elif defined(__MINGW__)
+      "mingw";
 #elif defined(__linux__)
       "linux";
 #else
@@ -234,10 +245,9 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
     }
 
     // http://syprog.blogspot.com/2011/12/listing-loaded-shared-objects-in-linux.html
-    struct lmap*      pl;
-    void*             ph = dlopen(NULL, RTLD_NOW);
-    struct something* p  = (struct something*) ph;
-
+    struct lmap* pl;
+    void* ph = dlopen(NULL, RTLD_NOW);
+    struct something* p = (struct something*)ph;
     p  = p->ptr;
     pl = (struct lmap*)p->ptr;
 
@@ -257,17 +267,21 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
     os << "version="  << __VERSION__            << endl;
     os << "date="     << __DATE__               << endl;
     os << "time="     << __TIME__               << endl;
-    os << "svn="      << SVN_VERSION            << endl;
-
+    os << "ssh="      << EXV_USE_SSH            << endl;
+#if EXV_USE_CURL == 1
+    curl_version_info_data* vinfo   =  curl_version_info(CURLVERSION_NOW);
+    os << "curlversion="            << vinfo->version      << endl;
+    os << "curlprotocols=";
+    for (int i = 0; vinfo->protocols[i]; i++)
+        os << vinfo->protocols[i] << " ";
+    os << endl;
+#else
+    os << "curl="     << EXV_USE_CURL          << endl;
+#endif
+    os << "id="       << "$Id$" << endl;
     if ( libs.begin() != libs.end() ) {
         os << "executable=" << *libs.begin() << endl;
         for ( string_i lib = libs.begin()+1 ; lib != libs.end() ; lib++ )
             os << "library=" << *lib << endl;
     }
-
-#if defined(__linux__)
-    dlclose(ph);
-    ph=NULL;
-#endif
-
 }

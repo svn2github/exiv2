@@ -60,6 +60,7 @@ BINSRC = addmoddel.cpp        \
          exifcomment.cpp      \
          exifdata-test.cpp    \
          exifprint.cpp        \
+         httptest.cpp         \
          iotest.cpp           \
          iptceasy.cpp         \
          iptcprint.cpp        \
@@ -112,6 +113,7 @@ endif
 
 PREFIX = /usr/local/lib
 LINK.cc += -rpath $(PREFIX) -L$(PREFIX) 
+COMPILE.cc += -I$(top_srcdir)/include/exiv2
 
 # ******************************************************************************
 # Rules

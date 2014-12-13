@@ -32,12 +32,7 @@ EXIV2_RCSID("@(#) $Id$")
 //#define DEBUG 1
 
 // *****************************************************************************
-// included header files
-#ifdef _MSC_VER
-# include "exv_msvc.h"
-#else
-# include "exv_conf.h"
-#endif
+#include "exv_conf.h"
 #include "psdimage.hpp"
 #include "jpgimage.hpp"
 #include "image.hpp"
@@ -545,6 +540,10 @@ namespace Exiv2 {
             newResLength += writeXmpData(xmpData_, outIo);
             xmpDone = true;
         }
+
+        // Populate the fake data, only make sense for remoteio, httpio and sshio.
+        // it avoids allocating memory for parts of the file that contain image-date.
+        io_->populateFakeData();
 
         // Copy remaining data
         long readSize = 0;
