@@ -191,6 +191,27 @@ case "$build" in
             export CXX=$(which g++)
             export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
             echo --- recursive MinGW build ---
+
+            ##########################
+            #  To build curl/MinGW/64 (on 32bit MinGW):
+            #  PKG_CONFIG_PATH="/usr/local/lib/pkgconfig/:/usr/lib/pkgconfig/"
+            #  cd /home/rmills/gnu/curl/curl-7.39.0>
+            #  ./configure --prefix=/usr/local --disable-static --enable-shared --host=i686-x64-mingw32
+            #  I haven't succeeded in getting openssl to link with curl on MinGW
+            #  --with-ssl=/usr/local
+            ##########################
+            if [ "$withcurl" == "--with-curl" ]; then
+            	withcurl="--with-curl=/usr/local"
+            fi
+
+            ##########################
+            # I have be unable to build libssh on MinGW (neither 32 nor 64 bits)
+            ##########################
+            if [ "$withssh" == "--with-ssh" ]; then
+            	echo "*** unable to build --with-ssh on MING ***"
+            	withssh="--without-ssh"
+            fi
+            
             ./configure $withcurl $withssh
             (cd src ; make svn_version.h)
             make        # DO NOT USE -j4.  It seems to hang the build!
