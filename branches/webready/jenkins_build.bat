@@ -41,8 +41,11 @@ call "%VS80COMNTOOLS%\..\..\Vc\bin\vcvars32.bat"
 
 rem --
 rem Pull in support libraries
-if NOT EXIST ..\expat-2.1.0 xcopy/yesihq  c:\exiv2libs\expat-2.1.0 ..\expat-2.1.0
-if NOT EXIST ..\zlib-1.2.7  xcopy/yesihq  c:\exiv2libs\zlib-1.2.7  ..\zlib-1.2.7
+if NOT EXIST ..\expat    xcopy/yesihq  c:\exiv2libs\expat-2.1.0     ..\expat
+if NOT EXIST ..\zlib     xcopy/yesihq  c:\exiv2libs\zlib-1.2.7      ..\zlib
+if NOT EXIST ..\openssl  xcopy/yesihq  c:\exiv2libs\openssl-1.0.1j  ..\openssl
+if NOT EXIST ..\ssh      xcopy/yesihq  c:\exiv2libs\libssh-0.5.5    ..\ssh
+if NOT EXIST ..\curl     xcopy/yesihq  c:\exiv2libs\curl-7.39.0     ..\curl
 
 rem --
 rem build and test
