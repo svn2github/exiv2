@@ -151,10 +151,10 @@ if %x64%==true   (
 del e.sln
 popd
 
-# delete the support libraries
-pushd .. > /dev/nul
-C:\cygwin64\bin\rm -rf expat zlib openssl libssh curl
-popd
+rem delete the support libraries
+cd .. 
+C:\cygwin64\bin\rm.exe -rf expat zlib openssl libssh curl
+cd msvc
 
 rem That's all Folks!
 rem -----------------
