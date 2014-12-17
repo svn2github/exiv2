@@ -151,5 +151,8 @@ del d.sln
 
 popd
 
+# delete the support libraries
+rmdir/s/q ..\expat ..\zlib ..\openssl ..\libssh ..\curl
+
 rem That's all Folks!
 rem -----------------
