@@ -61,6 +61,7 @@ for /f "tokens=*" %%a in ('cygpath -au ..') do set FOO=%%a
 rem --
 rem remove lines from the solution file to respect build options
 copy exiv2.sln e.sln
+copy exiv2.sln d.sln
 rem find the lines which specify openssl, eay, ssh and curl
 for /f "tokens=*" %%a in ('findstr /c:openssl e.sln') do set L_OPENSSL=%%a
 for /f "tokens=*" %%a in ('findstr /c:libeay  e.sln') do set L_LIBEAY=%%a
@@ -79,6 +80,7 @@ if %libssh%==false (
 if %curl%==false (
     call BatchSubstitute.bat "%%L_CURL%%"    "" e.sln > d.sln && copy/y d.sln e.sln
 )
+del d.sln
 
 rem --
 rem Now build
@@ -147,13 +149,11 @@ if %x64%==true   (
 ) ) ) )
 
 del e.sln
-del d.sln
-
 popd
 
 # delete the support libraries
 pushd .. > /dev/nul
-del/s expat zlib openssl libssh curl
+del/s     expat zlib openssl libssh curl
 rmdir/s/q expat zlib openssl libssh curl
 rem C:\cygwin64\bin\rm -rf expat zlib openssl libssh curl
 popd
