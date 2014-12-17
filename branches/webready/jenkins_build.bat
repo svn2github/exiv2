@@ -153,9 +153,7 @@ popd
 
 # delete the support libraries
 pushd .. > /dev/nul
-del/s     expat zlib openssl libssh curl
-rmdir/s/q expat zlib openssl libssh curl
-rem C:\cygwin64\bin\rm -rf expat zlib openssl libssh curl
+C:\cygwin64\bin\rm -rf expat zlib openssl libssh curl
 popd
 
 rem That's all Folks!
