@@ -41,12 +41,12 @@ rem  set the build environment
 call "%VS80COMNTOOLS%\..\..\Vc\bin\vcvars32.bat"
 
 rem --
-rem Pull in support libraries
-if NOT EXIST ..\expat    xcopy/yesihq  c:\exiv2libs\expat-2.1.0     ..\expat
-if NOT EXIST ..\zlib     xcopy/yesihq  c:\exiv2libs\zlib-1.2.7      ..\zlib
-if NOT EXIST ..\openssl  xcopy/yesihq  c:\exiv2libs\openssl-1.0.1j  ..\openssl
-if NOT EXIST ..\libssh   xcopy/yesihq  c:\exiv2libs\libssh-0.5.5    ..\libssh
-if NOT EXIST ..\curl     xcopy/yesihq  c:\exiv2libs\curl-7.39.0     ..\curl
+rem copy the support libraries
+if NOT EXIST ..\expat   xcopy/yesihq  c:\exiv2libs\expat-2.1.0     ..\expat
+if NOT EXIST ..\zlib    xcopy/yesihq  c:\exiv2libs\zlib-1.2.7      ..\zlib
+if NOT EXIST ..\openssl xcopy/yesihq  c:\exiv2libs\openssl-1.0.1j  ..\openssl
+if NOT EXIST ..\libssh  xcopy/yesihq  c:\exiv2libs\libssh-0.5.5    ..\libssh
+if NOT EXIST ..\curl    xcopy/yesihq  c:\exiv2libs\curl-7.39.0     ..\curl
 
 rem --
 rem build and test
@@ -151,10 +151,8 @@ if %x64%==true   (
 del e.sln
 popd
 
-rem delete the support libraries
-cd .. 
-C:\cygwin64\bin\rm.exe -rf expat zlib openssl libssh curl
-cd msvc
+rem delete the support libraries (with mozilla's native rm utility)
+msvc2005\tools\bin\rm.exe -rf ..\expat ..\zlib ..\openssl ..\libssh ..\curl
 
 rem That's all Folks!
 rem -----------------
