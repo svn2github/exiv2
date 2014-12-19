@@ -30,7 +30,19 @@
 EXIV2_RCSID("@(#) $Id$")
 
 // *****************************************************************************
+// included header files
 #include "exv_conf.h"
+
+#include "futils.hpp"
+
+#define UNUSED(x) (void)(x)
+
+// Linux GCC 4.8 appears to be confused about strerror_r
+#ifndef EXV_STRERROR_R_CHAR_P
+#ifdef  __gnu_linux__
+#define EXV_STRERROR_R_CHAR_P
+#endif
+#endif
 
 // + standard includes
 #include <sys/types.h>
@@ -42,7 +54,6 @@ EXIV2_RCSID("@(#) $Id$")
 # include <unistd.h>                     // for stat()
 #endif
 
-#include "futils.hpp"
 #include <cerrno>
 #include <sstream>
 #include <cstring>

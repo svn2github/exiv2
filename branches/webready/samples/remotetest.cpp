@@ -1,4 +1,4 @@
-// *****************************************************************
+// ***************************************************************** -*- C++ -*-
 // remotetest.cpp
 // Tester application for testing remote i/o.
 // It makes some modifications on the metadata of remote file, reads new metadata from that file

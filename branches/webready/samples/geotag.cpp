@@ -1,7 +1,6 @@
 // ***************************************************************** -*- C++ -*-
-
 // geotag.cpp, $Rev: 2286 $
-// Sample program to read gpx files and update the images with GPS tags
+// Sample program to read gpx files and update images with GPS tags
 
 #include <exiv2/exiv2.hpp>
 

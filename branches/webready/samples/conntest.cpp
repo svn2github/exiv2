@@ -1,8 +1,9 @@
-// *****************************************************************
+// ***************************************************************** -*- C++ -*-
 // con-test.cpp
 // Tester application for testing the http/https/ftp/ssh/sftp connection
 
 #include "exv_conf.h"
+
 #include "exiv2/futils.hpp"
 #include "http.hpp"
 #if EXV_USE_CURL == 1

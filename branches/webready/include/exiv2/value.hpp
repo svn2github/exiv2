@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2013 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -493,9 +493,9 @@ namespace Exiv2 {
         //@{
         AutoPtr clone() const { return AutoPtr(clone_()); }
         /*!
-          @brief Write the value to an output stream. Any trailing '\\0'
-                 characters of the ASCII value are stripped and not written to
-                 the output stream.
+          @brief Write the ASCII value up to the the first '\\0' character to an
+                 output stream.  Any further characters are ignored and not
+                 written to the output stream.
         */
         virtual std::ostream& write(std::ostream& os) const;
         //@}
@@ -1062,8 +1062,8 @@ namespace Exiv2 {
      @brief %Value for simple ISO 8601 times.
 
      This class is limited to handling simple time strings in the ISO 8601
-     format HHMMSS±HHMM where HHMMSS refers to local hour, minute and
-     seconds and ±HHMM refers to hours and minutes ahead or behind
+     format HHMMSSï¿½HHMM where HHMMSS refers to local hour, minute and
+     seconds and ï¿½HHMM refers to hours and minutes ahead or behind
      Universal Coordinated Time.
      */
     class EXIV2API TimeValue : public Value {
@@ -1550,7 +1550,8 @@ namespace Exiv2 {
     {
         value_.clear();
         long ts = TypeInfo::typeSize(typeId());
-        if (len % ts != 0) len = (len / ts) * ts;
+        if (ts != 0)
+            if (len % ts != 0) len = (len / ts) * ts;
         for (long i = 0; i < len; i += ts) {
             value_.push_back(getValue<T>(buf + i, byteOrder));
         }

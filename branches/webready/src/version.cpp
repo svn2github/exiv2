@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2013 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -125,7 +125,6 @@ typedef string_v::iterator  string_i;
 #elif defined(__linux__)
 # include <unistd.h>
 // http://syprog.blogspot.com/2011/12/listing-loaded-shared-objects-in-linux.html
-# include "link.h"
 # include <dlfcn.h>
   struct something
   {
@@ -156,7 +155,7 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
       int debug=0;
 #endif
 
-#if   defined(EXV_HAVE_DLL)
+#if   defined(DLL_EXPORT) || defined(EXV_HAVE_DLL)
       int dll=1;
 #else
       int dll=0;
@@ -187,7 +186,7 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
 #endif
 
 #if defined(__SUNPRO_CC) || defined (__SUNPRO_C)
-#define     __oracle__      
+#define     __oracle__
 #endif
 
 #ifndef __VERSION__
@@ -205,8 +204,10 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
       "windows";
 #elif defined(__APPLE__)
       "apple";
-#elif defined(__MINGW__)
-      "mingw";
+#elif defined(__MINGW64__)
+      "mingw64";
+#elif defined(__MINGW32__)
+      "mingw32";
 #elif defined(__linux__)
       "linux";
 #else
@@ -245,9 +246,10 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
     }
 
     // http://syprog.blogspot.com/2011/12/listing-loaded-shared-objects-in-linux.html
-    struct lmap* pl;
-    void* ph = dlopen(NULL, RTLD_NOW);
-    struct something* p = (struct something*)ph;
+    struct lmap*      pl;
+    void*             ph = dlopen(NULL, RTLD_NOW);
+    struct something* p  = (struct something*) ph;
+
     p  = p->ptr;
     pl = (struct lmap*)p->ptr;
 
@@ -267,6 +269,7 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
     os << "version="  << __VERSION__            << endl;
     os << "date="     << __DATE__               << endl;
     os << "time="     << __TIME__               << endl;
+    os << "svn="      << SVN_VERSION            << endl;
     os << "ssh="      << EXV_USE_SSH            << endl;
 #if EXV_USE_CURL == 1
     curl_version_info_data* vinfo   =  curl_version_info(CURLVERSION_NOW);
@@ -284,4 +287,10 @@ EXIV2API void dumpLibraryInfo(std::ostream& os)
         for ( string_i lib = libs.begin()+1 ; lib != libs.end() ; lib++ )
             os << "library=" << *lib << endl;
     }
+
+#if defined(__linux__)
+    dlclose(ph);
+    ph=NULL;
+#endif
+
 }

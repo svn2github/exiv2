@@ -179,7 +179,7 @@ namespace Exiv2 {
               Nonzero if failure;
          */
 #if defined(_MSC_VER)
-        virtual int seek(int64_t offset, Position pos) = 0;
+        virtual int seek(uint64_t offset, Position pos) = 0;
 #else
         virtual int seek(long offset, Position pos) = 0;
 #endif
@@ -251,7 +251,14 @@ namespace Exiv2 {
          */
         virtual BasicIo::AutoPtr temporary() const = 0;
 
-        virtual void populateFakeData() = 0;
+        /*!
+          @brief Mark all the bNone blocks to bKnow. This avoids allocating memory
+            for parts of the file that contain image-date (non-metadata/pixel data)
+
+          @note This method should be only called after the concerned data (metadata)
+                are all downloaded from the remote file to memory.
+         */
+    	virtual void populateFakeData() {}
         //@}
 
     protected:
@@ -441,7 +448,7 @@ namespace Exiv2 {
                  Nonzero if failure;
          */
 #if defined(_MSC_VER)
-        virtual int seek(int64_t offset, Position pos);
+        virtual int seek(uint64_t offset, Position pos);
 #else
         virtual int seek(long offset, Position pos);
 #endif
@@ -519,6 +526,13 @@ namespace Exiv2 {
          */
         virtual BasicIo::AutoPtr temporary() const;
 
+        /*!
+          @brief Mark all the bNone blocks to bKnow. This avoids allocating memory
+            for parts of the file that contain image-date (non-metadata/pixel data)
+
+          @note This method should be only called after the concerned data (metadata)
+                are all downloaded from the remote file to memory.
+         */
         virtual void populateFakeData();
         //@}
 
@@ -666,7 +680,7 @@ namespace Exiv2 {
                  Nonzero if failure;
          */
 #if defined(_MSC_VER)
-        virtual int seek(int64_t offset, Position pos);
+        virtual int seek(uint64_t offset, Position pos);
 #else
         virtual int seek(long offset, Position pos);
 #endif
@@ -718,7 +732,15 @@ namespace Exiv2 {
          */
         virtual BasicIo::AutoPtr temporary() const;
 
+        /*!
+          @brief Mark all the bNone blocks to bKnow. This avoids allocating memory
+            for parts of the file that contain image-date (non-metadata/pixel data)
+
+          @note This method should be only called after the concerned data (metadata)
+                are all downloaded from the remote file to memory.
+         */
         virtual void populateFakeData();
+
         //@}
 
     private:

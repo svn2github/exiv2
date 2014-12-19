@@ -32,21 +32,18 @@
 
 // *********************************************************************
 // included header files
-#ifdef _MSC_VER
-# include "exv_msvc.h"
-# include <types.hpp>
-#else
-# include "exv_conf.h"
-#endif
+#include "exv_conf.h"
+
 
 #ifdef EXV_HAVE_STDINT_H
 # include <stdint.h>                     // for uint8_t
 #endif
-#include <limits.h>						 // for UINT_MAX
 
 // + standard includes
+#include <types.hpp>
 #include <string>
 #include <map>
+#include <limits.h>						 // for UINT_MAX
 
 // *********************************************************************
 // namespace extensions

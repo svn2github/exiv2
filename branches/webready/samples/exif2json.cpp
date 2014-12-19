@@ -1,5 +1,5 @@
 // ***************************************************************** -*- C++ -*-
-// exifprint.cpp, $Id: exif2json.cpp 518 2013-05-10 23:53:00Z robinwmills@gmail.com $
+// exif2json.cpp, $Id: exif2json.cpp 518 2013-05-10 23:53:00Z robinwmills@gmail.com $
 // Sample program to print the Exif metadata in JSON format
 
 #include <exiv2/exiv2.hpp>

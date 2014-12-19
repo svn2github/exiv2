@@ -29,9 +29,12 @@
 EXIV2_RCSID("@(#) $Id$")
 
 // *****************************************************************************
+// included header files
 #include "exv_conf.h"
 
 #include "basicio.hpp"
+#include "futils.hpp"
+#include "types.hpp"
 #include "error.hpp"
 #include "http.hpp"
 
@@ -154,6 +157,7 @@ namespace Exiv2 {
 
     FileIo::Impl::Impl(const std::string& path)
         : path_(path)
+        , fp_(0), opMode_(opSeek)
         , pMappedArea_(0), mappedLength_(0), isMalloced_(false), isWriteable_(false)
 #ifdef EXV_UNICODE_PATH
         , wpMode_(wpStandard)
@@ -162,8 +166,6 @@ namespace Exiv2 {
         , hFile_(0), hMap_(0)
 #endif
     {
-        fp_ = 0;
-        opMode_ = opSeek;
     }
 
 #ifdef EXV_UNICODE_PATH
@@ -741,6 +743,43 @@ namespace Exiv2 {
             // MSVCRT rename that does not overwrite existing files
 #ifdef EXV_UNICODE_PATH
             if (p_->wpMode_ == Impl::wpUnicode) {
+#if defined(WIN32) && defined(REPLACEFILE_IGNORE_MERGE_ERRORS)
+                // Windows implementation that deals with the fact that ::rename fails
+                // if the target filename still exists, which regularly happens when
+                // that file has been opened with FILE_SHARE_DELETE by another process,
+                // like a virus scanner or disk indexer
+                // (see also http://stackoverflow.com/a/11023068)
+                typedef BOOL (WINAPI * ReplaceFileW_t)(LPCWSTR, LPCWSTR, LPCWSTR, DWORD, LPVOID, LPVOID);
+                HMODULE hKernel = LoadLibraryA("kernel32.dll");
+                if (hKernel) {
+                    ReplaceFileW_t pfcn_ReplaceFileW = (ReplaceFileW_t)GetProcAddress(hKernel, "ReplaceFileW");
+                    if (pfcn_ReplaceFileW) {
+                        BOOL ret = pfcn_ReplaceFileW(wpf, fileIo->wpath().c_str(), NULL, REPLACEFILE_IGNORE_MERGE_ERRORS, NULL, NULL);
+                        FreeLibrary(hKernel);
+                        if (ret == 0) {
+                            if (GetLastError() == ERROR_FILE_NOT_FOUND) {
+                                if (::_wrename(fileIo->wpath().c_str(), wpf) == -1) {
+                                    throw WError(17, fileIo->wpath(), wpf, strError().c_str());
+                                }
+                                ::_wremove(fileIo->wpath().c_str());
+                            }
+                            else {
+                                throw WError(17, fileIo->wpath(), wpf, strError().c_str());
+                            }
+                        }
+                    }
+                    else {
+                        FreeLibrary(hKernel);
+                        if (fileExists(wpf) && ::_wremove(wpf) != 0) {
+                            throw WError(2, wpf, strError().c_str(), "::_wremove");
+                        }
+                        if (::_wrename(fileIo->wpath().c_str(), wpf) == -1) {
+                            throw WError(17, fileIo->wpath(), wpf, strError().c_str());
+                        }
+                        ::_wremove(fileIo->wpath().c_str());
+                    }
+                }
+#else
                 if (fileExists(wpf) && ::_wremove(wpf) != 0) {
                     throw WError(2, wpf, strError().c_str(), "::_wremove");
                 }
@@ -748,6 +787,7 @@ namespace Exiv2 {
                     throw WError(17, fileIo->wpath(), wpf, strError().c_str());
                 }
                 ::_wremove(fileIo->wpath().c_str());
+#endif
                 // Check permissions of new file
                 struct _stat buf2;
                 if (statOk && ::_wstat(wpf, &buf2) == -1) {
@@ -768,6 +808,43 @@ namespace Exiv2 {
             else
 #endif // EXV_UNICODE_PATH
             {
+#if defined(WIN32) && defined(REPLACEFILE_IGNORE_MERGE_ERRORS)
+                // Windows implementation that deals with the fact that ::rename fails
+                // if the target filename still exists, which regularly happens when
+                // that file has been opened with FILE_SHARE_DELETE by another process,
+                // like a virus scanner or disk indexer
+                // (see also http://stackoverflow.com/a/11023068)
+                typedef BOOL (WINAPI * ReplaceFileA_t)(LPCSTR, LPCSTR, LPCSTR, DWORD, LPVOID, LPVOID);
+                HMODULE hKernel = LoadLibraryA("kernel32.dll");
+                if (hKernel) {
+                    ReplaceFileA_t pfcn_ReplaceFileA = (ReplaceFileA_t)GetProcAddress(hKernel, "ReplaceFileA");
+                    if (pfcn_ReplaceFileA) {
+                        BOOL ret = pfcn_ReplaceFileA(pf, fileIo->path().c_str(), NULL, REPLACEFILE_IGNORE_MERGE_ERRORS, NULL, NULL);
+                        FreeLibrary(hKernel);
+                        if (ret == 0) {
+                            if (GetLastError() == ERROR_FILE_NOT_FOUND) {
+                                if (::rename(fileIo->path().c_str(), pf) == -1) {
+                                    throw Error(17, fileIo->path(), pf, strError());
+                                }
+                                ::remove(fileIo->path().c_str());
+                            }
+                            else {
+                                throw Error(17, fileIo->path(), pf, strError());
+                            }
+                        }
+                    }
+                    else {
+                        FreeLibrary(hKernel);
+                        if (fileExists(pf) && ::remove(pf) != 0) {
+                            throw Error(2, pf, strError(), "::remove");
+                        }
+                        if (::rename(fileIo->path().c_str(), pf) == -1) {
+                            throw Error(17, fileIo->path(), pf, strError());
+                        }
+                        ::remove(fileIo->path().c_str());
+                    }
+                }
+#else
                 if (fileExists(pf) && ::remove(pf) != 0) {
                     throw Error(2, pf, strError(), "::remove");
                 }
@@ -775,6 +852,7 @@ namespace Exiv2 {
                     throw Error(17, fileIo->path(), pf, strError());
                 }
                 ::remove(fileIo->path().c_str());
+#endif
                 // Check permissions of new file
                 struct stat buf2;
                 if (statOk && ::stat(pf, &buf2) == -1) {
@@ -857,7 +935,7 @@ namespace Exiv2 {
     }
 
 #if defined(_MSC_VER)
-    int FileIo::seek( int64_t offset, Position pos )
+    int FileIo::seek( uint64_t offset, Position pos )
     {
         assert(p_->fp_ != 0);
 
@@ -1171,7 +1249,7 @@ namespace Exiv2 {
     }
 
 #if defined(_MSC_VER)
-    int MemIo::seek( int64_t offset, Position pos )
+    int MemIo::seek( uint64_t offset, Position pos )
     {
         uint64_t newIdx = 0;
 

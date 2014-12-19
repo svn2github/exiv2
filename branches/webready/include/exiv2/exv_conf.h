@@ -9,10 +9,10 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to 1 if you want to use libssh */
-/* #undef EXV_USE_SSH */
+#define EXV_USE_SSH 1
 
 /* Define to 1 if you want to use libcurl in httpIo */
-/* #undef EXV_USE_CURL */
+#define EXV_USE_CURL 1
 
 /* Define to 1 if you have the `alarm' function. */
 /* #undef EXV_HAVE_ALARM */

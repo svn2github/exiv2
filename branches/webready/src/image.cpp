@@ -34,6 +34,7 @@ EXIV2_RCSID("@(#) $Id$")
 
 // *****************************************************************************
 #include "exv_conf.h"
+
 #include "image.hpp"
 #include "error.hpp"
 #include "futils.hpp"
@@ -75,6 +76,8 @@ EXIV2_RCSID("@(#) $Id$")
 #ifdef EXV_HAVE_UNISTD_H
 # include <unistd.h>                            // stat
 #endif
+
+#define UNUSED(x) (void)(x)
 
 // *****************************************************************************
 namespace {
@@ -434,7 +437,10 @@ namespace Exiv2 {
             return BasicIo::AutoPtr(new XPathIo(path)); // may throw
 
         return BasicIo::AutoPtr(new FileIo(path));
+        
+        UNUSED(useCurl);
     } // ImageFactory::createIo
+
 #ifdef EXV_UNICODE_PATH
     BasicIo::AutoPtr ImageFactory::createIo(const std::wstring& wpath, bool useCurl)
 	{

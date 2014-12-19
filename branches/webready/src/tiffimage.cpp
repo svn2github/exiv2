@@ -31,11 +31,7 @@ EXIV2_RCSID("@(#) $Id$")
 
 // *****************************************************************************
 // included header files
-#ifdef _MSC_VER
-# include "exv_msvc.h"
-#else
-# include "exv_conf.h"
-#endif
+#include "exv_conf.h"
 
 #include "tiffimage.hpp"
 #include "tiffimage_int.hpp"
@@ -2039,6 +2035,7 @@ namespace Exiv2 {
             buf.pData_[0] = 0x4d;
             buf.pData_[1] = 0x4d;
             break;
+        case asciiBytes:
         case invalidByteOrder:
             assert(false);
             break;
@@ -2059,6 +2056,7 @@ namespace Exiv2 {
         switch (byteOrder_) {
         case littleEndian:     os << ", " << _("little endian encoded"); break;
         case bigEndian:        os << ", " << _("big endian encoded");    break;
+        case asciiBytes:       os << ", " << _("ascii bytes");           break;
         case invalidByteOrder: break;
         }
         os << "\n";

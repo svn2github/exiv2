@@ -1,6 +1,6 @@
 // ***************************************************************** -*- C++ -*-
 /*
- * Copyright (C) 2004-2012 Andreas Huggel <ahuggel@gmx.net>
+ * Copyright (C) 2004-2013 Andreas Huggel <ahuggel@gmx.net>
  *
  * This program is part of the Exiv2 distribution.
  *
@@ -53,7 +53,7 @@
 
  */
 
-#if defined(__GNUG__) || defined(__GNUC__) || defined (_MSC_VER)
+#if (defined(__GNUG__) || defined(__GNUC__) || defined (_MSC_VER)) && ! defined(__clang__)
 #define EXIV2_RCSID(id) \
     namespace { \
         inline const char* getRcsId(const char*) { return id ; } \
