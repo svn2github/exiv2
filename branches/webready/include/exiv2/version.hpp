@@ -37,13 +37,6 @@
 // + standard includes
 #include <string>
 
-// svn version has not been implemented yet for DevStudio
-#if     defined(_MSC_VER) && !defined(CMAKE_BUILD_SVN)
-#define SVN_VERSION 0
-#else
-#include "svn_version.h"
-#endif
-
 /*!
   @brief %Exiv2 MAJOR version number of the library used at compile-time.
  */

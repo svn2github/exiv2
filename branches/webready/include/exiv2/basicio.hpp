@@ -179,7 +179,7 @@ namespace Exiv2 {
               Nonzero if failure;
          */
 #if defined(_MSC_VER)
-        virtual int seek(uint64_t offset, Position pos) = 0;
+        virtual int seek(uint64_t offset, Position pos) { return 0 ; }
 #else
         virtual int seek(long offset, Position pos) = 0;
 #endif

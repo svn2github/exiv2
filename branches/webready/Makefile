@@ -103,8 +103,11 @@ configure:
 config:
 	cd config && $(MAKE) -f config.make $(MAKECMDGOALS)
 
-xmpsdk: config/config.mk
+xmpsdk: src/svn_version.h config/config.mk 
 	if test "x$(ENABLE_XMP)" = "x1"; then cd xmpsdk/src && $(MAKE) $@; fi;
+	
+src/svn_version.h:
+	cd src && $(MAKE) svn_version.h
 
 mostlyclean clean: config/config.mk
 	cd src && $(MAKE) $(MAKECMDGOALS)
@@ -113,7 +116,7 @@ mostlyclean clean: config/config.mk
 	cd xmpsdk/src && $(MAKE) $(MAKECMDGOALS)
 	cd config && $(MAKE) -f config.make $(MAKECMDGOALS)
 	cd po && $(MAKE) $(MAKECMDGOALS)
-	rm -rf test/tmp
+	rm -rf test/tmp include/exiv2/exv_conf.h src/svn_version.h
 	mkdir  test/tmp
 
 # `make distclean' also removes files created by configuring 
@@ -122,7 +125,7 @@ mostlyclean clean: config/config.mk
 distclean: clean
 	rm -f config.log config.status libtool
 	rm -f *~ *.bak
-	rm -rf bin
+	if [ -e bin ]; then rm -rf bin ; fi
 
 # This removes almost everything, including the configure script!
 maintainer-clean: distclean

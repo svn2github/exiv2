@@ -55,6 +55,7 @@ EXIV2_RCSID("@(#) $Id$")
 #endif
 
 #include "http.hpp"
+#include "svn_version.h"
 #include "version.hpp"
 
 // + standard includes

@@ -262,7 +262,7 @@ ifdef DEP_TRACKING
 endif
 
 # Be sure to rewrite exv_conf.h and svn_version.h before compiling anything
-$(SRC): ../include/exiv2/exv_conf.h ../include/exiv2/svn_version.h
+$(SRC): ../include/exiv2/exv_conf.h svn_version.h
 
 ../include/exiv2/exv_conf.h: $(top_srcdir)/config/config.h
 	LC_ALL=C sed 's/#define \([A-Z]\)/#define EXV_\1/; s/#undef \([A-Z]\)/#undef EXV_\1/' < $< > $@
@@ -271,14 +271,8 @@ $(SRC): ../include/exiv2/exv_conf.h ../include/exiv2/svn_version.h
 svn_version.h:
 	./svn_version.sh
 
-../include/exiv2/svn_version.h: svn_version.h
-	cp $(top_srcdir)/src/svn_version.h $(top_srcdir)/include/exiv2/svn_version.h
-	
 version.hpp : svn_version.h
 	
-../include/exiv2/exv_conf.h: $(top_srcdir)/config/config.h
-	LC_ALL=C sed 's/#define \([A-Z]\)/#define EXV_\1/; s/#undef \([A-Z]\)/#undef EXV_\1/' < $< > $@
-
 $(LIBTOOL): $(LIBTOOL_DEPS)
 	$(SHELL) $(top_srcdir)/config.status --recheck
 
@@ -362,7 +356,6 @@ mostlyclean:
 	$(RM) core
 	$(RM) $(CCSRC:.cpp=.ii)
 	$(RM) lib
-	$(RM) include/exiv2/exv_conf.h
 	$(RM) $(CCSRC:%.cpp=.libs/%.d) $(CSRC:%.c=.libs/%.d)
 	@$(LIBTOOL) --mode=clean $(RM) $(LOBJ) $(sort $(EXIV2OBJ) $(EXIV2COBJ) $(CONNTOBJ) $(EXIFPOBJ) $(REMOTETOBJ) )
 
