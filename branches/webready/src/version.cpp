@@ -31,7 +31,7 @@ EXIV2_RCSID("@(#) $Id$")
 
 // *****************************************************************************
 
-#include "exv_conf.h"
+#include "config.h"
 
 #ifndef EXV_USE_SSH
 #define EXV_USE_SSH 0
@@ -40,6 +40,7 @@ EXIV2_RCSID("@(#) $Id$")
 #ifndef EXV_USE_CURL
 #define EXV_USE_CURL 0
 #endif
+
 #if EXV_USE_CURL == 1
 #include <curl/curl.h>
 #endif

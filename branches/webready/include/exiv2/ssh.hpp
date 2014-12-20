@@ -21,7 +21,9 @@
 #ifndef SSH_HPP_
 #define SSH_HPP_
 
-#include "exv_conf.h"
+// included header files
+#include "config.h"
+
 #if EXV_USE_SSH == 1
 #include <libssh/libssh.h>
 #include <libssh/sftp.h>

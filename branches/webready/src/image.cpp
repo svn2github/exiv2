@@ -32,8 +32,8 @@
 #include "rcsid_int.hpp"
 EXIV2_RCSID("@(#) $Id$")
 
-// *****************************************************************************
-#include "exv_conf.h"
+// included header files
+#include "config.h"
 
 #include "image.hpp"
 #include "error.hpp"
@@ -76,8 +76,6 @@ EXIV2_RCSID("@(#) $Id$")
 #ifdef EXV_HAVE_UNISTD_H
 # include <unistd.h>                            // stat
 #endif
-
-#define UNUSED(x) (void)(x)
 
 // *****************************************************************************
 namespace {

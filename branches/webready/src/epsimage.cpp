@@ -29,13 +29,8 @@
 #include "rcsid_int.hpp"
 EXIV2_RCSID("@(#) $Id: epsimage.cpp $")
 
-// *****************************************************************************
-
-//#define DEBUG 1
-
-// *****************************************************************************
 // included header files
-#include "exv_conf.h"
+#include "config.h"
 
 #include "epsimage.hpp"
 #include "image.hpp"

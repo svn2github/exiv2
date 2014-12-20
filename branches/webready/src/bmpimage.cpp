@@ -28,11 +28,8 @@
 #include "rcsid_int.hpp"
 EXIV2_RCSID("@(#) $Id$")
 
-//#define DEBUG 1
-
-// *****************************************************************************
 // included header files
-#include "exv_conf.h"
+#include "config.h"
 
 #include "bmpimage.hpp"
 #include "image.hpp"

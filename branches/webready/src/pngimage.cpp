@@ -29,12 +29,8 @@
 #include "rcsid_int.hpp"
 EXIV2_RCSID("@(#) $Id$")
 
-// *****************************************************************************
-
-//#define DEBUG 1
-
-// *****************************************************************************
-#include "exv_conf.h"
+// included header files
+#include "config.h"
 
 #ifdef   EXV_HAVE_LIBZ
 #include "pngchunk_int.hpp"

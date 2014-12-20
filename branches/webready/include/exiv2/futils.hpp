@@ -32,8 +32,9 @@
 
 // *********************************************************************
 // included header files
-#include "exv_conf.h"
+#include "config.h"
 
+#define UNUSED(x) (void)(x)
 
 #ifdef EXV_HAVE_STDINT_H
 # include <stdint.h>                     // for uint8_t

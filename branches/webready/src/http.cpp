@@ -23,8 +23,10 @@
  * http.cpp
  */
 
-#include "exv_conf.h"
-#include <exiv2/exiv2.hpp>
+// included header files
+#include "config.h"
+
+#include "exiv2.hpp"
 
 #include <sys/types.h>
 #include <stdio.h>
@@ -39,7 +41,6 @@
 
 #define SLEEP       1000
 #define SNOOZE         0
-
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
 #define __MINGW__

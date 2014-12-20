@@ -29,9 +29,8 @@
 #include "rcsid_int.hpp"
 EXIV2_RCSID("@(#) $Id$")
 
-// *****************************************************************************
 // included header files
-#include "exv_conf.h"
+#include "config.h"
 
 #include "cr2image.hpp"
 #include "cr2image_int.hpp"
