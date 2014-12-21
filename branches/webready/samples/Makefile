@@ -161,7 +161,7 @@ metacopy path-test: %: %.cpp ../src/utils.o
 
 # Remove binaries, e.g., to relink them
 binclean:
-	if [ -d ../bin ] ; cd ../bin ;	$(RM) $(EXECUTABLE) ; fi
+	$(RM) $(EXECUTABLE)
 
 mostlyclean:
 	$(RM) core
