@@ -255,8 +255,8 @@ typedef int pid_t;
 #endif
 
 /*
-  If you're using Solaris and the Solaris Studio compiler, then you really
-  do need to use -library=stdcxx4 along with these inclusions below
+  If you're using Solaris and the Solaris Studio compiler
+  you must -library=stdcxx4 along with these inclusions below
 */
 #if defined(OS_SOLARIS)
 #include <stdio.h>

@@ -84,6 +84,9 @@ TESTS  = addmoddel.sh         \
 TESTV  = video-test.sh         
 TESTE  = eps-test.sh
 TESTVW = write-video-test.sh
+TESTX = httpiotest.sh     \
+        curliotest.sh     \
+        sshiotest.sh
 
 tests:
 	cd .. ; make tests
@@ -120,9 +123,23 @@ testvw:
 	done
 ##
 
+##
 # TODO: download eps data on demand for 0.24 (similar to testv)
 teste:
+	@for t in /eps ; do \
+		if [ ! -e data/$$t ]; then \
+	echo svn export '$(SVN_TEST)'$$t data$$t ; \
+	     svn export '$(SVN_TEST)'$$t data$$t ; \
+	fi ; done
 	@list='$(TESTE)'; for p in $$list; do \
+	    echo Running $$p ...; \
+	    ./$$p; \
+	done
+
+##
+# TODO: test httpIo and remoteIo
+testx:
+	@list='$(TESTX)'; for p in $$list; do \
 	    echo Running $$p ...; \
 	    ./$$p; \
 	done
