@@ -1844,7 +1844,7 @@ namespace Exiv2 {
     }
 
 #if defined(_MSC_VER)
-    int RemoteIo::seek( int64_t offset, Position pos )
+    int RemoteIo::seek( uint64_t offset, Position pos )
     {
         assert(p_->isMalloced_);
         uint64_t newIdx = 0;
@@ -2476,10 +2476,10 @@ namespace Exiv2 {
     void SshIo::SshImpl::getDataByRange(long lowBlock, long highBlock, std::string& response)
     {
         if (protocol_ == pSftp) {
-            if (sftp_seek(fileHandler_, lowBlock * blockSize_) < 0) throw Error(1, "SFTP: unable to sftp_seek");
+            if (sftp_seek(fileHandler_, (uint32_t) (lowBlock * blockSize_)) < 0) throw Error(1, "SFTP: unable to sftp_seek");
             size_t buffSize = (highBlock - lowBlock + 1) * blockSize_;
             char* buffer = new char[buffSize];
-            long nBytes = sftp_read(fileHandler_, buffer, buffSize);
+            long nBytes = (long) sftp_read(fileHandler_, buffer, buffSize);
             if (nBytes < 0) throw Error(1, "SFTP: unable to sftp_read");
             response.assign(buffer, buffSize);
             delete[] buffer;
