@@ -76,7 +76,7 @@ reportTest()
     cat $results | tr '\\' '/' > ${results}-new
     	mv -f ${results}-new $results
     if [ ! -z `which dos2unix` ]; then
-        unix2dos $results >/dev/null 2>&1
+        dos2unix $results >/dev/null 2>&1
     fi
 
     if [ $# -eq 0 ]; then
@@ -422,6 +422,8 @@ prepareTest()
 	os=$(uname)
 	if [ "${os:0:4}" == "CYGW" ]; then
 		export PLATFORM=cygwin
+	elif [ "${os:0:4}" == "MING" ]; then
+		export PLATFORM=mingw
 	else
 		export PLATFORM=$os
 	fi
@@ -430,7 +432,7 @@ prepareTest()
 		exe=.exe
 	fi
 	
-	if [ "$PLATFORM" == cygwin -o "$PLATFORM" == mingw ]; then
+	if [ "$PLATFORM" == cygwin ]; then
 		# We need a private version of diff for linux compatibility
 		diff()
 		{
@@ -469,7 +471,7 @@ prepareTest()
 	fi
 	da2="--ignore-matching-lines=^Usage:.*exiv2"
 	diff -q $da2 $tmpfile $tmpfile 2>/dev/null
-	if [ $? -ne 0 ] ; then
+	if [ $? -ne 0  -o "$PLATFORM" == mingw ] ; then
     	da2=""
 	fi
 	diffargs="$da1 $da2"
