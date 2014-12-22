@@ -356,7 +356,7 @@ mostlyclean:
 	$(RM) core
 	$(RM) $(CCSRC:.cpp=.ii)
 	$(RM) lib
-	$(RM) $(CCSRC:%.cpp=.libs/%.d) $(CSRC:%.c=.libs/%.d)
+	$(RM) -rf $(CCSRC:%.cpp=.libs/%.d) $(CSRC:%.c=.libs/%.d) .libs/*.dSYM
 	@$(LIBTOOL) --mode=clean $(RM) $(LOBJ) $(sort $(EXIV2OBJ) $(EXIV2COBJ) $(CONNTOBJ) $(EXIFPOBJ) $(REMOTETOBJ) )
 
 clean: mostlyclean
