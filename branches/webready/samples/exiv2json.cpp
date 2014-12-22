@@ -10,10 +10,22 @@
 #include <cassert>
 #include <string>
 
+#if defined(__MINGW32__) || defined(__MINGW64__)
+# ifndef  __MINGW__
+#  define __MINGW__
+# endif
+#endif
+
 #include <stdlib.h>
-#ifdef   _MSC_VER
+#include <limits.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#if defined(_MSC_VER) || defined(__MINGW__)
 #include <windows.h>
-#define  PATH_MAX 512
+#ifndef  PATH_MAX
+# define  PATH_MAX 512
+#endif
 const char* realpath(const char* file,char* path)
 {
 	GetFullPathName(file,PATH_MAX,path,NULL);
@@ -22,9 +34,6 @@ const char* realpath(const char* file,char* path)
 #else
 #include <unistd.h>
 #endif
-#include <limits.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 using namespace std;
 using namespace Jzon;
@@ -166,7 +175,7 @@ void fileSystemPush(const char* path,Jzon::Node& nfs)
     fs.Add("st_mtime"  ,(int) buf.st_mtime  ); /* time of last modification       */
     fs.Add("st_ctime"  ,(int) buf.st_ctime  ); /* time of last status change      */
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW__)
 	size_t blksize     = 1024;
 	size_t blocks      = (buf.st_size+blksize-1)/blksize;
 #else
