@@ -33,12 +33,6 @@ EXIV2_RCSID("@(#) $Id$")
 
 #include "utils.hpp"
 
-#if defined(__MINGW32__) || defined(__MINGW64__)
-# ifndef  __MINGW__
-#  define __MINGW__
-# endif
-#endif
-
 // + standard includes
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -79,10 +73,6 @@ namespace Util {
         for (;;) {
             int c = ::getopt(argc, argv, optstring.c_str());
             if (c == -1) break;
-#ifdef __MINGW__
-			// seems to be a bug in ::getopt on msys
-			optarg=argv[optind+1];
-#endif            
             errcnt_ += option(c, ::optarg == 0 ? "" : ::optarg, ::optopt);
         }
         for (int i = ::optind; i < argc; i++) {

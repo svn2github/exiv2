@@ -96,17 +96,13 @@ typedef int pid_t;
 #define EXV_USE_SSH 1
 #endif
 
-
 /* Help out our buddy curl */
 #ifndef EXV_HAVE_DLL
 #define CURL_STATICLIB
 #endif
 
-//#if EXV_USE_CURL == 1
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "wldap32.lib")
-//#endif
-
 
 /* File path seperator */
 #define EXV_SEPERATOR_STR "\\"

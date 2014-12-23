@@ -36,21 +36,37 @@ if NOT DEFINED LIB           set "LIB=C:\Program Files (x86)\Microsoft Visual St
 if NOT DEFINED LIBPATH       set "LIBPATH=C:\Windows\Microsoft.NET\Framework\v2.0.50727;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\ATLMFC\LIB"
 if NOT DEFINED VS80COMNTOOLS set "VS80COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 8\Common7\Tools\"
 
-rem  --
+rem ----------------------------------------------
 rem  set the build environment
 call "%VS80COMNTOOLS%\..\..\Vc\bin\vcvars32.bat"
 
-rem --
+rem ----------------------------------------------
 rem copy the support libraries
-if NOT EXIST ..\expat   xcopy/yesihq  c:\exiv2libs\expat-2.1.0     ..\expat
-if NOT EXIST ..\zlib    xcopy/yesihq  c:\exiv2libs\zlib-1.2.7      ..\zlib
-if NOT EXIST ..\openssl xcopy/yesihq  c:\exiv2libs\openssl-1.0.1j  ..\openssl
-if NOT EXIST ..\libssh  xcopy/yesihq  c:\exiv2libs\libssh-0.5.5    ..\libssh
-if NOT EXIST ..\curl    xcopy/yesihq  c:\exiv2libs\curl-7.39.0     ..\curl
+xcopy/yesihq  c:\exiv2libs\expat-2.1.0     ..\expat
+xcopy/yesihq  c:\exiv2libs\zlib-1.2.7      ..\zlib
+xcopy/yesihq  c:\exiv2libs\openssl-1.0.1j  ..\openssl
+xcopy/yesihq  c:\exiv2libs\libssh-0.5.5    ..\libssh
+xcopy/yesihq  c:\exiv2libs\curl-7.39.0     ..\curl
 
-rem --
-rem build and test
+rem ----------------------------------------------
+rem modify include/exiv2/exv_msvc.h to respect library requests
+pushd include\exiv2
 
+copy/y  exv_msvc.h t.h
+if %curl%==false (
+   type t.h | ..\..\msvc2005\tools\bin\sed.exe -e "s/EXV_USE_CURL 1/EXV_USE_CURL 0/g" > exv_msvc.h
+)
+del t.h
+
+copy/y  exv_msvc.h t.h
+if %curl%==false (
+   type t.h | ..\..\msvc2005\tools\bin\sed.exe -e "s/EXV_USE_SSH 1/EXV_USE_SSH 0/g" > exv_msvc.h
+)
+del t.h
+popd
+
+rem ----------------------------------------------
+rem modify msvc2005/exiv2.sln to respect library requests
 pushd msvc2005
 
 rem --
@@ -58,10 +74,8 @@ rem FOO is the current directory in cygwin (/cygdrive/c/users/shared/workspace/e
 rem we need this to set the correct directory when we run the test suite from Cygwin
 for /f "tokens=*" %%a in ('cygpath -au ..') do set FOO=%%a
 
-rem --
-rem remove lines from the solution file to respect build options
 copy exiv2.sln e.sln
-copy exiv2.sln d.sln
+copy exiv2.sln t.sln
 rem find the lines which specify openssl, eay, ssh and curl
 for /f "tokens=*" %%a in ('findstr /c:openssl e.sln') do set L_OPENSSL=%%a
 for /f "tokens=*" %%a in ('findstr /c:libeay  e.sln') do set L_LIBEAY=%%a
@@ -70,20 +84,21 @@ for /f "tokens=*" %%a in ('findstr /c:libssh  e.sln') do set L_LIBSSH=%%a
 for /f "tokens=*" %%a in ('findstr /c:curl    e.sln') do set L_CURL=%%a
 
 if %openssl%==false (
-    call BatchSubstitute.bat "%%L_OPENSSL%%" "" e.sln > d.sln && copy/y d.sln e.sln
-    call BatchSubstitute.bat "%%L_LIBEAY%%"  "" e.sln > d.sln && copy/y d.sln e.sln
-    call BatchSubstitute.bat "%%L_SSLEAY%%"  "" e.sln > d.sln && copy/y d.sln e.sln
+    call BatchSubstitute.bat "%%L_OPENSSL%%" "" e.sln > t.sln && copy/y t.sln e.sln
+    call BatchSubstitute.bat "%%L_LIBEAY%%"  "" e.sln > t.sln && copy/y t.sln e.sln
+    call BatchSubstitute.bat "%%L_SSLEAY%%"  "" e.sln > t.sln && copy/y t.sln e.sln
 )
 if %libssh%==false (
-    call BatchSubstitute.bat "%%L_OPENSSL%%" "" e.sln > d.sln && copy d.sln/y e.sln
+    call BatchSubstitute.bat "%%L_OPENSSL%%" "" e.sln > t.sln && copy t.sln/y e.sln
 )
 if %curl%==false (
-    call BatchSubstitute.bat "%%L_CURL%%"    "" e.sln > d.sln && copy/y d.sln e.sln
+    call BatchSubstitute.bat "%%L_CURL%%"    "" e.sln > t.sln && copy/y t.sln e.sln
 )
-del d.sln
+del t.sln
 
 rem --
-rem Now build
+rem Now build and test
+
 if %Win32%==true (
   if %debug%==true (
     if %static%==true (
