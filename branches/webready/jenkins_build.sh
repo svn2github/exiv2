@@ -216,9 +216,7 @@ case "$build" in
             make        # DO NOT USE -j4.  It seems to hang the build!
             make install
             make samples
-            # don't run the test suite because it fails rather badly
-            # issue seems to be in ::getopt
-            # run_tests
+            run_tests
             exiv2 -v -V
         else
             if [ -e config/config.mk ]; then make clean ; fi
