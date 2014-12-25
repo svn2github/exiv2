@@ -58,10 +58,8 @@ SHELL = /bin/sh
 
 ##
 # to save download time for simple build/test, we download video and eps data on demand
-# TODO: remove data/eps from depot for the 0.24 release.
-#       If we remove it now, it'll break the test instructions on the web:
-#       http://www.exiv2.org/download.html
-SVN = svn://dev.exiv2.org/svn/testdata/trunk
+SVN      = svn://dev.exiv2.org/svn/testdata/trunk
+SVN_TEST = svn://dev.exiv2.org/svn/trunk/test/data
 
 ##
 # Add test drivers to this list

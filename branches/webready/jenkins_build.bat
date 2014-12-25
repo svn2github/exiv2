@@ -48,25 +48,8 @@ xcopy/yesihq  c:\exiv2libs\openssl-1.0.1j  ..\openssl
 xcopy/yesihq  c:\exiv2libs\libssh-0.5.5    ..\libssh
 xcopy/yesihq  c:\exiv2libs\curl-7.39.0     ..\curl
 
-rem ----------------------------------------------
-rem modify include/exiv2/exv_msvc.h to respect library requests
-pushd include\exiv2
-
-copy/y  exv_msvc.h t.h
-if %curl%==false (
-   type t.h | ..\..\msvc2005\tools\bin\sed.exe -e "s/EXV_USE_CURL 1/EXV_USE_CURL 0/g" > exv_msvc.h
-)
-del t.h
-
-copy/y  exv_msvc.h t.h
-if %curl%==false (
-   type t.h | ..\..\msvc2005\tools\bin\sed.exe -e "s/EXV_USE_SSH 1/EXV_USE_SSH 0/g" > exv_msvc.h
-)
-del t.h
-popd
 
 rem ----------------------------------------------
-rem modify msvc2005/exiv2.sln to respect library requests
 pushd msvc2005
 
 rem --
@@ -75,7 +58,13 @@ rem we need this to set the correct directory when we run the test suite from Cy
 for /f "tokens=*" %%a in ('cygpath -au ..') do set FOO=%%a
 
 copy exiv2.sln e.sln
-if %curl% == true if %libssh% == true if %openssl% == true copy/y exiv2-webready.sln e.sln 
+
+set webready=false
+if %curl% == true if %libssh% == true if %openssl% == true set webready=true
+if %webready% == true (
+    copy/y exiv2-webready.sln e.sln
+    copy/y ..\include\exiv2\exv-msvc-webready.h ..\..\include\exiv2\exv-msvc.h
+) 
 
 rem --
 rem Now build and test
