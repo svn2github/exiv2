@@ -81,9 +81,9 @@ TESTS  = addmoddel.sh         \
 TESTV  = video-test.sh         
 TESTE  = eps-test.sh
 TESTVW = write-video-test.sh
-TESTX = httpiotest.sh     \
-        curliotest.sh     \
-        sshiotest.sh
+TESTX  = httpiotest.sh     \
+         curliotest.sh     \
+         sshiotest.sh
 
 tests:
 	cd .. ; make tests
@@ -120,8 +120,6 @@ testvw:
 	done
 ##
 
-##
-# TODO: download eps data on demand for 0.24 (similar to testv)
 teste:
 	@for t in /eps ; do \
 		if [ ! -e data/$$t ]; then \
