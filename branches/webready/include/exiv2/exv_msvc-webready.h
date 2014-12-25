@@ -88,12 +88,12 @@ typedef int pid_t;
 
 /* Define as 1 if you want to use curl to perform http I/O */
 #ifndef EXV_USE_CURL
-#define EXV_USE_CURL 0
+#define EXV_USE_CURL 1
 #endif
 
 /* Define as 1 if you want to use libssh (for ssh:// and sftp:// support */
 #ifndef EXV_USE_SSH
-#define EXV_USE_SSH 0
+#define EXV_USE_SSH 1
 #endif
 
 /* Help out our buddy curl */

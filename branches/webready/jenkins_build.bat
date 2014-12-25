@@ -75,26 +75,7 @@ rem we need this to set the correct directory when we run the test suite from Cy
 for /f "tokens=*" %%a in ('cygpath -au ..') do set FOO=%%a
 
 copy exiv2.sln e.sln
-copy exiv2.sln t.sln
-rem find the lines which specify openssl, eay, ssh and curl
-for /f "tokens=*" %%a in ('findstr /c:openssl e.sln') do set L_OPENSSL=%%a
-for /f "tokens=*" %%a in ('findstr /c:libeay  e.sln') do set L_LIBEAY=%%a
-for /f "tokens=*" %%a in ('findstr /c:ssleay  e.sln') do set L_SSLEAY=%%a
-for /f "tokens=*" %%a in ('findstr /c:libssh  e.sln') do set L_LIBSSH=%%a
-for /f "tokens=*" %%a in ('findstr /c:curl    e.sln') do set L_CURL=%%a
-
-if %openssl%==false (
-    call BatchSubstitute.bat "%%L_OPENSSL%%" "" e.sln > t.sln && copy/y t.sln e.sln
-    call BatchSubstitute.bat "%%L_LIBEAY%%"  "" e.sln > t.sln && copy/y t.sln e.sln
-    call BatchSubstitute.bat "%%L_SSLEAY%%"  "" e.sln > t.sln && copy/y t.sln e.sln
-)
-if %libssh%==false (
-    call BatchSubstitute.bat "%%L_OPENSSL%%" "" e.sln > t.sln && copy t.sln/y e.sln
-)
-if %curl%==false (
-    call BatchSubstitute.bat "%%L_CURL%%"    "" e.sln > t.sln && copy/y t.sln e.sln
-)
-del t.sln
+if %curl% == true if %libssh% == true if %openssl% == true copy/y exiv2-webready.sln e.sln 
 
 rem --
 rem Now build and test

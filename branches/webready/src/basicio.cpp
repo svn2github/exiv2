@@ -124,12 +124,16 @@ namespace Exiv2 {
         // TYPES
         //! Simple struct stat wrapper for internal use
         struct StructStat {
+#if EXV_USE_SSH == 1
             StructStat() : st_mode(0), st_size(0), st_nlink(0) {}
             mode_t  st_mode;            //!< Permissions
-            off_t   st_size;            //!< Size
+#else
+            StructStat() : st_size(0), st_nlink(0) {}
+#endif
+			off_t   st_size;            //!< Size
             nlink_t st_nlink;           //!< Number of hard links (broken on Windows, see winNumberOfLinks())
         };
-
+// #endif
         // METHODS
         /*!
           @brief Switch to a new access mode, reopening the file if needed.
@@ -256,8 +260,10 @@ namespace Exiv2 {
             ret = ::stat(path_.c_str(), &st);
             if (0 == ret) {
                 buf.st_size = st.st_size;
-                buf.st_mode = st.st_mode;
                 buf.st_nlink = st.st_nlink;
+#if EXV_USE_SSH == 1
+				buf.st_mode = st.st_mode;
+#endif
             }
         }
         return ret;
@@ -682,8 +688,10 @@ namespace Exiv2 {
             close();
 
             bool statOk = true;
-            mode_t origStMode = 0;
-            std::string spf;
+#if EXV_USE_SSH == 1
+			mode_t origStMode = 0;
+#endif
+			std::string spf;
             char* pf = 0;
 #ifdef EXV_UNICODE_PATH
             std::wstring wspf;
@@ -736,7 +744,9 @@ namespace Exiv2 {
             if (p_->stat(buf1) == -1) {
                 statOk = false;
             }
-            origStMode = buf1.st_mode;
+#if EXV_USE_SSH == 1
+			origStMode = buf1.st_mode;
+#endif
 #endif // !EXV_HAVE_LSTAT
 
             // MSVCRT rename that does not overwrite existing files
@@ -860,7 +870,8 @@ namespace Exiv2 {
                     EXV_WARNING << Error(2, pf, strError(), "::stat") << "\n";
 #endif
                 }
-                if (statOk && origStMode != buf2.st_mode) {
+#if EXV_USE_SSH == 1
+				if (statOk && origStMode != buf2.st_mode) {
                     // Set original file permissions
                     if (::chmod(pf, origStMode) == -1) {
 #ifndef SUPPRESS_WARNINGS
@@ -868,7 +879,8 @@ namespace Exiv2 {
 #endif
                     }
                 }
-            }
+#endif
+			}
         } // if (fileIo)
         else {
             // Generic handling, reopen both to reset to start
