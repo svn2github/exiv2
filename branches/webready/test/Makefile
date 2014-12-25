@@ -59,7 +59,6 @@ SHELL = /bin/sh
 ##
 # to save download time for simple build/test, we download video and eps data on demand
 SVN      = svn://dev.exiv2.org/svn/testdata/trunk
-SVN_TEST = svn://dev.exiv2.org/svn/trunk/test/data
 
 ##
 # Add test drivers to this list
@@ -126,8 +125,8 @@ testvw:
 teste:
 	@for t in /eps ; do \
 		if [ ! -e data/$$t ]; then \
-	echo svn export '$(SVN_TEST)'$$t data$$t ; \
-	     svn export '$(SVN_TEST)'$$t data$$t ; \
+	echo svn export '$(SVN)'$$t data$$t ; \
+	     svn export '$(SVN)'$$t data$$t ; \
 	fi ; done
 	@list='$(TESTE)'; for p in $$list; do \
 	    echo Running $$p ...; \

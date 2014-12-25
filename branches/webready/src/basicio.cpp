@@ -720,7 +720,9 @@ namespace Exiv2 {
                 EXV_WARNING << Error(2, pf, strError(), "::lstat") << "\n";
 #endif
             }
+#if EXV_USE_SSH == 1
             origStMode = buf1.st_mode;
+#endif
             DataBuf lbuf; // So that the allocated memory is freed. Must have same scope as pf
             // In case path() is a symlink, get the path of the linked-to file
             if (statOk && S_ISLNK(buf1.st_mode)) {
@@ -737,7 +739,9 @@ namespace Exiv2 {
                     EXV_WARNING << Error(2, pf, strError(), "::stat") << "\n";
 #endif
                 }
+#if EXV_USE_SSH == 1
                 origStMode = buf1.st_mode;
+#endif
             }
 #else // EXV_HAVE_LSTAT
             Impl::StructStat buf1;
