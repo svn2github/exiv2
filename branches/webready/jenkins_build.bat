@@ -37,7 +37,11 @@ if %Builder%==2003 (
   set   curl=false
   set   openssl=false
   set   libssh=false
-  call  "C:\Program Files (x86)\Microsoft Visual Studio .NET 2003\Vc7\bin\vcvars32.bat"
+  echo ------------------
+  echo calling vcvars32 for Visual Studio 2003
+  call "C:\Program Files (x86)\Microsoft Visual Studio .NET 2003\Vc7\bin\vcvars32.bat"
+  set | sort
+  echo ------------------
   pushd msvc2003
 )
 
