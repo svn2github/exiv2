@@ -137,34 +137,30 @@ if %Win32%==true (
 if %x64%==true (
   if %debug%==true (
     if %static%==true (
-      if %Builder%==2005 devenv e.sln %ACTION% "Debug|x64"        
-      if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Debug'
-) ) ) )
+      devenv e.sln %ACTION% "Debug|x64"        
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Debug'
+) ) )
 
 if %x64%==true (
   if %release%==true (
     if %static%==true  (
-      if %Builder%==2005 devenv e.sln %ACTION% "Release|x64"      
-      if %tests%==true   (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Release'
-) ) ) )
+      devenv e.sln %ACTION% "Release|x64"      
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Debug'
+) ) )
 
 if %x64%==true (
   if %debug%==true (
     if %dll%==true   (
-      if %Builder%==2005 devenv e.sln %ACTION% "DebugDLL|x64"     
-      if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/DebugDLL'
-) ) ) )
+      devenv e.sln %ACTION% "DebugDLL|x64"     
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Debug'
+) ) )
 
 if %x64%==true   (
   if %release%==true (
     if %dll%==true     (
-      if %Builder%==2005 devenv e.sln %ACTION% "ReleaseDLL|x64"   
-      if %tests%==true   (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/ReleaseDLL'
-) ) ) )
+      devenv e.sln %ACTION% "ReleaseDLL|x64"   
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Debug'
+) ) )
 
 del e.sln
 popd
