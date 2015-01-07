@@ -137,8 +137,8 @@ if %Win32%==true (
         set C=ReleaseDLL
         set T=../msvc2003/bin/ReleaseDLL
       )
-      echo %VSINSTALLDIR%\devenv.exe e.sln %ACTION% "ReleaseDLL"
-           %VSINSTALLDIR%\devenv.exe e.sln %ACTION% "ReleaseDLL"     
+      echo "%VSINSTALLDIR%\devenv.exe" e.sln %ACTION% "ReleaseDLL"
+           "%VSINSTALLDIR%\devenv.exe" e.sln %ACTION% "ReleaseDLL"     
       if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) )
 
