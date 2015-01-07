@@ -145,21 +145,21 @@ if %x64%==true (
   if %release%==true (
     if %static%==true  (
       devenv e.sln %ACTION% "Release|x64"      
-      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Debug'
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Release'
 ) ) )
 
 if %x64%==true (
   if %debug%==true (
     if %dll%==true   (
       devenv e.sln %ACTION% "DebugDLL|x64"     
-      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Debug'
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/DebugDLL'
 ) ) )
 
 if %x64%==true   (
   if %release%==true (
     if %dll%==true     (
       devenv e.sln %ACTION% "ReleaseDLL|x64"   
-      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Debug'
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/ReleaseDLL'
 ) ) )
 
 del e.sln
