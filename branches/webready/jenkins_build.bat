@@ -95,11 +95,10 @@ if %Win32%==true (
         set C=Debug
         set T=../msvc2003/bin/Debug
       )
-      echo "%VSINSTALLDIR%\devenv" e.sln %ACTION% %C%     
-           "%VSINSTALLDIR%\devenv" e.sln %ACTION% %C%     
-      if %ERRORLEVEL%==0 if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
-) ) ) )
+      echo devenv e.sln %ACTION% "%C%"
+           devenv.com e.sln %ACTION% "%C%"     
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
+) ) )
 
 if %Win32%==true (
   if %release%==true (
@@ -110,11 +109,10 @@ if %Win32%==true (
         set C=Release
         set T=../msvc2003/bin/Release
       )
-      echo "%VSINSTALLDIR%\devenv" e.sln %ACTION% %C%     
-           "%VSINSTALLDIR%\devenv" e.sln %ACTION% %C%     
-      if %ERRORLEVEL%==0 if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
-) ) ) )
+      echo devenv e.sln %ACTION% "%C%"
+           devenv.com e.sln %ACTION% "%C%"     
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
+) ) )
 
 if %Win32%==true (
   if %debug%==true (
@@ -125,11 +123,10 @@ if %Win32%==true (
         set C=DebugDLL
         set T=../msvc2003/bin/Debug
       )
-      echo "%VSINSTALLDIR%\devenv" e.sln %ACTION% %C%     
-           "%VSINSTALLDIR%\devenv" e.sln %ACTION% %C%     
-      if %ERRORLEVEL%==0 if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
-) ) ) )
+      echo devenv e.sln %ACTION% "%C%"
+           devenv.com e.sln %ACTION% "%C%"     
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
+) ) )
 
 if %Win32%==true (
   if %release%==true (
@@ -140,11 +137,10 @@ if %Win32%==true (
         set C=ReleaseDLL
         set T=../msvc2003/bin/ReleaseDLL
       )
-      echo "%VSINSTALLDIR%\devenv" e.sln %ACTION% %C%     
-           "%VSINSTALLDIR%\devenv" e.sln %ACTION% %C%     
-      if %ERRORLEVEL%==0 if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
-) ) ) )
+      echo devenv e.sln %ACTION% "%C%"
+           devenv.com e.sln %ACTION% "%C%"     
+      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
+) ) )
 
 if %x64%==true (
   if %debug%==true (
