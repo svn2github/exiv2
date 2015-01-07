@@ -91,7 +91,7 @@ if %Win32%==true (
       )
       if %Builder%==2005 (
         devenv e.sln %ACTION% "Debug|Win32"     
-        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/Debug'
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/win32/Debug'
       )
 ) ) )
 
@@ -104,7 +104,7 @@ if %Win32%==true (
       )
       if %Builder%==2005 (
         devenv e.sln %ACTION% "Release|Win32"     
-        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/Release'
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/win32/Release'
       )
 ) ) )
 
@@ -117,7 +117,7 @@ if %Win32%==true (
       )
       if %Builder%==2005 (
         devenv e.sln %ACTION% "DebugDLL|Win32"     
-        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/DebugDLL'
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/win32/DebugDLL'
       )
 ) ) )
 
@@ -130,7 +130,7 @@ if %Win32%==true (
       )
       if %Builder%==2005 (
         devenv e.sln %ACTION% "ReleaseDLL|Win32"     
-        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/Release'
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/win32/Release'
       )
 ) ) )
 
