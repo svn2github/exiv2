@@ -95,8 +95,8 @@ if %Win32%==true (
         set C=Debug
         set T=../msvc2003/bin/Debug
       )
-      echo devenv e.sln %ACTION% "%C%"
-           devenv.com e.sln %ACTION% "%C%"     
+      echo devenv e.sln %ACTION% "Debug"
+           devenv e.sln %ACTION% "Debug"     
       if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) )
 
@@ -109,8 +109,8 @@ if %Win32%==true (
         set C=Release
         set T=../msvc2003/bin/Release
       )
-      echo devenv e.sln %ACTION% "%C%"
-           devenv.com e.sln %ACTION% "%C%"     
+      echo devenv e.sln %ACTION% "Release"
+           devenv e.sln %ACTION% "Release"     
       if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) )
 
@@ -123,8 +123,8 @@ if %Win32%==true (
         set C=DebugDLL
         set T=../msvc2003/bin/Debug
       )
-      echo devenv e.sln %ACTION% "%C%"
-           devenv.com e.sln %ACTION% "%C%"     
+      echo devenv e.sln %ACTION% "DebugDLL"
+           devenv e.sln %ACTION% "DebugDLL"     
       if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) )
 
@@ -137,8 +137,8 @@ if %Win32%==true (
         set C=ReleaseDLL
         set T=../msvc2003/bin/ReleaseDLL
       )
-      echo devenv e.sln %ACTION% "%C%"
-           devenv.com e.sln %ACTION% "%C%"     
+      echo devenv e.sln %ACTION% "ReleaseDLL"
+           devenv e.sln %ACTION% "ReleaseDLL"     
       if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) )
 
