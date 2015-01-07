@@ -95,9 +95,10 @@ if %Win32%==true (
         set C=Debug
         set T=../msvc2003/bin/Debug
       )
-      devenv.com e.sln %ACTION% %C%     
-      if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/%T%'
+      echo %VSINSTALLDIR%\devenv e.sln %ACTION% %C%     
+           %VSINSTALLDIR%\devenv e.sln %ACTION% %C%     
+      if %ERRORLEVEL%==0 if %tests%==true (
+        call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) ) )
 
 if %Win32%==true (
@@ -109,9 +110,10 @@ if %Win32%==true (
         set C=Release
         set T=../msvc2003/bin/Release
       )
-      devenv.com e.sln %ACTION% %C%     
-      if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/%T%'
+      echo %VSINSTALLDIR%\devenv e.sln %ACTION% %C%     
+           %VSINSTALLDIR%\devenv e.sln %ACTION% %C%     
+      if %ERRORLEVEL%==0 if %tests%==true (
+        call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) ) )
 
 if %Win32%==true (
@@ -123,9 +125,10 @@ if %Win32%==true (
         set C=DebugDLL
         set T=../msvc2003/bin/Debug
       )
-      devenv.com e.sln %ACTION% %C%     
-      if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/%T%'
+      echo %VSINSTALLDIR%\devenv e.sln %ACTION% %C%     
+           %VSINSTALLDIR%\devenv e.sln %ACTION% %C%     
+      if %ERRORLEVEL%==0 if %tests%==true (
+        call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) ) )
 
 if %Win32%==true (
@@ -137,9 +140,10 @@ if %Win32%==true (
         set C=ReleaseDLL
         set T=../msvc2003/bin/ReleaseDLL
       )
-      devenv.com e.sln %ACTION% %C%     
-      if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/%T%'
+      echo %VSINSTALLDIR%\devenv e.sln %ACTION% %C%     
+           %VSINSTALLDIR%\devenv e.sln %ACTION% %C%     
+      if %ERRORLEVEL%==0 if %tests%==true (
+        call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) ) )
 
 if %x64%==true (
