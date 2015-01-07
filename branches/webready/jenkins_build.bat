@@ -85,6 +85,14 @@ rem Now build and test
 if %Win32%==true (
   if %debug%==true (
     if %static%==true (
+      if %Builder%==2003 (
+        devenv e.sln %ACTION% "Debug"     
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2003/bin/Debug'
+      )
+      if %Builder%==2005 (
+        devenv e.sln %ACTION% "Debug|Win32"     
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/Debug'
+      )
 ) ) )
 
 if %Win32%==true (
@@ -103,6 +111,14 @@ if %Win32%==true (
 if %Win32%==true (
   if %debug%==true (
     if %dll%==true   (
+      if %Builder%==2003 (
+        devenv e.sln %ACTION% "DebugDLL"     
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2003/bin/DebugDLL'
+      )
+      if %Builder%==2005 (
+        devenv e.sln %ACTION% "DebugDLL|Win32"     
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/DebugDLL'
+      )
 ) ) )
 
 if %Win32%==true (
