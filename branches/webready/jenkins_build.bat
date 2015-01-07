@@ -31,26 +31,30 @@ if %openssl%==true           set curl=true
 if %ACTION%==/clean          set tests=false
 if %ACTION%==/upgrade        set tests=false
 
-if NOT DEFINED INCLUDE       set "INCLUDE=C:\Program Files (x86)\Microsoft Visual Studio 8\VC\ATLMFC\INCLUDE;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\INCLUDE;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\PlatformSDK\include;c:\Program Files (x86)\Microsoft Visual Studio .NET 2003\SDK\v1.1\include\;c:\home\rmills\dev\win32\boost\include\boost-1_42
-if NOT DEFINED LIB           set "LIB=C:\Program Files (x86)\Microsoft Visual Studio 8\VC\ATLMFC\LIB;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\LIB;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\PlatformSDK\lib;C:\Program Files (x86)\Microsoft Visual Studio 8\SDK\v2.0\lib;c:\Program Files (x86)\Microsoft Visual Studio .NET 2003\SDK\v1.1\Lib\"
-if NOT DEFINED LIBPATH       set "LIBPATH=C:\Windows\Microsoft.NET\Framework\v2.0.50727;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\ATLMFC\LIB"
-if NOT DEFINED VS80COMNTOOLS set "VS80COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 8\Common7\Tools\"
+if %Builder%==2003 (
+  set   x64=false
+  set   Win32=true
+  set   curl=false
+  set   openssl=false
+  set   libssh=false
+  call  "C:\Program Files (x86)\Microsoft Visual Studio .NET 2003\Vc7\bin\vcvars32.bat"
+  pushd msvc2003
+)
 
-rem ----------------------------------------------
-rem  set the build environment
-call "%VS80COMNTOOLS%\..\..\Vc\bin\vcvars32.bat"
+if %Builder%==2005 (
+  rem if NOT DEFINED INCLUDE       set "INCLUDE=C:\Program Files (x86)\Microsoft Visual Studio 8\VC\ATLMFC\INCLUDE;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\INCLUDE;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\PlatformSDK\include;c:\Program Files (x86)\Microsoft Visual Studio .NET 2003\SDK\v1.1\include\;c:\home\rmills\dev\win32\boost\include\boost-1_42
+  rem if NOT DEFINED LIB           set "LIB=C:\Program Files (x86)\Microsoft Visual Studio 8\VC\ATLMFC\LIB;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\LIB;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\PlatformSDK\lib;C:\Program Files (x86)\Microsoft Visual Studio 8\SDK\v2.0\lib;c:\Program Files (x86)\Microsoft Visual Studio .NET 2003\SDK\v1.1\Lib\"
+  rem if NOT DEFINED LIBPATH       set "LIBPATH=C:\Windows\Microsoft.NET\Framework\v2.0.50727;C:\Program Files (x86)\Microsoft Visual Studio 8\VC\ATLMFC\LIB"
+  rem if NOT DEFINED VS80COMNTOOLS set "VS80COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 8\Common7\Tools\"
 
-rem ----------------------------------------------
-rem copy the support libraries
-xcopy/yesihq  c:\exiv2libs\expat-2.1.0     ..\expat
-xcopy/yesihq  c:\exiv2libs\zlib-1.2.7      ..\zlib
-xcopy/yesihq  c:\exiv2libs\openssl-1.0.1j  ..\openssl
-xcopy/yesihq  c:\exiv2libs\libssh-0.5.5    ..\libssh
-xcopy/yesihq  c:\exiv2libs\curl-7.39.0     ..\curl
+  rem ----------------------------------------------
+  rem  set the build environment
+  call "C:\Program Files (x86)\Microsoft Visual Studio 8\..\..\Vc\bin\vcvars32.bat"
 
+  pushd msvc2005
+)
 
-rem ----------------------------------------------
-pushd msvc2005
+call copylibs.bat
 
 rem --
 rem FOO is the current directory in cygwin (/cygdrive/c/users/shared/workspace/exiv2-trunk/label/msvc)
@@ -77,39 +81,68 @@ rem Now build and test
 if %Win32%==true (
   if %debug%==true (
     if %static%==true (
-      devenv e.sln %ACTION% "Debug|Win32"     
+      rem ----------------------------
+      rem set C=Configuration to build
+      rem set T=test binary directory
+      rem ----------------------------
+      set "C=Debug|Win32"
+      set "T=../msvc2005/bin/Win32/Debug"
+      if %Builder%==2003 (
+        set C=Debug
+        set T=../msvc2003/bin/Debug
+      )
+      devenv e.sln %ACTION% %C%     
       if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/Debug'
+        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/%T%'
 ) ) ) )
 
 if %Win32%==true (
   if %release%==true (
     if %static%==true  (
-      devenv e.sln %ACTION% "Release|Win32"    
-      if %tests%==true   (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/Release'
+      set "C=Release|Win32"
+      set "T=../msvc2005/bin/Win32/Release"
+      if %Builder%==2003 (
+        set C=Release
+        set T=../msvc2003/bin/Release
+      )
+      devenv e.sln %ACTION% %C%     
+      if %tests%==true (
+        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/%T%'
 ) ) ) )
 
 if %Win32%==true (
   if %debug%==true (
     if %dll%==true   (
-      devenv e.sln %ACTION% "DebugDLL|Win32"   
+      set "C=DebugDLL|Win32"
+      set "T=../msvc2005/bin/Win32/DebugDLL"
+      if %Builder%==2003 (
+        set C=DebugDLL
+        set T=../msvc2003/bin/Debug
+      )
+      echo devenv e.sln %ACTION% %C%     
+      devenv e.sln %ACTION% %C%     
       if %tests%==true (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/DebugDLL'
+        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/%T%'
 ) ) ) )
 
 if %Win32%==true (
   if %release%==true (
     if %dll%==true     (
-      devenv e.sln %ACTION% "ReleaseDLL|Win32" 
-      if %tests%==true   (
-        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/ReleaseDLL'
+      set "C=ReleaseDLL|Win32"
+      set "T=../msvc2005/bin/Win32/ReleaseDLL"
+      if %Builder%==2003 (
+        set C=ReleaseDLL
+        set T=../msvc2003/bin/ReleaseDLL
+      )
+      devenv e.sln %ACTION% %C%     
+      if %tests%==true (
+        call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/%T%'
 ) ) ) )
 
 if %x64%==true (
   if %debug%==true (
     if %static%==true (
-      devenv e.sln %ACTION% "Debug|x64"        
+      if %Builder%==2005 devenv e.sln %ACTION% "Debug|x64"        
       if %tests%==true (
         call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Debug'
 ) ) ) )
@@ -117,7 +150,7 @@ if %x64%==true (
 if %x64%==true (
   if %release%==true (
     if %static%==true  (
-      devenv e.sln %ACTION% "Release|x64"      
+      if %Builder%==2005 devenv e.sln %ACTION% "Release|x64"      
       if %tests%==true   (
         call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/Release'
 ) ) ) )
@@ -125,7 +158,7 @@ if %x64%==true (
 if %x64%==true (
   if %debug%==true (
     if %dll%==true   (
-      devenv e.sln %ACTION% "DebugDLL|x64"     
+      if %Builder%==2005 devenv e.sln %ACTION% "DebugDLL|x64"     
       if %tests%==true (
         call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/DebugDLL'
 ) ) ) )
@@ -133,7 +166,7 @@ if %x64%==true (
 if %x64%==true   (
   if %release%==true (
     if %dll%==true     (
-      devenv e.sln %ACTION% "ReleaseDLL|x64"   
+      if %Builder%==2005 devenv e.sln %ACTION% "ReleaseDLL|x64"   
       if %tests%==true   (
         call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/x64/ReleaseDLL'
 ) ) ) )
@@ -141,10 +174,14 @@ if %x64%==true   (
 del e.sln
 popd
 
-rem delete the support libraries (with mozilla's native rm utility)
-msvc2005\tools\bin\rm.exe -rf ..\expat ..\zlib ..\openssl ..\libssh ..\curl
-cd ..
-c:\cygwin64\bin\rm.exe -rf openssl
+rem delete support libraries (with mozilla's native rm utility)
+if %Builder%==2003 msvc2005\tools\bin\rm.exe -rf ..\expat-2.0.1 ..\zlib-1.2.3
+if %Builder%==2005 msvc2005\tools\bin\rm.exe -rf ..\expat ..\zlib ..\openssl ..\libssh ..\curl
+if %Builder%==2005 if EXIST openssl (
+  cd ..
+  cygwin64\bin\rm.exe -rf openssl
+  cd msvc2005
+)
 
 rem That's all Folks!
 rem -----------------
