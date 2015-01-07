@@ -39,7 +39,7 @@ if %Builder%==2003 (
   set   libssh=false
   echo ------------------
   echo calling vcvars32 for Visual Studio 2003
-  call "C:\Program Files (x86)\Microsoft Visual Studio .NET 2003\Vc7\bin\vcvars32.bat"
+  call "C:\Program Files (x86)\Microsoft Visual Studio .NET 2003\Common7\Tools\vsvars32.bat"
   set | sort
   echo ------------------
   pushd msvc2003
@@ -53,7 +53,7 @@ if %Builder%==2005 (
 
   rem ----------------------------------------------
   rem  set the build environment
-  call "C:\Program Files (x86)\Microsoft Visual Studio 8\..\..\Vc\bin\vcvars32.bat"
+  call "C:\Program Files (x86)\Microsoft Visual Studio 8\Common7\Tools\vsvars32.bat"
 
   pushd msvc2005
 )
@@ -85,61 +85,37 @@ rem Now build and test
 if %Win32%==true (
   if %debug%==true (
     if %static%==true (
-      rem ----------------------------
-      rem set C=Configuration to build
-      rem set T=test binary directory
-      rem ----------------------------
-      set "C=Debug|Win32"
-      set "T=../msvc2005/bin/Win32/Debug"
-      if %Builder%==2003 (
-        set C=Debug
-        set T=../msvc2003/bin/Debug
-      )
-      echo devenv e.sln %ACTION% "Debug"
-           devenv e.sln %ACTION% "Debug"     
-      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) )
 
 if %Win32%==true (
   if %release%==true (
     if %static%==true  (
-      set "C=Release|Win32"
-      set "T=../msvc2005/bin/Win32/Release"
       if %Builder%==2003 (
-        set C=Release
-        set T=../msvc2003/bin/Release
+        devenv e.sln %ACTION% "Release"     
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2003/bin/Release'
       )
-      echo devenv e.sln %ACTION% "Release"
-           devenv e.sln %ACTION% "Release"     
-      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
+      if %Builder%==2005 (
+        devenv e.sln %ACTION% "Release|Win32"     
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/Release'
+      )
 ) ) )
 
 if %Win32%==true (
   if %debug%==true (
     if %dll%==true   (
-      set "C=DebugDLL|Win32"
-      set "T=../msvc2005/bin/Win32/DebugDLL"
-      if %Builder%==2003 (
-        set C=DebugDLL
-        set T=../msvc2003/bin/Debug
-      )
-      echo devenv e.sln %ACTION% "DebugDLL"
-           devenv e.sln %ACTION% "DebugDLL"     
-      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
 ) ) )
 
 if %Win32%==true (
   if %release%==true (
     if %dll%==true     (
-      set "C=ReleaseDLL|Win32"
-      set "T=../msvc2005/bin/Win32/ReleaseDLL"
       if %Builder%==2003 (
-        set C=ReleaseDLL
-        set T=../msvc2003/bin/ReleaseDLL
+        devenv e.sln %ACTION% "ReleaseDLL"     
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2003/bin/ReleaseDLL'
       )
-      echo "%VSINSTALLDIR%\devenv.exe" e.sln %ACTION% "ReleaseDLL"
-           "%VSINSTALLDIR%\devenv.exe" e.sln %ACTION% "ReleaseDLL"     
-      if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh %T%'
+      if %Builder%==2005 (
+        devenv e.sln %ACTION% "ReleaseDLL|Win32"     
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/Win32/Release'
+      )
 ) ) )
 
 if %x64%==true (
