@@ -130,7 +130,7 @@ if %Win32%==true (
       )
       if %Builder%==2005 (
         devenv e.sln %ACTION% "ReleaseDLL|Win32"     
-        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/win32/Release'
+        if NOT ERRORLEVEL 1 if %tests%==true call bash -c 'cd %FOO%;cd test;./testMSVC.sh ../msvc2005/bin/win32/ReleaseDLL'
       )
 ) ) )
 
