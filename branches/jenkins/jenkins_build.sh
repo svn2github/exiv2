@@ -166,15 +166,15 @@ case "$build" in
         if [ "$Win32" == true ]; then builds+=(win32) ; fi
         if [ "$x64"   == true ]; then builds+=(x64)   ; fi
         for build in ${builds[*]} ; do
-            # host=""
-            # if [ "$build" == "x64"   ]; then host="--host=x86_64-pc-cygwin" ; fi
+            host=""
+            if [ "$build" == "x64"   ]; then host="--host=x86_64-pc-cygwin" ; fi
             # if [ "$build" == "win32" ]; then host="--host=i686-pc-cygwin"   ; fi
             if [ "$build" == "x64"   ]; then 
                 # change the path.  The jenkins path causes cygwin to build 32 bits only
                 export PATH="/c/Perl64/bin:.:/home/rmills/bin:/home/rmills/bin/cygwin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/X11R6/bin:/System/Library/Frameworks/Python.framework/Versions/2.7/bin/:/opt/local/bin:/opt/local/sbin:/opt/pkgconfig/bin"
             fi
-            echo ./configure ${withcurl} ${withssh} --disable-nls
-                 ./configure ${withcurl} ${withssh} --disable-nls 
+            echo ./configure ${withcurl} ${withssh} ${host} --disable-nls
+                 ./configure ${withcurl} ${withssh} ${host} --disable-nls 
             make clean
             make -j4
             # result=$?
