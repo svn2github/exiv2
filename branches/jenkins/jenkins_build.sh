@@ -159,6 +159,9 @@ case "$build" in
         # 1. trying to get Cygwin to build with gettext and friends
         # 2. trying to get Cygwin to install into a local directory
 
+        # change the path.  The jenkins generated path is broken and cause cygwin to build 32 bits only
+        export PATH="/c/Perl64/bin:.:/home/rmills/bin:/home/rmills/bin/cygwin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/X11R6/bin:/System/Library/Frameworks/Python.framework/Versions/2.7/bin/:/opt/local/bin:/opt/local/sbin:/opt/pkgconfig/bin"
+
         # deal with 32bit and 64bit build requests
         # cygwin is happy to cross compile
         declare -a builds
@@ -168,10 +171,9 @@ case "$build" in
             host=""
             if [ "$build" == "x64"   ]; then host="--host=x86_64-pc-cygwin" ; fi
             if [ "$build" == "win32" ]; then host="--host=i686-pc-cygwin"   ; fi
-            make distclean
-            make config
             echo ./configure ${withcurl} ${withssh} ${host} --disable-nls
                  ./configure ${withcurl} ${withssh} ${host} --disable-nls 
+            make clean
             make -j4
             # result=$?
             make install
