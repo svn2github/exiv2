@@ -142,6 +142,7 @@ perl --version
 echo ---- end of path and perl ----
 
 case "$build" in
+
   UNIX) 
         echo ./configure  --prefix=$PWD/usr  $withcurl $withssh
              ./configure "--prefix=$PWD/usr" $withcurl $withssh
@@ -154,32 +155,36 @@ case "$build" in
   ;;
 
   CYGW)
+        if [ ! -z "$RECURSIVE" ]; then
+			# export LIBS=-lintl
+			# I've given up:
+			# 1 trying to get Cygwin to build with gettext and friends
+			# 2 trying to get Cygwin to install into a local directory
 
-        # export LIBS=-lintl
-        # I've given up:
-        # 1. trying to get Cygwin to build with gettext and friends
-        # 2. trying to get Cygwin to install into a local directory
-
-        # deal with 32bit and 64bit build requests
-        # Jenkins invokes the 32 bit cygwin, so recursively build 64 bits.  
-        if [ "$x64" == true -a -z "$RECURSIVE" ]; then 
-        	export RECURSIVE=1
-            /cygdrive/c/cygwin64/bin/bash.exe -c "cd $PWD ; ./$0"
-            result=$?
+			# deal with 32bit and 64bit build requests
+			# Jenkins invokes the 32 bit cygwin, so recursively build 64 bits.  
+			make clean
+			rm   -rf config.log config.status
+			echo ./configure ${withcurl} ${withssh} --disable-nls
+				 ./configure ${withcurl} ${withssh} --disable-nls 
+			make -j4
+			make install
+			make -j4 samples
+			run_tests
+			/usr/local/bin/exiv2 -v -V
+			result=$?
         else
-            make clean
-            rm   -rf config.log config.status
-            echo ./configure ${withcurl} ${withssh} --disable-nls
-                 ./configure ${withcurl} ${withssh} --disable-nls 
-            make -j4
-            make install
-            make -j4 samples
-            run_tests
-            /usr/local/bin/exiv2 -v -V
-            result=$?
+			if [ "$x64" == true ]; then 
+				export RECURSIVE=1
+				/cygdrive/c/cygwin64/bin/bash.exe -c "cd $PWD ; ./$0"
+				result=$?
+			fi
+			if [ "$Win32" == true ]; then 
+				export RECURSIVE=1
+				/cygdrive/c/cygwin/bin/bash.exe -c "cd $PWD ; ./$0"
+				result=$?
+			fi
         fi
-        
-        done
   ;;
 
   MING) 
