@@ -153,40 +153,37 @@ case "$build" in
         "$PWD/usr/bin/exiv2" -v -V
   ;;
 
-  CYGW) 
+  CYGW)
+
         # export LIBS=-lintl
         # I've given up:
         # 1. trying to get Cygwin to build with gettext and friends
         # 2. trying to get Cygwin to install into a local directory
 
-
         # deal with 32bit and 64bit build requests
-        # cygwin is happy to cross compile
-        declare -a builds
-        if [ "$Win32" == true ]; then builds+=(win32) ; fi
-        if [ "$x64"   == true ]; then builds+=(x64)   ; fi
-        for build in ${builds[*]} ; do
-            host=""
-            if [ "$build" == "x64"   ]; then host="--host=x86_64-pc-cygwin" ; fi
-            # if [ "$build" == "win32" ]; then host="--host=i686-pc-cygwin"   ; fi
-            if [ "$build" == "x64"   ]; then 
-                # change the path.  The jenkins path causes cygwin to build 32 bits only
-                export PATH="/c/Perl64/bin:.:/home/rmills/bin:/home/rmills/bin/cygwin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/X11R6/bin:/System/Library/Frameworks/Python.framework/Versions/2.7/bin/:/opt/local/bin:/opt/local/sbin:/opt/pkgconfig/bin"
-            fi
-            echo ./configure ${withcurl} ${withssh} ${host} --disable-nls
-                 ./configure ${withcurl} ${withssh} ${host} --disable-nls 
+        # Jenkins invokes the 32 bit cygwin, so recursively build 64 bits.  
+        if [ "$x64" == true -a -z "$RECURSIVE" ]; then 
+        	export RECURSIVE=1
+            /cygdrive/c/cygwin64/bin/bash.exe -c "cd $PWD ; ./$0"
+            result=$?
+        else
             make clean
+            rm   -rf config.log config.status
+            echo ./configure ${withcurl} ${withssh} --disable-nls
+                 ./configure ${withcurl} ${withssh} --disable-nls 
             make -j4
-            # result=$?
             make install
             make -j4 samples
             run_tests
             /usr/local/bin/exiv2 -v -V
+            result=$?
+        fi
+        
         done
   ;;
 
   MING) 
-        if [ ! -z "$BUILDMINGW" ]; then
+        if [ ! -z "$RECURSIVE" ]; then
             export  CC=$(which gcc)
             export  CXX=$(which g++)
             export "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
@@ -223,7 +220,7 @@ case "$build" in
             (
                 export TMP=/tmp
                 export TEMP=$TMP
-                export BUILDMINGW=1
+                export RECURSIVE=1
                 # recursively invoke MinGW/bash with appropriate tool chain
                 if [ "$x64" == true ]; then 
                     /cygdrive/c/MinGW64/msys/1.0/bin/bash.exe -c "export PATH=/c/TDM-GCC-64/bin:/c/MinGW64/bin:/c/MinGW64/msys/1.0/bin:/c/MinGW64/msys/1.0/local/bin; $0"
