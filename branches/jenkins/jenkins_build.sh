@@ -166,8 +166,8 @@ case "$build" in
         if [ "$x64"   == true ]; then builds+=(x64)   ; fi
         for build in ${builds[*]} ; do
             host=""
-            if [ "$build" == "x64"   ]; then host=x86_64-pc-cygwin ; fi
-            if [ "$build" == "win32" ]; then host=i686-pc-cygwin   ; fi
+            if [ "$build" == "x64"   ]; then host="--host=x86_64-pc-cygwin" ; fi
+            if [ "$build" == "win32" ]; then host="--host=i686-pc-cygwin"   ; fi
             echo ./configure ${withcurl} ${withssh} ${host} --disable-nls
                  ./configure ${withcurl} ${withssh} ${host} --disable-nls 
             make -j4
