@@ -168,8 +168,8 @@ case "$build" in
             host=""
             if [ "$build" == "x64"   ]; then host=x86_64-pc-cygwin ; fi
             if [ "$build" == "win32" ]; then host=i686-pc-cygwin   ; fi
-            echo ./configure ${withcurl} ${withssh} --disable-nls --host
-                 ./configure ${withcurl} ${withssh} --disable-nls --host
+            echo ./configure ${withcurl} ${withssh} ${host} --disable-nls
+                 ./configure ${withcurl} ${withssh} ${host} --disable-nls 
             make -j4
             # result=$?
             make install
